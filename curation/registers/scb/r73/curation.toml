@@ -1705,330 +1705,6 @@ evidence = "Ursprunglig och härledd uppgift avser värmeåtervinning.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2007-01-01..2007-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2008-01-01..2008-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2009-01-01..2009-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2010-01-01..2010-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2011-01-01..2011-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2012-01-01..2012-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2013-01-01..2013-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2014-01-01..2014-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2015-01-01..2015-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2016-01-01..2016-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2017-01-01..2017-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2018-01-01..2018-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2019-01-01..2019-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2020-01-01..2020-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2021-01-01..2021-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2022-01-01..2022-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2023-01-01..2023-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: B_FUppvarmningKomplement @2024-01-01..2024-12-31 where key = 'v21117'"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Variabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2007-01-01..2007-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2008-01-01..2008-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2009-01-01..2009-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2010-01-01..2010-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2011-01-01..2011-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2012-01-01..2012-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2013-01-01..2013-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2014-01-01..2014-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2015-01-01..2015-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2016-01-01..2016-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2017-01-01..2017-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2018-01-01..2018-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2019-01-01..2019-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2020-01-01..2020-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2021-01-01..2021-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2022-01-01..2022-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2023-01-01..2023-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: EnergiKomplement @2024-01-01..2024-12-31 where key = 'v37374'"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Värdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2007-01-01..2007-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2008-01-01..2008-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2009-01-01..2009-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2010-01-01..2010-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2011-01-01..2011-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2012-01-01..2012-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2013-01-01..2013-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2014-01-01..2014-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2015-01-01..2015-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2016-01-01..2016-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2017-01-01..2017-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2018-01-01..2018-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2019-01-01..2019-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2020-01-01..2020-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2021-01-01..2021-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2022-01-01..2022-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2023-01-01..2023-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2024-01-01..2024-12-31 where key = 'v37425'"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:redovisningsar"
 fields = { "sets" = ["redovisningsperiod"] }
 evidence = "This records the statistics' reference year and the objects published for that year, matching the group's explicit inclusion of reporting years (r96, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40600\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40745\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/priser-nyproducerade-bostader/redovisningsperiod"
@@ -2038,3 +1714,33 @@ kind = "set"
 subject = "var:redovisningskvartal-justerad"
 fields = { "sets" = ["redovisningsperiod"] }
 evidence = "This is the statistics' reference quarter, adjusted by assigning certain prior-year commencements to the first reporting quarter. The group explicitly includes adjusted reporting quarters (r97, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40601\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40746\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/priser-nyproducerade-bostader/redovisningsperiod"
+
+[[statement]]
+kind = "set"
+subject = "var:energikomplement"
+fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningkomplement"
+fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ytterligare-uppvarmningssystem"
+fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar"
+fields = { "tags" = ["housing"] }
+evidence = "The builder's remarks come from the form's house-information section (r59), supporting housing consistently with the sibling remarks field (r60) and register theme context (r68, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar-blankett"
+fields = { "tags" = ["housing"] }
+evidence = "These are builder-to-SCB form remarks (r60). The sibling remarks field's house-information section (r59) and register theme context (r68, r1) support housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

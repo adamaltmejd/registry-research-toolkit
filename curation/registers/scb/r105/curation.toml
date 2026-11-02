@@ -2780,90 +2780,6 @@ evidence = "Katalogen anger angränsande ägare för samma kolumn.\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "deltagarregister: Filial @2018-01-01..2018-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2019-01-01..2019-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2020-01-01..2020-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2021-01-01..2021-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2022-01-01..2022-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2023-01-01..2023-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Filial @2024-01-01..2024-12-31 where key = 'v1999'"
-fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
-evidence = "Beskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "deltagarregister: Funk_ned_flera @2024-01-01..2024-12-31 where key = 'v36571'"
-fields = { "description" = "Deltagaren har flera funktionsnedsättningar som innebär anpassning av studierna." }
-evidence = "Variabeln anger flera funktionsnedsättningar, inte endast förekomst av funktionsnedsättning.\ncatalog:variable_text:11529:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2019-01-01..2019-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2020-01-01..2020-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2021-01-01..2021-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2022-01-01..2022-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2023-01-01..2023-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2024-01-01..2024-12-31 where key = 'v39035'"
-fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
-evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:skolkommun"
 fields = { "sets" = ["skolkommun"] }
 evidence = "r103 defines the school/unit's municipality, and r14 explicitly locates the folk high school there. This matches the counterpart in r104.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:100293\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11616\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11617"
@@ -2879,3 +2795,23 @@ kind = "set"
 subject = "var:skolkommun-text"
 fields = { "sets" = ["skolkommun"] }
 evidence = "r105 explicitly records the school's municipality in plain text, matching the school municipality documented in r104.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11599\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11617\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11618"
+
+[[statement]]
+kind = "set"
+subject = "var:filial"
+fields = { "description" = "Anger om kursen ges på filial utanför skolans huvudsakliga lokalisering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger skolans innehav av filial, medan variabeln anger om kursen ges på filial.\ncatalog:variable_text:11509:17532:18262\ncatalog:variable_text:11509:18262:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:funktionsnedsattning"
+fields = { "description" = "Deltagaren har flera funktionsnedsättningar som innebär anpassning av studierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger flera funktionsnedsättningar, inte endast förekomst av funktionsnedsättning.\ncatalog:variable_text:11529:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:uppdragutbkurs-15hp"
+fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"

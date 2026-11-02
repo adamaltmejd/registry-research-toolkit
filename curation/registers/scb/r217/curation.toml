@@ -403,14 +403,9 @@ subject = "var:strandlinje-inom-skyddad-natur"
 fields = { "tags" = ["environment"] }
 evidence = "Skyddsläge grupperas med byggnadens skyddsläge.\ncatalog:variable_text:6169:19358:19723\ncatalog:variable_text:6193:17532:19723"
 
-[[statement]]
-kind = "set"
-subject = "bebyggelsepaverkad-kust: LANNAMN @2022-01-01..2022-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "bebyggelsepaverkad-kust: LANNAMN @2023-01-01..2023-12-31 where key = 'v49'"
+subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"

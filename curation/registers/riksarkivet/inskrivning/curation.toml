@@ -1225,27 +1225,29 @@ evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:858:-365:10227"
 
 [[statement]]
 kind = "set"
-subject = "inskrivning: WMAX @1969-01-01..1997-12-31 where key = 'n:wmax'"
-fields = { "description" = "Fysisk arbetsförmåga" }
-evidence = "Rättar böjningsformen utan att ändra betydelsen.\ncatalog:variable_text:763:-365:10227"
-
-[[statement]]
-kind = "set"
-subject = "inskrivning: LASV @1969-01-01..1997-12-31 where key = 'n:lasv'"
-fields = { "description" = "Läs- och skrivsvårigheter" }
-evidence = "Rättar uppenbart stavfel i samma betydelse.\ncatalog:variable_text:782:-365:10227"
-
-[[statement]]
-kind = "set"
-subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
-fields = { "description" = "Femte typhinder" }
-evidence = "Rättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The current label and definition both say Språk. The broad language theme is established even though the purpose of this language field remains unspecified.\ncatalog:variable:826\ncatalog:variable_text:826:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-arbetsformaga"
+fields = { "description" = "Fysisk arbetsförmåga" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar böjningsformen utan att ändra betydelsen.\ncatalog:variable_text:763:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:las-och-skrivsvarigheter"
+fields = { "description" = "Läs- och skrivsvårigheter" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:variable_text:782:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-5"
+fields = { "description" = "Femte typhinder" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
 
 [[statement]]
 kind = "set"
@@ -1264,3 +1266,39 @@ kind = "set"
 subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
 fields = { "label" = "Femte typhinder" }
 evidence = "Part of #2040. riksarkivet/inskrivning/typhinder-5: Remove stray u in typhuinder. Reviewed occurrence label: Femte typhuinder"
+
+[[statement]]
+kind = "set"
+subject = "var:certifikat"
+fields = { "tags" = ["defence"] }
+evidence = "The unspecified certificate is recorded in the enlistment register (r2, r9), whose supplied subject context supports defence (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1173\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:755\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:multipel-vardering"
+fields = { "tags" = ["defence"] }
+evidence = "The multiple-rating field belongs to the enlistment register (r4, r10); its supplied subject context supports defence without decoding the rating (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1201\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:787\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:nara-hem"
+fields = { "tags" = ["defence"] }
+evidence = "The near-home field belongs to the enlistment register (r5, r11); that context supports defence without assuming a placement preference (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1202\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:789\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanfattningssiffra"
+fields = { "tags" = ["defence"] }
+evidence = "The summary figure belongs to the enlistment register (r7, r12); its subject context supports defence without assuming what the figure summarizes (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1225\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:810\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-safhe"
+fields = { "tags" = ["defence"] }
+evidence = "The enlistment context supports defence for the unspecified SAFHE rating (r6, r14; r18, r1). Its mixed health and defence siblings do not establish a general health measure (r13, r17).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1224\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:819\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:820\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:851\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-sipe"
+fields = { "tags" = ["defence"] }
+evidence = "The enlistment context supports defence for the unspecified SIPE rating (r8, r15; r18, r1). Its mixed health and defence siblings do not establish a general health measure (r13, r17).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1227\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:819\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:821\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:851\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

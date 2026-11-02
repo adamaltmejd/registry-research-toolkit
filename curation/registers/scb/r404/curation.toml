@@ -2527,744 +2527,6 @@ evidence = "Personens och jobbets yrkesställning är alternativa kodningar.\nca
 
 [[statement]]
 kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2020-01-01..2020-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2021-01-01..2021-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2022-01-01..2022-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2023-01-01..2023-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2024-01-01..2024-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IALDF @2025-01-01..2025-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IALDFp @2020-01-01..2020-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IALDFp @2021-01-01..2021-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IALDFp @2022-01-01..2022-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IALDFp @2023-01-01..2023-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IALDFp @2024-01-01..2024-12-31 where key = 'v1390'"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Beskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2020-01-01..2020-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2021-01-01..2021-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2022-01-01..2022-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2023-01-01..2023-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2024-01-01..2024-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IBOENT @2025-01-01..2025-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IBOENTp @2020-01-01..2020-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IBOENTp @2021-01-01..2021-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IBOENTp @2022-01-01..2022-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IBOENTp @2023-01-01..2023-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IBOENTp @2024-01-01..2024-12-31 where key = 'v29506'"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Källtexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2020-01-01..2020-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2021-01-01..2021-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2022-01-01..2022-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2023-01-01..2023-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2024-01-01..2024-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IEBOST @2025-01-01..2025-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IEBOSTp @2020-01-01..2020-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IEBOSTp @2021-01-01..2021-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IEBOSTp @2022-01-01..2022-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IEBOSTp @2023-01-01..2023-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: IEBOSTp @2024-01-01..2024-12-31 where key = 'v28161'"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Beskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: BSTUDOVR @2020-01-01..2020-12-31 where key = 'v46871'"
-fields = { "description" = "Personen är inskriven i utbildning." }
-evidence = "Rättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: BSTUDOVR @2021-01-01..2021-12-31 where key = 'v46871'"
-fields = { "description" = "Personen är inskriven i utbildning." }
-evidence = "Rättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: BSTUDOVR @2022-01-01..2022-12-31 where key = 'v46871'"
-fields = { "description" = "Personen är inskriven i utbildning." }
-evidence = "Rättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: BSTUDOVR @2023-01-01..2023-12-31 where key = 'v46871'"
-fields = { "description" = "Personen är inskriven i utbildning." }
-evidence = "Rättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: BSTUDOVR @2024-01-01..2024-12-31 where key = 'v46871'"
-fields = { "description" = "Personen är inskriven i utbildning." }
-evidence = "Rättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCB @2020-01-01..2020-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCB @2021-01-01..2021-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCB @2022-01-01..2022-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCB @2023-01-01..2023-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCB @2024-01-01..2024-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: ISOCB @2020-01-01..2020-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: ISOCB @2021-01-01..2021-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: ISOCB @2022-01-01..2022-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: ISOCB @2023-01-01..2023-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: ISOCBU @2025-01-01..2025-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5741:19723:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: ISOCBU @2024-01-01..2024-12-31 where key = 'v6258'"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Källan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5741:19723:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2020-01-01..2020-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2021-01-01..2021-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2022-01-01..2022-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2023-01-01..2023-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2024-01-01..2024-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: IETABE @2025-01-01..2025-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
-evidence = "Beskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TFORPTp @2020-01-01..2020-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TFORPTp @2021-01-01..2021-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TFORPTp @2022-01-01..2022-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TFORPTp @2023-01-01..2023-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TFORPTp @2024-01-01..2024-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2020-01-01..2020-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2021-01-01..2021-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2022-01-01..2022-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2023-01-01..2023-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2024-01-01..2024-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TFORPT @2025-01-01..2025-12-31 where key = 'v1625'"
-fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
-evidence = "Källan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2020-01-01..2020-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2021-01-01..2021-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2022-01-01..2022-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2023-01-01..2023-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2024-01-01..2024-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TNAR @2025-01-01..2025-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TNARp @2020-01-01..2020-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TNARp @2021-01-01..2021-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TNARp @2022-01-01..2022-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TNARp @2023-01-01..2023-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TNARp @2024-01-01..2024-12-31 where key = 'v1616'"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Källan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMSTBID @2025-01-01..2025-12-31 where key = 'v46233'"
-fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
-evidence = "Beskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5818:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMSTBIDp @2024-01-01..2024-12-31 where key = 'v46233'"
-fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
-evidence = "Beskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5819:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2020-01-01..2020-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2021-01-01..2021-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2022-01-01..2022-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2023-01-01..2023-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2024-01-01..2024-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TOMVARD @2025-01-01..2025-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMVARDp @2020-01-01..2020-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMVARDp @2021-01-01..2021-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMVARDp @2022-01-01..2022-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMVARDp @2023-01-01..2023-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TOMVARDp @2024-01-01..2024-12-31 where key = 'v42407'"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
-evidence = "Variabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2020-01-01..2020-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2021-01-01..2021-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2022-01-01..2022-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2023-01-01..2023-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2024-01-01..2024-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: PPREPEG @2025-01-01..2025-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: PPREPEGp @2020-01-01..2020-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: PPREPEGp @2021-01-01..2021-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: PPREPEGp @2022-01-01..2022-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: PPREPEGp @2023-01-01..2023-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: PPREPEGp @2024-01-01..2024-12-31 where key = 'v1523'"
-fields = { "description" = "Belopp i premiepension." }
-evidence = "Texten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2020-01-01..2020-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2021-01-01..2021-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2022-01-01..2022-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2023-01-01..2023-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2024-01-01..2024-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TREHAB @2025-01-01..2025-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TREHABp @2020-01-01..2020-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TREHABp @2021-01-01..2021-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TREHABp @2022-01-01..2022-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TREHABp @2023-01-01..2023-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TREHABp @2024-01-01..2024-12-31 where key = 'v1613'"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Texten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2020-01-01..2020-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2021-01-01..2021-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2022-01-01..2022-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2023-01-01..2023-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2024-01-01..2024-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "preliminara-manadsuppgifter: TVARD @2025-01-01..2025-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TVARDp @2020-01-01..2020-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TVARDp @2021-01-01..2021-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TVARDp @2022-01-01..2022-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TVARDp @2023-01-01..2023-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "slutliga-manadsuppgifter: TVARDp @2024-01-01..2024-12-31 where key = 'v1197'"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsmarknadsstatus"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "r148 defines classification by labour-market situation and a hierarchy of statuses; r147 supplies the corresponding status codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5691\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2845\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5698"
@@ -3316,3 +2578,153 @@ kind = "set"
 subject = "var:klassificerad-sysselsatt"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "r156 defines classification as employed using alternative qualifying criteria, with yes/no codes in r145. The resulting classification is explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5789"
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod"
+fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod-ialdfp"
+fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendetillagg"
+fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:boendetillagg-iboentp"
+fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsersattning"
+fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsersattning-iebostp"
+fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bstudovr"
+fields = { "description" = "Personen är inskriven i utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-isocbu"
+fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5741:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:etableringsersattning"
+fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-tillfallig-vard-av-barn-tforptp"
+fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-vab"
+fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning"
+fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning-tnarp"
+fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbid"
+fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5818:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbidp"
+fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5819:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omvardnadsbidrag"
+fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvardnadsbidrag-tomvardp"
+fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:premiepension"
+fields = { "description" = "Belopp i premiepension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:premiepension-pprepegp"
+fields = { "description" = "Belopp i premiepension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning"
+fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning-trehabp"
+fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag"
+fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-tvardp"
+fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktat-inkomstbasbelopp"
+fields = { "tags" = ["income"] }
+evidence = "The weighted IBB determines monthly income thresholds (r13), supporting the income theme also present in the register context (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5865\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -4064,12 +4064,6 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-23"
-fields = { "sets" = [] }
-evidence = "Den operationella definitionen växlar mellan tröskning och grönfoder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0438: De valda obärgade arealerna avser grönfoder enligt den granskade begreppsbeskrivningen. De omfattas därför inte av kärn- och frögruppens definition; ingen annan vald variabel stöder medlemskap här. membership-0439: Grödvisa obärgade kärn- och fröarealer omfattas, inklusive ekologiska och särskilt namngivna redovisningar. Majs och vårrybs stöds av etiketter och källbedömning trots identitetsöverlapp. Det etikettstödda medlemskapet för dar-23 behålls med granskningsgap.\ncatalog:variable_text:42328:19723:20089\ncatalog:variable_text:42330:19723:20089\ncatalog:variable_text:42348:17897:18628\ncatalog:variable_text:42353:16801:18628\ncatalog:variable_text:42365:19723:20089\ncatalog:variable_text:42366:16801:18628\ncatalog:variable_text:42524:19723:20089\ncatalog:variable_text:42525:19723:20089\ncatalog:variable_text:42526:19723:20089\ncatalog:variable_text:42527:19723:20089\ncatalog:variable_text:42528:19723:20089\ncatalog:variable_text:42529:19723:20089\ncatalog:variable_text:42530:19723:20089\ncatalog:variable_text:42531:19723:20089\ncatalog:variable_text:42532:19723:20089\ncatalog:variable_text:42533:19723:20089\ncatalog:variable_text:42534:19723:20089\ncatalog:variable_text:42535:19723:20089\ncatalog:variable_text:42536:19723:20089\ncatalog:variable_text:42537:19723:20089\ncatalog:variable_text:42538:19723:20089\ncatalog:variable_text:42539:19723:20089\ncatalog:variable_text:42540:19723:20089\ncatalog:variable_text:42541:19723:20089\ncatalog:variable_text:42542:19723:20089\ncatalog:variable_text:42543:19723:20089\ncatalog:variable_text:42544:19723:20089\ncatalog:variable_text:42545:19723:20089\ncatalog:variable_text:42546:16801:18628\ncatalog:variable_text:42547:16801:19358\ncatalog:variable_text:42548:17532:17897\ncatalog:variable_text:42548:17897:18262\ncatalog:variable_text:42548:18628:18993\ncatalog:variable_text:42549:19723:20089\ncatalog:variable_text:42550:19723:20089\ncatalog:variable_text:42551:19723:20089\ncatalog:variable_text:42552:19723:20089\ncatalog:variable_text:42553:19723:20089\ncatalog:variable_text:42554:16801:18628\ncatalog:variable_text:42555:19723:20089\ncatalog:variable_text:42556:19723:20089\ncatalog:variable_text:42557:19723:20089\ncatalog:variable_text:42558:19723:20089\ncatalog:variable_text:42661:16801:18628\ncatalog:variable_text:42663:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-23"
 fields = { "tags" = ["agriculture"] }
 evidence = "Den operationella definitionen växlar mellan tröskning och grönfoder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0438: De valda obärgade arealerna avser grönfoder enligt den granskade begreppsbeskrivningen. De omfattas därför inte av kärn- och frögruppens definition; ingen annan vald variabel stöder medlemskap här. membership-0439: Grödvisa obärgade kärn- och fröarealer omfattas, inklusive ekologiska och särskilt namngivna redovisningar. Majs och vårrybs stöds av etiketter och källbedömning trots identitetsöverlapp. Det etikettstödda medlemskapet för dar-23 behålls med granskningsgap.\ncatalog:variable_text:42328:19723:20089\ncatalog:variable_text:42330:19723:20089\ncatalog:variable_text:42348:17897:18628\ncatalog:variable_text:42353:16801:18628\ncatalog:variable_text:42365:19723:20089\ncatalog:variable_text:42366:16801:18628\ncatalog:variable_text:42524:19723:20089\ncatalog:variable_text:42525:19723:20089\ncatalog:variable_text:42526:19723:20089\ncatalog:variable_text:42527:19723:20089\ncatalog:variable_text:42528:19723:20089\ncatalog:variable_text:42529:19723:20089\ncatalog:variable_text:42530:19723:20089\ncatalog:variable_text:42531:19723:20089\ncatalog:variable_text:42532:19723:20089\ncatalog:variable_text:42533:19723:20089\ncatalog:variable_text:42534:19723:20089\ncatalog:variable_text:42535:19723:20089\ncatalog:variable_text:42536:19723:20089\ncatalog:variable_text:42537:19723:20089\ncatalog:variable_text:42538:19723:20089\ncatalog:variable_text:42539:19723:20089\ncatalog:variable_text:42540:19723:20089\ncatalog:variable_text:42541:19723:20089\ncatalog:variable_text:42542:19723:20089\ncatalog:variable_text:42543:19723:20089\ncatalog:variable_text:42544:19723:20089\ncatalog:variable_text:42545:19723:20089\ncatalog:variable_text:42546:16801:18628\ncatalog:variable_text:42547:16801:19358\ncatalog:variable_text:42548:17532:17897\ncatalog:variable_text:42548:17897:18262\ncatalog:variable_text:42548:18628:18993\ncatalog:variable_text:42549:19723:20089\ncatalog:variable_text:42550:19723:20089\ncatalog:variable_text:42551:19723:20089\ncatalog:variable_text:42552:19723:20089\ncatalog:variable_text:42553:19723:20089\ncatalog:variable_text:42554:16801:18628\ncatalog:variable_text:42555:19723:20089\ncatalog:variable_text:42556:19723:20089\ncatalog:variable_text:42557:19723:20089\ncatalog:variable_text:42558:19723:20089\ncatalog:variable_text:42661:16801:18628\ncatalog:variable_text:42663:19723:20089"
 
@@ -6067,198 +6061,6 @@ evidence = "Variabeln mäter total kärn- och fröskörd.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:karnfroobargadareal-1"
 fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
 evidence = "r316 defines unharvested winter barley area in hectares and explicitly specifies threshing in its operational history.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42381\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42524"
@@ -6472,3 +6274,33 @@ kind = "set"
 subject = "var:obargad-areal-varrybs"
 fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
 evidence = "r352 explicitly defines unharvested spring turnip rape area as an organic subset of unharvested area for threshing, supporting inclusion despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42521\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42663"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-23"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "Maintainer-approved B audit correction: Exclusion over-read persists. Only the 2019 opdef says 'till grönfoder'; 2016, 2018, 2020 say 'för tröskning', every other dar-* peer says tröskning in all years, and the column is KarnfroObargadAreal_Dar_23. A one-year documentation copy error, not a green-fodder variable.\naudit:136686ac70e998059105a5712b1dac1ffea570502047d4b8e59418065f1e4888:row:11\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42524:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42525:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42526:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42527:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42528:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42529:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42530:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42531:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42532:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42533:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42534:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42535:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42536:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42537:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42538:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42539:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42540:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42541:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42542:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42543:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42544:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42545:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42546:16801:18628\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42547:16801:19358\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42548:18628:18993\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42549:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42550:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42551:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42552:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42553:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42554:16801:18628\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42555:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42556:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42557:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42558:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42661:16801:18628\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:42663:19723:20089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:438855\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:439863\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:440373\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:441371\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:42405\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-spannmal/obargad-areal-for-karna-och-fro"

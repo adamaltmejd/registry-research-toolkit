@@ -4265,204 +4265,6 @@ evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:1095
 
 [[statement]]
 kind = "set"
-subject = "foretag: stgjord @2010-01-01..2010-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2011-01-01..2011-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2012-01-01..2012-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2013-01-01..2013-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2014-01-01..2014-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2015-01-01..2015-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2016-01-01..2016-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2017-01-01..2017-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2018-01-01..2018-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2019-01-01..2019-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2020-01-01..2020-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2021-01-01..2021-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2022-01-01..2022-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2023-01-01..2023-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2024-01-01..2024-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "foretag: stgjord @2025-01-01..2025-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2010-01-01..2010-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2011-01-01..2011-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2012-01-01..2012-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2013-01-01..2013-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2014-01-01..2014-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2015-01-01..2015-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2016-01-01..2016-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2017-01-01..2017-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2018-01-01..2018-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2019-01-01..2019-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2020-01-01..2020-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2021-01-01..2021-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2022-01-01..2022-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2023-01-01..2023-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2024-01-01..2024-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: stgjord @2025-01-01..2025-12-31 where key = 'v41866'"
-fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
-evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
-
-[[statement]]
-kind = "set"
-subject = "uppdragsregistret: Tkod @1998-01-01..1998-12-31 where key = 'v44427'"
-fields = { "description" = "Kod för typ av trädgårdsodling." }
-evidence = "Värdena anger odlingstyp och inte areal i hektar.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
-
-[[statement]]
-kind = "set"
 subject = "foretag: bete @2003-01-01..2003-12-31 where key = 'v41873'"
 fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
 evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
@@ -4682,3 +4484,21 @@ kind = "set"
 subject = "var:varvete-varvete"
 fields = { "sets" = ["varveteareal"] }
 evidence = "r310 defines spring wheat area in hectares; r293 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36062\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varveteareal"
+
+[[statement]]
+kind = "set"
+subject = "var:hektar-aker-och-betesareal"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tradgard-odlingstyp"
+fields = { "description" = "Kod för typ av trädgårdsodling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger odlingstyp och inte areal i hektar.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-adressforsaljning"
+fields = { "tags" = ["agriculture"] }
+evidence = "The flag records farmers’ requests to block name/address disclosure (r16). This administrative field follows the register’s dominant agriculture theme (r34, r1), consistent with its crop-related siblings (r27, r30).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:334082\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35792\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35845\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

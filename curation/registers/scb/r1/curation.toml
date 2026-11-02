@@ -19,12 +19,6 @@ evidence = "reg_meta_build/curation/registers/scb/fdb.toml:10\n\nSWECOV's delive
 
 [[statement]]
 kind = "set"
-subject = "administrativa: aststat"
-fields = { "description" = "AST-status" }
-evidence = "reg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "arbetsstalleenheter: {kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -1471,246 +1465,6 @@ evidence = "VEStat är en källkod vars bokstavskoder inte återger etikettens o
 
 [[statement]]
 kind = "set"
-subject = "arbetsstalleenheter: Fax @1999-01-01..1999-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2000-01-01..2000-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2001-01-01..2001-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2002-01-01..2002-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2003-01-01..2003-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2004-01-01..2004-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2005-01-01..2005-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2006-01-01..2006-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2007-01-01..2007-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2008-01-01..2008-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2009-01-01..2009-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2010-01-01..2010-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2011-01-01..2011-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2012-01-01..2012-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2013-01-01..2013-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2014-01-01..2014-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2015-01-01..2015-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2016-01-01..2016-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2017-01-01..2017-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstalleenheter: Fax @2018-01-01..2018-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @1999-01-01..1999-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2000-01-01..2000-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2001-01-01..2001-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2002-01-01..2002-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2003-01-01..2003-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2004-01-01..2004-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2005-01-01..2005-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2006-01-01..2006-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2007-01-01..2007-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2008-01-01..2008-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2009-01-01..2009-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2010-01-01..2010-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2011-01-01..2011-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2012-01-01..2012-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2013-01-01..2013-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2014-01-01..2014-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2015-01-01..2015-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2016-01-01..2016-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2017-01-01..2017-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "juridiska-enheter: Fax @2018-01-01..2018-12-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:ae-statistisk-status"
 fields = { "sets" = ["verksamhetsstatus"] }
 evidence = "AE statistical status follows administrative activity status, with codes for never active, active and inactive (r254, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10428\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10445"
@@ -1756,3 +1510,21 @@ kind = "set"
 subject = "var:verksamhetsstatus-ve"
 fields = { "sets" = ["verksamhetsstatus"] }
 evidence = "The definition records whether the activity unit operates; historical and later codes encode activity status (r263, r246, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12629\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10557"
+
+[[statement]]
+kind = "set"
+subject = "var:aststat"
+fields = { "description" = "AST-status" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "description" = "Faxnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter"
+fields = { "tags" = ["business"] }
+evidence = "Statements counted for legal entities (r36) and AST units (r9) form a business-register administrative measure, consistent with the dominant business theme (r104, r1) and firm/entity-count siblings (r81, r82).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:84490\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:86365\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10441\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10442\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -7,12 +7,6 @@ evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:144\
 caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 
 [[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: hkom @1993-10-15,1994-10-15,2007-10-15,2008-10-15,2009-10-15,2010-10-15,2011-10-15,2012-10-15,2013-10-15,2014-10-15,2015-10-15,2016-10-15"
-fields = { "description" = "Hemkommun" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:12\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
 kind = "link"
 subject = "var:gymnasieforbundets-namn"
 relation = "label_of"
@@ -25,42 +19,6 @@ subject = "var:skolenhetens-namn"
 relation = "label_of"
 object = "scb/gymnasieskola-elever/skolenhetskod"
 evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:52\n\nLegacy code_label_pair declaration"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: klass"
-fields = { "description" = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut." }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: personnr @1992-10-15,1993-10-15,1994-10-15,1995-10-15,1996-10-15,1997-10-15,1998-10-15,1999-10-15,2000-10-15,2001-10-15,2002-10-15,2003-10-15,2004-10-15,2005-10-15,2006-10-15,2007-10-15,2008-10-15,2009-10-15,2010-10-15,2011-10-15,2012-10-15,2013-10-15,2014-10-15"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: kommun"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: skolkommun"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: inriktninggy"
-fields = { "description" = "Typ av fristående gymnasieskola" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: arskurs"
-fields = { "description" = "Årskurs" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -1466,194 +1424,72 @@ subject = "var:varldsdelsgruppering-mor"
 fields = { "tags" = ["demographics"] }
 evidence = "Grupperingen avser moderns födelseland.\ncatalog:occurrence-locators:variable:23069"
 
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: EJ_INR @2014-10-15..2014-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: EJ_INR @2015-10-15..2015-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+subject = "var:arskurs"
+fields = { "description" = "Årskurs" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2016-10-15..2016-10-15 where key = 'v30906'"
+subject = "var:ej-inr"
 fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2017-10-15..2017-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+subject = "var:hkom"
+fields = { "description" = "Hemkommun" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2018-10-15..2018-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+subject = "var:inriktninggy"
+fields = { "description" = "Typ av fristående gymnasieskola" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2019-10-15..2019-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+subject = "var:klassbeteckning"
+fields = { "description" = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2020-10-15..2020-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
+subject = "var:kommun"
+fields = { "description" = "Skolkommun" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2021-10-15..2021-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2022-10-15..2022-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2023-10-15..2023-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Ej_Inr @2024-10-15..2024-10-15 where key = 'v30906'"
-fields = { "description" = "Anger om eleven inte har påbörjat inriktningen." }
-evidence = "Definitionen anger påbörjande men koderna och den operativa definitionen anger att inriktningen inte påbörjats.\ncatalog:occurrence-locators:variable:22975\ncatalog:valueset:4481"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: LARL_ERS_Dec @2015-10-15..2015-10-15 where key = 'v30907'"
+subject = "var:larl-ers-dec"
 fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2016-10-15..2016-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2017-10-15..2017-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2018-10-15..2018-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2019-10-15..2019-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2020-10-15..2020-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2021-10-15..2021-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2022-10-15..2022-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2023-10-15..2023-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers_Dec @2024-10-15..2024-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning i december." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23003\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: LARL_ERS @2014-10-15..2014-10-15 where key = 'v30907'"
+subject = "var:larlingsersattning"
 fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: LARL_ERS @2015-10-15..2015-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2016-10-15..2016-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2017-10-15..2017-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2018-10-15..2018-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2019-10-15..2019-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2020-10-15..2020-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2021-10-15..2021-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2022-10-15..2022-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2023-10-15..2023-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
-
-[[statement]]
-kind = "set"
-subject = "elever-per-15-oktober: Larl_Ers @2024-10-15..2024-10-15 where key = 'v30907'"
-fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning." }
-evidence = "Variabeln kodar mottagen ersättning, inte ersättningen generellt.\ncatalog:occurrence-locators:variable:23004\ncatalog:valueset:9505"
+subject = "var:skolkommun"
+fields = { "description" = "Skolkommun" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

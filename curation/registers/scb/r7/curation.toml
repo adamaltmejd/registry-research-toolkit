@@ -524,20 +524,8 @@ evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\
 
 [[statement]]
 kind = "set"
-subject = "var:adressrad1"
-fields = { "tags" = [] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21166:15706:15707"
-
-[[statement]]
-kind = "set"
 subject = "var:adressrad2"
 fields = { "sets" = ["adressuppgifter"] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21167:12053:12054"
-
-[[statement]]
-kind = "set"
-subject = "var:adressrad2"
-fields = { "tags" = [] }
 evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21167:12053:12054"
 
 [[statement]]
@@ -548,20 +536,8 @@ evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\
 
 [[statement]]
 kind = "set"
-subject = "var:adressrad3"
-fields = { "tags" = [] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21168:12053:12054"
-
-[[statement]]
-kind = "set"
 subject = "var:adressrad4"
 fields = { "sets" = ["adressuppgifter"] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21169:12053:12054"
-
-[[statement]]
-kind = "set"
-subject = "var:adressrad4"
-fields = { "tags" = [] }
 evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21169:12053:12054"
 
 [[statement]]
@@ -572,20 +548,8 @@ evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\
 
 [[statement]]
 kind = "set"
-subject = "var:adressrad5"
-fields = { "tags" = [] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21170:12053:12054"
-
-[[statement]]
-kind = "set"
 subject = "var:adressrad6"
 fields = { "sets" = ["adressuppgifter"] }
-evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21171:12053:12054"
-
-[[statement]]
-kind = "set"
-subject = "var:adressrad6"
-fields = { "tags" = [] }
 evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21171:12053:12054"
 
 [[statement]]
@@ -2660,12 +2624,6 @@ evidence = "Postadress är en namngiven adressdel.\ncatalog:occurrence:196413"
 
 [[statement]]
 kind = "set"
-subject = "var:postadress"
-fields = { "tags" = [] }
-evidence = "Postadress är en namngiven adressdel.\ncatalog:occurrence:196413"
-
-[[statement]]
-kind = "set"
 subject = "var:postnr"
 fields = { "sets" = ["postnummer"] }
 evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:occurrence:192476"
@@ -3332,12 +3290,6 @@ evidence = "Dödsbo anges inte som variabelns betydelse; källan beskriver kompl
 
 [[statement]]
 kind = "set"
-subject = "var:adress-ovrigt"
-fields = { "tags" = [] }
-evidence = "Dödsbo anges inte som variabelns betydelse; källan beskriver kompletterande adress- eller namnfält.\ncatalog:occurrence:192480\ncatalog:variable_text:21420:11688:11689"
-
-[[statement]]
-kind = "set"
 subject = "var:total-biyta"
 fields = { "sets" = ["biyta"] }
 evidence = "Total biyta och biutrymmesyta i småhus är mått på biyta.\ncatalog:variable_text:21217:19358:19359\ncatalog:variable_text:21421:19358:19359"
@@ -3568,12 +3520,6 @@ evidence = "UB är en bokstavskod för under byggnation.\ncatalog:variable_text:
 kind = "set"
 subject = "var:utdelningsadress"
 fields = { "sets" = ["adressuppgifter"] }
-evidence = "Utdelningsadress är en namngiven adressdel.\ncatalog:occurrence:192461"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelningsadress"
-fields = { "tags" = [] }
 evidence = "Utdelningsadress är en namngiven adressdel.\ncatalog:occurrence:192461"
 
 [[statement]]
@@ -3885,3 +3831,63 @@ kind = "set"
 subject = "var:skattekontor"
 fields = { "tags" = ["taxation"] }
 evidence = "Coordinator-approved audit correction: Valueset: Skattekontoret i Norrtälje/Södertälje/... — tax-office code. Row 33 (scb/iot/handlaggande-skattemyndighet, same kind of variable) got taxation; the two must agree.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:14\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21314\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:192388\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12939\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21395"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-ovrigt"
+fields = { "tags" = ["geography"] }
+evidence = "r289 defines supplementary address text, including c/o and foreign addresses. The geography-tagged postal-area sibling (r298) supports the address battery's geography theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21085\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad1"
+fields = { "tags" = ["geography"] }
+evidence = "r77 defines this as the first part of the owner's address, usually containing the owner's name. Its battery role supports geography alongside the postal-area sibling (r298).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:192732\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad2"
+fields = { "tags" = ["geography"] }
+evidence = "r291 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21087\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad3"
+fields = { "tags" = ["geography"] }
+evidence = "r292 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21088\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad4"
+fields = { "tags" = ["geography"] }
+evidence = "r293 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad5"
+fields = { "tags" = ["geography"] }
+evidence = "r294 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21090\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad6"
+fields = { "tags" = ["geography"] }
+evidence = "r295 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21091\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-uppgiftslamnare"
+fields = { "tags" = ["property"] }
+evidence = "r296 records the respondent's name in owner and property-assessment records (r3, r144). This administrative role supports the register's property theme (r300).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:192390\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:196200\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21263\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "r297 defines the enterprise's postal address. The geography-tagged postal-area sibling (r298) supports geography for this address battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21281\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "tags" = ["geography"] }
+evidence = "r299 defines an address variable used as the delivery address. The geography-tagged postal-area sibling (r298) supports geography for this address battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21359"

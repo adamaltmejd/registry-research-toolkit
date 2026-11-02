@@ -863,8 +863,9 @@ subject = "var:summa-utslapp-utan-egen-rening"
 fields = { "tags" = ["environment"] }
 evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27718:18262:18628"
 
+
 [[statement]]
 kind = "set"
-subject = "industrins-vattenanvandning: v3_sum_san @2020-01-01..2020-12-31 where key = 'v49344'"
+subject = "var:summa-anvandning-sanitart"
 fields = { "description" = "Summan av arbetsställets vattenanvändning för sanitärt ändamål." }
-evidence = "Rättar ett stavfel utan att ändra betydelsen.\ncatalog:variable_text:27699:18262:18628"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett stavfel utan att ändra betydelsen.\ncatalog:variable_text:27699:18262:18628"

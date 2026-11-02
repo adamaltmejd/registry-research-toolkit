@@ -859,45 +859,22 @@ evidence = "Ymark är en opak källkod för yrkesmässig trafik.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "vagtrafikolyckor: LEASINGFORDON @2000-01-01..2000-12-31 where key = 'v2819'"
-fields = { "description" = "Kod för leasingfordon." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "vagtrafikolyckor: LEASINGFORDON @2001-01-01..2001-12-31 where key = 'v2819'"
-fields = { "description" = "Kod för leasingfordon." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "vagtrafikolyckor: LEASINGFORDON @2002-01-01..2002-12-31 where key = 'v2819'"
-fields = { "description" = "Kod för leasingfordon." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "vagtrafikolyckor: EFFEKTNORM @2000-01-01..2000-12-31 where key = 'v2813'"
-fields = { "description" = "Normering för motoreffekt." }
-evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "vagtrafikolyckor: EFFEKTNORM @2001-01-01..2001-12-31 where key = 'v2813'"
-fields = { "description" = "Normering för motoreffekt." }
-evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "vagtrafikolyckor: EFFEKTNORM @2002-01-01..2002-12-31 where key = 'v2813'"
-fields = { "description" = "Normering för motoreffekt." }
-evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:vader"
 fields = { "tags" = ["environment"] }
 evidence = "The variable measures weather conditions (r5), with codes for fog, rain and snowfall (r4), supporting environment's natural-environment scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45935"
+
+[[statement]]
+kind = "set"
+subject = "var:leasingfordon"
+fields = { "description" = "Kod för leasingfordon." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
+
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-i-kw"
+fields = { "description" = "Normering för motoreffekt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
 
 [[statement]]
 kind = "set"

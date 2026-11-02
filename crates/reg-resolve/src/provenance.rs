@@ -292,8 +292,27 @@ pub fn finalize(
                 || "none".to_owned(),
                 |index| resolved.variables[index].slug.clone(),
             ));
-            let mut values =
-                field_values(candidates, &subject, &current, occurrence.period.as_ref());
+            if let Some(variable) = occurrence.variable {
+                let current =
+                    serde_json::json!({"description": resolved.variables[variable].description});
+                for mut value in field_values(
+                    candidates
+                        .clone()
+                        .filter(|claim| claim.field == "description"),
+                    &Subject::Variable(ri, variable),
+                    &current,
+                    None,
+                ) {
+                    value.source_value = None;
+                    result.values.push(value);
+                }
+            }
+            let mut values = field_values(
+                candidates.filter(|claim| claim.field != "description"),
+                &subject,
+                &current,
+                occurrence.period.as_ref(),
+            );
             let mut mask = values
                 .iter()
                 .fold(0, |mask, value| mask | override_bit(&value.field));

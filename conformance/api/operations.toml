@@ -4,8 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# v5 reads the v4 catalog (schema.md v4). Every result is answered from the queries and
-# indexes of schema.md §2.1.
+# The v5 API reads catalog schema 5. The emitted DDL is crates/reg-build/src/schema.sql.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
@@ -49,7 +48,9 @@ tool = "search"
 params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?", scope = "enum(reference|steward)?" }
 result = "Page<SearchHit>"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
-note = """One ranked list per call over `search` (FTS5) and `search_item`. Order is \
+note = """One ranked list per call over primary `search` and fallback `search_description` \
+(FTS5), deduplicated by `search_item.id`. Primary matches precede fallback matches; \
+within each index order is \
 bm25, then kind, then `sort_key` (schema §2.1): there is no exact-identity \
 first rule and no type prior, and pins and synonyms are curation (D). Without `type` \
 every kind ranks together; with `type` that kind only. `register` filters by \
@@ -94,13 +95,17 @@ is in every response's `meta`, and the counts serve the SPA shell."""
 name = "show"
 http = ["GET /api/catalog", "GET /api/catalog/{ref}"]
 tool = "show"
-params = { ref = "ref?" }
+params = { ref = "ref?", evidence = "boolean?" }
 result = "Show"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The summary for any ref; no ref is the catalog root. `class` is the one \
 reserved first segment. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
-(`coverage`)."""
+(`coverage`). Variable summaries show curated description, coverage, tables, sets and \
+tags. Without a curated description, source_definition returns the latest available \
+provider definition/operational definition as one text and its period, marked origin=provider. \
+`evidence=true` adds provider text history, source keys/spellings, statement locators \
+and linked documents; provenance is absent by default."""
 
 [[operation]]
 name = "segments"
@@ -342,8 +347,8 @@ note = """A `kind`-tagged summary: root (providers), provider (registers), regis
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, unit_type, cadence, spans \
 [Period], releases [Release], row_keys [{fqid, spelling, period}]), variable (name, \
-definition, register, period, unit_types, texts [{period, label, definition, \
-operational_definition, unit}], spellings [{spelling, kind}], tables [fqid]), \
+optional description or provider-marked source_definition {period, text}, register, period, tables [fqid], sets/tags [{fqid, name}], \
+optional evidence {texts, source_only, spellings, statements, documents}), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \
 Registers list their tables and variables unpaged. Paired roots also expose \

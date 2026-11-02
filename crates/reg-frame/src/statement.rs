@@ -158,14 +158,33 @@ impl Statement {
             return Err("evidence must not be blank".into());
         }
         match self {
-            Self::Set { fields, .. } => {
+            Self::Set {
+                subject, fields, ..
+            } => {
                 validate_fields(fields)?;
                 fields.validate_references()?;
+                if fields.description.is_some() && matches!(subject, Address::Occurrence { .. }) {
+                    return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
+                }
+                if matches!(subject, Address::Variable(_))
+                    && fields
+                        .description
+                        .as_ref()
+                        .is_some_and(|text| text.trim().is_empty())
+                {
+                    return Err(
+                        "description-empty: a variable description must not be blank".into(),
+                    );
+                }
             }
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                     validate_fields(fields)?;
                     value_set_reference(fields.value_set.as_deref())?;
+                    if matches!(fact, AssertFact::Occurrence { .. }) && fields.description.is_some()
+                    {
+                        return Err("description-subject: an occurrence cannot assert a description; use set description on var:<id>".into());
+                    }
                 }
                 AssertFact::Release { name, .. } if name.trim().is_empty() => {
                     return Err("asserted release name must not be blank".into());

@@ -22,6 +22,7 @@ pub mod search;
 pub mod segments;
 pub mod shape;
 pub mod show;
+mod show_evidence;
 pub mod values;
 
 use std::collections::BTreeMap;

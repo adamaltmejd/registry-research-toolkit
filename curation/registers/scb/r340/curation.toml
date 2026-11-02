@@ -8,138 +8,6 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:144\
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ma"
-fields = { "description" = "Betyg i matematik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: no @2022..2025"
-fields = { "description" = "Betyg i naturorienterade ämnen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: so"
-fields = { "description" = "Betyg i samhällsorienterade ämnen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: bl"
-fields = { "description" = "Betyg i ämnet bild" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: bi"
-fields = { "description" = "Betyg i ämnet biologi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: en"
-fields = { "description" = "Betyg i ämnet engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: fy"
-fields = { "description" = "Betyg i ämnet fysik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ge"
-fields = { "description" = "Betyg i ämnet geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: hkk"
-fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: hi"
-fields = { "description" = "Betyg i ämnet historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: idh @2013..2021"
-fields = { "description" = "Betyg i ämnet idrott och hälsa" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ke"
-fields = { "description" = "Betyg i ämnet kemi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: mu"
-fields = { "description" = "Betyg i ämnet musik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: re"
-fields = { "description" = "Betyg i ämnet religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: sh"
-fields = { "description" = "Betyg i ämnet samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: sl"
-fields = { "description" = "Betyg i ämnet slöjd" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: sv"
-fields = { "description" = "Betyg i ämnet svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: tn"
-fields = { "description" = "Betyg i ämnet teckenspråk" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: tk"
-fields = { "description" = "Betyg i ämnet teknik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: skolenhetskod"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: skolkod"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "grundskolan-betyg-arskurs-6: {hkom,skom} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -972,266 +840,184 @@ subject = "var:utlsvbakg"
 fields = { "tags" = ["demographics"] }
 evidence = "Klassificering av svensk och utländsk bakgrund.\ncatalog:variable_text:21854:17897:20454"
 
+
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2015-01-01..2015-12-31 where key = 'v3594'"
+subject = "var:antal-amnen-ej-natt"
 fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2016-01-01..2016-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-bild"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2017-01-01..2017-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2018-01-01..2018-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2019-01-01..2019-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-religion"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2020-01-01..2020-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-samhallskunskap"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2021-01-01..2021-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-slojd"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2022-01-01..2022-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-svenska"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2023-01-01..2023-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-teckensprak"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2024-01-01..2024-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:betyg-teknik"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: AntalF @2025-01-01..2025-12-31 where key = 'v3594'"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Den kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
+subject = "var:bi"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2013-01-01..2013-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:blockbetyg-no-amnen"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2014-01-01..2014-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:blockbetyg-so-amnen"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2015-01-01..2015-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:en"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2016-01-01..2016-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:fy"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2017-01-01..2017-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:ge"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2018-01-01..2018-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:hi"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2019-01-01..2019-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:ke"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2020-01-01..2020-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+subject = "var:ma"
+fields = { "description" = "Betyg i matematik" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Betyg @2021-01-01..2021-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_betyg @2022-01-01..2022-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_betyg @2023-01-01..2023-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_betyg @2024-01-01..2024-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_betyg @2025-01-01..2025-12-31 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2013-01-01..2013-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2014-01-01..2014-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2015-01-01..2015-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2016-01-01..2016-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2017-01-01..2017-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2018-01-01..2018-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2019-01-01..2019-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2020-01-01..2020-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: ML_Sprak @2021-01-01..2021-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_sprak @2022-01-01..2022-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_sprak @2023-01-01..2023-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_sprak @2024-01-01..2024-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: Ml_sprak @2025-01-01..2025-12-31 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Definitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_Spra @2019-01-01..2019-12-31 where key = 'v25186'"
+subject = "var:moderna-sprak-elevens-val-sprak"
 fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_Spra @2020-01-01..2020-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:modersmal-betyg"
+fields = { "description" = "Betyg i ämnet modersmål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger undervisningsämnet, men variabeln mäter betyget.\ncatalog:valueset:10816\ncatalog:variable_text:21818:15706:20454"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_Spra @2021-01-01..2021-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:modersmal-sprak"
+fields = { "description" = "Språk i ämnet modersmål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger undervisningsämnet, men variabeln anger språk.\ncatalog:valueset:8869\ncatalog:variable_text:21819:15706:20454"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_spra @2022-01-01..2022-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:mu"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_spra @2023-01-01..2023-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_spra @2024-01-01..2024-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "grundskolan-betyg-arskurs-6: M1_spra @2025-01-01..2025-12-31 where key = 'v25186'"
-fields = { "description" = "Språk i ämnet moderna språk inom ramen för elevens val." }
-evidence = "Definitionen anger undervisning, men variabeln anger vilket språk.\ncatalog:valueset:8869\ncatalog:variable_text:21820:17897:20454"
+subject = "var:skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

@@ -697,126 +697,6 @@ evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2008-01-01..2008-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2009-01-01..2009-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2010-01-01..2010-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2011-01-01..2011-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2012-01-01..2012-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2013-01-01..2013-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2014-01-01..2014-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2015-01-01..2015-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2016-01-01..2016-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2017-01-01..2017-12-31 where key = 'v20503'"
-fields = { "description" = "Produktion av olika bränslen." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2008-01-01..2008-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2009-01-01..2009-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2010-01-01..2010-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2011-01-01..2011-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2012-01-01..2012-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2013-01-01..2013-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2014-01-01..2014-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2015-01-01..2015-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2016-01-01..2016-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
-subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2017-01-01..2017-12-31 where key = 'v20504'"
-fields = { "description" = "Lager vid periodens slut." }
-evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
-
-[[statement]]
-kind = "set"
 subject = "manatlig-bransle-gas-och-lagerstatistik: scbid @2024-01-01..2024-12-31 where key = 'v19529'"
 fields = { "variable" = "scb-nummer" }
 evidence = "The respondent identifier and later informationless identifier share the operational definition: product-specific IDs assigned by collection staff. Both use the ScbId column and character type in the same table, with adjacent periods [17532,19723) and [19723,20454). These facts support an unchanged identifier despite revised descriptive wording."
@@ -826,3 +706,16 @@ kind = "set"
 subject = "manatlig-bransle-gas-och-lagerstatistik: scbid @2025-01-01..2025-12-31 where key = 'v19529'"
 fields = { "variable" = "scb-nummer" }
 evidence = "The respondent identifier and later informationless identifier share the operational definition: product-specific IDs assigned by collection staff. Both use the ScbId column and character type in the same table, with adjacent periods [17532,19723) and [19723,20454). These facts support an unchanged identifier despite revised descriptive wording."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utlager"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"

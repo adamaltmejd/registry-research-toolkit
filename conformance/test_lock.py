@@ -285,3 +285,28 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     assert obsolete.returncode == 1, obsolete.stderr
     assert "unsupported premise lock version 1" in obsolete.stderr
     assert "run reg-build lock" in obsolete.stderr
+
+
+@pytest.mark.parametrize("scenario", ["occurrence", "conflict"])
+def test_description_has_one_variable_owner(scenario, tmp_path):
+    # Regression: accept occurrence-owned descriptions or overwrite conflicting var:
+    # descriptions. The valid HTTP/MCP descriptions fixture is the allowed twin;
+    # its source history remains independently described by occurrence definitions.
+    case = Path(__file__).parent / "cases/lock/variable-description"
+    fixture = Path(__file__).parent / "cases/fixtures/descriptions"
+    expected = json.loads((case / "expected.json").read_text())[scenario]
+    curation = tmp_path / "curation"
+    shutil.copytree(fixture / "curation", curation)
+    statements = curation / "registers/demo/descriptions/curation.toml"
+    statements.write_text((case / f"{scenario}.toml").read_text())
+    result = subprocess.run(
+        [REG_BUILD, "lock", "--inputs", fixture / "inputs", "--curation", curation],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == expected["exit_code"]
+    assert expected["code"] in result.stderr
+    for line in expected["located_lines"]:
+        assert f"registers/demo/descriptions/curation.toml:{line}:" in result.stderr

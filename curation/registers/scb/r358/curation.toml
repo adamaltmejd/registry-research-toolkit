@@ -341,146 +341,30 @@ subject = "var:upprakningstal"
 fields = { "tags" = ["methods"] }
 evidence = "Uppräkningstalet är en urvalsvikt.\ncatalog:variable_text:45830:16801:19723"
 
+
 [[statement]]
 kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2018-01-01..2018-12-31 where key = 'v44430'"
+subject = "var:impexp-1-2"
 fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2019-01-01..2019-12-31 where key = 'v44430'"
-fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2020-01-01..2020-12-31 where key = 'v44430'"
-fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2021-01-01..2021-12-31 where key = 'v44430'"
-fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2022-01-01..2022-12-31 where key = 'v44430'"
-fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: ImpExp_1-2 @2023-01-01..2023-12-31 where key = 'v44430'"
-fields = { "description" = "Anger om företaget importerat eller exporterat." }
-evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+subject = "var:total-exp-gwh"
 fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_exp_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+subject = "var:total-imp-gwh"
 fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_imp_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+subject = "var:total-prod-gwh"
 fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "oforadlat-tradbransle: Total_prod_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
-fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
-evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"

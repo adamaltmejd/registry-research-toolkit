@@ -997,102 +997,6 @@ evidence = "Val av komvuxstudier hör till utbildning.\ncatalog:variable_text:39
 
 [[statement]]
 kind = "set"
-subject = "nyborjare-i-komvux: f2 @2003-01-01..2003-12-31 where key = 'v15'"
-fields = { "description" = "Personens familjeförhållande vid studiestarten i komvux." }
-evidence = "Värdena beskriver familjeförhållande och omfattar sammanboende och ensamstående.\ncatalog:valueset:11941\ncatalog:variable_text:39385:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f3_1 @2003-01-01..2003-12-31 where key = 'v2764'"
-fields = { "description" = "Uppgift om att personen inte hade hemmavarande barn under 20 år vid studiestarten." }
-evidence = "Kodningen anger att personen inte har hemmavarande barn, inte antalet barn.\ncatalog:valueset:4271"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f3_2 @2003-01-01..2003-12-31 where key = 'v2764'"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 0–5 år vid studiestarten." }
-evidence = "Kodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f3_3 @2003-01-01..2003-12-31 where key = 'v2764'"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 6–12 år vid studiestarten." }
-evidence = "Kodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:6360"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f3_4 @2003-01-01..2003-12-31 where key = 'v2764'"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 13–16 år vid studiestarten." }
-evidence = "Kodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:675"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f3_5 @2003-01-01..2003-12-31 where key = 'v2764'"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 17–19 år vid studiestarten." }
-evidence = "Kodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:2045"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7a @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6648\ncatalog:variable_text:39427:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7b @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5528\ncatalog:variable_text:39428:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7c @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:7434\ncatalog:variable_text:39429:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7d @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4999\ncatalog:variable_text:39430:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7e @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:8640\ncatalog:variable_text:39431:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7f @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:10270\ncatalog:variable_text:39432:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7g @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6100\ncatalog:variable_text:39433:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7h @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4275\ncatalog:variable_text:39434:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7i @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5224\ncatalog:variable_text:39435:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "nyborjare-i-komvux: f7j @2003-01-01..2003-12-31 where key = 'v28705'"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:12028\ncatalog:variable_text:39436:12053:12418"
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-under-matveckan"
 fields = { "sets" = ["arbete-under-matveckan"] }
 evidence = "F21 asks about work during 7–13 April 2003 (r5). Its work-type categories (r9) fit the fixed definition's inclusion of measurement-week work codings.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39243\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:390070\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7877"
@@ -1102,3 +1006,114 @@ kind = "set"
 subject = "var:minst-en-timmes-arbete-under-matveckan"
 fields = { "sets" = ["arbete-under-matveckan"] }
 evidence = "F18 asks whether any work was performed during 7–13 April 2003 (r4), with Yes/No codes (r7), matching the fixed measurement-week concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:390066\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11360"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "description" = "Personens familjeförhållande vid studiestarten i komvux." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver familjeförhållande och omfattar sammanboende och ensamstående.\ncatalog:valueset:11941\ncatalog:variable_text:39385:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn-0-5-ar-hosten-2000"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 0–5 år vid studiestarten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn-13-16-ar-hosten-2000"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 13–16 år vid studiestarten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:675"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn-17-19-ar-hosten-2000"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 17–19 år vid studiestarten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:2045"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn-6-12-ar-hosten-2000"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 6–12 år vid studiestarten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:6360"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn-under-20-ar-nej-hosten-2000"
+fields = { "description" = "Uppgift om att personen inte hade hemmavarande barn under 20 år vid studiestarten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger att personen inte har hemmavarande barn, inte antalet barn.\ncatalog:valueset:4271"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-annat-skal"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:12028\ncatalog:variable_text:39436:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-borjade-annan-kurs-komvux"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:10270\ncatalog:variable_text:39432:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-borjade-annan-utbildning"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6100\ncatalog:variable_text:39433:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-for-hog-studietakt"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6648\ncatalog:variable_text:39427:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-halsoskal"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5224\ncatalog:variable_text:39435:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-innehall-motsvarade-inte-forvantningar"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4999\ncatalog:variable_text:39430:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-inte-fa-efterstravat-betyg"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:8640\ncatalog:variable_text:39431:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-studietrott"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4275\ncatalog:variable_text:39434:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-svart-kombinera-studier-arbete"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5528\ncatalog:variable_text:39428:12053:12418"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
+fields = { "description" = "Angivet skäl till studieavbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:7434\ncatalog:variable_text:39429:12053:12418"

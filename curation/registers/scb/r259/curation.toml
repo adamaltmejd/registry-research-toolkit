@@ -552,87 +552,15 @@ fields = { "tags" = ["methods"] }
 evidence = "Variabeln är en uppräkningsvikt för skattning.\ncatalog:variable_text:12019:16801:17897"
 
 [[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_TOT @2012-01-01..2012-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_TOT @2013-01-01..2013-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2014-01-01..2014-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2015-01-01..2015-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2016-01-01..2016-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2017-01-01..2017-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2018-01-01..2018-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2019-01-01..2019-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2020-01-01..2020-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: DATA_UTG @2021-01-01..2021-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: Data_tot @2010-01-01..2010-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: Data_tot @2011-01-01..2011-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-utgifter-for-it: data_tot @2009-01-01..2009-12-31 where key = 'v21895'"
-fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
-evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
-
-[[statement]]
 kind = "link"
 subject = "var:orgnr-12"
 relation = "continues"
 object = "scb/foretagens-utgifter-it/person-orgnr"
 at = "2009-01-01.."
 evidence = "IT expenditure: legal-unit person/org number (2006-08) -> enterprise-unit org number from CFAR (2009-21); respondent key redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:datautrustning-utg"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"

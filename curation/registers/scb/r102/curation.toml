@@ -41,18 +41,6 @@ evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:10\n\
 
 [[statement]]
 kind = "set"
-subject = "examens-studiebevis-teknikprogrammet-ak4: utokad"
-fields = { "description" = "Kursen är en s.k. utökad kurs." }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "examens-studiebevis-teknikprogrammet-ak4: {hemkommun,skolkommun,skollan} @2017-07-01..2018-06-30"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -7115,2790 +7103,6 @@ evidence = "Markeringen anger om minst ett X-betyg förekommer.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "slutbetyg: AmneKod17 @1984-07-01..1985-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1985-07-01..1986-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1986-07-01..1987-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1987-07-01..1988-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1988-07-01..1989-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1989-07-01..1990-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1990-07-01..1991-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1991-07-01..1992-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1992-07-01..1993-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1993-07-01..1994-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1994-07-01..1995-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod17 @1995-07-01..1996-06-30 where key = 'v40176'"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1984-07-01..1985-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1985-07-01..1986-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1986-07-01..1987-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1987-07-01..1988-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1988-07-01..1989-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1989-07-01..1990-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1990-07-01..1991-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1991-07-01..1992-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1992-07-01..1993-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1993-07-01..1994-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1994-07-01..1995-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: AmneKod18 @1995-07-01..1996-06-30 where key = 'v40177'"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Rättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2011-07-01..2012-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2012-07-01..2013-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2013-07-01..2014-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2014-07-01..2015-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2015-07-01..2016-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2016-07-01..2017-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2017-07-01..2018-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2018-07-01..2019-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2019-07-01..2020-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2020-07-01..2021-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2021-07-01..2022-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2022-07-01..2023-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A @2023-07-01..2024-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2011-07-01..2012-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2012-07-01..2013-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2013-07-01..2014-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2014-07-01..2015-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2015-07-01..2016-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2016-07-01..2017-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2017-07-01..2018-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2018-07-01..2019-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2019-07-01..2020-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2020-07-01..2021-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2021-07-01..2022-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2022-07-01..2023-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2023-07-01..2024-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_A @2024-07-01..2025-06-30 where key = 'v30462'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2011-07-01..2012-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2012-07-01..2013-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2013-07-01..2014-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2014-07-01..2015-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2015-07-01..2016-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2016-07-01..2017-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2017-07-01..2018-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2018-07-01..2019-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2019-07-01..2020-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2020-07-01..2021-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2021-07-01..2022-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2022-07-01..2023-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_A_Gr @2023-07-01..2024-06-30 where key = 'v30462'"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2011-07-01..2012-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2012-07-01..2013-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2013-07-01..2014-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2014-07-01..2015-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2015-07-01..2016-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2016-07-01..2017-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2017-07-01..2018-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2018-07-01..2019-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2019-07-01..2020-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2020-07-01..2021-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2021-07-01..2022-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2022-07-01..2023-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B @2023-07-01..2024-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2011-07-01..2012-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2012-07-01..2013-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2013-07-01..2014-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2014-07-01..2015-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2015-07-01..2016-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2016-07-01..2017-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2017-07-01..2018-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2018-07-01..2019-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2019-07-01..2020-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2020-07-01..2021-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2021-07-01..2022-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2022-07-01..2023-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2023-07-01..2024-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_B @2024-07-01..2025-06-30 where key = 'v30463'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2011-07-01..2012-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2012-07-01..2013-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2013-07-01..2014-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2014-07-01..2015-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2015-07-01..2016-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2016-07-01..2017-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2017-07-01..2018-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2018-07-01..2019-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2019-07-01..2020-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2020-07-01..2021-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2021-07-01..2022-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2022-07-01..2023-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_B_Gr @2023-07-01..2024-06-30 where key = 'v30463'"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2011-07-01..2012-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2012-07-01..2013-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2013-07-01..2014-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2014-07-01..2015-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2015-07-01..2016-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2016-07-01..2017-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2017-07-01..2018-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2018-07-01..2019-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2019-07-01..2020-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2020-07-01..2021-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2021-07-01..2022-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2022-07-01..2023-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C @2023-07-01..2024-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2011-07-01..2012-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2012-07-01..2013-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2013-07-01..2014-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2014-07-01..2015-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2015-07-01..2016-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2016-07-01..2017-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2017-07-01..2018-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2018-07-01..2019-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2019-07-01..2020-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2020-07-01..2021-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2021-07-01..2022-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2022-07-01..2023-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2023-07-01..2024-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_C @2024-07-01..2025-06-30 where key = 'v30464'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2011-07-01..2012-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2012-07-01..2013-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2013-07-01..2014-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2014-07-01..2015-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2015-07-01..2016-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2016-07-01..2017-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2017-07-01..2018-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2018-07-01..2019-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2019-07-01..2020-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2020-07-01..2021-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2021-07-01..2022-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2022-07-01..2023-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_C_Gr @2023-07-01..2024-06-30 where key = 'v30464'"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2011-07-01..2012-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2012-07-01..2013-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2013-07-01..2014-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2014-07-01..2015-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2015-07-01..2016-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2016-07-01..2017-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2017-07-01..2018-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2018-07-01..2019-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2019-07-01..2020-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2020-07-01..2021-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2021-07-01..2022-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2022-07-01..2023-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D @2023-07-01..2024-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2011-07-01..2012-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2012-07-01..2013-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2013-07-01..2014-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2014-07-01..2015-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2015-07-01..2016-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2016-07-01..2017-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2017-07-01..2018-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2018-07-01..2019-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2019-07-01..2020-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2020-07-01..2021-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2021-07-01..2022-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2022-07-01..2023-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2023-07-01..2024-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_D @2024-07-01..2025-06-30 where key = 'v30465'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2011-07-01..2012-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2012-07-01..2013-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2013-07-01..2014-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2014-07-01..2015-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2015-07-01..2016-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2016-07-01..2017-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2017-07-01..2018-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2018-07-01..2019-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2019-07-01..2020-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2020-07-01..2021-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2021-07-01..2022-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2022-07-01..2023-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_D_Gr @2023-07-01..2024-06-30 where key = 'v30465'"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2011-07-01..2012-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2012-07-01..2013-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2013-07-01..2014-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2014-07-01..2015-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2015-07-01..2016-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2016-07-01..2017-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2017-07-01..2018-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2018-07-01..2019-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2019-07-01..2020-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2020-07-01..2021-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2021-07-01..2022-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2022-07-01..2023-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E @2023-07-01..2024-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2011-07-01..2012-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2012-07-01..2013-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2013-07-01..2014-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2014-07-01..2015-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2015-07-01..2016-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2016-07-01..2017-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2017-07-01..2018-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2018-07-01..2019-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2019-07-01..2020-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2020-07-01..2021-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2021-07-01..2022-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2022-07-01..2023-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2023-07-01..2024-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_E @2024-07-01..2025-06-30 where key = 'v30466'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2011-07-01..2012-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2012-07-01..2013-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2013-07-01..2014-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2014-07-01..2015-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2015-07-01..2016-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2016-07-01..2017-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2017-07-01..2018-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2018-07-01..2019-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2019-07-01..2020-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2020-07-01..2021-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2021-07-01..2022-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2022-07-01..2023-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_E_Gr @2023-07-01..2024-06-30 where key = 'v30466'"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2011-07-01..2012-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2012-07-01..2013-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2013-07-01..2014-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2014-07-01..2015-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2015-07-01..2016-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2016-07-01..2017-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2017-07-01..2018-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2018-07-01..2019-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2019-07-01..2020-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2020-07-01..2021-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2021-07-01..2022-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2022-07-01..2023-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F @2023-07-01..2024-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2011-07-01..2012-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2012-07-01..2013-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2013-07-01..2014-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2014-07-01..2015-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2015-07-01..2016-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2016-07-01..2017-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2017-07-01..2018-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2018-07-01..2019-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2019-07-01..2020-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2020-07-01..2021-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2021-07-01..2022-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2022-07-01..2023-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2023-07-01..2024-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Ant_F @2024-07-01..2025-06-30 where key = 'v30467'"
-fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
-evidence = "Variabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2011-07-01..2012-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2012-07-01..2013-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2013-07-01..2014-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2014-07-01..2015-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2015-07-01..2016-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2016-07-01..2017-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2017-07-01..2018-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2018-07-01..2019-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2019-07-01..2020-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2020-07-01..2021-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2021-07-01..2022-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2022-07-01..2023-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: Ant_F_Gr @2023-07-01..2024-06-30 where key = 'v30467'"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Variabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1984-07-01..1985-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1985-07-01..1986-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1986-07-01..1987-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1987-07-01..1988-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1988-07-01..1989-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1989-07-01..1990-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1990-07-01..1991-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1991-07-01..1992-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1992-07-01..1993-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1993-07-01..1994-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1994-07-01..1995-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg20 @1995-07-01..1996-06-30 where key = 'v40150'"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Beskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1984-07-01..1985-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1985-07-01..1986-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1986-07-01..1987-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1987-07-01..1988-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1988-07-01..1989-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1989-07-01..1990-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1990-07-01..1991-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1991-07-01..1992-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1992-07-01..1993-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1993-07-01..1994-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1994-07-01..1995-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Betyg28 @1995-07-01..1996-06-30 where key = 'v40158'"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_NO_amnen @2011-07-01..2012-06-30 where key = 'v3619'"
-fields = { "description" = "Anger om blockbetyget i naturorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22618:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_NO_amnen @2012-07-01..2013-06-30 where key = 'v3619'"
-fields = { "description" = "Anger om blockbetyget i naturorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22618:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_NO_amnen @2013-07-01..2014-06-30 where key = 'v3619'"
-fields = { "description" = "Anger om blockbetyget i naturorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22618:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_So @2011-07-01..2012-06-30 where key = 'v3624'"
-fields = { "description" = "Anger om blockbetyget i samhällsorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22620:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_So @2012-07-01..2013-06-30 where key = 'v3624'"
-fields = { "description" = "Anger om blockbetyget i samhällsorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22620:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_So @2013-07-01..2014-06-30 where key = 'v3624'"
-fields = { "description" = "Anger om blockbetyget i samhällsorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22620:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2013-07-01..2014-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2014-07-01..2015-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2015-07-01..2016-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2016-07-01..2017-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2017-07-01..2018-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2018-07-01..2019-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2019-07-01..2020-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2020-07-01..2021-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2021-07-01..2022-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2022-07-01..2023-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2023-07-01..2024-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Gymnasiearbete @2024-07-01..2025-06-30 where key = 'v30941'"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Värdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bl @2011-07-01..2012-06-30 where key = 'v3599'"
-fields = { "description" = "Anger om betyget i bild har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22724:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bl @2012-07-01..2013-06-30 where key = 'v3599'"
-fields = { "description" = "Anger om betyget i bild har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22724:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bl @2013-07-01..2014-06-30 where key = 'v3599'"
-fields = { "description" = "Anger om betyget i bild har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22724:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Re @2011-07-01..2012-06-30 where key = 'v3620'"
-fields = { "description" = "Anger om betyget i religion har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22725:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Re @2012-07-01..2013-06-30 where key = 'v3620'"
-fields = { "description" = "Anger om betyget i religion har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22725:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Re @2013-07-01..2014-06-30 where key = 'v3620'"
-fields = { "description" = "Anger om betyget i religion har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22725:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sh @2011-07-01..2012-06-30 where key = 'v3621'"
-fields = { "description" = "Anger om betyget i samhällskunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22726:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sh @2012-07-01..2013-06-30 where key = 'v3621'"
-fields = { "description" = "Anger om betyget i samhällskunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22726:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sh @2013-07-01..2014-06-30 where key = 'v3621'"
-fields = { "description" = "Anger om betyget i samhällskunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22726:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sl @2011-07-01..2012-06-30 where key = 'v3622'"
-fields = { "description" = "Anger om betyget i slöjd har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22727:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sl @2012-07-01..2013-06-30 where key = 'v3622'"
-fields = { "description" = "Anger om betyget i slöjd har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22727:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sl @2013-07-01..2014-06-30 where key = 'v3622'"
-fields = { "description" = "Anger om betyget i slöjd har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22727:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sv @2011-07-01..2012-06-30 where key = 'v3625'"
-fields = { "description" = "Anger om betyget i svenska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22728:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sv @2012-07-01..2013-06-30 where key = 'v3625'"
-fields = { "description" = "Anger om betyget i svenska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22728:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sv @2013-07-01..2014-06-30 where key = 'v3625'"
-fields = { "description" = "Anger om betyget i svenska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22728:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tn @2011-07-01..2012-06-30 where key = 'v3629'"
-fields = { "description" = "Anger om betyget i teckenspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22729:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tn @2012-07-01..2013-06-30 where key = 'v3629'"
-fields = { "description" = "Anger om betyget i teckenspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22729:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tn @2013-07-01..2014-06-30 where key = 'v3629'"
-fields = { "description" = "Anger om betyget i teckenspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22729:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tk @2011-07-01..2012-06-30 where key = 'v3627'"
-fields = { "description" = "Anger om betyget i teknik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22730:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tk @2012-07-01..2013-06-30 where key = 'v3627'"
-fields = { "description" = "Anger om betyget i teknik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22730:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Tk @2013-07-01..2014-06-30 where key = 'v3627'"
-fields = { "description" = "Anger om betyget i teknik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Värdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22730:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bi @2011-07-01..2012-06-30 where key = 'v3597'"
-fields = { "description" = "Anger om betyget i biologi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22731:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bi @2012-07-01..2013-06-30 where key = 'v3597'"
-fields = { "description" = "Anger om betyget i biologi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22731:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Bi @2013-07-01..2014-06-30 where key = 'v3597'"
-fields = { "description" = "Anger om betyget i biologi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22731:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_En @2011-07-01..2012-06-30 where key = 'v3602'"
-fields = { "description" = "Anger om betyget i engelska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22732:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_En @2012-07-01..2013-06-30 where key = 'v3602'"
-fields = { "description" = "Anger om betyget i engelska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22732:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_En @2013-07-01..2014-06-30 where key = 'v3602'"
-fields = { "description" = "Anger om betyget i engelska har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22732:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Fy @2011-07-01..2012-06-30 where key = 'v3604'"
-fields = { "description" = "Anger om betyget i fysik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22733:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Fy @2012-07-01..2013-06-30 where key = 'v3604'"
-fields = { "description" = "Anger om betyget i fysik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22733:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Fy @2013-07-01..2014-06-30 where key = 'v3604'"
-fields = { "description" = "Anger om betyget i fysik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22733:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ge @2011-07-01..2012-06-30 where key = 'v3605'"
-fields = { "description" = "Anger om betyget i geografi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22734:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ge @2012-07-01..2013-06-30 where key = 'v3605'"
-fields = { "description" = "Anger om betyget i geografi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22734:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ge @2013-07-01..2014-06-30 where key = 'v3605'"
-fields = { "description" = "Anger om betyget i geografi har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22734:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hi @2011-07-01..2012-06-30 where key = 'v3606'"
-fields = { "description" = "Anger om betyget i historia har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22735:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hi @2012-07-01..2013-06-30 where key = 'v3606'"
-fields = { "description" = "Anger om betyget i historia har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22735:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hi @2013-07-01..2014-06-30 where key = 'v3606'"
-fields = { "description" = "Anger om betyget i historia har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22735:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hkk @2011-07-01..2012-06-30 where key = 'v3607'"
-fields = { "description" = "Anger om betyget i hem- och konsumentkunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22736:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hkk @2012-07-01..2013-06-30 where key = 'v3607'"
-fields = { "description" = "Anger om betyget i hem- och konsumentkunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22736:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Hkk @2013-07-01..2014-06-30 where key = 'v3607'"
-fields = { "description" = "Anger om betyget i hem- och konsumentkunskap har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22736:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Idh @2011-07-01..2012-06-30 where key = 'v3609'"
-fields = { "description" = "Anger om betyget i idrott och hälsa har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22737:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Idh @2012-07-01..2013-06-30 where key = 'v3609'"
-fields = { "description" = "Anger om betyget i idrott och hälsa har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22737:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Idh @2013-07-01..2014-06-30 where key = 'v3609'"
-fields = { "description" = "Anger om betyget i idrott och hälsa har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22737:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ke @2011-07-01..2012-06-30 where key = 'v3610'"
-fields = { "description" = "Markering av att betyget i ämnet kemi har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22738:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ke @2012-07-01..2013-06-30 where key = 'v3610'"
-fields = { "description" = "Markering av att betyget i ämnet kemi har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22738:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ke @2013-07-01..2014-06-30 where key = 'v3610'"
-fields = { "description" = "Markering av att betyget i ämnet kemi har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22738:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ma @2011-07-01..2012-06-30 where key = 'v3613'"
-fields = { "description" = "Markering av att betyget i ämnet matematik har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22739:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ma @2012-07-01..2013-06-30 where key = 'v3613'"
-fields = { "description" = "Markering av att betyget i ämnet matematik har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22739:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ma @2013-07-01..2014-06-30 where key = 'v3613'"
-fields = { "description" = "Markering av att betyget i ämnet matematik har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
-evidence = "Ja/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22739:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_betyg @2011-07-01..2012-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om betyget i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22740:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_betyg @2012-07-01..2013-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om betyget i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22740:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_betyg @2013-07-01..2014-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om betyget i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22740:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_sprak @2011-07-01..2012-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om språkuppgiften i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22741:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_sprak @2012-07-01..2013-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om språkuppgiften i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22741:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Ml_sprak @2013-07-01..2014-06-30 where key = 'v25188'"
-fields = { "description" = "Anger om språkuppgiften i modersmål har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22741:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_betyg @2011-07-01..2012-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om betyget i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22742:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_betyg @2012-07-01..2013-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om betyget i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22742:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_betyg @2013-07-01..2014-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om betyget i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22742:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_sprak @2011-07-01..2012-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22743:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_sprak @2012-07-01..2013-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22743:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr1_sprak @2013-07-01..2014-06-30 where key = 'v25186'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22743:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_betyg @2011-07-01..2012-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om betyget i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22744:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_betyg @2012-07-01..2013-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om betyget i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22744:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_betyg @2013-07-01..2014-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om betyget i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22744:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_sprak @2011-07-01..2012-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22745:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_sprak @2012-07-01..2013-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22745:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mspr2_sprak @2013-07-01..2014-06-30 where key = 'v34103'"
-fields = { "description" = "Anger om språkuppgiften i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
-evidence = "Markeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22745:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mu @2011-07-01..2012-06-30 where key = 'v3618'"
-fields = { "description" = "Anger om betyget i musik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22746:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mu @2012-07-01..2013-06-30 where key = 'v3618'"
-fields = { "description" = "Anger om betyget i musik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22746:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Mu @2013-07-01..2014-06-30 where key = 'v3618'"
-fields = { "description" = "Anger om betyget i musik har kompletterats med uppgifter från årskurs 9." }
-evidence = "Variabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22746:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sva @2011-07-01..2012-06-30 where key = 'v3626'"
-fields = { "description" = "Anger om betyget i svenska som andraspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22747:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sva @2012-07-01..2013-06-30 where key = 'v3626'"
-fields = { "description" = "Anger om betyget i svenska som andraspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22747:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: kompl_Sva @2013-07-01..2014-06-30 where key = 'v3626'"
-fields = { "description" = "Anger om betyget i svenska som andraspråk har kompletterats med uppgifter från årskurs 9." }
-evidence = "Ja och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22747:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_betyg @2011-07-01..2012-06-30 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Värdena och den operativa definitionen avser betyg, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22786:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_betyg @2012-07-01..2013-06-30 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Värdena och den operativa definitionen avser betyg, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22786:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_betyg @2013-07-01..2014-06-30 where key = 'v25188'"
-fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Värdena och den operativa definitionen avser betyg, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22786:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_sprak @2011-07-01..2012-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22787:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_sprak @2012-07-01..2013-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22787:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Ml_sprak @2013-07-01..2014-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22787:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_betyg @2011-07-01..2012-06-30 where key = 'v25186'"
-fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22788:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_betyg @2012-07-01..2013-06-30 where key = 'v25186'"
-fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22788:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_betyg @2013-07-01..2014-06-30 where key = 'v25186'"
-fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22788:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M1_spra @2011-07-01..2012-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22789:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M1_spra @2012-07-01..2013-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22789:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M1_spra @2013-07-01..2014-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22789:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_sprak @2011-07-01..2012-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22790:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_sprak @2012-07-01..2013-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22790:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr1_sprak @2013-07-01..2014-06-30 where key = 'v25186'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22790:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M2_spra @2011-07-01..2012-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22791:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M2_spra @2012-07-01..2013-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22791:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: M2_spra @2013-07-01..2014-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22791:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_betyg @2011-07-01..2012-06-30 where key = 'v34103'"
-fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22792:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_betyg @2012-07-01..2013-06-30 where key = 'v34103'"
-fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22792:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_betyg @2013-07-01..2014-06-30 where key = 'v34103'"
-fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
-evidence = "Definitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22792:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_sprak @2011-07-01..2012-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22793:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_sprak @2012-07-01..2013-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22793:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "nytt-grundskolebetyg: Mspr2_sprak @2013-07-01..2014-06-30 where key = 'v34103'"
-fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
-evidence = "Variabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22793:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: MODM_AMN @2011-07-01..2012-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22800:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: MODM_AMN @2012-07-01..2013-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22800:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieintyg: MODM_AMN @2013-07-01..2014-06-30 where key = 'v25188'"
-fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Variabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22800:15156:16252"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1984-07-01..1985-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1985-07-01..1986-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1986-07-01..1987-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1987-07-01..1988-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1988-07-01..1989-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1989-07-01..1990-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1990-07-01..1991-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1991-07-01..1992-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1992-07-01..1993-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1993-07-01..1994-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1994-07-01..1995-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod14 @1995-07-01..1996-06-30 where key = 'v40236'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Rättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1984-07-01..1985-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1985-07-01..1986-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1986-07-01..1987-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1987-07-01..1988-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1988-07-01..1989-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1989-07-01..1990-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1990-07-01..1991-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1991-07-01..1992-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1992-07-01..1993-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1993-07-01..1994-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1994-07-01..1995-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod2 @1995-07-01..1996-06-30 where key = 'v40224'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Rättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1984-07-01..1985-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1985-07-01..1986-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1986-07-01..1987-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1987-07-01..1988-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1988-07-01..1989-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1989-07-01..1990-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1990-07-01..1991-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1991-07-01..1992-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1992-07-01..1993-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1993-07-01..1994-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1994-07-01..1995-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod27 @1995-07-01..1996-06-30 where key = 'v40249'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Rättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1984-07-01..1985-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1985-07-01..1986-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1986-07-01..1987-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1987-07-01..1988-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1988-07-01..1989-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1989-07-01..1990-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1990-07-01..1991-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1991-07-01..1992-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1992-07-01..1993-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1993-07-01..1994-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1994-07-01..1995-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: RefKod4 @1995-07-01..1996-06-30 where key = 'v40226'"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2014-07-01..2015-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2015-07-01..2016-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2016-07-01..2017-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2017-07-01..2018-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2018-07-01..2019-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2019-07-01..2020-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2020-07-01..2021-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2021-07-01..2022-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2022-07-01..2023-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2023-07-01..2024-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "slutbetyg: Streck @2024-07-01..2025-06-30 where key = 'v32868'"
-fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
-evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
-
-[[statement]]
-kind = "set"
 subject = "var:ar-avslutad-gymnasieutbildning"
 fields = { "sets" = ["avslutningsar"] }
 evidence = "r33 explicitly records the calendar year of completing upper-secondary school, which avslutningsar includes (r92).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:207685\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/avslutningsar"
@@ -9920,3 +7124,363 @@ kind = "set"
 subject = "var:sluttyp"
 fields = { "sets" = ["laroplan"] }
 evidence = "The operational definitions identify the curriculum followed (r69, r74), and the complete codes distinguish Lpf94 from Gy2011 (r85), satisfying r93.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22803\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:211900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:212252\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5557\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/laroplan"
+
+[[statement]]
+kind = "set"
+subject = "var:amnekod17"
+fields = { "description" = "Elevens 17:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:amnekod18"
+fields = { "description" = "Elevens 18:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-a"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget A." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22470:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-a-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget A." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-b"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget B." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22472:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-b-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget B." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-c"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget C." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22474:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-c-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget C." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-d"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget D." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22476:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-d-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget D." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-e"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget E." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22478:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-e-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget E." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-f"
+fields = { "description" = "Antal gymnasiekurser där eleven fått betyget F." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln räknar kurser, inte en enskild kurs.\ncatalog:variable_text:22480:19905:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-f-gr"
+fields = { "description" = "Antal kurser där eleven har fått betyget F." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-hem-konsumentkunskap-kompletterat-arskurs-9"
+fields = { "description" = "Anger om betyget i hem- och konsumentkunskap har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22736:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-kemi-kompletterat-arskurs-9"
+fields = { "description" = "Markering av att betyget i ämnet kemi har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22738:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg20"
+fields = { "description" = "Betyg i elevens 20:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg28"
+fields = { "description" = "Betyg i elevens 28:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:blockbetyg-no-komplettering"
+fields = { "description" = "Anger om blockbetyget i naturorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22618:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:blockbetyg-so-komplettering"
+fields = { "description" = "Anger om blockbetyget i samhällsorienterade ämnen har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa och nej anger komplettering, inte själva blockbetyget.\ncatalog:valueset:10571\ncatalog:variable_text:22620:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiearbete"
+fields = { "description" = "Betyg i gymnasiearbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-bild"
+fields = { "description" = "Anger om betyget i bild har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22724:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-religion"
+fields = { "description" = "Anger om betyget i religion har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22725:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-samhallskunskap"
+fields = { "description" = "Anger om betyget i samhällskunskap har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22726:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-slojd"
+fields = { "description" = "Anger om betyget i slöjd har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22727:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-svenska"
+fields = { "description" = "Anger om betyget i svenska har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22728:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-teckensprak"
+fields = { "description" = "Anger om betyget i teckenspråk har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22729:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-betyg-teknik"
+fields = { "description" = "Anger om betyget i teknik har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdet anger om betyget kompletterats, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22730:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-bi"
+fields = { "description" = "Anger om betyget i biologi har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22731:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-en"
+fields = { "description" = "Anger om betyget i engelska har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22732:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-fy"
+fields = { "description" = "Anger om betyget i fysik har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22733:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-ge"
+fields = { "description" = "Anger om betyget i geografi har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22734:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-hi"
+fields = { "description" = "Anger om betyget i historia har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22735:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-idh"
+fields = { "description" = "Anger om betyget i idrott och hälsa har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22737:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-ma"
+fields = { "description" = "Markering av att betyget i ämnet matematik har kompletterats med uppgifter från betyget eleven fick i årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa/nej-värdena och den operativa definitionen avser komplettering, inte själva betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22739:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-mu"
+fields = { "description" = "Anger om betyget i musik har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln markerar komplettering, inte betygsvärdet.\ncatalog:valueset:10571\ncatalog:variable_text:22746:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-sva"
+fields = { "description" = "Anger om betyget i svenska som andraspråk har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa och nej anger komplettering, inte betyget.\ncatalog:valueset:10571\ncatalog:variable_text:22747:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-betyg"
+fields = { "description" = "Betyg i ämnet modersmål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och den operativa definitionen avser betyg, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22786:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-sprak"
+fields = { "description" = "Språk i ämnet modersmål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22787:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-betyg"
+fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22788:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-betyg-kompletterat-arskurs-9"
+fields = { "description" = "Anger om betyget i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22742:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak"
+fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22789:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak-2"
+fields = { "description" = "Språk som läses i moderna språk inom ramen för elevens val." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22790:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak-kompletterat-arskurs-9"
+fields = { "description" = "Anger om språkuppgiften i moderna språk inom elevens val har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22743:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval"
+fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22791:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-betyg"
+fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver undervisning, men variabeln mäter betyg.\ncatalog:variable_text:22792:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-betyg-kompletterat-arskurs-9"
+fields = { "description" = "Anger om betyget i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av betyget, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22744:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-sprak"
+fields = { "description" = "Språk som läses i moderna språk inom ramen för språkval." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger vilket språk som läses, inte undervisningen.\ncatalog:variable_text:22793:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-sprak-kompletterat-arskurs-9"
+fields = { "description" = "Anger om språkuppgiften i moderna språk inom språkval har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av språkuppgiften, inte undervisningen.\ncatalog:valueset:10571\ncatalog:variable_text:22745:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-betyg-kompletterat-arskurs-9"
+fields = { "description" = "Anger om betyget i modersmål har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av betyget, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22740:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-sprak-kompletterat-arskurs-9"
+fields = { "description" = "Anger om språkuppgiften i modersmål har kompletterats med uppgifter från årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller komplettering av språkuppgiften, inte undervisningsämnet.\ncatalog:valueset:10571\ncatalog:variable_text:22741:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:modm-amn"
+fields = { "description" = "Språk i ämnet modersmål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger språk i ämnet, inte undervisningsämnet.\ncatalog:variable_text:22800:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:refkod14"
+fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:refkod2"
+fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:refkod27"
+fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:refkod4"
+fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:streck"
+fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:utokad"
+fields = { "description" = "Kursen är en s.k. utökad kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-examen"
+fields = { "sets" = ["avslutningsar"] }
+evidence = "The history records the calendar year the pupil received compulsory-school final grades (r5, r31, r42). The fixed definition includes leaving/graduation years without restricting those alternatives to upper-secondary school; it excludes issuance dates (r52).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:206173\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:213288\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:22415\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/avslutningsar"

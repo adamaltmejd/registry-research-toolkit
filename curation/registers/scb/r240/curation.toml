@@ -805,110 +805,16 @@ subject = "var:valdistriktsnamn-2"
 fields = { "tags" = ["geography"] }
 evidence = "Suffixet 2 är en tilldelad räknare som inte kommer från källkolumnen; etiketten kolliderar och målet kräver kollisionskontroll.\ncatalog:variable_text:7901:19723:20089"
 
-[[statement]]
-kind = "set"
-subject = "rostberattigade: Lansnamn @2004-01-01..2004-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "rostberattigade: Lansnamn @2009-01-01..2009-12-31 where key = 'v49'"
+subject = "var:lan"
 fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
+
 
 [[statement]]
 kind = "set"
-subject = "rostberattigade: Lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "rostberattigade: lansnamn @2024-01-01..2024-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @1995-01-01..1995-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @1999-01-01..1999-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @2004-01-01..2004-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @2009-01-01..2009-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @2019-01-01..2019-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: lansnamn @2024-01-01..2024-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen säger kod, men källans operationella definitioner och texttypen anger länsnamn genom perioderna.\ncatalog:occurrence:57089\ncatalog:variable_text:7861:10592:10957\ncatalog:variable_text:7861:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @1995-01-01..1995-12-31 where key = 'v14775'"
+subject = "var:riksdagsvalkrets-namn"
 fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @1999-01-01..1999-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @2004-01-01..2004-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @2009-01-01..2009-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @2014-01-01..2014-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @2019-01-01..2019-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "valresultat: valkretsnamn @2024-01-01..2024-12-31 where key = 'v14775'"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Definitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"

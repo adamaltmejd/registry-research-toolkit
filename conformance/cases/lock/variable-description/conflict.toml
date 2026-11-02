@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "var:measure"
+fields.description = "One concept"
+evidence = "The first description applies to the entire variable."
+
+[[statement]]
+kind = "set"
+subject = "var:measure"
+fields.description = "A different concept"
+evidence = "A different meaning requires another variable, not another description."

@@ -1,0 +1,77 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/measure"
+      ],
+      "/data/items/0/definition": "Source definition, revised coverage",
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/measure"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {
+          "fqid": "demo/descriptions",
+          "variable_matches": 1
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/measure"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/weighted"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/comparator"
+      ],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {
+          "fqid": "demo/descriptions",
+          "variable_matches": 2,
+          "variables": [
+            {
+              "fqid": "demo/descriptions/comparator",
+              "name": "Vikt"
+            },
+            {
+              "fqid": "demo/descriptions/weighted",
+              "name": "Vikt"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

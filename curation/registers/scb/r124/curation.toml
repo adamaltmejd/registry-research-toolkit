@@ -5442,42 +5442,6 @@ fields = { "tags" = ["methods"] }
 evidence = "Uppräkningsvikt för undersökningen.\ncatalog:variable_text:4243:18993:19358"
 
 [[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: nattant @2018-01-01..2018-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna." }
-evidence = "Beskrivningen anger kväll trots att källan och värdena anger natt.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: nattant @2020-01-01..2020-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna." }
-evidence = "Beskrivningen anger kväll trots att källan och värdena anger natt.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: nattant @2022-01-01..2022-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna." }
-evidence = "Beskrivningen anger kväll trots att källan och värdena anger natt.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: OLANTAL @2018-01-01..2018-12-31 where key = 'v38414'"
-fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: OLANTAL @2020-01-01..2020-12-31 where key = 'v38414'"
-fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "arbetsorsakade-besvar-2018: OLANTAL @2022-01-01..2022-12-31 where key = 'v38414'"
-fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"
-
-[[statement]]
 kind = "link"
 subject = "var:besvar-minskat-andrade-uppg"
 relation = "continues"
@@ -5664,3 +5628,16 @@ kind = "set"
 subject = "var:vet-ej-nar-arbetsskadan-anmaldes-till-forsakringskassan"
 fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
 evidence = "Indicates that the respondent does not know when the report was made, an associated reporting-time response explicitly included by the group (r165, r105).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4231"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-minst-halften"
+fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kväll trots att källan och värdena anger natt.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:olantal"
+fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"

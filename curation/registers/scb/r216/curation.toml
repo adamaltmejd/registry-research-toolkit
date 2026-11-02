@@ -139,8 +139,9 @@ subject = "var:lannamn"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger län i klartext.\ncatalog:variable_text:21159:18262:18628"
 
+
 [[statement]]
 kind = "set"
-subject = "fritidshusomraden: LANNAMN @2020-01-01..2020-12-31 where key = 'v49'"
+subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Variabeln innehåller länets namn i klartext, inte en kod.\ncatalog:variable_text:21159:18262:18628"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln innehåller länets namn i klartext, inte en kod.\ncatalog:variable_text:21159:18262:18628"

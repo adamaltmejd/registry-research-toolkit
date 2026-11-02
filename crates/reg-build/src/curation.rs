@@ -1779,7 +1779,7 @@ pub(super) fn resolve_catalog(
             let ledger = ledger(root, provider, register, retired)?;
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
-            reg_resolve::curation::apply_metadata(&mut resolved, metadata);
+            reg_resolve::curation::apply_metadata(&mut resolved, metadata)?;
             Ok(resolved)
         })
         .collect()

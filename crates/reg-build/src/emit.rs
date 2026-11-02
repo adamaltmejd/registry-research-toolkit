@@ -625,6 +625,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(pid_of_variable(r, v)),
                     Cell::Text(variable.label.clone()),
                     opt_text(variable.definition.as_ref()),
+                    opt_text(variable.description.as_ref()),
                     Cell::Int(start(&variable.hull.0)),
                     Cell::Int(end(&variable.hull.1)),
                 ],
@@ -1438,6 +1439,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     }
     tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])
         .map_err(sql)?;
+    {
+        let mut insert = tx
+            .prepare(
+                "INSERT INTO search_description(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
+            )
+            .map_err(sql)?;
+        for (i, item) in search.iter().enumerate() {
+            if !item.description.is_empty() {
+                let body = format!("{}\n{}", item.body, item.description);
+                insert
+                    .execute((id(i), &item.name, &item.label, &body))
+                    .map_err(|e| format!("search_description: {e}"))?;
+            }
+        }
+    }
+    tx.execute(
+        "INSERT INTO search_description(search_description) VALUES ('optimize')",
+        [],
+    )
+    .map_err(sql)?;
     // External-content FTS5 over doc_section, in rowid order.
     {
         let mut insert = tx

@@ -3277,18 +3277,6 @@ evidence = "Samma källkolumn har en angränsande mappning till en bredare låne
 
 [[statement]]
 kind = "set"
-subject = "foretagens-kortperiodiska-tillgangar-och-skulder: StallnRad501 @2010-01-01..2010-12-31 where key = 'v21301'"
-fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
-evidence = "Definitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "foretagens-kortperiodiska-tillgangar-och-skulder: StallnRad501 @2011-01-01..2011-12-31 where key = 'v21301'"
-fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
-evidence = "Definitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
-
-[[statement]]
-kind = "set"
 subject = "foretagens-kortperiodiska-tillgangar-och-skulder: omvrad32 @2010-01-01..2010-12-31 where key = 'v21288'"
 fields = { "variable" = "utlandska-noterade-aktier-omv" }
 evidence = "Both measure quarterly revaluation of foreign listed-share holdings in KSEK. The market-value definition agrees with price and currency changes. OmvRad32 has adjacent periods [10957,14610) and [14610,15340)."
@@ -3496,3 +3484,9 @@ relation = "continues"
 object = "scb/bast/dagslan-utlandet-trans"
 at = "2002-01-01.."
 evidence = "BAST TransRad131: overnight lending abroad (1997-2001) -> short-term lending abroad (2002-2011); broadened item."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-stallning-aktuellt"
+fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"

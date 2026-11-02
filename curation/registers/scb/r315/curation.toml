@@ -577,18 +577,24 @@ evidence = "Kalibreringsvikten är ett statistiskt metodmått.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "deltagare-i-svenskundervisning-for-invandrare-sfi: F10 @2008-07-01..2008-12-31 where key = 'v2174'"
-fields = { "description" = "Beskriver om personen har försörjningsstöd." }
-evidence = "Definitionen beskriver rätt till bistånd, medan frågan mäter om personen har försörjningsstöd.\ncatalog:valueset:7326\ncatalog:variable_text:41985:14061:14245"
-
-[[statement]]
-kind = "set"
-subject = "deltagare-i-svenskundervisning-for-invandrare-sfi: F11 @2008-07-01..2008-12-31 where key = 'v7499'"
-fields = { "description" = "Beskriver om personen har introduktionsersättning." }
-evidence = "Definitionen anger ett utbetalt belopp till hushållet, medan frågan mäter om personen har introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:modersmal"
 fields = { "tags" = ["demographics", "language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41825\ncatalog:variable_text:41825:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod"
+fields = { "description" = "Beskriver om personen har försörjningsstöd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd, medan frågan mäter om personen har försörjningsstöd.\ncatalog:valueset:7326\ncatalog:variable_text:41985:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "description" = "Beskriver om personen har introduktionsersättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger ett utbetalt belopp till hushållet, medan frågan mäter om personen har introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-for-framtida-livet-i-sverige"
+fields = { "tags" = ["language-religion"] }
+evidence = "The item measures the perceived importance of Swedish for future life in Sweden (r9), using an importance scale (r3). This supports the language theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41842"

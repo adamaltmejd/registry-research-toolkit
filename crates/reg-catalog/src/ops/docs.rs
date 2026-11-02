@@ -415,9 +415,18 @@ fn related(server: &Server, params: &Params) -> Result<Value, Error> {
     ) {
         return Err(invalid_ref(value, &entity));
     }
+    Ok(serde_json::to_value(related_documents(&conn, &entity)?)
+        .expect("RelatedDocument serializes"))
+}
+
+/// Linked documents, allowing an empty catalog for an entity's evidence response.
+pub(super) fn related_documents(
+    conn: &Connection,
+    entity: &Entity,
+) -> Result<Vec<RelatedDocument>, Error> {
     // DISTINCT: a register's own link and its table's link to one page of one
     // document are one row to the reader.
-    let rows = conn
+    Ok(conn
         .prepare(&format!(
             "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page
              FROM doc_link l
@@ -438,8 +447,7 @@ fn related(server: &Server, params: &Params) -> Result<Value, Error> {
                 page: row.get(6)?,
             })
         })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    Ok(serde_json::to_value(rows).expect("RelatedDocument serializes"))
+        .collect::<rusqlite::Result<Vec<_>>>()?)
 }
 
 /// `docs_get`'s file: the stored bytes of a `pdf` document, shown inline.

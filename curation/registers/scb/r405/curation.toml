@@ -967,12 +967,6 @@ evidence = "Måttet gäller möjlighet att ordna kontanter.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:cash3b"
-fields = { "tags" = [] }
-evidence = "Måttet gäller möjlighet att ordna kontanter.\ncatalog:variable_text:5275:16071:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:cash4a-19198"
 fields = { "sets" = ["kontantmarginal"] }
 evidence = "Suffixet 19198 finns inte i källkolumnen.\ncatalog:variable_text:5276:16801:18262"
@@ -981,12 +975,6 @@ evidence = "Suffixet 19198 finns inte i källkolumnen.\ncatalog:variable_text:52
 kind = "set"
 subject = "var:cash4b"
 fields = { "sets" = ["kontantmarginal"] }
-evidence = "Måttet gäller möjlighet att ordna kontanter.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:cash4b"
-fields = { "tags" = [] }
 evidence = "Måttet gäller möjlighet att ordna kontanter.\ncatalog:variable_text:5277:16436:18262"
 
 [[statement]]
@@ -1297,12 +1285,6 @@ evidence = "Slutbokstaven B är en källkolumnskod, och familjen ekko* behandlas
 
 [[statement]]
 kind = "set"
-subject = "var:ekkontantb"
-fields = { "tags" = [] }
-evidence = "Slutbokstaven B är en källkolumnskod, och familjen ekko* behandlas enhetligt som kodbaserad. Variabeln ingår i kontantmarginal tillsammans med frågan om att själv ha råd.\ncatalog:occurrence:36622\ncatalog:occurrence:36623\ncatalog:variable_text:5306:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:ekkopa"
 fields = { "sets" = ["ej-rad-att-kopa-som-kompisar"] }
 evidence = "Id:t är läsbart och behålls i linje med ekko-familjen. Variabeln mäter ett ekonomiskt hinder för köp.\ncatalog:variable_text:5307:19358:19723"
@@ -1341,12 +1323,6 @@ evidence = "Samma arbetsmått är uppdelat mellan intilliggande perioder; värde
 kind = "set"
 subject = "var:ekonomi-ha-rad-100kr"
 fields = { "sets" = ["kontantmarginal"] }
-evidence = "Måttet avser möjlighet att ordna 100 kronor.\ncatalog:variable_text:5310:13879:15706\ncatalog:variable_text:5310:15706:16071\ncatalog:variable_text:5310:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:ekonomi-ha-rad-100kr"
-fields = { "tags" = [] }
 evidence = "Måttet avser möjlighet att ordna 100 kronor.\ncatalog:variable_text:5310:13879:15706\ncatalog:variable_text:5310:15706:16071\ncatalog:variable_text:5310:16071:16436"
 
 [[statement]]
@@ -2740,12 +2716,6 @@ kind = "set"
 subject = "var:bakgrund-kon-foralder-i-ulf"
 fields = { "tags" = ["demographics"] }
 evidence = "IP är en bokstavskod.\ncatalog:variable_text:5438:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-maka"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar förälderns makes kön.\ncatalog:variable_text:5439:16801:18262"
 
 [[statement]]
 kind = "set"
@@ -5449,252 +5419,6 @@ evidence = "Urbaniseringsgrad.\ncatalog:variable_text:5674:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar: cash4b @2015-01-01..2015-12-31 where key = 'v19198'"
-fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
-evidence = "Definitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: cash4b @2016-01-01..2016-12-31 where key = 'v19198'"
-fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
-evidence = "Definitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: cash4b @2017-01-01..2017-12-31 where key = 'v19198'"
-fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
-evidence = "Definitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: cash4b @2018-01-01..2018-12-31 where key = 'v19198'"
-fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
-evidence = "Definitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: cash4b @2019-01-01..2019-12-31 where key = 'v19198'"
-fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
-evidence = "Definitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2008-01-01..2008-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2009-01-01..2009-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2010-01-01..2010-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2011-01-01..2011-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2012-01-01..2012-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2013-01-01..2013-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_day @2014-01-01..2014-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_day @2015-01-01..2015-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_day2 @2016-01-01..2016-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_day2 @2017-01-01..2017-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_day2 @2018-01-01..2018-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_day2 @2019-01-01..2019-12-31 where key = 'v19213'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Definitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2008-01-01..2008-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2009-01-01..2009-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2010-01-01..2010-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2011-01-01..2011-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2012-01-01..2012-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2013-01-01..2013-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sec_brea @2014-01-01..2014-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_brea @2015-01-01..2015-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_brea2 @2016-01-01..2016-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_brea2 @2017-01-01..2017-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_brea2 @2018-01-01..2018-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sec_brea2 @2019-01-01..2019-12-31 where key = 'v19218'"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Definitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a @2008-01-01..2008-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a @2009-01-01..2009-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a @2010-01-01..2010-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a @2011-01-01..2011-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a @2012-01-01..2012-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a2 @2013-01-01..2013-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: avoid_a2 @2014-01-01..2014-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: avoid_a2 @2015-01-01..2015-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: avoid_a2 @2016-01-01..2016-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: avoid_a2 @2017-01-01..2017-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: avoid_a2 @2018-01-01..2018-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: avoid_a2 @2019-01-01..2019-12-31 where key = 'v19210'"
-fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
-evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:bakgrund-fodelseland"
 fields = { "sets" = ["fodelseland"] }
 evidence = "r324 explicitly defines the child's country of birth; r348 supplies a grouped partner. Omitted individual country codes do not decide the concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5212\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5305"
@@ -5902,3 +5626,81 @@ kind = "set"
 subject = "var:x-boforsyss"
 fields = { "sets" = ["sysselsattningsstatus"] }
 evidence = "r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration. | r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration. | r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5663\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10684\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5670"
+
+[[statement]]
+kind = "set"
+subject = "var:cash4b"
+fields = { "description" = "Om barnet skulle kunna få 200 kronor från sina föräldrar till en tillfällig utgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver egen tillgång, men frågan avser hjälp från föräldrar.\ncatalog:variable_text:5277:16436:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-i-bostadsomradet-dagtid"
+fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-rasterna"
+fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-undvika-vuxna"
+fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:cash3b"
+fields = { "tags" = ["wealth"] }
+evidence = "r94 and r41 measure parental help obtaining a cash margin after the child lacks their own money. The corresponding own-cash measures carry wealth in r95 and r104.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:35701\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5255\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5256\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5286"
+
+[[statement]]
+kind = "set"
+subject = "var:cash4b"
+fields = { "tags" = ["wealth"] }
+evidence = "r42 describes parental help when the child lacks the cash margin. This belongs to the same wealth theme as the child's own cash resources in r95 and r104.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:35866\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5256\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5286"
+
+[[statement]]
+kind = "set"
+subject = "var:ekkontantb"
+fields = { "tags" = ["wealth"] }
+evidence = "r105 and r55 measure parental help obtaining a cash margin, complementing the wealth-tagged own-cash measure in r104.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:36623\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5286\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5287"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomi-ha-rad-100kr"
+fields = { "tags" = ["wealth"] }
+evidence = "r107 and r12–r40 describe access to an emergency cash margin across questionnaire changes. Wealth matches the corresponding cash-resource measures in r95 and r104.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:34496\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:35522\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:35700\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5256\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5286\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5291"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-maka"
+fields = { "sets" = ["kon"] }
+evidence = "r133 explicitly defines the other parent's sex. This falls within the parental-sex inclusion in r202.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5415\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/barn-ulf/kon"
+
+[[statement]]
+kind = "set"
+subject = "var:pet"
+fields = { "tags" = ["consumption"] }
+evidence = "r148 measures access to a pet in a possessions questionnaire. The consumption-tagged lack-of-possessions measure in r108 supports consumption as the broad material-access theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5292\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5473"
+
+[[statement]]
+kind = "set"
+subject = "var:sat-look"
+fields = { "tags" = ["health"] }
+evidence = "Appearance satisfaction in r158 concerns psychological wellbeing, consistent with the health-tagged self-satisfaction measures in r123 and r125.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5364\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5374\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5528"
+
+[[statement]]
+kind = "set"
+subject = "var:tror-far-det-bra-i-framtiden"
+fields = { "tags" = ["health"] }
+evidence = "r167 measures personal optimism about the future, consistent with the psychological wellbeing theme of the health-tagged mood items in r121 and r122.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5356\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5361\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5623"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-kanner-manga-omradet"
+fields = { "tags" = ["crime"] }
+evidence = "r174 measures neighbourhood familiarity within the safety battery containing threats and avoidance items in r171 and r179. The broad crime theme includes safety.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5630\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5633\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5638"

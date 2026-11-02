@@ -3547,12 +3547,6 @@ evidence = "Id:t är en ogenomskinlig frågekod; etiketten anger fritext om andr
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-text-hosten-2014"
-fields = { "tags" = [] }
-evidence = "Id:t är en ogenomskinlig frågekod; etiketten anger fritext om andra framtidsplaner.\ncatalog:variable_text:29577:16161:16191"
-
-[[statement]]
-kind = "set"
 subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29578:18628:18809"
@@ -3715,20 +3709,8 @@ evidence = "F27_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29594
 
 [[statement]]
 kind = "set"
-subject = "var:f27-txt"
-fields = { "tags" = [] }
-evidence = "F27_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29594:18262:18444"
-
-[[statement]]
-kind = "set"
 subject = "var:f28-txt"
 fields = { "sets" = ["ovriga-enkatkommentarer"] }
-evidence = "F28_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29595:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:f28-txt"
-fields = { "tags" = [] }
 evidence = "F28_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29595:17167:17348"
 
 [[statement]]
@@ -3856,12 +3838,6 @@ kind = "set"
 subject = "var:f5"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F5 är en opak frågekod.\ncatalog:occurrence:249591\ncatalog:variable_text:29612:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:f5-02"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i en annan period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Etiketter och beskrivningar anger orsaker till att examenskrav inte uppnåtts, även för f5-02. membership-0300: Alternativen anger orsaker till ej uppnådda examenskrav. Uppgifter om vad som saknas respektive kravuppfyllelse mäter inte dessa orsaker. membership-0301: Ingen vald variabel i sektionen anger orsaker till ej uppnådda examenskrav. membership-0302: Ingen vald variabel i sektionen mäter orsaker till ej uppnådda examenskrav. membership-0303: Ingen vald variabel mäter orsaker till ej uppnådda examenskrav. membership-0304: Ingen vald variabel anger orsaker till att examenskrav inte uppnåtts. membership-0305: Ingen vald variabel anger orsaker till ej uppnådda examenskrav. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Dessa variabler anger skäl till ej uttagen examen eller examensbevis. F5-02 gäller enligt aktuellt innehåll ej uppnådda examenskrav och utesluts. membership-0300: Samtliga anger orsaker till att examensbevis inte tagits ut, skilt från ej uppnådda examenskrav. membership-0301: Ingen vald variabel i sektionen anger skäl till att inte ta ut examen. membership-0302: Ingen vald variabel i sektionen mäter skäl till att inte ta ut examen. membership-0303: Ingen vald variabel mäter skäl att inte ta ut examen eller examensbevis. membership-0304: Ingen vald variabel anger skäl till att inte ta ut examen eller examensbevis. membership-0305: Ingen vald variabel anger skäl att inte ta ut examen.\ncatalog:occurrence:248957\ncatalog:occurrence:249053\ncatalog:variable_text:29578:18628:18809\ncatalog:variable_text:29579:18628:18809\ncatalog:variable_text:29580:18628:18809\ncatalog:variable_text:29581:18628:18809\ncatalog:variable_text:29582:18628:18809\ncatalog:variable_text:29583:18628:18809\ncatalog:variable_text:29597:17167:17348\ncatalog:variable_text:29598:17167:17348\ncatalog:variable_text:29599:17167:17348\ncatalog:variable_text:29600:17167:17348\ncatalog:variable_text:29601:17167:17348\ncatalog:variable_text:29613:15796:15826\ncatalog:variable_text:29614:17167:17348\ncatalog:variable_text:29615:17167:17348\ncatalog:variable_text:29616:15796:15826\ncatalog:variable_text:29617:15796:15826\ncatalog:variable_text:29619:15796:15826\ncatalog:variable_text:29620:15796:15826\ncatalog:variable_text:29831:12478:12509\ncatalog:variable_text:29987:17167:17348\ncatalog:variable_text:29988:17167:17348\ncatalog:variable_text:29989:17167:17348\ncatalog:variable_text:29990:17167:17348\ncatalog:variable_text:29991:17167:17348\ncatalog:variable_text:29992:17167:17348\ncatalog:variable_text:29993:17167:17348\ncatalog:variable_text:29994:17167:17348\ncatalog:variable_text:30030:15796:15826\ncatalog:variable_text:30163:17167:17348\ncatalog:variable_text:30184:12478:12509"
 
 [[statement]]
 kind = "set"
@@ -5851,20 +5827,8 @@ evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29786:1
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat"
-fields = { "tags" = [] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29786:18628:18809"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-annat-f19-08"
 fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29787:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-annat-f19-08"
-fields = { "tags" = [] }
 evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29787:16161:16191"
 
 [[statement]]
@@ -5875,32 +5839,14 @@ evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29788:1
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-f24-8"
-fields = { "tags" = [] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29788:19358:19539"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-annat-f26-8"
 fields = { "sets" = ["andra-framtidsplaner"] }
 evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29789:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-f26-8"
-fields = { "tags" = [] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29789:18262:18444"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-annat-f27-08"
 fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249427\ncatalog:occurrence:249584"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-annat-f27-08"
-fields = { "tags" = [] }
 evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249427\ncatalog:occurrence:249584"
 
 [[statement]]
@@ -6211,20 +6157,8 @@ evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-vet-inte"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29816:18628:18809"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-vet-inte-f19-9"
 fields = { "sets" = ["ovissa-framtidsplaner"] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29817:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f19-9"
-fields = { "tags" = [] }
 evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29817:16161:16191"
 
 [[statement]]
@@ -6235,32 +6169,14 @@ evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-vet-inte-f24-9"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29818:19358:19539"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-vet-inte-f26-9"
 fields = { "sets" = ["ovissa-framtidsplaner"] }
 evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29819:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-vet-inte-f26-9"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29819:18262:18444"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-vet-inte-f27-09"
 fields = { "sets" = ["ovissa-framtidsplaner"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249428\ncatalog:occurrence:249585"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f27-09"
-fields = { "tags" = [] }
 evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249428\ncatalog:occurrence:249585"
 
 [[statement]]
@@ -8269,32 +8185,14 @@ evidence = "F25_txt har olika ägare mellan perioderna.\ncatalog:occurrence:2496
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-kommentarer-till-enkaten"
-fields = { "tags" = [] }
-evidence = "F25_txt har olika ägare mellan perioderna.\ncatalog:occurrence:249658\ncatalog:occurrence:249735"
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-kommentarer-till-enkaten-2"
 fields = { "sets" = ["ovriga-enkatkommentarer"] }
 evidence = "F28 har olika ägare mellan perioderna.\ncatalog:occurrence:249438\ncatalog:occurrence:249586"
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-kommentarer-till-enkaten-2"
-fields = { "tags" = [] }
-evidence = "F28 har olika ägare mellan perioderna.\ncatalog:occurrence:249438\ncatalog:occurrence:249586"
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-kommentarer-till-enkaten-3"
 fields = { "sets" = ["ovriga-enkatkommentarer"] }
-evidence = "F29 har olika ägare mellan perioderna.\ncatalog:occurrence:249339\ncatalog:occurrence:249588"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-kommentarer-till-enkaten-3"
-fields = { "tags" = [] }
 evidence = "F29 har olika ägare mellan perioderna.\ncatalog:occurrence:249339\ncatalog:occurrence:249588"
 
 [[statement]]
@@ -10327,66 +10225,6 @@ evidence = "Yrkgen är en källmnemonik utan igenkännbara delar av etiketten.\n
 
 [[statement]]
 kind = "set"
-subject = "hogskolestuderande: F10_07 @2021-01-01..2021-06-30 where key = 'v29906'"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Källans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F15_09 @2017-01-01..2017-06-30 where key = 'v29906'"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Källans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "intradet-gymnasieavgangna-hogskoleexaminerade: öt @2002-03-01..2002-03-31 where key = 'v4655'"
-fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
-evidence = "Definitionen anger ett antal, inte en kod.\ncatalog:occurrence:249933"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F6_2 @2013-04-01..2013-04-30 where key = 'v29901'"
-fields = { "description" = "Månad då individen anser sig ha avslutat sina universitets- och högskolestudier." }
-evidence = "Definitionen anger år men variabeln mäter avslutsmånad.\ncatalog:occurrence:248968\ncatalog:variable_text:29632:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F19_07 @2021-01-01..2021-06-30 where key = 'v29907'"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Etiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F19_09 @2017-01-01..2017-06-30 where key = 'v29907'"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Etiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr98f @2000-03-01..2000-03-31 where key = 'v41838'"
-fields = { "description" = "Huvudsaklig sysselsättning juni 1998" }
-evidence = "Mellanslaget saknas i källans datum.\ncatalog:variable_text:29761:11017:11048"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F3_rev @2021-01-01..2021-06-30 where key = 'v38945'"
-fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning." }
-evidence = "Källan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F20 @2017-01-01..2017-06-30 where key = 'v5242'"
-fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
-evidence = "Frågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F20 @2021-01-01..2021-06-30 where key = 'v5242'"
-fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
-evidence = "Frågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
-
-[[statement]]
-kind = "set"
 subject = "intradet-gymnasieavgangna: f13 @2014-04-01..2014-04-30 where key = 'v5120'"
 fields = { "variable" = "viljan-att-arbeta-mer-f15" }
 evidence = "Both measure desired working hours under selector v5120 in nonoverlapping periods. Every complete historical list agrees on substantive codes: 1 more hours, 2 current hours appropriate, 3 fewer hours. List differences concern additional nonresponse categories."
@@ -11281,6 +11119,170 @@ evidence = "The operational definition asks satisfaction with the completed uppe
 
 [[statement]]
 kind = "set"
+subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f10-07"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f15-09"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348"
+
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod-ot"
+fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger ett antal, inte en kod.\ncatalog:occurrence:249933"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-anvanda-kritiskt-tankande-f19-07"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-juni-1998"
+fields = { "description" = "Huvudsaklig sysselsättning juni 1998" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslaget saknas i källans datum.\ncatalog:variable_text:29761:11017:11048"
+
+
+[[statement]]
+kind = "set"
+subject = "var:latt-svart-fa-arbete-amnesomradet"
+fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-avslutande-av-universitets-eller-hogskolestudier"
+fields = { "description" = "Månad då individen anser sig ha avslutat sina universitets- och högskolestudier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger år men variabeln mäter avslutsmånad.\ncatalog:occurrence:248968\ncatalog:variable_text:29632:15796:15826"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning"
+fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildningens-fardighetstraning-f19-09"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"
+
+[[statement]]
+kind = "set"
 subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr98f @2000-03-01..2000-03-31 where key = 'v41838'"
 fields = { "label" = "Huvudsaklig sysselsättning juni 1998" }
 evidence = "Part of #2040. scb/intradet-pa-arbetsmarknaden/huvudsaklig-sysselsattning-juni-1998: Restore missing separator between month and year in juni1998. Reviewed occurrence label: Huvudsaklig sysselsättning juni1998"
+
+[[statement]]
+kind = "set"
+subject = "var:f27-txt"
+fields = { "tags" = ["methods"] }
+evidence = "The prompt requests comments on questionnaire questions (r129), supporting methods through survey-quality feedback. The employment and education context in r326 does not identify a single substantive topic.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29499\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-txt"
+fields = { "tags" = ["methods"] }
+evidence = "The prompt requests comments on questionnaire questions (r130), supporting methods through survey-quality feedback. The mixed substantive themes in r326 do not identify a more specific subject.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29500\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:f5-02"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r136 explicitly defines this named matching-job alternative as a cause of unmet examination requirements. The certificate wording in r81 does not establish mere certificate abstention, so r324's exclusion is not demonstrated.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:248957\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29512\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/orsaker-till-ej-uppnadda-examenskrav"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat"
+fields = { "tags" = ["employment"] }
+evidence = "This residual future-plan option (r143) belongs alongside job-seeking (r150), supporting employment as a broad battery theme in the supplied register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29616\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29627\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-f19-08"
+fields = { "tags" = ["employment"] }
+evidence = "This residual future-plan response (r144) shares a battery with job-seeking (r151), supporting employment as a broad search theme alongside the register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29617\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29628\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-f24-8"
+fields = { "tags" = ["employment"] }
+evidence = "This residual autumn-2023 planning response (r145) shares its future-plan battery with job-seeking (r152), supporting the employment search theme alongside r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29618\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29629\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-f26-8"
+fields = { "tags" = ["employment"] }
+evidence = "This residual autumn-2020 planning response (r146) shares its future-plan battery with job-seeking (r153), supporting the employment search theme alongside the register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29619\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29630\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-f27-08"
+fields = { "tags" = ["employment"] }
+evidence = "This residual autumn-2017 planning response (r147) shares a future-plan battery with job-seeking (r154), supporting employment as a broad search theme alongside r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29620\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29631\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-text-hosten-2014"
+fields = { "tags" = ["employment"] }
+evidence = "This text field supplies the residual future-plan answer (r148), alongside the job-seeking branch (r151). Employment is a supported broad battery theme in the register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29621\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29628\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte"
+fields = { "tags" = ["employment"] }
+evidence = "This uncertainty response belongs to future planning (r155), with siblings concerning continuing or finding work (r149, r150). That supports the employment search theme alongside r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29622\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29627\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29647\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte-f19-9"
+fields = { "tags" = ["employment"] }
+evidence = "This uncertainty response concerns future plans (r156), with a job-seeking sibling (r151). Employment is therefore a supported broad battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29628\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29648\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte-f24-9"
+fields = { "tags" = ["employment"] }
+evidence = "The autumn-2023 uncertainty response (r157) belongs to future planning alongside seeking a job (r152), supporting the employment search theme in r326's register context.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29629\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29649\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte-f26-9"
+fields = { "tags" = ["employment"] }
+evidence = "The uncertainty response concerns future activity (r158), alongside a job-seeking sibling (r153). Employment is a supported battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29630\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29650\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte-f27-09"
+fields = { "tags" = ["employment"] }
+evidence = "This uncertainty response concerns autumn-2017 plans (r159), alongside a job-seeking sibling (r154). Employment is a supported broad battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29631\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29651\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kommentarer-till-enkaten"
+fields = { "tags" = ["methods"] }
+evidence = "The prompt explicitly requests feedback on questionnaire questions (r205), supporting methods through survey-quality information despite the register's mixed substantive themes (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29905\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kommentarer-till-enkaten-2"
+fields = { "tags" = ["methods"] }
+evidence = "The operational question requests comments on survey questions (r206), supporting methods through questionnaire-quality feedback. The mixed register context (r326) supplies no narrower substantive theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29906\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kommentarer-till-enkaten-3"
+fields = { "tags" = ["methods"] }
+evidence = "Interviewer comments (r207) are survey-collection notes, supporting methods consistently with questionnaire-feedback siblings (r129, r206). The mixed register themes (r326) supply no narrower subject.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29499\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29906\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29907\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

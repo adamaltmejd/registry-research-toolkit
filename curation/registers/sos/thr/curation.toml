@@ -1,102 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "thr-besok: mot_namn"
-fields = { "description" = "Klinikens namn" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:253\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok: org_nr"
-fields = { "description" = "Klinikens organisationsnummer\n10-siffrig kod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:262\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: postkod"
-fields = { "description" = "Klinikens postkod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:271\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: postort"
-fields = { "description" = "Klinikens stad" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:280\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: org_nr"
-fields = { "description" = "Mottagningens organisationsnummer\n10-siffrig kod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:262\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: mot_namn"
-fields = { "description" = "Mottagningensnamn" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:253\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok: postkod"
-fields = { "description" = "Mottagnings postkod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:271\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok: postort"
-fields = { "description" = "Mottagnings stad" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:280\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-tandhalsa-landsting: kon"
-fields = { "description" = "Patientens kön" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-tandhalsa: kon"
-fields = { "description" = "Patientens kön" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: kon"
-fields = { "description" = "Patientens kön. Man eller kvinna. Härleds från Patientens Patientnummer." }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok: kon"
-fields = { "description" = "Patientens kön. Man eller kvinna. Härleds från patientens Patientnummer." }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-tandhalsa-landsting: arendeid"
-fields = { "description" = "Ärende ID" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-tandhalsa: arendeid"
-fields = { "description" = "Ärende ID" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok-landsting: arendeid"
-fields = { "description" = "Ärende ID\n10-siffrig kod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
-subject = "thr-besok: arendeid"
-fields = { "description" = "Ärende ID\n10-siffrig kod" }
-evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
-
-[[statement]]
-kind = "set"
 subject = "var:alder"
 fields = { "sets" = [] }
 evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:57437:15706:20089"
@@ -388,3 +292,45 @@ kind = "set"
 subject = "var:elementstatus"
 fields = { "tags" = ["healthcare"] }
 evidence = "The codes include Abonnemangstandvård and Förhandsprövning krävs alongside approval and rejection states, supporting the healthcare theme for dental-care administration (r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:arendeid"
+fields = { "description" = "Ärende-ID, 10-siffrig kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/arendeid"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Patientens kön, man eller kvinna, härlett från patientnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/kon"
+
+[[statement]]
+kind = "set"
+subject = "var:mot-namn"
+fields = { "description" = "Mottagningens namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:253\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/mot-namn"
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields = { "description" = "Vårdgivarens organisationsnummer, 10-siffrig kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:262\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/orgnr"
+
+[[statement]]
+kind = "set"
+subject = "var:postkod"
+fields = { "description" = "Mottagningens postkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:271\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/postkod"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "description" = "Mottagningens postort." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/thr.toml:280\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json.\n\nMaintainer description review 2026-11-02: sos/thr/postort"
+
+[[statement]]
+kind = "set"
+subject = "var:header-status"
+fields = { "tags" = ["healthcare"] }
+evidence = "Submission, receipt and partial-rejection statuses (r6, r7) administer visit and dental-health records (r2, r4), consistent with the register’s healthcare theme (r1, r9).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:523048\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:523111\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2499\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2778\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

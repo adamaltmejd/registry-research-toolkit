@@ -1902,14 +1902,16 @@ subject = "var:undervisningstimmar-yrkesinriktade-kurser-komvux"
 fields = { "tags" = ["education"] }
 evidence = "YTutim är en opak källmnemonik; etiketten kolliderar och målet behöver R6-prövning.\ncatalog:variable_text:53390:6756:19905"
 
-[[statement]]
-kind = "set"
-subject = "komvux: YAndel @1988-07-01..2024-06-30 where key = 'v1280'"
-fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser." }
-evidence = "Variabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53384:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "komvux: YAndel_Num @1988-07-01..2024-06-30 where key = 'v1280'"
+subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
 fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser." }
-evidence = "Variabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53385:6756:19905"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53385:6756:19905"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-kursinriktning-komvux-tidigare-berakning"
+fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53384:6756:19905"

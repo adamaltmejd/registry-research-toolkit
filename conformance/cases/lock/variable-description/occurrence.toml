@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "main: Measure @2018..2019"
+fields.description = "Occurrence description"
+evidence = "An occurrence must not own the variable description."

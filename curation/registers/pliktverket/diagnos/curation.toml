@@ -28,3 +28,9 @@ kind = "set"
 subject = "var:sjukdomsnummer"
 fields = { "tags" = ["health"] }
 evidence = "Sjukdomsnumret kodar diagnosen.\ncatalog:variable_text:637:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsekod"
+fields = { "tags" = ["health"] }
+evidence = "The event-code field belongs to the diagnosis register (r2, r3), whose supplied thematic context supports health (r1, r4). This supports a broad theme without inferring individual code meanings.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1043\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:634\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -13806,18 +13806,6 @@ evidence = "Id:t innehåller den opaka källkoden TUR; etiketten anger en omsät
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: E11d @2006-01-01..2008-12-31 where key = 'v15613'"
-fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
-evidence = "Beskrivningen anger inköpet i stället för de utgifter som mäts.\ncatalog:variable_text:29176:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: E11c @2006-01-01..2008-12-31 where key = 'v15612'"
-fields = { "description" = "Utgifter för förvärv av maskiner, utrustning och programvara." }
-evidence = "Beskrivningen anger förvärvet i stället för utgifterna som mäts.\ncatalog:variable_text:29177:13149:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
 fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
 evidence = "r137 defines turnover share from world-first product innovations; r184 explicitly includes world novelty.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27762\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27852\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
@@ -14001,3 +13989,16 @@ kind = "set"
 subject = "var:weight-tur"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "r180 defines a turnover-calibrated statistical weight, explicitly included by r188.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29191\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/upprakningsvikter"
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-forvarv-existerande-kunskap"
+fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inköpet i stället för de utgifter som mäts.\ncatalog:variable_text:29176:13149:14245"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-forvarv-maskiner-programvara"
+fields = { "description" = "Utgifter för förvärv av maskiner, utrustning och programvara." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förvärvet i stället för utgifterna som mäts.\ncatalog:variable_text:29177:13149:14245"

@@ -756,198 +756,6 @@ fields = { "tags" = ["employment"] }
 evidence = "Variabeln klassificerar yrke.\ncatalog:variable_text:42940:16071:20089"
 
 [[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2022-01-01..2022-12-31 where key = 'v46225'"
-fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
-evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2023-01-01..2023-12-31 where key = 'v46225'"
-fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
-evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2024-01-01..2024-12-31 where key = 'v46225'"
-fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
-evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1996-01-01..1996-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1997-01-01..1997-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1998-01-01..1998-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1999-01-01..1999-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2000-01-01..2000-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2001-01-01..2001-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2002-01-01..2002-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2003-01-01..2003-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2004-01-01..2004-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2005-01-01..2005-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2006-01-01..2006-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2007-01-01..2007-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2008-01-01..2008-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2009-01-01..2009-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2010-01-01..2010-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2011-01-01..2011-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2012-01-01..2012-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2013-01-01..2013-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2014-01-01..2014-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2015-01-01..2015-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2016-01-01..2016-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2017-01-01..2017-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2018-01-01..2018-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2019-01-01..2019-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2020-01-01..2020-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2021-01-01..2021-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2022-01-01..2022-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2023-01-01..2023-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2024-01-01..2024-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
-
-[[statement]]
 kind = "link"
 subject = "var:lonesumma-formaner"
 relation = "continues"
@@ -990,3 +798,16 @@ kind = "set"
 subject = "var:beraknad-helglon-arbetare"
 fields = { "sets" = ["lonesumma"] }
 evidence = "r170 defines compensation for wages lost on public holidays, and r159 records the derived holiday-pay wage sum in SEK. This fits the included holiday-pay component despite the conflicting hectare unit in r48.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42792\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:445229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446108\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42935"
+
+[[statement]]
+kind = "set"
+subject = "var:kollavt-proc"
+fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"

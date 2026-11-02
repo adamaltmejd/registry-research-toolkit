@@ -113,20 +113,9 @@ subject = "var:tutvixfast"
 fields = { "tags" = ["business"] }
 evidence = "TUtvIxFast är också mappad till arsmanadslank-fast-kal under en överlappande period. Variabeln mäter ett utvecklingstal för produktion.\ncatalog:occurrence:401516\ncatalog:occurrence:401517\ncatalog:occurrence:401537\ncatalog:register:224"
 
-[[statement]]
-kind = "set"
-subject = "produktionsindex-over-naringslivet: TUtvIxFast @2012-01-01..2012-12-31 where key = 'v28761'"
-fields = { "description" = "Årsmånadslänk i fasta priser" }
-evidence = "Rätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "produktionsindex-over-naringslivet: TUtvIxFast @2013-01-01..2013-12-31 where key = 'v28761'"
+subject = "var:tutvixfast"
 fields = { "description" = "Årsmånadslänk i fasta priser" }
-evidence = "Rätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "produktionsindex-over-naringslivet: TUtvIxFast @2014-01-01..2014-12-31 where key = 'v28761'"
-fields = { "description" = "Årsmånadslänk i fasta priser" }
-evidence = "Rätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436"
