@@ -8,9 +8,9 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA shell, search, provider, register and table pages use the current API. Variable,
-classification and project pages remain disconnected until their owning workstreams
-restore them. The earlier SPA is archived on `archive/reg-webapp-spa`.
+The SPA shell, search, provider, register, table, variable and classification-version
+pages use the current API. Project pages remain disconnected until their owning
+workstream restores them. The earlier SPA is archived on `archive/reg-webapp-spa`.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
@@ -36,6 +36,20 @@ register response, falling back to identifiers only when names are unknown.
 `Finding.tsx` remains the separate project-validation renderer. Table releases also
 start collapsed and expand in edition order, marking primary releases. The obsolete
 variants browser has no route or data source; editions remain deferred.
+
+Variable value sets stay inline, deduplicated by hash across segments, with table and
+period coverage. Disclosures fetch codes on first expansion through `values`; hashes
+never become routes. Flat sets use debounced server search and cursor paging.
+Hierarchical sets start at level one, load children by parent code, and keep expanded
+branches while search shows flat matches with levels. Only active search shows a
+matching result count; sentinel items are labelled in plain words.
+
+Classification-version routes (`/catalog/class/<family>/<version>`) read `values` with
+`classification` directly: classifications are not `Show` nodes. Humanized version slugs
+and value-set names are the available title metadata. A family has no page because the
+API cannot list its versions. Classification umbrella group routes remain separate.
+Segments supply their own classification links; a null value-set classification is never
+inferred from its names.
 
 ## Why no auth — cost protection instead
 

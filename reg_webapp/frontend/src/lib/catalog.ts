@@ -223,13 +223,19 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       return [{ label: BROWSE_REGISTERS_LABEL, narrowOnly: true }];
     case "catalog-node": {
       // Each ancestor segment is a link to its cumulative `/catalog/...` path;
-      // the leaf segment is the current page (no href).
+      // the leaf segment is the current page (no href). Classification families
+      // and their root have no pages, so their ancestors stay plain text.
       const trail = breadcrumbs(route.fqidPath);
+      const classification =
+        route.fqidPath === "class" || route.fqidPath.startsWith("class/");
       return [
         browserRoot,
         ...trail.map((c, i) => ({
           label: c.label,
-          href: i < trail.length - 1 ? catalogHref(c.fqidPath) : undefined,
+          href:
+            !classification && i < trail.length - 1
+              ? catalogHref(c.fqidPath)
+              : undefined,
         })),
       ];
     }
@@ -240,11 +246,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         label: route.key,
       });
     case "class-group":
-      return [
-        browserRoot,
-        { label: "class", href: catalogHref("class") },
-        { label: route.key },
-      ];
+      return [browserRoot, { label: "class" }, { label: route.key }];
     case "project":
       return [browserRoot, { label: "Project", word: true }];
     case "doc":

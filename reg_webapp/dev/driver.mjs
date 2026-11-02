@@ -339,6 +339,60 @@ async function browseVariableCase(page, shoot) {
   check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
 }
 
+// Browser boundary over webapp-dev's kon and bransch value sets. Fails if
+// variable disclosures lose their codes, q stops reaching the server, search
+// leaves unrelated codes visible, or hierarchy expansion/flat search loses its
+// children, levels or expansion after clearing search. Existing browse cases do
+// not open value sets. Expected labels and hierarchy come from
+// inputs/frame/webapp-dev.jsonl.
+async function browseValuesCase(page, shoot) {
+  const main = page.getByRole("main");
+  await main.locator('a[href="/catalog/demo/bas/kon"]').click();
+  await page.waitForURL("**/catalog/demo/bas/kon");
+  await settled(page);
+  const values = main.locator("section").filter({ has: page.getByRole("heading", { name: "Value sets", exact: true }) });
+  await values.getByRole("button", { name: /^kon/ }).click();
+  await settled(page);
+  await values.getByText("Man", { exact: true }).waitFor();
+  await values.getByText("Kvinna", { exact: true }).waitFor();
+  await shoot("browse-values");
+  const flatSearch = page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return url.pathname === "/api/values" && url.searchParams.get("q") === "Kvinna" && response.ok();
+  });
+  await values.getByRole("searchbox", { name: "Search codes", exact: true }).fill("Kvinna");
+  await flatSearch;
+  await values.getByText("Man", { exact: true }).waitFor({ state: "detached" });
+  await values.getByText("Kvinna", { exact: true }).waitFor();
+  await settled(page);
+  // Fails if a successful server search omits its matching count.
+  await values.getByText("1 of 3", { exact: true }).waitFor();
+  await shoot("browse-values-search");
+
+  await open(page, "/catalog/demo/hush/bransch");
+  await settled(page);
+  await values.getByRole("button", { name: /^bransch/ }).click();
+  await settled(page);
+  await values.getByRole("button").filter({ has: page.getByText("Jordbruk", { exact: true }) }).click();
+  await values.getByText("Jordbruk, grupp 1", { exact: true }).waitFor();
+  await settled(page);
+  await shoot("browse-values-hierarchy");
+  const hierarchySearch = page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return url.pathname === "/api/values" && url.searchParams.get("q") === "Jordbruk, grupp 1a" && response.ok();
+  });
+  await values.getByRole("searchbox", { name: "Search codes", exact: true }).fill("Jordbruk, grupp 1a");
+  await hierarchySearch;
+  await values.getByText("Jordbruk, grupp 1a", { exact: true }).waitFor();
+  await values.getByText("Jordbruk, grupp 1", { exact: true }).waitFor({ state: "hidden" });
+  await values.getByText(/level 3/i).waitFor();
+  await settled(page);
+  await shoot("browse-values-hierarchy-search");
+  await values.getByRole("searchbox", { name: "Search codes", exact: true }).press("Escape");
+  await values.getByText("Jordbruk, grupp 1", { exact: true }).waitFor();
+  await settled(page);
+}
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -392,6 +446,11 @@ async function runCase(viewport, name, body, route) {
       shots: 2,
       route: "/catalog/demo/hush",
       run: browseVariableCase,
+    },
+    "browse-values": {
+      shots: 4,
+      route: "/catalog/demo/bas",
+      run: browseValuesCase,
     },
   };
   for (const name of selection) {
