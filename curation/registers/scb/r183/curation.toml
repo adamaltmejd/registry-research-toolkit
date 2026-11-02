@@ -566,8 +566,8 @@ evidence = "Planerade bostadsinvesteringar.\ncatalog:variable_text:30256:14975:1
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30257:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30257:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250965\nrel070-base/reg_meta.db:occurrence:251057\nrel070-base/reg_meta.db:occurrence:251149\nrel070-base/reg_meta.db:occurrence:251241\nrel070-base/reg_meta.db:occurrence:251333\nrel070-base/reg_meta.db:occurrence:251425\nrel070-base/reg_meta.db:occurrence:251516\nrel070-base/reg_meta.db:occurrence:251812\nrel070-base/reg_meta.db:occurrence:251903\nrel070-base/reg_meta.db:occurrence:251995\nrel070-base/reg_meta.db:occurrence:252078\nrel070-base/reg_meta.db:occurrence:252161\nrel070-base/reg_meta.db:occurrence:252244\nrel070-base/reg_meta.db:occurrence:252327"
 
 [[statement]]
 kind = "set"
@@ -578,8 +578,8 @@ evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-bkbyggm"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251580\ncatalog:occurrence:251589"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251580\ncatalog:occurrence:251589\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251589\nrel070-base/reg_meta.db:occurrence:251641\nrel070-base/reg_meta.db:occurrence:251692\nrel070-base/reg_meta.db:occurrence:251743"
 
 [[statement]]
 kind = "set"
@@ -590,8 +590,8 @@ evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-v211"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30259:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30259:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250974\nrel070-base/reg_meta.db:occurrence:251066\nrel070-base/reg_meta.db:occurrence:251158\nrel070-base/reg_meta.db:occurrence:251250\nrel070-base/reg_meta.db:occurrence:251342\nrel070-base/reg_meta.db:occurrence:251434\nrel070-base/reg_meta.db:occurrence:251525\nrel070-base/reg_meta.db:occurrence:251821\nrel070-base/reg_meta.db:occurrence:251912\nrel070-base/reg_meta.db:occurrence:252004\nrel070-base/reg_meta.db:occurrence:252087\nrel070-base/reg_meta.db:occurrence:252170\nrel070-base/reg_meta.db:occurrence:252253\nrel070-base/reg_meta.db:occurrence:252336"
 
 [[statement]]
 kind = "set"
@@ -602,8 +602,8 @@ evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-v311"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30260:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30260:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250983\nrel070-base/reg_meta.db:occurrence:251075\nrel070-base/reg_meta.db:occurrence:251167\nrel070-base/reg_meta.db:occurrence:251259\nrel070-base/reg_meta.db:occurrence:251351\nrel070-base/reg_meta.db:occurrence:251443\nrel070-base/reg_meta.db:occurrence:251534\nrel070-base/reg_meta.db:occurrence:251830\nrel070-base/reg_meta.db:occurrence:251921\nrel070-base/reg_meta.db:occurrence:252013\nrel070-base/reg_meta.db:occurrence:252096\nrel070-base/reg_meta.db:occurrence:252179\nrel070-base/reg_meta.db:occurrence:252262\nrel070-base/reg_meta.db:occurrence:252345"
 
 [[statement]]
 kind = "set"
@@ -614,8 +614,8 @@ evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-v411"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30261:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30261:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250992\nrel070-base/reg_meta.db:occurrence:251084\nrel070-base/reg_meta.db:occurrence:251176\nrel070-base/reg_meta.db:occurrence:251268\nrel070-base/reg_meta.db:occurrence:251360\nrel070-base/reg_meta.db:occurrence:251452\nrel070-base/reg_meta.db:occurrence:251543\nrel070-base/reg_meta.db:occurrence:251839\nrel070-base/reg_meta.db:occurrence:251930\nrel070-base/reg_meta.db:occurrence:252022\nrel070-base/reg_meta.db:occurrence:252105\nrel070-base/reg_meta.db:occurrence:252188\nrel070-base/reg_meta.db:occurrence:252271\nrel070-base/reg_meta.db:occurrence:252354"
 
 [[statement]]
 kind = "set"
@@ -626,8 +626,8 @@ evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-v511"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30262:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30262:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251001\nrel070-base/reg_meta.db:occurrence:251093\nrel070-base/reg_meta.db:occurrence:251185\nrel070-base/reg_meta.db:occurrence:251277\nrel070-base/reg_meta.db:occurrence:251369\nrel070-base/reg_meta.db:occurrence:251461\nrel070-base/reg_meta.db:occurrence:251552\nrel070-base/reg_meta.db:occurrence:251848\nrel070-base/reg_meta.db:occurrence:251939\nrel070-base/reg_meta.db:occurrence:252031\nrel070-base/reg_meta.db:occurrence:252114\nrel070-base/reg_meta.db:occurrence:252197\nrel070-base/reg_meta.db:occurrence:252280\nrel070-base/reg_meta.db:occurrence:252363"
 
 [[statement]]
 kind = "set"
@@ -638,8 +638,8 @@ evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-maskiner-inventarier-v611"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30263:14975:17532"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Planerade investeringar i maskiner och inventarier.\ncatalog:variable_text:30263:14975:17532\n\nDefinition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251010\nrel070-base/reg_meta.db:occurrence:251102\nrel070-base/reg_meta.db:occurrence:251194\nrel070-base/reg_meta.db:occurrence:251286\nrel070-base/reg_meta.db:occurrence:251378\nrel070-base/reg_meta.db:occurrence:251470\nrel070-base/reg_meta.db:occurrence:251561\nrel070-base/reg_meta.db:occurrence:251857\nrel070-base/reg_meta.db:occurrence:251948\nrel070-base/reg_meta.db:occurrence:252040\nrel070-base/reg_meta.db:occurrence:252123\nrel070-base/reg_meta.db:occurrence:252206\nrel070-base/reg_meta.db:occurrence:252289\nrel070-base/reg_meta.db:occurrence:252372"
 
 [[statement]]
 kind = "set"
@@ -1250,8 +1250,8 @@ evidence = "Källan avser investeringar i fastighetsinköp.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:investeringar-verkstallda-maskiner"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251580\ncatalog:occurrence:251589"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Definition-pass audit follow-up 2026-11-02: Source key v2786 measures annual completed machinery/equipment investment and is an explicit candidate member. BKbyggm is a shared spelling; it does not make v2786 the planned v2826 measure.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:250940\nrel070-base/reg_meta.db:occurrence:251032\nrel070-base/reg_meta.db:occurrence:251124\nrel070-base/reg_meta.db:occurrence:251216\nrel070-base/reg_meta.db:occurrence:251308\nrel070-base/reg_meta.db:occurrence:251400\nrel070-base/reg_meta.db:occurrence:251491\nrel070-base/reg_meta.db:occurrence:251580\nrel070-base/reg_meta.db:occurrence:251632\nrel070-base/reg_meta.db:occurrence:251683\nrel070-base/reg_meta.db:occurrence:251734\nrel070-base/reg_meta.db:occurrence:251788\nrel070-base/reg_meta.db:occurrence:251879\nrel070-base/reg_meta.db:occurrence:251970\nrel070-base/reg_meta.db:occurrence:252062\nrel070-base/reg_meta.db:occurrence:252145\nrel070-base/reg_meta.db:occurrence:252228\nrel070-base/reg_meta.db:occurrence:252311"
 
 [[statement]]
 kind = "set"
@@ -1808,8 +1808,8 @@ evidence = "Källan avser uppräknat investeringsvärde.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:verkstallda-transport-bilar"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590\n\nDefinition pass 2026-11-02: The annual total inseparably combines cars and trailers; the approved car-group scope includes this total.\nrel070-base/reg_meta.db:occurrence:250941\nrel070-base/reg_meta.db:occurrence:251033\nrel070-base/reg_meta.db:occurrence:251125\nrel070-base/reg_meta.db:occurrence:251217\nrel070-base/reg_meta.db:occurrence:251309\nrel070-base/reg_meta.db:occurrence:251401\nrel070-base/reg_meta.db:occurrence:251492\nrel070-base/reg_meta.db:occurrence:251581\nrel070-base/reg_meta.db:occurrence:251633\nrel070-base/reg_meta.db:occurrence:251684\nrel070-base/reg_meta.db:occurrence:251735\nrel070-base/reg_meta.db:occurrence:251789\nrel070-base/reg_meta.db:occurrence:251880\nrel070-base/reg_meta.db:occurrence:251971\nrel070-base/reg_meta.db:occurrence:252063\nrel070-base/reg_meta.db:occurrence:252146\nrel070-base/reg_meta.db:occurrence:252229\nrel070-base/reg_meta.db:occurrence:252312"
 
 [[statement]]
 kind = "set"
@@ -1906,3 +1906,51 @@ kind = "set"
 subject = "var:planerade-transport-bilar"
 fields = { "sets" = ["investeringar-i-bilar"] }
 evidence = "The definition specifies quarterly planned investment in cars (r243), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30352\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-bilar"
+fields = { "description" = "Verkställda investeringar i bilar och släpfordon för hela året, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The annual total inseparably combines cars and trailers; the approved car-group scope includes this total.\nrel070-base/reg_meta.db:occurrence:250941\nrel070-base/reg_meta.db:occurrence:251033\nrel070-base/reg_meta.db:occurrence:251125\nrel070-base/reg_meta.db:occurrence:251217\nrel070-base/reg_meta.db:occurrence:251309\nrel070-base/reg_meta.db:occurrence:251401\nrel070-base/reg_meta.db:occurrence:251492\nrel070-base/reg_meta.db:occurrence:251581\nrel070-base/reg_meta.db:occurrence:251633\nrel070-base/reg_meta.db:occurrence:251684\nrel070-base/reg_meta.db:occurrence:251735\nrel070-base/reg_meta.db:occurrence:251789\nrel070-base/reg_meta.db:occurrence:251880\nrel070-base/reg_meta.db:occurrence:251971\nrel070-base/reg_meta.db:occurrence:252063\nrel070-base/reg_meta.db:occurrence:252146\nrel070-base/reg_meta.db:occurrence:252229\nrel070-base/reg_meta.db:occurrence:252312"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250965\nrel070-base/reg_meta.db:occurrence:251057\nrel070-base/reg_meta.db:occurrence:251149\nrel070-base/reg_meta.db:occurrence:251241\nrel070-base/reg_meta.db:occurrence:251333\nrel070-base/reg_meta.db:occurrence:251425\nrel070-base/reg_meta.db:occurrence:251516\nrel070-base/reg_meta.db:occurrence:251812\nrel070-base/reg_meta.db:occurrence:251903\nrel070-base/reg_meta.db:occurrence:251995\nrel070-base/reg_meta.db:occurrence:252078\nrel070-base/reg_meta.db:occurrence:252161\nrel070-base/reg_meta.db:occurrence:252244\nrel070-base/reg_meta.db:occurrence:252327"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-bkbyggm"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251589\nrel070-base/reg_meta.db:occurrence:251641\nrel070-base/reg_meta.db:occurrence:251692\nrel070-base/reg_meta.db:occurrence:251743"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v211"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250974\nrel070-base/reg_meta.db:occurrence:251066\nrel070-base/reg_meta.db:occurrence:251158\nrel070-base/reg_meta.db:occurrence:251250\nrel070-base/reg_meta.db:occurrence:251342\nrel070-base/reg_meta.db:occurrence:251434\nrel070-base/reg_meta.db:occurrence:251525\nrel070-base/reg_meta.db:occurrence:251821\nrel070-base/reg_meta.db:occurrence:251912\nrel070-base/reg_meta.db:occurrence:252004\nrel070-base/reg_meta.db:occurrence:252087\nrel070-base/reg_meta.db:occurrence:252170\nrel070-base/reg_meta.db:occurrence:252253\nrel070-base/reg_meta.db:occurrence:252336"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v311"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250983\nrel070-base/reg_meta.db:occurrence:251075\nrel070-base/reg_meta.db:occurrence:251167\nrel070-base/reg_meta.db:occurrence:251259\nrel070-base/reg_meta.db:occurrence:251351\nrel070-base/reg_meta.db:occurrence:251443\nrel070-base/reg_meta.db:occurrence:251534\nrel070-base/reg_meta.db:occurrence:251830\nrel070-base/reg_meta.db:occurrence:251921\nrel070-base/reg_meta.db:occurrence:252013\nrel070-base/reg_meta.db:occurrence:252096\nrel070-base/reg_meta.db:occurrence:252179\nrel070-base/reg_meta.db:occurrence:252262\nrel070-base/reg_meta.db:occurrence:252345"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v411"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:250992\nrel070-base/reg_meta.db:occurrence:251084\nrel070-base/reg_meta.db:occurrence:251176\nrel070-base/reg_meta.db:occurrence:251268\nrel070-base/reg_meta.db:occurrence:251360\nrel070-base/reg_meta.db:occurrence:251452\nrel070-base/reg_meta.db:occurrence:251543\nrel070-base/reg_meta.db:occurrence:251839\nrel070-base/reg_meta.db:occurrence:251930\nrel070-base/reg_meta.db:occurrence:252022\nrel070-base/reg_meta.db:occurrence:252105\nrel070-base/reg_meta.db:occurrence:252188\nrel070-base/reg_meta.db:occurrence:252271\nrel070-base/reg_meta.db:occurrence:252354"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v511"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251001\nrel070-base/reg_meta.db:occurrence:251093\nrel070-base/reg_meta.db:occurrence:251185\nrel070-base/reg_meta.db:occurrence:251277\nrel070-base/reg_meta.db:occurrence:251369\nrel070-base/reg_meta.db:occurrence:251461\nrel070-base/reg_meta.db:occurrence:251552\nrel070-base/reg_meta.db:occurrence:251848\nrel070-base/reg_meta.db:occurrence:251939\nrel070-base/reg_meta.db:occurrence:252031\nrel070-base/reg_meta.db:occurrence:252114\nrel070-base/reg_meta.db:occurrence:252197\nrel070-base/reg_meta.db:occurrence:252280\nrel070-base/reg_meta.db:occurrence:252363"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v611"
+fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor. I urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Definition pass 2026-11-02: The source defines the combined machinery, transport and equipment category; separately reported transport investment is a different measure.\nrel070-base/reg_meta.db:occurrence:251010\nrel070-base/reg_meta.db:occurrence:251102\nrel070-base/reg_meta.db:occurrence:251194\nrel070-base/reg_meta.db:occurrence:251286\nrel070-base/reg_meta.db:occurrence:251378\nrel070-base/reg_meta.db:occurrence:251470\nrel070-base/reg_meta.db:occurrence:251561\nrel070-base/reg_meta.db:occurrence:251857\nrel070-base/reg_meta.db:occurrence:251948\nrel070-base/reg_meta.db:occurrence:252040\nrel070-base/reg_meta.db:occurrence:252123\nrel070-base/reg_meta.db:occurrence:252206\nrel070-base/reg_meta.db:occurrence:252289\nrel070-base/reg_meta.db:occurrence:252372"

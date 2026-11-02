@@ -977,3 +977,9 @@ kind = "set"
 subject = "var:studievag-gymnasieskolan"
 fields = { "description" = "Studieväg" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen"
+fields = { "description" = "Antal terminer som kursen läses över. Vilken kurs som avses anges i variabeln Kurs." }
+evidence = "Definition pass 2026-11-02: The operational definition and unit Antal establish a duration count, not a calendar term.\nrel070-base/reg_meta.db:occurrence:214714\nrel070-base/reg_meta.db:occurrence:214748\nrel070-base/reg_meta.db:occurrence:214783\nrel070-base/reg_meta.db:occurrence:214827\nrel070-base/reg_meta.db:occurrence:214878\nrel070-base/reg_meta.db:occurrence:214922\nrel070-base/reg_meta.db:occurrence:214967\nrel070-base/reg_meta.db:occurrence:215006\nrel070-base/reg_meta.db:occurrence:215046\nrel070-base/reg_meta.db:occurrence:215090\nrel070-base/reg_meta.db:occurrence:215134\nrel070-base/reg_meta.db:occurrence:215178\nrel070-base/reg_meta.db:occurrence:215222\nrel070-base/reg_meta.db:occurrence:215266"

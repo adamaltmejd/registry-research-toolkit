@@ -1017,8 +1017,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-0-5-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 0–5 år vid studiestarten. Uppgiften avser studiestarten hösten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390074:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390074."
+fields = { "description" = "Indikator för hemmavarande barn i åldern 0–5 år vid studiestarten i komvux under höstterminen. Kod 2 anger ja, 0 ej kryss och 9 saknad uppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390074:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390074.\n\nDefinition pass 2026-11-02: Valueset 3123 is an age-band checkbox, not a child count. The source question fixes the reference point at study start.\nrel070-base/reg_meta.db:occurrence:390074"
 
 
 [[statement]]

@@ -29190,3 +29190,21 @@ kind = "set"
 subject = "var:z0703"
 fields = { "tags" = ["taxation"] }
 evidence = "r597 supplies a formula in register-k10, confirmed by r317. The explicitly taxable K10 profit context in r595 supports taxation without decoding point 4.2.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:76380\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:9969\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:9979"
+
+[[statement]]
+kind = "set"
+subject = "var:bbtpandh"
+fields = { "description" = "Antal individer i familjehushållet. Uppgiften härleds genom att summera individerna i FASIT:s individregister." }
+evidence = "Definition pass 2026-11-02: The definition, derivation and person-count unit agree; the housing-share label is erroneous.\nrel070-base/reg_meta.db:occurrence:58527\nrel070-base/reg_meta.db:occurrence:58595\nrel070-base/reg_meta.db:occurrence:58666\nrel070-base/reg_meta.db:occurrence:58770\nrel070-base/reg_meta.db:occurrence:58898\nrel070-base/reg_meta.db:occurrence:59026\nrel070-base/reg_meta.db:occurrence:59097\nrel070-base/reg_meta.db:occurrence:59177\nrel070-base/reg_meta.db:occurrence:59254\nrel070-base/reg_meta.db:occurrence:59333\nrel070-base/reg_meta.db:occurrence:59416\nrel070-base/reg_meta.db:occurrence:59497\nrel070-base/reg_meta.db:occurrence:59578\nrel070-base/reg_meta.db:occurrence:59660\nrel070-base/reg_meta.db:occurrence:59742\nrel070-base/reg_meta.db:occurrence:59872"
+
+[[statement]]
+kind = "set"
+subject = "var:bbtpandhb"
+fields = { "description" = "Antal individer i bostadshushållet. Uppgiften härleds genom att summera individerna i FASIT:s individregister." }
+evidence = "Definition pass 2026-11-02: The definition, derivation and person-count unit agree; the housing-share label is erroneous.\nrel070-base/reg_meta.db:occurrence:59098\nrel070-base/reg_meta.db:occurrence:59178\nrel070-base/reg_meta.db:occurrence:59255\nrel070-base/reg_meta.db:occurrence:59334\nrel070-base/reg_meta.db:occurrence:59417\nrel070-base/reg_meta.db:occurrence:59498\nrel070-base/reg_meta.db:occurrence:59579\nrel070-base/reg_meta.db:occurrence:59661\nrel070-base/reg_meta.db:occurrence:59743\nrel070-base/reg_meta.db:occurrence:59873"
+
+[[statement]]
+kind = "set"
+subject = "var:bbtpandz"
+fields = { "description" = "Antal personer i kosthushållet. Uppgiften härleds från individregistret i FASIT." }
+evidence = "Definition pass 2026-11-02: The definition, derivation and person-count unit agree; the housing-share label is erroneous.\nrel070-base/reg_meta.db:occurrence:58528\nrel070-base/reg_meta.db:occurrence:58596\nrel070-base/reg_meta.db:occurrence:58667\nrel070-base/reg_meta.db:occurrence:58771\nrel070-base/reg_meta.db:occurrence:58899\nrel070-base/reg_meta.db:occurrence:59027"

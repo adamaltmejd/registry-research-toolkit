@@ -7740,3 +7740,9 @@ kind = "set"
 subject = "var:mikrougn"
 fields = { "tags" = ["housing"] }
 evidence = "r85 measures appliance access. Comparable dwelling equipment, the washing machine in r104, supports the housing theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45583"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-svar"
+fields = { "description" = "Tilldelad redovisningsdag som SCB önskade att respondenten skulle lämna uppgifter för." }
+evidence = "Definition pass 2026-11-02: The operational definition gives the assigned diary/reference day, not the date a response arrived.\nrel070-base/reg_meta.db:occurrence:466882"
