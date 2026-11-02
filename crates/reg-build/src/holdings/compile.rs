@@ -98,7 +98,7 @@ pub(super) fn periods(value: &str) -> Result<Vec<Span>, String> {
     Ok(merge(out))
 }
 
-fn canonical_period(value: &str) -> Result<String, String> {
+pub(super) fn canonical_period(value: &str) -> Result<String, String> {
     let spans = value
         .split(',')
         .map(|token| {
@@ -112,7 +112,7 @@ fn canonical_period(value: &str) -> Result<String, String> {
     Ok(reg_core::render(&reg_core::merge(spans)))
 }
 
-fn table_periods(table: &input::Table) -> Result<Vec<Span>, String> {
+pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>, String> {
     match (table.disposition.as_str(), table.delivery.as_deref()) {
         ("dated", Some(delivery)) => periods(delivery),
         ("timeless", None) => Ok(vec![(
@@ -293,46 +293,30 @@ fn placements(
     locator: &str,
     keys: &[input::RowKey],
 ) -> Result<Vec<Segment>, String> {
-    let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
-    let mut withheld = BTreeSet::new();
-    for c in candidates {
-        if let Some(key) = keys.iter().find(|k| k.hold.is_some()) {
-            withheld.insert(key.locator.as_str());
-            for span in &c.spans {
-                notice(
-                    db,
-                    holding,
-                    Some(column),
-                    "row_key_held",
-                    Some(*span),
-                    (&[], &[], &[]),
-                    key.hold.as_deref().expect("held key"),
-                    &key.locator,
-                )?;
-            }
-        } else {
-            by_table.entry(&c.segment.table).or_default().push(c);
-        }
-    }
-    if by_table.is_empty()
-        && (!withheld.is_empty() || !keys.is_empty() && keys.iter().all(|k| k.hold.is_some()))
-    {
-        let held: Vec<_> = keys.iter().filter(|k| k.hold.is_some()).collect();
-        let reason = held
-            .iter()
-            .map(|k| k.hold.as_deref().expect("held key"))
-            .collect::<Vec<_>>()
-            .join("; ");
-        let follow_up = held
-            .iter()
-            .filter_map(|k| k.follow_up.as_deref())
-            .collect::<Vec<_>>()
-            .join("; ");
+    if let Some(key) = keys.iter().find(|key| key.hold.is_some()) {
         db.execute(
             "UPDATE holding_column SET disposition='hold',reason=?,follow_up=? WHERE id=?",
-            params![reason, follow_up, column],
+            params![key.hold, key.follow_up, column],
         )
         .map_err(|_| "holdings_row_key_invalid: hold needs a reason and follow-up")?;
+        notice(
+            db,
+            holding,
+            Some(column),
+            "row_key_held",
+            None,
+            (owed, &[], &[]),
+            key.hold.as_deref().expect("held key"),
+            &key.locator,
+        )?;
+        return Ok(Vec::new());
+    }
+    let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
+    for candidate in candidates {
+        by_table
+            .entry(&candidate.segment.table)
+            .or_default()
+            .push(candidate);
     }
     let mut accepted = Vec::new();
     let mut admitted = Vec::new();
@@ -577,6 +561,7 @@ pub(super) fn write(
         let authored = &authored[&table.name];
         let id = ids[&table.name];
         let result = (|| -> Result<(), String> {
+            super::keys::validate_shapes(id, &authored.key)?;
             let spans = table_periods(authored)?;
             if authored.partition.is_some() && authored.projection_of.is_some() {
                 return Err(
@@ -775,6 +760,9 @@ pub(super) fn write(
                     let candidates = candidates(authored, column, decision, &owed, &index)?;
                     let accepted =
                         placements(&tx, id, cid, &candidates, &owed, locator, &authored.key)?;
+                    if accepted.is_empty() && authored.key.iter().any(|key| key.hold.is_some()) {
+                        return Ok(());
+                    }
                     if accepted.is_empty() {
                         unmatched += 1;
                         notice(
@@ -817,20 +805,7 @@ pub(super) fn write(
         })();
         result.map_err(|error| format!("holdings:table={id}: {error}"))?;
     }
-    // A projection may introduce its own entity components (recipient × child).
-    // These held keys serve no projected data cell and need no parent copy.
-    tx.execute(
-        "UPDATE holding_mapping SET carried=1 WHERE id IN (
-        SELECT m.id FROM holding_mapping m
-        JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id
-        WHERE h.projection_of IS NOT NULL AND EXISTS (
-            SELECT 1 FROM json_each(h.key_requirements) k WHERE
-            EXISTS (SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
-            OR EXISTS (SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid)
-        ))",
-        [],
-    )
-    .map_err(|e| e.to_string())?;
+    super::keys::carry_projections(&tx)?;
     tx.commit().map_err(|e| e.to_string())?;
     Ok((count_tables, count_columns, mapped, unmatched))
 }

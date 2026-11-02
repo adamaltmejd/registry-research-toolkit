@@ -42,6 +42,22 @@ def generation(db_path: Path) -> str:
     return value
 
 
+def verify_refusals(tmp_path, output, base, root, variant="base"):
+    for case in json.loads((HOLDINGS_CASE / "verify-refusals.json").read_text()):
+        if case.get("variant", "base") != variant:
+            continue
+        damaged = tmp_path / "damaged.db"
+        shutil.copyfile(output, damaged)
+        with closing(sqlite3.connect(damaged)) as db:
+            db.executescript(case["sql"])
+        refused = run(
+            [REG_BUILD, "verify", damaged, "--catalog", base, "--steward-repo", root]
+        )
+        assert refused.returncode == 1
+        assert case["code"] in refused.stderr, refused.stderr
+        assert case["location"] in refused.stderr, refused.stderr
+
+
 @pytest.mark.parametrize(
     "case", sorted((CASES / "order").iterdir()), ids=lambda p: p.name
 )
@@ -91,7 +107,7 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # RelativeId is an identifier but not an entity/time component; requiring it
     # would wrongly refuse Pool. PartA/B supply their year from the table period.
     # Child introduces its own entity component absent from Parent: requiring
-    # that carried key as a projected parent data cell would wrongly refuse it.
+    # that child-only key as a projected parent cell would wrongly refuse it.
     # Owners.Unmatched is beside offered columns without a period-column binding;
     # SQL NULL propagation in the independent storage predicate must not refuse it.
     # Expected placements are authored from census, dates and ledgers in the corpus.
@@ -162,17 +178,9 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # its explicitly disjoint allowed twin.
     # The withheld-key case also fails if the required-key guard or its location is lost,
     # while retaining source coordinates and consistent mapped/unmatched accounting.
-    for case in json.loads((HOLDINGS_CASE / "verify-refusals.json").read_text()):
-        damaged = tmp_path / "damaged.db"
-        shutil.copyfile(outputs[0], damaged)
-        with closing(sqlite3.connect(damaged)) as db:
-            db.executescript(case["sql"])
-        refused = run(
-            [REG_BUILD, "verify", damaged, "--catalog", base, "--steward-repo", root]
-        )
-        assert refused.returncode == 1
-        assert case["code"] in refused.stderr
-        assert case["location"] in refused.stderr
+    # Mutations also fail if stored delivery bounds replace authored bounds, if a
+    # child data cell is carried as a key, or if a projection loses its parent key.
+    verify_refusals(tmp_path, outputs[0], base, root)
 
 
 def test_projection_keeps_child_only_data_beside_parent_holds(tmp_path):
@@ -214,6 +222,64 @@ def test_projection_keeps_child_only_data_beside_parent_holds(tmp_path):
         assert [list(row) for row in held] == expected["held"]
 
 
+def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
+    tmp_path, server_cmd
+):
+    # Fails if catalog identifier roles auto-carry RelativeId or replace the
+    # declared received Id. The corpus keeps RelativeId as an explicit binding;
+    # reference-only order cases cannot exercise the holdings key authority.
+    base, _, command = prepare_holdings(tmp_path)
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    expected = json.loads((HOLDINGS_CASE / "order-key-requirements.json").read_text())
+    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
+    try:
+        answer = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=expected["project"]
+        )
+        assert answer.status_code == 200, answer.text
+        data = answer.json()["data"]
+        assert data["row_keys"] == expected["row_keys"]
+        linking = expected["explicit_linking_entry"]
+        assert [
+            {key: entry[key] for key in linking}
+            for entry in data["entries"]
+            if entry["variable"] == linking["variable"]
+        ] == [linking]
+    finally:
+        pool.close()
+
+
+def test_bounded_period_key_does_not_offer_unused_period_column(tmp_path):
+    # Fails if an attested single delivery cannot supply a period key, or unused
+    # period-column metadata forces a storage claim despite its explicit unmap.
+    base, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    original = '[[table.key]]\nentity = ["demo/held/id"]\ntime = []\nperiod_key = "column"\nlocator = "fixture:declared-entity-time-key"\n'
+    path.write_text(
+        path.read_text().replace(
+            original, (HOLDINGS_CASE / "bounded-period-key.toml").read_text(), 1
+        )
+    )
+    storage = root / "storage.csv"
+    storage.write_text(
+        "\n".join(
+            line for line in storage.read_text().splitlines() if ",Year," not in line
+        )
+        + "\n"
+    )
+    pin_steward(root, tmp_path / "stewards.toml")
+    output = tmp_path / "bounded.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    verified = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert verified.returncode == 0, verified.stderr
+
+
 def test_explicit_missing_row_key_holds_the_received_table(tmp_path):
     # Fails if an explicit missing-time-key hold offers another column from the
     # same received table. Other table/column holds do not pin this row-unit rule.
@@ -239,6 +305,17 @@ def test_explicit_missing_row_key_holds_the_received_table(tmp_path):
         assert db.execute(
             "SELECT count(*) FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Pool' AND c.disposition='hold'"
         ).fetchone() == (9,)
+        # A deliberate row-unit hold has an owner and is not an unmatched column.
+        assert db.execute(
+            "SELECT count(*) FROM holding_notice n JOIN holding_table t ON t.id=n.holding_id WHERE t.physical_name='Pool' AND n.code IN ('unmatched','mapping_missing')"
+        ).fetchone() == (0,)
+        # Only Owners.Unmatched lacks an owner; Shared retains its uncontested slices.
+        expected = json.loads((HOLDINGS_CASE / "expected.json").read_text())
+        assert db.execute(
+            "SELECT value FROM meta WHERE key='unmatched_columns'"
+        ).fetchone() == (expected["held_key_unmatched_columns"],)
+    # Fails if a stored mapping is admitted beside its pinned held row-key claim.
+    verify_refusals(tmp_path, output, base, root, "held-key")
 
 
 def test_unrouted_table_keeps_holds_and_valid_earlier_bindings(tmp_path):
@@ -403,6 +480,14 @@ def test_census_replacement_preserves_routes_and_refuses_vanished_columns(tmp_pa
         ("hidden-config", "holdings_pin_invalid"),
         ("blank-hold", "holdings_column_disposition_invalid"),
         ("pooled-year-key", "holdings_period_key_invalid"),
+        ("disjoint-period-key", "holdings_period_key_invalid"),
+        ("missing-period-column", "holdings_period_key_invalid"),
+        ("held-key-without-followup", "holdings_row_key_invalid"),
+        ("scoped-held-key", "holdings_row_key_invalid"),
+        ("duplicate-entity-key", "holdings_row_key_invalid"),
+        ("mixed-held-key", "holdings_row_key_invalid"),
+        ("projection-held-parent", "holdings_projection_key_missing"),
+        ("duplicate-placement", "inventory_cell_conflict"),
         ("overlapping-key-scopes", "holdings_row_key_undeclared_or_ambiguous"),
     ],
 )
@@ -410,6 +495,8 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
     # Fails if an invalid route/target/window or missing storage is silently admitted,
     # or if unpinned dirty source content bypasses admission. This exercises compiler
     # refusal beside the allowed physical fixture, at the publication boundary.
+    # The key twins fail if disjoint deliveries supply one implicit period, a
+    # column key lacks its column, or malformed/combined held claims are admitted.
     _, root, command = prepare_holdings(tmp_path)
     path = root / "holdings.toml"
     text = path.read_text()
@@ -438,6 +525,35 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
         text = text.replace('period = "2019"', 'period = "2018..2019"', 1)
     elif mutation == "pooled-year-key":
         text = text.replace('period_key = "column"', 'period_key = "year"', 1)
+    elif mutation == "disjoint-period-key":
+        text = text.replace('delivery = "2017..2020"', 'delivery = "2017,2019"', 1)
+        text = text.replace('period_key = "column"', 'period_key = "period"', 1)
+    elif mutation == "missing-period-column":
+        text = text.replace('period_column = "Year"\nperiod_encoding = "year"\n', "", 1)
+    elif mutation == "duplicate-placement":
+        text = text.replace('partition = "b"', 'partition = "a"', 1)
+    elif mutation == "projection-held-parent":
+        text = text.replace(
+            'entity = ["demo/projected/id"]\ntime = []\n',
+            'entity = ["demo/projected/id"]\ntime = []\nhold = "Parent key held"\nfollow_up = "synthetic:review-parent-key"\n',
+            1,
+        )
+    elif mutation == "duplicate-entity-key":
+        text = text.replace(
+            'entity = ["demo/projected/id"]',
+            'entity = ["demo/projected/id", "demo/projected/id"]',
+            1,
+        )
+    elif mutation in {"held-key-without-followup", "scoped-held-key", "mixed-held-key"}:
+        declaration = 'entity = ["demo/projected/id"]\ntime = []\n'
+        held = declaration + 'hold = "Await reviewed key"\n'
+        if mutation != "held-key-without-followup":
+            held += 'follow_up = "synthetic:review-key"\n'
+        if mutation == "scoped-held-key":
+            held += 'period = "2018"\n'
+        if mutation == "mixed-held-key":
+            held += 'locator = "fixture:held-key"\n\n[[table.key]]\n' + declaration
+        text = text.replace(declaration, held, 1)
     elif mutation == "blank-hold":
         text = text.replace('hold = "Await reviewed association"', 'hold = " "')
     elif mutation == "mixed-schema":
@@ -462,8 +578,14 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
     result = run([*command, "--out", output])
     assert result.returncode == 1
     assert refusal in result.stderr
-    if mutation in {"pooled-year-key", "overlapping-key-scopes"}:
+    if refusal.startswith(("holdings_period_key", "holdings_row_key")):
         assert "holdings:table=" in result.stderr
+        if mutation != "overlapping-key-scopes":
+            assert "fixture:" in result.stderr
+    if mutation == "projection-held-parent":
+        assert "holdings:table=1:parent=5:" in result.stderr
+    if mutation == "duplicate-placement":
+        assert "holdings:tables=" in result.stderr
     assert output.read_bytes() == b"previous publication"
     assert not list(tmp_path.glob(".*.holdings-*"))
 
@@ -641,6 +763,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
     )
     assert verified.returncode == 0, verified.stderr
+    # Fails if an occurrence binding may contain no supplemental segment, or a
+    # declared physical key is satisfied from an unrelated logical route.
+    verify_refusals(tmp_path, output, base, root, "reference")
     (tmp_path / "reg_meta.db").symlink_to(base)
     pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
     try:
@@ -671,6 +796,49 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         )
     finally:
         pool.close()
+    # Fails if located occurrence declarations can omit all supplemental segments
+    # on their claimed table. Keep endpoints and the variable's other membership.
+    references = root / "reference-occurrences.toml"
+    original = references.read_text()
+    # Retain a same-register source table with a different existing variable so
+    # the missing membership reaches the empty guard, not endpoint absence.
+    owners_source = source / "owners.csv"
+    owners_original = owners_source.read_text()
+    owners_source.write_text(
+        owners_original
+        + ",Other,Received table measure,,integer,,,,false,false,2017-01-01,2019-12-31\n"
+    )
+    ledger_original = owner_ledger.read_text()
+    owner_ledger.write_text(ledger_original + 'other = ["Other"]\n')
+    references.write_text(
+        original.replace(
+            'table_pid = "demo/owners/received"', 'table_pid = "demo/owners"'
+        )
+        + '\n[[occurrence]]\ntable_pid = "demo/owners"\nvariable_pid = "demo/owners/other"\nlocator = "synthetic-delivery:retain-table"\nevidence = "Existing canonical measure retains the table endpoint beside the empty key membership."\n'
+    )
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    empty = run([*command, "--out", tmp_path / "empty-occurrence.db"])
+    assert empty.returncode == 1
+    assert (
+        "synthetic-delivery:new-membership: holdings_reference_occurrence_empty"
+        in empty.stderr
+    )
+    references.write_text(original)
+    owners_source.write_text(owners_original)
+    owner_ledger.write_text(ledger_original)
     # The same declaration may add occurrence years, never overwrite a base year.
     source_file = source / "held.csv"
     source_file.write_text(

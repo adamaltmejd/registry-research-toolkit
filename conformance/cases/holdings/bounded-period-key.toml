@@ -1,0 +1,10 @@
+[[table.column]]
+name = "Year"
+unmap = "Time supplied by the bounded delivery period"
+locator = "fixture:unused-period-column"
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "period"
+locator = "fixture:bounded-delivery-key"

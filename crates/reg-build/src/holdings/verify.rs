@@ -18,7 +18,7 @@ struct StoredColumn {
 /// Compare artifact coordinates with the independently re-read, admitted sources.
 /// Artifact counters are summaries, never the census oracle.
 #[allow(clippy::too_many_lines)]
-fn sources(db: &Connection, root: &Path) -> Result<(), String> {
+fn sources(db: &Connection, root: &Path) -> Result<input::Topology, String> {
     let pin = input::Pin {
         repo: meta(db, "steward_repo")?,
         commit: meta(db, "steward_commit")?,
@@ -58,10 +58,42 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
             )
         })
         .collect();
+    let placements: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .map(|table| {
+            (
+                table.physical_name.clone(),
+                (
+                    table.projection_of.clone(),
+                    table.projection_token.clone(),
+                    table.partition.clone(),
+                ),
+            )
+        })
+        .collect();
+    let table_periods: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .map(|table| {
+            Ok((
+                table.physical_name.clone(),
+                (
+                    table.disposition.clone(),
+                    table
+                        .delivery
+                        .as_deref()
+                        .map(compile::canonical_period)
+                        .transpose()?,
+                    compile::table_periods(table)?,
+                ),
+            ))
+        })
+        .collect::<Result<_, String>>()?;
     let schemas: BTreeMap<_, _> = topology
         .table
-        .into_iter()
-        .map(|t| (t.physical_name, t.schema_name))
+        .iter()
+        .map(|t| (t.physical_name.clone(), t.schema_name.clone()))
         .collect();
     let mut query = db
         .prepare("SELECT physical_name,id,schema_name,table_type FROM holding_table")
@@ -76,6 +108,35 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
         let (id, schema, kind) = tables
             .remove(&table.name)
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+        let placement: (Option<String>, Option<String>, Option<String>) = db
+            .query_row(
+                "SELECT p.physical_name,h.projection_token,h.partition FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of WHERE h.id=?",
+                [id],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+            )
+            .map_err(|e| e.to_string())?;
+        if placements.get(&table.name) != Some(&placement) {
+            return Err(format!("{location}: holdings_topology_source_mismatch"));
+        }
+        let disposition: (String, Option<String>) = db
+            .query_row(
+                "SELECT disposition,delivery FROM holding_table WHERE id=?",
+                [id],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .map_err(|e| e.to_string())?;
+        let periods = db
+            .prepare("SELECT start,end FROM holding_period WHERE holding_id=? ORDER BY start,end")
+            .map_err(|e| e.to_string())?
+            .query_map([id], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, i64>(1)?)))
+            .map_err(|e| e.to_string())?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())?;
+        if table_periods.get(&table.name) != Some(&(disposition.0, disposition.1, periods)) {
+            return Err(format!(
+                "{location}: holdings_period_source_mismatch: authored table disposition or delivery differs"
+            ));
+        }
         let recorded: String = db
             .query_row(
                 "SELECT key_requirements FROM holding_table WHERE id=?",
@@ -94,17 +155,39 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
         if period_bindings.get(&table.name) != Some(&binding) {
             return Err(format!("{location}: holdings_period_source_mismatch"));
         }
+        let period_keys: Vec<_> = recorded
+            .iter()
+            .filter(|key| key.hold.is_none() && key.period_key.as_deref() == Some("column"))
+            .collect();
+        let mut period_offered = false;
+        if !period_keys.is_empty() {
+            let spans = db
+                .prepare("SELECT m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE c.holding_id=?")
+                .map_err(|e| e.to_string())?
+                .query_map([id], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, i64>(1)?)))
+                .map_err(|e| e.to_string())?
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(|e| e.to_string())?;
+            for key in period_keys {
+                let scope = key.period.as_deref().map(compile::periods).transpose()?;
+                if scope.as_ref().map_or(!spans.is_empty(), |scope| {
+                    !compile::overlap(&spans, scope).is_empty()
+                }) {
+                    period_offered = true;
+                    break;
+                }
+            }
+        }
         let mut query = db
             .prepare(
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
             EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
-              OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0)
-                  AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column x ON x.id=m.column_id WHERE x.holding_id=c.holding_id))
-            FROM holding_column c WHERE c.holding_id=?",
+              OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0) AND ?2)
+            FROM holding_column c WHERE c.holding_id=?1",
             )
             .map_err(|e| e.to_string())?;
         let mut columns: BTreeMap<String, StoredColumn> = query
-            .query_map([id], |r| {
+            .query_map(rusqlite::params![id, period_offered], |r| {
                 Ok((
                     r.get(0)?,
                     StoredColumn {
@@ -168,7 +251,7 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
             return Err(format!("census:{key}: holdings_source_accounting_mismatch"));
         }
     }
-    Ok(())
+    Ok(topology)
 }
 
 pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), String> {
@@ -233,7 +316,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
     if meta(&db, "owner_kind")? != "steward" || !reg_core::is_slug(&meta(&db, "owner_id")?) {
         return Err("holdings_owner_invalid".into());
     }
-    sources(&db, root)?;
+    let topology = sources(&db, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?
@@ -296,10 +379,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         (
             "SELECT 1 FROM holding_table h JOIN holding_column c ON c.id=h.period_column_id WHERE c.holding_id!=h.id",
             "holdings_period_column_invalid: foreign column",
-        ),
-        (
-            "SELECT 1 FROM holding_table h JOIN holding_column c ON c.id=h.period_column_id WHERE c.storage_type IS NULL AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column mc ON mc.id=m.column_id WHERE mc.holding_id=h.id)",
-            "holdings_storage_missing: row-period column needs unambiguous storage facts",
         ),
         (
             "SELECT 1 FROM holding_table h JOIN holding_table p ON p.id=h.projection_of WHERE h.id=p.id OR p.projection_of IS NOT NULL",
@@ -378,7 +457,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             .map(|s| (s.start, s.end))
             .collect();
         if !compile::covered(&[(start, end)], &admitted) {
-            return Err("inventory_window_invalid: mapping escapes unambiguous semantic coverage or key role".into());
+            return Err("inventory_window_invalid: mapping escapes unambiguous semantic coverage or declared role".into());
         }
         let mut periods = db
             .prepare("SELECT start,end FROM holding_period WHERE holding_id=?")
@@ -401,7 +480,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             );
         }
     }
-    super::keys::verify(&db, &base)?;
+    super::keys::verify(&db, &base, &topology)?;
     // Same logical cell in two columns needs an explicit partition, a projection,
     // or a carried key. Shared spelling and labels alone never authorize possession.
     let mut duplicates = db.prepare(

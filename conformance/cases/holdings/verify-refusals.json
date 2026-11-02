@@ -46,7 +46,39 @@
   },
   {
     "sql": "UPDATE holding_table SET partition=NULL WHERE physical_name='Part B'",
-    "code": "inventory_cell_conflict",
-    "location": "holdings:tables="
+    "code": "holdings_topology_source_mismatch",
+    "location": "census:row=5"
+  },
+  {
+    "sql": "UPDATE holding_period SET end=end+365 WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Parent')",
+    "code": "holdings_period_source_mismatch",
+    "location": "census:row=6"
+  },
+  {
+    "sql": "UPDATE holding_mapping SET carried=1 WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Child' AND c.name='ChildId')",
+    "code": "holdings_carried_key_invalid",
+    "location": "holdings:table=1:"
+  },
+  {
+    "sql": "DELETE FROM holding_mapping WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Parent' AND c.name='Id'); INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Withheld parent key','fixture:withheld-parent-key' FROM holding_column WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Parent') AND name='Id'",
+    "code": "holdings_projection_key_missing",
+    "location": "parent=5:key=demo/projected/id:"
+  },
+  {
+    "variant": "held-key",
+    "sql": "UPDATE holding_column SET disposition='candidate',reason=NULL,follow_up=NULL WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Pool') AND name='Received_Id'; INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,locator) SELECT c.id,'demo/held','demo/held/id',p.start,p.end,'row_key',0,'fixture:mapping-beside-held-key' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_period p ON p.holding_id=h.id WHERE h.physical_name='Pool' AND c.name='Received_Id'",
+    "code": "holdings_held_key_mapping",
+    "location": "holdings:table=8:"
+  },
+  {
+    "variant": "reference",
+    "sql": "UPDATE holding_mapping SET table_pid='demo/owners' WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='AttestedMember' AND c.name='Id')",
+    "code": "holdings_key_missing",
+    "location": "key=demo/owners/id:"
+  },
+  {
+    "sql": "UPDATE holding_table SET projection_of=(SELECT id FROM holding_table WHERE physical_name='Part A') WHERE physical_name='Child'",
+    "code": "holdings_topology_source_mismatch",
+    "location": "census:row=7"
   }
 ]

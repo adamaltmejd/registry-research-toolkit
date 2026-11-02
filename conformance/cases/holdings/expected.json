@@ -21,7 +21,7 @@
       "2018-01-01",
       "2019-01-01",
       "row_key",
-      1
+      0
     ],
     [
       "Child",
@@ -237,5 +237,6 @@
         "caveat": "Lineage preserves distinct variable identity and grants no possession."
       }
     ]
-  }
+  },
+  "held_key_unmatched_columns": "1"
 }
