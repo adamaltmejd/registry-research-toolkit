@@ -1045,14 +1045,17 @@ grammar (`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns
 
 - `class` is reserved as a slug everywhere. `set` and `group` are reserved only as
   leading provider segments; they remain valid register and final slugs. The set
-  namespace's provider obeys the same provider restrictions. A plain three-part ref
-  never addresses a set, even when its final slug matches a set's slug. Set refs are
-  presentation addresses, never project bindings, source tables or relation endpoints.
+  namespace's provider obeys the same provider restrictions. The builder refuses a
+  reserved provider in the manifest or source frame with located `provider-reserved`. A
+  plain three-part ref never addresses a set, even when its final slug matches a set's
+  slug. Set refs are presentation addresses, never project bindings, source tables or
+  relation endpoints.
 - A slash-separated ref is checked against this grammar before exact lookup. The leading
   `set/` namespace resolves only a set. Malformed set refs are `invalid_ref`; a
   well-formed absent set is `not_found`. Exact lookup cannot reinterpret the kind. Sets
   resolve only by their namespaced id: bare-name lookup excludes sets, so a same-slug
-  set never makes an ordinary variable's bare name ambiguous.
+  set never makes an ordinary variable's bare name ambiguous. Bare `set` is an ordinary
+  name and may resolve a variable; only leading `set/` selects the set namespace.
 - A slug is lowercase ASCII kebab-case, `^[a-z](?:-?[a-z0-9])*$`; a class version may
   start with a digit.
 - Time is context, not identity: no id has a period slot. The period grammar is `YYYY`,
@@ -2372,8 +2375,9 @@ A call returns one ranked list.
    `start < e AND s < end` over the row's hull, which drops code and document rows (no
    span). So `type=code` with `register` or `period` is empty. `tag` accepts a tag slug
    or its `tag/<slug>` public id and keeps only variables belonging to that tag; an
-   unknown tag has no matches. It applies before paging and paired-result counts, and
-   belongs to the cursor context like every other search filter.
+   unknown tag refuses with `not_found`, like an unknown register. It applies before
+   paging and paired-result counts, and belongs to the cursor context like every other
+   search filter.
 5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
    cursor's context is every parameter but `cursor` and `limit`, its offset the hits
    returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page
@@ -2442,6 +2446,12 @@ descriptions occupy `var_set.name_text` and `description_text`; ordered axes occ
 in its one set, in `var_set_member_facet`; omitted labels default to the value. An
 undeclared axis or a variable outside the set refuses at its statement location. These
 tables are part of catalog schema 6.
+
+Facets do not name a set, so a faceted variable must belong to exactly one set;
+ambiguous membership refuses rather than choosing one alphabetically. Presentation
+refusals use the ordinary curation removal and rerun path. A stale set declaration
+withdraws dependent facets and their provenance: development builds continue with
+located warnings, while release builds collect the refusals in their report.
 
 `show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
 optional `description`, register public id, ordered `axes`, and `members`. Each member

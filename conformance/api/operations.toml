@@ -57,7 +57,7 @@ bm25, then kind, then `sort_key` (schema §2.1): there is no exact-identity \
 first rule and no type prior, and pins and synonyms are curation (D). Without `type` \
 every kind ranks together; with `type` that kind only. `register` filters by \
 `search_item.register_id`; `period` keeps rows whose hull overlaps it. \
-`tag` accepts a tag slug or tag/<slug> and keeps only its member variables; unknown tags match nothing. A `code` hit \
+`tag` accepts a tag slug or tag/<slug> and keeps only its member variables; unknown tags refuse with not_found, like unknown registers. A `code` hit \
 is one distinct (code, label) pair, not a value set (schema §2.1, "Code search"): \
 `register` and `period` do not apply to it and exclude `code` rows from a \
 filtered search. Its value sets come from `values?code=&label=`. The tokenizer is \

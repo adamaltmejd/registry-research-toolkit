@@ -214,6 +214,9 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         _ => return Err(Error::invalid_parameter("scope")),
     };
     let conn = server.catalog.connect()?;
+    if let Some(tag) = params.get("tag") {
+        require_tag(server, &conn, tag)?;
+    }
     let mut page = search_origin(server, params, &conn, "cursor", "reference", held)?;
     if let Some(extra) = server.catalog.connect_holdings()? {
         let supplemental =
@@ -228,6 +231,32 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         return Err(Error::invalid_parameter("steward_cursor"));
     }
     Ok(serde_json::to_value(page).expect("a page serializes"))
+}
+
+/// Tags are search-only refs, so their published vocabulary lives in `var_set`,
+/// without `ident` rows. A paired catalog may define the tag in either origin.
+fn require_tag(server: &Server, conn: &Connection, value: &str) -> Result<(), Error> {
+    let pid = format!("tag/{}", value.strip_prefix("tag/").unwrap_or(value));
+    let exists = |conn: &Connection| -> Result<bool, Error> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM var_set WHERE kind = 'tag' AND pid = ?)",
+            [&pid],
+            |row| row.get(0),
+        )?)
+    };
+    if exists(conn)? {
+        return Ok(());
+    }
+    if let Some(extra) = server.catalog.connect_holdings()?
+        && exists(&extra)?
+    {
+        return Ok(());
+    }
+    Err(Error::new(
+        Code::NotFound,
+        format!("Nothing is named {value:?}."),
+        vec![value.into()],
+    ))
 }
 
 fn search_origin(

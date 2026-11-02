@@ -124,5 +124,19 @@
         "ref": "set/demo/bas/absent"
       }
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "variable",
+      "/data/fqid": "demo/bas/set"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "variable",
+      "/data/fqid": "demo/bas/set"
+    }
   }
 ]

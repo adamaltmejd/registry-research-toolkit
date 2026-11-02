@@ -1,5 +1,5 @@
 {
-  "note": "Fails if set presentation is missing, member sorting uses labels/names or reverses axes, facet labels do not default to their values, or tags omit a non-first member. Oracle is authored webapp-dev curation and source labels. Fails if a set shadows the same-slug variable, a malformed set/ ref is accepted, or a well-formed absent set is malformed. Namespace and refusal expectations follow the set/ ruling.",
+  "note": "Fails if set presentation is missing, member sorting uses labels/names or reverses axes, facet labels do not default to their values, or tags omit a non-first member. Oracle is authored webapp-dev curation and source labels. Fails if a set shadows the same-slug variable, a malformed set/ ref is accepted, or a well-formed absent set is malformed. Namespace and refusal expectations follow the set/ ruling. Bare set and a register-final set are ordinary variable refs; only leading set/ selects the set namespace.",
   "fixture": "webapp-dev",
   "requests": [
     {
@@ -21,6 +21,14 @@
     {
       "operation": "show",
       "path": "/api/catalog/set/demo/bas/absent"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/set"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/demo/bas/set"
     }
   ]
 }

@@ -96,3 +96,4 @@
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"gross-household","source_key":"gross-household","label":"Förvärvsinkomst, hushåll","dtype":"int","unit":"kr"}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"gross-person","source_key":"gross-person","label":"Förvärvsinkomst, person","dtype":"int","unit":"kr"}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"net-household","source_key":"net-household","label":"Disponibel inkomst, hushåll","dtype":"int","unit":"kr"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"set","source_key":"set","label":"Mängd","dtype":"int"}

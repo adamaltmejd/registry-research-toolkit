@@ -6,5 +6,33 @@
   "nonmember": {
     "code": "set-facet-nonmember",
     "line": 15
+  },
+  "stale": {
+    "label": "Inkomstmått",
+    "replacement": "Ändrat inkomstmått",
+    "set_pid": "set/demo/bas/inkomst",
+    "fallback_label": "inkomst",
+    "refusals": [
+      {
+        "code": "premise-missing",
+        "location": "registers/demo/bas/curation.toml:1"
+      },
+      {
+        "code": "set-axis-undeclared",
+        "location": "registers/demo/bas/curation.toml:line=15"
+      },
+      {
+        "code": "set-axis-undeclared",
+        "location": "registers/demo/bas/curation.toml:line=27"
+      },
+      {
+        "code": "set-axis-undeclared",
+        "location": "registers/demo/bas/curation.toml:line=39"
+      },
+      {
+        "code": "set-axis-undeclared",
+        "location": "registers/demo/bas/curation.toml:line=51"
+      }
+    ]
   }
 }

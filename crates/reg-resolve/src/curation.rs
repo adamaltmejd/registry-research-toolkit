@@ -2035,14 +2035,20 @@ pub fn apply_metadata(
     Ok(())
 }
 
-/// Check the final membership boundary after all setters and identities resolve.
-///
-/// # Errors
-/// A set statement has no final set, or a member facet is outside its declared axes.
+/// A presentation statement that cannot apply to the final variable memberships.
+pub struct PresentationRefusal {
+    pub at: Locator,
+    pub message: String,
+}
+
+/// Check every presentation statement after all memberships and identities resolve.
+/// The build boundary removes refused statements and reevaluates the remaining curation.
+#[must_use]
 pub fn validate_set_presentation(
     registers: &[crate::Resolved],
     sets: &[apply::SetPresentation],
-) -> Result<(), String> {
+) -> Vec<PresentationRefusal> {
+    let mut refusals = Vec::new();
     for set in sets {
         let exists = registers.iter().any(|r| {
             r.register.provider == set.provider
@@ -2050,10 +2056,13 @@ pub fn validate_set_presentation(
                 && r.variables.iter().any(|v| v.sets.contains(&set.slug))
         });
         if !exists {
-            return Err(format!(
-                "{}:{}: set-member-missing: set {:?} has no final members",
-                set.at.input, set.at.at, set.slug
-            ));
+            refusals.push(PresentationRefusal {
+                at: set.at.clone(),
+                message: format!(
+                    "set-member-missing: set {:?} has no final members",
+                    set.slug
+                ),
+            });
         }
     }
     for register in registers {
@@ -2061,12 +2070,30 @@ pub fn validate_set_presentation(
             let Some(at) = &variable.facets_at else {
                 continue;
             };
-            let name = variable.sets.iter().next().ok_or_else(|| {
-                format!(
-                    "{}:{}: set-facet-nonmember: variable {:?} is not a set member",
-                    at.input, at.at, variable.slug
-                )
-            })?;
+            let mut memberships = variable.sets.iter();
+            let name = match (memberships.next(), memberships.next()) {
+                (Some(name), None) => name,
+                (None, _) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-nonmember: variable {:?} is not a set member",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+                (_, Some(_)) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-multiple-sets: facets require one set for variable {:?}",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+            };
             let axes = sets
                 .iter()
                 .filter(|s| {
@@ -2077,15 +2104,17 @@ pub fn validate_set_presentation(
                 .flat_map(|s| &s.axes)
                 .map(|a| a.id.as_str())
                 .collect::<BTreeSet<_>>();
-            for axis in variable.facets.keys() {
-                if !axes.contains(axis.as_str()) {
-                    return Err(format!(
-                        "{}:{}: set-axis-undeclared: set {:?} does not declare axis {:?} for variable {:?}",
-                        at.input, at.at, name, axis, variable.slug
-                    ));
-                }
+            if let Some(axis) = variable
+                .facets
+                .keys()
+                .find(|axis| !axes.contains(axis.as_str()))
+            {
+                refusals.push(PresentationRefusal {
+                    at: at.clone(),
+                    message: format!("set-axis-undeclared: set {:?} does not declare axis {:?} for variable {:?}", name, axis, variable.slug),
+                });
             }
         }
     }
-    Ok(())
+    refusals
 }

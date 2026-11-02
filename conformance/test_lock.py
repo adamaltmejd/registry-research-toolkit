@@ -151,6 +151,8 @@ def test_membership_refusals(tmp_path, membership_case, change):
     # Multi-group regression: a variable selector and an occurrence selector put
     # the same final variable in different groups; generic override conflicts or
     # last-writer membership replacement must not hide either group's origin.
+    # Its faceted member also pins refusal before an unqualified facet map could
+    # choose the alphabetically first set; multiple memberships are never allowed.
     fixture, overlay, curation, expected = membership_case
 
     def run(command):

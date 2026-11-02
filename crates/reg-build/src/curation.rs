@@ -1749,7 +1749,38 @@ fn run_selected(
             &result.metadata,
             &result.classifications,
         )?;
-        reg_resolve::curation::validate_set_presentation(&resolved, &result.sets)?;
+        let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        if !invalid.is_empty() {
+            let by_location = evaluated
+                .iter()
+                .map(|(statement, _)| statement_locator(root, statement).map(|at| (at, *statement)))
+                .collect::<Result<BTreeMap<_, _>, _>>()?;
+            let mut refused = BTreeSet::new();
+            for error in invalid {
+                let statement = by_location.get(&error.at).ok_or_else(|| {
+                    format!(
+                        "{}:{}: presentation refusal has no originating statement",
+                        error.at.input, error.at.at
+                    )
+                })?;
+                refused.insert(publication_identity(statement));
+                refusals.push(Refusal::scoped(
+                    statement,
+                    format!("{}:{}: {}", error.at.input, error.at.at, error.message),
+                ));
+            }
+            let skipped = refusal_findings(&refusals, record)?;
+            let retained = statements
+                .iter()
+                .copied()
+                .filter(|s| !refused.contains(&publication_identity(s)))
+                .collect::<Vec<_>>();
+            let mut rerun =
+                run_selected(root, retired, &retained, outputs, record, registers, base)?;
+            rerun.findings.extend(skipped);
+            rerun.refusals.extend(refusals);
+            return Ok(rerun);
+        }
     }
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()

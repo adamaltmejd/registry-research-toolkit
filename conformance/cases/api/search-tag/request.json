@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a tag is ignored, applies to non-variable hits, or its published fqid cannot filter. Same-name income variants are deliberately untagged. Oracle is the single authored income tag membership in webapp-dev.",
+  "note": "Fails if a tag is ignored, applies to non-variable hits, or its published fqid cannot filter. Same-name income variants are deliberately untagged. Oracle is the single authored income tag membership in webapp-dev. An unknown tag must refuse with the same not_found code as an unknown register, beside the allowed membership filter.",
   "fixture": "webapp-dev",
   "requests": [
     {

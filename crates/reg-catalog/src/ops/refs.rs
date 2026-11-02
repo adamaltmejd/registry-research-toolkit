@@ -171,7 +171,7 @@ pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
 fn is_set_ref(value: &str) -> Result<bool, Error> {
     match value.parse::<Fqid>() {
         Ok(Fqid::Set { .. }) => Ok(true),
-        Err(_) if value.contains('/') || value == "set" => Err(invalid_ref(value)),
+        Err(_) if value.contains('/') => Err(invalid_ref(value)),
         _ => Ok(false),
     }
 }

@@ -22,9 +22,12 @@
     }
   },
   {
-    "status": 200,
+    "status": 404,
     "json": {
-      "/data/items": []
+      "/error/code": "not_found",
+      "/error/fields": {
+        "ref": "absent"
+      }
     }
   }
 ]
