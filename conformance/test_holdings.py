@@ -103,6 +103,8 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # child data cell is carried as a key, or if a projection loses its parent key.
     # Swapping Code/Year must refuse even though both targets have compatible coverage:
     # explicit Code decisions and automatic Year spellings bind physical associations.
+    # Shortening Late by one day or removing Code's authored coding caveat must
+    # refuse: containment and nonblank-only checks miss these source mismatches.
     verify_refusals(tmp_path, outputs[0], base, root)
 
 

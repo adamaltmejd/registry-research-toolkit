@@ -1,6 +1,7 @@
 //! `resolve`: delivered column names to variables, through `name_fold` → `alias` →
 //! `variable`.
 
+use rusqlite::OptionalExtension;
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
@@ -52,16 +53,13 @@ pub struct ResolvedMatch {
 }
 
 fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = match params.get("register") {
-        Some(value) => server.catalog.connect_for_ref(value)?,
-        None => server.catalog.connect()?,
-    };
     let register = params
         .get("register")
         .map(|value| {
-            let entity = refs::resolve(&conn, value)?;
+            let origin = server.catalog.connect_for_ref(value)?;
+            let entity = refs::resolve(&origin, value)?;
             if entity.kind == "register" {
-                Ok(entity.id)
+                Ok(entity.pid)
             } else {
                 Err(Error::new(
                     Code::InvalidRef,
@@ -71,15 +69,25 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
             }
         })
         .transpose()?;
-    let extra = if params.get("register").is_none() {
-        server.catalog.connect_holdings()?
-    } else {
-        None
-    };
-    let mut lookups = std::iter::once(&conn)
-        .chain(extra.as_ref())
-        .map(|conn| {
-            conn.prepare(
+    let conn = server.catalog.connect()?;
+    let extra = server.catalog.connect_holdings()?;
+    let mut lookups = Vec::new();
+    for origin in std::iter::once(&conn).chain(extra.as_ref()) {
+        let local_register = if let Some(pid) = &register {
+            let Some(id) = origin
+                .query_row("SELECT id FROM register WHERE pid = ?", [pid], |row| {
+                    row.get::<_, i64>(0)
+                })
+                .optional()?
+            else {
+                continue;
+            };
+            Some(id)
+        } else {
+            None
+        };
+        lookups.push((
+            origin.prepare(
                 "SELECT v.pid, l.body, r.pid, a.kind
          FROM name_fold f JOIN alias a ON a.fold_id = f.id
            JOIN variable v ON v.id = a.variable_id
@@ -87,16 +95,17 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
            JOIN register r ON r.id = v.register_id
          WHERE f.folded = ?1 AND (?2 IS NULL OR v.register_id = ?2)
          ORDER BY v.pid",
-            )
-        })
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+            )?,
+            local_register,
+        ));
+    }
     let mut columns = Vec::new();
     for column in params.list("columns") {
         let mut matches = Vec::new();
-        for lookup in &mut lookups {
+        for (lookup, local_register) in &mut lookups {
             matches.extend(
                 lookup
-                    .query_map((reg_core::fold_identity(column), register), |row| {
+                    .query_map((reg_core::fold_identity(column), *local_register), |row| {
                         Ok(ResolvedMatch {
                             fqid: row.get(0)?,
                             name: row.get(1)?,
