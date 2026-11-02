@@ -296,7 +296,7 @@ pub(super) enum Placement<'a> {
     Blocked(Span, &'static str, &'static str),
 }
 
-/// Apply interval-local ownership once for both emission and publication verification.
+/// Apply interval-local ownership for emission.
 pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, String> {
     let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
     for candidate in candidates {

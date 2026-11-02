@@ -1,3 +1,4 @@
 register,name,description,from,to
 held,Held,Additional attested years,,
 owners,Interval-local rival owners,,,
+earlier,Earlier metadata,Shifts supplemental local ids independently of the reference catalog,,

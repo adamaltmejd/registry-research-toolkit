@@ -85,5 +85,15 @@
     "sql": "UPDATE holding_mapping SET column_id=CASE column_id WHEN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Code') THEN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Year') ELSE (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Code') END WHERE column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name IN ('Code','Year'))",
     "code": "holdings_mapping_source_mismatch",
     "location": "census:row=3:column=7"
+  },
+  {
+    "sql": "UPDATE holding_mapping SET end=end-1 WHERE variable_pid='demo/held/late'",
+    "code": "holdings_mapping_source_mismatch",
+    "location": "census:row=3:column=4"
+  },
+  {
+    "sql": "UPDATE holding_mapping SET caveat=NULL WHERE variable_pid='steward/slots/code'",
+    "code": "holdings_mapping_source_mismatch",
+    "location": "census:row=3:column=7"
   }
 ]

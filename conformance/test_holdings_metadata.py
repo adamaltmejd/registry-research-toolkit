@@ -127,11 +127,20 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     case = HOLDINGS_CASE / "reference-extension"
     source = root / "inputs/reference"
     source.mkdir()
-    for name in ["registers.csv", "tables.csv", "held.csv", "owners.csv"]:
+    for name in [
+        "registers.csv",
+        "tables.csv",
+        "earlier.csv",
+        "held.csv",
+        "owners.csv",
+    ]:
         shutil.copyfile(case / name, source / name)
     ledger = root / "curation/registers/demo/held/ids.toml"
     ledger.parent.mkdir(parents=True)
     shutil.copyfile(case / "ids.toml", ledger)
+    earlier_ledger = ledger.parent.parent / "earlier/ids.toml"
+    earlier_ledger.parent.mkdir()
+    shutil.copyfile(case / "earlier-ids.toml", earlier_ledger)
     owner_ledger = ledger.parent.parent / "owners/ids.toml"
     owner_ledger.parent.mkdir()
     shutil.copyfile(case / "owners-ids.toml", owner_ledger)
@@ -179,18 +188,25 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     (tmp_path / "reg_meta.db").symlink_to(base)
     pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
     try:
-        # Fails if reference and steward occurrences of one canonical variable
-        # count as rival matches. The earlier cases have distinct identities;
-        # this oracle uses Old's shared identity and label in both source fixtures.
-        expected_resolve = json.loads((HOLDINGS_CASE / "expected.json").read_text())[
-            "attested_resolve"
-        ]
-        for query in [{"columns": "Old"}, {"columns": "Old", "register": "demo/held"}]:
+        # Fails if a register filter skips an earlier supplemental spelling or
+        # uses the reference register's local id in the supplemental origin.
+        # Id also pins canonical deduplication across the two source fixtures.
+        expected = json.loads((HOLDINGS_CASE / "expected.json").read_text())
+        expected_resolve = expected["attested_resolve"]
+        for query in [
+            {"columns": ["Old", "ReceivedOld"]},
+            {"columns": ["Old", "ReceivedOld"], "register": "demo/held"},
+        ]:
             resolved = pool.client(artifact_env(output)).get(
                 "/api/resolve", params=query
             )
             assert resolved.status_code == 200, resolved.text
-            assert resolved.json()["data"] == expected_resolve
+            assert resolved.json()["data"] == expected_resolve, query
+        key = pool.client(artifact_env(output)).get(
+            "/api/resolve", params={"columns": "Id", "register": "demo/held"}
+        )
+        assert key.status_code == 200, key.text
+        assert key.json()["data"] == expected["attested_key_resolve"]
         answer = pool.client(artifact_env(output)).get("/api/coverage/demo/held/value")
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]

@@ -7,6 +7,24 @@
         "matches": [
           {"fqid": "demo/held/value", "name": "Value", "register": "demo/held", "alias": "delivered"}
         ]
+      },
+      {
+        "column": "ReceivedOld",
+        "status": "matched",
+        "matches": [
+          {"fqid": "demo/held/value", "name": "Value", "register": "demo/held", "alias": "delivered"}
+        ]
+      }
+    ]
+  },
+  "attested_key_resolve": {
+    "columns": [
+      {
+        "column": "Id",
+        "status": "matched",
+        "matches": [
+          {"fqid": "demo/held/id", "name": "Identifier", "register": "demo/held", "alias": "delivered"}
+        ]
       }
     ]
   },

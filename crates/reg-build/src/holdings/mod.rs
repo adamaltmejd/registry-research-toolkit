@@ -5,6 +5,7 @@ mod input;
 mod keys;
 mod references;
 mod verify;
+mod verify_mappings;
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};

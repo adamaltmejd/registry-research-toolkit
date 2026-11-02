@@ -288,76 +288,6 @@ fn sources(
     Ok((topology, census))
 }
 
-/// Re-derive physical associations from admitted decisions, never stored mappings.
-fn associations(
-    db: &Connection,
-    base: &Connection,
-    topology: &input::Topology,
-    census: &reg_readers::holdings::ReadOutput,
-) -> Result<(), String> {
-    let index = compile::segment_index(base, db)?;
-    let tables: BTreeMap<_, _> = topology
-        .table
-        .iter()
-        .map(|t| (t.physical_name.as_str(), t))
-        .collect();
-    let mut query = db
-        .prepare(
-            "SELECT m.table_pid,m.variable_pid,m.start,m.end FROM holding_mapping m
-         JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id
-         WHERE h.physical_name=?1 AND c.name=?2 ORDER BY m.id",
-        )
-        .map_err(|e| e.to_string())?;
-    for table in &census.tables {
-        let authored = tables[table.name.as_str()];
-        let spans = compile::table_periods(authored)?;
-        for column in &table.columns {
-            let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
-            let decision = authored.column.iter().find(|c| c.name == column.name);
-            let owed = compile::column_periods(decision, &spans)?;
-            let candidates = if spans.is_empty()
-                || decision.is_some_and(|c| c.hold.is_some() || c.unmap.is_some())
-                || authored.key.iter().any(|key| key.hold.is_some())
-            {
-                Vec::new()
-            } else {
-                compile::candidates(authored, column, decision, &owed, &index)
-                    .map_err(|error| format!("{location}: {error}"))?
-            };
-            let placements =
-                compile::plan(&candidates).map_err(|error| format!("{location}: {error}"))?;
-            let mut rows = query
-                .query(rusqlite::params![table.name, column.name])
-                .map_err(|e| e.to_string())?;
-            while let Some(row) = rows.next().map_err(|e| e.to_string())? {
-                let target: String = row.get(0).map_err(|e| e.to_string())?;
-                let variable: String = row.get(1).map_err(|e| e.to_string())?;
-                let span = (
-                    row.get(2).map_err(|e| e.to_string())?,
-                    row.get(3).map_err(|e| e.to_string())?,
-                );
-                let admitted: Vec<_> = placements
-                    .iter()
-                    .filter_map(|placement| match placement {
-                        compile::Placement::Accepted(span, c)
-                            if c.segment.table == target && c.segment.variable == variable =>
-                        {
-                            Some(*span)
-                        }
-                        _ => None,
-                    })
-                    .collect();
-                if !compile::covered(&[span], &admitted) {
-                    return Err(format!(
-                        "{location}: holdings_mapping_source_mismatch: association differs from admitted explicit mapping or spelling"
-                    ));
-                }
-            }
-        }
-    }
-    Ok(())
-}
-
 pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), String> {
     let allowed = references::admitted(holdings, base)?;
     {
@@ -585,7 +515,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         }
     }
     super::keys::verify(&db, &base, &topology)?;
-    associations(&db, &base, &topology, &census)?;
+    super::verify_mappings::verify(&db, &base, &topology, &census)?;
     // A documented position family only authorizes distinct positions in one file.
     // Other duplicates still need a partition, projection, or carried key.
     let mut duplicates = db.prepare(

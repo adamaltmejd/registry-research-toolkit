@@ -1556,8 +1556,11 @@ recorded in the holdings file, then independently re-reads the census and storag
 export. Every census table and exact physical column must be present, with no extra
 coordinates; offered columns must match the source schema, table type, storage type,
 length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
-Each stored physical association is checked against the admitted explicit mapping or
-automatic spelling match over its interval; a different association refuses with located
+Physical mappings must equal the complete admitted explicit mappings or automatic
+spelling matches: interval unions grouped by table, variable, role, carried flag,
+caveat, authored window and evidence locator. Verification derives these expectations
+from the admitted sources independently of compiler candidates and placements, including
+shared projection keys. Missing coverage or changed attributes refuse with located
 `holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
 artifact table/column ids without printing private physical identifiers.
 
