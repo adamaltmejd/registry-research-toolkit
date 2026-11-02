@@ -9,3 +9,9 @@ kind = "set"
 subject = "u: SIDE @2000"
 fields = { variable = "alpha" }
 evidence = "A concurrent spelling in another table remains distinct there."
+
+[[statement]]
+kind = "set"
+subject = "t: {WAVE_EARLY,RENAMED}"
+fields = { variable = "alpha" }
+evidence = "A different spelling in another release is allowed despite overlapping periods."

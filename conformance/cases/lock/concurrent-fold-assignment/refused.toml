@@ -15,3 +15,9 @@ kind = "set"
 subject = "t: RIVAL @2000-12-31"
 fields = { variable = "alpha" }
 evidence = "This differs in fold and overlaps EARLY on its last included day."
+
+[[statement]]
+kind = "set"
+subject = "t: {WAVE_EARLY,RENAMED}"
+fields = { variable = "alpha" }
+evidence = "A different spelling in another release is allowed despite overlapping periods."

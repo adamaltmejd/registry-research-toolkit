@@ -324,8 +324,10 @@ Accepting one requires reviewed curation and a premise lock.
   those groups. The same exact-selection rule governs every field override: change only
   selected whole occurrences, or the selected entity for fields owned by tables,
   releases or variables. Selectors and premises use the immutable phase view.
-  Assignments cannot merge concurrent different folded spellings in one table;
-  resolution refuses with `D-11` at lock, before a malformed segment can be published.
+  Assignments cannot merge concurrent different folded spellings in the same delivery
+  (release) of one table; unreleased occurrences share one delivery for this check.
+  Resolution refuses with `D-11` at lock, before a malformed segment can be published.
+  Different spellings across releases are allowed even when survey waves overlap.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
   `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
   occurrences; text runs and segments derive from those occurrences. `period` changes

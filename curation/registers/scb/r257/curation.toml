@@ -7086,18 +7086,6 @@ evidence = "Källkoden är en ogenomskinlig förkortning; etiketten anger begrep
 
 [[statement]]
 kind = "set"
-subject = "var:coop-pub-clcu-neu-nefta"
-fields = { "sets" = [] }
-evidence = "Källkoden är en ogenomskinlig förkortning; etiketten anger begreppet.\ncatalog:variable_text:28047:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:coop-pub-clcu-neu-nefta"
-fields = { "tags" = ["research"] }
-evidence = "Källkoden är en ogenomskinlig förkortning; etiketten anger begreppet.\ncatalog:variable_text:28047:18262:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:coop-rnd"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod för samarbete inom FoU.\ncatalog:variable_text:28049:16801:20089"
@@ -14017,15 +14005,15 @@ evidence = "Docs description review 2026-11-02; one variable, one description. T
 
 [[statement]]
 kind = "set"
-subject = "var:coop-pub-clcu-neu-nefta"
-fields = { "description" = "Anger om företaget har bedrivit samarbete inom innovationsaktiviteter inklusive FoU med kunder eller klienter inom offentlig sektor lokaliserade utanför EU och EFTA." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The documented column spelling changes between waves, so these two PIDs are kept separate. Each matching Swedish wave export explicitly defines the same public-sector partner and outside-EU/EFTA geography; no equivalence is inferred from the suffix alone.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_NEFTA; staged:8afdce6745f0bbb0a16d2da9bc469baa72582aa298934d62c75b38a7b5ac6581:page:1:chars:19841-20232\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 71, column COOP_PUB_CLCU_NEU_NEFTA; staged:76be0764168051b062f67f63af596d95680740ed158e363b6e2e06f3c608cbb7:page:1:chars:23535-23926\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673"
+subject = "innovation-i-foretagssektorn: {COOP_PUB_CLCU_NEU_EFTA,COOP_PUB_CLCU_NEU_NEFTA} where key = 'v39126'"
+fields = { "variable" = "innovationssamarbete-kunder-klienter-coop-pub-clcu-neu-efta" }
+evidence = "Docs description review 2026-11-02; one variable, one description. The Swedish 2016–2018 and 2018–2020 exports use COOP_PUB_CLCU_NEU_EFTA; the 2020–2022 and 2022–2024 exports use COOP_PUB_CLCU_NEU_NEFTA. Both spellings have source key v39126 and the same definition of public-sector customers or clients outside EU/EFTA, and never occur in the same delivery. Merge into the older id; retain each whole release and original spelling. No equivalence is inferred from the suffix alone.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 54, column COOP_PUB_CLCU_NEU_EFTA; staged:8a8bec00bfa3b46222f9325f2824dc18a28158672a1653218eea2c34febae5ca:page:1:chars:16302-16681\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_EFTA; staged:3787aa169caa2212b08ff09ef307a86dffc8b770749d8655a2662aadf297129a:page:1:chars:17695-18083\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_NEFTA; staged:8afdce6745f0bbb0a16d2da9bc469baa72582aa298934d62c75b38a7b5ac6581:page:1:chars:19841-20232\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 71, column COOP_PUB_CLCU_NEU_NEFTA; staged:76be0764168051b062f67f63af596d95680740ed158e363b6e2e06f3c608cbb7:page:1:chars:23535-23926"
 
 [[statement]]
 kind = "set"
 subject = "var:innovationssamarbete-kunder-klienter-coop-pub-clcu-neu-efta"
 fields = { "description" = "Anger om företaget har bedrivit samarbete inom innovationsaktiviteter inklusive FoU med kunder eller klienter inom offentlig sektor lokaliserade utanför EU och EFTA." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The documented column spelling changes between waves, so these two PIDs are kept separate. Each matching Swedish wave export explicitly defines the same public-sector partner and outside-EU/EFTA geography; no equivalence is inferred from the suffix alone.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 54, column COOP_PUB_CLCU_NEU_EFTA; staged:8a8bec00bfa3b46222f9325f2824dc18a28158672a1653218eea2c34febae5ca:page:1:chars:16302-16681\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_EFTA; staged:3787aa169caa2212b08ff09ef307a86dffc8b770749d8655a2662aadf297129a:page:1:chars:17695-18083\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673"
+evidence = "Docs description review 2026-11-02; one variable, one description. The Swedish 2016–2018 and 2018–2020 exports use COOP_PUB_CLCU_NEU_EFTA; the 2020–2022 and 2022–2024 exports use COOP_PUB_CLCU_NEU_NEFTA. Both spellings have source key v39126 and the same definition of public-sector customers or clients outside EU/EFTA, and never occur in the same delivery. Merge into the older id; retain each whole release and original spelling. No equivalence is inferred from the suffix alone.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 54, column COOP_PUB_CLCU_NEU_EFTA; staged:8a8bec00bfa3b46222f9325f2824dc18a28158672a1653218eea2c34febae5ca:page:1:chars:16302-16681\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_EFTA; staged:3787aa169caa2212b08ff09ef307a86dffc8b770749d8655a2662aadf297129a:page:1:chars:17695-18083\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_NEFTA; staged:8afdce6745f0bbb0a16d2da9bc469baa72582aa298934d62c75b38a7b5ac6581:page:1:chars:19841-20232\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 71, column COOP_PUB_CLCU_NEU_NEFTA; staged:76be0764168051b062f67f63af596d95680740ed158e363b6e2e06f3c608cbb7:page:1:chars:23535-23926"
 
 [[statement]]
 kind = "set"
