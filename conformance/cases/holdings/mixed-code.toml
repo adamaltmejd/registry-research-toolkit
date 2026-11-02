@@ -1,0 +1,17 @@
+[[table.column]]
+name = "Code"
+locator = "fixture:unrouted-Code"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/code"
+delivery = "2017"
+caveat = "Earlier coding remains steward-qualified."
+locator = "fixture:retained-earlier-coding"
+[[table.column.mapping]]
+table_pid = "demo/absent"
+variable_pid = "demo/absent/unproved"
+delivery = "2018..2020"
+hold = "Later meaning not established by the delivery documentation"
+follow_up = "https://example.invalid/issues/held-meaning"
+locator = "fixture:held-code-meaning"
+

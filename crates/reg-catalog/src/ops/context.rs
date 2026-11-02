@@ -30,6 +30,13 @@ pub struct Context {
     /// The server's version, which seeds a new project's `reg_meta_version`.
     reg_meta_version: String,
     sizes: Sizes,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    steward: Option<crate::Steward>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(value_type = Object)]
+    steward_config: Option<Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    steward_sizes: Option<Sizes>,
 }
 
 /// Every provider, register, table (implicit ones included) and variable.
@@ -69,6 +76,22 @@ impl Context {
             },
             reg_meta_version: version.to_owned(),
             sizes,
+            steward: catalog.steward(),
+            steward_config: catalog.steward_config(),
+            steward_sizes: catalog
+                .connect_holdings()?
+                .map(|extra| {
+                    let count = |table: &str| {
+                        extra.query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |r| r.get(0))
+                    };
+                    Ok::<_, Error>(Sizes {
+                        providers: count("provider")?,
+                        registers: count("register")?,
+                        tables: count("tbl")?,
+                        variables: count("variable")?,
+                    })
+                })
+                .transpose()?,
         })
     }
 }

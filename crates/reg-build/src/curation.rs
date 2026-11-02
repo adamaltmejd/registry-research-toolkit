@@ -232,6 +232,7 @@ fn ledger(
 
 /// Catalog references resolve through each register's ledger, then snapshot source
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
+#[allow(clippy::too_many_arguments)]
 fn references(
     root: &Path,
     records: &[Record],
@@ -240,6 +241,7 @@ fn references(
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     shared: &reg_resolve::curation::SharedSources,
     retired: &[crate::retired::Retired],
+    base: Option<&crate::external::Context>,
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -315,6 +317,10 @@ fn references(
         }
         if let [Ok(premise)] = &matches[..] {
             references.insert(object.clone(), premise.clone());
+        } else if let Some(base) = base
+            && let Some(premise) = base.premise(object)?
+        {
+            references.insert(object.clone(), premise);
         }
     }
     Ok(references)
@@ -970,6 +976,7 @@ pub(super) fn run(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
+    base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
     let mut applied = run_selected(
         root,
@@ -978,6 +985,7 @@ pub(super) fn run(
         outputs,
         record,
         registers,
+        base,
     )?;
     applied.refusals.sort();
     applied.refusals.dedup();
@@ -995,6 +1003,7 @@ fn run_selected(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
+    base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
     let mut records = outputs
         .iter()
@@ -1059,7 +1068,7 @@ fn run_selected(
         let finding_catalog = if stage == Phase::Acknowledgements
             && statements.iter().any(|s| phase(&s.statement) == stage)
         {
-            Some(complete_findings(root, retired, &records, &result)?)
+            Some(complete_findings(root, retired, &records, &result, base)?)
         } else {
             None
         };
@@ -1154,6 +1163,7 @@ fn run_selected(
                 &result.variables,
                 &shared,
                 retired,
+                base,
             )?;
             let evaluations = reg_resolve::curation::resolve(
                 &source,
@@ -1426,7 +1436,7 @@ fn run_selected(
                         .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
                     let mut rerun =
-                        run_selected(root, retired, &retained, outputs, record, registers)?;
+                        run_selected(root, retired, &retained, outputs, record, registers, base)?;
                     rerun.findings.extend(skipped);
                     rerun.refusals.extend(refusals);
                     return Ok(rerun);
@@ -1602,7 +1612,7 @@ fn run_selected(
             &result.metadata,
             &result.classifications,
         )?;
-        let linked = crate::link::curate(root, &resolved, &records, &result.links)?;
+        let linked = crate::link::curate(root, &resolved, &records, &result.links, base)?;
         if !linked.refusals.is_empty() {
             let messages = linked
                 .refusals
@@ -1631,7 +1641,8 @@ fn run_selected(
                 .copied()
                 .filter(|s| !refused.contains(&publication_identity(s)))
                 .collect::<Vec<_>>();
-            let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
+            let mut rerun =
+                run_selected(root, retired, &retained, outputs, record, registers, base)?;
             refusals.extend(messages);
             rerun.findings.extend(refusal_findings(&refusals, record)?);
             rerun.refusals.extend(refusals);
@@ -1714,7 +1725,7 @@ fn run_selected(
             .copied()
             .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)?;
         rerun.findings.extend(skipped);
         rerun.refusals.extend(refusals);
         return Ok(rerun);
@@ -1800,6 +1811,7 @@ pub(super) fn complete_findings(
     retired: &[crate::retired::Retired],
     records: &[Record],
     applied: &Applied,
+    base: Option<&crate::external::Context>,
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let mut resolved = resolve_catalog(
         root,
@@ -1817,7 +1829,8 @@ pub(super) fn complete_findings(
     }
     let mut linked = crate::link::resolve(&resolved, records, &[])?;
     if !applied.links.is_empty() {
-        linked.relations = crate::link::curate(root, &resolved, records, &applied.links)?.relations;
+        linked.relations =
+            crate::link::curate(root, &resolved, records, &applied.links, base)?.relations;
     }
     crate::proposals::generate(&mut resolved, &applied.classifications, &sets, &linked)?;
     Ok(resolved)

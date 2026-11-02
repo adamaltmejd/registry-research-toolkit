@@ -1,0 +1,3 @@
+table,column,label,definition,data_type,unit,codes,code_system,sensitive,identifier,from,to
+,Slot2,Second position,Separate positional slot,integer,,,,false,false,2017-01-01,2020-12-31
+,Code,Earlier coding,Explicit supplemental coding; reference validity is unchanged,text,,1=One;2=Two,,false,false,2010-01-01,2017-12-31

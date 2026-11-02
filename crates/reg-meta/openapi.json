@@ -1062,7 +1062,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
+        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
         "operationId": "search",
         "parameters": [
           {
@@ -1121,6 +1121,26 @@
             "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "steward_cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "reference",
+                "steward"
+              ]
             }
           }
         ],
@@ -1201,6 +1221,18 @@
               "type": "integer",
               "maximum": 200,
               "minimum": 1
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "reference",
+                "steward"
+              ]
             }
           }
         ],
@@ -1537,6 +1569,29 @@
           },
           "sizes": {
             "$ref": "#/components/schemas/Sizes"
+          },
+          "steward": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Steward"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "steward_config": {
+            "type": "object"
+          },
+          "steward_sizes": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Sizes"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -1564,12 +1619,32 @@
           "fqid": {
             "type": "string"
           },
+          "held": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/HeldPlacement"
+            },
+            "description": "Accepted physical placements, absent in reference-only mode."
+          },
           "kind": {
             "type": "string"
           },
           "period": {
             "$ref": "#/components/schemas/Period",
             "description": "The entity's hull."
+          },
+          "steward_occurrences": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/StewardOccurrence"
+            },
+            "description": "Same canonical variable, documented in additional steward-attested periods.\nReference spans above retain the global catalog's meaning."
           },
           "tables": {
             "type": "array",
@@ -2165,6 +2240,49 @@
           }
         }
       },
+      "HeldPlacement": {
+        "type": "object",
+        "description": "A physical placement's public semantic coordinates and held interval.",
+        "required": [
+          "table",
+          "variable",
+          "physical_table",
+          "column",
+          "period",
+          "role",
+          "carried",
+          "caveat"
+        ],
+        "properties": {
+          "carried": {
+            "type": "boolean"
+          },
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "column": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "physical_table": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
       "Issue": {
         "type": "object",
         "description": "`shape.Issue`: a project issue or an order finding, located in the project.",
@@ -2319,6 +2437,16 @@
           },
           "generation": {
             "type": "string"
+          },
+          "steward": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Steward"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -3065,6 +3193,16 @@
             "items": {
               "$ref": "#/components/schemas/RegisterFacet"
             }
+          },
+          "steward": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StewardRegisterFacets"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -3546,7 +3684,7 @@
       },
       "SearchPage": {
         "type": "object",
-        "description": "`Page<SearchHit>`.",
+        "description": "`Page<SearchHit>`; paired mode adds a count and an independently ranked steward group.",
         "required": [
           "items",
           "next_cursor"
@@ -3563,6 +3701,23 @@
               "string",
               "null"
             ]
+          },
+          "steward": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StewardSearchPage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
           }
         }
       },
@@ -3718,6 +3873,15 @@
                 "items": {
                   "$ref": "#/components/schemas/ShowProviderRef"
                 }
+              },
+              "steward_providers": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "$ref": "#/components/schemas/ShowProviderRef"
+                }
               }
             }
           },
@@ -3744,6 +3908,15 @@
               },
               "registers": {
                 "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowRegisterRef"
+                }
+              },
+              "steward_registers": {
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "items": {
                   "$ref": "#/components/schemas/ShowRegisterRef"
                 }
@@ -4149,6 +4322,153 @@
             "type": "string"
           },
           "line": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Steward": {
+        "type": "object",
+        "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+        "required": [
+          "owner",
+          "catalog_generation",
+          "holdings_generation",
+          "schema_version"
+        ],
+        "properties": {
+          "catalog_generation": {
+            "type": "string"
+          },
+          "holdings_generation": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          }
+        }
+      },
+      "StewardOccurrence": {
+        "type": "object",
+        "description": "A source occurrence in the steward's supplemental semantics. Its identity\ndeclaration and ordinary transcription locators both remain available.",
+        "required": [
+          "table",
+          "variable",
+          "period",
+          "spelling",
+          "label",
+          "definition",
+          "type",
+          "coded",
+          "value_set",
+          "locator",
+          "evidence",
+          "sources"
+        ],
+        "properties": {
+          "coded": {
+            "type": "string"
+          },
+          "definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locator": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Locator"
+            }
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ValueSetRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
+      "StewardRegisterFacets": {
+        "type": "object",
+        "required": [
+          "owner",
+          "registers"
+        ],
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "registers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisterFacet"
+            }
+          }
+        }
+      },
+      "StewardSearchPage": {
+        "type": "object",
+        "description": "Supplemental matches have their own rank, count and cursor. Independent bm25\nscores from different databases are never compared.",
+        "required": [
+          "owner",
+          "items",
+          "total"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "total": {
             "type": "integer",
             "format": "int64"
           }

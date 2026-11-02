@@ -67,9 +67,11 @@ pub struct GraphEdge {
 
 /// An entity as the `relation` table names it: its kind and row id.
 type End = (String, i64);
+type Nodes = BTreeMap<(String, String), String>;
+type Edge = ((String, String, String, Option<i64>), GraphEdge);
 
 fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
     let kind = params.get("kind").copied();
     if kind.is_some_and(|k| !KINDS.contains(&k)) {
@@ -106,7 +108,7 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
         }
     }
 
-    let mut nodes: BTreeMap<(String, String), String> = BTreeMap::new();
+    let mut nodes = Nodes::new();
     let (pid, name) = node(&conn, &(entity.kind.clone(), entity.id))?;
     nodes.insert((pid, entity.kind.clone()), name);
     let mut edges = Vec::new();
@@ -157,6 +159,7 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             ));
         }
     }
+    external_relations(server, &entity.pid, &ends, kind, &mut nodes, &mut edges)?;
     // NULL `at_start` sorts first; the key is the contract's, which `relation`'s
     // uniqueness makes total up to the implicit table's shared pid.
     edges.sort_by(|a, b| a.0.cmp(&b.0));
@@ -171,15 +174,88 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
     .expect("a graph serializes"))
 }
 
-/// An entity's public id and display name: a register's or table's name, a variable's
-/// or class version's label.
-fn node(conn: &Connection, (kind, id): &End) -> Result<(String, String), Error> {
-    let (table, column) = match kind.as_str() {
+/// Qualified relations keep each endpoint in its own database origin. The base
+/// concept also sees the reverse edge; possessing a slot never grants the concept.
+fn external_relations(
+    server: &Server,
+    focus: &str,
+    ends: &[End],
+    kind: Option<&str>,
+    nodes: &mut Nodes,
+    edges: &mut Vec<Edge>,
+) -> Result<(), Error> {
+    let Some(extra) = server.catalog.connect_holdings()? else {
+        return Ok(());
+    };
+    let base = server.catalog.connect()?;
+    let mut query = extra.prepare(
+        "SELECT kind, subject_kind, subject_pid, object_kind, object_pid,
+                at_start, at_end, caveat
+         FROM holding_relation
+         WHERE (subject_pid = ?1 OR object_pid = ?1)
+           AND (?2 IS NULL OR kind = ?2)
+         ORDER BY kind, subject_pid, object_pid, at_start",
+    )?;
+    let rows = query.query_map((focus, kind), |r| {
+        Ok((
+            r.get::<_, String>(0)?,
+            r.get::<_, String>(1)?,
+            r.get::<_, String>(2)?,
+            r.get::<_, String>(3)?,
+            r.get::<_, String>(4)?,
+            r.get::<_, Option<i64>>(5)?,
+            r.get::<_, Option<i64>>(6)?,
+            r.get::<_, Option<String>>(7)?,
+        ))
+    })?;
+    for row in rows {
+        let (relation, subject_kind, from, object_kind, to, start, end, caveat) = row?;
+        let selected = |pid: &str, kind: &str| pid == focus && ends.iter().any(|e| e.0 == kind);
+        if !selected(&from, &subject_kind) && !selected(&to, &object_kind) {
+            continue;
+        }
+        let (_, from_name) = node_by_pid(&extra, &subject_kind, &from)?;
+        let (_, to_name) = node_by_pid(&base, &object_kind, &to)?;
+        nodes.insert((from.clone(), subject_kind), from_name);
+        nodes.insert((to.clone(), object_kind), to_name);
+        edges.push((
+            (relation.clone(), from.clone(), to.clone(), start),
+            GraphEdge {
+                kind: relation,
+                from,
+                to,
+                at: start.map(|s| server.period(s, end.unwrap_or(server.open.1))),
+                prov: "curated".to_owned(),
+                caveat,
+            },
+        ));
+    }
+    Ok(())
+}
+
+fn node_by_pid(conn: &Connection, kind: &str, pid: &str) -> Result<(String, String), Error> {
+    let (table, _) = node_table(kind);
+    let id = conn.query_row(
+        &format!("SELECT id FROM {table} WHERE pid = ?"),
+        [pid],
+        |r| r.get(0),
+    )?;
+    node(conn, &(kind.to_owned(), id))
+}
+
+fn node_table(kind: &str) -> (&'static str, &'static str) {
+    match kind {
         "variable" => ("variable", "label_text"),
         "table" => ("tbl", "name_text"),
         "register" => ("register", "name_text"),
         _ => ("class_version", "label_text"),
-    };
+    }
+}
+
+/// An entity's public id and display name: a register's or table's name, a variable's
+/// or class version's label.
+fn node(conn: &Connection, (kind, id): &End) -> Result<(String, String), Error> {
+    let (table, column) = node_table(kind);
     Ok(conn.query_row(
         &format!(
             "SELECT e.pid, t.body FROM {table} e JOIN text t ON t.id = e.{column} WHERE e.id = ?"

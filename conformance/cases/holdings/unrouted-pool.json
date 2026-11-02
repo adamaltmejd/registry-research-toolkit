@@ -1,0 +1,31 @@
+{
+  "held_columns": [
+    "Held",
+    "Late",
+    "New",
+    "Slot2",
+    "Year"
+  ],
+  "unmatched_column": "Unknown",
+  "notice": "mapping_missing",
+  "mappings": [
+    [
+      "Code",
+      "steward/slots",
+      "steward/slots/code",
+      "2017-01-01",
+      "2018-01-01"
+    ],
+    [
+      "Received_Id",
+      "demo/held",
+      "demo/held/id",
+      "2017-01-01",
+      "2021-01-01"
+    ]
+  ],
+  "held_mapping_notice": "mapping_held",
+  "hold_follow_up": "https://example.invalid/issues/held-meaning",
+  "invalid_hold_code": "holdings_mapping_hold_invalid",
+  "invalid_hold_column": "column=7"
+}

@@ -29,6 +29,8 @@ mod curation;
 mod diff;
 mod docs;
 mod emit;
+mod external;
+mod holdings;
 mod id_targets;
 mod link;
 mod proposals;
@@ -74,6 +76,7 @@ struct Args {
     catalog_version: String,
     release: bool,
     registers: Vec<String>,
+    base: Option<PathBuf>,
 }
 
 #[derive(Serialize)]
@@ -91,6 +94,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
         (None, None, None, None, None, None);
     let mut release = false;
     let mut registers = Vec::new();
+    let mut base = None;
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--inputs" => &mut inputs,
@@ -99,6 +103,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
             "--assets" => &mut assets,
             "--report" => &mut report,
             "--catalog-version" => &mut version,
+            "--base" if command == "lock" => &mut base,
             "--release" => {
                 release = true;
                 continue;
@@ -128,6 +133,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
         catalog_version: version.unwrap_or_else(|| "dev".to_owned()),
         release,
         registers,
+        base: base.map(PathBuf::from),
     })
 }
 
@@ -255,15 +261,37 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
     Ok(())
 }
 
-#[allow(clippy::too_many_lines)]
 fn build(args: &Args) -> Result<(), String> {
+    build_with_provenance(args, None, None)
+}
+
+/// A steward commit covers its own generated transcription inputs; putting that
+/// same commit inside its manifest would make a self-referential Git pin.
+#[allow(clippy::too_many_lines)]
+fn build_with_provenance(
+    args: &Args,
+    admitted_pin: Option<(&str, &str)>,
+    base: Option<&external::Context>,
+) -> Result<(), String> {
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let tags = sets::vocabulary(&args.curation)?;
     sets::statements(&tags, &statements)?;
-    let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
+    let mut manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
+    if let Some((repo, commit)) = admitted_pin {
+        repo.clone_into(&mut manifest.repo);
+        commit.clone_into(&mut manifest.commit);
+    }
     let outputs = read_all(args, &manifest)?;
-    let mut applied = curation::run(&args.curation, &retired, &statements, &outputs, false, &[])?;
+    let mut applied = curation::run(
+        &args.curation,
+        &retired,
+        &statements,
+        &outputs,
+        false,
+        &[],
+        base,
+    )?;
     if !args.release {
         for finding in &applied.findings {
             eprintln!("reg-build: {finding}");
@@ -363,7 +391,7 @@ fn build(args: &Args) -> Result<(), String> {
     }
 
     let mut resolved =
-        curation::complete_findings(&args.curation, &retired, &applied.records, &applied)?;
+        curation::complete_findings(&args.curation, &retired, &applied.records, &applied, base)?;
     let mut report = BTreeMap::new();
     let mut refusals = Vec::new();
     if args.release {
@@ -454,8 +482,10 @@ fn build(args: &Args) -> Result<(), String> {
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     let mut linked = link::resolve(&resolved, &links, &docs)?;
+    let mut external_relations = Vec::new();
     if let Some(curated) = applied.linked {
         linked.relations = curated.relations;
+        external_relations = curated.external;
         applied.statements.extend(curated.statements);
     }
     let link_unresolved = linked.warnings.len();
@@ -489,6 +519,10 @@ fn build(args: &Args) -> Result<(), String> {
         ));
     }
     hasher.update(&curation_digest);
+    if let Some(base) = base {
+        hasher.update(&base.generation);
+        hasher.update(&base.sha256);
+    }
     let generation_id = reg_frame::hex(&hasher.finalize());
     let day = |iso| reg_core::iso_day_number(iso).expect("an ISO day");
     let meta = BTreeMap::from([
@@ -551,6 +585,7 @@ fn build(args: &Args) -> Result<(), String> {
         statements: applied.statements,
         provenance,
         classifications: applied.classifications,
+        external_relations,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({
@@ -573,6 +608,13 @@ fn build(args: &Args) -> Result<(), String> {
                 refusal.details.len(),
                 refusal.kind,
             );
+            if base.is_some()
+                && let Some(code) = ["premise-changed", "premise-missing"]
+                    .into_iter()
+                    .find(|code| refusal.details.iter().any(|detail| detail.contains(code)))
+            {
+                eprintln!("reg-build: {code}");
+            }
         }
         return Err(match &args.report {
             Some(path) => format!("build refused; report: {}", path.display()),
@@ -583,6 +625,11 @@ fn build(args: &Args) -> Result<(), String> {
 }
 
 fn lock(args: &Args) -> Result<(), String> {
+    let base = args
+        .base
+        .as_deref()
+        .map(external::Context::open)
+        .transpose()?;
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let tags = sets::vocabulary(&args.curation)?;
@@ -596,6 +643,7 @@ fn lock(args: &Args) -> Result<(), String> {
         &outputs,
         true,
         &args.registers,
+        base.as_ref(),
     )?;
     for finding in &applied.findings {
         eprintln!("reg-build: {finding}");
@@ -630,7 +678,14 @@ fn main() -> ExitCode {
     if args.next_if_eq("diff").is_some() {
         return diff::run(&args.collect::<Vec<_>>());
     }
-    let result = if args.next_if_eq("verify").is_some() {
+    let result = if args.next_if_eq("holdings").is_some() {
+        holdings::run(args)
+    } else if args.peek().is_some_and(|arg| arg == "verify")
+        && std::env::args().any(|arg| arg == "--catalog")
+    {
+        args.next();
+        holdings::verify_args(args)
+    } else if args.next_if_eq("verify").is_some() {
         parse_verify(args).and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
     } else {
         parse_args(args).and_then(|args| match args.command.as_str() {

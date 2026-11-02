@@ -22,6 +22,17 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
         OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_URI,
     )
     .map_err(sql)?;
+    semantic(&db)?;
+    schema_version(&db)?;
+    if let Some(previous) = previous {
+        compare(&db, previous)?;
+    }
+    Ok(())
+}
+
+/// Shared semantic-table checks for a base catalog and a supplemental catalog.
+pub(crate) fn semantic(db: &Connection) -> Result<(), String> {
+    let sql = |e: rusqlite::Error| e.to_string();
     let integrity: String = db
         .query_row("PRAGMA integrity_check", [], |r| r.get(0))
         .map_err(sql)?;
@@ -34,17 +45,13 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
         .collect::<Vec<_>>()
         .join("\n");
     for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
-        if has_rows(&db, statement)? {
+        if has_rows(db, statement)? {
             return Err(format!("post-write check failed:\n{statement}"));
         }
     }
-    schema_version(&db)?;
-    types(&db)?;
-    valuesets(&db)?;
-    pdfs(&db)?;
-    if let Some(previous) = previous {
-        compare(&db, previous)?;
-    }
+    types(db)?;
+    valuesets(db)?;
+    pdfs(db)?;
     Ok(())
 }
 

@@ -1323,6 +1323,10 @@ then a holdings asset paired with the base catalog. The same compiler and
 second steward's webapp and steward-specific MCP is later, not E; E establishes the
 data/config contract, not a second deployment.
 
+`reg-build holdings --report FILE` forwards the ordinary supplemental build report,
+including located release refusals; it does not admit a refused artifact. Reports and
+holdings outputs cannot overwrite the reference catalog.
+
 The compiler has explicit paths and pins; it reads no neighbouring files implicitly. The
 inspected private inputs worktree is clean at commit
 `9186fcbceeb2283a50c7f684764869e4dda5765e` (also the current `curation/inputs.toml`
@@ -1550,18 +1554,135 @@ search indexes stay in the catalog file. Holdings inputs and stored cross-file m
 use public ids; integer ids are local to each database and never joined across files
 without their database origin. Do not import schema-v3's obsolete programme id ranges or
 `UNION ALL` of unqualified row ids.
-`reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
-cross-file references that SQLite cannot enforce as foreign keys.
+`reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
+the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
+admits the clean steward checkout against the repository, commit, config and input pins
+recorded in the holdings file, then independently re-reads the census and storage
+export. Every census table and exact physical column must be present, with no extra
+coordinates; offered columns must match the source schema, table type, storage type,
+length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
+Each stored physical association is checked against the admitted explicit mapping or
+automatic spelling match over its interval; a different association refuses with located
+`holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
+artifact table/column ids without printing private physical identifiers.
+
+The census is the authority for physical possession (maintainer, 2026-11-02), and its
+replacement is an ordinary pinned input change followed by recompilation. Reviewed
+routes and windows on surviving columns remain authored inputs. A vanished column named
+by an authored decision is `stale_declared_mapping_target`, located to that decision and
+its route locators; it is not silently retired. A new column passes through ordinary
+interval-local matching and is retained with `mapping_missing` when undocumented. There
+is no migration or carry-forward of old physical rows.
+
+Steward attestation can support years absent from the reference catalog (maintainer,
+2026-11-02). Provider labels, definitions and value sets for those years are not a
+prerequisite. A canonical occurrence can be added when all five conditions hold:
+
+1. The same register and delivery-table series are established by the census naming and
+   pinned series topology, including its covered-year tables.
+2. The exact physical column name occurs for that variable, or its spelling is
+   documented. The same exact census spelling with an unambiguous covered-year mapping
+   is a spelling witness; the pinned reader's literal-prefix rules still apply.
+3. The periods are contiguous or the series is continuous, with no documented break,
+   recode or intervening `continues` successor. Missing provider metadata alone is not a
+   documented break.
+4. Storage families are compatible with covered-year occurrences. Actual covered-year
+   storage facts take precedence over provider type descriptions; nearest covered facts
+   are compared so an unrelated later storage change is not projected backwards.
+5. No contrary fact assigns the name to another variable in that year/table or documents
+   a meaning change. Accepted earlier-coding bindings remain contrary evidence to
+   replacing that coding with the later canonical meaning.
+
+A documented steward variable may retain its private definition namespace: both
+placements must have located provenance to the same actual source register and census
+series. That namespace alone does not establish a different physical source.
+
+Each such occurrence and physical binding carries
+`no provider metadata for <years>; identity from census column and series continuity`,
+with located evidence for the conditions, and enters the private global-curation
+worklist. A failed condition is named in the hold and its follow-up. Shared-shape
+choices without a separating fact remain held. Documentary new-variable definitions
+still use ordinary supplemental transcription and ledgers. Compiling these attestations
+never changes global validity or invents historical provider types, code lists or
+definitions.
+
+A census table need not have a logical route when no route is proved. Its held columns
+remain held, and other columns without an accepted owner remain `mapping_missing`.
+Absence of a route grants no possession; a declared route for an offered binding must
+resolve. This lets a fully held table survive a census refresh without a guessed route.
+An authored mapping may itself have `hold` and `follow_up`, with a reason and locator.
+It produces a `mapping_held` notice with its requested window and follow-up, never a
+placement or automatic fallback. This preserves a proved earlier-coding binding beside
+an unproved later meaning without pretending that either widens global validity.
+
+The compiler's closed steward config adds `inputs.holdings` (authored replacement
+topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
+SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
+individual file pins are also accepted. Every supplemental manifest input is pinned too.
+Config bytes must match the selected Git commit, including when index flags hide
+worktree changes. Paths stay inside that checkout and directory traversal refuses
+symlinks. `--registry <file>` selects an explicit alternative pin registry, including
+the synthetic corpus; it does not weaken commit or input admission.
+
+`inputs.holdings` declares physical tables and reviewed column decisions once. The old
+inventory and series remain migration evidence, not additional compiler authorities.
+Automatic matching still reads the raw census against the resolved semantic view; it
+does not consume generated automatic mappings. The census reader's closed config names
+the table header and numbered-column prefix and permits evidenced literal prefix
+rewrites only. Identifiers remain exact after reader trimming; rewrites affect matching,
+not emitted physical names. CSV errors identify input roles and row numbers without
+echoing private source values.
+
+Ordinary supplemental curation records its locks with
+`reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
+The same premise path runs during holdings compilation. A referenced base public id
+records its kind and exact catalog generation/file digest in the ordinary premise;
+changing the base requires explicit lock review. `holding_relation` stores these
+ordinary `derived_from` links with qualified public-id endpoints and local statement
+provenance. The supplemental subject and reference object retain their own database
+origins, including reverse graph queries. Only derivation crosses this boundary;
+identity/succession relations are not imported as shortcuts. Standalone catalog builds
+do not admit `--base` or emit a catalog with unresolved external endpoints.
+
+In paired metadata search, `scope=steward` restricts register, table and variable hits
+to accepted placements and their requested intervals before counts and ranking. A code
+or document hit is not itself a possession claim; linked values and documents remain
+available through semantic metadata. Supplemental results retain their own group, count
+and cursor. Reference-only response fields remain unchanged.
 
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
-overwritten. Their public ids must be distinct; the reader resolves a public id to one
-database origin before using its local row id. Shared code lists are addressed by
-content hash. The same catalog-check implementation can read this composed semantic view
-without changing base entities. Ordinary SWECOV-only provider definitions and steward
-slots both use this home (maintainer 2026-10-29); pre-2018 current coding also uses
-ordinary supplemental coding-table definitions; there is no new addressable "form"
-entity and no base-copy/append pipeline.
+overwritten. Their public ids must be distinct except for the explicit same-variable
+occurrence bindings below; the reader resolves an ordinary public id to one database
+origin before using its local row id. Shared code lists are addressed by content hash.
+The same catalog-check implementation can read this composed semantic view without
+changing base entities. Ordinary SWECOV-only provider definitions and steward slots both
+use this home (maintainer 2026-10-29); pre-2018 current coding also uses ordinary
+supplemental coding-table definitions; there is no new addressable "form" entity and no
+base-copy/append pipeline.
+
+Steward-attested occurrences of a canonical variable use the same ordinary CSV reader
+and ledger with the canonical variable/table ids. The pinned optional
+`inputs.reference_occurrences` TOML declares each `(table_pid, variable_pid)` with a
+locator and reviewed identity evidence from provider documents or census/series
+continuity. The compiler and pair verifier require both endpoints in both origins, the
+same register/provider, dated tables, nonempty source periods, and no overlap with
+existing reference segments. Both endpoints must exist, but the base may omit their
+membership: an evidenced, nonempty steward occurrence can supply the received table's
+missing key without inventing global validity. An empty supplemental occurrence still
+refuses (`holdings_reference_occurrence_empty`), even if the base lacks membership. Only
+the explicit variables, tables and their parent registers may share public identities;
+other collisions still refuse. These declarations are occurrence bindings, not aliases,
+derivations or copied reference rows. The verifier compares them with the pinned input.
+Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+
+Reference `coverage` spans retain their original meaning. In selected steward mode,
+`coverage.steward_occurrences` exposes these canonical variables' attested supplemental
+periods, documentary label/definition, logical type/coding/value set and local source
+locators, beside accepted physical `held` intervals. Variable holdings include these
+steward-attested memberships even when the global member list omits them. This keeps the
+provenance and scope explicit without widening or copying global semantics. Logical
+order consumption of these occurrences remains e-order work.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -1570,44 +1691,97 @@ digest, plus input/curation/compiler pins. Admission checks both schemas exactly
 pairing pins; it does not accept another generation because the public ids happen to
 resolve.
 
+Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
+recompiled. Family declarations and their evidence remain steward input facts, with no
+register or physical-table naming rules in the compiler.
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
-  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
-  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                        |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                               |
-  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                        |
+  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                                   |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                          |
+  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                   |
 
-Row keys are `role = row_key` on column placements, validated against the logical
-column's role; there is no `holding_key` or `tbl_key` table (clean-room design §2.2, §13
-D10; schema-v3 prefatory rulings). Carried copies retain that role and grant no
-additional ordered cell. Stable key ordering derives from column ordinals. Holdings
-listings are metadata, not confidential by default (§13 D9); this does not authorize
-publishing private source documents, secrets or any microdata.
+Required held keys are the received row's entity components and time components,
+reviewed from received-row evidence. The pinned physical `[[table.key]]` declarations
+are their authority, not builder panel keys or a catalog identifier role. The 2026-10-23
+ruling excludes ordinary linking identifiers and descriptive fields. A donor table's
+identifiers do not redefine the received row unit. Each pinned physical table declares
+these requirements in `[[table.key]]`; the compiler stores that evidence as
+`holding_table.key_requirements`, and standalone verification compares it to the pinned
+source again. This is metadata on the physical table, not a new `holding_key` or
+`tbl_key` entity. Every offered interval must have exactly one applicable declaration
+and every declared physical component must have an applicable mapping on that received
+table through its authored default or explicit mapping routes. Those mappings must cover
+each offered span; a globally existing variable or a mapping on an unrelated route
+cannot satisfy the declaration. There is no identifier-based or missing-key fallback.
+Steward orders use the same declared entity/time components and their received column
+names. Panel identifier-kind comparisons use the declared entity subset; time components
+do not define identifier kinds. Linking identifiers remain ordinary columns and enter
+the order only when explicitly selected.
 
-Partition and projection are mutually exclusive. Projection parents must exist and cover
-the projected mapping's interval and logical variable; a parent is not itself a
-projection; no projection is an SQL join instruction. Index mappings by logical table,
-variable and start/end and columns by holding/name. Coverage is computed from indexed
-facts, not stored guesses about future UI summaries. Include source digests and the
-accepted census accounting in `meta`/`input`; publish no raw private locators that
-expose confidential document paths. Published locators use input-role ids and safe
-relative metadata locations.
+A time component can instead be supplied by a declared physical period column, or by the
+table's period (`year`, `month`, `day`, or the attested delivery `period`). A constant
+year/month/day must be the same across the entire physical table; a pooled multi-year
+table cannot pretend to supply one year. An attested delivery `period` must be one
+merged bounded span, not disjoint deliveries or an open interval. A physical period
+column is offered as an implicit time supplier only where an active declaration uses
+`period_key = "column"`. Physical time components remain required beside any additional
+implicit period dimension. Missing physical components require an explicit, located
+table-key hold and follow-up; it must be the table's sole key declaration, without a
+scoped `period`. Its columns remain held, not unmatched, and never become orderable
+placements. New census columns remain ordinary unmatched notices. Semantic `role` is
+retained from the reference or supplemental occurrence; it does not by itself make an
+identifier required. Carried copies must be declared entity/time components, including
+received keys whose old donor role was not `row_key`. They grant no additional ordered
+cell. Stable key ordering derives from column ordinals. Holdings listings are metadata
+(§13 D9); this does not authorize publishing private source documents, secrets or
+microdata.
+
+Partition and projection are mutually exclusive. A projection parent must exist and must
+not itself be a projection. Each mapped child span must have a nonempty shared declared
+entity/time key: matching entity components and matching time components in the
+applicable child and parent declarations. The parent must actually hold every shared
+component over that span; missing claims refuse with located
+`holdings_projection_key_missing`. Only shared components the parent holds are carried;
+child-only key components remain ordinary child placements. The relationship claims a
+shared key served by the parent; the child remains a separate extract with its own key
+and file. It does not require the parent to hold every child data variable or cover its
+interval. A child-only data cell is an ordinary placement ordered from the child's file.
+If the same logical cell is placed in both parent and child, the duplicate is authorized
+by the declared projection; undeclared duplicates still refuse. Carried-key rules remain
+in force. A child's required held keys may add entity components absent from the parent
+(recipient × child) and are independently key-validated. No projection is an SQL join
+instruction.
+
+This follows the maintainer's 2026-10-18 rulings "Projection, all 6 years" for
+`RTB_PostNr_YYYY` of `RTBYYYY` (`series/rtb-postnr.toml`) and "HUSH projection of PERS"
+(`series/swecov-sos-ekb-hush.toml`) for the EKB household extract: postal codes and
+household amounts are child-only data, not claims that the parent holds them.
+
+Index mappings by logical table, variable and start/end and columns by holding/name.
+Coverage is computed from indexed facts, not stored guesses about future UI summaries.
+Include source digests and the accepted census accounting in `meta`/`input`; publish no
+raw private locators that expose confidential document paths. Published locators use
+input-role ids and safe relative metadata locations.
 
 `reg-build verify` is the sole publication validator. It checks exact census accounting
-(one disposition per table; every physical column represented), referential integrity,
-form/window containment, complete storage facts for orderable columns, key roles and
-presence, disjointness/uniqueness of emitted placements, projection rules and located
-caveats. Competing candidate owners have already become `ambiguous_delivered_owners`
-notices with their contested placements omitted, so they do not violate uniqueness.
-Partitions authorize several explicitly disjoint locations; projections and carried keys
-authorize duplicates only under their stated rules. A warning cannot license an
-otherwise ambiguous mapping. Unmatched columns are notices/worklist entries, not
-publication blockers; they count in coverage but do not order until a valid mapping
-exists. Excluded, lookup and retained-unknown tables are accounted with reasons; a
-lookup used as a logical codelist is not thereby observation data.
+(one disposition per table; every physical column represented), stored disposition and
+periods against the pinned authored topology before using them as bounds, referential
+integrity, form/window containment, complete storage facts for orderable columns, key
+roles and presence, disjointness/uniqueness of emitted placements, projection rules and
+located caveats. Competing candidate owners have already become
+`ambiguous_delivered_owners` notices with their contested placements omitted, so they do
+not violate uniqueness. Partitions authorize several explicitly disjoint locations;
+projections, carried keys and documented position families authorize duplicates only
+under their stated rules. A warning cannot license an otherwise ambiguous mapping.
+Unmatched columns are notices/worklist entries, not publication blockers; they count in
+coverage but do not order until a valid mapping exists. Excluded, lookup and
+retained-unknown tables are accounted with reasons; a lookup used as a logical codelist
+is not thereby observation data.
 
 For example, `Swedbank_V15` is explicitly partition `v15` for 2020
 (`series/swedbank-v15.toml`); its label is not inferred from its name. Conversely,
@@ -1718,16 +1892,27 @@ resolution; only unmatched slots need new ids. In particular the five legacy yea
 uses are resolution/retargeting work, not an automatic minting queue. D32 still governs
 catalog identity: no catalog series entity and no merge of co-delivered slot variables.
 
-Under this decision, `holding_mapping` has one slot `variable_pid` per physical
+Under this decision, `holding_mapping` has one `variable_pid` per physical
 column/window; it has no member discriminator. Optional `slot_kind/index` on
-`holding_column` describes topology/order only, never N:1 identity. For a worked target
-shape (illustrative ids pending the normal ledger review),
+`holding_column` describes topology/order and never invents variable identity. A
+documented position family may place the same existing variable in several columns of
+one physical table (maintainer e-slots ruling, 2026-11-02). Each member explicitly
+declares the same nonblank `slot_family`, `slot_kind = "position"`, a distinct positive
+integer `slot_index`, and a locator evidencing the slot association. The exception is
+local to the same physical table and logical table/variable; it grants no cross-file
+duplication or temporal coverage. Index spellings such as `2` and `"02"` denote the same
+position and refuse as duplicates. The verifier compares family, kind, index and
+evidence locator with the pinned steward input before accepting the exception. Bare slot
+tags, different families and undeclared duplicates still refuse. Existing distinct
+steward slot variables keep their identities. For a worked target shape (illustrative
+ids pending the normal ledger review),
 `(table_pid = swecov/par-sv-slots, variable_pid = swecov/par-sv-slots/dia1, interval = [2019-01-01,2021-01-01))`
 points to `SWECOV_SOS_SV.DIA1` and carries `slot_kind = position`, `slot_index = 1` on
 its physical column. The provider long DIA is lineage evidence, not the target of that
-placement. Before these ids exist, an order of provider DIA does **not** select
-`DIA1`…`DIA30`. Do not publish mappings against invented ids. There is no holdings-only
-one-to-many expansion contract.
+placement. Without an explicit evidenced family mapping, an order of provider DIA does
+**not** select `DIA1`…`DIA30`. Do not publish mappings against invented ids. A family
+declaration authorizes physical placements; it does not add a logical-order expansion or
+a new catalog series entity.
 
 For example, in the adopted SV slot model, select the thirty adopted slot variables as a
 set; each maps to exactly one literal `DIA<N>` column, and the person row key is added
@@ -2095,13 +2280,13 @@ published relation endpoints can be followed. Ordinary bindings and the predeces
 retain explicit clipping; preliminary data remains a warning. A refusal blocks the whole
 order with the existing structured findings, never returns a partial order.
 
-  | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                         |
-  | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin selects an exact curated class version (schema §2.2). Missing versions are `fqid_unresolved`; unrelated versions are refused.                                       |
-  | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not. |
-  | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                         |
-  | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                       |
-  | panel `entity_key`, `time_key`            | removed                                                  | Keys come from the catalog: a table's row keys are its segments with role `row_key` (schema §0), and the time axis is the member table's `time_point` / `time_start` segment, else the member source's period.              |
+  | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                                                                      |
+  | ----------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin selects an exact curated class version (schema §2.2). Missing versions are `fqid_unresolved`; unrelated versions are refused.                                                                                    |
+  | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not.                                              |
+  | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                                                                      |
+  | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                                                                    |
+  | panel `entity_key`, `time_key`            | removed                                                  | Steward keys come from the pinned holdings table's declared entity/time requirements, not all identifier roles. Reference-only orders use catalog `row_key` segments; their time axis is the member table's `time_point` / `time_start` segment, else the source period. |
 
 A panel is a named grouping of sources with a comment. Which keys join across members is
 the researcher's call; the order check warns (`panel_row_keys_differ`).

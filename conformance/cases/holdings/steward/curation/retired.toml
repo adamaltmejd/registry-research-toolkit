@@ -1,0 +1,4 @@
+["steward/slots/removed"]
+kind = "variable"
+in = "1.0.0"
+reason = "withdrawn"

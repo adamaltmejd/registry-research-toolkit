@@ -1,0 +1,66 @@
+[[table]]
+physical_name = "Pool"
+disposition = "dated"
+delivery = "2017..2020"
+table_pids = []
+period_column = "Year"
+period_encoding = "year"
+locator = "fixture:unrouted-pool"
+
+[[table.column]]
+name = "Received_Id"
+locator = "fixture:required-key-for-earlier-coding"
+[[table.column.mapping]]
+table_pid = "demo/held"
+variable_pid = "demo/held/id"
+locator = "fixture:required-key-for-earlier-coding"
+
+[[table.column]]
+name = "Old"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Old"
+
+[[table.column]]
+name = "New"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-New"
+
+[[table.column]]
+name = "Late"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Late"
+
+[[table.column]]
+name = "Slot2"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Slot2"
+
+[[table.column]]
+name = "Code"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Code"
+
+[[table.column]]
+name = "Held"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Held"
+
+[[table.column]]
+name = "Year"
+hold = "Route not established by delivery documentation"
+follow_up = "https://example.invalid/issues/unrouted"
+locator = "fixture:unrouted-Year"
+
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "column"
+locator = "fixture:declared-entity-time-key"
+

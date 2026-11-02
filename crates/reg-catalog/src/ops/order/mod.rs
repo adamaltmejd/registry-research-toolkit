@@ -317,6 +317,9 @@ pub fn check(
     project: &ProjectData,
 ) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
     let conn = server.catalog.connect()?;
+    if server.catalog.steward().is_some() {
+        server.catalog.attach_holdings(&conn)?;
+    }
     let mut findings = Vec::new();
     let mut entries = Vec::new();
     let mut row_keys = Vec::new();
@@ -331,7 +334,7 @@ pub fn check(
         members.push((source.name.as_str(), checked.served));
     }
     for (index, panel) in project.panels.iter().enumerate() {
-        findings.extend(rows::panel(&conn, index, panel, &members)?);
+        findings.extend(rows::panel(server, &conn, index, panel, &members)?);
     }
     // Editing the study window never rewrites a source's period; a source left wholly
     // outside it blocks (reg-core DESIGN.md, "Logical selection").

@@ -1,0 +1,10 @@
+[[table.column]]
+name = "Slot2"
+slot_kind = "position"
+slot_index = 2
+locator = "fixture:slot"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:slot-route"
+
