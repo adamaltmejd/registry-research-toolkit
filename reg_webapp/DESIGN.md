@@ -8,9 +8,30 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA shell, search, provider, register, table, variable and classification-version
-pages use the current API. Project pages remain disconnected until their owning
-workstream restores them. The earlier SPA is archived on `archive/reg-webapp-spa`.
+The SPA shell, search, provider, register, table, variable, classification-version and
+loaded-project pages use the current API. The earlier SPA is archived on
+`archive/reg-webapp-spa`.
+
+## Loaded projects
+
+The browser keeps one working `project_data.json` in localStorage. WASM checks every
+opened file and name edit before it becomes a typed 5.1 draft. Rejected input stays
+unchanged for download or discard; no migration is attempted. Catalog validation uses
+the shared abortable resource hook, with issues under their source or binding and
+summary links that focus them. Opening a replacement or discarding the working copy asks
+first. Download remains available if browser persistence fails.
+
+The banner and project page share one catalog check. The banner retains the project
+name, source and column counts, verdict and download save state across routes. A
+restored local draft is recovery, so it remains unsaved until downloaded. The study
+window is a readout here; its window-band picker returns in W5b1.
+
+The order page reads the logical order, grouping entry rows by source and table.
+Secondary fields are in each row's Details popover, so the table fits the narrow detail
+pane. Register-name reads are shared with catalog browsing; value-set names are read by
+their content identity without displaying hashes. Row keys, period clips and
+non-blocking findings remain separate. Source authoring, catalog picking and panels
+return in W5b; manifests, resolve and steward workflows remain deferred.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared

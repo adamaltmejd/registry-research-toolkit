@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 // The fold corpus the server's `fold_search` is generated from and checked against.
 import foldCorpus from "../../../../conformance/cases/folds/fold_search.jsonl?raw";
-// The period grammar corpora reg-core's own tests run (`crates/reg-core/tests/grammar.rs`).
+// The period grammar corpus reg-core's own tests run (`crates/reg-core/tests/grammar.rs`).
 import periodCorpus from "../../../../conformance/cases/grammar/period.jsonl?raw";
-import sourcePeriodCorpus from "../../../../conformance/cases/grammar/source_period.jsonl?raw";
 // The interval algebra's golden cases (`crates/reg-core/tests/interval.rs`).
 import intervalGolden from "../../../../crates/reg-core/tests/interval/golden.json";
+// Source-period wire shaping is owned by reg-core's project corpus.
+import sourcePeriodCorpus from "../../../../crates/reg-core/tests/project/source_period.jsonl?raw";
 import {
   checkProject,
   foldSearch,
@@ -44,9 +45,7 @@ const VERSION_CASE = import.meta.glob<{
     import: "default",
   },
 );
-const VERSION_EXPECTED = import.meta.glob<
-  { json: { "/data/issues": unknown[] } }[]
->(
+const VERSION_EXPECTED = import.meta.glob<{ json: Record<string, unknown> }[]>(
   "../../../../conformance/cases/api/validate-unsupported-schema-version/expected.json",
   { eager: true, import: "default" },
 );
@@ -84,10 +83,14 @@ describe("checkProject (reg-core-wasm)", () => {
   it("answers another schema version as the server does", () => {
     const [request] = Object.values(VERSION_CASE);
     const [expected] = Object.values(VERSION_EXPECTED);
-    expect(checkProject(JSON.stringify(request.requests[0].body))).toEqual({
-      ok: false,
-      issues: expected[0].json["/data/issues"],
-    });
+    const result = checkProject(JSON.stringify(request.requests[0].body));
+    const oracle = expected[0].json;
+    expect(result.ok).toEqual(oracle["/data/ok"]);
+    for (const field of ["code", "level", "path", "successor_fqid"] as const) {
+      expect(result.issues.map((issue) => issue[field])).toEqual(
+        oracle[`/data/issues/*/${field}`],
+      );
+    }
   });
 
   // Fails when text that is not JSON aborts the module instead of being an issue.

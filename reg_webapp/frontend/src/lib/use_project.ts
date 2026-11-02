@@ -1,18 +1,46 @@
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { type ValidationResultModel, validateProject } from "./api";
 import type { ProjectStudyWindow } from "./project_data";
-import { projectStore } from "./project_store";
+import { type ProjectSnapshot, projectStore } from "./project_store";
+import { type AsyncResource, useAsyncResource } from "./use_async_resource";
 import { windowStore } from "./window";
 
-/** Read the project store. `read` returns a primitive or an object the store
- * holds (the draft, the validation result), never a fresh object: React compares
- * snapshots by identity. */
-export function useProject<T>(read: (store: typeof projectStore) => T): T {
-  return useSyncExternalStore(projectStore.subscribe, () => read(projectStore));
+export function useProject(): ProjectSnapshot {
+  return useSyncExternalStore(projectStore.subscribe, projectStore.getSnapshot);
 }
 
 const readWindow = () => windowStore.value;
 
-/** The active study window (the draft's, or the no-project fallback). */
 export function useStudyWindow(): ProjectStudyWindow | null {
   return useSyncExternalStore(windowStore.subscribe, readWindow);
+}
+
+export interface ProjectValidation
+  extends AsyncResource<ValidationResultModel> {
+  refresh: () => void;
+}
+
+/** One catalog check shared by the page and the banner across route changes. */
+export function useProjectValidation(): ProjectValidation {
+  const { draft, raw } = useProject();
+  const [revision, setRevision] = useState(0);
+  const resource = useAsyncResource(
+    draft ? `${raw}:${revision}` : null,
+    async (signal) => {
+      await new Promise<void>((resolve, reject) => {
+        const timer = setTimeout(resolve, 350);
+        signal.addEventListener(
+          "abort",
+          () => {
+            clearTimeout(timer);
+            reject(signal.reason);
+          },
+          { once: true },
+        );
+      });
+      if (!draft) throw new Error("Open a project before checking the catalog");
+      return validateProject(draft, { signal });
+    },
+  );
+  return { ...resource, refresh: () => setRevision((value) => value + 1) };
 }

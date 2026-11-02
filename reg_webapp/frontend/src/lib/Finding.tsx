@@ -8,11 +8,20 @@ import { catalogHref } from "./catalog";
 import styles from "./Finding.module.css";
 import { StatusRow } from "./ui/StatusRow";
 import type { StatusTone } from "./ui/types";
-import {
-  type FindingLevel,
-  type ProjectFinding,
-  plainMessage,
-} from "./validation";
+import { plainIssueText, type ValidationIssue } from "./validation";
+
+// Presentation shape retained for the deferred source editor.
+type FindingLevel = ValidationIssue["level"];
+interface ProjectFinding {
+  id: string;
+  level: FindingLevel;
+  title: string;
+  code: string | null;
+  message: string;
+  fqids: readonly string[];
+  period: string | null;
+  location: { catalogFqid: string | null } | null;
+}
 
 // One project finding, wherever it renders: under the column lane or at the top
 // of the source card it concerns, or in the summary panel when it has no card
@@ -31,7 +40,13 @@ export type NameOf = (fqid: string) => string | null;
 /** The finding's title. Its stable code, the identifier people cite, is in a
  * tooltip that opens on hover after a delay or at once on focus; pressing the
  * title copies the code. */
-function FindingTitle({ title, code }: { title: string; code: string | null }) {
+export function FindingTitle({
+  title,
+  code,
+}: {
+  title: string;
+  code: string | null;
+}) {
   const [copied, setCopied] = useState(false);
   if (code === null) {
     return <strong className={styles.title}>{title}</strong>;
@@ -97,7 +112,16 @@ export function FindingItem({
         <span className={styles.body}>
           <FindingTitle title={finding.title} code={finding.code} />
           <span className={styles.message}>
-            {plainMessage(finding.message, finding.fqids, nameOf)}
+            {plainIssueText(
+              finding.message,
+              finding.fqids,
+              new Map(
+                finding.fqids.flatMap((fqid) => {
+                  const name = nameOf(fqid);
+                  return name ? [[fqid, name] as const] : [];
+                }),
+              ),
+            )}
           </span>
           {finding.period && (
             <span className={styles.meta}>Period {finding.period}</span>

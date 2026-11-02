@@ -1,5 +1,5 @@
 import type { CatalogPeriod } from "./api";
-import { renderIntervals } from "./reg_core";
+import { renderIntervals, sourcePeriodIntervals } from "./reg_core";
 
 /** Catalog periods are half-open; reg-core renders inclusive date intervals. */
 export function catalogPeriodLabel(period: CatalogPeriod): string {
@@ -12,6 +12,15 @@ export function catalogPeriodLabel(period: CatalogPeriod): string {
   if (period.start === null)
     return `Through ${end.endsWith("-12-31") ? end.slice(0, 4) : end}`;
   return renderIntervals([[period.start, end]]);
+}
+
+/** Project periods use the same inclusive renderer as catalog periods. */
+export function sourcePeriodLabel(period: unknown): string | null {
+  const parsed = sourcePeriodIntervals(period);
+  if ("error" in parsed) return null;
+  return parsed.intervals === null
+    ? "Unbounded"
+    : renderIntervals(parsed.intervals);
 }
 
 /** Coalesce half-open segment periods before displaying coverage runs. */
