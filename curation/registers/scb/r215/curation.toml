@@ -37,18 +37,6 @@ evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetade-timmar-avlonade"
-fields = { "sets" = ["arbetade-timmar"] }
-evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-avlonade"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-avlonade-pa-foretaget"
 fields = { "sets" = ["antal-sysselsatta"] }
 evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
@@ -94,18 +82,6 @@ kind = "set"
 subject = "var:antal-odlingar-lan3"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-pa-foretaget"
-fields = { "sets" = ["antal-sysselsatta"] }
-evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-pa-foretaget"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
 
 [[statement]]
 kind = "set"
@@ -2086,18 +2062,6 @@ kind = "set"
 subject = "var:produktion-av-musslor"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Produktion av musslor är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55091:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-oring-for-utsattning"
-fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
-evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-oring-for-utsattning"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
 
 [[statement]]
 kind = "set"
@@ -4650,9 +4614,109 @@ fields = { "description" = "Arbetskostnad för företagare." }
 evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
 
 [[statement]]
-kind = "link"
-subject = "var:produktion-av-roding-for-utsattning"
-relation = "continues"
-object = "scb/vattenbruk/produktion-av-oring-for-utsattning"
-at = "2019-01-01.."
-evidence = "The 2018 SRodp_salt source label says öring, but SOringp_salt separately carries öring in 2018 and SRodp_salt otherwise carries röding. Per maintainer correction after Opus audit, retain the held succession from the mislabelled 2018 row to the 2019+ röding variable; record the 2018 label error as open rather than merge identities or override the label here.\ncatalog:occurrence:514034\ncatalog:occurrence:513994\ncatalog:occurrence:514271\nmaintainer:2026-11-02:Opus-audit-correction-210"
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2021-01-01..2021-12-31 where key = 'v37409' and release = 'r18159'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2021-01-01..2021-12-31 where key = 'v37409' and release = 'r18159'"
+fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2022-01-01..2022-12-31 where key = 'v37409' and release = 'r18889'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2022-01-01..2022-12-31 where key = 'v37409' and release = 'r18889'"
+fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2023-01-01..2023-12-31 where key = 'v37409' and release = 'r19369'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2023-01-01..2023-12-31 where key = 'v37409' and release = 'r19369'"
+fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2024-01-01..2024-12-31 where key = 'v37409' and release = 'r20106'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2024-01-01..2024-12-31 where key = 'v37409' and release = 'r20106'"
+fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2021-01-01..2021-12-31 where key = 'v6306' and release = 'r18159'"
+fields = { "variable" = "antal-avlonade-pa-foretaget" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2021-01-01..2021-12-31 where key = 'v6306' and release = 'r18159'"
+fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2022-01-01..2022-12-31 where key = 'v6306' and release = 'r18889'"
+fields = { "variable" = "antal-avlonade-pa-foretaget" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2022-01-01..2022-12-31 where key = 'v6306' and release = 'r18889'"
+fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2023-01-01..2023-12-31 where key = 'v6306' and release = 'r19369'"
+fields = { "variable" = "antal-avlonade-pa-foretaget" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2023-01-01..2023-12-31 where key = 'v6306' and release = 'r19369'"
+fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2024-01-01..2024-12-31 where key = 'v6306' and release = 'r20106'"
+fields = { "variable" = "antal-avlonade-pa-foretaget" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2024-01-01..2024-12-31 where key = 'v6306' and release = 'r20106'"
+fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodp_salt @2018-01-01..2018-12-31 where key = 'v39824' and release = 'r13664'"
+fields = { "variable" = "produktion-av-roding-for-utsattning" }
+evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt independently carries öring in 2018-2024 with the same sea-production scope and kg unit. The 2018 SRodp_salt label and definition copied öring. SCB JO1201 quality declaration 2024, pp. 4-5, distinguishes the species and stocking-fish production. Assign the complete 2018 occurrence to röding, correct its text and remove the obsolete continues edge; the emptied ledger ID is retained. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodp_salt @2018-01-01..2018-12-31 where key = 'v39824' and release = 'r13664'"
+fields = { "label" = "Produktion av röding för utsättning", "definition" = "Företagets totala produktion av röding för utsättning, i kg." }
+evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt independently carries öring in 2018-2024 with the same sea-production scope and kg unit. The 2018 SRodp_salt label and definition copied öring. SCB JO1201 quality declaration 2024, pp. 4-5, distinguishes the species and stocking-fish production. Assign the complete 2018 occurrence to röding, correct its text and remove the obsolete continues edge; the emptied ledger ID is retained. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"

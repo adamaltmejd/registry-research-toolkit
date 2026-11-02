@@ -109567,3 +109567,27 @@ kind = "set"
 subject = "var:talar-bast-vilket-sprak-kod"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51987\ncatalog:variable_text:51987:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA0507 @2008-01-01..2008-12-31 where key = 'v14509' and release = 'r20086'"
+fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
+evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA0507 @2009-01-01..2009-12-31 where key = 'v14509' and release = 'r19891'"
+fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
+evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA0507 @2010-01-01..2010-12-31 where key = 'v14509' and release = 'r19865'"
+fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
+evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA0507 @2011-01-01..2011-12-31 where key = 'v14509' and release = 'r19811'"
+fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
+evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
