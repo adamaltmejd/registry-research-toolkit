@@ -5,7 +5,7 @@
 //! total, so no input string can panic (a panic aborts the module). The SPA's only
 //! importer is `reg_webapp/frontend/src/lib/reg_core.ts`.
 
-use reg_core::project::{SCHEMA_VERSION, StudyWindow, check};
+use reg_core::project::{SCHEMA_VERSION, SourcePeriod, StudyWindow, check};
 use reg_core::{Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult};
 use serde_json::{Value, json};
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -89,6 +89,58 @@ pub fn period_token_for_bounds(lo: &str, hi: &str) -> String {
     reg_core::period_token_for_bounds(lo, hi)
 }
 
+/// The `Source.period` JSON a `?period` wire spells (`SourcePeriod::from_wire`),
+/// shaped, not validated.
+///
+/// # Panics
+///
+/// Never on input: a source period always encodes.
+#[wasm_bindgen]
+#[must_use]
+pub fn source_period_from_wire(wire: &str) -> String {
+    serde_json::to_string(&SourcePeriod::from_wire(wire)).expect("a source period encodes")
+}
+
+/// The `?period` wire of a `Source.period` JSON value as a JSON string, or `null`
+/// when it has none (`SourcePeriod::to_wire`) or the value is not a source period's
+/// shape. Shaped, not validated: an out-of-grammar token still has a wire.
+#[wasm_bindgen]
+#[must_use]
+pub fn source_period_to_wire(json: &str) -> String {
+    let wire = serde_json::from_str::<Value>(json)
+        .ok()
+        .and_then(|value| SourcePeriod::from_shape(&value))
+        .and_then(|period| period.to_wire());
+    json!(wire).to_string()
+}
+
+/// The days a `Source.period` JSON value requests: `{intervals: [[lo, hi], ...]}`,
+/// merged; `{intervals: null}` for the year-independent `"_default"`; or `{error:
+/// "invalid_period", message}` when the period's structural check or its range
+/// order refuses it.
+#[wasm_bindgen]
+#[must_use]
+pub fn source_period_intervals(json: &str) -> String {
+    let refused = |message: String| json!({"error": "invalid_period", "message": message});
+    let answer = match checked_period(json) {
+        Err(message) => refused(message),
+        Ok(period) => match period.intervals() {
+            Ok(intervals) => json!({ "intervals": intervals }),
+            Err(message) => refused(message),
+        },
+    };
+    answer.to_string()
+}
+
+/// The calendar-year spans of a `Source.period` JSON value
+/// (`SourcePeriod::year_spans`): `[[lo, hi], ...]`, or `null` unless the period is
+/// accepted and every endpoint is a year.
+#[wasm_bindgen]
+#[must_use]
+pub fn source_period_years(json: &str) -> String {
+    json!(checked_period(json).ok().and_then(|p| p.year_spans())).to_string()
+}
+
 /// The days a study window JSON value (`{from, to}` int years) covers, as
 /// `[lo, hi]` (`StudyWindow::interval`, not held to the period grammar's years), or
 /// `null` for any other value, an inverted window or a year past four digits.
@@ -137,6 +189,20 @@ pub fn render(json: &str) -> String {
 #[must_use]
 pub fn fold_search(text: &str) -> String {
     reg_core::fold_search(text)
+}
+
+/// The source period in JSON text once its structural check accepts it, so that
+/// `SourcePeriod::intervals` cannot panic; else why not.
+fn checked_period(json: &str) -> Result<SourcePeriod, String> {
+    let value: Value = serde_json::from_str(json).map_err(|e| e.to_string())?;
+    SourcePeriod::from_value(&value).map_err(|result| {
+        result
+            .issues
+            .iter()
+            .map(|issue| issue.message.as_str())
+            .collect::<Vec<_>>()
+            .join("; ")
+    })
 }
 
 fn intervals(json: &str) -> Option<Vec<Interval>> {
