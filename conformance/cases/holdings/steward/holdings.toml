@@ -129,7 +129,7 @@ delivery = "2018"
 projection_of = "Parent"
 projection_token = "child"
 table_pids = ["demo/projected"]
-locator = "fixture:key-only-projection"
+locator = "fixture:projection"
 
 
 [[table.key]]

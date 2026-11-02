@@ -1,0 +1,12 @@
+[[table.column]]
+name = "Amount"
+hold = "Await reviewed parent amount"
+follow_up = "https://example.invalid/issues/2"
+locator = "fixture:parent-amount-held"
+
+[[table.column]]
+name = "Status"
+hold = "Await reviewed parent status"
+follow_up = "https://example.invalid/issues/3"
+locator = "fixture:parent-status-held"
+

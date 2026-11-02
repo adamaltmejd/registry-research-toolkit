@@ -13,3 +13,5 @@
 {"kind":"occurrence","provider":"demo","register":"held","table":"","column":"RelativeId","source_key":"relative-id","label":"Relative identifier, ordinary orderable column","dtype":"int","identifier":true,"from":"2017-01-01","to":"2021-12-31"}
 {"kind":"occurrence","provider":"demo","register":"owners","table":"received","column":"Other","source_key":"other","label":"Received table measure","dtype":"int","from":"2017-01-01","to":"2019-12-31"}
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"ChildId","source_key":"child-id","label":"Child entity component","dtype":"int","identifier":true,"from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Amount","source_key":"amount","label":"Amount","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Status","source_key":"status","label":"Status","dtype":"int","from":"2018-01-01","to":"2018-12-31"}

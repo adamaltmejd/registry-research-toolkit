@@ -1,0 +1,6 @@
+{
+  "failures": [
+    "holdings:table=1:parent=5:variable=demo/projected/amount:period=17532..17897: holdings_projection_invalid",
+    "holdings:table=1:parent=5:variable=demo/projected/status:period=17532..17897: holdings_projection_invalid"
+  ]
+}

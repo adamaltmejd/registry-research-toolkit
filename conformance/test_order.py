@@ -175,6 +175,25 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
         assert case["location"] in refused.stderr
 
 
+def test_projection_refusal_reports_every_missing_parent_cell(tmp_path):
+    # Fails if verification stops at the first absent parent mapping or omits its
+    # child/parent/variable/window location. The ordinary fixture admits both data
+    # cells; these authored parent holds leave both child mappings unsupported.
+    # Expected locations come from the synthetic topology, ledger and 2018 window.
+    _, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    text = path.read_text()
+    child = '[[table]]\nphysical_name = "Child"'
+    holds = (HOLDINGS_CASE / "projection-parent-holds.toml").read_text()
+    path.write_text(text.replace(child, holds + child, 1))
+    pin_steward(root, tmp_path / "stewards.toml")
+    result = run([*command, "--out", tmp_path / "refused.db"])
+    assert result.returncode == 1
+    expected = json.loads((HOLDINGS_CASE / "projection-refusal.json").read_text())
+    for failure in expected["failures"]:
+        assert failure in result.stderr
+
+
 def test_explicit_missing_row_key_holds_the_received_table(tmp_path):
     # Fails if an explicit missing-time-key hold offers another column from the
     # same received table. Other table/column holds do not pin this row-unit rule.
