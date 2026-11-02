@@ -4,5 +4,5 @@
 
 [swecov]
 repo = "git@github.com:adamaltmejd/swecov-steward.git"
-commit = "3a159ea7a8817288b760e118811bed76d59d29e2"
+commit = "01d901a4f25a045d5f2b1a67db0e675d937278ac"
 config = "steward.toml"
