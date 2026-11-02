@@ -98,12 +98,10 @@
 a.verdict {
   color: inherit;
 }
-.status[data-status="unchecked"] > .verdict,
 .status[data-status="checking"] > .verdict {
   color: var(--text-muted);
   font-weight: var(--body-weight);
 }
-.status[data-status="unchecked"],
 .status[data-status="checking"] {
   color: var(--text-muted);
 }
@@ -130,58 +128,17 @@ a.verdict {
   border-radius: var(--radius);
 }
 
-/* ── The study window ─────────────────────────────────────────────────────── */
-/* Wide enough for the label, the widest readout and Clear on one line, so the
-   label never breaks and the box keeps its size when Clear comes and goes
-   (#1822, #1819). */
 .window {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  width: 14rem;
-  max-width: 100%;
-}
-
-.windowHead {
-  display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  white-space: nowrap;
+  font-size: var(--text-sm);
 }
-
-/* The window's years in accent-ink mono: pine as text for the study window. */
 .readout {
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
   color: var(--accent-ink);
-  /* One span of years: it never breaks at the en dash. */
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.clear {
-  margin-left: auto;
-}
-
-/* The track: the span the window can take, a `surface` strip over an axis
-   hairline, as the Timeline's band sits on the pane (the band's `accent-bg`
-   barely shows on the banner's `accent-soft`); the window band over it
-   (ui/WindowBand), its bounds the thumbs. 20px tall so the thumbs keep a
-   usable hit area. */
-.track {
-  position: relative;
-  height: 20px;
-  box-sizing: border-box;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-.fill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-}
-.thumb {
-  top: 2px;
 }
 
 @media (max-width: 48rem) {
@@ -191,9 +148,5 @@ a.verdict {
   .summary {
     max-width: none;
     flex: 1 1 12rem;
-  }
-  .window {
-    flex: 1 1 12rem;
-    width: auto;
   }
 }

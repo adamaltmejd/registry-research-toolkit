@@ -67,10 +67,10 @@ function Storage({ row }: { row: CatalogSegment }) {
   return <>Not stated</>;
 }
 
-function ValueSetLabel({
+export function ValueSetLabel({
   valueSet,
 }: {
-  valueSet: CatalogSegment["value_set"];
+  valueSet: { names: readonly string[] } | null;
 }) {
   if (!valueSet)
     return <span className={variableStyles.singleLine}>Not stated</span>;

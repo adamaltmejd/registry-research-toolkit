@@ -4,6 +4,7 @@ import "./lib/ui/motion.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { startDraftLifecycle } from "./lib/project_store";
 import { initRegCore } from "./lib/reg_core";
 
 const target = document.getElementById("app");
@@ -16,6 +17,7 @@ if (!target) {
 // rather than render one that throws on the first edit.
 initRegCore().then(
   () => {
+    startDraftLifecycle();
     createRoot(target).render(
       <StrictMode>
         <App />

@@ -15,6 +15,7 @@ import findingStyles from "./Finding.module.css";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
+import { plainIssueText } from "./validation";
 
 type Names = ReadonlyMap<string, string>;
 
@@ -123,7 +124,13 @@ function FindingGroup({
                     <li key={JSON.stringify(finding)}>
                       <StatusRow tone={severity === "review" ? "warn" : "info"}>
                         <div className={styles.finding}>
-                          <span>{finding.message}</span>
+                          <span>
+                            {plainIssueText(
+                              finding.message,
+                              [],
+                              names ?? new Map(),
+                            )}
+                          </span>
                           <span>
                             Period:{" "}
                             {finding.period ? (

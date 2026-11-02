@@ -1,15 +1,18 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
+import type { Context } from "./api";
 import {
   browseFilter,
   useBrowseFilter,
   useBrowseMatches,
 } from "./browse_filter";
 import { CommandPalette } from "./CommandPalette";
+import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
 import { Button } from "./ui/Button";
+import type { ProjectValidation } from "./use_project";
 
 const mac = isMacPlatform();
 
@@ -41,7 +44,13 @@ function isOtherTextEntry(
  * are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
-export function TopBar() {
+export function TopBar({
+  context,
+  validation,
+}: {
+  context: Context | null;
+  validation: ProjectValidation;
+}) {
   const brand = "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -264,7 +273,7 @@ export function TopBar() {
             Search
           </Button>
         </span>
-        <a href="/project">Project</a>
+        <ProjectBanner context={context} validation={validation} />
       </div>
     </header>
   );

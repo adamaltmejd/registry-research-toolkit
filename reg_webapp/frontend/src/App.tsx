@@ -8,12 +8,14 @@ import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationView } from "./lib/ClassificationView";
 import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
 import { Home } from "./lib/Home";
+import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
+import { useProjectValidation } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { NoRegisterList, VariableList } from "./lib/VariableList";
 
@@ -22,6 +24,7 @@ const useHref = (href: string) => href;
 export function App() {
   const context = useAsyncResource("context", getContext);
   const route = useRoute();
+  const validation = useProjectValidation();
   const searching = useBrowseFiltering();
   const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
     searching && isBackCrumb(crumb)
@@ -38,7 +41,7 @@ export function App() {
     <RouterProvider navigate={router.navigate} useHref={useHref}>
       <I18nProvider locale="en-US">
         <div className={styles.app}>
-          <TopBar />
+          <TopBar context={context.data} validation={validation} />
           {context.error && (
             <StatusRow
               tone="error"
@@ -70,7 +73,14 @@ export function App() {
             <main className={styles.detail}>
               <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
               <div className={styles.routed}>
-                <RoutedView route={route} />
+                {route.name === "project" ? (
+                  <ProjectEditor
+                    context={context.data}
+                    validation={validation}
+                  />
+                ) : (
+                  <RoutedView route={route} />
+                )}
               </div>
             </main>
           </div>
