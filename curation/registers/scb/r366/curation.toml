@@ -16292,7 +16292,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:f10vt20"
-fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning under vårterminen." }
+fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning vårterminen 2020, från mitten av mars." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509578:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove occurrence-specific questionnaire dates; retain the measured live-distance-teaching share. Evidence: rel070-base/reg_meta.db occurrences 509578."
 
 [[statement]]
