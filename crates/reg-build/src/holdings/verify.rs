@@ -4,7 +4,134 @@ use std::path::Path;
 
 use rusqlite::Connection;
 
-use super::{compile, meta, open};
+use super::{compile, input, meta, open};
+
+struct StoredColumn {
+    ordinal: i64,
+    dtype: Option<String>,
+    length: Option<i64>,
+    precision: Option<i64>,
+    scale: Option<i64>,
+    offered: bool,
+}
+
+/// Compare artifact coordinates with the independently re-read, admitted sources.
+/// Artifact counters are summaries, never the census oracle.
+#[allow(clippy::too_many_lines)]
+fn sources(db: &Connection, root: &Path) -> Result<(), String> {
+    let pin = input::Pin {
+        repo: meta(db, "steward_repo")?,
+        commit: meta(db, "steward_commit")?,
+        config: meta(db, "steward_config")?,
+    };
+    let config = input::admit(root, &pin, &meta(db, "owner_id")?)?;
+    let recorded: BTreeMap<String, String> = serde_json::from_str(&meta(db, "input_pins")?)
+        .map_err(|_| "holdings_meta_invalid: input_pins")?;
+    if recorded != config.pins {
+        return Err("holdings_source_pin_mismatch: input_pins differ from pinned config".into());
+    }
+    let census = reg_readers::holdings::read(
+        &input::path(root, &config.inputs.census)?,
+        &input::path(root, &config.inputs.storage_export)?,
+        &input::path(root, &config.inputs.census_reader)?,
+    )
+    .map_err(|e| e.to_string())?;
+    let source_tables = census.tables.len();
+    let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
+    let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
+        .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
+    let schemas: BTreeMap<_, _> = topology
+        .table
+        .into_iter()
+        .map(|t| (t.physical_name, t.schema_name))
+        .collect();
+    let mut query = db
+        .prepare("SELECT physical_name,id,schema_name,table_type FROM holding_table")
+        .map_err(|e| e.to_string())?;
+    let mut tables: BTreeMap<String, (i64, Option<String>, Option<String>)> = query
+        .query_map([], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?, r.get(3)?))))
+        .map_err(|e| e.to_string())?
+        .collect::<Result<_, _>>()
+        .map_err(|e| e.to_string())?;
+    for table in census.tables {
+        let location = format!("census:row={}", table.source_row);
+        let (id, schema, kind) = tables
+            .remove(&table.name)
+            .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+        let mut query = db
+            .prepare(
+                "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
+            EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
+            FROM holding_column c WHERE c.holding_id=?",
+            )
+            .map_err(|e| e.to_string())?;
+        let mut columns: BTreeMap<String, StoredColumn> = query
+            .query_map([id], |r| {
+                Ok((
+                    r.get(0)?,
+                    StoredColumn {
+                        ordinal: r.get(1)?,
+                        dtype: r.get(2)?,
+                        length: r.get(3)?,
+                        precision: r.get(4)?,
+                        scale: r.get(5)?,
+                        offered: r.get(6)?,
+                    },
+                ))
+            })
+            .map_err(|e| e.to_string())?
+            .collect::<Result<_, _>>()
+            .map_err(|e| e.to_string())?;
+        for column in table.columns {
+            let location = format!("{location}:column={}", column.ordinal);
+            let stored = columns
+                .remove(&column.name)
+                .ok_or_else(|| format!("{location}: holdings_census_column_missing"))?;
+            if stored.ordinal != column.ordinal {
+                return Err(format!("{location}: holdings_census_ordinal_mismatch"));
+            }
+            if stored.offered {
+                let declared_schema = schemas.get(&table.name).and_then(Option::as_deref);
+                let facts: Vec<_> = column
+                    .storage
+                    .iter()
+                    .filter(|s| declared_schema.is_none_or(|name| name == s.schema_name))
+                    .collect();
+                let [fact] = facts.as_slice() else {
+                    return Err(format!(
+                        "{location}: holdings_source_storage_ambiguous: offered column needs exactly one source fact"
+                    ));
+                };
+                if schema.as_deref() != Some(fact.schema_name.as_str())
+                    || kind.as_deref() != Some(fact.table_type.as_str())
+                    || stored.dtype.as_deref() != Some(fact.data_type.as_str())
+                    || (stored.length, stored.precision, stored.scale)
+                        != (fact.length, fact.precision, fact.scale)
+                {
+                    return Err(format!("{location}: holdings_source_storage_mismatch"));
+                }
+            }
+        }
+        if let Some((_, stored)) = columns.first_key_value() {
+            let ordinal = stored.ordinal;
+            return Err(format!(
+                "holdings:table={id}:column={ordinal}: holdings_census_column_extra"
+            ));
+        }
+    }
+    if let Some((_, (id, ..))) = tables.first_key_value() {
+        return Err(format!("holdings:table={id}: holdings_census_table_extra"));
+    }
+    for (key, count) in [
+        ("census_tables", source_tables),
+        ("census_columns", source_columns),
+    ] {
+        if meta(db, key)? != count.to_string() {
+            return Err(format!("census:{key}: holdings_source_accounting_mismatch"));
+        }
+    }
+    Ok(())
+}
 
 pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), String> {
     {
@@ -43,7 +170,7 @@ fn no_rows(db: &Connection, sql: &str, code: &str) -> Result<(), String> {
 }
 
 #[allow(clippy::too_many_lines)]
-pub(super) fn pair(path: &Path, catalog: &Path) -> Result<(), String> {
+pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), String> {
     crate::verify::catalog(catalog, None)?;
     let base = open(catalog)?;
     let db = open(path)?;
@@ -66,6 +193,7 @@ pub(super) fn pair(path: &Path, catalog: &Path) -> Result<(), String> {
     if meta(&db, "owner_kind")? != "steward" || !reg_core::is_slug(&meta(&db, "owner_id")?) {
         return Err("holdings_owner_invalid".into());
     }
+    sources(&db, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?
@@ -147,17 +275,6 @@ pub(super) fn pair(path: &Path, catalog: &Path) -> Result<(), String> {
         ),
     ] {
         no_rows(&db, sql, code)?;
-    }
-    for (meta_key, table) in [
-        ("census_tables", "holding_table"),
-        ("census_columns", "holding_column"),
-    ] {
-        let count: i64 = db
-            .query_row(&format!("SELECT count(*) FROM {table}"), [], |r| r.get(0))
-            .map_err(|e| e.to_string())?;
-        if meta(&db, meta_key)? != count.to_string() {
-            return Err("holdings_accounting_invalid: census counts differ".into());
-        }
     }
     let mut index = BTreeMap::<(String, String), Vec<compile::Segment>>::new();
     for segment in compile::segments(&base)?

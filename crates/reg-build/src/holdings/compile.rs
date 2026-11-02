@@ -625,12 +625,17 @@ pub(super) fn write(
                 );
             }
             let mut decisions = BTreeMap::new();
-            for c in &authored.column {
+            for (position, c) in authored.column.iter().enumerate() {
                 if c.locator.trim().is_empty()
                     || decisions.insert(c.name.as_str(), c).is_some()
                     || !table.columns.iter().any(|physical| physical.name == c.name)
                 {
-                    return Err("stale_declared_mapping_target: column decision is stale, duplicate or unlocated".into());
+                    let routes: Vec<_> = c.mapping.iter().map(|m| m.locator.as_str()).collect();
+                    return Err(format!(
+                        "stale_declared_mapping_target: topology:column={}: locator={} routes={routes:?}: column decision is stale, duplicate or unlocated",
+                        position + 1,
+                        c.locator
+                    ));
                 }
             }
             let mut period_column = None;

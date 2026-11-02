@@ -1494,8 +1494,23 @@ search indexes stay in the catalog file. Holdings inputs and stored cross-file m
 use public ids; integer ids are local to each database and never joined across files
 without their database origin. Do not import schema-v3's obsolete programme id ranges or
 `UNION ALL` of unqualified row ids.
-`reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
-cross-file references that SQLite cannot enforce as foreign keys.
+`reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
+the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
+admits the clean steward checkout against the repository, commit, config and input pins
+recorded in the holdings file, then independently re-reads the census and storage
+export. Every census table and exact physical column must be present, with no extra
+coordinates; offered columns must match the source schema, table type, storage type,
+length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
+Refusals locate source rows/column ordinals or artifact table/column ids without
+printing private physical identifiers.
+
+The census is the authority for physical possession (maintainer, 2026-11-02), and its
+replacement is an ordinary pinned input change followed by recompilation. Reviewed
+routes and windows on surviving columns remain authored inputs. A vanished column named
+by an authored decision is `stale_declared_mapping_target`, located to that decision and
+its route locators; it is not silently retired. A new column passes through ordinary
+interval-local matching and is retained with `mapping_missing` when undocumented. There
+is no migration or carry-forward of old physical rows.
 
 The compiler's closed steward config adds `inputs.holdings` (authored replacement
 topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to

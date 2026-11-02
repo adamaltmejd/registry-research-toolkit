@@ -95,7 +95,9 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     for output in outputs:
         result = run([*command, "--out", output])
         assert result.returncode == 0, result.stderr
-        verified = run([REG_BUILD, "verify", output, "--catalog", base])
+        verified = run(
+            [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+        )
         assert verified.returncode == 0, verified.stderr
     assert outputs[0].read_bytes() == outputs[1].read_bytes()
     with closing(sqlite3.connect(outputs[0])) as db:
@@ -134,9 +136,98 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
             ("fixture", commit)
         ]
     wrong_base = cached_case_artifact({"fixture": "base"})
-    refused = run([REG_BUILD, "verify", outputs[0], "--catalog", wrong_base])
+    refused = run(
+        [
+            REG_BUILD,
+            "verify",
+            outputs[0],
+            "--catalog",
+            wrong_base,
+            "--steward-repo",
+            root,
+        ]
+    )
     assert refused.returncode == 1
     assert "holdings_catalog_mismatch" in refused.stderr
+
+    # Fails if verify trusts compiler counters instead of the pinned source files:
+    # exact-name/type corruption and additions/removals keep those counters consistent.
+    for case in json.loads((HOLDINGS_CASE / "verify-refusals.json").read_text()):
+        damaged = tmp_path / "damaged.db"
+        shutil.copyfile(outputs[0], damaged)
+        with closing(sqlite3.connect(damaged)) as db:
+            db.executescript(case["sql"])
+        refused = run(
+            [REG_BUILD, "verify", damaged, "--catalog", base, "--steward-repo", root]
+        )
+        assert refused.returncode == 1
+        assert case["code"] in refused.stderr
+        assert case["location"] in refused.stderr
+
+
+def test_census_replacement_preserves_routes_and_refuses_vanished_columns(tmp_path):
+    # Fails if a new input pin silently drops a stale reviewed route, loses surviving
+    # windows, or offers an undocumented new column. The old fixture alone has no
+    # source replacement. Expectations come from the second census and authored oracle.
+    base, root, command = prepare_holdings(tmp_path)
+    expected = json.loads((HOLDINGS_CASE / "census-update.json").read_text())
+    output = tmp_path / "published.db"
+    first = run([*command, "--out", output])
+    assert first.returncode == 0, first.stderr
+    original = output.read_bytes()
+    topology = (root / "holdings.toml").read_bytes()
+    shutil.copyfile(HOLDINGS_CASE / "census-next.csv", root / "census.csv")
+    pin_steward(root, tmp_path / "stewards.toml")
+    assert (root / "holdings.toml").read_bytes() == topology
+    # The old pair must still demand its recorded source commit, not the new pin.
+    stale = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert stale.returncode == 1
+    assert expected["previous_pin_refusal"] in stale.stderr
+    refused = run([*command, "--out", output])
+    assert refused.returncode == 1
+    for key in ["refusal", "route_locator", "decision_locator"]:
+        assert expected[key] in refused.stderr
+    assert output.read_bytes() == original
+
+    # Explicitly retire only the refused route; no migration changes the remaining
+    # declarations. This allowed twin observes the added column in a published artifact.
+    removed = (HOLDINGS_CASE / "removed-route.toml").read_text()
+    assert topology.decode().count(removed) == 1
+    (root / "holdings.toml").write_text(topology.decode().replace(removed, ""))
+    pin_steward(root, tmp_path / "stewards.toml")
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    verified = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert verified.returncode == 0, verified.stderr
+    with closing(sqlite3.connect(output)) as db:
+        names = {r[0] for r in db.execute("SELECT name FROM holding_column")}
+        assert expected["removed_column"] not in names
+        assert expected["added_column"] in names
+        added = db.execute(
+            """SELECT n.code FROM holding_notice n JOIN holding_column c ON c.id=n.column_id
+               WHERE c.name=?""",
+            [expected["added_column"]],
+        ).fetchall()
+        assert (expected["new_notice"],) in added
+        assert (
+            db.execute(
+                """SELECT count(*) FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+               WHERE c.name=?""",
+                [expected["added_column"]],
+            ).fetchone()[0]
+            == 0
+        )
+        mappings = db.execute(
+            """SELECT h.physical_name,c.name,m.table_pid,m.variable_pid,
+                      date(m.start*86400,'unixepoch'),date(m.end*86400,'unixepoch')
+               FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+               JOIN holding_table h ON h.id=c.holding_id"""
+        ).fetchall()
+        assert tuple(expected["retained_mapping"]) in mappings
 
 
 @pytest.mark.parametrize(

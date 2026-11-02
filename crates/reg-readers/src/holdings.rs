@@ -40,6 +40,7 @@ struct Rewrite {
 /// One accounted physical table; no observation records are read.
 pub struct Table {
     pub name: String,
+    pub source_row: usize,
     pub columns: Vec<Column>,
 }
 
@@ -214,8 +215,7 @@ pub fn read(
     columns.sort_by_key(|&(_, ordinal)| ordinal);
     let mut tables = BTreeMap::new();
     let mut matched_storage = BTreeSet::new();
-    for (index, record) in csv.records().enumerate() {
-        let row = index + 2;
+    for (row, record) in (2..).zip(csv.records()) {
         let record = record.map_err(|_| at("census", row, "malformed CSV record"))?;
         let name = record[table].trim();
         if name.is_empty() {
@@ -260,6 +260,7 @@ pub fn read(
                 name.to_owned(),
                 Table {
                     name: name.to_owned(),
+                    source_row: row,
                     columns: physical,
                 },
             )

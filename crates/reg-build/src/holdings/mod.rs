@@ -58,7 +58,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
         return Err("holdings_output_invalid: scratch output already exists".into());
     }
     let result = write(&base, &root, &scratch, &staged, &owner, pin, &config)
-        .and_then(|()| verify::pair(&staged, &base))
+        .and_then(|()| verify::pair(&staged, &base, &root))
         .and_then(|()| {
             let summary = {
                 let db = open(&staged)?;
@@ -100,14 +100,20 @@ fn flags(mut args: impl Iterator<Item = String>) -> Result<BTreeMap<String, Stri
 pub(crate) fn verify_args(mut args: impl Iterator<Item = String>) -> Result<(), String> {
     let file = PathBuf::from(
         args.next()
-            .ok_or("usage: reg-build verify FILE --catalog FILE")?,
+            .ok_or("usage: reg-build verify FILE --catalog FILE --steward-repo DIR")?,
     );
     let flags = flags(args)?;
-    if flags.len() != 1 {
-        return Err("usage: reg-build verify FILE --catalog FILE".into());
+    if flags
+        .keys()
+        .any(|key| !["--catalog", "--steward-repo"].contains(&key.as_str()))
+    {
+        return Err("usage: reg-build verify FILE --catalog FILE --steward-repo DIR".into());
     }
     let base = flags.get("--catalog").ok_or("--catalog is required")?;
-    verify::pair(&file, Path::new(base))
+    let root = flags
+        .get("--steward-repo")
+        .ok_or("holdings_source_required: --steward-repo is required")?;
+    verify::pair(&file, Path::new(base), Path::new(root))
 }
 
 pub(super) fn open(path: &Path) -> Result<Connection, String> {
