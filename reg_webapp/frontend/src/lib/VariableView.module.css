@@ -57,3 +57,22 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.valueSetCell {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.classification {
+  flex-shrink: 0;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueSetCell .valueSet {
+  flex: 1;
+  min-width: 0;
+}
