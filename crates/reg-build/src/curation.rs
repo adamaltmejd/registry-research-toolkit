@@ -20,7 +20,7 @@ struct Lock {
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct StoredPremise {
-    subjects: LockedSubjects,
+    subjects: LockedSubjects<String>,
     objects: Vec<String>,
 }
 
@@ -30,17 +30,23 @@ impl Lock {
         let statements = premises
             .into_iter()
             .map(|(identity, premise)| {
-                let mut keys = Vec::new();
-                for object in premise.objects {
-                    let key = object_key(&object);
-                    objects.entry(key.clone()).or_insert(object);
-                    keys.push(key);
-                }
-                keys.sort();
+                let subjects = match premise.subjects {
+                    LockedSubjects::Rows(rows) => LockedSubjects::Rows(intern(&mut objects, rows)),
+                    LockedSubjects::Variable {
+                        variable,
+                        count,
+                        locators_sha256,
+                    } => LockedSubjects::Variable {
+                        variable,
+                        count,
+                        locators_sha256,
+                    },
+                };
+                let keys = intern(&mut objects, premise.objects);
                 (
                     identity,
                     StoredPremise {
-                        subjects: premise.subjects,
+                        subjects,
                         objects: keys,
                     },
                 )
@@ -64,30 +70,55 @@ impl Lock {
         self.statements
             .into_iter()
             .map(|(identity, premise)| {
-                let mut objects = premise
-                    .objects
-                    .iter()
-                    .map(|key| {
-                        self.objects.get(key).cloned().ok_or_else(|| {
-                            format!(
-                                "statement {identity}: missing object {key}; run reg-build lock"
-                            )
-                        })
-                    })
-                    .collect::<Result<Vec<_>, _>>()?;
-                // Digest order is only a storage convention. Restore the resolver's
-                // canonical object order for unchanged field-level diagnostics.
-                objects.sort_by_key(reg_frame::canonical_line);
-                Ok((
-                    identity,
-                    LockedPremise {
-                        subjects: premise.subjects,
-                        objects,
+                let subjects = match premise.subjects {
+                    LockedSubjects::Rows(keys) => {
+                        LockedSubjects::Rows(resolve_objects(&self.objects, &keys, &identity)?)
+                    }
+                    LockedSubjects::Variable {
+                        variable,
+                        count,
+                        locators_sha256,
+                    } => LockedSubjects::Variable {
+                        variable,
+                        count,
+                        locators_sha256,
                     },
-                ))
+                };
+                let objects = resolve_objects(&self.objects, &premise.objects, &identity)?;
+                Ok((identity, LockedPremise { subjects, objects }))
             })
             .collect()
     }
+}
+
+fn intern(objects: &mut BTreeMap<String, SourcePremise>, rows: Vec<SourcePremise>) -> Vec<String> {
+    let mut keys = Vec::new();
+    for row in rows {
+        let key = object_key(&row);
+        objects.entry(key.clone()).or_insert(row);
+        keys.push(key);
+    }
+    keys.sort();
+    keys
+}
+
+fn resolve_objects(
+    objects: &BTreeMap<String, SourcePremise>,
+    keys: &[String],
+    identity: &str,
+) -> Result<Vec<SourcePremise>, String> {
+    let mut rows = keys
+        .iter()
+        .map(|key| {
+            objects.get(key).cloned().ok_or_else(|| {
+                format!("statement {identity}: missing object {key}; run reg-build lock")
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    // Digest order is only a storage convention. Compare resolved full records
+    // in canonical order so diagnostics retain field-level old/new values.
+    rows.sort_by_key(reg_frame::canonical_line);
+    Ok(rows)
 }
 
 fn object_key(object: &SourcePremise) -> String {
@@ -103,8 +134,8 @@ struct LockedPremise {
 
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged, deny_unknown_fields)]
-enum LockedSubjects {
-    Rows(Vec<SourcePremise>),
+enum LockedSubjects<T = SourcePremise> {
+    Rows(Vec<T>),
     Variable {
         variable: String,
         count: usize,
@@ -132,7 +163,9 @@ impl LockedPremise {
                 locators_sha256: reg_frame::hex(&hash.finalize()),
             }
         } else {
-            LockedSubjects::Rows(premise.subjects.clone())
+            let mut rows = premise.subjects.clone();
+            rows.sort_by_key(reg_frame::canonical_line);
+            LockedSubjects::Rows(rows)
         };
         let mut objects = premise
             .objects
