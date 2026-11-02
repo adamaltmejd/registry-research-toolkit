@@ -1070,8 +1070,8 @@ evidence = "Kodning av upplåtelseform.\ncatalog:variable_text:6754:19723:20089"
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-annat-bransle"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6755:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6755:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1082,8 +1082,8 @@ evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-biobransle"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6756:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6756:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1094,8 +1094,8 @@ evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-el"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6757:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6757:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1106,8 +1106,8 @@ evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-fjarrvarme"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6758:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6758:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1118,8 +1118,8 @@ evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-olja"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6759:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6759:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1130,8 +1130,8 @@ evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningsutgift-totalt"
-fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
-evidence = "Total uppvärmningsutgift ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6760:19723:20089"
+fields = { "sets" = ["uppvarmningsutgift"] }
+evidence = "Total uppvärmningsutgift ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6760:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to uppvarmningsutgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

@@ -872,8 +872,8 @@ evidence = "Kodningen hör till skatt i beskickningslandet.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:annanforman"
-fields = { "sets" = ["annan-forman", "formaner"] }
-evidence = "Förekomst av annan förmån ingår i kandidatgruppen och förmåner.\ncatalog:variable_text:39010:17532:17897"
+fields = { "sets" = ["annan-forman"] }
+evidence = "Förekomst av annan förmån ingår i kandidatgruppen och förmåner.\ncatalog:variable_text:39010:17532:17897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to annan-forman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1376,8 +1376,8 @@ evidence = "BetErs är en ogenomskinlig källmnemonik för betald bilförmån.\n
 [[statement]]
 kind = "set"
 subject = "var:bilersattning"
-fields = { "sets" = ["bilersattning", "kostnadsersattningar"] }
-evidence = "Förekomst av bilersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39054:15340:20089"
+fields = { "sets" = ["bilersattning"] }
+evidence = "Förekomst av bilersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39054:15340:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bilersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1388,8 +1388,8 @@ evidence = "Förekomst av bilersättning är en namngiven kostnadsersättningsko
 [[statement]]
 kind = "set"
 subject = "var:bilersattning-fel"
-fields = { "sets" = ["bilersattning", "kostnadsersattningar"] }
-evidence = "Felkolumnen gäller bilersättning.\ncatalog:variable_text:39055:18262:19723"
+fields = { "sets" = ["bilersattning"] }
+evidence = "Felkolumnen gäller bilersättning.\ncatalog:variable_text:39055:18262:19723\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bilersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1400,8 +1400,8 @@ evidence = "Felkolumnen gäller bilersättning.\ncatalog:variable_text:39055:182
 [[statement]]
 kind = "set"
 subject = "var:bilforman"
-fields = { "sets" = ["bilforman", "formaner"] }
-evidence = "Bilförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39056:17532:20089"
+fields = { "sets" = ["bilforman"] }
+evidence = "Bilförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39056:17532:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bilforman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1424,8 +1424,8 @@ evidence = "Bilkoden avser förmånsbil.\ncatalog:variable_text:39057:15340:1789
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman"
-fields = { "sets" = ["bostadsforman", "formaner"] }
-evidence = "Bostadsförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39058:15340:20089"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Bostadsförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39058:15340:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bostadsforman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1436,8 +1436,8 @@ evidence = "Bostadsförmån är en namngiven förmånskomponent.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman-fel"
-fields = { "sets" = ["bostadsforman", "formaner"] }
-evidence = "Felkolumnen gäller bostadsförmån.\ncatalog:variable_text:39059:17897:19723"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Felkolumnen gäller bostadsförmån.\ncatalog:variable_text:39059:17897:19723\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bostadsforman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1448,8 +1448,8 @@ evidence = "Felkolumnen gäller bostadsförmån.\ncatalog:variable_text:39059:17
 [[statement]]
 kind = "set"
 subject = "var:bostsmaforman"
-fields = { "sets" = ["bostadsforman", "formaner"] }
-evidence = "Småhuskomponenten hör till bostadsförmån och förmåner.\ncatalog:variable_text:39060:15340:20089"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Småhuskomponenten hör till bostadsförmån och förmåner.\ncatalog:variable_text:39060:15340:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bostadsforman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1460,8 +1460,8 @@ evidence = "Småhuskomponenten hör till bostadsförmån och förmåner.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:bostsmaforman-fel"
-fields = { "sets" = ["bostadsforman", "formaner"] }
-evidence = "Felkolumnen gäller bostadsförmån för småhus.\ncatalog:variable_text:39061:17897:19723"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Felkolumnen gäller bostadsförmån för småhus.\ncatalog:variable_text:39061:17897:19723\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bostadsforman; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1610,8 +1610,8 @@ evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:3907
 [[statement]]
 kind = "set"
 subject = "var:forman-som-pension"
-fields = { "sets" = ["forman-som-pension", "formaner"] }
-evidence = "Förmån som pension är en namngiven förmånskomponent.\ncatalog:variable_text:39076:17532:20089"
+fields = { "sets" = ["forman-som-pension"] }
+evidence = "Förmån som pension är en namngiven förmånskomponent.\ncatalog:variable_text:39076:17532:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to forman-som-pension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1646,8 +1646,8 @@ evidence = "Variabeln avser samlade förmåner.\ncatalog:variable_text:39078:175
 [[statement]]
 kind = "set"
 subject = "var:fri-parkering"
-fields = { "sets" = ["formaner", "fri-parkering"] }
-evidence = "Fri parkering är en namngiven förmån.\ncatalog:variable_text:39079:15340:17897"
+fields = { "sets" = ["fri-parkering"] }
+evidence = "Fri parkering är en namngiven förmån.\ncatalog:variable_text:39079:15340:17897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fri-parkering; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2012,8 +2012,8 @@ evidence = "Beloppet avser samlade förmåner och andra skattepliktiga ersättni
 [[statement]]
 kind = "set"
 subject = "var:pensforman-fel"
-fields = { "sets" = ["forman-som-pension", "formaner"] }
-evidence = "Felkolumnen gäller förmån som pension.\ncatalog:variable_text:39110:18993:19358"
+fields = { "sets" = ["forman-som-pension"] }
+evidence = "Felkolumnen gäller förmån som pension.\ncatalog:variable_text:39110:18993:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to forman-som-pension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2084,8 +2084,8 @@ evidence = "Markeringen hör till rättad post.\ncatalog:variable_text:39117:178
 [[statement]]
 kind = "set"
 subject = "var:reprers"
-fields = { "sets" = ["kostnadsersattningar", "representationsersattning"] }
-evidence = "Representationsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39119:9496:11688"
+fields = { "sets" = ["representationsersattning"] }
+evidence = "Representationsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39119:9496:11688\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to representationsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2234,8 +2234,8 @@ evidence = "Beloppet avser tjänstepension.\ncatalog:variable_text:39132:17532:2
 [[statement]]
 kind = "set"
 subject = "var:traktamente"
-fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
-evidence = "Traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39133:17897:20089"
+fields = { "sets" = ["traktamente"] }
+evidence = "Traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39133:17897:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to traktamente; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2246,8 +2246,8 @@ evidence = "Traktamente är en namngiven kostnadsersättningskomponent.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:traktamente-fel"
-fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
-evidence = "Felkolumnen gäller traktamente.\ncatalog:variable_text:39134:18262:19723"
+fields = { "sets" = ["traktamente"] }
+evidence = "Felkolumnen gäller traktamente.\ncatalog:variable_text:39134:18262:19723\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to traktamente; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2258,8 +2258,8 @@ evidence = "Felkolumnen gäller traktamente.\ncatalog:variable_text:39134:18262:
 [[statement]]
 kind = "set"
 subject = "var:traktamente-inom-riket"
-fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
-evidence = "Inrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39135:15340:17897"
+fields = { "sets" = ["traktamente"] }
+evidence = "Inrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39135:15340:17897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to traktamente; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2270,8 +2270,8 @@ evidence = "Inrikes traktamente är en namngiven kostnadsersättningskomponent.\
 [[statement]]
 kind = "set"
 subject = "var:traktamente-utom-riket"
-fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
-evidence = "Utrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39136:15340:17897"
+fields = { "sets" = ["traktamente"] }
+evidence = "Utrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39136:15340:17897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to traktamente; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

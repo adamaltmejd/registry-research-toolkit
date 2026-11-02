@@ -308,12 +308,6 @@ evidence = "Referensår hör till gruppen för referensår.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:ar-och-kvartal"
-fields = { "sets" = ["referensar", "referenskvartal"] }
-evidence = "Angivelsen innehåller både referensår och referenskvartal.\ncatalog:variable_text:40422:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-och-kvartal"
 fields = { "tags" = [] }
 evidence = "Angivelsen innehåller både referensår och referenskvartal.\ncatalog:variable_text:40422:17897:18628"
 

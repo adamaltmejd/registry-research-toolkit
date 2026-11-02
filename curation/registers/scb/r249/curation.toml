@@ -3935,12 +3935,6 @@ evidence = "Variabeln anger poängomfattning på gymnasial nivå.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:proval"
-fields = { "sets" = ["provning", "validering"] }
-evidence = "Kodningen omfattar både prövning och validering.\ncatalog:valueset:4170\ncatalog:valueset:4755\ncatalog:variable_text:34724:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:proval"
 fields = { "tags" = ["education"] }
 evidence = "Kodningen omfattar både prövning och validering.\ncatalog:valueset:4170\ncatalog:valueset:4755\ncatalog:variable_text:34724:17897:18262"
 
@@ -3955,12 +3949,6 @@ kind = "set"
 subject = "var:provbet"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger betyg på nationellt prov.\ncatalog:variable_text:34725:19905:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:provn"
-fields = { "sets" = ["provning"] }
-evidence = "Kodningen avser prövning, inklusive prövning efter validering.\ncatalog:valueset:11080\ncatalog:variable_text:34726:19905:20089"
 
 [[statement]]
 kind = "set"
@@ -4291,12 +4279,6 @@ kind = "set"
 subject = "var:utbsun"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger personens högsta utbildningsnivå.\ncatalog:variable_text:34762:15887:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:valid"
-fields = { "sets" = ["validering"] }
-evidence = "Kodningen avser validering av del av eller hel kurs.\ncatalog:valueset:3865\ncatalog:variable_text:34764:19905:20089"
 
 [[statement]]
 kind = "set"

@@ -314,8 +314,8 @@ evidence = "Arbetslöshetskassa är en komponent i arbetslöshetsersättningen.\
 [[statement]]
 kind = "set"
 subject = "var:aktivitetsersattning"
-fields = { "sets" = ["aktivitetsersattning", "ersattning-vid-langvarigt-nedsatt-arbetsformaga"] }
-evidence = "Alternativa belopp och komponent i ersättning vid nedsatt arbetsförmåga.\ncatalog:variable_text:5678:18262:20454"
+fields = { "sets" = ["aktivitetsersattning"] }
+evidence = "Alternativa belopp och komponent i ersättning vid nedsatt arbetsförmåga.\ncatalog:variable_text:5678:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to aktivitetsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -326,8 +326,8 @@ evidence = "Alternativa belopp och komponent i ersättning vid nedsatt arbetsfö
 [[statement]]
 kind = "set"
 subject = "var:aktivitetsersattning-takp"
-fields = { "sets" = ["aktivitetsersattning", "ersattning-vid-langvarigt-nedsatt-arbetsformaga"] }
-evidence = "Alternativ redovisning av aktivitetsersättning.\ncatalog:variable_text:5679:18262:20089"
+fields = { "sets" = ["aktivitetsersattning"] }
+evidence = "Alternativ redovisning av aktivitetsersättning.\ncatalog:variable_text:5679:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to aktivitetsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -608,8 +608,8 @@ evidence = "Nivå och belopp är redovisningar av arbetsrelaterad inkomst.\ncata
 [[statement]]
 kind = "set"
 subject = "var:arbetsskadesjukpenning"
-fields = { "sets" = ["arbetsskadesjukpenning", "ersattning-vid-sjukdom"] }
-evidence = "Alternativa belopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5704:18262:20454"
+fields = { "sets" = ["arbetsskadesjukpenning"] }
+evidence = "Alternativa belopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5704:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to arbetsskadesjukpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -620,8 +620,8 @@ evidence = "Alternativa belopp och komponent i sjukdomsersättning.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:arbetsskadesjukpenning-tskadep"
-fields = { "sets" = ["arbetsskadesjukpenning", "ersattning-vid-sjukdom"] }
-evidence = "Alternativ redovisning av arbetsskadesjukpenning.\ncatalog:variable_text:5705:18262:20089"
+fields = { "sets" = ["arbetsskadesjukpenning"] }
+evidence = "Alternativ redovisning av arbetsskadesjukpenning.\ncatalog:variable_text:5705:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to arbetsskadesjukpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -986,8 +986,8 @@ evidence = "DeSO anger geografisk tillhörighet.\ncatalog:variable_text:5739:182
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand"
-fields = { "sets" = ["ekonomiskt-bistand", "ekonomiskt-stod"] }
-evidence = "Alternativa biståndsbelopp och komponent i ekonomiskt stöd.\ncatalog:variable_text:5740:18262:20089"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "Alternativa biståndsbelopp och komponent i ekonomiskt stöd.\ncatalog:variable_text:5740:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ekonomiskt-bistand; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -998,8 +998,8 @@ evidence = "Alternativa biståndsbelopp och komponent i ekonomiskt stöd.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-isocbu"
-fields = { "sets" = ["ekonomiskt-bistand", "ekonomiskt-stod"] }
-evidence = "Alternativt biståndsbelopp och komponent i ekonomiskt stöd.\ncatalog:variable_text:5741:19723:20454"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "Alternativt biståndsbelopp och komponent i ekonomiskt stöd.\ncatalog:variable_text:5741:19723:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ekonomiskt-bistand; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1046,8 +1046,8 @@ evidence = "Överskott och underskott är redovisningar av samma inkomstslag.\nc
 [[statement]]
 kind = "set"
 subject = "var:ersattning-amprogram-skattefri"
-fields = { "sets" = ["ersattning-vid-arbetsloshet", "ersattning-vid-arbetsmarknadspolitiska-program"] }
-evidence = "Skattefri programersättning är en komponent i arbetslöshetsersättningen.\ncatalog:variable_text:5745:18262:20454"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadspolitiska-program"] }
+evidence = "Skattefri programersättning är en komponent i arbetslöshetsersättningen.\ncatalog:variable_text:5745:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-arbetsmarknadspolitiska-program; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1058,8 +1058,8 @@ evidence = "Skattefri programersättning är en komponent i arbetslöshetsersät
 [[statement]]
 kind = "set"
 subject = "var:ersattning-amprogram-skattepliktig"
-fields = { "sets" = ["ersattning-vid-arbetsloshet", "ersattning-vid-arbetsmarknadspolitiska-program"] }
-evidence = "Skattepliktig programersättning är en komponent i arbetslöshetsersättningen.\ncatalog:variable_text:5746:18262:20454"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadspolitiska-program"] }
+evidence = "Skattepliktig programersättning är en komponent i arbetslöshetsersättningen.\ncatalog:variable_text:5746:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-arbetsmarknadspolitiska-program; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1082,8 +1082,8 @@ evidence = "Belopp och andel av ersättning för arbete grupperas.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:ersattning-for-karens"
-fields = { "sets" = ["ersattning-for-karens", "ersattning-vid-sjukdom"] }
-evidence = "Alternativa karensbelopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5748:18262:19358"
+fields = { "sets" = ["ersattning-for-karens"] }
+evidence = "Alternativa karensbelopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5748:18262:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-for-karens; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1094,8 +1094,8 @@ evidence = "Alternativa karensbelopp och komponent i sjukdomsersättning.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:ersattning-for-karens-tkarensp"
-fields = { "sets" = ["ersattning-for-karens", "ersattning-vid-sjukdom"] }
-evidence = "Alternativ redovisning av karensersättning.\ncatalog:variable_text:5749:18262:19358"
+fields = { "sets" = ["ersattning-for-karens"] }
+evidence = "Alternativ redovisning av karensersättning.\ncatalog:variable_text:5749:18262:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-for-karens; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1118,8 +1118,8 @@ evidence = "Belopp för föräldraledighet och närståendeomvårdnad.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:ersattning-forlangd-skolgang"
-fields = { "sets" = ["ersattning-for-studier", "ersattning-vid-forlangd-skolgang"] }
-evidence = "Alternativa belopp och komponent i studieersättning.\ncatalog:variable_text:5751:18262:20454"
+fields = { "sets" = ["ersattning-vid-forlangd-skolgang"] }
+evidence = "Alternativa belopp och komponent i studieersättning.\ncatalog:variable_text:5751:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-forlangd-skolgang; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1154,8 +1154,8 @@ evidence = "Belopp för ersättning vid långvarigt nedsatt arbetsförmåga.\nca
 [[statement]]
 kind = "set"
 subject = "var:ersattning-riskgrupper"
-fields = { "sets" = ["ersattning-till-riskgrupper", "ersattning-vid-sjukdom"] }
-evidence = "Alternativa riskgruppsbelopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5754:18262:19358"
+fields = { "sets" = ["ersattning-till-riskgrupper"] }
+evidence = "Alternativa riskgruppsbelopp och komponent i sjukdomsersättning.\ncatalog:variable_text:5754:18262:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-till-riskgrupper; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1178,8 +1178,8 @@ evidence = "Belopp för studieersättning.\ncatalog:variable_text:5755:20089:204
 [[statement]]
 kind = "set"
 subject = "var:ersattning-till-riskgrupper-triskp"
-fields = { "sets" = ["ersattning-till-riskgrupper", "ersattning-vid-sjukdom"] }
-evidence = "Alternativ redovisning av riskgruppsersättning.\ncatalog:variable_text:5756:18262:19358"
+fields = { "sets" = ["ersattning-till-riskgrupper"] }
+evidence = "Alternativ redovisning av riskgruppsersättning.\ncatalog:variable_text:5756:18262:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-till-riskgrupper; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1202,8 +1202,8 @@ evidence = "Belopp för arbetslöshetsersättning.\ncatalog:variable_text:5757:1
 [[statement]]
 kind = "set"
 subject = "var:ersattning-vid-deltagande-i-arbetsmarknadspolitiska-iarbutp"
-fields = { "sets" = ["ersattning-vid-arbetsloshet", "ersattning-vid-arbetsmarknadspolitiska-program"] }
-evidence = "Alternativ redovisning av skattefri programersättning.\ncatalog:variable_text:5758:18262:20089"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadspolitiska-program"] }
+evidence = "Alternativ redovisning av skattefri programersättning.\ncatalog:variable_text:5758:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-arbetsmarknadspolitiska-program; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1214,8 +1214,8 @@ evidence = "Alternativ redovisning av skattefri programersättning.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:ersattning-vid-deltagande-i-arbetsmarknadspolitiska-tarbutp"
-fields = { "sets" = ["ersattning-vid-arbetsloshet", "ersattning-vid-arbetsmarknadspolitiska-program"] }
-evidence = "Alternativ redovisning av skattepliktig programersättning.\ncatalog:variable_text:5759:18262:20089"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadspolitiska-program"] }
+evidence = "Alternativ redovisning av skattepliktig programersättning.\ncatalog:variable_text:5759:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-arbetsmarknadspolitiska-program; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1226,8 +1226,8 @@ evidence = "Alternativ redovisning av skattepliktig programersättning.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:ersattning-vid-forlangd-skolgang-cstudfsp"
-fields = { "sets" = ["ersattning-for-studier", "ersattning-vid-forlangd-skolgang"] }
-evidence = "Alternativ redovisning av ersättning vid förlängd skolgång.\ncatalog:variable_text:5760:18262:20089"
+fields = { "sets" = ["ersattning-vid-forlangd-skolgang"] }
+evidence = "Alternativ redovisning av ersättning vid förlängd skolgång.\ncatalog:variable_text:5760:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ersattning-vid-forlangd-skolgang; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1286,8 +1286,8 @@ evidence = "Folkbokföringsstatus beskriver befolkningstillhörighet.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-barns-fodelse"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "foraldrapenning"] }
-evidence = "Föräldrapenning är en komponent i ersättningsaggregatet.\ncatalog:variable_text:5765:18262:20454"
+fields = { "sets" = ["foraldrapenning"] }
+evidence = "Föräldrapenning är en komponent i ersättningsaggregatet.\ncatalog:variable_text:5765:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldrapenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1298,8 +1298,8 @@ evidence = "Föräldrapenning är en komponent i ersättningsaggregatet.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-barns-fodelse-tforpfp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "foraldrapenning"] }
-evidence = "Alternativ redovisning av föräldrapenning.\ncatalog:variable_text:5766:18262:20089"
+fields = { "sets" = ["foraldrapenning"] }
+evidence = "Alternativ redovisning av föräldrapenning.\ncatalog:variable_text:5766:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldrapenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1310,8 +1310,8 @@ evidence = "Alternativ redovisning av föräldrapenning.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-tillfallig-vard-av-barn-tforptp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "foraldrapenning"] }
-evidence = "Alternativ redovisning av tillfällig föräldrapenning.\ncatalog:variable_text:5767:18262:20089"
+fields = { "sets" = ["foraldrapenning"] }
+evidence = "Alternativ redovisning av tillfällig föräldrapenning.\ncatalog:variable_text:5767:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldrapenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1322,8 +1322,8 @@ evidence = "Alternativ redovisning av tillfällig föräldrapenning.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-vab"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "foraldrapenning"] }
-evidence = "Tillfällig föräldrapenning ingår i ersättningsaggregatet.\ncatalog:variable_text:5768:18262:20454"
+fields = { "sets" = ["foraldrapenning"] }
+evidence = "Tillfällig föräldrapenning ingår i ersättningsaggregatet.\ncatalog:variable_text:5768:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldrapenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1358,8 +1358,8 @@ evidence = "Skattepliktiga förmåner är en möjlig lönekomponent.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:garantipension"
-fields = { "sets" = ["garantipension", "pension"] }
-evidence = "Garantipension är en pensionskomponent.\ncatalog:variable_text:5771:18262:20454"
+fields = { "sets" = ["garantipension"] }
+evidence = "Garantipension är en pensionskomponent.\ncatalog:variable_text:5771:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to garantipension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1370,8 +1370,8 @@ evidence = "Garantipension är en pensionskomponent.\ncatalog:variable_text:5771
 [[statement]]
 kind = "set"
 subject = "var:garantipension-pgarpp"
-fields = { "sets" = ["garantipension", "pension"] }
-evidence = "Alternativ redovisning av garantipension.\ncatalog:variable_text:5772:18262:20089"
+fields = { "sets" = ["garantipension"] }
+evidence = "Alternativ redovisning av garantipension.\ncatalog:variable_text:5772:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to garantipension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1382,8 +1382,8 @@ evidence = "Alternativ redovisning av garantipension.\ncatalog:variable_text:577
 [[statement]]
 kind = "set"
 subject = "var:graviditetsersattning"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "graviditetsersattning"] }
-evidence = "Graviditetsersättning ingår i ersättningsaggregatet.\ncatalog:variable_text:5773:18262:20454"
+fields = { "sets" = ["graviditetsersattning"] }
+evidence = "Graviditetsersättning ingår i ersättningsaggregatet.\ncatalog:variable_text:5773:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to graviditetsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1394,8 +1394,8 @@ evidence = "Graviditetsersättning ingår i ersättningsaggregatet.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:graviditetsersattning-tforhp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "graviditetsersattning"] }
-evidence = "Alternativ redovisning av graviditetsersättning.\ncatalog:variable_text:5774:18262:20089"
+fields = { "sets" = ["graviditetsersattning"] }
+evidence = "Alternativ redovisning av graviditetsersättning.\ncatalog:variable_text:5774:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to graviditetsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1454,8 +1454,8 @@ evidence = "IETABEp är en ogenomskinlig källkod.\ncatalog:variable_text:5762:1
 [[statement]]
 kind = "set"
 subject = "var:inkomstpension"
-fields = { "sets" = ["inkomstpension", "pension"] }
-evidence = "Inkomstpension är en pensionskomponent.\ncatalog:variable_text:5780:18262:20454"
+fields = { "sets" = ["inkomstpension"] }
+evidence = "Inkomstpension är en pensionskomponent.\ncatalog:variable_text:5780:18262:20454\n\nSingle-group ruling 2026-11-02: Income pension and its supplement concern the specific income-pension component."
 
 [[statement]]
 kind = "set"
@@ -1466,8 +1466,8 @@ evidence = "Inkomstpension är en pensionskomponent.\ncatalog:variable_text:5780
 [[statement]]
 kind = "set"
 subject = "var:inkomstpension-pinkpp"
-fields = { "sets" = ["inkomstpension", "pension"] }
-evidence = "Alternativ redovisning av inkomstpension.\ncatalog:variable_text:5781:18262:20089"
+fields = { "sets" = ["inkomstpension"] }
+evidence = "Alternativ redovisning av inkomstpension.\ncatalog:variable_text:5781:18262:20089\n\nSingle-group ruling 2026-11-02: Income pension and its supplement concern the specific income-pension component."
 
 [[statement]]
 kind = "set"
@@ -1478,8 +1478,8 @@ evidence = "Alternativ redovisning av inkomstpension.\ncatalog:variable_text:578
 [[statement]]
 kind = "set"
 subject = "var:inkomstpensionstillagg"
-fields = { "sets" = ["inkomstpension", "pension"] }
-evidence = "Inkomstpensionstillägg är en uttrycklig pensionskomponent.\ncatalog:variable_text:5782:18628:20454"
+fields = { "sets" = ["inkomstpension"] }
+evidence = "Inkomstpensionstillägg är en uttrycklig pensionskomponent.\ncatalog:variable_text:5782:18628:20454\n\nSingle-group ruling 2026-11-02: Income pension and its supplement concern the specific income-pension component."
 
 [[statement]]
 kind = "set"
@@ -1856,8 +1856,8 @@ evidence = "Näringsgrenskodningar för olika enheter grupperas.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:narstaendepenning"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "narstaendepenning"] }
-evidence = "Närståendepenning ingår i ersättningsaggregatet.\ncatalog:variable_text:5814:18262:20454"
+fields = { "sets" = ["narstaendepenning"] }
+evidence = "Närståendepenning ingår i ersättningsaggregatet.\ncatalog:variable_text:5814:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to narstaendepenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1868,8 +1868,8 @@ evidence = "Närståendepenning ingår i ersättningsaggregatet.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:narstaendepenning-tnarp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "narstaendepenning"] }
-evidence = "Alternativ redovisning av närståendepenning.\ncatalog:variable_text:5815:18262:20089"
+fields = { "sets" = ["narstaendepenning"] }
+evidence = "Alternativ redovisning av närståendepenning.\ncatalog:variable_text:5815:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to narstaendepenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1880,8 +1880,8 @@ evidence = "Alternativ redovisning av närståendepenning.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:omstallningsstudiestod"
-fields = { "sets" = ["ersattning-for-studier", "omstallningsstudiestod"] }
-evidence = "Omställningsstudiestöd är en möjlig studieersättningskomponent.\ncatalog:variable_text:5816:19358:20089"
+fields = { "sets" = ["omstallningsstudiestod"] }
+evidence = "Omställningsstudiestöd är en möjlig studieersättningskomponent.\ncatalog:variable_text:5816:19358:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omstallningsstudiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1892,8 +1892,8 @@ evidence = "Omställningsstudiestöd är en möjlig studieersättningskomponent.
 [[statement]]
 kind = "set"
 subject = "var:omstallningsstudiestod-comstp"
-fields = { "sets" = ["ersattning-for-studier", "omstallningsstudiestod"] }
-evidence = "Alternativ redovisning av omställningsstudiestöd.\ncatalog:variable_text:5817:19358:19723"
+fields = { "sets" = ["omstallningsstudiestod"] }
+evidence = "Alternativ redovisning av omställningsstudiestöd.\ncatalog:variable_text:5817:19358:19723\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omstallningsstudiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1904,8 +1904,8 @@ evidence = "Alternativ redovisning av omställningsstudiestöd.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:omstallningsstudiestod-tomstbid"
-fields = { "sets" = ["ersattning-for-studier", "omstallningsstudiestod"] }
-evidence = "Bidragsdelen ingår i omställningsstudiestödet.\ncatalog:variable_text:5818:20089:20454"
+fields = { "sets" = ["omstallningsstudiestod"] }
+evidence = "Bidragsdelen ingår i omställningsstudiestödet.\ncatalog:variable_text:5818:20089:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omstallningsstudiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1916,8 +1916,8 @@ evidence = "Bidragsdelen ingår i omställningsstudiestödet.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:omstallningsstudiestod-tomstbidp"
-fields = { "sets" = ["ersattning-for-studier", "omstallningsstudiestod"] }
-evidence = "Alternativ redovisning av bidragsdelen.\ncatalog:variable_text:5819:19723:20089"
+fields = { "sets" = ["omstallningsstudiestod"] }
+evidence = "Alternativ redovisning av bidragsdelen.\ncatalog:variable_text:5819:19723:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omstallningsstudiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1928,8 +1928,8 @@ evidence = "Alternativ redovisning av bidragsdelen.\ncatalog:variable_text:5819:
 [[statement]]
 kind = "set"
 subject = "var:omvardnadsbidrag"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "omvardnadsbidrag"] }
-evidence = "Omvårdnadsbidrag ingår i ersättningsaggregatet.\ncatalog:variable_text:5820:18262:20454"
+fields = { "sets" = ["omvardnadsbidrag"] }
+evidence = "Omvårdnadsbidrag ingår i ersättningsaggregatet.\ncatalog:variable_text:5820:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omvardnadsbidrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1940,8 +1940,8 @@ evidence = "Omvårdnadsbidrag ingår i ersättningsaggregatet.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:omvardnadsbidrag-tomvardp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "omvardnadsbidrag"] }
-evidence = "Alternativ redovisning av omvårdnadsbidrag.\ncatalog:variable_text:5821:18262:20089"
+fields = { "sets" = ["omvardnadsbidrag"] }
+evidence = "Alternativ redovisning av omvårdnadsbidrag.\ncatalog:variable_text:5821:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to omvardnadsbidrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1952,8 +1952,8 @@ evidence = "Alternativ redovisning av omvårdnadsbidrag.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:ovrig-ersattning-sjukdom"
-fields = { "sets" = ["ersattning-vid-sjukdom", "ovrig-ersattning-vid-sjukdom"] }
-evidence = "Alternativ redovisning och komponent i sjukdomsersättning.\ncatalog:variable_text:5822:20089:20454"
+fields = { "sets" = ["ovrig-ersattning-vid-sjukdom"] }
+evidence = "Alternativ redovisning och komponent i sjukdomsersättning.\ncatalog:variable_text:5822:20089:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ovrig-ersattning-vid-sjukdom; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1964,8 +1964,8 @@ evidence = "Alternativ redovisning och komponent i sjukdomsersättning.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:ovrig-ersattning-vid-sjukdom-csjukovr"
-fields = { "sets" = ["ersattning-vid-sjukdom", "ovrig-ersattning-vid-sjukdom"] }
-evidence = "Alternativ redovisning av övrig sjukdomsersättning.\ncatalog:variable_text:5823:18262:20089"
+fields = { "sets" = ["ovrig-ersattning-vid-sjukdom"] }
+evidence = "Alternativ redovisning av övrig sjukdomsersättning.\ncatalog:variable_text:5823:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ovrig-ersattning-vid-sjukdom; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2012,8 +2012,8 @@ evidence = "Övrig pension ingår i pensionsaggregatet.\ncatalog:variable_text:5
 [[statement]]
 kind = "set"
 subject = "var:premiepension"
-fields = { "sets" = ["pension", "premiepension"] }
-evidence = "Premiepension är en pensionskomponent.\ncatalog:variable_text:5830:18262:20454"
+fields = { "sets" = ["premiepension"] }
+evidence = "Premiepension är en pensionskomponent.\ncatalog:variable_text:5830:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to premiepension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2024,8 +2024,8 @@ evidence = "Premiepension är en pensionskomponent.\ncatalog:variable_text:5830:
 [[statement]]
 kind = "set"
 subject = "var:premiepension-pprepegp"
-fields = { "sets" = ["pension", "premiepension"] }
-evidence = "Alternativ redovisning av premiepension.\ncatalog:variable_text:5831:18262:20089"
+fields = { "sets" = ["premiepension"] }
+evidence = "Alternativ redovisning av premiepension.\ncatalog:variable_text:5831:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to premiepension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2060,8 +2060,8 @@ evidence = "RegSO anger geografisk tillhörighet.\ncatalog:variable_text:5834:18
 [[statement]]
 kind = "set"
 subject = "var:rehabiliteringsersattning"
-fields = { "sets" = ["ersattning-vid-sjukdom", "rehabiliteringsersattning"] }
-evidence = "Rehabiliteringsersättning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5835:18262:20454"
+fields = { "sets" = ["rehabiliteringsersattning"] }
+evidence = "Rehabiliteringsersättning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5835:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rehabiliteringsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2072,8 +2072,8 @@ evidence = "Rehabiliteringsersättning ingår i sjukdomsaggregatet.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:rehabiliteringsersattning-trehabp"
-fields = { "sets" = ["ersattning-vid-sjukdom", "rehabiliteringsersattning"] }
-evidence = "Alternativ redovisning av rehabiliteringsersättning.\ncatalog:variable_text:5836:18262:20089"
+fields = { "sets" = ["rehabiliteringsersattning"] }
+evidence = "Alternativ redovisning av rehabiliteringsersättning.\ncatalog:variable_text:5836:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rehabiliteringsersattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2108,8 +2108,8 @@ evidence = "Ordinarie och särskilda bostadstillägg för pensionärer grupperas
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-pensionstillagg"
-fields = { "sets" = ["pension", "sarskilt-pensionstillagg"] }
-evidence = "Särskilt pensionstillägg är en pensionskomponent.\ncatalog:variable_text:5839:18262:20454"
+fields = { "sets" = ["sarskilt-pensionstillagg"] }
+evidence = "Särskilt pensionstillägg är en pensionskomponent.\ncatalog:variable_text:5839:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to sarskilt-pensionstillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2120,8 +2120,8 @@ evidence = "Särskilt pensionstillägg är en pensionskomponent.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-pensionstillagg-psptp"
-fields = { "sets" = ["pension", "sarskilt-pensionstillagg"] }
-evidence = "Alternativ redovisning av särskilt pensionstillägg.\ncatalog:variable_text:5840:18262:20089"
+fields = { "sets" = ["sarskilt-pensionstillagg"] }
+evidence = "Alternativ redovisning av särskilt pensionstillägg.\ncatalog:variable_text:5840:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to sarskilt-pensionstillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2132,8 +2132,8 @@ evidence = "Alternativ redovisning av särskilt pensionstillägg.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:sjukersattning"
-fields = { "sets" = ["ersattning-vid-langvarigt-nedsatt-arbetsformaga", "sjukersattning"] }
-evidence = "Sjukersättning ingår i ersättningsaggregatet.\ncatalog:variable_text:5841:18262:20454"
+fields = { "sets" = ["sjukersattning"] }
+evidence = "Sjukersättning ingår i ersättningsaggregatet.\ncatalog:variable_text:5841:18262:20454\n\nSingle-group ruling 2026-11-02: The specific sickness-compensation group covers the named benefit; the pension-insurance quantity is reviewed separately."
 
 [[statement]]
 kind = "set"
@@ -2144,8 +2144,8 @@ evidence = "Sjukersättning ingår i ersättningsaggregatet.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:sjukersattning-tsep"
-fields = { "sets" = ["ersattning-vid-langvarigt-nedsatt-arbetsformaga", "sjukersattning"] }
-evidence = "Alternativ redovisning av sjukersättning.\ncatalog:variable_text:5842:18262:20089"
+fields = { "sets" = ["sjukersattning"] }
+evidence = "Alternativ redovisning av sjukersättning.\ncatalog:variable_text:5842:18262:20089\n\nSingle-group ruling 2026-11-02: The specific sickness-compensation group covers the named benefit; the pension-insurance quantity is reviewed separately."
 
 [[statement]]
 kind = "set"
@@ -2156,8 +2156,8 @@ evidence = "Alternativ redovisning av sjukersättning.\ncatalog:variable_text:58
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning"
-fields = { "sets" = ["ersattning-vid-sjukdom", "sjukpenning"] }
-evidence = "Sjukpenning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5843:18262:20454"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "Sjukpenning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5843:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to sjukpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2168,8 +2168,8 @@ evidence = "Sjukpenning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5843
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning-tsjukpp"
-fields = { "sets" = ["ersattning-vid-sjukdom", "sjukpenning"] }
-evidence = "Alternativ redovisning av sjukpenning.\ncatalog:variable_text:5844:18262:20089"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "Alternativ redovisning av sjukpenning.\ncatalog:variable_text:5844:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to sjukpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2192,8 +2192,8 @@ evidence = "Beloppet är preliminär A-skatt.\ncatalog:variable_text:5845:18993:
 [[statement]]
 kind = "set"
 subject = "var:smittbararpenning"
-fields = { "sets" = ["ersattning-vid-sjukdom", "smittbararpenning"] }
-evidence = "Smittbärarpenning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5846:18262:20454"
+fields = { "sets" = ["smittbararpenning"] }
+evidence = "Smittbärarpenning ingår i sjukdomsaggregatet.\ncatalog:variable_text:5846:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to smittbararpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2204,8 +2204,8 @@ evidence = "Smittbärarpenning ingår i sjukdomsaggregatet.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:smittbararpenning-tsmittp"
-fields = { "sets" = ["ersattning-vid-sjukdom", "smittbararpenning"] }
-evidence = "Alternativ redovisning av smittbärarpenning.\ncatalog:variable_text:5847:18262:20089"
+fields = { "sets" = ["smittbararpenning"] }
+evidence = "Alternativ redovisning av smittbärarpenning.\ncatalog:variable_text:5847:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to smittbararpenning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2216,8 +2216,8 @@ evidence = "Alternativ redovisning av smittbärarpenning.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:studiehjalp"
-fields = { "sets" = ["ersattning-for-studier", "studiehjalp"] }
-evidence = "Studiehjälp ingår i studieersättningsaggregatet.\ncatalog:variable_text:5848:18262:20454"
+fields = { "sets" = ["studiehjalp"] }
+evidence = "Studiehjälp ingår i studieersättningsaggregatet.\ncatalog:variable_text:5848:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiehjalp; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2228,8 +2228,8 @@ evidence = "Studiehjälp ingår i studieersättningsaggregatet.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:studiehjalp-istudhjalpp"
-fields = { "sets" = ["ersattning-for-studier", "studiehjalp"] }
-evidence = "Alternativ redovisning av studiehjälp.\ncatalog:variable_text:5849:18262:20089"
+fields = { "sets" = ["studiehjalp"] }
+evidence = "Alternativ redovisning av studiehjälp.\ncatalog:variable_text:5849:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiehjalp; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2240,8 +2240,8 @@ evidence = "Alternativ redovisning av studiehjälp.\ncatalog:variable_text:5849:
 [[statement]]
 kind = "set"
 subject = "var:studiemedel-bidrag"
-fields = { "sets" = ["ersattning-for-studier", "studiemedel"] }
-evidence = "Bidragsdelen ingår i studiemedel och studieersättning.\ncatalog:variable_text:5850:18262:20454"
+fields = { "sets" = ["studiemedel"] }
+evidence = "Bidragsdelen ingår i studiemedel och studieersättning.\ncatalog:variable_text:5850:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiemedel; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2252,8 +2252,8 @@ evidence = "Bidragsdelen ingår i studiemedel och studieersättning.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:studiemedel-bidrag-ismbidrp"
-fields = { "sets" = ["ersattning-for-studier", "studiemedel"] }
-evidence = "Alternativ redovisning av studiemedlens bidragsdel.\ncatalog:variable_text:5851:18262:20089"
+fields = { "sets" = ["studiemedel"] }
+evidence = "Alternativ redovisning av studiemedlens bidragsdel.\ncatalog:variable_text:5851:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiemedel; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2264,8 +2264,8 @@ evidence = "Alternativ redovisning av studiemedlens bidragsdel.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:studiemedel-lan-m-m"
-fields = { "sets" = ["ersattning-for-studier", "studiemedel"] }
-evidence = "Lånedelen ingår i studiemedel och studieersättning.\ncatalog:variable_text:5852:20089:20454"
+fields = { "sets" = ["studiemedel"] }
+evidence = "Lånedelen ingår i studiemedel och studieersättning.\ncatalog:variable_text:5852:20089:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiemedel; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2276,8 +2276,8 @@ evidence = "Lånedelen ingår i studiemedel och studieersättning.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:studiemedel-lan-m-m-ismlanp"
-fields = { "sets" = ["ersattning-for-studier", "studiemedel"] }
-evidence = "Alternativ redovisning av studiemedlens lånedel.\ncatalog:variable_text:5853:18262:20089"
+fields = { "sets" = ["studiemedel"] }
+evidence = "Alternativ redovisning av studiemedlens lånedel.\ncatalog:variable_text:5853:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiemedel; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2288,8 +2288,8 @@ evidence = "Alternativ redovisning av studiemedlens lånedel.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:studiestartsstod"
-fields = { "sets" = ["ersattning-for-studier", "studiestartsstod"] }
-evidence = "Studiestartsstöd ingår i studieersättningsaggregatet.\ncatalog:variable_text:5854:18262:20454"
+fields = { "sets" = ["studiestartsstod"] }
+evidence = "Studiestartsstöd ingår i studieersättningsaggregatet.\ncatalog:variable_text:5854:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiestartsstod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2300,8 +2300,8 @@ evidence = "Studiestartsstöd ingår i studieersättningsaggregatet.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:studiestartsstod-istudstodp"
-fields = { "sets" = ["ersattning-for-studier", "studiestartsstod"] }
-evidence = "Alternativ redovisning av studiestartsstöd.\ncatalog:variable_text:5855:18262:20089"
+fields = { "sets" = ["studiestartsstod"] }
+evidence = "Alternativ redovisning av studiestartsstöd.\ncatalog:variable_text:5855:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to studiestartsstod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2384,8 +2384,8 @@ evidence = "TETABJ är en ogenomskinlig källkod. Coordinator group membership: 
 [[statement]]
 kind = "set"
 subject = "var:tillaggspension"
-fields = { "sets" = ["pension", "tillaggspension"] }
-evidence = "Tilläggspension är en pensionskomponent.\ncatalog:variable_text:5862:18262:20454"
+fields = { "sets" = ["tillaggspension"] }
+evidence = "Tilläggspension är en pensionskomponent.\ncatalog:variable_text:5862:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to tillaggspension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2396,8 +2396,8 @@ evidence = "Tilläggspension är en pensionskomponent.\ncatalog:variable_text:58
 [[statement]]
 kind = "set"
 subject = "var:tillaggspension-ptillpp"
-fields = { "sets" = ["pension", "tillaggspension"] }
-evidence = "Alternativ redovisning av tilläggspension.\ncatalog:variable_text:5863:18262:20089"
+fields = { "sets" = ["tillaggspension"] }
+evidence = "Alternativ redovisning av tilläggspension.\ncatalog:variable_text:5863:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to tillaggspension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2444,8 +2444,8 @@ evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5866:18262
 [[statement]]
 kind = "set"
 subject = "var:sjukpension-sjukersattning-pensionsforsakring"
-fields = { "sets" = ["ersattning-vid-langvarigt-nedsatt-arbetsformaga", "sjukersattning"] }
-evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5867:18262:20089"
+fields = { "sets" = ["sjukersattning"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5867:18262:20089\n\nSingle-group ruling 2026-11-02: The specific sickness-compensation group covers the named benefit; the pension-insurance quantity is reviewed separately."
 
 [[statement]]
 kind = "set"
@@ -2492,8 +2492,8 @@ evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncat
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "vardbidrag"] }
-evidence = "Vårdbidrag ingår i ersättningsaggregatet.\ncatalog:variable_text:5871:18262:20454"
+fields = { "sets" = ["vardbidrag"] }
+evidence = "Vårdbidrag ingår i ersättningsaggregatet.\ncatalog:variable_text:5871:18262:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to vardbidrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2504,8 +2504,8 @@ evidence = "Vårdbidrag ingår i ersättningsaggregatet.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag-tvardp"
-fields = { "sets" = ["ersattning-vid-foraldraledighet-och-narstaendeomvardnad", "vardbidrag"] }
-evidence = "Alternativ redovisning av vårdbidrag.\ncatalog:variable_text:5872:18262:20089"
+fields = { "sets" = ["vardbidrag"] }
+evidence = "Alternativ redovisning av vårdbidrag.\ncatalog:variable_text:5872:18262:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to vardbidrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

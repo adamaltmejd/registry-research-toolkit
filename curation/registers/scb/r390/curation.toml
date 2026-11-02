@@ -76,12 +76,6 @@ evidence = "Ålder ingår i åldersgruppen och är en demografisk uppgift.\ncata
 [[statement]]
 kind = "set"
 subject = "var:aldgkon"
-fields = { "sets" = ["alder", "kon"] }
-evidence = "Kodningen kombinerar ålder och kön.\ncatalog:valueset:12133\ncatalog:variable_text:20996:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:aldgkon"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodningen kombinerar ålder och kön.\ncatalog:valueset:12133\ncatalog:variable_text:20996:18628:19723"
 
@@ -870,12 +864,6 @@ kind = "set"
 subject = "var:kommunnamn"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger kommunens namn.\ncatalog:variable_text:21068:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:kon"
-fields = { "sets" = ["kon"] }
-evidence = "Variabeln anger kön.\ncatalog:variable_text:21069:16801:19723"
 
 [[statement]]
 kind = "set"

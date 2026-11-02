@@ -434,8 +434,8 @@ evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:lon-vid-sjukdom-m-m"
-fields = { "sets" = ["loner", "sociala-avgifter"] }
-evidence = "Koden är opak och etiketten anger lönekomponenten.\ncatalog:variable_text:36096:13879:14245"
+fields = { "sets" = ["loner"] }
+evidence = "Koden är opak och etiketten anger lönekomponenten.\ncatalog:variable_text:36096:13879:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to loner; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
