@@ -1,0 +1,131 @@
+.page {
+  min-width: 0;
+}
+
+.loading {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Entries separate more than the segments inside one entry, or a family runs
+   into its neighbour. */
+.variants {
+  display: grid;
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The page is all register-version prose, so the entry carries the measure. */
+.entry {
+  max-width: 60ch;
+}
+
+.entryName {
+  margin: 0;
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border-strong);
+  font-size: var(--text-h2);
+  font-weight: var(--heading-weight);
+}
+
+.entryMeta,
+.segments {
+  margin: var(--space-2) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.segments {
+  padding: 0;
+  list-style: none;
+}
+
+/* A year is a machine value wherever it lands. */
+.years {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.segment {
+  margin-top: var(--space-4);
+}
+
+.slug {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+}
+.slug code {
+  font-family: var(--font-mono);
+}
+
+.description {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.version {
+  margin-top: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--border);
+}
+
+.versionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+}
+
+.versionName {
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.asDelivered {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.asDelivered code {
+  font-family: var(--font-mono);
+}
+
+.metadata {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* A heading over its KeyValue rows, not a term: a term-styled label read as a
+   term with no value. */
+.metadataHeading {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--text-body);
+  font-weight: var(--heading-weight);
+}
+
+/* ── The register page's summary (VariantsSummary) ───────────────────── */
+.summaryName {
+  display: block;
+}
+.summarySlug {
+  display: block;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.summaryLink {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+}
+.summaryLink a {
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  text-decoration: none;
+}

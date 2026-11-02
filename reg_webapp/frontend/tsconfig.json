@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": [
+    "src/main.tsx",
+    "vite.config.ts",
+    "src/test-setup.unit.ts",
+    "src/lib/router.test.ts",
+    "src/lib/platform.test.ts",
+    "src/lib/inline_markdown.test.ts"
+  ]
+}
