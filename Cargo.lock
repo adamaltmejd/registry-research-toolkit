@@ -929,7 +929,7 @@ dependencies = [
 
 [[package]]
 name = "reg-meta"
-version = "0.69.0"
+version = "0.70.0"
 dependencies = [
  "axum",
  "reg-catalog",
