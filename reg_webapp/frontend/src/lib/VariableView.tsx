@@ -30,6 +30,7 @@ import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead } from "./use_store_read";
+import { ValueSetView } from "./ValueSetView";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 
@@ -255,7 +256,19 @@ export function VariableView({ node }: { node: VariableShow }) {
                   case "storage":
                     return <Storage row={row} />;
                   case "value_set":
-                    return <ValueSetLabel valueSet={row.value_set} />;
+                    return (
+                      <span className={variableStyles.valueSetCell}>
+                        <ValueSetLabel valueSet={row.value_set} />
+                        {row.classification && (
+                          <a
+                            className={`link ${variableStyles.classification}`}
+                            href={catalogHref(row.classification)}
+                          >
+                            {row.classification.split("/").at(-1)}
+                          </a>
+                        )}
+                      </span>
+                    );
                   case "notes":
                     return (
                       <ul
@@ -276,6 +289,7 @@ export function VariableView({ node }: { node: VariableShow }) {
           <EmptyState title="No segments recorded for this variable." />
         )}
       </Panel>
+      {segments.data && <ValueSetView segments={segments.data} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
       <Disclosure
         className={styles.disclosure}

@@ -419,3 +419,27 @@ export function getFindings(
     options,
   );
 }
+
+export type ValueSetRef = RustSchemas["ValueSetRef"];
+export type ValueItem = RustSchemas["ValueItem"];
+export type ValueItemsPage = RustSchemas["ValueItemsPage"];
+export type ValuesSubject = { value_set: string } | { classification: string };
+
+/** One page of a set or classification version; lookup by code is a separate surface. */
+export function getValues(
+  subject: ValuesSubject,
+  filters: {
+    parent?: string;
+    level?: number;
+    q?: string;
+    cursor?: string;
+    limit?: number;
+  } = {},
+  options?: { signal?: AbortSignal },
+): Promise<ValueItemsPage> {
+  const query = new URLSearchParams(subject);
+  for (const [key, value] of Object.entries(filters)) {
+    if (value !== undefined) query.set(key, String(value));
+  }
+  return rustGet<ValueItemsPage>("/values", query, options);
+}
