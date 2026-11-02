@@ -1,7 +1,7 @@
 [
   {
     "name": "search",
-    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`.",
+    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -385,9 +385,12 @@
   },
   {
     "name": "show",
-    "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+    "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
     "inputSchema": {
       "properties": {
+        "evidence": {
+          "type": "boolean"
+        },
         "ref": {
           "type": "string"
         }
@@ -397,6 +400,43 @@
     },
     "outputSchema": {
       "$defs": {
+        "CurationStatement": {
+          "description": "An authored curation statement that contributed a field of this variable.",
+          "properties": {
+            "caveat": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evidence": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "field": {
+              "type": "string"
+            },
+            "statement": {
+              "$ref": "#/$defs/StatementLocation"
+            },
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value",
+            "statement",
+            "evidence",
+            "caveat"
+          ],
+          "type": "object"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}`.",
           "properties": {
@@ -422,6 +462,37 @@
             "message",
             "remediation",
             "fields"
+          ],
+          "type": "object"
+        },
+        "EvidenceSpelling": {
+          "description": "A delivered or curated folded alias; exact source spellings are in `texts`.",
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "spelling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "spelling",
+            "kind"
+          ],
+          "type": "object"
+        },
+        "Locator": {
+          "properties": {
+            "input": {
+              "type": "string"
+            },
+            "locator": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "input",
+            "locator"
           ],
           "type": "object"
         },
@@ -491,6 +562,114 @@
             "name",
             "definition",
             "ref_day"
+          ],
+          "type": "object"
+        },
+        "ProviderText": {
+          "description": "One documented occurrence; source values remain distinct from curated winners.",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "locators": {
+              "items": {
+                "$ref": "#/$defs/Locator"
+              },
+              "type": "array"
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "source_key": {
+              "type": "string"
+            },
+            "spelling": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "type": "string"
+            },
+            "table": {
+              "type": "string"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "table",
+            "period",
+            "status",
+            "source_key",
+            "spelling",
+            "label",
+            "definition",
+            "operational_definition",
+            "unit",
+            "locators"
+          ],
+          "type": "object"
+        },
+        "RelatedDocument": {
+          "description": "`shape.RelatedDocument`.",
+          "properties": {
+            "bytes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "doc": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "page": {
+              "description": "0 = the whole document.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "licence",
+            "url",
+            "bytes",
+            "page"
           ],
           "type": "object"
         },
@@ -736,15 +915,13 @@
             },
             {
               "properties": {
-                "definition": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
                 "description": {
                   "description": "The one curated description, separate from source text runs.",
                   "type": "string"
+                },
+                "evidence": {
+                  "$ref": "#/$defs/VariableEvidence",
+                  "description": "Provenance is present only when requested with `evidence=true`."
                 },
                 "fqid": {
                   "type": "string"
@@ -759,17 +936,22 @@
                   "type": "string"
                 },
                 "period": {
-                  "$ref": "#/$defs/Period"
+                  "$ref": "#/$defs/Period",
+                  "description": "The coverage hull; `coverage` supplies detailed spans and gaps."
                 },
                 "register": {
                   "description": "The register's fqid.",
                   "type": "string"
                 },
-                "spellings": {
+                "sets": {
                   "items": {
-                    "$ref": "#/$defs/ShowSpelling"
+                    "$ref": "#/$defs/ShowMembership"
                   },
                   "type": "array"
+                },
+                "source_definition": {
+                  "$ref": "#/$defs/SourceDefinition",
+                  "description": "Provider text fallback only when no curated description is available."
                 },
                 "tables": {
                   "description": "The fqids of the tables the variable has segments in.",
@@ -778,15 +960,9 @@
                   },
                   "type": "array"
                 },
-                "texts": {
+                "tags": {
                   "items": {
-                    "$ref": "#/$defs/ShowText"
-                  },
-                  "type": "array"
-                },
-                "unit_types": {
-                  "items": {
-                    "type": "string"
+                    "$ref": "#/$defs/ShowMembership"
                   },
                   "type": "array"
                 }
@@ -794,18 +970,32 @@
               "required": [
                 "fqid",
                 "name",
-                "definition",
                 "register",
                 "period",
-                "unit_types",
-                "texts",
-                "spellings",
+                "sets",
+                "tags",
                 "tables",
                 "kind"
               ],
               "type": "object"
             }
           ]
+        },
+        "ShowMembership": {
+          "description": "A curated set (group) or tag the variable belongs to.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name"
+          ],
+          "type": "object"
         },
         "ShowProviderRef": {
           "properties": {
@@ -861,23 +1051,6 @@
           ],
           "type": "object"
         },
-        "ShowSpelling": {
-          "description": "A folded name the variable is known by.",
-          "properties": {
-            "kind": {
-              "description": "`delivered` or `curated`.",
-              "type": "string"
-            },
-            "spelling": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "spelling",
-            "kind"
-          ],
-          "type": "object"
-        },
         "ShowTable": {
           "description": "A register's table; the implicit one has the register's fqid.",
           "properties": {
@@ -924,43 +1097,6 @@
           ],
           "type": "object"
         },
-        "ShowText": {
-          "description": "One run of a variable's descriptive text.",
-          "properties": {
-            "definition": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "label": {
-              "type": "string"
-            },
-            "operational_definition": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "period": {
-              "$ref": "#/$defs/Period"
-            },
-            "unit": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "period",
-            "label",
-            "definition",
-            "operational_definition",
-            "unit"
-          ],
-          "type": "object"
-        },
         "ShowVariableRef": {
           "properties": {
             "fqid": {
@@ -977,6 +1113,88 @@
             "fqid",
             "name",
             "period"
+          ],
+          "type": "object"
+        },
+        "SourceDefinition": {
+          "description": "Latest provider definition pair, used only when no curated description exists.",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "origin": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "origin",
+            "period",
+            "definition",
+            "operational_definition"
+          ],
+          "type": "object"
+        },
+        "StatementLocation": {
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "line": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "file",
+            "line"
+          ],
+          "type": "object"
+        },
+        "VariableEvidence": {
+          "description": "Provider text and curation provenance, returned only when evidence is requested.",
+          "properties": {
+            "documents": {
+              "items": {
+                "$ref": "#/$defs/RelatedDocument"
+              },
+              "type": "array"
+            },
+            "spellings": {
+              "items": {
+                "$ref": "#/$defs/EvidenceSpelling"
+              },
+              "type": "array"
+            },
+            "statements": {
+              "items": {
+                "$ref": "#/$defs/CurationStatement"
+              },
+              "type": "array"
+            },
+            "texts": {
+              "items": {
+                "$ref": "#/$defs/ProviderText"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "texts",
+            "spellings",
+            "statements",
+            "documents"
           ],
           "type": "object"
         }

@@ -1,11 +1,7 @@
 {
-  "note": "Fails if a variable loses its single curated description, overwrites its per-occurrence source definition history, or loses description discovery in search/facets. The 2021 query still matches through the variable hull. Also fails if supplementary indexing reverses equal-label primary hits (Weighted is shorter than Comparator), duplicates a primary hit, or loses an AND across source and description text. Expected values come from the source fixture and its var: setters.",
+  "note": "Fails if the one curated description is omitted from compiled discovery/facets, source terms stop being indexed, the 2021 gap is excluded despite the variable hull, supplementary indexing reverses equal-label primary hits, or paging/facets duplicate a primary hit. The Source Longitudinal query pins an AND across source and curated text. The default and evidence show cases own the summary/provenance oracles; expected discovery values come from the descriptions source fixture.",
   "fixture": "descriptions",
   "requests": [
-    {
-      "operation": "show",
-      "path": "/api/catalog/demo/descriptions/measure"
-    },
     {
       "operation": "search",
       "path": "/api/search",
@@ -56,7 +52,7 @@
         "limit": 1
       },
       "cursor_from": [
-        5,
+        4,
         "/data/next_cursor"
       ]
     },

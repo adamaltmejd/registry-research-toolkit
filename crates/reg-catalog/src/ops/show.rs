@@ -7,7 +7,8 @@ use utoipa::ToSchema;
 
 use super::refs::{self, Entity};
 use super::shape::{self, Release};
-use super::{Cache, Operation, Param, Params, Period, Server, Type, component};
+use super::show_evidence::{self, SourceDefinition, VariableEvidence};
+use super::{Cache, Operation, Param, Params, Period, Server, Type, component, flag};
 use crate::{Code, Error};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -15,8 +16,14 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
     description: "The summary of a provider, register, table or variable by public id or bare \
-                  name; without a ref, the catalog's providers.",
-    params: &[Param::optional("ref", Type::Ref)],
+                  name; without a ref, the catalog's providers. Variables show curated \
+                  metadata by default, with marked provider text only as a fallback. \
+                  Use evidence=true for provider text history, source keys/spellings, \
+                  curation statement locators and linked documents.",
+    params: &[
+        Param::optional("ref", Type::Ref),
+        Param::optional("evidence", Type::Boolean),
+    ],
     cache: Cache::Minute,
     run: show,
     result: component::<Show>,
@@ -67,18 +74,24 @@ pub enum Show {
     Variable {
         fqid: String,
         name: String,
-        #[schema(required = true)]
-        definition: Option<String>,
         /// The register's fqid.
         register: String,
+        /// The coverage hull; `coverage` supplies detailed spans and gaps.
         period: Period,
-        unit_types: Vec<String>,
-        texts: Vec<ShowText>,
         /// The one curated description, separate from source text runs.
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
         description: Option<String>,
-        spellings: Vec<ShowSpelling>,
+        /// Provider text fallback only when no curated description is available.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        source_definition: Option<SourceDefinition>,
+        sets: Vec<ShowMembership>,
+        tags: Vec<ShowMembership>,
+        /// Provenance is present only when requested with `evidence=true`.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        evidence: Option<VariableEvidence>,
         /// The fqids of the tables the variable has segments in.
         tables: Vec<String>,
     },
@@ -127,29 +140,16 @@ pub struct ShowRowKey {
     period: Period,
 }
 
-/// One run of a variable's descriptive text.
+/// A curated set (group) or tag the variable belongs to.
 #[derive(Serialize, ToSchema)]
-pub struct ShowText {
-    period: Period,
-    label: String,
-    #[schema(required = true)]
-    definition: Option<String>,
-    #[schema(required = true)]
-    operational_definition: Option<String>,
-    #[schema(required = true)]
-    unit: Option<String>,
-}
-
-/// A folded name the variable is known by.
-#[derive(Serialize, ToSchema)]
-pub struct ShowSpelling {
-    spelling: String,
-    /// `delivered` or `curated`.
-    kind: String,
+pub struct ShowMembership {
+    fqid: String,
+    name: String,
 }
 
 fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect()?;
+    let evidence = flag(params, "evidence")?;
     let shown = match params.get("ref") {
         None => root(&conn)?,
         Some(value) => {
@@ -158,7 +158,7 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "provider" => provider(server, &conn, &entity)?,
                 "register" => register(server, &conn, &entity)?,
                 "table" => table(server, &conn, &entity)?,
-                "variable" => variable(server, &conn, &entity)?,
+                "variable" => variable(server, &conn, &entity, evidence)?,
                 // simplify: classification and set summaries land in D with their data.
                 kind => {
                     return Err(Error::new(
@@ -350,15 +350,19 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
     })
 }
 
-fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
-    type Head = (String, Option<String>, Option<String>, String, i64, i64);
-    let (name, definition, description, register, start, end): Head = conn.query_row(
-        "SELECT l.body, d.body, c.body, r.pid, v.start, v.end
-             FROM variable v JOIN text l ON l.id = v.label_text
-               LEFT JOIN text d ON d.id = v.definition_text
-               LEFT JOIN text c ON c.id = v.description_text
-               JOIN register r ON r.id = v.register_id
-             WHERE v.id = ?",
+fn variable(
+    server: &Server,
+    conn: &Connection,
+    entity: &Entity,
+    include_evidence: bool,
+) -> Result<Show, Error> {
+    type Head = (String, Option<String>, String, i64, i64);
+    let (name, description, register, start, end): Head = conn.query_row(
+        "SELECT l.body, c.body, r.pid, v.start, v.end
+         FROM variable v JOIN text l ON l.id = v.label_text
+           LEFT JOIN text c ON c.id = v.description_text
+           JOIN register r ON r.id = v.register_id
+         WHERE v.id = ?",
         [entity.id],
         |row| {
             Ok((
@@ -367,48 +371,14 @@ fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 row.get(2)?,
                 row.get(3)?,
                 row.get(4)?,
-                row.get(5)?,
             ))
         },
     )?;
-    let unit_types = conn
-        .prepare(
-            "SELECT u.slug FROM variable_unit_type vu JOIN unit_type u ON u.id = vu.unit_type_id
-             WHERE vu.variable_id = ? ORDER BY u.slug",
-        )?
-        .query_map([entity.id], |row| row.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
-    let texts = conn
-        .prepare(
-            "SELECT vt.start, vt.end, l.body, d.body, o.body, u.body
-             FROM variable_text vt JOIN text l ON l.id = vt.label_text
-               LEFT JOIN text d ON d.id = vt.definition_text
-               LEFT JOIN text o ON o.id = vt.opdef_text
-               LEFT JOIN text u ON u.id = vt.unit_text
-             WHERE vt.variable_id = ? ORDER BY vt.start",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowText {
-                period: server.period(row.get(0)?, row.get(1)?),
-                label: row.get(2)?,
-                definition: row.get(3)?,
-                operational_definition: row.get(4)?,
-                unit: row.get(5)?,
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let spellings = conn
-        .prepare(
-            "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
-             WHERE a.variable_id = ? ORDER BY f.folded",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowSpelling {
-                spelling: row.get(0)?,
-                kind: row.get(1)?,
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+    let source_definition = if description.is_none() {
+        show_evidence::latest_source_text(server, conn, entity.id)?
+    } else {
+        None
+    };
     let tables = conn
         .prepare(
             "SELECT DISTINCT t.pid FROM segment s JOIN tbl t ON t.id = s.table_id
@@ -419,13 +389,31 @@ fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     Ok(Show::Variable {
         fqid: entity.pid.clone(),
         name,
-        definition,
         register,
         period: server.period(start, end),
-        unit_types,
-        texts,
         description,
-        spellings,
+        source_definition,
+        sets: memberships(conn, entity.id, "set")?,
+        tags: memberships(conn, entity.id, "tag")?,
+        evidence: include_evidence
+            .then(|| show_evidence::load(server, conn, entity))
+            .transpose()?,
         tables,
     })
+}
+
+fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowMembership>, Error> {
+    Ok(conn
+        .prepare(
+            "SELECT s.pid, n.body FROM var_set_member m JOIN var_set s ON s.id = m.set_id
+             JOIN text n ON n.id = s.name_text
+             WHERE m.variable_id = ? AND s.kind = ? ORDER BY s.pid",
+        )?
+        .query_map(rusqlite::params![variable, kind], |row| {
+            Ok(ShowMembership {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?)
 }

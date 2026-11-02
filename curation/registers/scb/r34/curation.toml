@@ -18217,7 +18217,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:bostadstillagg-sarskilt-familj"
 fields = { "description" = "Bostadstillägg, särskilt bostadstillägg och kompletterande belopp till bostadstillägg för pensionärer, familj." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A728\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:619\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/bostadstillagg-sarskilt-familj"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A728\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:619\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/bostadstillagg-sarskilt-familj"
 
 
 [[statement]]
@@ -18294,7 +18294,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:cfar-nummer"
 fields = { "description" = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid leverans)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A9\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A163\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/cfar-nummer"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A9\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A163\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/cfar-nummer"
 
 
 [[statement]]
@@ -18448,7 +18448,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ersattning-arbetsloshetskassa-alu"
 fields = { "description" = "Ersättning från arbetslöshetskassa vid arbetslivsutveckling (ALU)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A592\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A593\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A594\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/ersattning-arbetsloshetskassa-alu"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A592\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A593\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A594\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/ersattning-arbetsloshetskassa-alu"
 
 
 [[statement]]
@@ -18581,7 +18581,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:fad-arbetsstalle-id"
 fields = { "description" = "Arbetsställets identitetsnummer i FAD, för koppling till arbetsställetabellen; ersätts med löpnummer vid leverans." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A8\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A165\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/fad-arbetsstalle-id"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A8\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A165\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/fad-arbetsstalle-id"
 
 
 [[statement]]
@@ -19183,7 +19183,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomst-av-kapital"
 fields = { "description" = "Inkomst av kapital." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A661\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:793\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/inkomst-av-kapital"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A661\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:793\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/inkomst-av-kapital"
 
 
 [[statement]]
@@ -19239,7 +19239,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomst-foranledd-sjukdom-2"
 fields = { "description" = "Summa inkomst föranledd av sjukdom, arbetsskada och rehabilitering under året." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A514\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:799\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/inkomst-foranledd-sjukdom-2"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A514\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:799\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/inkomst-foranledd-sjukdom-2"
 
 
 [[statement]]
@@ -19505,7 +19505,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 kind = "set"
 subject = "var:kommun-for-arbetsstalle"
 fields = { "description" = "Arbetsställets belägenhetskommun." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A14\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A169\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/kommun-for-arbetsstalle"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A14\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A169\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/kommun-for-arbetsstalle"
 
 
 [[statement]]
@@ -20240,7 +20240,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:loneinkomst"
 fields = { "description" = "Deklarerad löneinkomst; från 2020 ingår även utländsk beskattad lön från annat nordiskt land." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A415\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:859\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/loneinkomst"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A415\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:859\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/loneinkomst"
 
 
 [[statement]]
@@ -20436,7 +20436,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:naringsgren-huvud-arbetsstalle"
 fields = { "description" = "Huvudsaklig näringsgren för arbetsstället där personen haft sin huvudsakliga sysselsättning: SNI92 före 2002 och SNI2002 från 2002." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A15\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A18\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/naringsgren-huvud-arbetsstalle"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A15\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A18\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/naringsgren-huvud-arbetsstalle"
 
 
 [[statement]]
@@ -20597,7 +20597,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:naringsgren-nast-storsta-ku"
 fields = { "description" = "Näringsgren för arbetsstället för personens näst största förvärvskälla: SNI92 före 2002 och SNI2002 från 2002." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A332\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A335\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/naringsgren-nast-storsta-ku"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A332\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A335\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/naringsgren-nast-storsta-ku"
 
 
 [[statement]]
@@ -20681,7 +20681,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:naringsgren-storsta-ku"
 fields = { "description" = "Näringsgren för arbetsstället för personens största förvärvskälla: SNI92 före 2002 och SNI2002 från 2002." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A266\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A269\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/naringsgren-storsta-ku"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A266\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A269\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/naringsgren-storsta-ku"
 
 
 [[statement]]
@@ -20758,7 +20758,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:naringsgren-tredje-storsta-ku"
 fields = { "description" = "Näringsgren för arbetsstället för personens tredje största förvärvskälla: SNI92 före 2002 och SNI2002 från 2002." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A394\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A397\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/naringsgren-tredje-storsta-ku"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A394\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A397\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/naringsgren-tredje-storsta-ku"
 
 
 [[statement]]
@@ -21073,7 +21073,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:person-orgnr"
 fields = { "description" = "Företagets person- eller organisationsnummer; ersätts med löpnummer vid leverans." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A10\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A161\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:943\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/person-orgnr"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A10\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A161\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:943\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/person-orgnr"
 
 
 [[statement]]
@@ -22137,7 +22137,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:sysselsattningsstatus-november"
 fields = { "description" = "Sysselsättningsstatus i november, med avgränsningsmetod 1993 i de äldre uppgifterna och avgränsningsmetod 2011 från 2011." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A141\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A143\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDecision: curation/reviews/description-decisions.jsonl#scb/lisa/sysselsattningsstatus-november"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A141\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A143\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/sysselsattningsstatus-november"
 
 
 [[statement]]

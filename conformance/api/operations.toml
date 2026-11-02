@@ -90,14 +90,17 @@ is in every response's `meta`, and the counts serve the SPA shell."""
 name = "show"
 http = ["GET /api/catalog", "GET /api/catalog/{ref}"]
 tool = "show"
-params = { ref = "ref?" }
+params = { ref = "ref?", evidence = "boolean?" }
 result = "Show"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The summary for any ref; no ref is the catalog root. `class` is the one \
 reserved first segment. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
-(`coverage`). A variable has one optional `description` string; \
-per-period source definitions remain in `texts`."""
+(`coverage`). Variable summaries show curated description, coverage, tables, sets and \
+tags. Without a curated description, source_definition returns the latest available \
+provider definition/operational-definition pair and its period, marked origin=provider. \
+`evidence=true` adds provider text history, source keys/spellings, statement locators \
+and linked documents; provenance is absent by default."""
 
 [[operation]]
 name = "segments"
@@ -335,8 +338,9 @@ note = """A `kind`-tagged summary: root (providers), provider (registers), regis
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, unit_type, cadence, spans \
 [Period], releases [Release], row_keys [{fqid, spelling, period}]), variable (name, \
-definition, register, period, unit_types, texts [{period, label, definition, \
-operational_definition, unit}], spellings [{spelling, kind}], tables [fqid]), \
+optional description or provider-marked source_definition {period, definition, \
+operational_definition}, register, period, tables [fqid], sets/tags [{fqid, name}], \
+optional evidence {texts, spellings, statements, documents}), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \
 Registers list their tables and variables unpaged."""

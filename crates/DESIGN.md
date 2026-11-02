@@ -350,14 +350,20 @@ Accepting one requires reviewed curation and a premise lock.
   resolution; length corrections do not. Corrected conflict markers clear while the
   original premises remain evidence. Format is carried and published without changing
   agreement or F1 findings.
-- **One variable, one description (maintainer, 2026-11-02).** Spelling variants and
+- **One variable, one description (maintainer, 2026-11-02).** The one curated
+  description states both what the variable means and how it is measured or derived.
+  There is no separate curated operational definition. For example: "Usual weekly hours
+  in the main job; the sum of HuVanlTim and BiVanlTim; from 2021 agreed hours are used
+  where usual equals agreed hours." The provider's definition/operational definition
+  split is source structure, retained as evidence and in the explicitly marked provider
+  fallback when a curated description is not yet available. Spelling variants and
   wording drift are consolidated into one text. A minor change in scope or exact
-  definition belongs in that description with its change and year (for example, "from
-  2015 also includes …"). A material change in meaning requires a separate variable
-  linked by `continues` with an evidenced `at`; it is not another description on the
-  same variable. Per-occurrence provider labels and definition texts remain source
-  evidence. The description review records probable identity/`continues` cases without
-  splitting variables or guessing relation dates.
+  definition belongs in that description with its change and year. A material change in
+  meaning requires a separate variable linked by `continues` with an evidenced `at`; it
+  is not another description on the same variable. Source-field corrections and drift
+  findings retain their existing semantics; correcting an occurrence's operational
+  definition does not create a second curated variable description. Identity questions
+  require review before splitting variables or assigning relation dates.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -950,11 +956,28 @@ Rules:
   context. Fine-grained HTTP routes map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
-**Variable descriptions (#2039).** `show` returns one optional `description` string,
-separate from `definition` and the per-period source `texts`. Without a curated variable
-description the field is absent. It has no table or period variants; a minor scope
-change and its year are stated in the one text. `segments(evidence=true)` keeps
-occurrence labels, source locators and occurrence overrides, not descriptions.
+**Curated by default, evidence on request (maintainer, 2026-11-02).** A variable's
+`show` summary returns its name, the one optional curated `description`, register,
+coverage hull (`period`), tables, sets (groups) and tags. Detailed coverage spans and
+gaps remain the `coverage` facet. The description combines meaning, measurement and
+derivation; `texts`, source spellings and a promoted top-level `definition` are not
+summary fields.
+
+When no curated description exists, `source_definition` supplies the most recent used
+occurrence's available source definition and operational definition together, with their
+period and `origin: "provider"`. The two fields are never assembled from different
+occurrences or years. A completely silent provider has no invented fallback. This is
+explicitly provider wording, not a curated description.
+
+`show(ref, evidence=true)` adds `evidence`: per-occurrence provider labels, definitions,
+operational definitions and units with periods, table, status, source keys, exact
+spellings and source locators; delivered/curated aliases; applied curation fields with
+statement file/line, evidence and caveat; and linked documents. Original provider text
+and spelling values are restored from override provenance when a correction exists,
+including a source that was silent. Actual description, identity and group/tag statement
+locators are included; a ledger id does not acquire an invented statement. Evidence is
+never loaded or returned by the default summary. `segments(evidence=true)` remains the
+structural segment evidence pathway.
 
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
 agents need no install and no 1.2 GB download. `/mcp` and every POST share one rate

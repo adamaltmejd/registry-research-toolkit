@@ -44,7 +44,8 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/search"],
         tool: Some("search"),
         description: "Full-text search over registers, tables, variables, value codes and \
-                      documents, ranked by relevance. Exact column names are `resolve`.",
+                      documents, ranked by relevance. Exact column names are `resolve`. \
+                      Use show with evidence=true to check a variable's provenance.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("type", Type::Enum(TYPES)),

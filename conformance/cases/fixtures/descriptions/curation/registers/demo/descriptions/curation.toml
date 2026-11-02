@@ -9,3 +9,46 @@ kind = "set"
 subject = "var:weighted"
 fields.description = "Supplementary weighting evidence"
 evidence = "Equal labels: Weighted has the shorter primary row, but appending its description would make it longer than Comparator."
+
+[[statement]]
+kind = "set"
+subject = "var:measure"
+fields.label = "Curated measure"
+evidence = "The curated name must not replace the provider label in evidence."
+
+[[statement]]
+kind = "set"
+subject = "main: Measure"
+fields.variable = "measure"
+evidence = "The explicit identity decision remains attributable to its statement."
+
+[[statement]]
+kind = "set"
+subject = "var:measure"
+fields.sets = ["analysis"]
+# Tag membership is authored separately from the picking set.
+evidence = "Measure and Comparator form the analysis picking unit; Measure has the timing tag."
+
+[[statement]]
+kind = "set"
+subject = "var:comparator"
+fields.sets = ["analysis"]
+evidence = "Measure and Comparator form the analysis picking unit."
+
+[[statement]]
+kind = "set"
+subject = "main: Comparator @2020"
+fields.definition = "Corrected scope"
+evidence = "The fallback must restore the provider wording rather than relabel this correction as source."
+
+[[statement]]
+kind = "set"
+subject = "main: Comparator @2022"
+fields.definition = "Corrected source-only scope"
+evidence = "The provider is silent in 2022; a later source correction must not become a provider fallback."
+
+[[statement]]
+kind = "set"
+subject = "var:measure"
+fields.tags = ["timing"]
+evidence = "The timing tag is independent of the analysis picking unit."

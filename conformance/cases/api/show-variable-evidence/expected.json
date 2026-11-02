@@ -1,0 +1,249 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/name": "Curated measure",
+      "/data/description": "Longitudinal supplement; from 2020 includes revised coverage.",
+      "/data/evidence/texts": [
+        {
+          "table": "demo/descriptions/main",
+          "period": {
+            "start": "2018-01-01",
+            "end": "2019-01-01"
+          },
+          "status": "used",
+          "source_key": "m",
+          "spelling": "Measure",
+          "label": "Measure",
+          "definition": "Source definition",
+          "operational_definition": "Source procedure",
+          "unit": "hours",
+          "locators": [
+            {
+              "input": "frame",
+              "locator": "frame/descriptions.jsonl:line=4"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/main",
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          },
+          "status": "used",
+          "source_key": "m",
+          "spelling": "Measure",
+          "label": "Measure",
+          "definition": "Source definition",
+          "operational_definition": "Source procedure",
+          "unit": "hours",
+          "locators": [
+            {
+              "input": "frame",
+              "locator": "frame/descriptions.jsonl:line=5"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/main",
+          "period": {
+            "start": "2020-01-01",
+            "end": "2021-01-01"
+          },
+          "status": "used",
+          "source_key": "m",
+          "spelling": "Measure",
+          "label": "Measure",
+          "definition": "Source definition, revised coverage",
+          "operational_definition": "Source procedure",
+          "unit": "hours",
+          "locators": [
+            {
+              "input": "frame",
+              "locator": "frame/descriptions.jsonl:line=6"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/main",
+          "period": {
+            "start": "2022-01-01",
+            "end": "2023-01-01"
+          },
+          "status": "used",
+          "source_key": "m",
+          "spelling": "Measure",
+          "label": "Measure",
+          "definition": "Source definition, revised coverage",
+          "operational_definition": "Source procedure",
+          "unit": "hours",
+          "locators": [
+            {
+              "input": "frame",
+              "locator": "frame/descriptions.jsonl:line=7"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/other",
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          },
+          "status": "used",
+          "source_key": "m",
+          "spelling": "Measure",
+          "label": "Measure",
+          "definition": "Source definition",
+          "operational_definition": "Source procedure",
+          "unit": "hours",
+          "locators": [
+            {
+              "input": "frame",
+              "locator": "frame/descriptions.jsonl:line=8"
+            }
+          ]
+        }
+      ],
+      "/data/evidence/spellings": [
+        {
+          "spelling": "measure",
+          "kind": "delivered"
+        }
+      ],
+      "/data/evidence/statements": [
+        {
+          "field": "description",
+          "value": "Longitudinal supplement; from 2020 includes revised coverage.",
+          "statement": {
+            "file": "registers/demo/descriptions/curation.toml",
+            "line": 1
+          },
+          "evidence": "One variable description covers the source wording change across periods and tables.",
+          "caveat": null
+        },
+        {
+          "field": "label",
+          "value": "Curated measure",
+          "statement": {
+            "file": "registers/demo/descriptions/curation.toml",
+            "line": 13
+          },
+          "evidence": "The curated name must not replace the provider label in evidence.",
+          "caveat": null
+        },
+        {
+          "field": "variable",
+          "value": "measure",
+          "statement": {
+            "file": "registers/demo/descriptions/curation.toml",
+            "line": 19
+          },
+          "evidence": "The explicit identity decision remains attributable to its statement.",
+          "caveat": null
+        },
+        {
+          "field": "sets",
+          "value": "[\"analysis\"]",
+          "statement": {
+            "file": "registers/demo/descriptions/curation.toml",
+            "line": 25
+          },
+          "evidence": "Measure and Comparator form the analysis picking unit; Measure has the timing tag.",
+          "caveat": null
+        },
+        {
+          "field": "tags",
+          "value": "[\"timing\"]",
+          "statement": {
+            "file": "registers/demo/descriptions/curation.toml",
+            "line": 50
+          },
+          "evidence": "The timing tag is independent of the analysis picking unit.",
+          "caveat": null
+        }
+      ],
+      "/data/evidence/documents": [
+        {
+          "doc": "4b569dc568152cfbde4665f5e5394ff3c81ca1bb79d822dcb80013766f9eebca",
+          "title": "Measure source notes",
+          "kind": "parsed",
+          "licence": "CC0",
+          "url": "https://example.org/measure",
+          "bytes": 30,
+          "page": 1
+        }
+      ]
+    },
+    "keys": {
+      "/data": [
+        "description",
+        "evidence",
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register",
+        "sets",
+        "tables",
+        "tags"
+      ],
+      "/data/evidence": [
+        "documents",
+        "spellings",
+        "statements",
+        "texts"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/name": "Inkomst efter skatt",
+      "/data/evidence/texts/*/label": [
+        "Inkomst f\u00f6re skatt",
+        "Inkomst efter skatt"
+      ],
+      "/data/evidence/texts/*/period": [
+        {
+          "start": "2019-01-01",
+          "end": "2020-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
+      ],
+      "/data/evidence/texts/*/spelling": [
+        "Inkomst",
+        "InkomstBrutto"
+      ],
+      "/data/evidence/spellings": [
+        {
+          "spelling": "inkomst",
+          "kind": "delivered"
+        },
+        {
+          "spelling": "inkomstbrutto",
+          "kind": "delivered"
+        }
+      ],
+      "/data/evidence/statements": [],
+      "/data/evidence/documents": []
+    },
+    "keys": {
+      "/data": [
+        "evidence",
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register",
+        "sets",
+        "tables",
+        "tags"
+      ]
+    }
+  }
+]

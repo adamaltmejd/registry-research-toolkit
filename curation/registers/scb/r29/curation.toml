@@ -17830,14 +17830,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 kind = "set"
 subject = "var:ekonomiskt-bistand"
 fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36520:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt försörjningsstöd.\ncatalog:variable_text:36601:11323:12784\n\nDecision: curation/reviews/description-decisions.jsonl#scb/linda/ekonomiskt-bistand"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36520:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt försörjningsstöd.\ncatalog:variable_text:36601:11323:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand"
 
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-uppdelat"
 fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt, uppdelat mellan sökande och medsökande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36521:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36602:12418:12784\n\nDecision: curation/reviews/description-decisions.jsonl#scb/linda/ekonomiskt-bistand-uppdelat"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36521:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36602:12418:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand-uppdelat"
 
 
 [[statement]]
