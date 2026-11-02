@@ -8,13 +8,32 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA is deleted from this checkout and archived on `archive/reg-webapp-spa`.
-Milestone E rewrites it on the v5 API from that archive and
-`claude/rebuild-s-shell-search`.
+The SPA shell, search, provider, register and table pages use the current API. Variable,
+classification and project pages remain disconnected until their owning workstreams
+restore them. The earlier SPA is archived on `archive/reg-webapp-spa`.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
 SQL reader. Holdings, scope and steward branding return in milestone E.
+
+## Catalog pages
+
+Provider, register and table pages read `catalog/{ref}`; register and table findings
+come from `findings/{ref}`. They do not read variable segments. The generated OpenAPI
+types own the response shapes. An implicit table shares its register's FQID, so its
+canonical link opens the register; it has no separately addressable table page.
+
+Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
+to reg-core's inclusive interval renderer, without copying its period grammar. The
+register's `unplaced` list contains release names, not variable identities. Populations
+belong to releases and keep that context on the table page.
+
+Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: severity totals and
+counts per severity/code, with entries mounted only when a code is expanded. This keeps
+large registers usable without mounting thousands of notices on load. `Finding.tsx`
+remains the separate project-validation renderer. Table releases also start collapsed
+and expand in edition order, marking primary releases. The obsolete variants browser has
+no route or data source; editions remain deferred.
 
 ## Why no auth — cost protection instead
 

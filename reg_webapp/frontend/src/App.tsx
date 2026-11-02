@@ -4,16 +4,17 @@ import styles from "./App.module.css";
 import { getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
+import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
 import { Home } from "./lib/Home";
 import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
-import { ColumnList } from "./lib/ui/ColumnList";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useRoute } from "./lib/use_router";
+import { NoRegisterList, VariableList } from "./lib/VariableList";
 
 const useHref = (href: string) => href;
 
@@ -52,16 +53,19 @@ export function App() {
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
             <BrowseTree className={styles.browse} />
-            <ColumnList
-              label="Variables"
-              className={styles.list}
-              sections={[]}
-              selectedId={null}
-              selectedExact={false}
-              renderName={(item) => item.name}
-              empty="Not ported to the current API yet"
-              error={null}
-            />
+            {route.name === "catalog-node" &&
+            route.fqidPath.split("/").length >= 2 &&
+            !route.fqidPath.startsWith("class/") ? (
+              <VariableList
+                registerFqid={route.fqidPath.split("/").slice(0, 2).join("/")}
+                selectedFqid={
+                  route.fqidPath.split("/").length > 2 ? route.fqidPath : null
+                }
+                className={styles.list}
+              />
+            ) : (
+              <NoRegisterList className={styles.list} />
+            )}
             <main className={styles.detail}>
               <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
               <div className={styles.routed}>
@@ -75,8 +79,7 @@ export function App() {
   );
 }
 
-// Entity and project modules remain in the tree for W2–W5. They are deliberately
-// disconnected here until their owning PR ports them to the current API.
+// Remaining entity and project pages return in W3–W5.
 function RoutedView({ route }: { route: Route }) {
   switch (route.name) {
     case "home":
@@ -91,9 +94,14 @@ function RoutedView({ route }: { route: Route }) {
         </>
       );
     case "catalog-node":
+      if (route.fqidPath === "class" || route.fqidPath.startsWith("class/")) {
+        return (
+          <StatusRow tone="info">Not ported to the current API yet</StatusRow>
+        );
+      }
+      return <CatalogNodeView key={route.fqidPath} fqidPath={route.fqidPath} />;
     case "group":
     case "class-group":
-    case "variants":
     case "project":
     case "doc":
       return (
