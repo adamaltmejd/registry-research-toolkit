@@ -1187,110 +1187,16 @@ subject = "var:yrkesmassig-trafik-lastbil"
 fields = { "tags" = ["transport"] }
 evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
 
+
 [[statement]]
 kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2000-01-01..2000-12-31 where key = 'v1979'"
+subject = "var:korda-kilometer-i-utlandet-med-last"
 fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
 
 [[statement]]
 kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2001-01-01..2001-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2002-01-01..2002-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2003-01-01..2003-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2004-01-01..2004-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2005-01-01..2005-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2006-01-01..2006-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2007-01-01..2007-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2008-01-01..2008-12-31 where key = 'v1979'"
-fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2000-01-01..2000-12-31 where key = 'v1984'"
+subject = "var:urvslut"
 fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2001-01-01..2001-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2002-01-01..2002-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2003-01-01..2003-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2004-01-01..2004-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2005-01-01..2005-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2006-01-01..2006-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2007-01-01..2007-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2008-01-01..2008-12-31 where key = 'v1984'"
-fields = { "description" = "Faktiskt slutdatum för urval" }
-evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"

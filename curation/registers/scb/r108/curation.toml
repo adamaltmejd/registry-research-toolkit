@@ -2359,84 +2359,6 @@ evidence = "Källkolumnerna återanvänds för andra frågor.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "gymnasieungdomars-studieintresse: F22_06 @2019-07-01..2020-06-30 where key = 'v40393'"
-fields = { "description" = "Hur individen har tänkt att försörja sig på annat sätt under sina studier." }
-evidence = "Beskrivningen anger studiemedel men frågan gäller annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F29_04 @2021-07-01..2022-06-30 where key = 'v45068'"
-fields = { "description" = "Aktivt deltagande under lektionerna." }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:23403:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F30_01 @2021-07-01..2022-06-30 where key = 'v45054'"
-fields = { "description" = "Hur stor andel av lektionerna som hölls genom ett digitalt mötesverktyg, till exempel Zoom, Google Meet eller Teams." }
-evidence = "Värdena anger andelen lektioner, inte antalet.\ncatalog:occurrence:218488\ncatalog:valueset:6465"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F30_02 @2021-07-01..2022-06-30 where key = 'v45055'"
-fields = { "description" = "Hur stor andel av distanslektionerna som spelades in så att individen kunde se dem i efterhand eller flera gånger." }
-evidence = "Värdena anger andelen lektioner som spelades in.\ncatalog:occurrence:218489\ncatalog:valueset:6465"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F31 @2021-07-01..2022-06-30 where key = 'v45038'"
-fields = { "description" = "Upplevt lärande på distanslektioner jämfört med lektioner i skolans lokaler under coronapandemin." }
-evidence = "Den befintliga beskrivningen avser undervisningsplats, medan frågan mäter upplevt lärande.\ncatalog:occurrence:218490\ncatalog:valueset:1460"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F34_01 @2021-07-01..2022-06-30 where key = 'v45046'"
-fields = { "description" = "Om engelska har fungerat bäst att genomföra på distans under coronapandemin." }
-evidence = "Definitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: F34_07 @2021-07-01..2022-06-30 where key = 'v45052'"
-fields = { "description" = "Om samhällskunskap har fungerat bäst att genomföra på distans under coronapandemin." }
-evidence = "Definitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: PersonNr @2013-07-01..2014-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: PersonNr @2015-07-01..2016-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: PersonNr @2017-07-01..2018-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: PersonNr @2019-07-01..2020-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: PersonNr @2021-07-01..2022-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieungdomars-studieintresse: personnr @2011-07-01..2012-06-30 where key = 'v7020'"
-fields = { "description" = "Urvalspersonens personnummer." }
-evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
-
-[[statement]]
-kind = "set"
 subject = "gymnasieungdomars-studieintresse: lopnr @2005-07-01..2006-06-30 where key = 'v2179'"
 fields = { "variable" = "uenr" }
 evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
@@ -2548,3 +2470,58 @@ kind = "set"
 subject = "var:f32"
 fields = { "sets" = ["distansundervisningens-funktion"] }
 evidence = "F32 rates motivation during distance study as better, unchanged or worse (r28, r29), a functional aspect covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12084"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktivit-deltagande"
+fields = { "description" = "Aktivt deltagande under lektionerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:23403:18809:19174"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-engelska"
+fields = { "description" = "Om engelska har fungerat bäst att genomföra på distans under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
+fields = { "description" = "Om samhällskunskap har fungerat bäst att genomföra på distans under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-digitalt-motesverktyg"
+fields = { "description" = "Hur stor andel av lektionerna som hölls genom ett digitalt mötesverktyg, till exempel Zoom, Google Meet eller Teams." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger andelen lektioner, inte antalet.\ncatalog:occurrence:218488\ncatalog:valueset:6465"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-inspelade-lektioner"
+fields = { "description" = "Hur stor andel av distanslektionerna som spelades in så att individen kunde se dem i efterhand eller flera gånger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger andelen lektioner som spelades in.\ncatalog:occurrence:218489\ncatalog:valueset:6465"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
+fields = { "description" = "Upplevt lärande på distanslektioner jämfört med lektioner i skolans lokaler under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen avser undervisningsplats, medan frågan mäter upplevt lärande.\ncatalog:occurrence:218490\ncatalog:valueset:1460"
+
+
+[[statement]]
+kind = "set"
+subject = "var:f22-06"
+fields = { "description" = "Hur individen har tänkt att försörja sig på annat sätt under sina studier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger studiemedel men frågan gäller annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-urval"
+fields = { "description" = "Urvalspersonens personnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"

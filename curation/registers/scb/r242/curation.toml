@@ -1745,56 +1745,16 @@ subject = "var:kalibrering-rostande-ej-rostande-kommunval-orebro-uppdelat"
 fields = { "tags" = ["democracy"] }
 evidence = "X är en opak källkod i variabelnamnet.\ncatalog:variable_text:2945:14975:15340"
 
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @1991-01-01..1991-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
 
 [[statement]]
 kind = "set"
-subject = "valdeltagande: CIVILSTAND @1994-01-01..1994-12-31 where key = 'v7008'"
+subject = "var:gift-sambo-ensamstaende"
 fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nCivilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
+
 
 [[statement]]
 kind = "set"
-subject = "valdeltagande: CIVILSTAND @1998-01-01..1998-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @2002-01-01..2002-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @2006-01-01..2006-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @2010-01-01..2010-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @2011-01-01..2011-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: CIVILSTAND @2014-01-01..2014-12-31 where key = 'v7008'"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Civilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
-
-[[statement]]
-kind = "set"
-subject = "valdeltagande: omrost_ko @2011-01-01..2011-12-31 where key = 'v28723'"
+subject = "var:rostat-i-omval-till-kommunfullmaktige"
 fields = { "description" = "Variabeln anger om uppgiftspersonen har röstat i omvalet till kommunfullmäktige." }
-evidence = "Rättar ett skrivfel utan att ändra innebörden.\ncatalog:variable_text:2886:14975:15340"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra innebörden.\ncatalog:variable_text:2886:14975:15340"

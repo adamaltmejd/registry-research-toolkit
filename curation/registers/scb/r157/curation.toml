@@ -157,98 +157,16 @@ subject = "var:smaortskod-old"
 fields = { "tags" = ["geography"] }
 evidence = "Den äldre småortskoden och småortskoden beskriver samma geografiska indelning.\ncatalog:variable_text:43095:19358:19723\ncatalog:variable_text:43096:16436:16801"
 
+
 [[statement]]
 kind = "set"
-subject = "smaorter: BEF @1990-01-01..1990-12-31 where key = 'v2188'"
+subject = "var:folkmangd"
 fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
+
 
 [[statement]]
 kind = "set"
-subject = "smaorter: BEF @1995-01-01..1995-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2000-01-01..2000-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2005-01-01..2005-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2010-01-01..2010-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2015-01-01..2015-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2020-01-01..2020-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: BEF @2023-01-01..2023-12-31 where key = 'v2188'"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Definitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @1990-01-01..1990-12-31 where key = 'v49'"
+subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @1995-01-01..1995-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2000-01-01..2000-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2005-01-01..2005-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2010-01-01..2010-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2015-01-01..2015-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2020-01-01..2020-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "smaorter: LANNAMN @2023-01-01..2023-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"

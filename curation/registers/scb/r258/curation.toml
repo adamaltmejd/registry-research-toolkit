@@ -17358,192 +17358,6 @@ evidence = "Kolumnerna har andra periodägare.\ncatalog:occurrence:289940\ncatal
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: INV3R_PMP @2017-01-01..2017-12-31 where key = 'v35490'"
-fields = { "description" = "Andel mottagna pappersfakturor och elektroniska fakturor som inte kan processas automatiskt i mottagarens it-system." }
-evidence = "Definitionen beskriver fakturatyperna men variabeln mäter deras andel.\ncatalog:occurrence:292452\ncatalog:variable_text:32328:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: <none> @2014-01-01..2014-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2013-01-01..2013-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2015-01-01..2015-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2017-01-01..2017-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2018-01-01..2018-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2019-01-01..2019-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2021-01-01..2021-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2022-01-01..2022-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2023-01-01..2023-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXSVALPCT @2024-01-01..2024-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: AXVALPCT @2020-01-01..2020-12-31 where key = 'v26891'"
-fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
-evidence = "Beskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: DatD8 @2009-01-01..2009-12-31 where key = 'v21128'"
-fields = { "description" = "Problem vid köp eller beställning via internet under de senaste 12 månaderna." }
-evidence = "Rättar stavning och förtydligar den avbrutna tidsangivelsen med stöd av frågan.\ncatalog:occurrence:289418\ncatalog:variable_text:32753:14245:14610"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_EU @2021-01-01..2021-12-31 where key = 'v44713'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom övriga EU-länder." }
-evidence = "Definitionen beskriver fördelningen i stället för den uppmätta andelen av företagets omsättning.\ncatalog:variable_text:32863:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_EU @2022-01-01..2022-12-31 where key = 'v44713'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom övriga EU-länder." }
-evidence = "Definitionen beskriver fördelningen i stället för den uppmätta andelen av företagets omsättning.\ncatalog:variable_text:32863:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_HM @2021-01-01..2021-12-31 where key = 'v44712'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom Sverige." }
-evidence = "Beskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32864:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_HM @2022-01-01..2022-12-31 where key = 'v44712'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom Sverige." }
-evidence = "Beskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32864:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_WW @2021-01-01..2021-12-31 where key = 'v44714'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom länder i övriga världen." }
-evidence = "Beskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32865:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_AWSVAL_WW @2022-01-01..2022-12-31 where key = 'v44714'"
-fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom länder i övriga världen." }
-evidence = "Beskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32865:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_CVD_CRMF @2021-01-01..2021-12-31 where key = 'v44764'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Definitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292889\ncatalog:valueset:7895\ncatalog:variable_text:32876:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_CVD_CRMP @2021-01-01..2021-12-31 where key = 'v44766'"
-fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
-evidence = "Definitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292890\ncatalog:valueset:10571\ncatalog:variable_text:32877:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: E_CVD_CRMX @2021-01-01..2021-12-31 where key = 'v44773'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Definitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:variable_text:32878:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: <none> @2014-01-01..2014-12-31 where key = 'v30757'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Beskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292180\ncatalog:valueset:7898\ncatalog:variable_text:33441:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: MT_FREE @2014-01-01..2014-12-31 where key = 'v30757'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Beskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292180\ncatalog:valueset:7898\ncatalog:variable_text:33441:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: RA_SG @2022-01-01..2022-12-31 where key = 'v45755'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Beskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292988\ncatalog:valueset:7898\ncatalog:variable_text:33548:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: RM_EG @2022-01-01..2022-12-31 where key = 'v45749'"
-fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
-evidence = "Beskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292999\ncatalog:valueset:7898\ncatalog:variable_text:33580:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: RM_SG @2022-01-01..2022-12-31 where key = 'v45748'"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Beskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:293000\ncatalog:valueset:7898\ncatalog:variable_text:33581:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: SECMSMS @2022-01-01..2022-12-31 where key = 'v45756'"
-fields = { "description" = "Företaget tillämpar it-säkerhetsövervakning." }
-evidence = "Värdemängden anger förekomst, inte andel.\ncatalog:valueset:7898\ncatalog:variable_text:33617:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: SECMSMS @2024-01-01..2024-12-31 where key = 'v45756'"
-fields = { "description" = "Företaget tillämpar it-säkerhetsövervakning." }
-evidence = "Värdemängden anger förekomst, inte andel.\ncatalog:valueset:7898\ncatalog:variable_text:33617:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: DatC5J @2011-01-01..2011-12-31 where key = 'v27985'"
-fields = { "description" = "Sökt på Wikipedia eller andra wiki-webbplatser" }
-evidence = "Tar bort en överflödig avslutande parentes.\ncatalog:variable_text:33688:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: IUWIKI @2013-01-01..2013-12-31 where key = 'v27985'"
-fields = { "description" = "Sökt på Wikipedia eller andra wiki-webbplatser" }
-evidence = "Tar bort en överflödig avslutande parentes.\ncatalog:variable_text:33688:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "befolkningens-it-anvandning: b3b @2018-01-01..2018-12-31 where key = 'v38257'"
 fields = { "variable" = "data4c5" }
 evidence = "Both specify laptop internet connection with the same equipment-use definition and preceding-three-month window in the population IT-use table. Observations do not overlap: [17532,17897) versus [14610,15706), [18628,18993) and [19358,19723). Shared code 1 is affirmative, with no conflicting shared-code meaning."
@@ -18881,6 +18695,96 @@ kind = "set"
 subject = "befolkningens-it-anvandning: D8 @2016-01-01..2016-12-31 where key = 'v35542' and release = 'r12032'"
 fields = { "definition" = "Har du köpt eller beställt någon vara eller tjänst via internet genom att klicka vidare i en annons på sociala nätverssajter eller appar de senaste 12 månaderna?" }
 evidence = "Rename audit d8: the sole D8 occurrence (2016, r12032/v35542) has a social-network-ad purchase label but a copied stock-trading/three-month definition. SCB LE0108 documentation 2016, p. 19, question D8 explicitly asks about purchases through social-network advertisements in the last 12 months. Retain the correctly renamed owner and replace only the definition. https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2016_jv_170117.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-mottagna-fakturor-ej-processas"
+fields = { "description" = "Andel mottagna pappersfakturor och elektroniska fakturor som inte kan processas automatiskt i mottagarens it-system." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver fakturatyperna men variabeln mäter deras andel.\ncatalog:occurrence:292452\ncatalog:variable_text:32328:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-edi"
+fields = { "description" = "Andel av företagets omsättning som kom från EDI-beställningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen definierar EDI men anger inte den uppmätta omsättningsandelen.\ncatalog:variable_text:32329:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-webbomsattning-ovriga-varlden-av-foretagsomsattning"
+fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom länder i övriga världen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32865:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-webbomsattning-sverige-av-foretagsomsattning"
+fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en fördelning men variabeln mäter en omsättningsandel.\ncatalog:variable_text:32864:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-distansmoten-internet-okade-delvis-covid-19"
+fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292890\ncatalog:valueset:10571\ncatalog:variable_text:32877:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-distansmoten-internet-okade-helt-covid-19"
+fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292889\ncatalog:valueset:7895\ncatalog:variable_text:32876:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalet-distansmoten-over-internet-okade-inte-alls-pa-grund"
+fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:variable_text:32878:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:datd8"
+fields = { "description" = "Problem vid köp eller beställning via internet under de senaste 12 månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och förtydligar den avbrutna tidsangivelsen med stöd av frågan.\ncatalog:occurrence:289418\ncatalog:variable_text:32753:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:e-awsval-eu"
+fields = { "description" = "Andel av företagets omsättning från webbförsäljning av varor eller tjänster till kunder inom övriga EU-länder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver fördelningen i stället för den uppmätta andelen av företagets omsättning.\ncatalog:variable_text:32863:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:foretaget-tillampar-it-sakerhetsovervakning"
+fields = { "description" = "Företaget tillämpar it-säkerhetsövervakning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden anger förekomst, inte andel.\ncatalog:valueset:7898\ncatalog:variable_text:33617:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:har-riktlinjer-som-framjar-digitala-moten-framfor"
+fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292999\ncatalog:valueset:7898\ncatalog:variable_text:33580:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:har-sakerhetsriktlinjer-for-distansmoten"
+fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:293000\ncatalog:valueset:7898\ncatalog:variable_text:33581:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:har-sakerhetsriktlinjer-for-fjarranslutning"
+fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292180\ncatalog:valueset:7898\ncatalog:variable_text:33441:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ra-sg"
+fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292988\ncatalog:valueset:7898\ncatalog:variable_text:33548:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-wikipedia-wiki-webbplatser"
+fields = { "description" = "Sökt på Wikipedia eller andra wiki-webbplatser" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar bort en överflödig avslutande parentes.\ncatalog:variable_text:33688:15706:16071"
 
 [[statement]]
 kind = "set"

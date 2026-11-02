@@ -948,12 +948,6 @@ evidence = "Yrke är en arbetsmarknadsuppgift.\ncatalog:variable_text:11007:-840
 
 [[statement]]
 kind = "set"
-subject = "folkbokforda-biologiska: fodelsetidmor @1961-01-01..2025-12-31 where key = 'v7947'"
-fields = { "description" = "Datum för födelse för mor." }
-evidence = "Definitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454"
-
-[[statement]]
-kind = "set"
 subject = "var:dop"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:10915\ncatalog:variable_text:10915:-8401:-731"
@@ -963,3 +957,9 @@ kind = "set"
 subject = "var:konfirmation"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:10970\ncatalog:variable_text:10970:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidmor"
+fields = { "description" = "Datum för födelse för mor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454"

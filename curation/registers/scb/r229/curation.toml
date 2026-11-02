@@ -3773,23 +3773,12 @@ subject = "var:kurs-5-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\ncatalog:variable_text:39953:14610:14791"
 
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2006-01-01..2006-06-30 where key = 'v17467'"
-fields = { "description" = "Antal timmar för lärarledda kurser och konferenser." }
-evidence = "Källtextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2008-01-01..2008-06-30 where key = 'v17467'"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
 fields = { "description" = "Antal timmar för lärarledda kurser och konferenser." }
-evidence = "Källtextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
-fields = { "description" = "Antal timmar för lärarledda kurser och konferenser." }
-evidence = "Källtextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
 
 [[statement]]
 kind = "set"

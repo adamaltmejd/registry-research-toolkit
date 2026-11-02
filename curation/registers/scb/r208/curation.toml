@@ -6061,198 +6061,6 @@ evidence = "Variabeln mäter total kärn- och fröskörd.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderObargadAreal_Dar_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2016-01-01..2016-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2017-01-01..2017-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2018-01-01..2018-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2019-01-01..2019-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2020-01-01..2020-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2021-01-01..2021-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2022-01-01..2022-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2024-01-01..2024-12-31 where key = 'v44305'"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:karnfroobargadareal-1"
 fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
 evidence = "r316 defines unharvested winter barley area in hectares and explicitly specifies threshing in its operational history.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42381\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42524"
@@ -6466,6 +6274,30 @@ kind = "set"
 subject = "var:obargad-areal-varrybs"
 fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
 evidence = "r352 explicitly defines unharvested spring turnip rape area as an organic subset of unharvested area for threshing, supporting inclusion despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42521\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42663"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-12"
+fields = { "description" = "Obärgad areal blandsäd strå" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
 
 [[statement]]
 kind = "set"

@@ -7,8 +7,18 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
         "operationId": "show_without_ref",
+        "parameters": [
+          {
+            "name": "evidence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -59,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -68,6 +78,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "evidence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -1044,7 +1062,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`.",
+        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
         "operationId": "search",
         "parameters": [
           {
@@ -1631,6 +1649,43 @@
           }
         }
       },
+      "CurationStatement": {
+        "type": "object",
+        "description": "An authored curation statement that contributed a field of this variable.",
+        "required": [
+          "field",
+          "value",
+          "statement",
+          "evidence",
+          "caveat"
+        ],
+        "properties": {
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "field": {
+            "type": "string"
+          },
+          "statement": {
+            "$ref": "#/components/schemas/StatementLocation"
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Diff": {
         "type": "object",
         "description": "`shape.Diff`.",
@@ -1934,6 +1989,22 @@
             "type": "string"
           },
           "remediation": {
+            "type": "string"
+          }
+        }
+      },
+      "EvidenceSpelling": {
+        "type": "object",
+        "description": "A delivered or curated folded alias; source occurrences retain exact spellings.",
+        "required": [
+          "spelling",
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "spelling": {
             "type": "string"
           }
         }
@@ -2872,6 +2943,90 @@
         },
         "additionalProperties": false
       },
+      "ProviderText": {
+        "type": "object",
+        "description": "One provider text, with its coverage and every contributing source occurrence.",
+        "required": [
+          "text",
+          "periods",
+          "sources"
+        ],
+        "properties": {
+          "periods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderTextSource"
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "ProviderTextSource": {
+        "type": "object",
+        "description": "Source values remain distinct from curated winners, including silent sources.",
+        "required": [
+          "table",
+          "period",
+          "status",
+          "source_key",
+          "spelling",
+          "label",
+          "unit",
+          "locators"
+        ],
+        "properties": {
+          "field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Locator"
+            }
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "source_key": {
+            "type": "string"
+          },
+          "spelling": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "RegisterFacet": {
         "type": "object",
         "description": "One register's matched variables. `name` and `variables` are present only in the\nmodes that list them, never `null`.",
@@ -3736,21 +3891,21 @@
             "required": [
               "fqid",
               "name",
-              "definition",
               "register",
               "period",
-              "unit_types",
-              "texts",
-              "spellings",
+              "sets",
+              "tags",
               "tables",
               "kind"
             ],
             "properties": {
-              "definition": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+              "description": {
+                "type": "string",
+                "description": "The one curated description, separate from source text runs."
+              },
+              "evidence": {
+                "$ref": "#/components/schemas/VariableEvidence",
+                "description": "Provenance is present only when requested with `evidence=true`."
               },
               "fqid": {
                 "type": "string"
@@ -3765,17 +3920,22 @@
                 "type": "string"
               },
               "period": {
-                "$ref": "#/components/schemas/Period"
+                "$ref": "#/components/schemas/Period",
+                "description": "The coverage hull; `coverage` supplies detailed spans and gaps."
               },
               "register": {
                 "type": "string",
                 "description": "The register's fqid."
               },
-              "spellings": {
+              "sets": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ShowSpelling"
+                  "$ref": "#/components/schemas/ShowMembership"
                 }
+              },
+              "source_definition": {
+                "$ref": "#/components/schemas/SourceDefinition",
+                "description": "Provider text fallback only when no curated description is available."
               },
               "tables": {
                 "type": "array",
@@ -3784,22 +3944,32 @@
                 },
                 "description": "The fqids of the tables the variable has segments in."
               },
-              "texts": {
+              "tags": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ShowText"
-                }
-              },
-              "unit_types": {
-                "type": "array",
-                "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/ShowMembership"
                 }
               }
             }
           }
         ],
         "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back."
+      },
+      "ShowMembership": {
+        "type": "object",
+        "description": "A curated set (group) or tag the variable belongs to.",
+        "required": [
+          "fqid",
+          "name"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "ShowProviderRef": {
         "type": "object",
@@ -3855,23 +4025,6 @@
           }
         }
       },
-      "ShowSpelling": {
-        "type": "object",
-        "description": "A folded name the variable is known by.",
-        "required": [
-          "spelling",
-          "kind"
-        ],
-        "properties": {
-          "kind": {
-            "type": "string",
-            "description": "`delivered` or `curated`."
-          },
-          "spelling": {
-            "type": "string"
-          }
-        }
-      },
       "ShowTable": {
         "type": "object",
         "description": "A register's table; the implicit one has the register's fqid.",
@@ -3911,43 +4064,6 @@
             "type": "boolean"
           },
           "unit_type": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
-      "ShowText": {
-        "type": "object",
-        "description": "One run of a variable's descriptive text.",
-        "required": [
-          "period",
-          "label",
-          "definition",
-          "operational_definition",
-          "unit"
-        ],
-        "properties": {
-          "definition": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "label": {
-            "type": "string"
-          },
-          "operational_definition": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "period": {
-            "$ref": "#/components/schemas/Period"
-          },
-          "unit": {
             "type": [
               "string",
               "null"
@@ -3999,6 +4115,26 @@
           "variables": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "SourceDefinition": {
+        "type": "object",
+        "description": "Latest provider text, used only when no curated description exists.",
+        "required": [
+          "origin",
+          "period",
+          "text"
+        ],
+        "properties": {
+          "origin": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "text": {
+            "type": "string"
           }
         }
       },
@@ -4235,6 +4371,49 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "VariableEvidence": {
+        "type": "object",
+        "description": "Provider text and curation provenance, returned only when evidence is requested.",
+        "required": [
+          "texts",
+          "source_only",
+          "spellings",
+          "statements",
+          "documents"
+        ],
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelatedDocument"
+            }
+          },
+          "source_only": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderTextSource"
+            }
+          },
+          "spellings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceSpelling"
+            }
+          },
+          "statements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurationStatement"
+            }
+          },
+          "texts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderText"
+            }
           }
         }
       }

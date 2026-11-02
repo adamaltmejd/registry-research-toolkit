@@ -74269,2568 +74269,6 @@ evidence = "Den operativa definitionen ändras från ersättningssumma till anta
 
 [[statement]]
 kind = "set"
-subject = "individtabeller: BINKRAK @2016-01-01..2016-12-31 where key = 'v2662'"
-fields = { "description" = "Andel/grad av aktivitetsersättning (inkomstrelaterad)." }
-evidence = "Definitionen anger garantiersättning men etiketten anger inkomstrelaterad ersättning.\ncatalog:variable_text:14763:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BSTPER01 @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal studiemånader i SVUX01." }
-evidence = "Beskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14969:11688:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BSTPER99 @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal studiemånader i SVUX99." }
-evidence = "Beskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14970:11688:12053"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: BENTOTM2 @2022-01-01..2022-12-31 where key = 'v39768'"
-fields = { "description" = "Totalt förbrukad mängd bränsle." }
-evidence = "Den operativa definitionen anger totalt förbrukad mängd, inte en återbetalningsberättigad mängd, i båda perioderna.\ncatalog:variable_text:15135:18993:19358\ncatalog:variable_text:15135:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: BENTOTM2 @2023-01-01..2023-12-31 where key = 'v39768'"
-fields = { "description" = "Totalt förbrukad mängd bränsle." }
-evidence = "Den operativa definitionen anger totalt förbrukad mängd, inte en återbetalningsberättigad mängd, i båda perioderna.\ncatalog:variable_text:15135:18993:19358\ncatalog:variable_text:15135:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2000-01-01..2000-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2001-01-01..2001-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2002-01-01..2002-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2003-01-01..2003-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2004-01-01..2004-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2005-01-01..2005-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0763 @2006-01-01..2006-12-31 where key = 'v16959'"
-fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
-evidence = "Källans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8244 @2019-01-01..2019-12-31 where key = 'v47753'"
-fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
-evidence = "Den operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8244 @2020-01-01..2020-12-31 where key = 'v47753'"
-fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
-evidence = "Den operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8244 @2021-01-01..2021-12-31 where key = 'v47753'"
-fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
-evidence = "Den operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8244 @2022-01-01..2022-12-31 where key = 'v47753'"
-fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
-evidence = "Den operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8244 @2023-01-01..2023-12-31 where key = 'v47753'"
-fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
-evidence = "Den operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2000-01-01..2000-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2001-01-01..2001-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2002-01-01..2002-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2003-01-01..2003-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2004-01-01..2004-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2005-01-01..2005-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2006-01-01..2006-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2007-01-01..2007-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2008-01-01..2008-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2009-01-01..2009-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2010-01-01..2010-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2011-01-01..2011-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2012-01-01..2012-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2013-01-01..2013-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2014-01-01..2014-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2015-01-01..2015-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2016-01-01..2016-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2017-01-01..2017-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2018-01-01..2018-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2019-01-01..2019-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2020-01-01..2020-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2021-01-01..2021-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2022-01-01..2022-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: BALTEX @2023-01-01..2023-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2001-01-01..2001-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2002-01-01..2002-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2003-01-01..2003-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2004-01-01..2004-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2005-01-01..2005-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2006-01-01..2006-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2007-01-01..2007-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2008-01-01..2008-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2009-01-01..2009-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2010-01-01..2010-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2011-01-01..2011-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2012-01-01..2012-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2013-01-01..2013-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2014-01-01..2014-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2015-01-01..2015-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2016-01-01..2016-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2017-01-01..2017-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2018-01-01..2018-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2019-01-01..2019-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2020-01-01..2020-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2021-01-01..2021-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2022-01-01..2022-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: BALTEX @2023-01-01..2023-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2000-01-01..2000-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2001-01-01..2001-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2002-01-01..2002-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2003-01-01..2003-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2004-01-01..2004-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2005-01-01..2005-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BALTEX @2006-01-01..2006-12-31 where key = 'v695'"
-fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
-evidence = "The historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BANDFPT @2000-01-01..2000-12-31 where key = 'v5649'"
-fields = { "description" = "Andel av full folkpension plus pensionstillskott." }
-evidence = "Beskrivningen anger pensionen i stället för den andel som mäts.\ncatalog:variable_text:15764:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BANDFPT @2001-01-01..2001-12-31 where key = 'v5649'"
-fields = { "description" = "Andel av full folkpension plus pensionstillskott." }
-evidence = "Beskrivningen anger pensionen i stället för den andel som mäts.\ncatalog:variable_text:15764:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BANDFPT @2002-01-01..2002-12-31 where key = 'v5649'"
-fields = { "description" = "Andel av full folkpension plus pensionstillskott." }
-evidence = "Beskrivningen anger pensionen i stället för den andel som mäts.\ncatalog:variable_text:15764:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2000-01-01..2000-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2001-01-01..2001-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2002-01-01..2002-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2003-01-01..2003-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2004-01-01..2004-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2005-01-01..2005-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2006-01-01..2006-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BASKAP @2016-01-01..2016-12-31 where key = 'v704'"
-fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
-evidence = "Beskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMAN @2000-01-01..2000-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension.\ncatalog:variable_text:16002:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMAN @2001-01-01..2001-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension.\ncatalog:variable_text:16002:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMAN @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension.\ncatalog:variable_text:16002:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANB @2000-01-01..2000-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med vanlig folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med vanlig folkpension.\ncatalog:variable_text:16003:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANB @2001-01-01..2001-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med vanlig folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med vanlig folkpension.\ncatalog:variable_text:16003:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANB @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med vanlig folkpension." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med vanlig folkpension.\ncatalog:variable_text:16003:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANBT @2000-01-01..2000-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension enligt FPgrupp 0112." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension enligt FPgrupp 0112.\ncatalog:variable_text:16004:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANBT @2001-01-01..2001-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension enligt FPgrupp 0112." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension enligt FPgrupp 0112.\ncatalog:variable_text:16004:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BFPMANBT @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med folkpension enligt FPgrupp 0112." }
-evidence = "Definitionen avser bokslut men variabeln mäter månader med folkpension enligt FPgrupp 0112.\ncatalog:variable_text:16004:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPMANB @2000-01-01..2000-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension.\ncatalog:variable_text:16160:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPMANB @2001-01-01..2001-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension.\ncatalog:variable_text:16160:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPMANB @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension.\ncatalog:variable_text:16160:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTMANB @2000-01-01..2000-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension ATP." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension ATP.\ncatalog:variable_text:16165:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTMANB @2001-01-01..2001-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension ATP." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension ATP.\ncatalog:variable_text:16165:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTMANB @2002-01-01..2002-12-31 where key = 'v16965'"
-fields = { "description" = "Antal månader med omställningspension ATP." }
-evidence = "Källans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension ATP.\ncatalog:variable_text:16165:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTPFR @2000-01-01..2000-12-31 where key = 'v37928'"
-fields = { "description" = "Datum från och med vilket tjänstepension avses." }
-evidence = "Den operativa definitionen avser tjänstepension och inte sjukfall.\ncatalog:variable_text:16167:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTPFR @2001-01-01..2001-12-31 where key = 'v37928'"
-fields = { "description" = "Datum från och med vilket tjänstepension avses." }
-evidence = "Den operativa definitionen avser tjänstepension och inte sjukfall.\ncatalog:variable_text:16167:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BOPTPFR @2002-01-01..2002-12-31 where key = 'v37928'"
-fields = { "description" = "Datum från och med vilket tjänstepension avses." }
-evidence = "Den operativa definitionen avser tjänstepension och inte sjukfall.\ncatalog:variable_text:16167:10957:12053"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2000-01-01..2000-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2001-01-01..2001-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2002-01-01..2002-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2003-01-01..2003-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2004-01-01..2004-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2005-01-01..2005-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2006-01-01..2006-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCB @2016-01-01..2016-12-31 where key = 'v6258'"
-fields = { "description" = "Individens ekonomiska bistånd." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCBU @2004-01-01..2004-12-31 where key = 'v1283'"
-fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCBU @2005-01-01..2005-12-31 where key = 'v1283'"
-fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCBU @2006-01-01..2006-12-31 where key = 'v1283'"
-fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: ISOCBU @2016-01-01..2016-12-31 where key = 'v1283'"
-fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
-evidence = "Definitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERHALV1MNG @2017-01-01..2017-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16515:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2018-01-01..2018-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2019-01-01..2019-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2020-01-01..2020-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2021-01-01..2021-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2022-01-01..2022-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELATERMNG @2023-01-01..2023-12-31 where key = 'v39768'"
-fields = { "description" = "Återbetalningsberättigad mängd, el" }
-evidence = "Källan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2007-01-01..2007-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2008-01-01..2008-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2009-01-01..2009-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2010-01-01..2010-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2011-01-01..2011-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2012-01-01..2012-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_15 @2013-01-01..2013-12-31 where key = 'v25983'"
-fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2007-01-01..2007-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2008-01-01..2008-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2009-01-01..2009-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2010-01-01..2010-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2011-01-01..2011-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2012-01-01..2012-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_17 @2013-01-01..2013-12-31 where key = 'v25985'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2007-01-01..2007-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2008-01-01..2008-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2009-01-01..2009-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2010-01-01..2010-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2011-01-01..2011-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2012-01-01..2012-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_13 @2013-01-01..2013-12-31 where key = 'v25981'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2007-01-01..2007-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2008-01-01..2008-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2009-01-01..2009-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2010-01-01..2010-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2011-01-01..2011-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2012-01-01..2012-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_19 @2013-01-01..2013-12-31 where key = 'v25987'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2007-01-01..2007-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2008-01-01..2008-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2009-01-01..2009-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2010-01-01..2010-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2011-01-01..2011-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2012-01-01..2012-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V701_11 @2013-01-01..2013-12-31 where key = 'v25979'"
-fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
-evidence = "Källans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: IETABE @2016-01-01..2016-12-31 where key = 'v28159'"
-fields = { "description" = "Utbetalt belopp i etableringsersättning till personer som är nya i Sverige." }
-evidence = "Källans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjlighet till flera ersättningar.\ncatalog:variable_text:16653:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: IETABT @2016-01-01..2016-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp i etableringstillägg till personer som är nya i Sverige." }
-evidence = "Källans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjligheten att få tillägget.\ncatalog:variable_text:16654:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2018-01-01..2018-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2019-01-01..2019-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2020-01-01..2020-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2021-01-01..2021-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2022-01-01..2022-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: ELFORBMNG @2023-01-01..2023-12-31 where key = 'v25874'"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
-evidence = "Källan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2016-01-01..2016-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2017-01-01..2017-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2018-01-01..2018-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2019-01-01..2019-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2020-01-01..2020-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2021-01-01..2021-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2022-01-01..2022-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: RH @2023-01-01..2023-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Källans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARP @2003-01-01..2003-12-31 where key = 'v1508'"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Källan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARP @2004-01-01..2004-12-31 where key = 'v1508'"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Källan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARP @2005-01-01..2005-12-31 where key = 'v1508'"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Källan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARP @2006-01-01..2006-12-31 where key = 'v1508'"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Källan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARP @2016-01-01..2016-12-31 where key = 'v1508'"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Källan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: IVARD @2016-01-01..2016-12-31 where key = 'v1434'"
-fields = { "description" = "Vårdbidragets merkostnadsdel." }
-evidence = "Definitionen beskriver möjlig rätt till vårdbidrag, medan variabeln mäter merkostnadsdelen.\ncatalog:variable_text:17436:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2005-01-01..2005-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2006-01-01..2006-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2007-01-01..2007-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2008-01-01..2008-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2009-01-01..2009-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2010-01-01..2010-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2011-01-01..2011-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2012-01-01..2012-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2013-01-01..2013-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2014-01-01..2014-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2015-01-01..2015-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2016-01-01..2016-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2017-01-01..2017-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2018-01-01..2018-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2019-01-01..2019-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2020-01-01..2020-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2021-01-01..2021-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2022-01-01..2022-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LFF @2023-01-01..2023-12-31 where key = 'v26169'"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2016-01-01..2016-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2017-01-01..2017-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2018-01-01..2018-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2019-01-01..2019-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2020-01-01..2020-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2021-01-01..2021-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2022-01-01..2022-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH @2023-01-01..2023-12-31 where key = 'v38086'"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
-evidence = "Utvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2005-01-01..2005-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2006-01-01..2006-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2007-01-01..2007-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2008-01-01..2008-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2009-01-01..2009-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2010-01-01..2010-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2011-01-01..2011-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2012-01-01..2012-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2013-01-01..2013-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2014-01-01..2014-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LH3 @2015-01-01..2015-12-31 where key = 'v26277'"
-fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
-evidence = "Utvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2005-01-01..2005-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2006-01-01..2006-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2007-01-01..2007-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2008-01-01..2008-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2009-01-01..2009-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2010-01-01..2010-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2011-01-01..2011-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2012-01-01..2012-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2013-01-01..2013-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2014-01-01..2014-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2015-01-01..2015-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2016-01-01..2016-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2017-01-01..2017-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2018-01-01..2018-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2019-01-01..2019-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2020-01-01..2020-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2021-01-01..2021-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2022-01-01..2022-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: LII @2023-01-01..2023-12-31 where key = 'v26260'"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
-evidence = "Källans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: IUHBID @2016-01-01..2016-12-31 where key = 'v30639'"
-fields = { "description" = "Modellberäknat underhållsbidrag." }
-evidence = "Källan anger modellberäknade värden, inte observerade mottagna belopp.\ncatalog:variable_text:18038:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2000-01-01..2000-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2001-01-01..2001-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2002-01-01..2002-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2003-01-01..2003-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2004-01-01..2004-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2005-01-01..2005-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2006-01-01..2006-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TNAR @2016-01-01..2016-12-31 where key = 'v1616'"
-fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
-evidence = "Beloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2000-01-01..2000-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2001-01-01..2001-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2002-01-01..2002-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2003-01-01..2003-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2004-01-01..2004-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2005-01-01..2005-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2006-01-01..2006-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2007-01-01..2007-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2008-01-01..2008-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2009-01-01..2009-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2010-01-01..2010-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V0860 @2011-01-01..2011-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2012-01-01..2012-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2013-01-01..2013-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2014-01-01..2014-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2015-01-01..2015-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2016-01-01..2016-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2017-01-01..2017-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2018-01-01..2018-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2019-01-01..2019-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2020-01-01..2020-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2021-01-01..2021-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2022-01-01..2022-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6633 @2023-01-01..2023-12-31 where key = 'v17860'"
-fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
-evidence = "Källan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: OLJKVFGCO2SKSATS @2021-01-01..2021-12-31 where key = 'v25871'"
-fields = { "description" = "Skattesats för koldioxidskatt, återbetalningar och punktskatter" }
-evidence = "Den operativa definitionen anger skattesatsen, medan den befintliga beskrivningen anger själva skatten.\ncatalog:variable_text:18322:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: OLJKVFGCO2SKSATS @2022-01-01..2022-12-31 where key = 'v25871'"
-fields = { "description" = "Skattesats för koldioxidskatt, återbetalningar och punktskatter" }
-evidence = "Den operativa definitionen anger skattesatsen, medan den befintliga beskrivningen anger själva skatten.\ncatalog:variable_text:18322:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: OLJKVFGCO2SKSATS @2023-01-01..2023-12-31 where key = 'v25871'"
-fields = { "description" = "Skattesats för koldioxidskatt, återbetalningar och punktskatter" }
-evidence = "Den operativa definitionen anger skattesatsen, medan den befintliga beskrivningen anger själva skatten.\ncatalog:variable_text:18322:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2009-01-01..2009-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2011-01-01..2011-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2012-01-01..2012-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2013-01-01..2013-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2014-01-01..2014-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: borgnr_dotter3 @2015-01-01..2015-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2016-01-01..2016-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2017-01-01..2017-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2018-01-01..2018-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2019-01-01..2019-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2020-01-01..2020-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2021-01-01..2021-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2022-01-01..2022-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: bpnr_dot3 @2023-01-01..2023-12-31 where key = 'v36693'"
-fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
-evidence = "Definitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARFOP @2003-01-01..2003-12-31 where key = 'v1506'"
-fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARFOP @2004-01-01..2004-12-31 where key = 'v1506'"
-fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARFOP @2005-01-01..2005-12-31 where key = 'v1506'"
-fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARFOP @2006-01-01..2006-12-31 where key = 'v1506'"
-fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGARFOP @2016-01-01..2016-12-31 where key = 'v1506'"
-fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGAROP @2003-01-01..2003-12-31 where key = 'v1507'"
-fields = { "description" = "Garantipension till omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGAROP @2004-01-01..2004-12-31 where key = 'v1507'"
-fields = { "description" = "Garantipension till omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGAROP @2005-01-01..2005-12-31 where key = 'v1507'"
-fields = { "description" = "Garantipension till omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGAROP @2006-01-01..2006-12-31 where key = 'v1507'"
-fields = { "description" = "Garantipension till omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: PGAROP @2016-01-01..2016-12-31 where key = 'v1507'"
-fields = { "description" = "Garantipension till omställningspension, i kronor." }
-evidence = "Den befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: BISHBEX @2006-01-01..2006-12-31 where key = 'v1411'"
-fields = { "description" = "Studiehjälp, antal månader med extra tillägg." }
-evidence = "Variabeln mäter antal månader, inte ett ospecificerat bidragsbelopp.\ncatalog:variable_text:19268:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2008-01-01..2008-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2009-01-01..2009-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2010-01-01..2010-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2011-01-01..2011-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2012-01-01..2012-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMCO2SKATT @2013-01-01..2013-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Definitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2017-01-01..2017-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2018-01-01..2018-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2019-01-01..2019-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2020-01-01..2020-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2021-01-01..2021-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2022-01-01..2022-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMFARCO2SK @2023-01-01..2023-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
-evidence = "Den operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMKVCO2SK @2021-01-01..2021-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Den operativa definitionen avser koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19295:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMKVCO2SK @2022-01-01..2022-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Den operativa definitionen avser koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19295:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMKVCO2SK @2023-01-01..2023-12-31 where key = 'v26552'"
-fields = { "description" = "Summa koldioxidskatt, punktskatt." }
-evidence = "Den operativa definitionen avser koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19295:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SVAVELSK @2021-01-01..2021-12-31 where key = 'v26552'"
-fields = { "description" = "Summa svavelskatt för diverse industriella processer." }
-evidence = "Källans operativa definition anger svavelskatt i samtliga perioder.\ncatalog:variable_text:19325:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SVAVELSK @2022-01-01..2022-12-31 where key = 'v26552'"
-fields = { "description" = "Summa svavelskatt för diverse industriella processer." }
-evidence = "Källans operativa definition anger svavelskatt i samtliga perioder.\ncatalog:variable_text:19325:18628:19358"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2017-01-01..2017-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2018-01-01..2018-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2019-01-01..2019-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2020-01-01..2020-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2021-01-01..2021-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2022-01-01..2022-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: SUMPCCO2SK @2023-01-01..2023-12-31 where key = 'v26552'"
-fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
-evidence = "Den operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "individtabeller: TKUVARD @2016-01-01..2016-12-31 where key = 'v1197'"
-fields = { "description" = "Vårdbidrag enligt deklarationsuppgift för vård av ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Beskrivningen anger rätt till bidrag medan variabeln avser ett belopp enligt deklarationsuppgift.\ncatalog:occurrence:176069\ncatalog:variable_text:19446:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2000-01-01..2000-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2001-01-01..2001-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2002-01-01..2002-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2003-01-01..2003-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2004-01-01..2004-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2005-01-01..2005-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2006-01-01..2006-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2007-01-01..2007-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2008-01-01..2008-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2009-01-01..2009-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2010-01-01..2010-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V2333 @2011-01-01..2011-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6554 @2013-01-01..2013-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2014-01-01..2014-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2015-01-01..2015-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2016-01-01..2016-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2017-01-01..2017-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2018-01-01..2018-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2019-01-01..2019-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2020-01-01..2020-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2021-01-01..2021-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2022-01-01..2022-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n3a: V6654 @2023-01-01..2023-12-31 where key = 'v26944'"
-fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
-evidence = "Mellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2006-01-01..2006-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2007-01-01..2007-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2008-01-01..2008-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2009-01-01..2009-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2010-01-01..2010-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V0646 @2011-01-01..2011-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2012-01-01..2012-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2013-01-01..2013-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2014-01-01..2014-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2015-01-01..2015-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2016-01-01..2016-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2017-01-01..2017-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2018-01-01..2018-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2019-01-01..2019-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2020-01-01..2020-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2021-01-01..2021-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2022-01-01..2022-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-k10: V4528 @2023-01-01..2023-12-31 where key = 'v26723'"
-fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
-evidence = "Källans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2000-01-01..2000-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2001-01-01..2001-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2002-01-01..2002-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2003-01-01..2003-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2004-01-01..2004-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2005-01-01..2005-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0370 @2006-01-01..2006-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2000-01-01..2000-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2001-01-01..2001-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2002-01-01..2002-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2003-01-01..2003-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2004-01-01..2004-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2005-01-01..2005-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2006-01-01..2006-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2007-01-01..2007-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2008-01-01..2008-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2009-01-01..2009-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0370 @2010-01-01..2010-12-31 where key = 'v16409'"
-fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
-evidence = "Definitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2000-01-01..2000-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2001-01-01..2001-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2002-01-01..2002-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2003-01-01..2003-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2004-01-01..2004-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2005-01-01..2005-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: V0891 @2006-01-01..2006-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2000-01-01..2000-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2001-01-01..2001-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2002-01-01..2002-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2003-01-01..2003-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2004-01-01..2004-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2005-01-01..2005-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "deklarationsuppgifter: V0891 @2006-01-01..2006-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2000-01-01..2000-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2001-01-01..2001-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2002-01-01..2002-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2003-01-01..2003-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2004-01-01..2004-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2005-01-01..2005-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2006-01-01..2006-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2007-01-01..2007-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: V0891 @2008-01-01..2008-12-31 where key = 'v16998'"
-fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
-evidence = "Remove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2007-01-01..2007-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2008-01-01..2008-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2009-01-01..2009-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2010-01-01..2010-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2011-01-01..2011-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2012-01-01..2012-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "punktskatter-for-energi: V712_59 @2013-01-01..2013-12-31 where key = 'v26360'"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
-evidence = "Definitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8234 @2019-01-01..2019-12-31 where key = 'v47763'"
-fields = { "description" = "Avdrag för insatsutdelning" }
-evidence = "Rättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8234 @2020-01-01..2020-12-31 where key = 'v47763'"
-fields = { "description" = "Avdrag för insatsutdelning" }
-evidence = "Rättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8234 @2021-01-01..2021-12-31 where key = 'v47763'"
-fields = { "description" = "Avdrag för insatsutdelning" }
-evidence = "Rättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8234 @2022-01-01..2022-12-31 where key = 'v47763'"
-fields = { "description" = "Avdrag för insatsutdelning" }
-evidence = "Rättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "bilaga-n9: V8234 @2023-01-01..2023-12-31 where key = 'v47763'"
-fields = { "description" = "Avdrag för insatsutdelning" }
-evidence = "Rättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2007-01-01..2007-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2008-01-01..2008-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2009-01-01..2009-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2010-01-01..2010-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2011-01-01..2011-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2012-01-01..2012-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2013-01-01..2013-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2014-01-01..2014-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2017-01-01..2017-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2018-01-01..2018-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2019-01-01..2019-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2020-01-01..2020-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "finansbolag: VG28 @2023-01-01..2023-12-31 where key = 'v27700'"
-fields = { "description" = "Övriga avsättningar" }
-evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "aktiebolag: avat @2011-01-01..2011-12-31 where key = 'v29836'"
 fields = { "variable" = "underlag-fastighetsskatt-vattenkraft" }
 evidence = "Both describe the property-tax base for hydroelectric generating units in SEK. AVAT in the company table changes ownership at day 15340 without overlap; the earlier label additionally states the 2.8% tax rate. The later member has more occurrences."
@@ -78943,6 +76381,336 @@ kind = "set"
 subject = "var:samfundskod-samfundskod-for-avgift-for-2-a-samfundet"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:19217\ncatalog:variable_text:19217:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetsersattning-inkomst"
+fields = { "description" = "Andel/grad av aktivitetsersättning (inkomstrelaterad)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger garantiersättning men etiketten anger inkomstrelaterad ersättning.\ncatalog:variable_text:14763:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bstper01"
+fields = { "description" = "Antal studiemånader i SVUX01." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14969:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bstper99"
+fields = { "description" = "Antal studiemånader i SVUX99." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14970:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-omstallningspension-atp"
+fields = { "description" = "Antal månader med omställningspension ATP." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension ATP.\ncatalog:variable_text:16165:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:aterbetalningsberattigad-mangd-bransle-bentotm2"
+fields = { "description" = "Totalt förbrukad mängd bränsle." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger totalt förbrukad mängd, inte en återbetalningsberättigad mängd, i båda perioderna.\ncatalog:variable_text:15135:18993:19358\ncatalog:variable_text:15135:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aterstaende-avdragsutrymme-for-skogsavdrag-arets-ingang"
+fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11"
+fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-blankett-n9-avdrag-for-kvarstaende-negativt-rantenetto-fran-tidigare-ar"
+fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-insatsutdelning"
+fields = { "description" = "Avdrag för insatsutdelning" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalstyp-alternativ-exempelmetod-har-tillampats"
+fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bandfpt"
+fields = { "description" = "Andel av full folkpension plus pensionstillskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger pensionen i stället för den andel som mäts.\ncatalog:variable_text:15764:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:baskap"
+fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:bfpman"
+fields = { "description" = "Antal månader med folkpension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med folkpension.\ncatalog:variable_text:16002:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bfpmanb"
+fields = { "description" = "Antal månader med vanlig folkpension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med vanlig folkpension.\ncatalog:variable_text:16003:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bfpmanbt"
+fields = { "description" = "Antal månader med folkpension enligt FPgrupp 0112." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med folkpension enligt FPgrupp 0112.\ncatalog:variable_text:16004:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bopmanb"
+fields = { "description" = "Antal månader med omställningspension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension.\ncatalog:variable_text:16160:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:boptpfr"
+fields = { "description" = "Datum från och med vilket tjänstepension avses." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen avser tjänstepension och inte sjukfall.\ncatalog:variable_text:16167:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "description" = "Individens ekonomiska bistånd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-uppdelat"
+fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:elaterhalv1mng"
+fields = { "description" = "Återbetalningsberättigad mängd, el" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16515:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:elatermng"
+fields = { "description" = "Återbetalningsberättigad mängd, el" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:elkraftavdrag-energieffektivisering-vol"
+fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elkraftavdrag-framstallning-volymer"
+fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elkraftavdrag-kemisk-reduktion-volymer"
+fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elkraftavdrag-overforing-elnatet-volymer"
+fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:etableringsersattning"
+fields = { "description" = "Utbetalt belopp i etableringsersättning till personer som är nya i Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjlighet till flera ersättningar.\ncatalog:variable_text:16653:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:etableringstillagg"
+fields = { "description" = "Utbetalt belopp i etableringstillägg till personer som är nya i Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjligheten att få tillägget.\ncatalog:variable_text:16654:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukad-mangd-bransle-punktskatter"
+fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostn-och-andra-upplupna-int-rh"
+fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:garantipension"
+fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ivard"
+fields = { "description" = "Vårdbidragets merkostnadsdel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver möjlig rätt till vårdbidrag, medan variabeln mäter merkostnadsdelen.\ncatalog:variable_text:17436:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:lff"
+fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lh"
+fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lh3"
+fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lii"
+fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-underhallsbidrag"
+fields = { "description" = "Modellberäknat underhållsbidrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden, inte observerade mottagna belopp.\ncatalog:variable_text:18038:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning"
+fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:negativt-kapitalunderlag-860"
+fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvfgco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt, återbetalningar och punktskatter" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger skattesatsen, medan den befintliga beskrivningen anger själva skatten.\ncatalog:variable_text:18322:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-tredje-dotterbolaget"
+fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-avsattningar"
+fields = { "description" = "Övriga avsättningar" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:pgarfop"
+fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:pgarop"
+fields = { "description" = "Garantipension till omställningspension, i kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp-extra-tillagg"
+fields = { "description" = "Studiehjälp, antal månader med extra tillägg." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal månader, inte ett ospecificerat bidragsbelopp.\ncatalog:variable_text:19268:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-co2-skatt-fargad-eldningsolja-jord-skogsbruk"
+fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-co2-skatt-kraftvarme-industri-utslappsratter"
+fields = { "description" = "Summa koldioxidskatt, punktskatt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen avser koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19295:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-koldioxidskatt-aterbetalning-bat-skepp"
+fields = { "description" = "Summa koldioxidskatt, punktskatt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skatt-svavel"
+fields = { "description" = "Summa svavelskatt för diverse industriella processer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition anger svavelskatt i samtliga perioder.\ncatalog:variable_text:19325:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sumpcco2sk"
+fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-nasta-ar-punkt-8"
+fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-kapital-huvudreg-p2-15"
+fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-eget-kapital-hb-kb-enskilda-naringsidkare"
+fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:v712-59"
+fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-deklarationsuppgift"
+fields = { "description" = "Vårdbidrag enligt deklarationsuppgift för vård av ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bidrag medan variabeln avser ett belopp enligt deklarationsuppgift.\ncatalog:occurrence:176069\ncatalog:variable_text:19446:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varulagrets-samlade-anskaffningsvarde"
+fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRemove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
 
 [[statement]]
 kind = "set"

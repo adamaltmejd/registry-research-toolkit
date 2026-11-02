@@ -1434,66 +1434,6 @@ evidence = "Ålder för yrkesuppgiften.\ncatalog:variable_text:13105:12053:12418
 
 [[statement]]
 kind = "set"
-subject = "fortroendevalda: Ant_barn18 @2023-01-01..2023-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda: AntalBarnUnder18_alt @2007-01-01..2007-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda: AntalBarnUnder18_alt @2011-01-01..2011-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda: ant_barn18 @2015-01-01..2015-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda: ant_barn18 @2019-01-01..2019-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda-i-regioner-landsting: Ant_barn18 @2023-01-01..2023-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda-i-regioner-landsting: AntalBarnUnder18_alt @2007-01-01..2007-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda-i-regioner-landsting: AntalBarnUnder18_alt @2011-01-01..2011-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda-i-regioner-landsting: ant_barn18 @2015-01-01..2015-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "fortroendevalda-i-regioner-landsting: ant_barn18 @2019-01-01..2019-12-31 where key = 'v29608'"
-fields = { "description" = "Antal barn under 18 år." }
-evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:k-rtb"
 fields = { "sets" = ["kommun"] }
 evidence = "The occurrence and definition explicitly describe division into municipalities (r6, r19), which fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13020\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133481\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13039"
@@ -1521,3 +1461,9 @@ kind = "set"
 subject = "var:kommunkod"
 fields = { "sets" = ["kommun"] }
 evidence = "The source definition explicitly identifies a municipality code (r15, r22), which the fixed kommun definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13026\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13044"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18"
+fields = { "description" = "Antal barn under 18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"

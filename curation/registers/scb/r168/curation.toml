@@ -452,12 +452,6 @@ fields = { "variable" = "rorelseresultat" }
 evidence = "reg_meta_build/curation/registers/scb/fek.toml:1539\n\n2026-10-13 one-register batch (#1579). Native family 168.4279 in reg_meta 0.49.0: one exported name (Rörelseresultat) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
 
 [[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: fhar002_jmf"
-fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
-
-[[statement]]
 kind = "assert"
 subject = "fek-slutdata: SNI92 @1990,1991,1992,1993,1994,1995,1996"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SNI92", "definition" = "SCB delivery report documents SNI92 for FE1990-FE1996; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity." } }
@@ -594,48 +588,6 @@ kind = "assert"
 subject = "fek-slutdata: SummaMateriellaAnlaggningstillgangar @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Summa materiella anläggningstillgångar (SummaMateriellaAnlaggningstillgangar)", "definition" = "Summa materiella anläggningstillgångar" } }
 evidence = "reg_meta_build/curation/registers/scb/fek.toml:65\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: antman"
-fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: bokslutsman"
-fields = { "description" = "Bokslutsmånad" }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: peorgnrhe"
-fields = { "description" = "Företagets löpnummer" }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: fenr"
-fields = { "description" = "Företagsenhetens löpnummer" }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform"
-fields = { "description" = "Juridisk form" }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: sektor"
-fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat"
-fields = { "description" = "Ägarkontroll" }
-evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -5304,6 +5256,54 @@ kind = "set"
 subject = "var:summa-aktier-och-andelar-i-koncern-och-intresseforetag"
 fields = { "sets" = ["aktier-och-andelar"] }
 evidence = "The definition explicitly identifies financial assets consisting of shares and interests in group and associated companies (r282).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10840\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10859"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "description" = "Ägarkontroll" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bokslut"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:bokslutsman"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:fenr"
+fields = { "description" = "Företagsenhetens löpnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "description" = "Juridisk form" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"

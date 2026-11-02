@@ -5671,66 +5671,6 @@ evidence = "Samma källkolumn är överlappande mappad till en annan variabel. F
 
 [[statement]]
 kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39986:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14b @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15b @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39989:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q18a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q19a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20b @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26a @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26b @2012-01-01..2012-12-31 where key = 'v32879'"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706"
-
-[[statement]]
-kind = "set"
 subject = "var:nuvarande-arbete-bedomning-utbildningsniva-for-utforande"
 fields = { "sets" = ["utbildningskrav-i-arbetet"] }
 evidence = "r5 and r21 assess whether the stated education level is necessary or a lower or higher level is required. This measures job-required education alongside r4.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40055\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:394873\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:394874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1695"
@@ -5746,6 +5686,75 @@ kind = "set"
 subject = "var:namnde-fler-an-ett-sprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The operational definition asks whether the respondent mentioned more than one language, establishing the language theme despite the generic background label.\ncatalog:variable:40054\ncatalog:variable_text:40054:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:onskad-utbildning-inte-deltagit-senaste-12-manader"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-antal-dagar-senaste-ar"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-antal-veckor-senaste-ar"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-timmar-totalt-inte-restid-senaste-ar"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-under-eller-utanfor-arbetstid-senaste-ar"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39989:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-viktigaste-hinder-deltagande-senaste-ar"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-huvudsaklig-anledning-senaste-aret"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-samtidigt-arbete-senaste-aret"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-yrkesrelaterad-senaste-aret"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39986:15340:15706"
 
 [[statement]]
 kind = "set"

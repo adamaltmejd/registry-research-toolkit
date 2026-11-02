@@ -2299,324 +2299,6 @@ evidence = "Kodningen avser utrikes tjänsteresa.\ncatalog:variable_text:39139:1
 
 [[statement]]
 kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2019-01-01..2019-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2020-01-01..2020-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2021-01-01..2021-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2022-01-01..2022-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2023-01-01..2023-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: AntDagSjo @2024-01-01..2024-12-31 where key = 'v41336'"
-fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
-evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2019-01-01..2019-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2020-01-01..2020-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2021-01-01..2021-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2022-01-01..2022-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2023-01-01..2023-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntAmbassadAnstSv @2024-01-01..2024-12-31 where key = 'v41328'"
-fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
-evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @1996-01-01..1996-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @1997-01-01..1997-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @1998-01-01..1998-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @1999-01-01..1999-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2000-01-01..2000-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2001-01-01..2001-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2002-01-01..2002-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2003-01-01..2003-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2004-01-01..2004-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2005-01-01..2005-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2006-01-01..2006-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2007-01-01..2007-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2008-01-01..2008-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2009-01-01..2009-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2010-01-01..2010-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2011-01-01..2011-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2012-01-01..2012-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2013-01-01..2013-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2014-01-01..2014-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2015-01-01..2015-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2016-01-01..2016-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2017-01-01..2017-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2018-01-01..2018-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2019-01-01..2019-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2020-01-01..2020-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2021-01-01..2021-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2022-01-01..2022-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2023-01-01..2023-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntPersLon @2024-01-01..2024-12-31 where key = 'v6116'"
-fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
-evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2013-01-01..2013-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2014-01-01..2014-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2015-01-01..2015-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2016-01-01..2016-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2017-01-01..2017-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntSocAvtal @2018-01-01..2018-12-31 where key = 'v30678'"
-fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
-evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2019-01-01..2019-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2020-01-01..2020-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2021-01-01..2021-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2022-01-01..2022-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2023-01-01..2023-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "foretag-kuagg: AntEjSkattEjBeskatt @2024-01-01..2024-12-31 where key = 'v41337'"
-fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
-evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "sets" = ["resekostnadsersattning"] }
 evidence = "The fixed definition explicitly includes travel compensation for residents abroad (r276). This variable measures that compensation as an aggregate amount, including housing in Sweden (r266).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39069\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/resekostnadsersattning"
@@ -2638,6 +2320,36 @@ kind = "set"
 subject = "var:utrikes"
 fields = { "sets" = ["tjansteresor"] }
 evidence = "The variable records whether a person made a foreign business trip exceeding three months (r272), within the fixed definition (r277). The domestic-trip indicator provides a supported partner (r267), independently of report-count ambiguities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39086\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39139\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/tjansteresor"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-sjoinkomst"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antperslon"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antsocavtal"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag-antejskattejbeskatt"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
 
 [[statement]]
 kind = "set"

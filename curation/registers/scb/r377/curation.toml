@@ -2259,8 +2259,9 @@ subject = "var:valbar"
 fields = { "tags" = ["education"] }
 evidence = "Indikator för valbar kurs.\ncatalog:variable_text:55583:16071:19723"
 
+
 [[statement]]
 kind = "set"
-subject = "studerande-kurser: Hemlan @2020-01-01..2024-12-31 where key = 'v7062'"
+subject = "var:folkbokforingslan"
 fields = { "description" = "Län i klartext där personen är folkbokförd." }
-evidence = "Definitionen säger kod medan källan anger län i klartext.\ncatalog:variable_text:55463:18262:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen säger kod medan källan anger län i klartext.\ncatalog:variable_text:55463:18262:20089"

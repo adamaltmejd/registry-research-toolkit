@@ -2317,210 +2317,6 @@ evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:51205
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: F5 @2013-01-01..2013-12-31 where key = 'v16740'"
-fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
-evidence = "Frågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54747:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7 @2013-01-01..2013-12-31 where key = 'v16740'"
-fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
-evidence = "Frågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54748:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_02 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom annan anställning inom högskolan under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser en annan anställning inom högskolan.\ncatalog:occurrence:511999\ncatalog:valueset:10827"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_03 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom utbildningsbidrag under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser utbildningsbidrag.\ncatalog:occurrence:512001\ncatalog:valueset:4530"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_04 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom studiemedel från CSN under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser studiemedel.\ncatalog:occurrence:512003\ncatalog:valueset:10342"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_05 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom stipendium från Sverige under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser stipendium från Sverige.\ncatalog:occurrence:512005\ncatalog:valueset:903"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_06 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom stipendium från annat land än Sverige under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser stipendium från ett annat land.\ncatalog:occurrence:512006\ncatalog:valueset:640"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_07 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan med tid för egen forskning under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512007\ncatalog:valueset:3458"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_08 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan utan tid för egen forskning under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512008\ncatalog:valueset:7987"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_09 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom egen finansiering under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser egen finansiering.\ncatalog:occurrence:512009\ncatalog:valueset:1679"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F10_10 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom annan finansiering under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser annan finansiering.\ncatalog:occurrence:512010\ncatalog:valueset:2877"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_02 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom annan anställning inom högskolan under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser en annan anställning inom högskolan.\ncatalog:occurrence:512109\ncatalog:valueset:10827"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_03 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom utbildningsbidrag under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser utbildningsbidrag.\ncatalog:occurrence:512110\ncatalog:valueset:4530"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_04 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom studiemedel från CSN under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser studiemedel.\ncatalog:occurrence:512111\ncatalog:valueset:10342"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_05 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom stipendium från Sverige under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser stipendium från Sverige.\ncatalog:occurrence:512112\ncatalog:valueset:903"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_06 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom stipendium från annat land än Sverige under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser stipendium från ett annat land.\ncatalog:occurrence:512113\ncatalog:valueset:640"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_07 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan med tid för egen forskning under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512114\ncatalog:valueset:3458"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_08 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan utan tid för egen forskning under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512115\ncatalog:valueset:7987"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_09 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom egen finansiering under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser egen finansiering.\ncatalog:occurrence:512116\ncatalog:valueset:1679"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F7_10 @2013-01-01..2013-12-31 where key = 'v30008'"
-fields = { "description" = "Beskriver försörjning genom annan finansiering under forskarstudierna." }
-evidence = "Beskrivningen anger doktorandanställning, men svaret avser annan finansiering.\ncatalog:occurrence:512117\ncatalog:valueset:2877"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_01 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54833:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_02 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54834:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_03 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54835:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_04 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54836:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_05 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54837:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F15_06 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54838:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_01 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54839:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_02 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54840:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_03 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54841:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_04 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54842:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_05 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54843:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F21_06 @2013-01-01..2013-12-31 where key = 'v30038'"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
-evidence = "Beskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54844:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F12 @2013-01-01..2013-12-31 where key = 'v30020'"
-fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop." }
-evidence = "Frågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54858:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "utlandska-doktorander: F8 @2013-01-01..2013-12-31 where key = 'v30020'"
-fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop." }
-evidence = "Frågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54859:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:diskriminerad-f20-02"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54579\ncatalog:variable_text:54579:15706:16071"
@@ -2542,6 +2338,210 @@ kind = "set"
 subject = "var:diskriminerad-f26-03"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54583\ncatalog:variable_text:54583:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f5"
+fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54747:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f7"
+fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54748:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-02"
+fields = { "description" = "Beskriver försörjning genom annan anställning inom högskolan under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser en annan anställning inom högskolan.\ncatalog:occurrence:511999\ncatalog:valueset:10827"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-03"
+fields = { "description" = "Beskriver försörjning genom utbildningsbidrag under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser utbildningsbidrag.\ncatalog:occurrence:512001\ncatalog:valueset:4530"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-04"
+fields = { "description" = "Beskriver försörjning genom studiemedel från CSN under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser studiemedel.\ncatalog:occurrence:512003\ncatalog:valueset:10342"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-05"
+fields = { "description" = "Beskriver försörjning genom stipendium från Sverige under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser stipendium från Sverige.\ncatalog:occurrence:512005\ncatalog:valueset:903"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-06"
+fields = { "description" = "Beskriver försörjning genom stipendium från annat land än Sverige under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser stipendium från ett annat land.\ncatalog:occurrence:512006\ncatalog:valueset:640"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-07"
+fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan med tid för egen forskning under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512007\ncatalog:valueset:3458"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-08"
+fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan utan tid för egen forskning under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512008\ncatalog:valueset:7987"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-09"
+fields = { "description" = "Beskriver försörjning genom egen finansiering under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser egen finansiering.\ncatalog:occurrence:512009\ncatalog:valueset:1679"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-10"
+fields = { "description" = "Beskriver försörjning genom annan finansiering under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser annan finansiering.\ncatalog:occurrence:512010\ncatalog:valueset:2877"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-02"
+fields = { "description" = "Beskriver försörjning genom annan anställning inom högskolan under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser en annan anställning inom högskolan.\ncatalog:occurrence:512109\ncatalog:valueset:10827"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-03"
+fields = { "description" = "Beskriver försörjning genom utbildningsbidrag under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser utbildningsbidrag.\ncatalog:occurrence:512110\ncatalog:valueset:4530"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-04"
+fields = { "description" = "Beskriver försörjning genom studiemedel från CSN under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser studiemedel.\ncatalog:occurrence:512111\ncatalog:valueset:10342"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-05"
+fields = { "description" = "Beskriver försörjning genom stipendium från Sverige under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser stipendium från Sverige.\ncatalog:occurrence:512112\ncatalog:valueset:903"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-06"
+fields = { "description" = "Beskriver försörjning genom stipendium från annat land än Sverige under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser stipendium från ett annat land.\ncatalog:occurrence:512113\ncatalog:valueset:640"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-07"
+fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan med tid för egen forskning under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512114\ncatalog:valueset:3458"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-08"
+fields = { "description" = "Beskriver försörjning genom anställning utanför högskolan utan tid för egen forskning under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser anställning utanför högskolan.\ncatalog:occurrence:512115\ncatalog:valueset:7987"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-09"
+fields = { "description" = "Beskriver försörjning genom egen finansiering under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser egen finansiering.\ncatalog:occurrence:512116\ncatalog:valueset:1679"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
+fields = { "description" = "Beskriver försörjning genom annan finansiering under forskarstudierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser annan finansiering.\ncatalog:occurrence:512117\ncatalog:valueset:2877"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-01"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54833:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-02"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54834:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-03"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54835:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-04"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54836:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-05"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54837:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f15-06"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54838:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-01"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54839:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-02"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54840:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-03"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54841:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-04"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54842:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-05"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54843:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-eller-missnojd-f21-06"
+fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54844:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-inkomstniva-enkatfraga-hur-latt-eller-svart-f8"
+fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54859:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-inkomstniva-f12"
+fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54858:15706:16071"
 
 [[statement]]
 kind = "set"

@@ -41,7 +41,13 @@ HEADERS = {
 # a minute), so keep each artifact's total well under it.
 EQUIVALENCE = {
     # r-show
-    "show": ("show-provider", "show-refs"),
+    "show": (
+        "show-provider",
+        "show-refs",
+        "show-variable",
+        "show-variable-evidence",
+        "provider-text-dedup",
+    ),
     "resolve": ("resolve-columns",),
     # r-schema
     "schema": ("schema-paging", "schema-errors"),
@@ -54,6 +60,7 @@ EQUIVALENCE = {
     "graph": ("graph-succession", "graph-reference-edges", "graph-errors"),
     # r-search
     "search": (
+        "occurrence-descriptions",
         "search-register",
         "search-period",
         "invalid-parameters",

@@ -2245,186 +2245,6 @@ evidence = "Variabeln anger yngsta hemmaboende barnets ålder.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2000-01-01..2000-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2001-01-01..2001-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2002-01-01..2002-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2003-01-01..2003-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2004-01-01..2004-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2005-01-01..2005-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2006-01-01..2006-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2007-01-01..2007-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2008-01-01..2008-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2009-01-01..2009-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2010-01-01..2010-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2011-01-01..2011-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2012-01-01..2012-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2013-01-01..2013-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2014-01-01..2014-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2015-01-01..2015-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2016-01-01..2016-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2017-01-01..2017-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2018-01-01..2018-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2019-01-01..2019-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2020-01-01..2020-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2021-01-01..2021-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2022-01-01..2022-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2023-01-01..2023-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: FlkatMor @2024-01-01..2024-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: fodSUMor @1999-01-01..1999-12-31 where key = 'v8077'"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Definitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: StudNivaISCED @2001-01-01..2001-12-31 where key = 'v66'"
-fields = { "description" = "Nivå på personens studier enligt ISCED." }
-evidence = "Värdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: REKBHT @2004-01-01..2004-12-31 where key = 'v1598'"
-fields = { "description" = "Markering för utbetalt rekryteringsbidrag till vuxenstuderande från CSN." }
-evidence = "Värdena och operationaliseringen anger mottagande av rekryteringsbidrag, inte ett studiebidragsbelopp.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: REKBHT @2005-01-01..2005-12-31 where key = 'v1598'"
-fields = { "description" = "Markering för utbetalt rekryteringsbidrag till vuxenstuderande från CSN." }
-evidence = "Värdena och operationaliseringen anger mottagande av rekryteringsbidrag, inte ett studiebidragsbelopp.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-studiedeltagande: REKBHT @2006-01-01..2006-12-31 where key = 'v1598'"
-fields = { "description" = "Markering för utbetalt rekryteringsbidrag till vuxenstuderande från CSN." }
-evidence = "Värdena och operationaliseringen anger mottagande av rekryteringsbidrag, inte ett studiebidragsbelopp.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:sun2000niva"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The operational definition measures highest completed education aggregated to older SUN levels, an allowed classification variant (r12, r78).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41421\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41563"
@@ -2458,6 +2278,24 @@ kind = "set"
 subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The measure aggregates the individual's highest education through the spring term into seven SUN 2000 levels, matching the group's concept (r17, r80).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41457\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41565"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-sverige-utomlands-mor"
+fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryteringsbidrag-vuxenstuderande-skattepliktig"
+fields = { "description" = "Markering för utbetalt rekryteringsbidrag till vuxenstuderande från CSN." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och operationaliseringen anger mottagande av rekryteringsbidrag, inte ett studiebidragsbelopp.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:studnivaisced"
+fields = { "description" = "Nivå på personens studier enligt ISCED." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688"
 
 [[statement]]
 kind = "set"

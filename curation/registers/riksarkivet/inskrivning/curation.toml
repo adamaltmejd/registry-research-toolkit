@@ -1225,27 +1225,29 @@ evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:858:-365:10227"
 
 [[statement]]
 kind = "set"
-subject = "inskrivning: WMAX @1969-01-01..1997-12-31 where key = 'n:wmax'"
-fields = { "description" = "Fysisk arbetsförmåga" }
-evidence = "Rättar böjningsformen utan att ändra betydelsen.\ncatalog:variable_text:763:-365:10227"
-
-[[statement]]
-kind = "set"
-subject = "inskrivning: LASV @1969-01-01..1997-12-31 where key = 'n:lasv'"
-fields = { "description" = "Läs- och skrivsvårigheter" }
-evidence = "Rättar uppenbart stavfel i samma betydelse.\ncatalog:variable_text:782:-365:10227"
-
-[[statement]]
-kind = "set"
-subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
-fields = { "description" = "Femte typhinder" }
-evidence = "Rättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The current label and definition both say Språk. The broad language theme is established even though the purpose of this language field remains unspecified.\ncatalog:variable:826\ncatalog:variable_text:826:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-arbetsformaga"
+fields = { "description" = "Fysisk arbetsförmåga" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar böjningsformen utan att ändra betydelsen.\ncatalog:variable_text:763:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:las-och-skrivsvarigheter"
+fields = { "description" = "Läs- och skrivsvårigheter" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:variable_text:782:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-5"
+fields = { "description" = "Femte typhinder" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
 
 [[statement]]
 kind = "set"

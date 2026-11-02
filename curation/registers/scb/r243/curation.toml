@@ -1346,186 +1346,6 @@ evidence = "Suffixet är en räknare som inte kommer från källkolumnen.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1973-01-01..1973-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1976-01-01..1976-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1979-01-01..1979-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1982-01-01..1982-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1985-01-01..1985-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1988-01-01..1988-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1991-01-01..1991-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1994-01-01..1994-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @1998-01-01..1998-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2002-01-01..2002-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2006-01-01..2006-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2010-01-01..2010-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2015-01-01..2015-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2018-01-01..2018-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2019-01-01..2019-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "kommunfullmaktigeval: lansnamn @2022-01-01..2022-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @1991-01-01..1991-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @1994-01-01..1994-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @1998-01-01..1998-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2002-01-01..2002-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2006-01-01..2006-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2010-01-01..2010-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2018-01-01..2018-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "riksdagsval: lansnamn @2022-01-01..2022-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "rostberattigade: Lansnamn @2002-01-01..2002-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "rostberattigade: Lansnamn @2006-01-01..2006-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "rostberattigade: Lansnamn @2010-01-01..2010-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "rostberattigade: Lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
-fields = { "description" = "Regional indelning i län, angiven som namn." }
-evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "regionfullmaktigeval: valkretsnamn @2022-01-01..2022-12-31 where key = 'v22871'"
 fields = { "variable" = "lt-valkretsnamn" }
 evidence = "Both define constituency names for seats awarded in the regional council election table, using character column valkretsnamn. County council constituency becomes regional constituency with the same operational meaning. The last earlier observation is [17532,17897), followed by [18993,19358); coverage of the gap is not asserted."
@@ -1543,6 +1363,12 @@ kind = "set"
 subject = "var:landstingsvalkrets-kod"
 fields = { "sets" = ["landstingsvalkretsnamn"] }
 evidence = "r5 and r31 explicitly define a landstingsvalkrets code, qualified by county code. This matches the fixed group's inclusion of constituency codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2994\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20635\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20919"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Regional indelning i län, angiven som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
 
 [[statement]]
 kind = "set"

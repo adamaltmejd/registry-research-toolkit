@@ -642,74 +642,9 @@ subject = "var:typkod"
 fields = { "tags" = ["property"] }
 evidence = "Typkoden beskriver taxeringsenhetens typ.\ncatalog:variable_text:6285:15706:20089"
 
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2013-01-01..2013-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
 
 [[statement]]
 kind = "set"
-subject = "bostadsbestand: Antfolkb @2014-01-01..2014-12-31 where key = 'v392'"
+subject = "var:antfolkb"
 fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2015-01-01..2015-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2016-01-01..2016-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2017-01-01..2017-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2018-01-01..2018-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2019-01-01..2019-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2020-01-01..2020-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2021-01-01..2021-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2022-01-01..2022-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2023-01-01..2023-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "bostadsbestand: Antfolkb @2024-01-01..2024-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Antalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAntalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"

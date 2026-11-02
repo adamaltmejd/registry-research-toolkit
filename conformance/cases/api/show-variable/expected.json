@@ -3,46 +3,81 @@
     "status": 200,
     "json": {
       "/data/kind": "variable",
-      "/data/fqid": "demo/reg2/inkomstbrutto",
-      "/data/name": "Inkomst efter skatt",
-      "/data/definition": null,
-      "/data/register": "demo/reg2",
-      "/data/period": {"start": "2019-01-01", "end": "2021-01-01"},
-      "/data/unit_types": [],
-      "/data/texts": [
+      "/data/fqid": "demo/descriptions/measure",
+      "/data/name": "Curated measure",
+      "/data/description": "Longitudinal supplement; from 2020 includes revised coverage.",
+      "/data/register": "demo/descriptions",
+      "/data/period": {
+        "start": "2018-01-01",
+        "end": "2023-01-01"
+      },
+      "/data/tables": [
+        "demo/descriptions/main",
+        "demo/descriptions/other"
+      ],
+      "/data/sets": [
         {
-          "period": {"start": "2019-01-01", "end": "2020-01-01"},
-          "label": "Inkomst före skatt",
-          "definition": null,
-          "operational_definition": null,
-          "unit": null
-        },
-        {
-          "period": {"start": "2020-01-01", "end": "2021-01-01"},
-          "label": "Inkomst efter skatt",
-          "definition": null,
-          "operational_definition": null,
-          "unit": null
+          "fqid": "demo/descriptions/analysis",
+          "name": "analysis"
         }
       ],
-      "/data/spellings": [
-        {"spelling": "inkomst", "kind": "delivered"},
-        {"spelling": "inkomstbrutto", "kind": "delivered"}
-      ],
-      "/data/tables": ["demo/reg2/ind"]
+      "/data/tags": [
+        {
+          "fqid": "tag/timing",
+          "name": "Timing"
+        }
+      ]
     },
     "keys": {
       "/data": [
-        "definition",
+        "description",
         "fqid",
         "kind",
         "name",
         "period",
         "register",
-        "spellings",
+        "sets",
         "tables",
-        "texts",
-        "unit_types"
+        "tags"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "demo/descriptions/comparator",
+      "/data/name": "Vikt",
+      "/data/period": {
+        "start": "2019-01-01",
+        "end": "2023-01-01"
+      },
+      "/data/source_definition": {
+        "origin": "provider",
+        "period": {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        },
+        "text": "Recent scope\nRecent computation"
+      },
+      "/data/sets": [
+        {
+          "fqid": "demo/descriptions/analysis",
+          "name": "analysis"
+        }
+      ],
+      "/data/tags": []
+    },
+    "keys": {
+      "/data": [
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register",
+        "sets",
+        "source_definition",
+        "tables",
+        "tags"
       ]
     }
   }

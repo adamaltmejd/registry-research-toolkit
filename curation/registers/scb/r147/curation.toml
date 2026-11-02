@@ -695,20 +695,9 @@ subject = "var:wkout-strl"
 fields = { "tags" = ["methods"] }
 evidence = "Id:ts angivna indelning stämmer bara med en av perioderna.\ncatalog:variable_text:21640:17713:18078\ncatalog:variable_text:21640:18809:19174"
 
-[[statement]]
-kind = "set"
-subject = "godselmedelsanvandning-2016: DjurId @2015-07-01..2016-06-30 where key = 'v37478'"
-fields = { "description" = "Identitetsnummer för djurslag." }
-evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "godselmedelsanvandning-2016: DjurId @2018-07-01..2019-06-30 where key = 'v37478'"
+subject = "var:djurid"
 fields = { "description" = "Identitetsnummer för djurslag." }
-evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "godselmedelsanvandning-2016: DjurId @2021-07-01..2022-06-30 where key = 'v37478'"
-fields = { "description" = "Identitetsnummer för djurslag." }
-evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
