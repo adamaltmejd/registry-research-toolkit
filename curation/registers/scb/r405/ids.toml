@@ -486,3 +486,5 @@ public = "barn-ulf"
 "x-mediangrupp" = ["Barn-ULF 12-18 år, 2023–: x_mediangrupp"]
 "x-stratum" = ["Barn-ULF 12-18 år, 2023–: x_stratum"]
 "x-urbgrad" = ["Barn-ULF 12-18 år, 2023–: x_urbgrad"]
+"trygghet-i-bostadsomradet-dagtid-grad" = ["Barn-ULF 12-18 år: sec_day2 @ 2016-01-01"]
+"trygghet-rasterna-grad" = ["Barn-ULF 12-18 år: sec_brea2 @ 2016-01-01"]

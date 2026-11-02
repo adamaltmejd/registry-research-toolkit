@@ -91,7 +91,7 @@ public = "lisa"
 "andel-sjukersattning-inkomstrelaterad" = ["Individer, 15 år och äldre: SjukErsInkAnd"]
 "anlaggningstillgangar" = ["Företag: Ftg_Anlaggningstillgangar"]
 "anninkf" = ["Individer, 16 år och äldre: AnnInkF"]
-"anninkf04" = ["Individer, 15 år och äldre: AnnInkF04"]
+"anninkf04" = ["Individer, 15 år och äldre: AnnInkF04 @ 2010-01-01"]
 "anninkf18" = ["Individer, 15 år och äldre: AnnInkF18"]
 "antal-anstallda" = ["Företag: Org_AntalPers @ 2022-01-01"]
 "antal-anstallda-ku" = ["Företag: Org_AntalPers @ 1990-01-01"]
@@ -850,3 +850,4 @@ public = "lisa"
 
 "naringsgren-for-statistiken-huvudsaklig-org-sni2002" = ["Företag: Org_Sni2002 @ 2002-01-01"]
 "naringsgren-for-statistiken-huvudsaklig-org-sni92" = ["Företag: Org_Sni92 @ 1990-01-01"]
+"annan-inkomst-familj-inkl-underhallsbidrag" = ["Individer, 15 år och äldre: anninkf04 @ 2015-01-01"]

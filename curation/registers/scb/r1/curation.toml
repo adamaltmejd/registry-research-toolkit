@@ -1520,11 +1520,23 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:faxnummer"
-fields = { "description" = "Faxnummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
+fields = { "description" = "Arbetsställets faxnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897\n\nIdentity review: rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kontrolluppgifter"
 fields = { "tags" = ["business"] }
 evidence = "Statements counted for legal entities (r36) and AST units (r9) form a business-register administrative measure, consistent with the dominant business theme (r104, r1) and firm/entity-count siblings (r81, r82).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:84490\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:86365\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10441\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10442\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: fax @1999-01-01..2018-12-31 where key = 'v814'"
+fields = { "variable" = "faxnummer-juridisk-enhet" }
+evidence = "rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer-juridisk-enhet"
+fields = { "description" = "Den juridiska enhetens faxnummer, hämtat från exempelvis Skatteverket eller kontakt med enheten." }
+evidence = "rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."

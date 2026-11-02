@@ -6298,8 +6298,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:lan"
-fields = { "description" = "Bostadslän" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rtb.toml:110\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Personens folkbokföringslän vid tabellens referenstidpunkt, angivet med länskod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rtb.toml:110\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
 
 [[statement]]
 kind = "set"
@@ -6366,3 +6366,183 @@ kind = "set"
 subject = "var:sekretesshushall"
 fields = { "tags" = ["family-household"] }
 evidence = "This household-table field flags whether any household member has a secrecy marker (r66, r141, r115). Its household-level administrative role supports family-household.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:431885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5417\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41733"
+
+[[statement]]
+kind = "set"
+subject = "dodfodda: lan @1961-01-01..1997-12-31 where key = 'v49'"
+fields = { "variable" = "lanmor" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lanmor"
+fields = { "description" = "Moderns folkbokföringslän vid barnets födelse, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence. Identical mother-at-birth definition on LanMor from 1998; old Lan ends 1997. Merge the disjoint spelling into existing lanmor rather than minting a duplicate identity."
+
+[[statement]]
+kind = "set"
+subject = "fodda-kvartal: lan @1961-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-fodelse" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "description" = "Länet där barnet folkbokfördes vid födelsen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "doda-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-dodsfall" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "description" = "Personens folkbokföringslän vid dödsfallet, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-civilstandsandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "description" = "Personens folkbokföringslän vid civilståndsändringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-efter-inrikes-flytt" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "description" = "Personens folkbokföringslän efter den inrikes flyttningen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal: lan @1998-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-invandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "description" = "Länet där personen folkbokfördes vid invandringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal: lan @1998-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-utvandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "description" = "Personens folkbokföringslän vid utvandringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-medborgarskapsandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "description" = "Personens folkbokföringslän vid medborgarskapsändringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."

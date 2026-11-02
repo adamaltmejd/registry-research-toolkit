@@ -7064,20 +7064,20 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:privlakant"
-fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget har." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal avtal eller läkare med avtal.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
+fields = { "description" = "Antal läkare i privat regi som landstinget har vårdavtal med. Räknar vårdgivare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal avtal eller läkare med avtal.\ncatalog:occurrence:382947\ncatalog:occurrence:383010\n\nIdentity review: SCB 2007 questionnaire, lokal-demokrati/text/ba091a4fe38bbdf8f41180869c8c98cc380ee0f9a3762772e0f222d0afda2f34.json, page 20, questions 10-12: Hur många läkare?; rel070-base/reg_meta.db 2003 and 2008 privlakant occurrences."
 
 [[statement]]
 kind = "set"
 subject = "var:privsjukhant"
-fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget har." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382949\ncatalog:occurrence:383012"
+fields = { "description" = "Antal sjukhus i privat regi som landstinget har vårdavtal med. Räknar vårdgivare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382949\ncatalog:occurrence:383012\n\nIdentity review: SCB 2007 questionnaire, lokal-demokrati/text/ba091a4fe38bbdf8f41180869c8c98cc380ee0f9a3762772e0f222d0afda2f34.json, page 20, questions 10-12: Hur många sjukhus?; rel070-base/reg_meta.db 2003 and 2008 privsjukhant occurrences."
 
 [[statement]]
 kind = "set"
 subject = "var:privvardcant"
-fields = { "description" = "Antal vårdavtal med vårdcentraler i privat regi som landstinget har." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014"
+fields = { "description" = "Antal vårdcentraler i privat regi som landstinget har vårdavtal med. Räknar vårdgivare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014\n\nIdentity review: SCB 2007 questionnaire, lokal-demokrati/text/ba091a4fe38bbdf8f41180869c8c98cc380ee0f9a3762772e0f222d0afda2f34.json, page 20, questions 10-12: Hur många vårdcentraler?; rel070-base/reg_meta.db 2003 and 2008 privvardcant occurrences."
 
 [[statement]]
 kind = "set"

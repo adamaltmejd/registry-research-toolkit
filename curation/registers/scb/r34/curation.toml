@@ -17311,8 +17311,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:anninkf04"
-fields = { "description" = "Summa Annan inkomst för familj" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A737\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Summa annan inkomst för familjen: särskilt pensionstillägg, inkomst-, tilläggs-, premie- och garantipension, efterlevandeförmån, tjänstepension, handikappersättning, underhållsstöd eller bidragsförskott, individualiserat socialbidrag, bostadsbidrag och bostadstillägg, privat pensionsförsäkring, livränta och arbetsskadelivränta. Beloppet anges i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A737\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nIdentity review: rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
 
 [[statement]]
 kind = "set"
@@ -17929,8 +17929,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:bosttillhb"
-fields = { "description" = "Bostadstillägg för hushållet (Bostadstillägg och Särskilt bostadstillägg för pensionärer, Bostadstillägg och Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A729\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Bostadshushållets sammanlagda bostadstillägg och särskilda bostadstillägg för pensionärer och personer med sjuk- och aktivitetsersättning. Beloppet anges i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A729\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nIdentity review: SCB LISA variable inventory 2011-2024 BostTillHB: pensioners and sickness/activity compensation; id-docs/docs-vars/acquired/lisa/text/c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162.json; rel070-base/reg_meta.db 374697, 375094, 375501, 375897."
 
 [[statement]]
 kind = "set"
@@ -19855,14 +19855,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-foretag-sni2007g"
-fields = { "description" = "Näringsgren, SNI2007, grov nivå (15 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:901\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Företagets huvudsakliga näringsgren enligt SNI 2007, grupperad i 15 grupper. Näringsgrenen avser den juridiska enheten och hämtas från företagsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:901\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: SCB LISA inventory: Org_Sni2007G enterprise variable, 15 groups, 2008-2024; id-docs/docs-vars/acquired/lisa/text/c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162.json; rel070-base/reg_meta.db foretag table, same spelling/key/value set across coverage."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-foretag-sni2007u"
-fields = { "description" = "Näringsgren, SNI2007, utökad nivå (51 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:907\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Företagets huvudsakliga näringsgren enligt SNI 2007, grupperad i 51 grupper. Näringsgrenen avser den juridiska enheten och hämtas från företagsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:907\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: SCB LISA inventory: Org_Sni2007U enterprise variable, 51 groups, 2008-2024; id-docs/docs-vars/acquired/lisa/text/c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162.json; rel070-base/reg_meta.db foretag table, same spelling/key/value set across coverage."
 
 [[statement]]
 kind = "set"
@@ -21609,3 +21609,35 @@ kind = "set"
 subject = "var:utbblan"
 fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
 evidence = "r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components. | r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components. | r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38034\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/ersattning-vid-arbetsmarknadsatgard"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: anninkf04 @2015-01-01..2017-12-31 where key = 'v37046'"
+fields = { "variable" = "annan-inkomst-familj-inkl-underhallsbidrag" }
+evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-inkomst-familj-inkl-underhallsbidrag"
+fields = { "description" = "Summa annan inkomst för familjen: särskilt pensionstillägg, inkomst-, tilläggs-, premie- och garantipension, efterlevandeförmån, tjänstepension, handikappersättning, underhållsstöd eller bidragsförskott, individualiserat socialbidrag, bostadsbidrag och bostadstillägg, privat pensionsförsäkring, livränta och arbetsskadelivränta. Även underhållsbidrag ingår. Beloppet anges i hundratal kronor." }
+evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-inkomst-familj-inkl-underhallsbidrag"
+fields = { "sets" = ["annan-inkomst"] }
+evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-inkomst-familj-inkl-underhallsbidrag"
+fields = { "tags" = ["income"] }
+evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
+
+[[statement]]
+kind = "link"
+subject = "var:annan-inkomst-familj-inkl-underhallsbidrag"
+relation = "continues"
+object = "scb/lisa/anninkf04"
+at = "2015-01-01.."
+evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
