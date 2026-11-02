@@ -875,3 +875,21 @@ kind = "set"
 subject = "var:motoreffektnorm-i-kw"
 fields = { "description" = "Normering för motoreffekt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2000-01-01..2000-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2001-01-01..2001-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2002-01-01..2002-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"

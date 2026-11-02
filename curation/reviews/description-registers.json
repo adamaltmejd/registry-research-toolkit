@@ -184,5 +184,7 @@
     "sos/par",
     "sos/sol",
     "sos/thr"
-  ]
+  ],
+  "merged_base": "e14921f72de9a32d5200ae3af0ca895727cc4366",
+  "upstream_label_setters_preserved": 48
 }

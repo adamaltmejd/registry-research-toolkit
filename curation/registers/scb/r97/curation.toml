@@ -26122,3 +26122,33 @@ kind = "set"
 subject = "var:vardnadsbidrag-uppdelat-pa-foraldrar"
 fields = { "description" = "Årsbeloppet för hushållets vårdnadsbidrag, lika uppdelat mellan föräldrarna under undersökningsåret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger en lika uppdelning, inte observerat mottagande per förälder.\ncatalog:variable_text:25704:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "individregister: ISU721 @1975-01-01..1975-12-31 where key = 'v42825'"
+fields = { "label" = "Förvärvsinkomst" }
+evidence = "Part of #2040. scb/hek/forvarvsinkomt: Restore missing s in Förvärvsinkomt; preserve absence of final full stop. Reviewed occurrence label: Förvärvsinkomt"
+
+[[statement]]
+kind = "set"
+subject = "individregister: IFA2081 @1975-01-01..1975-12-31 where key = 'v43012'"
+fields = { "label" = "Underskott av fritidsfastighet" }
+evidence = "Part of #2040. scb/hek/ifa208: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+
+[[statement]]
+kind = "set"
+subject = "individregister: IFA2082 @1975-01-01..1975-12-31 where key = 'v43012'"
+fields = { "label" = "Underskott av fritidsfastighet" }
+evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2082: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+
+[[statement]]
+kind = "set"
+subject = "individregister: IFA2083 @1975-01-01..1975-12-31 where key = 'v43012'"
+fields = { "label" = "Underskott av fritidsfastighet" }
+evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2083: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+
+[[statement]]
+kind = "set"
+subject = "individregister: IJB1442 @1975-01-01..1975-12-31 where key = 'v43054'"
+fields = { "label" = "Upplåtelse av avverkningsrätt jordbruksfastighet" }
+evidence = "Part of #2040. scb/hek/upplatesle-av-avverkninsgratt-jordbruksfastighet-ijb1442: Correct Upplåtesle and avverkninsgrätt only; retain original wording without adding på. Reviewed occurrence label: Upplåtesle av avverkninsgrätt jordbruksfastighet"

@@ -11280,3 +11280,9 @@ kind = "set"
 subject = "var:nojdhet-med-utbildningens-fardighetstraning-f19-09"
 fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr98f @2000-03-01..2000-03-31 where key = 'v41838'"
+fields = { "label" = "Huvudsaklig sysselsättning juni 1998" }
+evidence = "Part of #2040. scb/intradet-pa-arbetsmarknaden/huvudsaklig-sysselsattning-juni-1998: Restore missing separator between month and year in juni1998. Reviewed occurrence label: Huvudsaklig sysselsättning juni1998"

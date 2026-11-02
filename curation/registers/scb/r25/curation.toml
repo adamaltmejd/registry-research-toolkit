@@ -22923,3 +22923,9 @@ kind = "set"
 subject = "var:vbbel"
 fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32068:7305:7670\ncatalog:variable_text:32068:7670:8401"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @1999-01-01..1999-12-31 where key = 'v4892'"
+fields = { "label" = "Realisationsförlust, räntefonder" }
+evidence = "Part of #2040. scb/iot/kapitalforlust-rantefond: Correct Realistonsförlust → Realisationsförlust only in the affected annual occurrence; preserve later source labels and punctuation. Reviewed occurrence label: Realistonsförlust, räntefonder"

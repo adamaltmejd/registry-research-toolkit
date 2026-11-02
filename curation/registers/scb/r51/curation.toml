@@ -1366,3 +1366,15 @@ kind = "set"
 subject = "var:sjuklon-forsta-period"
 fields = { "description" = "Sjuklön för första perioden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2016-01-01..2016-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2017-01-01..2017-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"
