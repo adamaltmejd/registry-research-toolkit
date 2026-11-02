@@ -339,13 +339,13 @@ Accepting one requires reviewed curation and a premise lock.
   variables. `notice` resolves to a finding on its selected subject. The emitter
   serializes these resolved facts and never derives them from provenance. Occurrence
   descriptions live in the existing `override` table and are returned with segment
-  evidence; they do not replace definitions or operational definitions. No field gets a
-  second home. A value-set override chooses the occurrence's own set while retaining its
-  source population alternatives as evidence. Unsupported entity/field combinations are
-  located refusals. Type corrections that change the family participate in F6 and
-  ambiguity resolution; length corrections do not. Corrected conflict markers clear
-  while the original premises remain evidence. Format is carried and published without
-  changing agreement or F1 findings.
+  evidence and variable `show` summaries; they do not replace definitions or operational
+  definitions. No field gets a second home. A value-set override chooses the
+  occurrence's own set while retaining its source population alternatives as evidence.
+  Unsupported entity/field combinations are located refusals. Type corrections that
+  change the family participate in F6 and ambiguity resolution; length corrections do
+  not. Corrected conflict markers clear while the original premises remain evidence.
+  Format is carried and published without changing agreement or F1 findings.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -936,6 +936,15 @@ Rules:
 - **Few, coarse MCP tools**, about ten, because every tool's schema occupies agent
   context. Fine-grained HTTP routes map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
+
+**Variable descriptions (#2039).** `show` returns `descriptions`, separate from
+`definition` and `texts`: each `{table, description, periods}` groups one exact text in
+one table. Only nonempty descriptions of used occurrences contribute. Equal texts merge
+overlapping or adjacent periods, retaining gaps; differing concurrent texts remain
+separate. Entries sort by table FQID then description, periods by start. No described
+occurrence means `[]`. `show` continues to summarize the whole variable without a period
+parameter; callers can read each description's periods rather than receiving an
+arbitrary latest winner. Detailed provenance remains in `segments(evidence=true)`.
 
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
 agents need no install and no 1.2 GB download. `/mcp` and every POST share one rate
@@ -2131,6 +2140,35 @@ A call returns one ranked list.
    in pid order, `limit` ignored; `registers: []` when none matches. Without it, `limit`
    adds `name` and the first `limit` matched variables in pid order. With neither,
    counts only. A key a mode does not list is omitted, never `null`.
+
+**Occurrence descriptions (#2039).** The builder appends each variable's distinct,
+nonempty used-occurrence descriptions to its FTS `body`, after definitions and
+operational definitions, deduplicating equal text. They participate in the existing
+low-weight body rank and in facets; search hits keep their definition field and `show`
+supplies the descriptions with their table and periods. The period filter still selects
+the variable's coverage hull, not the date of the matching text (as for historical
+definitions). A match therefore does not assert that its wording applies throughout the
+returned hull. No reader-side scan, second index or schema change is needed. Existing
+catalogs gain these matches only after a coordinated rebuild.
+
+Measurement on 2026-11-02, `labelfix2-pr-ev/reg_meta.db` (1,231,941,632 bytes),
+read-only in place: 22,984 description overrides, 22,539 on used occurrences. The
+indexed occurrence/override lookup over 1,970 described variables took median 0.052 ms,
+p95 0.242 ms after clearing SQLite's connection cache. HTTP with the dev binary, 100
+first requests for the most-described variables: baseline/new p95 2.86/4.56 ms; maximum
+response 15,510/17,684 bytes. Repeat requests for the largest occurrence count were p95
+3.66/5.12 ms, response 3,253/3,980 bytes. These are fresh SQLite connections with an
+uncontrolled, warm OS cache, not a cold-disk or production latency guarantee.
+
+One disposable copy measured the FTS change without a real-seed build: reconstruct
+affected rows from their indexed token positions, append distinct descriptions, and
+optimize. 1,779 variable rows gained 111,398 UTF-8 bytes of text after deduplication
+against definitions/opdefs. FTS pages grew 74,018,816 → 74,100,736 bytes (80 KiB,
+0.11%); the unvacuumed probe file grew 5,054,464 bytes including free pages, not a
+prediction of packed build size. Across 50 variable searches (ten each of `inkomst`,
+`barn`, `utbildning`, `pension`, `arbete`), baseline/probe p95 was 14.59/14.14 ms; local
+scheduling noise prevents a speedup claim. The copy was deleted immediately. The
+coordinator's real build remains the check of final artifact size and indexing.
 
 `resolve` is different: exact `fold_identity` lookup of delivered column names, no
 full-text fallback and no scoring. It maps known headers; it is not discovery.

@@ -34,6 +34,7 @@
     "keys": {
       "/data": [
         "definition",
+        "descriptions",
         "fqid",
         "kind",
         "name",

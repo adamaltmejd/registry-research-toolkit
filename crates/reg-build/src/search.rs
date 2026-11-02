@@ -4,6 +4,8 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use reg_resolve::provenance::Subject;
+
 use crate::emit::{self, Catalog};
 
 /// One searchable entity, before its id is known.
@@ -35,11 +37,33 @@ pub struct Ids<'a> {
 // quality on the real catalog and raise or drop the cap if long documents rank badly.
 const DOC_BODY_CHARS: usize = 2000;
 
+fn occurrence_descriptions(catalog: &Catalog) -> BTreeMap<(usize, usize), BTreeSet<&str>> {
+    let mut descriptions = BTreeMap::<_, BTreeSet<&str>>::new();
+    for value in &catalog.provenance.values {
+        if value.field == "description"
+            && let Subject::Occurrence(ri, oi) = &value.subject
+            && let Some(description) = value.value.as_deref().filter(|d| !d.is_empty())
+        {
+            let occurrence = &catalog.registers[*ri].occurrences[*oi];
+            if occurrence.status == "used"
+                && let Some(variable) = occurrence.variable
+            {
+                descriptions
+                    .entry((*ri, variable))
+                    .or_default()
+                    .insert(description);
+            }
+        }
+    }
+    descriptions
+}
+
 /// Every item, in `sort_key` order. The id of an item is its position, from 1.
 ///
 /// # Errors
 /// Two items with the same `sort_key`.
 pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
+    let descriptions = occurrence_descriptions(catalog);
     let mut items = Vec::new();
     for (ri, r) in catalog.registers.iter().enumerate() {
         let reg_pid = emit::pid_of_register(r);
@@ -95,6 +119,11 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                     {
                         definitions.push(d);
                     }
+                }
+            }
+            for description in descriptions.get(&(ri, v)).into_iter().flatten() {
+                if !definitions.contains(description) {
+                    definitions.push(description);
                 }
             }
             items.push(Item {

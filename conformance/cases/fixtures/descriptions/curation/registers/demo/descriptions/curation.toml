@@ -1,0 +1,23 @@
+[[statement]]
+kind = "set"
+subject = "main: Measure @2018..2019"
+fields.description = "Historical supplement"
+evidence = "Synthetic adjacent occurrences share supplementary text."
+
+[[statement]]
+kind = "set"
+subject = "main: Measure @2020"
+fields.description = "Revised supplement"
+evidence = "Synthetic description changes without replacing source definitions."
+
+[[statement]]
+kind = "set"
+subject = "main: Measure @2022"
+fields.description = "Historical supplement"
+evidence = "Synthetic repeated text after a gap."
+
+[[statement]]
+kind = "set"
+subject = "other: Measure @2019"
+fields.description = "Concurrent supplement"
+evidence = "Synthetic concurrent tables disagree."

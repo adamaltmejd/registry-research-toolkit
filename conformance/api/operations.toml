@@ -95,7 +95,8 @@ errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The summary for any ref; no ref is the catalog root. `class` is the one \
 reserved first segment. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
-(`coverage`)."""
+(`coverage`). Variable `descriptions` groups nonempty used-occurrence text by table \
+and exact text, with merged applicable periods; definitions remain separate."""
 
 [[operation]]
 name = "segments"

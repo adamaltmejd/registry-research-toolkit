@@ -1,0 +1,74 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/definition": "Source definition",
+      "/data/texts/0/operational_definition": "Source procedure",
+      "/data/descriptions": [
+        {
+          "table": "demo/descriptions/main",
+          "description": "Historical supplement",
+          "periods": [
+            {
+              "start": "2018-01-01",
+              "end": "2020-01-01"
+            },
+            {
+              "start": "2022-01-01",
+              "end": "2023-01-01"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/main",
+          "description": "Revised supplement",
+          "periods": [
+            {
+              "start": "2020-01-01",
+              "end": "2021-01-01"
+            }
+          ]
+        },
+        {
+          "table": "demo/descriptions/other",
+          "description": "Concurrent supplement",
+          "periods": [
+            {
+              "start": "2019-01-01",
+              "end": "2020-01-01"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/measure"
+      ],
+      "/data/items/0/definition": "Source definition",
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/descriptions/measure"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {
+          "fqid": "demo/descriptions",
+          "variable_matches": 1
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,8 @@
+{"kind":"register","provider":"demo","register":"descriptions","name":"Descriptions"}
+{"kind":"table","provider":"demo","register":"descriptions","table":"main","name":"Main"}
+{"kind":"table","provider":"demo","register":"descriptions","table":"other","name":"Other"}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Measure","source_key":"m","from":"2018-01-01","to":"2018-12-31","label":"Measure","definition":"Source definition","operational_definition":"Source procedure"}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Measure","source_key":"m","from":"2019-01-01","to":"2019-12-31","label":"Measure","definition":"Source definition","operational_definition":"Source procedure"}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Measure","source_key":"m","from":"2020-01-01","to":"2020-12-31","label":"Measure","definition":"Source definition","operational_definition":"Source procedure"}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Measure","source_key":"m","from":"2022-01-01","to":"2022-12-31","label":"Measure","definition":"Source definition","operational_definition":"Source procedure"}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"other","column":"Measure","source_key":"m","from":"2019-01-01","to":"2019-12-31","label":"Measure","definition":"Source definition","operational_definition":"Source procedure"}

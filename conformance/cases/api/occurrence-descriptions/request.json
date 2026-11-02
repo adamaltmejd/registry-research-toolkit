@@ -1,0 +1,34 @@
+{
+  "note": "Fails if occurrence descriptions replace definitions, lose concurrent table-specific texts or period gaps, fail to merge adjacent equal texts, or are omitted from compiled variable search and its facets. Expected texts and periods come from the descriptions source fixture and curation.",
+  "fixture": "descriptions",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/demo/descriptions/measure"
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Historical",
+        "type": "variable"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Concurrent",
+        "type": "variable",
+        "period": "2019"
+      }
+    },
+    {
+      "operation": "search_facets",
+      "path": "/api/search/facets",
+      "query": {
+        "q": "Revised"
+      }
+    }
+  ]
+}
