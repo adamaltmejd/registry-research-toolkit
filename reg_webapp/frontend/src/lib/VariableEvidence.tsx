@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   Button,
   Disclosure,
@@ -9,6 +10,7 @@ import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
 import { catalogPeriodLabel } from "./catalog_period";
+import { renderIntervals } from "./reg_core";
 import { ColumnChip } from "./ui/ColumnChip";
 import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
@@ -127,7 +129,7 @@ function visibleText(value: string | null): string | null {
 function statementValue(
   statement: StatementGroup,
   node: VariableShow,
-): string | null {
+): ReactNode {
   if (statement.value === null) return "Not stated";
   let value: unknown = statement.value;
   try {
@@ -137,24 +139,35 @@ function statementValue(
   }
   if (Array.isArray(value)) {
     if (value.length === 0) return "None";
+    // Statement endpoints are inclusive resolver intervals, unlike API Periods.
+    if (
+      statement.field === "period" &&
+      value.length === 2 &&
+      value.every((endpoint) => typeof endpoint === "string")
+    ) {
+      return renderIntervals([[value[0], value[1]]]);
+    }
     const members =
       statement.field === "tags"
         ? node.tags
         : statement.field === "sets"
           ? node.sets
           : [];
-    return (
-      value
-        .map(
-          (item) =>
-            members.find(
-              (member) =>
-                member.fqid === item || member.fqid.split("/").at(-1) === item,
-            )?.name,
-        )
-        .filter(Boolean)
-        .join(", ") || "Not stated"
-    );
+    const text = value
+      .map((item) => {
+        const name = members.find(
+          (member) =>
+            member.fqid === item || member.fqid.split("/").at(-1) === item,
+        )?.name;
+        if (name) return name;
+        return typeof item === "string"
+          ? item === ""
+            ? '""'
+            : item
+          : JSON.stringify(item);
+      })
+      .join(", ");
+    return statement.field === "sentinels" ? <code>{text}</code> : text;
   }
   if (typeof value === "boolean") return yesNo(value);
   if (typeof value === "number") return String(value);
@@ -204,7 +217,7 @@ function EvidenceSource({
           {
             label: "Spelling",
             value: source.spelling ? (
-              <ColumnChip name={source.spelling.toUpperCase()} />
+              <ColumnChip name={source.spelling} />
             ) : (
               "Not stated"
             ),
@@ -277,10 +290,7 @@ export function EvidenceContent({
   const spellings = new Map<string, string[]>();
   for (const spelling of evidence.spellings) {
     const kind = catalogWords(spelling.kind);
-    spellings.set(kind, [
-      ...(spellings.get(kind) ?? []),
-      spelling.spelling.toUpperCase(),
-    ]);
+    spellings.set(kind, [...(spellings.get(kind) ?? []), spelling.spelling]);
   }
   return (
     <div className={evidenceStyles.content}>
