@@ -83,7 +83,7 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
                 |r| r.get(0),
             )
             .map_err(|e| e.to_string())?;
-        let recorded: Vec<input::Key> = serde_json::from_str(&recorded)
+        let recorded: Vec<input::RowKey> = serde_json::from_str(&recorded)
             .map_err(|_| format!("{location}: holdings_row_key_invalid"))?;
         if required_keys.get(&table.name) != Some(&recorded) {
             return Err(format!("{location}: holdings_row_key_source_mismatch"));
@@ -98,7 +98,7 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
             .prepare(
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
             EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
-              OR (c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id)
+              OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0)
                   AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column x ON x.id=m.column_id WHERE x.holding_id=c.holding_id))
             FROM holding_column c WHERE c.holding_id=?",
             )
@@ -404,14 +404,35 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
     super::keys::verify(&db, &base)?;
     // Same logical cell in two columns needs an explicit partition, a projection,
     // or a carried key. Shared spelling and labels alone never authorize possession.
-    no_rows(&db,"SELECT 1 FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
+    let mut duplicates = db.prepare(
+        "SELECT ha.id,hb.id,a.table_pid,a.variable_pid,max(a.start,b.start),min(a.end,b.end) FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
       AND a.start<b.end AND b.start<a.end JOIN holding_column ca ON ca.id=a.column_id JOIN holding_column cb ON cb.id=b.column_id
       JOIN holding_table ha ON ha.id=ca.holding_id JOIN holding_table hb ON hb.id=cb.holding_id
       WHERE a.carried=0 AND b.carried=0 AND NOT(ha.id!=hb.id AND ha.partition IS NOT NULL AND hb.partition IS NOT NULL AND ha.partition!=hb.partition)
-      AND ha.projection_of IS NOT hb.id AND hb.projection_of IS NOT ha.id",
-      "inventory_cell_conflict: undeclared duplicate physical placement")?;
+      AND ha.projection_of IS NOT hb.id AND hb.projection_of IS NOT ha.id"
+    ).map_err(|e| e.to_string())?;
+    let mut conflicts = BTreeSet::new();
+    for row in duplicates
+        .query_map([], |r| {
+            Ok((
+                r.get::<_, i64>(0)?,
+                r.get::<_, i64>(1)?,
+                r.get::<_, String>(2)?,
+                r.get::<_, String>(3)?,
+                r.get::<_, i64>(4)?,
+                r.get::<_, i64>(5)?,
+            ))
+        })
+        .map_err(|e| e.to_string())?
+    {
+        let (left, right, table, variable, start, end) = row.map_err(|e| e.to_string())?;
+        conflicts.insert(format!("holdings:tables={left},{right}:route={table}:variable={variable}:period={start}..{end}: inventory_cell_conflict: undeclared duplicate physical placement"));
+    }
+    if !conflicts.is_empty() {
+        return Err(conflicts.into_iter().collect::<Vec<_>>().join("\n"));
+    }
     let mut children=db.prepare("SELECT h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m
-      JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id WHERE h.projection_of IS NOT NULL")
+      JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id WHERE h.projection_of IS NOT NULL AND m.carried=0")
         .map_err(|e|e.to_string())?;
     let mut children = children.query([]).map_err(|e| e.to_string())?;
     while let Some(child) = children.next().map_err(|e| e.to_string())? {

@@ -49,7 +49,7 @@ fn validate(
     db: &Connection,
     base: &Connection,
     holding: i64,
-    key: &input::Key,
+    key: &input::RowKey,
 ) -> Result<(), String> {
     let invalid = || {
         format!(
@@ -116,7 +116,7 @@ fn validate(
 
 #[allow(clippy::too_many_lines)]
 pub(super) fn verify(db: &Connection, base: &Connection) -> Result<(), String> {
-    let mut declarations = BTreeMap::<i64, Vec<input::Key>>::new();
+    let mut declarations = BTreeMap::<i64, Vec<input::RowKey>>::new();
     let mut tables = db
         .prepare("SELECT id,key_requirements FROM holding_table")
         .map_err(|e| e.to_string())?;
@@ -125,21 +125,25 @@ pub(super) fn verify(db: &Connection, base: &Connection) -> Result<(), String> {
         .map_err(|e| e.to_string())?
     {
         let (holding, json) = row.map_err(|e| e.to_string())?;
-        let keys: Vec<input::Key> =
+        let keys: Vec<input::RowKey> =
             serde_json::from_str(&json).map_err(|_| "holdings_row_key_invalid")?;
         for key in &keys {
             validate(db, base, holding, key)?;
         }
         declarations.insert(holding, keys);
     }
-    let mut held = BTreeMap::<(i64, String), Vec<Span>>::new();
-    let mut query = db.prepare("SELECT c.holding_id,m.variable_pid,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id").map_err(|e| e.to_string())?;
+    let mut held = BTreeMap::<(i64, String), Vec<(i64, Span)>>::new();
+    let mut query = db.prepare("SELECT c.holding_id,m.variable_pid,c.id,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id").map_err(|e| e.to_string())?;
     for row in query
-        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))
+        .query_map([], |r| {
+            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
+        })
         .map_err(|e| e.to_string())?
     {
-        let (holding, pid, start, end) = row.map_err(|e| e.to_string())?;
-        held.entry((holding, pid)).or_default().push((start, end));
+        let (holding, pid, column, start, end) = row.map_err(|e| e.to_string())?;
+        held.entry((holding, pid))
+            .or_default()
+            .push((column, (start, end)));
     }
     let mut failures = BTreeSet::new();
     let mut mappings = db.prepare("SELECT c.holding_id,m.table_pid,m.variable_pid,m.start,m.end,m.carried FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id ORDER BY m.id").map_err(|e| e.to_string())?;
@@ -201,11 +205,28 @@ pub(super) fn verify(db: &Connection, base: &Connection) -> Result<(), String> {
             }
             for pid in key.entity.iter().chain(key.time.iter()) {
                 let available = held.get(&(holding, pid.clone()));
-                if available.is_none_or(|s| !compile::covered(&[span], s)) {
+                let bindings = available.map_or(&[][..], Vec::as_slice);
+                let intervals: Vec<_> = bindings.iter().map(|(_, s)| *s).collect();
+                if !compile::covered(&[span], &intervals) {
                     failures.insert(format!(
                         "holdings:table={holding}: key={pid}: period={}..{}: holdings_key_missing",
                         span.0, span.1
                     ));
+                }
+                // simplify: pairwise within one physical key; index if a key exceeds 1,000 bindings.
+                for (column, interval) in bindings {
+                    if bindings.iter().any(|(other, reach)| {
+                        other != column
+                            && !compile::overlap(
+                                &[span],
+                                &compile::overlap(&[*interval], &[*reach]),
+                            )
+                            .is_empty()
+                    }) {
+                        failures.insert(format!(
+                            "holdings:table={holding}: key={pid}: holdings_key_ambiguous"
+                        ));
+                    }
                 }
             }
         }

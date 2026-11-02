@@ -22,6 +22,13 @@ locator = "fixture:second-owner-association"
 [[table.key]]
 entity = ["demo/owners/id"]
 time = []
+period = "2017..2018"
+locator = "fixture:declared-entity-time-key"
+
+[[table.key]]
+entity = ["demo/owners/id"]
+time = []
+period = "2019"
 locator = "fixture:declared-entity-time-key"
 
 [[table]]
@@ -126,7 +133,7 @@ locator = "fixture:key-only-projection"
 
 
 [[table.key]]
-entity = ["demo/projected/id"]
+entity = ["demo/projected/id", "demo/projected/child-id"]
 time = []
 locator = "fixture:declared-entity-time-key"
 

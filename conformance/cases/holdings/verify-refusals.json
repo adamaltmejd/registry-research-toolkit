@@ -15,7 +15,7 @@
     "location": "census:row=10"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,locator) SELECT id,'Invented',10,'int','candidate','fixture:invented' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Not documented','fixture:invented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='21' WHERE key='census_columns'",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,locator) SELECT id,'Invented',10,'int','candidate','fixture:invented' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Not documented','fixture:invented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='census_columns'",
     "code": "holdings_census_column_extra",
     "location": "column=10"
   },
@@ -38,5 +38,15 @@
     "sql": "UPDATE holding_table SET period_encoding='date' WHERE physical_name='Pool'",
     "code": "holdings_period_source_mismatch",
     "location": "census:row=3"
+  },
+  {
+    "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,locator) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,'row_key',1,'fixture:competing-key-copy' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
+    "code": "holdings_key_ambiguous",
+    "location": "key=demo/held/id:"
+  },
+  {
+    "sql": "UPDATE holding_table SET partition=NULL WHERE physical_name='Part B'",
+    "code": "inventory_cell_conflict",
+    "location": "holdings:tables="
   }
 ]

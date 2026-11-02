@@ -311,7 +311,7 @@ fn placements(
     candidates: &[Candidate],
     owed: &[Span],
     locator: &str,
-    keys: &[input::Key],
+    keys: &[input::RowKey],
 ) -> Result<Vec<Segment>, String> {
     let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
     let mut withheld = BTreeSet::new();
@@ -837,34 +837,20 @@ pub(super) fn write(
         })();
         result.map_err(|error| format!("holdings:table={id}: {error}"))?;
     }
-    let copied_keys = {
-        let mut query = tx
-            .prepare(
-                "SELECT m.id,h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m
-          JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id
-          WHERE h.projection_of IS NOT NULL AND EXISTS (SELECT 1 FROM json_each(h.key_requirements) k WHERE EXISTS (SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid) OR EXISTS (SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid)) ORDER BY m.id",
-            )
-            .map_err(|e| e.to_string())?;
-        query
-            .query_map([], |r| {
-                Ok((
-                    r.get::<_, i64>(0)?,
-                    r.get::<_, i64>(1)?,
-                    r.get::<_, String>(2)?,
-                    r.get::<_, i64>(3)?,
-                    r.get::<_, i64>(4)?,
-                ))
-            })
-            .map_err(|e| e.to_string())?
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(|e| e.to_string())?
-    };
-    for (mapping, parent, variable, start, end) in copied_keys {
-        if covered(&[(start, end)], &held_intervals(&tx, parent, &variable)?) {
-            tx.execute("UPDATE holding_mapping SET carried=1 WHERE id=?", [mapping])
-                .map_err(|e| e.to_string())?;
-        }
-    }
+    // A projection may introduce its own entity components (recipient × child).
+    // These held keys serve no projected data cell and need no parent copy.
+    tx.execute(
+        "UPDATE holding_mapping SET carried=1 WHERE id IN (
+        SELECT m.id FROM holding_mapping m
+        JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id
+        WHERE h.projection_of IS NOT NULL AND EXISTS (
+            SELECT 1 FROM json_each(h.key_requirements) k WHERE
+            EXISTS (SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
+            OR EXISTS (SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid)
+        ))",
+        [],
+    )
+    .map_err(|e| e.to_string())?;
     tx.commit().map_err(|e| e.to_string())?;
     Ok((count_tables, count_columns, mapped, unmatched))
 }

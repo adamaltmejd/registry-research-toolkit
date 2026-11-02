@@ -301,12 +301,19 @@ fn held(
          FROM holding_mapping m
            JOIN holding_column c ON c.id = m.column_id
            JOIN holding_table t ON t.id = c.holding_id
-         WHERE m.table_pid = ?1 AND (?2 IS NULL OR m.variable_pid = ?2)
-         ORDER BY m.variable_pid, m.start, m.end, t.physical_name, c.ordinal",
+         WHERE (?1 IS NULL OR m.table_pid = ?1) AND (?2 IS NULL OR m.variable_pid = ?2)
+         ORDER BY m.table_pid, m.variable_pid, m.start, m.end, t.physical_name, c.ordinal",
     )?;
-    for table in tables {
+    // A steward occurrence can attest a canonical variable in a table whose
+    // reference metadata omits that membership; global coverage stays unchanged.
+    let routes: Vec<_> = if kind == "variable" {
+        vec![None]
+    } else {
+        tables.iter().map(|t| Some(t.fqid.as_str())).collect()
+    };
+    for table in routes {
         let variable = (kind == "variable").then_some(pid);
-        let rows = query.query_map(rusqlite::params![table.fqid, variable], |r| {
+        let rows = query.query_map(rusqlite::params![table, variable], |r| {
             Ok(HeldPlacement {
                 table: r.get(0)?,
                 variable: r.get(1)?,

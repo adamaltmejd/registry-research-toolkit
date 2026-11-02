@@ -74,13 +74,13 @@ pub(super) struct Table {
     #[serde(default)]
     pub column: Vec<Column>,
     #[serde(default)]
-    pub key: Vec<Key>,
+    pub key: Vec<RowKey>,
 }
 
 /// Reviewed entity/time components of a served shape, not every identifier.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
-pub(super) struct Key {
+pub(super) struct RowKey {
     pub entity: Vec<String>,
     #[serde(default)]
     pub time: Vec<String>,

@@ -1,8 +1,18 @@
 {
   "tables": 9,
-  "columns": 20,
+  "columns": 22,
   "storage_extra_columns": "1",
   "mappings": [
+    [
+      "Child",
+      "ChildId",
+      "demo/projected",
+      "demo/projected/child-id",
+      "2018-01-01",
+      "2019-01-01",
+      "row_key",
+      1
+    ],
     [
       "Child",
       "Id",
