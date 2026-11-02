@@ -1513,12 +1513,36 @@ interval-local matching and is retained with `mapping_missing` when undocumented
 is no migration or carry-forward of old physical rows.
 
 Steward attestation can support years absent from the reference catalog (maintainer,
-2026-11-02), but a shared spelling alone does not establish the same variable or value
-domain. Documentary definitions enter through ordinary supplemental transcription and
-ledgers, with their steward-attested periods and located evidence. Unproved identity,
-grain or temporal claims become explicit holds with a reason and follow-up. Potential
-provider-wide facts are retained in the private global-curation worklist for separate
-review; compiling steward evidence never changes global validity.
+2026-11-02). Provider labels, definitions and value sets for those years are not a
+prerequisite. A canonical occurrence can be added when all five conditions hold:
+
+1. The same register and delivery-table series are established by the census naming and
+   pinned series topology, including its covered-year tables.
+2. The exact physical column name occurs for that variable, or its spelling is
+   documented. The same exact census spelling with an unambiguous covered-year mapping
+   is a spelling witness; the pinned reader's literal-prefix rules still apply.
+3. The periods are contiguous or the series is continuous, with no documented break,
+   recode or intervening `continues` successor. Missing provider metadata alone is not a
+   documented break.
+4. Storage families are compatible with covered-year occurrences. Actual covered-year
+   storage facts take precedence over provider type descriptions; nearest covered facts
+   are compared so an unrelated later storage change is not projected backwards.
+5. No contrary fact assigns the name to another variable in that year/table or documents
+   a meaning change. Accepted earlier-coding bindings remain contrary evidence to
+   replacing that coding with the later canonical meaning.
+
+A documented steward variable may retain its private definition namespace: both
+placements must have located provenance to the same actual source register and census
+series. That namespace alone does not establish a different physical source.
+
+Each such occurrence and physical binding carries
+`no provider metadata for <years>; identity from census column and series continuity`,
+with located evidence for the conditions, and enters the private global-curation
+worklist. A failed condition is named in the hold and its follow-up. Shared-shape
+choices without a separating fact remain held. Documentary new-variable definitions
+still use ordinary supplemental transcription and ledgers. Compiling these attestations
+never changes global validity or invents historical provider types, code lists or
+definitions.
 
 A census table need not have a logical route when no route is proved. Its held columns
 remain held, and other columns without an accepted owner remain `mapping_missing`.
@@ -1578,13 +1602,14 @@ base-copy/append pipeline.
 Steward-attested occurrences of a canonical variable use the same ordinary CSV reader
 and ledger with the canonical variable/table ids. The pinned optional
 `inputs.reference_occurrences` TOML declares each `(table_pid, variable_pid)` with a
-locator and documentary identity/domain evidence. The compiler and pair verifier require
-both endpoints in both origins, the same register/provider, dated tables, nonempty
-source periods, and no overlap with existing reference segments. Only the explicit
-variables, tables and their parent registers may share public identities; other
-collisions still refuse. These declarations are occurrence bindings, not aliases,
-derivations or copied reference rows. The verifier compares them with the pinned input.
-Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+locator and reviewed identity evidence from provider documents or census/series
+continuity. The compiler and pair verifier require both endpoints in both origins, the
+same register/provider, dated tables, nonempty source periods, and no overlap with
+existing reference segments. Only the explicit variables, tables and their parent
+registers may share public identities; other collisions still refuse. These declarations
+are occurrence bindings, not aliases, derivations or copied reference rows. The verifier
+compares them with the pinned input. Holdings schema 2 adds
+`holding_reference_occurrence`; older holdings are recompiled.
 
 Reference `coverage` spans retain their original meaning. In selected steward mode,
 `coverage.steward_occurrences` exposes these canonical variables' attested supplemental
