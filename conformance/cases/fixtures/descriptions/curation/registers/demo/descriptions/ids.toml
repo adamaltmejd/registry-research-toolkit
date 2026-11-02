@@ -6,3 +6,4 @@ other = "other"
 measure = ["main: Measure", "other: Measure"]
 weighted = ["main: Weighted"]
 comparator = ["main: Comparator"]
+deduplicated = ["main: Deduplicated"]

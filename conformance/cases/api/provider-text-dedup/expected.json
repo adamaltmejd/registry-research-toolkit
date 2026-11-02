@@ -1,0 +1,99 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/source_definition": {
+        "origin": "provider",
+        "period": {
+          "start": "2014-01-01",
+          "end": "2015-01-01"
+        },
+        "text": "Provider   MEANING; method…"
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/evidence/texts": [
+        {
+          "text": "Provider meaning; method.",
+          "periods": [
+            {
+              "start": "2010-01-01",
+              "end": "2011-01-01"
+            },
+            {
+              "start": "2012-01-01",
+              "end": "2013-01-01"
+            },
+            {
+              "start": "2014-01-01",
+              "end": "2015-01-01"
+            }
+          ],
+          "sources": [
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2010-01-01",
+                "end": "2011-01-01"
+              },
+              "status": "used",
+              "source_key": "deduplicated",
+              "spelling": "Deduplicated",
+              "label": "Deduplicated provider prose",
+              "unit": null,
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=14"
+                }
+              ],
+              "field": "definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2012-01-01",
+                "end": "2013-01-01"
+              },
+              "status": "used",
+              "source_key": "deduplicated",
+              "spelling": "Deduplicated",
+              "label": "Deduplicated provider prose",
+              "unit": null,
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=15"
+                }
+              ],
+              "field": "definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2014-01-01",
+                "end": "2015-01-01"
+              },
+              "status": "used",
+              "source_key": "deduplicated",
+              "spelling": "Deduplicated",
+              "label": "Deduplicated provider prose",
+              "unit": null,
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=16"
+                }
+              ],
+              "field": "operational_definition"
+            }
+          ]
+        }
+      ],
+      "/data/evidence/source_only": []
+    }
+  }
+]

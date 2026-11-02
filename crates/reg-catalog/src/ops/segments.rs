@@ -93,7 +93,7 @@ pub struct Occurrence {
     overrides: Vec<Override>,
 }
 
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct Locator {
     pub(super) input: String,
     pub(super) locator: String,

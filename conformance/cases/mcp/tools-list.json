@@ -466,7 +466,7 @@
           "type": "object"
         },
         "EvidenceSpelling": {
-          "description": "A delivered or curated folded alias; exact source spellings are in `texts`.",
+          "description": "A delivered or curated folded alias; source occurrences retain exact spellings.",
           "properties": {
             "kind": {
               "type": "string"
@@ -566,9 +566,35 @@
           "type": "object"
         },
         "ProviderText": {
-          "description": "One documented occurrence; source values remain distinct from curated winners.",
+          "description": "One provider text, with its coverage and every contributing source occurrence.",
           "properties": {
-            "definition": {
+            "periods": {
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            },
+            "sources": {
+              "items": {
+                "$ref": "#/$defs/ProviderTextSource"
+              },
+              "type": "array"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "periods",
+            "sources"
+          ],
+          "type": "object"
+        },
+        "ProviderTextSource": {
+          "description": "Source values remain distinct from curated winners, including silent sources.",
+          "properties": {
+            "field": {
               "type": [
                 "string",
                 "null"
@@ -585,12 +611,6 @@
                 "$ref": "#/$defs/Locator"
               },
               "type": "array"
-            },
-            "operational_definition": {
-              "type": [
-                "string",
-                "null"
-              ]
             },
             "period": {
               "$ref": "#/$defs/Period"
@@ -624,8 +644,6 @@
             "source_key",
             "spelling",
             "label",
-            "definition",
-            "operational_definition",
             "unit",
             "locators"
           ],
@@ -1117,32 +1135,22 @@
           "type": "object"
         },
         "SourceDefinition": {
-          "description": "Latest provider definition pair, used only when no curated description exists.",
+          "description": "Latest provider text, used only when no curated description exists.",
           "properties": {
-            "definition": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "operational_definition": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
             "origin": {
               "type": "string"
             },
             "period": {
               "$ref": "#/$defs/Period"
+            },
+            "text": {
+              "type": "string"
             }
           },
           "required": [
             "origin",
             "period",
-            "definition",
-            "operational_definition"
+            "text"
           ],
           "type": "object"
         },
@@ -1171,6 +1179,12 @@
               },
               "type": "array"
             },
+            "source_only": {
+              "items": {
+                "$ref": "#/$defs/ProviderTextSource"
+              },
+              "type": "array"
+            },
             "spellings": {
               "items": {
                 "$ref": "#/$defs/EvidenceSpelling"
@@ -1192,6 +1206,7 @@
           },
           "required": [
             "texts",
+            "source_only",
             "spellings",
             "statements",
             "documents"

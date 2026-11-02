@@ -2858,5 +2858,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:unikt-lopnummer"
-fields = { "description" = "Unikt löpnummer (FID) för varje fött barn, för koppling mellan underlag där samma FID förekommer." }
+fields = { "description" = "Unikt löpnummer (FID) för varje fött barn; samma FID förekommer i MFR och i FOK-underlaget och används för koppling. Om femte positionen är 3 finns födseln inte i MFR." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/unikt-lopnummer"

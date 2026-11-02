@@ -1,6 +1,8 @@
 //! Variable source evidence, separate from the default curated summary.
 
-use rusqlite::{Connection, OptionalExtension, Row};
+use std::collections::BTreeMap;
+
+use rusqlite::{Connection, Row};
 use serde::Serialize;
 use utoipa::ToSchema;
 
@@ -14,14 +16,25 @@ use crate::Error;
 #[derive(Serialize, ToSchema)]
 pub struct VariableEvidence {
     texts: Vec<ProviderText>,
+    source_only: Vec<ProviderTextSource>,
     spellings: Vec<EvidenceSpelling>,
     statements: Vec<CurationStatement>,
     documents: Vec<RelatedDocument>,
 }
 
-/// One documented occurrence; source values remain distinct from curated winners.
+/// One provider text, with its coverage and every contributing source occurrence.
 #[derive(Serialize, ToSchema)]
 pub struct ProviderText {
+    text: String,
+    periods: Vec<Period>,
+    sources: Vec<ProviderTextSource>,
+}
+
+/// Source values remain distinct from curated winners, including silent sources.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct ProviderTextSource {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    field: Option<&'static str>,
     table: String,
     period: Period,
     status: String,
@@ -31,15 +44,11 @@ pub struct ProviderText {
     #[schema(required = true)]
     label: Option<String>,
     #[schema(required = true)]
-    definition: Option<String>,
-    #[schema(required = true)]
-    operational_definition: Option<String>,
-    #[schema(required = true)]
     unit: Option<String>,
     locators: Vec<Locator>,
 }
 
-/// A delivered or curated folded alias; exact source spellings are in `texts`.
+/// A delivered or curated folded alias; source occurrences retain exact spellings.
 #[derive(Serialize, ToSchema)]
 pub struct EvidenceSpelling {
     spelling: String,
@@ -59,15 +68,12 @@ pub struct CurationStatement {
     caveat: Option<String>,
 }
 
-/// Latest provider definition pair, used only when no curated description exists.
+/// Latest provider text, used only when no curated description exists.
 #[derive(Serialize, ToSchema)]
 pub struct SourceDefinition {
     origin: &'static str,
     period: Period,
-    #[schema(required = true)]
-    definition: Option<String>,
-    #[schema(required = true)]
-    operational_definition: Option<String>,
+    text: String,
 }
 
 // An override row distinguishes a silent source (NULL) from no override. COALESCE
@@ -98,22 +104,68 @@ const SOURCE_ROWS: &str = "SELECT o.id, t.pid AS table_pid, o.start, o.end, o.st
      AND ux.field = 'unit'
  WHERE o.variable_id = ?1";
 
-fn provider_text(server: &Server, row: &Row<'_>) -> rusqlite::Result<(i64, ProviderText)> {
-    Ok((
-        row.get(0)?,
-        ProviderText {
+struct SourceRow {
+    id: i64,
+    start: i64,
+    end: i64,
+    definition: Option<String>,
+    operational_definition: Option<String>,
+    source: ProviderTextSource,
+}
+
+fn source_row(server: &Server, row: &Row<'_>) -> rusqlite::Result<SourceRow> {
+    Ok(SourceRow {
+        id: row.get(0)?,
+        start: row.get(2)?,
+        end: row.get(3)?,
+        definition: row.get(8)?,
+        operational_definition: row.get(9)?,
+        source: ProviderTextSource {
+            field: None,
             table: row.get(1)?,
             period: server.period(row.get(2)?, row.get(3)?),
             status: row.get(4)?,
             source_key: row.get(5)?,
             spelling: row.get(6)?,
             label: row.get(7)?,
-            definition: row.get(8)?,
-            operational_definition: row.get(9)?,
             unit: row.get(10)?,
             locators: Vec::new(),
         },
-    ))
+    })
+}
+
+fn normalized_text(text: &str) -> String {
+    reg_core::normalized_search_query(text)
+        .trim_end_matches(|c: char| c.is_whitespace() || reg_core::is_punctuation(c))
+        .to_owned()
+}
+
+// Compare normalized wording but retain the provider's original display strings.
+fn provider_texts<'a>(
+    definition: Option<&'a str>,
+    operational: Option<&'a str>,
+) -> Vec<(&'static str, &'a str)> {
+    let definition = definition.filter(|text| !text.trim().is_empty());
+    let operational = operational.filter(|text| !text.trim().is_empty());
+    match (definition, operational) {
+        (Some(definition), Some(operational)) => {
+            let d = normalized_text(definition);
+            let o = normalized_text(operational);
+            if d.contains(&o) {
+                vec![("definition", definition)]
+            } else if o.contains(&d) {
+                vec![("operational_definition", operational)]
+            } else {
+                vec![
+                    ("definition", definition),
+                    ("operational_definition", operational),
+                ]
+            }
+        }
+        (Some(text), None) => vec![("definition", text)],
+        (None, Some(text)) => vec![("operational_definition", text)],
+        (None, None) => Vec::new(),
+    }
 }
 
 /// All source occurrences, including shadowed evidence, in table/period/key order.
@@ -122,20 +174,20 @@ pub(super) fn load(
     conn: &Connection,
     entity: &Entity,
 ) -> Result<VariableEvidence, Error> {
-    let mut texts = conn
+    let mut rows = conn
         .prepare(&format!(
             "{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"
         ))?
-        .query_map([entity.id], |row| provider_text(server, row))?
+        .query_map([entity.id], |row| source_row(server, row))?
         .collect::<rusqlite::Result<Vec<_>>>()?;
     let mut locators = conn.prepare(
         "SELECT i.name, l.locator
          FROM occurrence_locator l JOIN input i ON i.id = l.input_id
          WHERE l.occurrence_id = ? ORDER BY i.name, l.locator",
     )?;
-    for (id, text) in &mut texts {
-        text.locators = locators
-            .query_map([*id], |row| {
+    for row in &mut rows {
+        row.source.locators = locators
+            .query_map([row.id], |row| {
                 Ok(Locator {
                     input: row.get(0)?,
                     locator: row.get(1)?,
@@ -143,6 +195,56 @@ pub(super) fn load(
             })?
             .collect::<rusqlite::Result<_>>()?;
     }
+    let mut text_indices = BTreeMap::new();
+    let mut grouped: Vec<(ProviderText, Vec<reg_core::Interval>)> = Vec::new();
+    let mut source_only = Vec::new();
+    for row in rows {
+        let texts = provider_texts(
+            row.definition.as_deref(),
+            row.operational_definition.as_deref(),
+        );
+        if texts.is_empty() {
+            source_only.push(row.source);
+            continue;
+        }
+        for (field, text) in texts {
+            let index = *text_indices
+                .entry(normalized_text(text))
+                .or_insert_with(|| {
+                    grouped.push((
+                        ProviderText {
+                            text: text.to_owned(),
+                            periods: Vec::new(),
+                            sources: Vec::new(),
+                        },
+                        Vec::new(),
+                    ));
+                    grouped.len() - 1
+                });
+            let (group, spans) = &mut grouped[index];
+            let mut source = row.source.clone();
+            source.field = Some(field);
+            group.sources.push(source);
+            // The shared interval algebra uses inclusive ISO endpoints; catalog
+            // periods are half-open, including the open-end sentinel.
+            spans.push((super::iso_day(row.start), super::iso_day(row.end - 1)));
+        }
+    }
+    let texts = grouped
+        .into_iter()
+        .map(|(mut text, spans)| {
+            text.periods = reg_core::merge(spans)
+                .into_iter()
+                .map(|(start, end)| {
+                    server.period(
+                        reg_core::iso_day_number(&start).expect("catalog ISO start"),
+                        reg_core::iso_day_number(&end).expect("catalog ISO end") + 1,
+                    )
+                })
+                .collect();
+            text
+        })
+        .collect();
     let spellings = conn
         .prepare(
             "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
@@ -156,7 +258,8 @@ pub(super) fn load(
         })?
         .collect::<rusqlite::Result<_>>()?;
     Ok(VariableEvidence {
-        texts: texts.into_iter().map(|(_, text)| text).collect(),
+        texts,
+        source_only,
         spellings,
         statements: statements(conn, entity.id)?,
         documents: docs::related_documents(conn, entity)?,
@@ -201,24 +304,26 @@ pub(super) fn latest_source_text(
     conn: &Connection,
     variable: i64,
 ) -> Result<Option<SourceDefinition>, Error> {
-    Ok(conn
-        .query_row(
-            &format!(
-                "SELECT start, end, definition, operational_definition FROM ({SOURCE_ROWS})
-                 WHERE status = 'used' AND
-                   (NULLIF(TRIM(definition), '') IS NOT NULL
-                    OR NULLIF(TRIM(operational_definition), '') IS NOT NULL)
-                 ORDER BY start DESC, end DESC, table_pid, source_key, spelling, id LIMIT 1"
-            ),
-            [variable],
-            |row| {
-                Ok(SourceDefinition {
-                    origin: "provider",
-                    period: server.period(row.get(0)?, row.get(1)?),
-                    definition: row.get(2)?,
-                    operational_definition: row.get(3)?,
-                })
-            },
-        )
-        .optional()?)
+    let mut statement = conn.prepare(&format!(
+        "{SOURCE_ROWS} AND o.status = 'used'
+         ORDER BY o.start DESC, o.end DESC, t.pid, o.source_key, spelling, o.id"
+    ))?;
+    let mut rows = statement.query([variable])?;
+    while let Some(row) = rows.next()? {
+        let definition: Option<String> = row.get(8)?;
+        let operational: Option<String> = row.get(9)?;
+        let texts = provider_texts(definition.as_deref(), operational.as_deref());
+        if !texts.is_empty() {
+            return Ok(Some(SourceDefinition {
+                origin: "provider",
+                period: server.period(row.get(2)?, row.get(3)?),
+                text: texts
+                    .into_iter()
+                    .map(|(_, text)| text)
+                    .collect::<Vec<_>>()
+                    .join("\n"),
+            }));
+        }
+    }
+    Ok(None)
 }

@@ -359,11 +359,14 @@ Accepting one requires reviewed curation and a premise lock.
   fallback when a curated description is not yet available. Spelling variants and
   wording drift are consolidated into one text. A minor change in scope or exact
   definition belongs in that description with its change and year. A material change in
-  meaning requires a separate variable linked by `continues` with an evidenced `at`; it
-  is not another description on the same variable. Source-field corrections and drift
-  findings retain their existing semantics; correcting an occurrence's operational
-  definition does not create a second curated variable description. Identity questions
-  require review before splitting variables or assigning relation dates.
+  meaning requires a separate variable. Temporal succession uses `continues` with an
+  evidenced `at`; different meanings in parallel tables require a candidate split,
+  without a succession edge. Historical codings distinguished within one column do not
+  alone imply a split. Materially different meanings cannot be separate descriptions on
+  the same variable. Source-field corrections and drift findings retain their existing
+  semantics; correcting an occurrence's operational definition does not create a second
+  curated variable description. Identity questions require review before splitting
+  variables or assigning relation dates.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -964,16 +967,22 @@ derivation; `texts`, source spellings and a promoted top-level `definition` are 
 summary fields.
 
 When no curated description exists, `source_definition` supplies the most recent used
-occurrence's available source definition and operational definition together, with their
-period and `origin: "provider"`. The two fields are never assembled from different
-occurrences or years. A completely silent provider has no invented fallback. This is
-explicitly provider wording, not a curated description.
+occurrence's available source definition and operational definition as one `text`, with
+its period and `origin: "provider"`. Equal or contained wording is shown once; otherwise
+the two original texts are joined by a newline. Comparison collapses whitespace, folds
+case and ignores trailing Unicode punctuation; displayed wording stays original. The
+fields are never assembled from different occurrences or years. A completely silent
+provider has no invented fallback. This is explicitly provider wording, not a curated
+description.
 
-`show(ref, evidence=true)` adds `evidence`: per-occurrence provider labels, definitions,
-operational definitions and units with periods, table, status, source keys, exact
-spellings and source locators; delivered/curated aliases; applied curation fields with
-statement file/line, evidence and caveat; and linked documents. Original provider text
-and spelling values are restored from override provenance when a correction exists,
+`show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
+texts use the same containment rule within each occurrence, then identical normalized
+texts are grouped with all their periods, preserving gaps. Each text retains its source
+occurrences: labels, units, periods, table, status, source keys, exact spellings and
+source locators. Occurrences without either text are kept in `source_only`. Evidence
+also includes delivered/curated aliases; applied curation fields with statement
+file/line, evidence and caveat; and linked documents. Original provider text and
+spelling values are restored from override provenance when a correction exists,
 including a source that was silent. Actual description, identity and group/tag statement
 locators are included; a ledger id does not acquire an invented statement. Evidence is
 never loaded or returned by the default summary. `segments(evidence=true)` remains the

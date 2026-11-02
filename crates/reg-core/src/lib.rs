@@ -79,6 +79,12 @@ pub fn is_letter(c: char) -> bool {
     c.general_category_group() == GeneralCategoryGroup::Letter
 }
 
+/// Whether a character belongs to a Unicode punctuation category.
+#[must_use]
+pub fn is_punctuation(c: char) -> bool {
+    c.general_category_group() == GeneralCategoryGroup::Punctuation
+}
+
 /// Python `str.casefold()`: full case folding (`CaseFolding.txt` statuses C and F).
 fn case_fold(s: &str) -> String {
     let mut out = String::with_capacity(s.len());

@@ -6,102 +6,233 @@
       "/data/description": "Longitudinal supplement; from 2020 includes revised coverage.",
       "/data/evidence/texts": [
         {
-          "table": "demo/descriptions/main",
-          "period": {
-            "start": "2018-01-01",
-            "end": "2019-01-01"
-          },
-          "status": "used",
-          "source_key": "m",
-          "spelling": "Measure",
-          "label": "Measure",
-          "definition": "Source definition",
-          "operational_definition": "Source procedure",
-          "unit": "hours",
-          "locators": [
+          "text": "Source definition",
+          "periods": [
             {
-              "input": "frame",
-              "locator": "frame/descriptions.jsonl:line=4"
+              "start": "2018-01-01",
+              "end": "2020-01-01"
+            }
+          ],
+          "sources": [
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2019-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=4"
+                }
+              ],
+              "field": "definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=5"
+                }
+              ],
+              "field": "definition"
+            },
+            {
+              "table": "demo/descriptions/other",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=8"
+                }
+              ],
+              "field": "definition"
             }
           ]
         },
         {
-          "table": "demo/descriptions/main",
-          "period": {
-            "start": "2019-01-01",
-            "end": "2020-01-01"
-          },
-          "status": "used",
-          "source_key": "m",
-          "spelling": "Measure",
-          "label": "Measure",
-          "definition": "Source definition",
-          "operational_definition": "Source procedure",
-          "unit": "hours",
-          "locators": [
+          "text": "Source procedure",
+          "periods": [
             {
-              "input": "frame",
-              "locator": "frame/descriptions.jsonl:line=5"
+              "start": "2018-01-01",
+              "end": "2021-01-01"
+            },
+            {
+              "start": "2022-01-01",
+              "end": "2023-01-01"
+            }
+          ],
+          "sources": [
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2019-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=4"
+                }
+              ],
+              "field": "operational_definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=5"
+                }
+              ],
+              "field": "operational_definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=6"
+                }
+              ],
+              "field": "operational_definition"
+            },
+            {
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2022-01-01",
+                "end": "2023-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=7"
+                }
+              ],
+              "field": "operational_definition"
+            },
+            {
+              "table": "demo/descriptions/other",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=8"
+                }
+              ],
+              "field": "operational_definition"
             }
           ]
         },
         {
-          "table": "demo/descriptions/main",
-          "period": {
-            "start": "2020-01-01",
-            "end": "2021-01-01"
-          },
-          "status": "used",
-          "source_key": "m",
-          "spelling": "Measure",
-          "label": "Measure",
-          "definition": "Source definition, revised coverage",
-          "operational_definition": "Source procedure",
-          "unit": "hours",
-          "locators": [
+          "text": "Source definition, revised coverage",
+          "periods": [
             {
-              "input": "frame",
-              "locator": "frame/descriptions.jsonl:line=6"
+              "start": "2020-01-01",
+              "end": "2021-01-01"
+            },
+            {
+              "start": "2022-01-01",
+              "end": "2023-01-01"
             }
-          ]
-        },
-        {
-          "table": "demo/descriptions/main",
-          "period": {
-            "start": "2022-01-01",
-            "end": "2023-01-01"
-          },
-          "status": "used",
-          "source_key": "m",
-          "spelling": "Measure",
-          "label": "Measure",
-          "definition": "Source definition, revised coverage",
-          "operational_definition": "Source procedure",
-          "unit": "hours",
-          "locators": [
+          ],
+          "sources": [
             {
-              "input": "frame",
-              "locator": "frame/descriptions.jsonl:line=7"
-            }
-          ]
-        },
-        {
-          "table": "demo/descriptions/other",
-          "period": {
-            "start": "2019-01-01",
-            "end": "2020-01-01"
-          },
-          "status": "used",
-          "source_key": "m",
-          "spelling": "Measure",
-          "label": "Measure",
-          "definition": "Source definition",
-          "operational_definition": "Source procedure",
-          "unit": "hours",
-          "locators": [
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=6"
+                }
+              ],
+              "field": "definition"
+            },
             {
-              "input": "frame",
-              "locator": "frame/descriptions.jsonl:line=8"
+              "table": "demo/descriptions/main",
+              "period": {
+                "start": "2022-01-01",
+                "end": "2023-01-01"
+              },
+              "status": "used",
+              "source_key": "m",
+              "spelling": "Measure",
+              "label": "Measure",
+              "unit": "hours",
+              "locators": [
+                {
+                  "input": "frame",
+                  "locator": "frame/descriptions.jsonl:line=7"
+                }
+              ],
+              "field": "definition"
             }
           ]
         }
@@ -174,7 +305,8 @@
           "bytes": 30,
           "page": 1
         }
-      ]
+      ],
+      "/data/evidence/source_only": []
     },
     "keys": {
       "/data": [
@@ -191,6 +323,7 @@
       ],
       "/data/evidence": [
         "documents",
+        "source_only",
         "spellings",
         "statements",
         "texts"
@@ -201,24 +334,6 @@
     "status": 200,
     "json": {
       "/data/name": "Inkomst efter skatt",
-      "/data/evidence/texts/*/label": [
-        "Inkomst f\u00f6re skatt",
-        "Inkomst efter skatt"
-      ],
-      "/data/evidence/texts/*/period": [
-        {
-          "start": "2019-01-01",
-          "end": "2020-01-01"
-        },
-        {
-          "start": "2020-01-01",
-          "end": "2021-01-01"
-        }
-      ],
-      "/data/evidence/texts/*/spelling": [
-        "Inkomst",
-        "InkomstBrutto"
-      ],
       "/data/evidence/spellings": [
         {
           "spelling": "inkomst",
@@ -230,7 +345,26 @@
         }
       ],
       "/data/evidence/statements": [],
-      "/data/evidence/documents": []
+      "/data/evidence/documents": [],
+      "/data/evidence/source_only/*/label": [
+        "Inkomst före skatt",
+        "Inkomst efter skatt"
+      ],
+      "/data/evidence/source_only/*/period": [
+        {
+          "start": "2019-01-01",
+          "end": "2020-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
+      ],
+      "/data/evidence/source_only/*/spelling": [
+        "Inkomst",
+        "InkomstBrutto"
+      ],
+      "/data/evidence/texts": []
     },
     "keys": {
       "/data": [

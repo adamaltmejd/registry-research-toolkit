@@ -18580,7 +18580,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:fad-arbetsstalle-id"
-fields = { "description" = "Arbetsställets identitetsnummer i FAD, för koppling till arbetsställetabellen; ersätts med löpnummer vid leverans." }
+fields = { "description" = "Arbetsställets identitetsnummer i FAD (löpnummer), nyckel för koppling mellan individtabellerna och arbetsställetabellen; i individtabellerna satt endast för sysselsatta vid faktiska arbetsställen, inte s.k. rörlig personal. Ersätts med löpnummer vid leverans." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A8\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A165\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer description review 2026-11-02: scb/lisa/fad-arbetsstalle-id"
 
 
