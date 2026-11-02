@@ -117,7 +117,7 @@ pub(super) fn admitted(db: &Connection, base: &Connection) -> Result<BTreeSet<St
         };
         let global = intervals(base)?;
         let extra = intervals(db)?;
-        if global.is_empty() || extra.is_empty() {
+        if extra.is_empty() {
             return Err(refuse("holdings_reference_occurrence_empty"));
         }
         if !compile::overlap(&extra, &global).is_empty() {

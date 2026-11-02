@@ -311,10 +311,48 @@ fn placements(
     candidates: &[Candidate],
     owed: &[Span],
     locator: &str,
+    keys: &[input::Key],
 ) -> Result<Vec<Segment>, String> {
     let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
+    let mut withheld = BTreeSet::new();
     for c in candidates {
-        by_table.entry(&c.segment.table).or_default().push(c);
+        if let Some(key) = keys.iter().find(|k| k.hold.is_some()) {
+            withheld.insert(key.locator.as_str());
+            for span in &c.spans {
+                notice(
+                    db,
+                    holding,
+                    Some(column),
+                    "row_key_held",
+                    Some(*span),
+                    (&[], &[], &[]),
+                    key.hold.as_deref().expect("held key"),
+                    &key.locator,
+                )?;
+            }
+        } else {
+            by_table.entry(&c.segment.table).or_default().push(c);
+        }
+    }
+    if by_table.is_empty()
+        && (!withheld.is_empty() || !keys.is_empty() && keys.iter().all(|k| k.hold.is_some()))
+    {
+        let held: Vec<_> = keys.iter().filter(|k| k.hold.is_some()).collect();
+        let reason = held
+            .iter()
+            .map(|k| k.hold.as_deref().expect("held key"))
+            .collect::<Vec<_>>()
+            .join("; ");
+        let follow_up = held
+            .iter()
+            .filter_map(|k| k.follow_up.as_deref())
+            .collect::<Vec<_>>()
+            .join("; ");
+        db.execute(
+            "UPDATE holding_column SET disposition='hold',reason=?,follow_up=? WHERE id=?",
+            params![reason, follow_up, column],
+        )
+        .map_err(|_| "holdings_row_key_invalid: hold needs a reason and follow-up")?;
     }
     let mut accepted = Vec::new();
     let mut admitted = Vec::new();
@@ -612,6 +650,14 @@ pub(super) fn write(
                 )
                 .map_err(|e| e.to_string())?;
             }
+            tx.execute(
+                "UPDATE holding_table SET key_requirements=? WHERE id=?",
+                params![
+                    serde_json::to_string(&authored.key).map_err(|e| e.to_string())?,
+                    id
+                ],
+            )
+            .map_err(|e| e.to_string())?;
             for route in &authored.routes {
                 if !index.contains_key(route) {
                     return Err("holdings_table_route_unresolved: default table absent".into());
@@ -747,7 +793,8 @@ pub(super) fn write(
                         return Ok(());
                     }
                     let candidates = candidates(authored, column, decision, &owed, &index)?;
-                    let accepted = placements(&tx, id, cid, &candidates, &owed, locator)?;
+                    let accepted =
+                        placements(&tx, id, cid, &candidates, &owed, locator, &authored.key)?;
                     if accepted.is_empty() {
                         unmatched += 1;
                         notice(
@@ -795,7 +842,7 @@ pub(super) fn write(
             .prepare(
                 "SELECT m.id,h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m
           JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id
-          WHERE h.projection_of IS NOT NULL AND m.role='row_key' ORDER BY m.id",
+          WHERE h.projection_of IS NOT NULL AND EXISTS (SELECT 1 FROM json_each(h.key_requirements) k WHERE EXISTS (SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid) OR EXISTS (SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid)) ORDER BY m.id",
             )
             .map_err(|e| e.to_string())?;
         query

@@ -15,3 +15,4 @@ dbo,Parent,BASE TABLE,Id,int,,10,0,1
 dbo,Child,BASE TABLE,Id,int,,10,0,1
 dbo,Outside,BASE TABLE,Extra,int,,10,0,1
 dbo,Pool,BASE TABLE,Year,int,,10,0,9
+dbo,Owners,BASE TABLE,Id,int,,10,0,2

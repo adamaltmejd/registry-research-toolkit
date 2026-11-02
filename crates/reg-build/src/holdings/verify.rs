@@ -43,6 +43,21 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
     let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
         .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
+    let required_keys: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .map(|t| (t.physical_name.clone(), t.key.clone()))
+        .collect();
+    let period_bindings: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .map(|t| {
+            (
+                t.physical_name.clone(),
+                (t.period_column.clone(), t.period_encoding.clone()),
+            )
+        })
+        .collect();
     let schemas: BTreeMap<_, _> = topology
         .table
         .into_iter()
@@ -61,10 +76,30 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
         let (id, schema, kind) = tables
             .remove(&table.name)
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+        let recorded: String = db
+            .query_row(
+                "SELECT key_requirements FROM holding_table WHERE id=?",
+                [id],
+                |r| r.get(0),
+            )
+            .map_err(|e| e.to_string())?;
+        let recorded: Vec<input::Key> = serde_json::from_str(&recorded)
+            .map_err(|_| format!("{location}: holdings_row_key_invalid"))?;
+        if required_keys.get(&table.name) != Some(&recorded) {
+            return Err(format!("{location}: holdings_row_key_source_mismatch"));
+        }
+        let binding: (Option<String>, Option<String>) = db.query_row(
+            "SELECT c.name,h.period_encoding FROM holding_table h LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?", [id], |r| Ok((r.get(0)?, r.get(1)?))
+        ).map_err(|e| e.to_string())?;
+        if period_bindings.get(&table.name) != Some(&binding) {
+            return Err(format!("{location}: holdings_period_source_mismatch"));
+        }
         let mut query = db
             .prepare(
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
             EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
+              OR (c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id)
+                  AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column x ON x.id=m.column_id WHERE x.holding_id=c.holding_id))
             FROM holding_column c WHERE c.holding_id=?",
             )
             .map_err(|e| e.to_string())?;
@@ -291,33 +326,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             .or_default()
             .push(segment);
     }
-    let mut row_keys = BTreeMap::<&str, Vec<&compile::Segment>>::new();
-    for segments in index.values() {
-        for key in segments.iter().filter(|s| s.role == "row_key") {
-            row_keys.entry(&key.table).or_default().push(key);
-        }
-    }
-    let mut held_keys = BTreeMap::<(i64, String, String), Vec<(i64, i64)>>::new();
-    let mut keys = db
-        .prepare(
-            "SELECT c.holding_id,m.table_pid,m.variable_pid,m.start,m.end
-      FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE m.role='row_key'",
-        )
-        .map_err(|e| e.to_string())?;
-    let mut keys = keys.query([]).map_err(|e| e.to_string())?;
-    while let Some(key) = keys.next().map_err(|e| e.to_string())? {
-        held_keys
-            .entry((
-                key.get(0).map_err(|e| e.to_string())?,
-                key.get(1).map_err(|e| e.to_string())?,
-                key.get(2).map_err(|e| e.to_string())?,
-            ))
-            .or_default()
-            .push((
-                key.get(3).map_err(|e| e.to_string())?,
-                key.get(4).map_err(|e| e.to_string())?,
-            ));
-    }
     let mut table_ids = BTreeSet::new();
     for conn in [&base, &db] {
         let mut query = conn
@@ -346,14 +354,12 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
       FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id ORDER BY m.id")
       .map_err(|e|e.to_string())?;
     let mut rows = query.query([]).map_err(|e| e.to_string())?;
-    let mut missing_keys = BTreeSet::new();
     while let Some(row) = rows.next().map_err(|e| e.to_string())? {
         let table: String = row.get(0).map_err(|e| e.to_string())?;
         let variable: String = row.get(1).map_err(|e| e.to_string())?;
         let start: i64 = row.get(2).map_err(|e| e.to_string())?;
         let end: i64 = row.get(3).map_err(|e| e.to_string())?;
         let role: String = row.get(4).map_err(|e| e.to_string())?;
-        let carried: bool = row.get(5).map_err(|e| e.to_string())?;
         let holding: i64 = row.get(6).map_err(|e| e.to_string())?;
         let disposition: String = row.get(7).map_err(|e| e.to_string())?;
         let window: Option<String> = row.get(8).map_err(|e| e.to_string())?;
@@ -371,7 +377,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             })
             .map(|s| (s.start, s.end))
             .collect();
-        if !compile::covered(&[(start, end)], &admitted) || carried && role != "row_key" {
+        if !compile::covered(&[(start, end)], &admitted) {
             return Err("inventory_window_invalid: mapping escapes unambiguous semantic coverage or key role".into());
         }
         let mut periods = db
@@ -394,23 +400,8 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
                 "inventory_window_invalid: mapping escapes file/window or lacks evidence".into(),
             );
         }
-        for key in row_keys.get(table.as_str()).into_iter().flatten() {
-            let required = (start.max(key.start), end.min(key.end));
-            if required.0 >= required.1 {
-                continue;
-            }
-            let held = held_keys.get(&(holding, table.clone(), key.variable.clone()));
-            if held.is_none_or(|held| !compile::covered(&[required], held)) {
-                missing_keys.insert(format!(
-                    "holdings:table={holding}: key={}: period={}..{}: holdings_key_missing",
-                    key.variable, required.0, required.1
-                ));
-            }
-        }
     }
-    if !missing_keys.is_empty() {
-        return Err(missing_keys.into_iter().collect::<Vec<_>>().join("\n"));
-    }
+    super::keys::verify(&db, &base)?;
     // Same logical cell in two columns needs an explicit partition, a projection,
     // or a carried key. Shared spelling and labels alone never authorize possession.
     no_rows(&db,"SELECT 1 FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid

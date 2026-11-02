@@ -1,0 +1,5 @@
+[tables]
+received = "received"
+
+[variables]
+id = ["received: Id"]

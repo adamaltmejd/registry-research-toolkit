@@ -15,7 +15,7 @@
     "location": "census:row=10"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,locator) SELECT id,'Invented',10,'int','candidate','fixture:invented' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Not documented','fixture:invented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='20' WHERE key='census_columns'",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,locator) SELECT id,'Invented',10,'int','candidate','fixture:invented' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Not documented','fixture:invented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='21' WHERE key='census_columns'",
     "code": "holdings_census_column_extra",
     "location": "column=10"
   },
@@ -28,5 +28,15 @@
     "sql": "DELETE FROM holding_mapping WHERE variable_pid='demo/held/id' AND column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool'); INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT c.holding_id,c.id,'mapping_missing','Required key withheld','fixture:missing-required-key' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Received_Id'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='unmatched_columns';",
     "code": "holdings_key_missing",
     "location": "key=demo/held/id:"
+  },
+  {
+    "sql": "UPDATE holding_table SET key_requirements='[]' WHERE physical_name='Pool'",
+    "code": "holdings_row_key_source_mismatch",
+    "location": "census:row=3"
+  },
+  {
+    "sql": "UPDATE holding_table SET period_encoding='date' WHERE physical_name='Pool'",
+    "code": "holdings_period_source_mismatch",
+    "location": "census:row=3"
   }
 ]

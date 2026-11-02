@@ -1,0 +1,7 @@
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "column"
+hold = "required_time_key_absent: EventDate"
+follow_up = "synthetic:request-event-key"
+locator = "fixture:missing-event-time"

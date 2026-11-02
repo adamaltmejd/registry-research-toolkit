@@ -1685,17 +1685,35 @@ catalog's half-open day convention:
 
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
   | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                        |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                               |
   | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                        |
 
-Row keys are `role = row_key` on column placements, validated against the logical
-column's role; there is no `holding_key` or `tbl_key` table (clean-room design §2.2, §13
-D10; schema-v3 prefatory rulings). Carried copies retain that role and grant no
-additional ordered cell. Stable key ordering derives from column ordinals. Holdings
-listings are metadata, not confidential by default (§13 D9); this does not authorize
-publishing private source documents, secrets or any microdata.
+Required held keys are the received row's entity components and time components,
+reviewed from the source variant's `panel_entity_key` / `panel_time_key` contract.
+The 2026-10-23 ruling excludes ordinary linking identifiers and descriptive fields.
+A donor table's identifiers do not redefine the received row unit. Each pinned
+physical table declares these requirements in `[[table.key]]`; the compiler stores
+that evidence as `holding_table.key_requirements`, and standalone verification
+compares it to the pinned source again. This is metadata on the physical table,
+not a new `holding_key` or `tbl_key` entity. Every offered interval must have exactly
+one applicable declaration and every declared physical component must be held.
+There is no identifier-based or missing-key fallback.
+
+A time component can instead be supplied by a declared physical period column, or
+by the table's period (`year`, `month`, `day`, or the attested delivery `period`).
+A constant year/month/day must be the same across the entire physical table;
+a pooled multi-year table cannot pretend to supply one year. Physical time
+components remain required beside any additional implicit period dimension.
+Missing physical components require an explicit, located table-key hold and follow-up;
+they never become an orderable placement. New census columns remain ordinary unmatched
+notices. Semantic `role` is retained from the reference or supplemental occurrence;
+it does not by itself make an identifier required. Carried copies must be declared
+entity/time components, including received keys whose old donor role was not
+`row_key`. They grant no additional ordered cell. Stable key ordering derives from
+column ordinals. Holdings listings are metadata (§13 D9); this does not authorize
+publishing private source documents, secrets or microdata.
 
 Partition and projection are mutually exclusive. Projection parents must exist and cover
 the projected mapping's interval and logical variable; a parent is not itself a

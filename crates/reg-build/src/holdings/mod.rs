@@ -2,6 +2,7 @@
 //! pipeline emits the supplemental part; this stage adds possession facts only.
 mod compile;
 mod input;
+mod keys;
 mod references;
 mod verify;
 
@@ -295,6 +296,7 @@ fn compiler_digest() -> String {
     let sources = [
         include_str!("mod.rs"),
         include_str!("input.rs"),
+        include_str!("keys.rs"),
         include_str!("references.rs"),
         include_str!("compile.rs"),
         include_str!("verify.rs"),

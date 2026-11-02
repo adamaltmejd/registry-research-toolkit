@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -73,6 +73,22 @@ pub(super) struct Table {
     pub period_encoding: Option<String>,
     #[serde(default)]
     pub column: Vec<Column>,
+    #[serde(default)]
+    pub key: Vec<Key>,
+}
+
+/// Reviewed entity/time components of a served shape, not every identifier.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub(super) struct Key {
+    pub entity: Vec<String>,
+    #[serde(default)]
+    pub time: Vec<String>,
+    pub period: Option<String>,
+    pub period_key: Option<String>,
+    pub hold: Option<String>,
+    pub follow_up: Option<String>,
+    pub locator: String,
 }
 
 #[derive(Deserialize)]

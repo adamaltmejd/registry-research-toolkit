@@ -1,6 +1,6 @@
 {
   "tables": 9,
-  "columns": 19,
+  "columns": 20,
   "storage_extra_columns": "1",
   "mappings": [
     [
@@ -12,6 +12,16 @@
       "2019-01-01",
       "row_key",
       1
+    ],
+    [
+      "Owners",
+      "Id",
+      "demo/owners",
+      "demo/owners/id",
+      "2017-01-01",
+      "2020-01-01",
+      "row_key",
+      0
     ],
     [
       "Owners",

@@ -1,5 +1,5 @@
 Category,Detail,Table,V1,V2,V3,V4,V5,V6,V7,V8,V9
-Synthetic,Rivals,Owners,Shared,,,,,,,,
+Synthetic,Rivals,Owners,Shared,Id,,,,,,,
 Synthetic,Pool,Pool,Received_Id,Old,New,Late,Unknown,Added,Code,Held,Year
 Synthetic,Partition,Part A,Id,New,,,,,,,
 Synthetic,Partition,Part B,Id,New,,,,,,,

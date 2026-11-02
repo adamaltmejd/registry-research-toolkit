@@ -88,6 +88,8 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # Fails if the compiler loses unmatched/held columns, widens provider coverage,
     # matches out-of-period spellings, discards a projection/partition, or emits
     # nondeterministic bytes. These physical behaviors have no logical-order twin.
+    # RelativeId is an identifier but not an entity/time component; requiring it
+    # would wrongly refuse Pool. PartA/B supply their year from the table period.
     # Expected placements are authored from census, dates and ledgers in the corpus.
     base, root, command = prepare_holdings(tmp_path)
     expected = json.loads((HOLDINGS_CASE / "expected.json").read_text())
@@ -165,6 +167,28 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
         assert refused.returncode == 1
         assert case["code"] in refused.stderr
         assert case["location"] in refused.stderr
+
+
+def test_explicit_missing_row_key_holds_the_received_table(tmp_path):
+    # Fails if an explicit missing-time-key hold offers another column from the
+    # same received table. Other table/column holds do not pin this row-unit rule.
+    base, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    text = path.read_text()
+    original = '\n'.join([
+        '[[table.key]]', 'entity = ["demo/held/id"]', 'time = []',
+        'period_key = "column"', 'locator = "fixture:declared-entity-time-key"', ''
+    ])
+    path.write_text(text.replace(original, (HOLDINGS_CASE / "row-key-hold.toml").read_text(), 1))
+    pin_steward(root, tmp_path / "stewards.toml")
+    output = tmp_path / "held.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    verified = run([REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root])
+    assert verified.returncode == 0, verified.stderr
+    with closing(sqlite3.connect(output)) as db:
+        assert db.execute("SELECT count(*) FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Pool'").fetchone() == (0,)
+        assert db.execute("SELECT count(*) FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Pool' AND c.disposition='hold'").fetchone() == (9,)
 
 
 def test_unrouted_table_keeps_holds_and_valid_earlier_bindings(tmp_path):
@@ -328,6 +352,7 @@ def test_census_replacement_preserves_routes_and_refuses_vanished_columns(tmp_pa
         ("dirty", "holdings_pin_invalid"),
         ("hidden-config", "holdings_pin_invalid"),
         ("blank-hold", "holdings_column_disposition_invalid"),
+        ("pooled-year-key", "holdings_period_key_invalid"),
     ],
 )
 def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
@@ -357,6 +382,10 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
                 if ",Slot2," not in line
             )
             + "\n"
+        )
+    elif mutation == "pooled-year-key":
+        text = text.replace(
+            'period_key = "column"', 'period_key = "year"', 1
         )
     elif mutation == "blank-hold":
         text = text.replace('hold = "Await reviewed association"', 'hold = " "')
@@ -507,16 +536,20 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     # Fails if an evidenced canonical occurrence is rejected as an identity collision,
     # replaces global coverage, loses its local provenance, or bypasses overlap admission.
     # The earlier 2015..2016 window comes from the readable delivery fixture; the
-    # base source attests 2017..2021. Existing cases only define new supplemental ids.
+    # base source attests 2017..2021. AttestedMember also pins an evidenced key
+    # membership absent from that global table, without changing global validity.
     base, root, command = prepare_holdings(tmp_path)
     case = HOLDINGS_CASE / "reference-extension"
     source = root / "inputs/reference"
     source.mkdir()
-    for name in ["registers.csv", "held.csv"]:
+    for name in ["registers.csv", "tables.csv", "held.csv", "owners.csv"]:
         shutil.copyfile(case / name, source / name)
     ledger = root / "curation/registers/demo/held/ids.toml"
     ledger.parent.mkdir(parents=True)
     shutil.copyfile(case / "ids.toml", ledger)
+    owner_ledger = ledger.parent.parent / "owners/ids.toml"
+    owner_ledger.parent.mkdir()
+    shutil.copyfile(case / "owners-ids.toml", owner_ledger)
     shutil.copyfile(
         case / "reference-occurrences.toml", root / "reference-occurrences.toml"
     )
@@ -525,9 +558,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n'
         )
     with (root / "census.csv").open("a") as f:
-        f.write("Synthetic,Attested,Attested,Old,,,,,,,,\n")
+        f.write("Synthetic,Attested,Attested,Old,Id,,,,,,,\nSynthetic,AttestedMember,AttestedMember,Id,,,,,,,,\n")
     with (root / "storage.csv").open("a") as f:
-        f.write("dbo,Attested,BASE TABLE,Old,int,,10,0,1\n")
+        f.write("dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\ndbo,AttestedMember,BASE TABLE,Id,int,,10,0,1\n")
     with (root / "holdings.toml").open("a") as f:
         f.write((case / "topology.toml").read_text())
     locked = run(
@@ -577,7 +610,7 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         pool.close()
     # The same declaration may add occurrence years, never overwrite a base year.
     source_file = source / "held.csv"
-    source_file.write_text(source_file.read_text().replace("2016-12-31", "2017-12-31"))
+    source_file.write_text(source_file.read_text().replace("2016-12-31", "2017-12-31", 1))
     locked = run(
         [
             REG_BUILD,

@@ -18,6 +18,12 @@ table_pid = "demo/owners"
 variable_pid = "demo/owners/second"
 locator = "fixture:second-owner-association"
 
+
+[[table.key]]
+entity = ["demo/owners/id"]
+time = []
+locator = "fixture:declared-entity-time-key"
+
 [[table]]
 physical_name = "Pool"
 disposition = "dated"
@@ -59,6 +65,13 @@ hold = "Await reviewed association"
 follow_up = "https://example.invalid/issues/1"
 locator = "fixture:held"
 
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "column"
+locator = "fixture:declared-entity-time-key"
+
 [[table]]
 physical_name = "Part A"
 disposition = "dated"
@@ -66,6 +79,13 @@ delivery = "2021"
 partition = "a"
 table_pids = ["demo/held"]
 locator = "fixture:partition-a"
+
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "year"
+locator = "fixture:declared-entity-time-key"
 
 [[table]]
 physical_name = "Part B"
@@ -75,12 +95,25 @@ partition = "b"
 table_pids = ["demo/held"]
 locator = "fixture:partition-b"
 
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "year"
+locator = "fixture:declared-entity-time-key"
+
 [[table]]
 physical_name = "Parent"
 disposition = "dated"
 delivery = "2018"
 table_pids = ["demo/projected"]
 locator = "fixture:parent"
+
+
+[[table.key]]
+entity = ["demo/projected/id"]
+time = []
+locator = "fixture:declared-entity-time-key"
 
 [[table]]
 physical_name = "Child"
@@ -91,6 +124,12 @@ projection_token = "child"
 table_pids = ["demo/projected"]
 locator = "fixture:key-only-projection"
 
+
+[[table.key]]
+entity = ["demo/projected/id"]
+time = []
+locator = "fixture:declared-entity-time-key"
+
 [[table]]
 physical_name = "Unknown"
 disposition = "unknown"
@@ -98,12 +137,14 @@ table_pids = []
 reason = "Delivery period not documented"
 locator = "fixture:unknown"
 
+
 [[table]]
 physical_name = "Lookup"
 disposition = "lookup"
 table_pids = []
 reason = "Accounted lookup; not observation data"
 locator = "fixture:lookup"
+
 
 [[table]]
 physical_name = "Excluded"
@@ -116,3 +157,4 @@ locator = "fixture:excluded"
 name = "Secret"
 unmap = "Not observation data"
 locator = "fixture:unmap"
+

@@ -3,7 +3,6 @@
     "Held",
     "Late",
     "New",
-    "Received_Id",
     "Slot2",
     "Year"
   ],
@@ -16,6 +15,13 @@
       "steward/slots/code",
       "2017-01-01",
       "2018-01-01"
+    ],
+    [
+      "Received_Id",
+      "demo/held",
+      "demo/held/id",
+      "2017-01-01",
+      "2021-01-01"
     ]
   ],
   "held_mapping_notice": "mapping_held",

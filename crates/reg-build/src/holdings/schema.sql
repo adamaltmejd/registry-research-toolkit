@@ -2,6 +2,7 @@
 CREATE TABLE holding_table (
  id INTEGER PRIMARY KEY,
  physical_name TEXT NOT NULL UNIQUE,
+ key_requirements TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(key_requirements)),
  schema_name TEXT,
  table_type TEXT,
  file_name TEXT NOT NULL UNIQUE,
@@ -65,7 +66,6 @@ CREATE TABLE holding_mapping (
  window TEXT,
  locator TEXT NOT NULL,
  CHECK(start < end),
- CHECK(carried = 0 OR role = 'row_key'),
  UNIQUE(column_id,table_pid,variable_pid,start,end)
 ) STRICT;
 CREATE INDEX holding_mapping_logical ON holding_mapping(table_pid,variable_pid,start,end);
