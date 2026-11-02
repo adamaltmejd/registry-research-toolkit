@@ -21641,3 +21641,693 @@ relation = "continues"
 object = "scb/lisa/anninkf04"
 at = "2015-01-01.."
 evidence = "rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
+
+[[statement]]
+kind = "set"
+subject = "set:agijobbyrk"
+fields = { "label" = "Jobbets yrkesställning (AGI)", "axes" = [{ "id" = "rank", "label" = "Förvärvskälla" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1121; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1jobbyrk"
+fields = { "facets" = { "rank" = { "value" = "1", "label" = "största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1121; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2jobbyrk"
+fields = { "facets" = { "rank" = { "value" = "2", "label" = "näst största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1121; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3jobbyrk"
+fields = { "facets" = { "rank" = { "value" = "3", "label" = "tredje största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1121; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:agilongarant"
+fields = { "label" = "Markering av erhållen lönegaranti (AGI)", "axes" = [{ "id" = "rank", "label" = "Förvärvskälla" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1128; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1longarant"
+fields = { "facets" = { "rank" = { "value" = "1", "label" = "största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1128; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2longarant"
+fields = { "facets" = { "rank" = { "value" = "2", "label" = "näst största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1128; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3longarant"
+fields = { "facets" = { "rank" = { "value" = "3", "label" = "tredje största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1128; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:agisektorgrp"
+fields = { "label" = "Institutionell sektor (AGI)", "axes" = [{ "id" = "rank", "label" = "Förvärvskälla" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1135; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1sektorgrp"
+fields = { "facets" = { "rank" = { "value" = "1", "label" = "största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1135; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2sektorgrp"
+fields = { "facets" = { "rank" = { "value" = "2", "label" = "näst största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1135; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3sektorgrp"
+fields = { "facets" = { "rank" = { "value" = "3", "label" = "tredje största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1135; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag", "axes" = [{ "id" = "kalla", "label" = "Källa" }, { "id" = "rank", "label" = "Förvärvskälla" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1faman"
+fields = { "facets" = { "kalla" = { "value" = "agi", "label" = "AGI" }, "rank" = { "value" = "1", "label" = "största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2faman"
+fields = { "facets" = { "kalla" = { "value" = "agi", "label" = "AGI" }, "rank" = { "value" = "2", "label" = "näst största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3faman"
+fields = { "facets" = { "kalla" = { "value" = "agi", "label" = "AGI" }, "rank" = { "value" = "3", "label" = "tredje största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1faman"
+fields = { "facets" = { "kalla" = { "value" = "ku", "label" = "KU" }, "rank" = { "value" = "1", "label" = "största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2faman"
+fields = { "facets" = { "kalla" = { "value" = "ku", "label" = "KU" }, "rank" = { "value" = "2", "label" = "näst största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3faman"
+fields = { "facets" = { "kalla" = { "value" = "ku", "label" = "KU" }, "rank" = { "value" = "3", "label" = "tredje största förvärvskällan" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1147; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn"
+fields = { "label" = "Antal hemmavarande barn per ålder", "axes" = [{ "id" = "alder", "label" = "Barnets ålder" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-ar"
+fields = { "facets" = { "alder" = { "value" = "00", "label" = "0 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-1-ar"
+fields = { "facets" = { "alder" = { "value" = "01", "label" = "1 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-10-ar"
+fields = { "facets" = { "alder" = { "value" = "10", "label" = "10 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-11-ar"
+fields = { "facets" = { "alder" = { "value" = "11", "label" = "11 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-12-ar"
+fields = { "facets" = { "alder" = { "value" = "12", "label" = "12 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-13-ar"
+fields = { "facets" = { "alder" = { "value" = "13", "label" = "13 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-14-ar"
+fields = { "facets" = { "alder" = { "value" = "14", "label" = "14 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-15-ar"
+fields = { "facets" = { "alder" = { "value" = "15", "label" = "15 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-ar"
+fields = { "facets" = { "alder" = { "value" = "16", "label" = "16 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-17-ar"
+fields = { "facets" = { "alder" = { "value" = "17", "label" = "17 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-18-ar"
+fields = { "facets" = { "alder" = { "value" = "18", "label" = "18 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-19-ar"
+fields = { "facets" = { "alder" = { "value" = "19", "label" = "19 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-2-ar"
+fields = { "facets" = { "alder" = { "value" = "02", "label" = "2 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-20-ar"
+fields = { "facets" = { "alder" = { "value" = "20", "label" = "20 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-21-ar"
+fields = { "facets" = { "alder" = { "value" = "21", "label" = "21 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-3-ar"
+fields = { "facets" = { "alder" = { "value" = "03", "label" = "3 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-4-ar"
+fields = { "facets" = { "alder" = { "value" = "04", "label" = "4 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-5-ar"
+fields = { "facets" = { "alder" = { "value" = "05", "label" = "5 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-ar"
+fields = { "facets" = { "alder" = { "value" = "06", "label" = "6 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-ar"
+fields = { "facets" = { "alder" = { "value" = "07", "label" = "7 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-8-ar"
+fields = { "facets" = { "alder" = { "value" = "08", "label" = "8 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-9-ar"
+fields = { "facets" = { "alder" = { "value" = "09", "label" = "9 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar"
+fields = { "facets" = { "alder" = { "value" = "16-17", "label" = "16-17 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-18-19-ar"
+fields = { "facets" = { "alder" = { "value" = "18-19", "label" = "18-19 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn0-3"
+fields = { "facets" = { "alder" = { "value" = "00-03", "label" = "0-3 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn11-15"
+fields = { "facets" = { "alder" = { "value" = "11-15", "label" = "11-15 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn18plus"
+fields = { "facets" = { "alder" = { "value" = "18-plus", "label" = "18 år och äldre" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn20plus"
+fields = { "facets" = { "alder" = { "value" = "20-plus", "label" = "20 år och äldre" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn4-6"
+fields = { "facets" = { "alder" = { "value" = "04-06", "label" = "4-6 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barn7-10"
+fields = { "facets" = { "alder" = { "value" = "07-10", "label" = "7-10 år" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1159; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren", "axes" = [{ "id" = "kalla", "label" = "Källa" }, { "id" = "population", "label" = "Population" }, { "id" = "level", "label" = "Level" }, { "id" = "metod", "label" = "Metod" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "arbetsstalle", "label" = "Arbetsställe" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "foretag", "label" = "Företag" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "huvudsaklig", "label" = "Huvudsaklig" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni69"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "nast-storsta", "label" = "Näst största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni69"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "storsta", "label" = "Största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002b"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002g"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007g"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007u"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "utokad", "label" = "Utökad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni69"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "detaljerad", "label" = "Detaljerad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92b"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "begransad", "label" = "Begränsad" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92g"
+fields = { "facets" = { "kalla" = { "value" = "tredje-storsta", "label" = "Tredje största" }, "population" = { "value" = "individ", "label" = "Individ" }, "level" = { "value" = "grov", "label" = "Grov" }, "metod" = { "value" = "standard", "label" = "Standard" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1175; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "label" = "Disponibel inkomst", "axes" = [{ "id" = "enhet", "label" = "Enhet" }, { "id" = "hushallsbegrepp", "label" = "Hushållsbegrepp" }, { "id" = "definition", "label" = "Definition" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "definition" = { "value" = "1991", "label" = "1991 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkkehb04"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkpersf"
+fields = { "facets" = { "enhet" = { "value" = "individualiserad", "label" = "Individualiserad från familj" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "1991", "label" = "1991 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "1991", "label" = "1991 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-individ-familj-2004"
+fields = { "facets" = { "enhet" = { "value" = "individualiserad", "label" = "Individualiserad från familj" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "1991", "label" = "1991 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "definition" = { "value" = "2004", "label" = "2004 års definition" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/lisa.toml:1191; existing set membership and current id ledger determine the targets."

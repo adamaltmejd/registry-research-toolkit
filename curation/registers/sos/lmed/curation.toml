@@ -1313,3 +1313,27 @@ kind = "set"
 subject = "lmed: varutyp"
 fields = { "label" = "Varutyp" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "set:specialistutbildningskod"
+fields = { "label" = "Specialistutbildningskod", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."

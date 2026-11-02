@@ -4550,3 +4550,39 @@ kind = "set"
 subject = "var:mottaget-underhallsbidrag"
 fields = { "description" = "Modellberäknat mottaget underhållsbidrag. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott, justerat för andelen icke växelvis boende barn och månader med rätt till bidrag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden, inte observerat mottagande.\ncatalog:occurrence-locators:variable:6567\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47269:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrvard"
+fields = { "label" = "Personnummer vårdnadshavare", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrap"
+fields = { "label" = "Personnummer annan person", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:16; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-annan-person-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:16; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-annan-person-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/breg.toml:16; existing set membership and current id ledger determine the targets."

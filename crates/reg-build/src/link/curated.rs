@@ -82,6 +82,9 @@ fn endpoints(
                 key: None,
             })
         }
+        Address::Set(_) => {
+            Err("sets are presentation only and cannot be relation endpoints".into())
+        }
         Address::Release { .. } => Err("release-kind curated link".into()),
         Address::Occurrence { .. } => {
             let mut variables = BTreeSet::new();

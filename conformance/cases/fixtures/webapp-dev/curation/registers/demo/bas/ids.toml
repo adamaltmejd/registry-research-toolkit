@@ -1,0 +1,5 @@
+[variables]
+inkomst = ["Inkomst"]
+gross-household = ["gross-household"]
+gross-person = ["gross-person"]
+net-household = ["net-household"]

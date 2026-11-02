@@ -963,3 +963,21 @@ kind = "set"
 subject = "var:fodelsetidmor"
 fields = { "description" = "Datum för födelse för mor. Uppgiften avser biologisk mor och kan finnas även när ett fullständigt personnummer saknas." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:96773:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrf"
+fields = { "label" = "Personnummer förälder", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-foralder-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-foralder-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."

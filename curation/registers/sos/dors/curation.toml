@@ -2231,3 +2231,885 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Den avlidnes personnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/dors.toml:503\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "set:dodsorsak"
+fields = { "label" = "ICD-kod för multipel dödsorsak", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-13"
+fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-14"
+fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-15"
+fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-16"
+fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-17"
+fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-18"
+fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-19"
+fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-20"
+fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-21"
+fields = { "facets" = { "ordinal" = { "value" = "21", "label" = "21" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-22"
+fields = { "facets" = { "ordinal" = { "value" = "22", "label" = "22" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-23"
+fields = { "facets" = { "ordinal" = { "value" = "23", "label" = "23" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-24"
+fields = { "facets" = { "ordinal" = { "value" = "24", "label" = "24" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-25"
+fields = { "facets" = { "ordinal" = { "value" = "25", "label" = "25" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-26"
+fields = { "facets" = { "ordinal" = { "value" = "26", "label" = "26" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-27"
+fields = { "facets" = { "ordinal" = { "value" = "27", "label" = "27" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-28"
+fields = { "facets" = { "ordinal" = { "value" = "28", "label" = "28" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-29"
+fields = { "facets" = { "ordinal" = { "value" = "29", "label" = "29" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-30"
+fields = { "facets" = { "ordinal" = { "value" = "30", "label" = "30" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-31"
+fields = { "facets" = { "ordinal" = { "value" = "31", "label" = "31" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-32"
+fields = { "facets" = { "ordinal" = { "value" = "32", "label" = "32" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-33"
+fields = { "facets" = { "ordinal" = { "value" = "33", "label" = "33" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-34"
+fields = { "facets" = { "ordinal" = { "value" = "34", "label" = "34" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-35"
+fields = { "facets" = { "ordinal" = { "value" = "35", "label" = "35" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-36"
+fields = { "facets" = { "ordinal" = { "value" = "36", "label" = "36" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-37"
+fields = { "facets" = { "ordinal" = { "value" = "37", "label" = "37" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-38"
+fields = { "facets" = { "ordinal" = { "value" = "38", "label" = "38" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-39"
+fields = { "facets" = { "ordinal" = { "value" = "39", "label" = "39" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-40"
+fields = { "facets" = { "ordinal" = { "value" = "40", "label" = "40" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-41"
+fields = { "facets" = { "ordinal" = { "value" = "41", "label" = "41" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-42"
+fields = { "facets" = { "ordinal" = { "value" = "42", "label" = "42" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-43"
+fields = { "facets" = { "ordinal" = { "value" = "43", "label" = "43" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-44"
+fields = { "facets" = { "ordinal" = { "value" = "44", "label" = "44" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-45"
+fields = { "facets" = { "ordinal" = { "value" = "45", "label" = "45" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-46"
+fields = { "facets" = { "ordinal" = { "value" = "46", "label" = "46" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-47"
+fields = { "facets" = { "ordinal" = { "value" = "47", "label" = "47" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-48"
+fields = { "facets" = { "ordinal" = { "value" = "48", "label" = "48" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:11; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:substans"
+fields = { "label" = "Substans", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-13"
+fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-14"
+fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-15"
+fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-16"
+fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-17"
+fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-18"
+fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-19"
+fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-20"
+fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-21"
+fields = { "facets" = { "ordinal" = { "value" = "21", "label" = "21" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-22"
+fields = { "facets" = { "ordinal" = { "value" = "22", "label" = "22" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-23"
+fields = { "facets" = { "ordinal" = { "value" = "23", "label" = "23" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-24"
+fields = { "facets" = { "ordinal" = { "value" = "24", "label" = "24" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-25"
+fields = { "facets" = { "ordinal" = { "value" = "25", "label" = "25" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-26"
+fields = { "facets" = { "ordinal" = { "value" = "26", "label" = "26" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-27"
+fields = { "facets" = { "ordinal" = { "value" = "27", "label" = "27" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-28"
+fields = { "facets" = { "ordinal" = { "value" = "28", "label" = "28" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-29"
+fields = { "facets" = { "ordinal" = { "value" = "29", "label" = "29" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-30"
+fields = { "facets" = { "ordinal" = { "value" = "30", "label" = "30" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-31"
+fields = { "facets" = { "ordinal" = { "value" = "31", "label" = "31" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-32"
+fields = { "facets" = { "ordinal" = { "value" = "32", "label" = "32" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-33"
+fields = { "facets" = { "ordinal" = { "value" = "33", "label" = "33" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-34"
+fields = { "facets" = { "ordinal" = { "value" = "34", "label" = "34" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-35"
+fields = { "facets" = { "ordinal" = { "value" = "35", "label" = "35" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-36"
+fields = { "facets" = { "ordinal" = { "value" = "36", "label" = "36" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-37"
+fields = { "facets" = { "ordinal" = { "value" = "37", "label" = "37" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-38"
+fields = { "facets" = { "ordinal" = { "value" = "38", "label" = "38" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-39"
+fields = { "facets" = { "ordinal" = { "value" = "39", "label" = "39" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-40"
+fields = { "facets" = { "ordinal" = { "value" = "40", "label" = "40" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-41"
+fields = { "facets" = { "ordinal" = { "value" = "41", "label" = "41" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-42"
+fields = { "facets" = { "ordinal" = { "value" = "42", "label" = "42" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-43"
+fields = { "facets" = { "ordinal" = { "value" = "43", "label" = "43" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-44"
+fields = { "facets" = { "ordinal" = { "value" = "44", "label" = "44" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-45"
+fields = { "facets" = { "ordinal" = { "value" = "45", "label" = "45" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-46"
+fields = { "facets" = { "ordinal" = { "value" = "46", "label" = "46" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-47"
+fields = { "facets" = { "ordinal" = { "value" = "47", "label" = "47" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-48"
+fields = { "facets" = { "ordinal" = { "value" = "48", "label" = "48" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:substans-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:18; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:dodsorsak-position"
+fields = { "label" = "Position på intyget av dödsorsaken (per dödsorsak)", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-13"
+fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-14"
+fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-15"
+fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-16"
+fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-17"
+fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-18"
+fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-19"
+fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-20"
+fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-21"
+fields = { "facets" = { "ordinal" = { "value" = "21", "label" = "21" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-22"
+fields = { "facets" = { "ordinal" = { "value" = "22", "label" = "22" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-23"
+fields = { "facets" = { "ordinal" = { "value" = "23", "label" = "23" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-24"
+fields = { "facets" = { "ordinal" = { "value" = "24", "label" = "24" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-25"
+fields = { "facets" = { "ordinal" = { "value" = "25", "label" = "25" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-26"
+fields = { "facets" = { "ordinal" = { "value" = "26", "label" = "26" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-27"
+fields = { "facets" = { "ordinal" = { "value" = "27", "label" = "27" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-28"
+fields = { "facets" = { "ordinal" = { "value" = "28", "label" = "28" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-29"
+fields = { "facets" = { "ordinal" = { "value" = "29", "label" = "29" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-30"
+fields = { "facets" = { "ordinal" = { "value" = "30", "label" = "30" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-31"
+fields = { "facets" = { "ordinal" = { "value" = "31", "label" = "31" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-32"
+fields = { "facets" = { "ordinal" = { "value" = "32", "label" = "32" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-33"
+fields = { "facets" = { "ordinal" = { "value" = "33", "label" = "33" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-34"
+fields = { "facets" = { "ordinal" = { "value" = "34", "label" = "34" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-35"
+fields = { "facets" = { "ordinal" = { "value" = "35", "label" = "35" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-36"
+fields = { "facets" = { "ordinal" = { "value" = "36", "label" = "36" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-37"
+fields = { "facets" = { "ordinal" = { "value" = "37", "label" = "37" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-38"
+fields = { "facets" = { "ordinal" = { "value" = "38", "label" = "38" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-39"
+fields = { "facets" = { "ordinal" = { "value" = "39", "label" = "39" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-40"
+fields = { "facets" = { "ordinal" = { "value" = "40", "label" = "40" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-41"
+fields = { "facets" = { "ordinal" = { "value" = "41", "label" = "41" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-42"
+fields = { "facets" = { "ordinal" = { "value" = "42", "label" = "42" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-43"
+fields = { "facets" = { "ordinal" = { "value" = "43", "label" = "43" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-44"
+fields = { "facets" = { "ordinal" = { "value" = "44", "label" = "44" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-45"
+fields = { "facets" = { "ordinal" = { "value" = "45", "label" = "45" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-46"
+fields = { "facets" = { "ordinal" = { "value" = "46", "label" = "46" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-47"
+fields = { "facets" = { "ordinal" = { "value" = "47", "label" = "47" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-48"
+fields = { "facets" = { "ordinal" = { "value" = "48", "label" = "48" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."

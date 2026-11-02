@@ -1,0 +1,96 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "kind": "set",
+        "fqid": "demo/bas/income-measures",
+        "name": "Inkomstmått",
+        "description": "Inkomst före och efter skatt för personer och hushåll.",
+        "register": "demo/bas",
+        "axes": [
+          {
+            "id": "unit",
+            "label": "Enhet"
+          },
+          {
+            "id": "measure",
+            "label": "Mått"
+          }
+        ],
+        "members": [
+          {
+            "fqid": "demo/bas/gross-household",
+            "name": "Förvärvsinkomst, hushåll",
+            "facets": [
+              {
+                "axis": "unit",
+                "value": "household",
+                "label": "household"
+              },
+              {
+                "axis": "measure",
+                "value": "gross",
+                "label": "Före skatt"
+              }
+            ]
+          },
+          {
+            "fqid": "demo/bas/net-household",
+            "name": "Disponibel inkomst, hushåll",
+            "facets": [
+              {
+                "axis": "unit",
+                "value": "household",
+                "label": "household"
+              },
+              {
+                "axis": "measure",
+                "value": "net",
+                "label": "Efter skatt"
+              }
+            ]
+          },
+          {
+            "fqid": "demo/bas/gross-person",
+            "name": "Förvärvsinkomst, person",
+            "facets": [
+              {
+                "axis": "unit",
+                "value": "person",
+                "label": "person"
+              },
+              {
+                "axis": "measure",
+                "value": "gross",
+                "label": "Före skatt"
+              }
+            ]
+          },
+          {
+            "fqid": "demo/bas/inkomst",
+            "name": "Inkomst efter skatt",
+            "facets": [
+              {
+                "axis": "unit",
+                "value": "person",
+                "label": "person"
+              },
+              {
+                "axis": "measure",
+                "value": "net",
+                "label": "Efter skatt"
+              }
+            ]
+          }
+        ],
+        "tags": [
+          {
+            "fqid": "tag/income",
+            "name": "Inkomst"
+          }
+        ]
+      }
+    }
+  }
+]

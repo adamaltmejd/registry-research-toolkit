@@ -522,14 +522,14 @@ optional user-facing text. Kind-specific content is:
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `length`, `format`, `notice`, `coverage`,
-`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name` and `synonyms`.
-Source-shaped assertion fields have a separate closed schema, including table `name` and
-occurrence `type` and `length`. Lists of sets, tags, sentinels and synonyms normalize as
-sorted sets; asserted codes sort by code, while duplicate codes are refused. Addresses
-normalize folded spellings, expanded braces and sorted guards and period tokens before
-hashing. Links add relations; conflicting successions refuse. There is no
-successor-choice or `reject` form. Merged release changes update every claim to the
-release's final placement.
+`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name`, `synonyms`, `axes`
+and `facets`. Source-shaped assertion fields have a separate closed schema, including
+table `name` and occurrence `type` and `length`. Lists of sets, tags, sentinels and
+synonyms normalize as sorted sets; asserted codes sort by code, while duplicate codes
+are refused. Addresses normalize folded spellings, expanded braces and sorted guards and
+period tokens before hashing. Links add relations; conflicting successions refuse. There
+is no successor-choice or `reject` form. Merged release changes update every claim to
+the release's final placement.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
@@ -2356,7 +2356,10 @@ A call returns one ranked list.
    `invalid_ref`; it keeps `search_item.register_id = id`, which drops code rows and
    keeps a document linked to that register (its first linked subject's). `period` keeps
    `start < e AND s < end` over the row's hull, which drops code and document rows (no
-   span). So `type=code` with `register` or `period` is empty.
+   span). So `type=code` with `register` or `period` is empty. `tag` accepts a tag slug
+   or its `tag/<slug>` public id and keeps only variables belonging to that tag; an
+   unknown tag has no matches. It applies before paging and paired-result counts, and
+   belongs to the cursor context like every other search filter.
 5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
    cursor's context is every parameter but `cursor` and `limit`, its offset the hits
    returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page
@@ -2417,19 +2420,33 @@ substitutes a version or reinterprets codes.
 ## Sets and tags
 
 Variable membership is curated with `set sets` and `set tags` and emitted through the
-existing membership storage. The D-9 converter combines explicit legacy groups with
-existing memberships into one setter per final variable. It converts membership only:
-axes, filters, value labels, coordinates, delivery-column hints and tag rank/star/notes
-are dropped with a named reason in its source-located report. Useful presentation
-metadata is deferred to the webapp rebuild (source recorded in REBUILD.md). Register tag
-memberships are deferred because the catalog has no register tag home; they are never
-expanded onto variables. Tag search is not implemented in D-9.
+existing membership storage. A register's `set:<slug>` subject gives an existing set its
+`label`, optional `description` and ordered `axes = [{id, label}]`. These use the same
+statements, resolution, locks and provenance as other curated fields. Set labels and
+descriptions occupy `var_set.name_text` and `description_text`; ordered axes occupy
+`var_set_axis`. A variable's `facets = {axis = {value, label}}` supplies its coordinate
+in its one set, in `var_set_member_facet`; omitted labels default to the value. An
+undeclared axis or a variable outside the set refuses at its statement location. These
+tables are part of catalog schema 6.
+
+`show` at a set's public id returns `kind: "set"`, its `fqid`, `name`, optional
+`description`, register public id, ordered `axes`, and `members`. Each member supplies
+`fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members sort by
+facet value in axis order (missing coordinates first), then by name and public id.
+`tags` is the union of the members' tags in public-id order. The summary contains
+curated presentation data; source evidence remains on the individual variables.
+
+The D-9 converter ported memberships; W6 restores unambiguously mapped legacy set
+labels, axes and member coordinates. Delivery-column hints, multi-coordinate identity
+splits, tag rank and classification groups stay outside this presentation model.
+Register tag memberships and tag star/notes remain maintainer decisions; register tags
+are never expanded onto variables. Tags filter search and have no `show` page.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it
 there should find in one place. A set never spans registers, and finding a concept
-across registers is a tag's job. It is presentation only, never an id kind, a binding or
-an order key.
+across registers is a tag's job. Its public id addresses presentation only; it is never
+a variable identity, a binding or an order key.
 
 A set is warranted when one register has two or more variables that are each an amount
 (or a coding) of the same concept for some unit under some definition. A component the
@@ -2457,8 +2474,8 @@ definitions are nonblank Swedish text. Unknown fields refuse. Build and lock ref
 unknown membership slugs at their curation statement locations. The vocabulary is
 included in the build input hash, but never in lock premises or per-register lock
 digests: editing a definition needs no relock. Tag labels and definitions populate the
-existing `var_set.name_text` and `description_text`; schema 4 remains unchanged. No
-current runtime, search or SPA consumer reads these memberships.
+existing `var_set.name_text` and `description_text`. Variable and set summaries expose
+tag memberships, and `search?tag=` narrows discovery to the tag's variables.
 
 ## Relationship graph
 

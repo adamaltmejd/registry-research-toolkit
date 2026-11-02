@@ -1892,3 +1892,9 @@ relation = "continues"
 object = "scb/iku/driftskostnader-reparationer"
 at = "2012-01-01.."
 evidence = "IKU V3010: repairs and running maintenance (2007-11) -> incl. periodic maintenance (2012-15); broadened."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iku.toml:9; existing set membership and current id ledger determine the targets."

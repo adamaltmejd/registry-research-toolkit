@@ -1335,3 +1335,15 @@ kind = "set"
 subject = "var:fv-pam"
 fields = { "tags" = ["methods"] }
 evidence = "The flag controls reminders to data providers to submit information (r103), recorded by staff (r31). This response-collection role supports methods within the register's mixed themes (r139).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:400491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40670\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "set:kn4"
+fields = { "label" = "KN4-varukod" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/prisindex.toml:21; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:kn8"
+fields = { "label" = "KN8-varukod" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/prisindex.toml:28; existing set membership and current id ledger determine the targets."

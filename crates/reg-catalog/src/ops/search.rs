@@ -47,12 +47,14 @@ pub const OPERATIONS: &[Operation] = &[
                       documents, ranked by relevance. Paired steward results have separate \
                       ranks, counts and cursors; scope=steward filters held intervals before \
                       ranking. Exact column names are `resolve`. \
+                      Use tag to keep variables belonging to that thematic tag. \
                       Use show with evidence=true to check a variable's provenance.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("type", Type::Enum(TYPES)),
             Param::optional("register", Type::Ref),
             Param::optional("period", Type::Period),
+            Param::optional("tag", Type::String),
             Param::optional("limit", Type::Limit),
             Param::optional("cursor", Type::Cursor),
             Param::optional("steward_cursor", Type::Cursor),
@@ -286,23 +288,21 @@ fn search_origin(
             steward: None,
         });
     };
-    let scope = held_search_scope(server, conn, held)?;
-    let filter = format!(
-        "(?2 IS NULL OR i.kind = ?2)
-        AND (?3 IS NULL OR i.register_id = ?3)
-        AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end)){scope}"
-    );
+    let tag = params
+        .get("tag")
+        .map(|tag| format!("tag/{}", tag.strip_prefix("tag/").unwrap_or(tag)));
+    let filter = search_filter(server, conn, held)?;
     let (start, end) = period.unzip();
     let total = paired.then(|| conn.query_row(
         &format!("{MATCHES} SELECT COUNT(*) FROM matched m JOIN search_item i ON i.id = m.id WHERE {filter}"),
-        params![expression, kind, register, start, end], |r| r.get(0))).transpose()?;
+        params![expression, kind, register, start, end, tag], |r| r.get(0))).transpose()?;
     let take = limit.min(DEPTH - offset);
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
     let mut rows: Vec<(i64, String, Option<i64>, String)> = conn
         .prepare(&format!(
             "{MATCHES} SELECT i.id, i.kind, i.entity_id, i.sort_key
          FROM matched m JOIN search_item i ON i.id = m.id
-         WHERE {filter} ORDER BY {ORDER} LIMIT ?6 OFFSET ?7"
+         WHERE {filter} ORDER BY {ORDER} LIMIT ?7 OFFSET ?8"
         ))?
         .query_map(
             params![
@@ -311,6 +311,7 @@ fn search_origin(
                 register,
                 start,
                 end,
+                tag,
                 sql_int(take + 1),
                 sql_int(offset)
             ],
@@ -339,14 +340,10 @@ fn search_origin(
     })
 }
 
-/// Possession is restricted by public id and requested interval before either
-/// the count or the ranked page query. Code/document presence grants no possession.
-fn held_search_scope(
-    server: &Server,
-    conn: &Connection,
-    held: bool,
-) -> Result<&'static str, Error> {
-    Ok(if held {
+/// Count and page share all filters. Possession is restricted by public id and
+/// requested interval; code/document presence grants no possession.
+fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<String, Error> {
+    let scope = if held {
         server.catalog.attach_holdings(conn)?;
         " AND EXISTS (SELECT 1 FROM held.holding_mapping hm
             JOIN variable hv ON hv.pid = hm.variable_pid
@@ -357,7 +354,15 @@ fn held_search_scope(
                OR (i.kind = 'register' AND i.entity_id = ht.register_id)))"
     } else {
         ""
-    })
+    };
+    Ok(format!(
+        "(?2 IS NULL OR i.kind = ?2)
+        AND (?3 IS NULL OR i.register_id = ?3)
+        AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end))
+        AND (?6 IS NULL OR (i.kind = 'variable' AND EXISTS (
+            SELECT 1 FROM var_set_member tm JOIN var_set t ON t.id = tm.set_id
+            WHERE tm.variable_id = i.entity_id AND t.kind = 'tag' AND t.pid = ?6))){scope}"
+    ))
 }
 
 /// A row's hit, with the fields rule 6 lists.

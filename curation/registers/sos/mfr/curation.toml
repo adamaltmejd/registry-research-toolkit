@@ -2914,3 +2914,447 @@ kind = "set"
 subject = "var:ofristim"
 fields = { "description" = "Ovulationsstimulering som åtgärd vid ofrivillig barnlöshet." }
 evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 194, column OFRISTIM; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:50544-50742"
+
+[[statement]]
+kind = "set"
+subject = "set:barnets-diagnoskod-bk"
+fields = { "label" = "Barnets diagnoskod BK", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-6"
+fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-7"
+fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-8"
+fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-barnet"
+fields = { "label" = "Diagnoskod, barnet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-13"
+fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-14"
+fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-15"
+fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-16"
+fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-17"
+fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-18"
+fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-19"
+fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-20"
+fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod-barnet"
+fields = { "label" = "Åtgärdskod, barnet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod-forlosta"
+fields = { "label" = "Åtgärdskod, den förlösta", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-forlosta"
+fields = { "label" = "Diagnoskod, den förlösta", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-1"
+fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-10"
+fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-11"
+fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-12"
+fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-2"
+fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-3"
+fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-4"
+fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-5"
+fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-6"
+fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-7"
+fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-8"
+fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-9"
+fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-graviditet"
+fields = { "label" = "Diagnoskod under graviditet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."

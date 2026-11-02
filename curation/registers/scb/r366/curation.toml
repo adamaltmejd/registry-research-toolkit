@@ -16594,3 +16594,9 @@ kind = "set"
 subject = "var:arbete-sysselsattning-efter-utbildningen"
 fields = { "description" = "Anger om personen arbetar vid samma universitet eller högskola som personen disputerade vid." }
 evidence = "Definition pass 2026-11-02: The question compares employer institution with the doctoral institution, not main activity.\nrel070-base/reg_meta.db:occurrence:510429"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "label" = "Kommungrupp" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:34; existing set membership and current id ledger determine the targets."

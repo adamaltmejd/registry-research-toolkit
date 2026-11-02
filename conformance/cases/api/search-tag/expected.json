@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/bas/inkomst"
+      ],
+      "/data/items/*/type": [
+        "variable"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/bas/inkomst"
+      ],
+      "/data/items/*/type": [
+        "variable"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  }
+]

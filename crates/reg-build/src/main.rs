@@ -561,6 +561,7 @@ fn build_with_provenance(
         &applied.overrides,
     );
     let catalog = emit::Catalog {
+        set_presentation: applied.sets,
         retired,
         tags,
         meta,

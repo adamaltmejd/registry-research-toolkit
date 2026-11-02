@@ -781,6 +781,7 @@ fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, S
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
+    pub sets: Vec<reg_resolve::curation::apply::SetPresentation>,
     pub records: Vec<Record>,
     pub findings: Vec<String>,
     pub refusals: Vec<Refusal>,
@@ -1442,6 +1443,7 @@ fn run_selected(
                     return Ok(rerun);
                 }
             };
+            result.sets.extend(applied.sets);
             result.variables.extend(applied.assignments);
             result.metadata.extend(applied.metadata);
             result.sentinels.extend(
@@ -1731,6 +1733,24 @@ fn run_selected(
         return Ok(rerun);
     }
 
+    if !result.sets.is_empty()
+        || result.metadata.iter().any(|m| {
+            matches!(
+                m.value,
+                reg_resolve::curation::apply::MetadataValue::Facets { .. }
+            )
+        })
+    {
+        let resolved = resolve_catalog(
+            root,
+            retired,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )?;
+        reg_resolve::curation::validate_set_presentation(&resolved, &result.sets)?;
+    }
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()
             && !registers

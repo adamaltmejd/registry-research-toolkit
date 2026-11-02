@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
+        "description": "The summary of a provider, register, table, set or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
+        "description": "The summary of a provider, register, table, set or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -1062,7 +1062,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
+        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use tag to keep variables belonging to that thematic tag. Use show with evidence=true to check a variable's provenance.",
         "operationId": "search",
         "parameters": [
           {
@@ -1099,6 +1099,14 @@
           },
           {
             "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
             "in": "query",
             "required": false,
             "schema": {
@@ -4065,6 +4073,58 @@
               "fqid",
               "name",
               "register",
+              "axes",
+              "members",
+              "tags",
+              "kind"
+            ],
+            "properties": {
+              "axes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSetAxis"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "set"
+                ]
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSetMember"
+                }
+              },
+              "name": {
+                "type": "string"
+              },
+              "register": {
+                "type": "string",
+                "description": "The register's fqid."
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowMembership"
+                },
+                "description": "The union of the members' tags, in public-id order."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "register",
               "period",
               "sets",
               "tags",
@@ -4194,6 +4254,64 @@
             "$ref": "#/components/schemas/Period"
           },
           "spelling": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowSetAxis": {
+        "type": "object",
+        "description": "A set's distinguishing axis, in curated order.",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowSetFacet": {
+        "type": "object",
+        "required": [
+          "axis",
+          "value",
+          "label"
+        ],
+        "properties": {
+          "axis": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowSetMember": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "facets"
+        ],
+        "properties": {
+          "facets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowSetFacet"
+            },
+            "description": "The member's coordinates in the set's axis order."
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }
