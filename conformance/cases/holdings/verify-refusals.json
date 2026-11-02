@@ -23,5 +23,10 @@
     "sql": "INSERT INTO holding_table(physical_name,file_name,disposition,reason,locator) VALUES('Invented','invented','lookup','Not in census','fixture:invented'); UPDATE meta SET value='10' WHERE key='census_tables'",
     "code": "holdings_census_table_extra",
     "location": "holdings:table="
+  },
+  {
+    "sql": "DELETE FROM holding_mapping WHERE variable_pid='demo/held/id' AND column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool'); INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT c.holding_id,c.id,'mapping_missing','Required key withheld','fixture:missing-required-key' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Received_Id'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='unmatched_columns';",
+    "code": "holdings_key_missing",
+    "location": "key=demo/held/id:"
   }
 ]

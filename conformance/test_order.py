@@ -152,6 +152,8 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
 
     # Fails if verify trusts compiler counters instead of the pinned source files:
     # exact-name/type corruption and additions/removals keep those counters consistent.
+    # The withheld-key case also fails if the required-key guard or its location is lost,
+    # while retaining source coordinates and consistent mapped/unmatched accounting.
     for case in json.loads((HOLDINGS_CASE / "verify-refusals.json").read_text()):
         damaged = tmp_path / "damaged.db"
         shutil.copyfile(outputs[0], damaged)
