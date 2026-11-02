@@ -22472,3 +22472,9 @@ kind = "set"
 subject = "var:utbildningsbidrag-vid-arbetsmarknadsutbildning"
 fields = { "sets" = ["ersattning-arbetsmarknadsprogram"] }
 evidence = "r682 explicitly defines taxable daily compensation granted for labour-market training, fitting the labour-market-measure payment scope in r686.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37185\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37336\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/linda/ersattning-arbetsmarknadsprogram"
+
+[[statement]]
+kind = "set"
+subject = "var:bkyrka"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:36243\ncatalog:variable_text:36243:9131:17897"

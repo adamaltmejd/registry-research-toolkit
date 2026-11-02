@@ -9877,13 +9877,13 @@ evidence = "Id:t är läsbart inom hus-familjen. Variabeln avser näringsgrensko
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk1"
+subject = "var:yrke-1-sifferniva-i-huvudsysslan"
 fields = { "sets" = ["yrke-i-huvudsysslan"] }
 evidence = "SSYK är en klassifikationskod som inte förekommer i etiketten. Variabeln hör till gruppen för yrke i huvudsysslan.\ncatalog:occurrence:26710\ncatalog:occurrence:26711\ncatalog:occurrence:26712\ncatalog:variable_text:3591:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk1"
+subject = "var:yrke-1-sifferniva-i-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK är en klassifikationskod som inte förekommer i etiketten. Variabeln hör till gruppen för yrke i huvudsysslan.\ncatalog:occurrence:26710\ncatalog:occurrence:26711\ncatalog:occurrence:26712\ncatalog:variable_text:3591:18628:18993"
 

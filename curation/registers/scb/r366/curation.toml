@@ -5677,13 +5677,13 @@ evidence = "Frågekoden är opak; källan anger användning av tryckta läroböc
 
 [[statement]]
 kind = "set"
-subject = "var:f22eforemarsvt20"
+subject = "var:anvandning-av-material-pa-papper-fore-mitten-av-mars-2020"
 fields = { "sets" = ["anvandning-av-material-pa-papper"] }
 evidence = "Frågekoden är opak; källan anger användning av material på papper.\ncatalog:variable_text:53806:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22eforemarsvt20"
+subject = "var:anvandning-av-material-pa-papper-fore-mitten-av-mars-2020"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak; källan anger användning av material på papper.\ncatalog:variable_text:53806:18262:18444"
 
@@ -14203,13 +14203,13 @@ evidence = "Avser skäl att lämna yrket.\ncatalog:variable_text:54594:16801:171
 
 [[statement]]
 kind = "set"
-subject = "var:tjb"
+subject = "var:senaste-tjanstebenamning-larare-skolledare"
 fields = { "sets" = [] }
 evidence = "TjB är en ogenomskinlig källförkortning för tjänstebenämning.\ncatalog:occurrence:511118\ncatalog:variable_text:54595:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:tjb"
+subject = "var:senaste-tjanstebenamning-larare-skolledare"
 fields = { "tags" = ["employment"] }
 evidence = "TjB är en ogenomskinlig källförkortning för tjänstebenämning.\ncatalog:occurrence:511118\ncatalog:variable_text:54595:12418:12784"
 

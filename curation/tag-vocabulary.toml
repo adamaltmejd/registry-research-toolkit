@@ -193,3 +193,8 @@ definition = "Mönstring, inskrivning, värnplikt, militär tjänstgöring, plac
 id = "integration"
 label = "Integration och etablering"
 definition = "Invandrares etablering, introduktionsprogram, integrationsinsatser och hinder eller utfall uttryckligen kopplade till dessa. Flyttning och bosättning hör till migration; allmän sysselsättning till employment. Enbart utländsk bakgrund motiverar inte integration."
+
+[[tag]]
+id = "language-religion"
+label = "Språk och religion"
+definition = "Språk, modersmål, språkanvändning och språkfärdigheter samt religiös tillhörighet, trossamfund, religiösa handlingar och kyrko- och samfundsavgifter. Omfattar även diskriminering som uttryckligen avser språk eller religion. Territoriella församlingskoder som anger geografiskt läge hör till geography; ett undervisningsämne eller en språkkurs hör till education när måttet avser utbildningsdeltagande eller utbildningsresultat."

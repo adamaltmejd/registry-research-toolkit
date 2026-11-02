@@ -5740,3 +5740,9 @@ kind = "set"
 subject = "var:nuvarande-arbete-utbildningsniva-for-att-fa-arbetet"
 fields = { "sets" = ["utbildningskrav-i-arbetet"] }
 evidence = "r4 asks which education level is required to obtain the current type of job, and r26 supplies education-level codes. It shares job-required education with r5.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40062\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:394873\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:394874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8230"
+
+[[statement]]
+kind = "set"
+subject = "var:namnde-fler-an-ett-sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The operational definition asks whether the respondent mentioned more than one language, establishing the language theme despite the generic background label.\ncatalog:variable:40054\ncatalog:variable_text:40054:15340:15706"

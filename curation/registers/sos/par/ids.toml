@@ -5,6 +5,8 @@
 "PAR_TV" = "par-tv"
 
 [variables]
+"atc-koder-diagnos-yttre-orsak" = ["PAR_SV: ATC @ 1997-01-01"]
+"atc-koder-atgard" = ["PAR_OV: ATCO @ 2007-01-01"]
 "alder" = ["PAR_OV: ALDER"]
 "anestesikod-1" = ["PAR_OV: ANE1"]
 "anestesikod-2" = ["PAR_OV: ANE2"]
@@ -125,7 +127,7 @@
 "alder-vid-arets-slut" = ["PAR_OV: ALDER_S"]
 "slutdatum-for-psykiatrisk-vardform" = ["PAR_SV: SLUT"]
 "startdatum-for-psykiatrisk-vardform" = ["PAR_SV: START"]
-"tillhorande-atg-kod-ar-en-atc-kod" = ["PAR_OV: ATCO"]
-"tillhorande-dia-eller-yo-kod-ar-en-atc-kod" = ["PAR_OV: ATC"]
+"tillhorande-atg-kod-ar-en-atc-kod" = ["PAR_OV: ATCO @ 2015-01-01"]
+"tillhorande-dia-eller-yo-kod-ar-en-atc-kod" = ["PAR_OV: ATC @ 2015-01-01"]
 "typ-av-diagnos" = ["PAR_OV: HDIA"]
 "yttre-orsakskoder" = ["PAR_OV: EKOD"]

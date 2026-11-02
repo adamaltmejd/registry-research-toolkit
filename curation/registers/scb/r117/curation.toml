@@ -1670,13 +1670,13 @@ evidence = "Identitetsfakten visar samma begrepp uppdelat mellan observerade per
 
 [[statement]]
 kind = "set"
-subject = "var:utjamningsar-lss-utjamning-23685"
+subject = "var:utjamningsar-lss-utjamning"
 fields = { "sets" = ["utjamningsar"] }
 evidence = "Siffersuffixet finns inte i källkolumnens namn och är ett räknarsuffix. LSS är läsbart i källans benämning.\ncatalog:occurrence-locators:variable:34301\ncatalog:occurrence:301255\ncatalog:variable_text:34301:20454:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:utjamningsar-lss-utjamning-23685"
+subject = "var:utjamningsar-lss-utjamning"
 fields = { "tags" = [] }
 evidence = "Siffersuffixet finns inte i källkolumnens namn och är ett räknarsuffix. LSS är läsbart i källans benämning.\ncatalog:occurrence-locators:variable:34301\ncatalog:occurrence:301255\ncatalog:variable_text:34301:20454:20819"
 

@@ -33830,13 +33830,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:46537:10227:113
 
 [[statement]]
 kind = "set"
-subject = "var:ba0257"
+subject = "var:hektar-skog-far"
 fields = { "sets" = [] }
 evidence = "Etikett och definition anger skog, medan den senare operativa texten nämner åkerjord.\ncatalog:variable_text:46539:13149:13514\ncatalog:variable_text:46539:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:ba0257"
+subject = "var:hektar-skog-far"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Etikett och definition anger skog, medan den senare operativa texten nämner åkerjord.\ncatalog:variable_text:46539:13149:13514\ncatalog:variable_text:46539:8401:12784"
 
@@ -33866,25 +33866,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:46541:13879:160
 
 [[statement]]
 kind = "set"
-subject = "var:ba0266"
+subject = "var:hektar-akerjord-mor"
 fields = { "sets" = [] }
 evidence = "Källans etikett och definition anger åkerjord men den senare operativa definitionen anger skog.\ncatalog:variable_text:46543:13149:13514\ncatalog:variable_text:46543:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:ba0266"
+subject = "var:hektar-akerjord-mor"
 fields = { "tags" = ["agriculture"] }
 evidence = "Källans etikett och definition anger åkerjord men den senare operativa definitionen anger skog.\ncatalog:variable_text:46543:13149:13514\ncatalog:variable_text:46543:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:ba0267"
+subject = "var:hektar-skog-mor"
 fields = { "sets" = [] }
 evidence = "Källans operativa definition motsäger etiketten under en period.\ncatalog:occurrence:498543\ncatalog:variable_text:46544:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:ba0267"
+subject = "var:hektar-skog-mor"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Källans operativa definition motsäger etiketten under en period.\ncatalog:occurrence:498543\ncatalog:variable_text:46544:8401:12784"
 
@@ -34598,13 +34598,13 @@ evidence = "BA3512 är en ogenomskinlig källkod; etiketten anger födelseår f�
 
 [[statement]]
 kind = "set"
-subject = "var:ba3521"
+subject = "var:kon-person-11-i-tablan"
 fields = { "sets" = [] }
 evidence = "The later yes/no values conflict with the sex label and earlier sex codes.\ncatalog:valueset:10815\ncatalog:valueset:12820\ncatalog:variable_text:46613:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:ba3521"
+subject = "var:kon-person-11-i-tablan"
 fields = { "tags" = ["demographics"] }
 evidence = "The later yes/no values conflict with the sex label and earlier sex codes.\ncatalog:valueset:10815\ncatalog:valueset:12820\ncatalog:variable_text:46613:13149:13514"
 
@@ -61154,13 +61154,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:49021
 
 [[statement]]
 kind = "set"
-subject = "var:ha0507"
+subject = "var:antal-ogonsjukdomsdiagnoser"
 fields = { "sets" = [] }
 evidence = "Källans operativa definition står i konflikt med etiketten och diagnosintervallet.\ncatalog:variable_text:49022:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ha0507"
+subject = "var:antal-ogonsjukdomsdiagnoser"
 fields = { "tags" = ["health"] }
 evidence = "Källans operativa definition står i konflikt med etiketten och diagnosintervallet.\ncatalog:variable_text:49022:13879:15340"
 
@@ -66866,13 +66866,13 @@ evidence = "HA14 är en källkod och A är en bokstavskod; etiketten anger varia
 
 [[statement]]
 kind = "set"
-subject = "var:ha14astmab"
+subject = "var:sjalvskattad-besvarsgrad-astma"
 fields = { "sets" = [] }
 evidence = "Etikett och definition anger olika sjukdomar.\ncatalog:variable_text:49503:16071:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ha14astmab"
+subject = "var:sjalvskattad-besvarsgrad-astma"
 fields = { "tags" = ["health"] }
 evidence = "Etikett och definition anger olika sjukdomar.\ncatalog:variable_text:49503:16071:18628"
 
@@ -66962,13 +66962,13 @@ evidence = "Etiketten och definitionen kan inte säkert förenas.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:ha14dysxa"
+subject = "var:har-dyslexi-eller-dyskalkyli"
 fields = { "sets" = [] }
 evidence = "Etiketten och definitionen skiljer sig i vilka tillstånd som omfattas.\ncatalog:variable_text:49511:16071:18628\ncatalog:variable_text:49512:16071:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ha14dysxa"
+subject = "var:har-dyslexi-eller-dyskalkyli"
 fields = { "tags" = ["disability", "health"] }
 evidence = "Etiketten och definitionen skiljer sig i vilka tillstånd som omfattas.\ncatalog:variable_text:49511:16071:18628\ncatalog:variable_text:49512:16071:18628"
 
@@ -87074,13 +87074,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51303:10957:124
 
 [[statement]]
 kind = "set"
-subject = "var:sm0251"
+subject = "var:yrkeskod-fob85-make-maka"
 fields = { "sets" = [] }
 evidence = "Definitionen anger yrkeskod men värdemängden heter näringsgren och dess koder är utelämnade.\ncatalog:valueset:4198\ncatalog:variable_text:51304:8401:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0251"
+subject = "var:yrkeskod-fob85-make-maka"
 fields = { "tags" = ["employment"] }
 evidence = "Definitionen anger yrkeskod men värdemängden heter näringsgren och dess koder är utelämnade.\ncatalog:valueset:4198\ncatalog:variable_text:51304:8401:12418"
 
@@ -87218,25 +87218,25 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51316:13149
 
 [[statement]]
 kind = "set"
-subject = "var:sm0340"
+subject = "var:hektar-akerjord-make-maka"
 fields = { "sets" = [] }
 evidence = "Källan anger en ändring från hektar till indelade svarsklasser.\ncatalog:variable_text:51317:13149:13514\ncatalog:variable_text:51317:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0340"
+subject = "var:hektar-akerjord-make-maka"
 fields = { "tags" = ["agriculture"] }
 evidence = "Källan anger en ändring från hektar till indelade svarsklasser.\ncatalog:variable_text:51317:13149:13514\ncatalog:variable_text:51317:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0341"
+subject = "var:hektar-skog-make-maka"
 fields = { "sets" = [] }
 evidence = "The source records a change from hectare counts to classes.\ncatalog:variable_text:51318:13149:13514\ncatalog:variable_text:51318:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0341"
+subject = "var:hektar-skog-make-maka"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "The source records a change from hectare counts to classes.\ncatalog:variable_text:51318:13149:13514\ncatalog:variable_text:51318:8401:12784"
 
@@ -87302,25 +87302,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51323:10227:109
 
 [[statement]]
 kind = "set"
-subject = "var:sm0396"
+subject = "var:hektar-akerjord-pensionerad-make-maka"
 fields = { "sets" = [] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51326:13149:13514\ncatalog:variable_text:51326:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0396"
+subject = "var:hektar-akerjord-pensionerad-make-maka"
 fields = { "tags" = ["agriculture"] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51326:13149:13514\ncatalog:variable_text:51326:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0397"
+subject = "var:hektar-skog-pensionerad-make-maka-sambo"
 fields = { "sets" = [] }
 evidence = "Källan anger ändrad kodning och 2007 års definition nämner åkerjord trots skogsetiketten.\ncatalog:variable_text:51327:13149:13514\ncatalog:variable_text:51327:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sm0397"
+subject = "var:hektar-skog-pensionerad-make-maka-sambo"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Källan anger ändrad kodning och 2007 års definition nämner åkerjord trots skogsetiketten.\ncatalog:variable_text:51327:13149:13514\ncatalog:variable_text:51327:8401:12784"
 
@@ -92042,13 +92042,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51899:8766:1205
 
 [[statement]]
 kind = "set"
-subject = "var:sy0251"
+subject = "var:yrkeskod-fob85-anstallda"
 fields = { "sets" = [] }
 evidence = "The label and definition say occupation, but the omitted value set is named industry.\ncatalog:valueset:4198\ncatalog:variable_text:51900:8401:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0251"
+subject = "var:yrkeskod-fob85-anstallda"
 fields = { "tags" = ["employment"] }
 evidence = "The label and definition say occupation, but the omitted value set is named industry.\ncatalog:valueset:4198\ncatalog:variable_text:51900:8401:12053"
 
@@ -92690,25 +92690,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51960:11688:124
 
 [[statement]]
 kind = "set"
-subject = "var:sy0340"
+subject = "var:hektar-akerjord-jordbrukare"
 fields = { "sets" = [] }
 evidence = "Källan anger att mätningens representation ändrades från hektar till klasser.\ncatalog:variable_text:51961:13149:13514\ncatalog:variable_text:51961:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0340"
+subject = "var:hektar-akerjord-jordbrukare"
 fields = { "tags" = ["agriculture"] }
 evidence = "Källan anger att mätningens representation ändrades från hektar till klasser.\ncatalog:variable_text:51961:13149:13514\ncatalog:variable_text:51961:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0341"
+subject = "var:hektar-skog-jordbrukare"
 fields = { "sets" = [] }
 evidence = "Källan anger att mätningens representation ändrades från hektar till klasser.\ncatalog:variable_text:51962:13149:13514\ncatalog:variable_text:51962:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0341"
+subject = "var:hektar-skog-jordbrukare"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Källan anger att mätningens representation ändrades från hektar till klasser.\ncatalog:variable_text:51962:13149:13514\ncatalog:variable_text:51962:8401:12784"
 
@@ -93026,25 +93026,25 @@ evidence = "Källkoden är opak; SY0394 mäter ett annat skäl för samma utfall
 
 [[statement]]
 kind = "set"
-subject = "var:sy0396"
+subject = "var:hektar-akerjord-pensionar"
 fields = { "sets" = [] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51995:13149:13514\ncatalog:variable_text:51995:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0396"
+subject = "var:hektar-akerjord-pensionar"
 fields = { "tags" = ["agriculture"] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51995:13149:13514\ncatalog:variable_text:51995:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0397"
+subject = "var:hektar-skog-pensionar"
 fields = { "sets" = [] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51996:13149:13514\ncatalog:variable_text:51996:8401:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:sy0397"
+subject = "var:hektar-skog-pensionar"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Mätvärdet ändras från antal hektar till klasser.\ncatalog:variable_text:51996:13149:13514\ncatalog:variable_text:51996:8401:12784"
 
@@ -93926,13 +93926,13 @@ evidence = "SY1310 är en källkod; etiketten anger sammanlagd arbetslöshet kor
 
 [[statement]]
 kind = "set"
-subject = "var:sy1311"
+subject = "var:arbetsloshets-och-permitteringstid-senaste-5-aren-ej-ak"
 fields = { "sets" = [] }
 evidence = "Definitionen anger veckor, men värdesatsen för 2004 innehåller årskategorier.\ncatalog:valueset:9097\ncatalog:variable_text:52071:12418:12784\ncatalog:variable_text:52071:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sy1311"
+subject = "var:arbetsloshets-och-permitteringstid-senaste-5-aren-ej-ak"
 fields = { "tags" = ["employment"] }
 evidence = "Definitionen anger veckor, men värdesatsen för 2004 innehåller årskategorier.\ncatalog:valueset:9097\ncatalog:variable_text:52071:12418:12784\ncatalog:variable_text:52071:13149:13514"
 
@@ -103724,13 +103724,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger timmar för deltids
 
 [[statement]]
 kind = "set"
-subject = "var:ut0550"
+subject = "var:universitet-hogskola-antal-terminer-heltid"
 fields = { "sets" = [] }
 evidence = "Etiketten och definitionen anger terminer men en senare enhet anger timmar.\ncatalog:variable_text:52940:8766:9131\ncatalog:variable_text:52940:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:ut0550"
+subject = "var:universitet-hogskola-antal-terminer-heltid"
 fields = { "tags" = ["education"] }
 evidence = "Etiketten och definitionen anger terminer men en senare enhet anger timmar.\ncatalog:variable_text:52940:8766:9131\ncatalog:variable_text:52940:9131:9496"
 
@@ -105260,73 +105260,73 @@ evidence = "Familjen *2000* ska ha en gemensam läsbarhetsbedömning; sun2000niv
 
 [[statement]]
 kind = "set"
-subject = "var:ut2001"
+subject = "var:internutbildning-minst-en-vecka-senaste-3-aren"
 fields = { "sets" = [] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:53092:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2001"
+subject = "var:internutbildning-minst-en-vecka-senaste-3-aren"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:53092:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2004"
+subject = "var:internutbildning-anvandbar-annan-arbetsgivare"
 fields = { "sets" = [] }
 evidence = "UT2004 är en opak källkod.\ncatalog:variable_text:53093:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2004"
+subject = "var:internutbildning-anvandbar-annan-arbetsgivare"
 fields = { "tags" = ["education"] }
 evidence = "UT2004 är en opak källkod.\ncatalog:variable_text:53093:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2005"
+subject = "var:internutbildning-anvandbar-alla-foretag-i-branschen"
 fields = { "sets" = [] }
 evidence = "UT2005 är en opak källkod.\ncatalog:variable_text:53094:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2005"
+subject = "var:internutbildning-anvandbar-alla-foretag-i-branschen"
 fields = { "tags" = ["education"] }
 evidence = "UT2005 är en opak källkod.\ncatalog:variable_text:53094:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2006"
+subject = "var:internutbildning-anvandbar-manga-branscher"
 fields = { "sets" = [] }
 evidence = "UT2006 är en opak källkod.\ncatalog:variable_text:53095:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2006"
+subject = "var:internutbildning-anvandbar-manga-branscher"
 fields = { "tags" = ["education"] }
 evidence = "UT2006 är en opak källkod.\ncatalog:variable_text:53095:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2007"
+subject = "var:internutbildning-mojlighet-avancera-pa-arbetsplatsen"
 fields = { "sets" = [] }
 evidence = "UT2007 är en ogenomskinlig källkod.\ncatalog:variable_text:53096:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2007"
+subject = "var:internutbildning-mojlighet-avancera-pa-arbetsplatsen"
 fields = { "tags" = ["education", "employment"] }
 evidence = "UT2007 är en ogenomskinlig källkod.\ncatalog:variable_text:53096:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2008"
+subject = "var:internutbildning-forvantad-nytta-i-framtiden"
 fields = { "sets" = [] }
 evidence = "UT2008 är en opak källkod.\ncatalog:variable_text:53097:8766:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2008"
+subject = "var:internutbildning-forvantad-nytta-i-framtiden"
 fields = { "tags" = ["education"] }
 evidence = "UT2008 är en opak källkod.\ncatalog:variable_text:53097:8766:10957"
 
@@ -105428,13 +105428,13 @@ evidence = "Id är en opak källkod.\ncatalog:variable_text:53102:3287:3652\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:ut2090"
+subject = "var:kursarrangor-1-ams-bidrag-omkodad"
 fields = { "sets" = [] }
 evidence = "Id är en opak källkod; den daterade operationaliseringen bevaras.\ncatalog:variable_text:53106:6940:7305\ncatalog:variable_text:53107:6940:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:ut2090"
+subject = "var:kursarrangor-1-ams-bidrag-omkodad"
 fields = { "tags" = ["education"] }
 evidence = "Id är en opak källkod; den daterade operationaliseringen bevaras.\ncatalog:variable_text:53106:6940:7305\ncatalog:variable_text:53107:6940:7305"
 
@@ -109090,7 +109090,7 @@ evidence = "The question measures distance from home to childcare, with explicit
 
 [[statement]]
 kind = "set"
-subject = "var:ba0256"
+subject = "var:hektar-akerjord-far"
 fields = { "tags" = ["agriculture"] }
 evidence = "The definition measures the father's hectares of arable land; the 2006 note directs forest hectares to BA0257 (r226, r168).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46949\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:498537\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47042"
 
@@ -109459,3 +109459,111 @@ kind = "set"
 subject = "var:veta-mera-barnens-laxor"
 fields = { "tags" = ["education"] }
 evidence = "Explicitly concerns knowledge needed to help children with schoolwork, supporting education and educational resources (r309).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52921\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:53116"
+
+[[statement]]
+kind = "set"
+subject = "var:barnet-for-litet"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:47212\ncatalog:variable_text:47212:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-lasa-svenska-3"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:48335\ncatalog:variable_text:48335:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-tala-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:48342\ncatalog:variable_text:48342:6940:7305\ncatalog:variable_text:48342:8766:9496\ncatalog:variable_text:48342:10227:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-tala-svenska-1"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:48343\ncatalog:variable_text:48343:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-1-kod"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:50261\ncatalog:variable_text:50261:4748:5844\ncatalog:variable_text:50261:6940:7305\ncatalog:variable_text:50261:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-2-kod"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:50262\ncatalog:variable_text:50262:4748:5844"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-annat-sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:50263\ncatalog:variable_text:50263:5113:6209\ncatalog:variable_text:50263:6940:7305\ncatalog:variable_text:50263:7670:8035\ncatalog:variable_text:50263:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-finska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:50264\ncatalog:variable_text:50264:5113:6209\ncatalog:variable_text:50264:6940:7305\ncatalog:variable_text:50264:7670:8035\ncatalog:variable_text:50264:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:50265\ncatalog:variable_text:50265:5113:6209\ncatalog:variable_text:50265:6940:7305\ncatalog:variable_text:50265:7670:8035\ncatalog:variable_text:50265:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-barn-annat"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51751\ncatalog:variable_text:51751:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-barn-makes-modersmal"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51752\ncatalog:variable_text:51752:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-barn-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51753\ncatalog:variable_text:51753:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-barn-up-s-modersmal"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51754\ncatalog:variable_text:51754:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-hemma"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51755\ncatalog:variable_text:51755:5113:6209\ncatalog:variable_text:51755:7670:8035\ncatalog:variable_text:51755:8766:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-hemma-1-kod"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51756\ncatalog:variable_text:51756:4748:6209\ncatalog:variable_text:51756:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-hemma-2-kod"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51757\ncatalog:variable_text:51757:4748:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:talar-bast-vilket-sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51986\ncatalog:variable_text:51986:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:talar-bast-vilket-sprak-kod"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:51987\ncatalog:variable_text:51987:6940:7305"
