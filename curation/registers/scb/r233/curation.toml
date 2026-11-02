@@ -1463,8 +1463,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "description" = "Skolkommun. Kommunen där studierna bedrivs härleds i den äldre källbeskrivningen från skolkodens fyra första positioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:213442:opdef_text; rel070-base/reg_meta.db:occurrence:213914:opdef_text; rel070-base/reg_meta.db:occurrence:214037:opdef_text. One variable, one description."
+fields = { "description" = "Skolkommun. Kommunen där studierna bedrivs härleds från skolkodens fyra första positioner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:213442:opdef_text; rel070-base/reg_meta.db:occurrence:213914:opdef_text; rel070-base/reg_meta.db:occurrence:214037:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 213442, 213914, 213980, 214037."
 
 
 [[statement]]

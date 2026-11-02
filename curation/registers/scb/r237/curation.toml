@@ -109409,8 +109409,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:fu0281"
-fields = { "description" = "Familj och umgänge födelseår barn 2. Åren 1984–1985 avser variabeln gruppen där urvalspersonen inte är gift eller sammanboende." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:477853:opdef_text. One variable, one description."
+fields = { "description" = "Födelseår för barn 2 för urvalspersoner som inte är gifta eller sammanboende." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:477853:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the occurrence-specific survey years; state the actual population and birth-year meaning directly. Evidence: rel070-base/reg_meta.db occurrences 477853."
 
 [[statement]]
 kind = "set"

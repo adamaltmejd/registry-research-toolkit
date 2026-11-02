@@ -17784,8 +17784,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKont
 [[statement]]
 kind = "set"
 subject = "var:markering-traff-rtb"
-fields = { "description" = "Markering för träff mot Registret över totalbefolkningen. Källbeskrivningarna 1993–2003 anger matchning av Skatteverkets taxeringsmaterial mot RTB, medan 2004 anger SCBTB mot RTB." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349732:opdef_text; rel070-base/reg_meta.db:occurrence:335272:opdef_text; rel070-base/reg_meta.db:occurrence:354154:opdef_text; rel070-base/reg_meta.db:occurrence:339098:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The old sentence incorrectly collapses changing input sources and undocumented earlier years into one permanent match recipe. Evidence: rel070-base/reg_meta.db occurrences 334859, 335272, 354154, 339098."
+fields = { "description" = "Markering för träff mellan RTB och Skatteverkets taxeringsmaterial eller SCBTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349732:opdef_text; rel070-base/reg_meta.db:occurrence:335272:opdef_text; rel070-base/reg_meta.db:occurrence:354154:opdef_text; rel070-base/reg_meta.db:occurrence:339098:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The old sentence incorrectly collapses changing input sources and undocumented earlier years into one permanent match recipe. Evidence: rel070-base/reg_meta.db occurrences 334859, 335272, 354154, 339098.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Describe matching inputs directly; input-file provenance alone is not a change in the meaning of the match indicator. Evidence: rel070-base/reg_meta.db occurrences 334859, 335272, 354154, 339098."
 
 [[statement]]
 kind = "set"
@@ -17826,8 +17826,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorr
 [[statement]]
 kind = "set"
 subject = "var:skattepliktig-formogenhet-familj"
-fields = { "description" = "Skattepliktig förmögenhet för familjen. Källan anger gemensam beräkning över 150 099 kronor för fysiska personer och sambeskattade familjer samt över 5 099 kronor för föreningar och samfund." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver nettoförmögenhet, medan etiketten och operationaliseringen anger familjens skattepliktiga förmögenhet.\ncatalog:variable_text:37061:365:2922\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:347835:opdef_text. One variable, one description."
+fields = { "description" = "Skattepliktig förmögenhet för familjen. Beräknas gemensamt över 150 099 kronor för fysiska personer och sambeskattade familjer samt över 5 099 kronor för föreningar och samfund." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver nettoförmögenhet, medan etiketten och operationaliseringen anger familjens skattepliktiga förmögenhet.\ncatalog:variable_text:37061:365:2922\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:347835:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the documented thresholds directly without narrating the source. Evidence: rel070-base/reg_meta.db occurrences 347835."
 
 [[statement]]
 kind = "set"
@@ -17856,14 +17856,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:tvard"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från Försäkringskassan eller deklaration, beroende på källperiod." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37233:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335458:opdef_text; rel070-base/reg_meta.db:occurrence:339924:opdef_text. One variable, one description."
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från Försäkringskassan eller deklaration." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37233:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335458:opdef_text; rel070-base/reg_meta.db:occurrence:339924:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove narration about source periods; retain the benefit and actual data inputs. Evidence: rel070-base/reg_meta.db occurrences 335458, 339924."
 
 [[statement]]
 kind = "set"
 subject = "var:underlag-for-hyreshusskatt-med-0-85-procent"
-fields = { "description" = "Underlag för fastighetsskatt på hyreshus med 0,85 procent. Underlaget är taxeringsvärdet för hyreshusenheter med bostäder med värdeår 1985–1988." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fastighetsavgift men källans korrigerade etikett och operationalisering avser fastighetsskatt.\ncatalog:variable_text:37268:9496:10592\nregisters/scb/r29/curation.toml:680\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:336023:opdef_text. One variable, one description."
+fields = { "description" = "Underlag för fastighetsskatt på hyreshus med 0,85 procent. Underlaget är taxeringsvärdet för hyreshusenheter med bostäder som beskattas med denna skattesats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fastighetsavgift men källans korrigerade etikett och operationalisering avser fastighetsskatt.\ncatalog:variable_text:37268:9496:10592\nregisters/scb/r29/curation.toml:680\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:336023:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove a fixed occurrence-specific value-year cohort; identify the tax base by the named rate rather than a calendar-year interval. Evidence: rel070-base/reg_meta.db occurrences 336023."
 
 [[statement]]
 kind = "set"
@@ -17874,8 +17874,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nText
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag-kontrolluppgift"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från kontrolluppgift, preciserat som pensions- och försäkringsutbetalare i en källperiod." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37208:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335437:opdef_text; rel070-base/reg_meta.db:occurrence:354374:opdef_text; rel070-base/reg_meta.db:occurrence:339899:opdef_text. One variable, one description."
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från kontrolluppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37208:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335437:opdef_text; rel070-base/reg_meta.db:occurrence:354374:opdef_text; rel070-base/reg_meta.db:occurrence:339899:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 335437, 354374, 339371, 339899."
 
 [[statement]]
 kind = "set"

@@ -76540,8 +76540,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:forutbetalda-kostn-och-andra-upplupna-int-rh"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter. Källan anger livförsäkringsbolag 2017–2022 och skadeförsäkringsbolag 2023." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163948:opdef_text; rel070-base/reg_meta.db:occurrence:164745:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Bolag scope varies by year, not just table; older 2016 occurrence has no scope text. Evidence: rel070-base/reg_meta.db occurrences 163810, 163948, 164745."
+fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163948:opdef_text; rel070-base/reg_meta.db:occurrence:164745:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Bolag scope varies by year, not just table; older 2016 occurrence has no scope text. Evidence: rel070-base/reg_meta.db occurrences 163810, 163948, 164745.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove conflicting life/non-life population assignment from the description; material population conflict is listed for identity review, not resolved by this edit. Evidence: rel070-base/reg_meta.db occurrences 163810, 163948, 164745."
 
 [[statement]]
 kind = "set"
@@ -76558,14 +76558,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:lff"
-fields = { "description" = "Avsättningar för andra risker och kostnader (LFF). Från 2017 anger källbeskrivningen att uppgiften avser livförsäkringsbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163882:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only 2017 onward explicitly documents the insurer scope; do not apply it to 2005–2016 without evidence. Evidence: rel070-base/reg_meta.db occurrences 162096, 163882."
+fields = { "description" = "Avsättningar för andra risker och kostnader (LFF). Uppgiften avser livförsäkringsbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163882:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only 2017 onward explicitly documents the insurer scope; do not apply it to 2005–2016 without evidence. Evidence: rel070-base/reg_meta.db occurrences 162096, 163882.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 162096, 163882."
 
 [[statement]]
 kind = "set"
 subject = "var:lh"
-fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter. Källan anger skadeförsäkringsbolag 2017–2022 och livförsäkringsbolag 2023." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163885:opdef_text; rel070-base/reg_meta.db:occurrence:164684:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The insurer scope reverses in 2023; replace the table-only qualifier with actual source periods. Evidence: rel070-base/reg_meta.db occurrences 163748, 163885, 164684."
+fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163885:opdef_text; rel070-base/reg_meta.db:occurrence:164684:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The insurer scope reverses in 2023; replace the table-only qualifier with actual source periods. Evidence: rel070-base/reg_meta.db occurrences 163748, 163885, 164684.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove conflicting life/non-life population assignment from the description; material population conflict is listed for identity review, not resolved by this edit. Evidence: rel070-base/reg_meta.db occurrences 163748, 163885, 164684."
 
 [[statement]]
 kind = "set"
@@ -76576,8 +76576,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtve
 [[statement]]
 kind = "set"
 subject = "var:lii"
-fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII). Från 2017 anger källbeskrivningen att uppgiften avser livförsäkringsbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163887:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only 2017 onward explicitly documents the insurer scope; do not apply it to 2005–2016 without evidence. Evidence: rel070-base/reg_meta.db occurrences 162105, 163887."
+fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII). Uppgiften avser livförsäkringsbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163887:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only 2017 onward explicitly documents the insurer scope; do not apply it to 2005–2016 without evidence. Evidence: rel070-base/reg_meta.db occurrences 162105, 163887.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 162105, 163887."
 
 [[statement]]
 kind = "set"

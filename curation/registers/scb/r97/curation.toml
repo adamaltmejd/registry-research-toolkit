@@ -25839,8 +25839,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-stod-mellan-hushall-givet"
-fields = { "description" = "Givet ekonomiskt stöd till andra hushåll. Källbeskrivningarna 2004–2008 avser sammanlagt minst 5 000 kronor under året." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel om stödets riktning.\ncatalog:variable_text:24282:12418:13879\ncatalog:variable_text:24282:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:230433:opdef_text; rel070-base/reg_meta.db:occurrence:231593:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The minimum annual amount is documented in 2004–2008; later 2009–2013 occurrences lack this operational text. Evidence: rel070-base/reg_meta.db occurrences 230433, 231593, 231860."
+fields = { "description" = "Givet ekonomiskt stöd till andra hushåll. Avser sammanlagt minst 5 000 kronor i gåvor eller ekonomiskt stöd till närstående eller släktingar under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel om stödets riktning.\ncatalog:variable_text:24282:12418:13879\ncatalog:variable_text:24282:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:230433:opdef_text; rel070-base/reg_meta.db:occurrence:231593:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The minimum annual amount is documented in 2004–2008; later 2009–2013 occurrences lack this operational text. Evidence: rel070-base/reg_meta.db occurrences 230433, 231593, 231860.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 230433, 231593, 231860."
 
 
 [[statement]]
@@ -25923,15 +25923,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBefi
 [[statement]]
 kind = "set"
 subject = "var:kpfkop"
-fields = { "description" = "Inköpskostnad för aktiefonder. Även allemansfonder ingår; uppgiften saknas när variabeln är skapad enligt källans hänvisning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger inköpskostnad, inte erhållen ersättning.\ncatalog:variable_text:24874:10592:10957\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:220381:opdef_text. One variable, one description."
+fields = { "description" = "Inköpskostnad för aktiefonder. Även allemansfonder ingår; uppgiften saknas när variabeln är beräknad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger inköpskostnad, inte erhållen ersättning.\ncatalog:variable_text:24874:10592:10957\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:220381:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove an opaque documentation cross-reference; retain the actual missing-value condition. Evidence: rel070-base/reg_meta.db occurrences 220381."
 
 
 [[statement]]
 kind = "set"
 subject = "var:kpfpris"
-fields = { "description" = "Försäljningspris för aktiefonder. Även allemansfonder ingår; uppgiften saknas när variabeln är skapad enligt källans hänvisning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger försäljningspris, inte omkostnadsbelopp.\ncatalog:variable_text:24875:10592:10957\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:220382:opdef_text. One variable, one description."
+fields = { "description" = "Försäljningspris för aktiefonder. Även allemansfonder ingår; uppgiften saknas när variabeln är beräknad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger försäljningspris, inte omkostnadsbelopp.\ncatalog:variable_text:24875:10592:10957\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:220382:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove an opaque documentation cross-reference; retain the actual missing-value condition. Evidence: rel070-base/reg_meta.db occurrences 220382."
 
 
 [[statement]]
@@ -26000,8 +26000,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:summa-forvarvs-och-kapitalinkomster"
-fields = { "description" = "Summa förvärvs- och kapitalinkomster. Beräknas som sammanräknad förvärvsinkomst plus kapitalinkomst från redovisade delbelopp; källan anger positivt belopp över 100 kronor som underlag för statlig inkomstskatt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25431:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229504:opdef_text. One variable, one description."
+fields = { "description" = "Summa förvärvs- och kapitalinkomster. Beräknas som sammanräknad förvärvsinkomst plus kapitalinkomst från redovisade delbelopp; positivt belopp över 100 kronor utgör underlag för statlig inkomstskatt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25431:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229504:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the threshold fact directly without source narration. Evidence: rel070-base/reg_meta.db occurrences 229504."
 
 
 [[statement]]

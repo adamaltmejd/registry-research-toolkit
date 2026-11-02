@@ -16292,8 +16292,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:f10vt20"
-fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning VT20. Perioden börjar i mitten av mars 2020." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509578:opdef_text. One variable, one description."
+fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning under vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509578:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove occurrence-specific questionnaire dates; retain the measured live-distance-teaching share. Evidence: rel070-base/reg_meta.db occurrences 509578."
 
 [[statement]]
 kind = "set"
@@ -16400,8 +16400,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:vt-veckor-termin"
-fields = { "description" = "Terminens längd. Antalet veckor avser januari–mars 2022 och räknar bort lov." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509978:opdef_text. One variable, one description."
+fields = { "description" = "Antal veckor under vårterminens januari–mars, exklusive lov." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509978:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire year; retain the within-year reference period and exclusion of school holidays. Evidence: rel070-base/reg_meta.db occurrences 509978."
 
 [[statement]]
 kind = "set"

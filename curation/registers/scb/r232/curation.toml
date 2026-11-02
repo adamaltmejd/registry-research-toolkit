@@ -4716,15 +4716,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:omfengelskahsku"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i engelska för personer med hörselskada och utvecklingsstörning, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35430:15887:17713\ncatalog:variable_text:35430:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326325:opdef_text; rel070-base/reg_meta.db:occurrence:327047:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i engelska för personer med hörselskada och utvecklingsstörning, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35430:15887:17713\ncatalog:variable_text:35430:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326325:opdef_text; rel070-base/reg_meta.db:occurrence:327047:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326325, 327047."
 
 
 [[statement]]
 kind = "set"
 subject = "var:omfestetisk"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i estetisk verksamhet, i procent. Från läsåret 2018/19 preciserar källan gymnasiesärskolan, grundsärskolans träningsskola eller särskild utbildning för vuxna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35431:15887:17713\ncatalog:variable_text:35431:17713:18444\ncatalog:variable_text:35431:18444:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326326:opdef_text; rel070-base/reg_meta.db:occurrence:327048:opdef_text; rel070-base/reg_meta.db:occurrence:327361:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i estetisk verksamhet, i procent. Undervisningen avser gymnasiesärskolan, grundsärskolans träningsskola eller särskild utbildning för vuxna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35431:15887:17713\ncatalog:variable_text:35431:17713:18444\ncatalog:variable_text:35431:18444:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326326:opdef_text; rel070-base/reg_meta.db:occurrence:327048:opdef_text; rel070-base/reg_meta.db:occurrence:327361:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326326, 327048, 327361."
 
 
 [[statement]]
@@ -4800,8 +4800,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:omfkommunikationhsku"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i kommunikation för hörselskadade personer med utvecklingsstörning, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35442:15887:17713\ncatalog:variable_text:35442:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326335:opdef_text; rel070-base/reg_meta.db:occurrence:327059:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i kommunikation för hörselskadade personer med utvecklingsstörning, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35442:15887:17713\ncatalog:variable_text:35442:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326335:opdef_text; rel070-base/reg_meta.db:occurrence:327059:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326335, 327059."
 
 
 [[statement]]
@@ -4821,8 +4821,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMåt
 [[statement]]
 kind = "set"
 subject = "var:omfmodsprak"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i moderna språk, i procent. För läsåren 2013/14–2017/18 anger källan undervisning vid specialskola." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel av tjänsteomfattningen.\ncatalog:variable_text:35445:15887:17713\ncatalog:variable_text:35445:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326338:opdef_text; rel070-base/reg_meta.db:occurrence:327062:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i moderna språk, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel av tjänsteomfattningen.\ncatalog:variable_text:35445:15887:17713\ncatalog:variable_text:35445:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326338:opdef_text; rel070-base/reg_meta.db:occurrence:327062:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326338, 327062."
 
 
 [[statement]]
@@ -4835,8 +4835,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:omfmotorik"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i motorik, i procent. Från läsåret 2018/19 preciserar källan grundsärskolans träningsskola eller särskild utbildning för vuxna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel av tjänsteomfattningen.\ncatalog:variable_text:35447:16983:17713\ncatalog:variable_text:35447:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326757:opdef_text; rel070-base/reg_meta.db:occurrence:327064:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i motorik, i procent. Undervisningen avser grundsärskolans träningsskola eller särskild utbildning för vuxna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel av tjänsteomfattningen.\ncatalog:variable_text:35447:16983:17713\ncatalog:variable_text:35447:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326757:opdef_text; rel070-base/reg_meta.db:occurrence:327064:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326757, 327064."
 
 
 [[statement]]
@@ -4856,8 +4856,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:omfnaturo"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i natur och miljö, i procent. Från läsåret 2018/19 preciserar källan gymnasiesärskolan eller särskild utbildning för vuxna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter en andel av tjänsteomfattningen, inte enbart om personen undervisar; den gemensamma beskrivningen gäller båda perioderna.\ncatalog:variable_text:35450:17348:17713\ncatalog:variable_text:35450:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326912:opdef_text; rel070-base/reg_meta.db:occurrence:327067:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i natur och miljö, i procent. Undervisningen avser gymnasiesärskolan eller särskild utbildning för vuxna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter en andel av tjänsteomfattningen, inte enbart om personen undervisar; den gemensamma beskrivningen gäller båda perioderna.\ncatalog:variable_text:35450:17348:17713\ncatalog:variable_text:35450:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326912:opdef_text; rel070-base/reg_meta.db:occurrence:327067:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326912, 327067."
 
 
 [[statement]]
@@ -4947,8 +4947,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:omfsprakochk"
-fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i språk och kommunikation, i procent. Från läsåret 2018/19 preciserar källan gymnasiesärskolan eller särskild utbildning för vuxna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35463:17348:17713\ncatalog:variable_text:35463:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326921:opdef_text; rel070-base/reg_meta.db:occurrence:327076:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i språk och kommunikation, i procent. Undervisningen avser gymnasiesärskolan eller särskild utbildning för vuxna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35463:17348:17713\ncatalog:variable_text:35463:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326921:opdef_text; rel070-base/reg_meta.db:occurrence:327076:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326921, 327076."
 
 
 [[statement]]
@@ -4968,15 +4968,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:omfsvhsk"
-fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i svenska för hörselskadade personer, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35466:15887:17713\ncatalog:variable_text:35466:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326354:opdef_text; rel070-base/reg_meta.db:occurrence:327079:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i svenska för hörselskadade personer, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35466:15887:17713\ncatalog:variable_text:35466:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326354:opdef_text; rel070-base/reg_meta.db:occurrence:327079:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326354, 327079."
 
 
 [[statement]]
 kind = "set"
 subject = "var:omfsvhsku"
-fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i svenska för hörselskadade personer med utvecklingsstörning, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35467:15887:17713\ncatalog:variable_text:35467:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326355:opdef_text; rel070-base/reg_meta.db:occurrence:327080:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i svenska för hörselskadade personer med utvecklingsstörning, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35467:15887:17713\ncatalog:variable_text:35467:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326355:opdef_text; rel070-base/reg_meta.db:occurrence:327080:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326355, 327080."
 
 
 [[statement]]
@@ -4996,15 +4996,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:omfteckensprakhsk"
-fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i teckenspråk för personer med hörselskada, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35470:15887:17713\ncatalog:variable_text:35470:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326358:opdef_text; rel070-base/reg_meta.db:occurrence:327083:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i teckenspråk för personer med hörselskada, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35470:15887:17713\ncatalog:variable_text:35470:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326358:opdef_text; rel070-base/reg_meta.db:occurrence:327083:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326358, 327083."
 
 
 [[statement]]
 kind = "set"
 subject = "var:omfteckensprakhsku"
-fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i teckenspråk för personer med hörselskada och utvecklingsstörning, i procent. Från läsåret 2018/19 preciserar källan undervisning i specialskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35471:15887:17713\ncatalog:variable_text:35471:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326359:opdef_text; rel070-base/reg_meta.db:occurrence:327084:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som ägnas åt undervisning i teckenspråk för personer med hörselskada och utvecklingsstörning, i procent. Undervisningen avser specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter andel av tjänsteomfattningen, inte enbart om personen undervisar.\ncatalog:variable_text:35471:15887:17713\ncatalog:variable_text:35471:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326359:opdef_text; rel070-base/reg_meta.db:occurrence:327084:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326359, 327084."
 
 
 [[statement]]
@@ -5024,8 +5024,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:omfvardagsaktiviteter"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i vardagsaktiviteter, i procent. Från läsåret 2018/19 preciserar källan grundskolans träningsskola eller särskild utbildning för vuxna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35474:16983:17713\ncatalog:variable_text:35474:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326778:opdef_text; rel070-base/reg_meta.db:occurrence:327087:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i vardagsaktiviteter, i procent. Undervisningen avser grundskolans träningsskola eller särskild utbildning för vuxna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter andel snarare än enbart förekomst.\ncatalog:variable_text:35474:16983:17713\ncatalog:variable_text:35474:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326778:opdef_text; rel070-base/reg_meta.db:occurrence:327087:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326778, 327087."
 
 
 [[statement]]
@@ -5052,8 +5052,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:omfyrkesgsar"
-fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i yrkesämnen, i procent. Från läsåret 2018/19 preciserar källan undervisning i gymnasiesärskolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter en andel, inte enbart om personen undervisar. Den gemensamma formuleringen bevarar den dokumenterade historiken.\ncatalog:variable_text:35478:16252:17713\ncatalog:variable_text:35478:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326499:opdef_text; rel070-base/reg_meta.db:occurrence:327091:opdef_text. One variable, one description."
+fields = { "description" = "Andel av personens tjänsteomfattning som avser undervisning i yrkesämnen, i procent. Undervisningen avser gymnasiesärskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter en andel, inte enbart om personen undervisar. Den gemensamma formuleringen bevarar den dokumenterade historiken.\ncatalog:variable_text:35478:16252:17713\ncatalog:variable_text:35478:17713:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:326499:opdef_text; rel070-base/reg_meta.db:occurrence:327091:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 326499, 327091."
 
 
 [[statement]]

@@ -7248,8 +7248,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa o
 [[statement]]
 kind = "set"
 subject = "var:gymnasiearbete"
-fields = { "description" = "Betyg i gymnasiearbete. Uppgiften gäller samlat betygsdokument eller högskoleförberedande examen med GYAR-kurskod (100 poäng, högst E); 2013/14–2014/15 nämns även slutbetyg enligt Lpf94." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:211801:opdef_text; rel070-base/reg_meta.db:occurrence:212199:opdef_text. One variable, one description."
+fields = { "description" = "Betyg i gymnasiearbete för elever med samlat betygsdokument eller högskoleförberedande examen och GYAR-kurskod. Gymnasiearbetet omfattar 100 poäng och högsta betyg är E; till och med läsåret 2014/15 omfattas även elever med slutbetyg enligt Lpf94." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:211801:opdef_text; rel070-base/reg_meta.db:occurrence:212199:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. The explicitly listed pupil group is removed after 2014/15; retain this minor scope change as a direct fact, not a mention in documentation. Evidence: rel070-base/reg_meta.db occurrences 211801, 212199."
 
 [[statement]]
 kind = "set"
