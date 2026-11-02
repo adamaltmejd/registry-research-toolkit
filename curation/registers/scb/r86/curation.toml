@@ -10870,3 +10870,111 @@ kind = "set"
 subject = "var:utgift-tv-apparat"
 fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
 evidence = "r136 explicitly specifies expenditure on a TV set, establishing equipment within r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241984\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2356 @1999-01-01..1999-12-31 where key = 'v40914'"
+fields = { "label" = "Utgift för Dammsugare" }
+evidence = "Part of #2040. scb/hut/utgift-for-damsugare: Restore missing m in Damsugare; preserve original capitalization and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Damsugare"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2356 @2000-01-01..2000-12-31 where key = 'v40914'"
+fields = { "label" = "Utgift för Dammsugare" }
+evidence = "Part of #2040. scb/hut/utgift-for-damsugare: Restore missing m in Damsugare; preserve original capitalization and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Damsugare"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2356 @2001-01-01..2001-12-31 where key = 'v40914'"
+fields = { "label" = "Utgift för Dammsugare" }
+evidence = "Part of #2040. scb/hut/utgift-for-damsugare: Restore missing m in Damsugare; preserve original capitalization and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Damsugare"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2640 @1999-01-01..1999-12-31 where key = 'v41036'"
+fields = { "label" = "Utgift för Kassetter" }
+evidence = "Part of #2040. scb/hut/utgift-for-kasetter: Restore missing s in Kasetter; preserve original capitalization. Three annual occurrences. Reviewed occurrence label: Utgift för Kasetter"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2640 @2000-01-01..2000-12-31 where key = 'v41036'"
+fields = { "label" = "Utgift för Kassetter" }
+evidence = "Part of #2040. scb/hut/utgift-for-kasetter: Restore missing s in Kasetter; preserve original capitalization. Three annual occurrences. Reviewed occurrence label: Utgift för Kasetter"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2640 @2001-01-01..2001-12-31 where key = 'v41036'"
+fields = { "label" = "Utgift för Kassetter" }
+evidence = "Part of #2040. scb/hut/utgift-for-kasetter: Restore missing s in Kasetter; preserve original capitalization. Three annual occurrences. Reviewed occurrence label: Utgift för Kasetter"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2316 @1999-01-01..1999-12-31 where key = 'v40898'"
+fields = { "label" = "Utgift för Mattor" }
+evidence = "Part of #2040. scb/hut/utgift-for-mattor: Correct accidental internal capital A in MAttor; preserve initial capital. Three annual occurrences. Reviewed occurrence label: Utgift för MAttor"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2316 @2000-01-01..2000-12-31 where key = 'v40898'"
+fields = { "label" = "Utgift för Mattor" }
+evidence = "Part of #2040. scb/hut/utgift-for-mattor: Correct accidental internal capital A in MAttor; preserve initial capital. Three annual occurrences. Reviewed occurrence label: Utgift för MAttor"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2316 @2001-01-01..2001-12-31 where key = 'v40898'"
+fields = { "label" = "Utgift för Mattor" }
+evidence = "Part of #2040. scb/hut/utgift-for-mattor: Correct accidental internal capital A in MAttor; preserve initial capital. Three annual occurrences. Reviewed occurrence label: Utgift för MAttor"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2352 @1999-01-01..1999-12-31 where key = 'v40910'"
+fields = { "label" = "Utgift för Mikrovågsugn" }
+evidence = "Part of #2040. scb/hut/utgift-for-microvagsugn: Correct Microvågsugn → Mikrovågsugn; preserve initial capital and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Microvågsugn"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2352 @2000-01-01..2000-12-31 where key = 'v40910'"
+fields = { "label" = "Utgift för Mikrovågsugn" }
+evidence = "Part of #2040. scb/hut/utgift-for-microvagsugn: Correct Microvågsugn → Mikrovågsugn; preserve initial capital and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Microvågsugn"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2352 @2001-01-01..2001-12-31 where key = 'v40910'"
+fields = { "label" = "Utgift för Mikrovågsugn" }
+evidence = "Part of #2040. scb/hut/utgift-for-microvagsugn: Correct Microvågsugn → Mikrovågsugn; preserve initial capital and punctuation. Three annual occurrences. Reviewed occurrence label: Utgift för Microvågsugn"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2261 @1999-01-01..1999-12-31 where key = 'v40880'"
+fields = { "label" = "Utgift för Fritidsbostad: räntor(brutto)" }
+evidence = "Part of #2040. scb/hut/utgift-forfritidsbostad-rantor-brutto: Restore missing word separator after för only; retain capitalization and parenthesis spacing. Three annual occurrences. Reviewed occurrence label: Utgift förFritidsbostad: räntor(brutto)"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2261 @2000-01-01..2000-12-31 where key = 'v40880'"
+fields = { "label" = "Utgift för Fritidsbostad: räntor(brutto)" }
+evidence = "Part of #2040. scb/hut/utgift-forfritidsbostad-rantor-brutto: Restore missing word separator after för only; retain capitalization and parenthesis spacing. Three annual occurrences. Reviewed occurrence label: Utgift förFritidsbostad: räntor(brutto)"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2261 @2001-01-01..2001-12-31 where key = 'v40880'"
+fields = { "label" = "Utgift för Fritidsbostad: räntor(brutto)" }
+evidence = "Part of #2040. scb/hut/utgift-forfritidsbostad-rantor-brutto: Restore missing word separator after för only; retain capitalization and parenthesis spacing. Three annual occurrences. Reviewed occurrence label: Utgift förFritidsbostad: räntor(brutto)"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2361 @1999-01-01..1999-12-31 where key = 'v40918'"
+fields = { "label" = "Utgift för Motordrivet trädgårdsredskap" }
+evidence = "Part of #2040. scb/hut/utgift-formotordrivet-tradgardsredskap: Restore missing word separator after för only; retain capitalization. Three annual occurrences. Reviewed occurrence label: Utgift förMotordrivet trädgårdsredskap"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2361 @2000-01-01..2000-12-31 where key = 'v40918'"
+fields = { "label" = "Utgift för Motordrivet trädgårdsredskap" }
+evidence = "Part of #2040. scb/hut/utgift-formotordrivet-tradgardsredskap: Restore missing word separator after för only; retain capitalization. Three annual occurrences. Reviewed occurrence label: Utgift förMotordrivet trädgårdsredskap"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2361 @2001-01-01..2001-12-31 where key = 'v40918'"
+fields = { "label" = "Utgift för Motordrivet trädgårdsredskap" }
+evidence = "Part of #2040. scb/hut/utgift-formotordrivet-tradgardsredskap: Restore missing word separator after för only; retain capitalization. Three annual occurrences. Reviewed occurrence label: Utgift förMotordrivet trädgårdsredskap"

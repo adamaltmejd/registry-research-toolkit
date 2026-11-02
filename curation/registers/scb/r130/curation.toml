@@ -1360,3 +1360,15 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning"
 fields = { "sets" = ["tjanstgoringsomfattning"] }
 evidence = "r231 explicitly defines actual service time relative to full-time and derives it from actual service extent. The earlier expansion-factor unit does not negate that definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42732\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42875"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-kommuner: sjuk1 @2016-01-01..2016-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slk/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-kommuner: sjuk1 @2017-01-01..2017-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slk/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"

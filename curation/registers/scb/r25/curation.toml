@@ -27049,3 +27049,9 @@ kind = "set"
 subject = "var:samfundskod-samfund-2"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:31395\ncatalog:variable_text:31395:11323:12053"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @1999-01-01..1999-12-31 where key = 'v4892'"
+fields = { "label" = "Realisationsförlust, räntefonder" }
+evidence = "Part of #2040. scb/iot/kapitalforlust-rantefond: Correct Realistonsförlust → Realisationsförlust only in the affected annual occurrence; preserve later source labels and punctuation. Reviewed occurrence label: Realistonsförlust, räntefonder"

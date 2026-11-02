@@ -1372,3 +1372,15 @@ kind = "set"
 subject = "var:sysselsattningsgrad-osysly"
 fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
 evidence = "The operational definitions measure agreed employment extent without accounting for leave extent (r103, r128).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447190\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447437"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2016-01-01..2016-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2017-01-01..2017-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"

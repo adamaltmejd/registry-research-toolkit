@@ -1246,3 +1246,21 @@ kind = "set"
 subject = "var:sprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The current label and definition both say Språk. The broad language theme is established even though the purpose of this language field remains unspecified.\ncatalog:variable:826\ncatalog:variable_text:826:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: WMAX @1969-01-01..1997-12-31 where key = 'n:wmax'"
+fields = { "label" = "Fysisk arbetsförmåga" }
+evidence = "Part of #2040. riksarkivet/inskrivning/fysisk-arbetsformaga: Correct adjective agreement: Fysiskt → Fysisk; same physical work capacity. Reviewed occurrence label: Fysiskt arbetsförmåga"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: LASV @1969-01-01..1997-12-31 where key = 'n:lasv'"
+fields = { "label" = "Läs- och skrivsvårigheter" }
+evidence = "Part of #2040. riksarkivet/inskrivning/las-och-skrivsvarigheter: Remove duplicated s in skrivssvårigheter. Reviewed occurrence label: Läs- och skrivssvårigheter"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
+fields = { "label" = "Femte typhinder" }
+evidence = "Part of #2040. riksarkivet/inskrivning/typhinder-5: Remove stray u in typhuinder. Reviewed occurrence label: Femte typhuinder"

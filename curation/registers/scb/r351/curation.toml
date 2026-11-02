@@ -5746,3 +5746,63 @@ kind = "set"
 subject = "var:namnde-fler-an-ett-sprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The operational definition asks whether the respondent mentioned more than one language, establishing the language theme despite the generic background label.\ncatalog:variable:40054\ncatalog:variable_text:40054:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/onskad-utbildning-inte-deltagit-senaste-12-manader: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q19a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildning-antal-dagar-senaste-ar: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q18a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildning-antal-veckor-senaste-ar: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildning-timmar-totalt-inte-restid-senaste-ar: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildning-under-eller-utanfor-arbetstid-senaste-ar: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildning-viktigaste-hinder-deltagande-senaste-ar: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildningsaktivitet-huvudsaklig-anledning-senaste-aret: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildningsaktivitet-samtidigt-arbete-senaste-aret: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Part of #2040. scb/piaac/utbildningsaktivitet-yrkesrelaterad-senaste-aret: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
