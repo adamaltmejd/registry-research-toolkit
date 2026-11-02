@@ -31710,3 +31710,69 @@ kind = "set"
 subject = "var:icke-territoriell-forsamling"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:8803\ncatalog:variable_text:8803:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2012-01-01..2012-12-31 where key = 'v37920' and release = 'r13019'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2013-01-01..2013-12-31 where key = 'v37920' and release = 'r12986'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2014-01-01..2014-12-31 where key = 'v37920' and release = 'r12961'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2015-01-01..2015-12-31 where key = 'v37920' and release = 'r12313'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2016-01-01..2016-12-31 where key = 'v37920' and release = 'r13001'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2017-01-01..2017-12-31 where key = 'v37920' and release = 'r14149'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2018-01-01..2018-12-31 where key = 'v37920' and release = 'r15726'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2019-01-01..2019-12-31 where key = 'v37920' and release = 'r16504'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2020-01-01..2020-12-31 where key = 'v37920' and release = 'r18386'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2021-01-01..2021-12-31 where key = 'v37920' and release = 'r18826'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS @2022-01-01..2022-12-31 where key = 'v37920' and release = 'r18951'"
+fields = { "label" = "A-kassa eller aktivitetsstöd", "definition" = "Anger om individen har a-kassa eller aktivitetsstöd." }
+evidence = "FASIT user guide, base year 2023, pp. 66-67: BAEERS is A-kassa eller aktivitetsstöd; BAEERSNIV is Typ av ersättning för arbetslöshet, with development allowance, basic and income-related levels. The catalog's unchanged 2012-2022 value sets independently confirm these distinct meanings (BAEERS codes 1-3; BAEERSNIV codes 1-5). Ownership already follows these meanings after the rename stage. Correct only BAEERS's erroneous level label and definition; BAEERSNIV's existing label and definition agree with the guide and remain unchanged. https://www.scb.se/contentassets/046c084226bb42e98bc10de5eb9951cb/anvandarhandledning-2023.pdf"

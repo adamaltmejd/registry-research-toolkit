@@ -172,3 +172,17 @@ kind = "set"
 subject = "var:volym"
 fields = { "tags" = ["energy"] }
 evidence = "Volymen avser levererat bränsle.\ncatalog:occurrence:391500\ncatalog:register:217"
+
+[[statement]]
+kind = "set"
+subject = "oljeleveranser-kommunvis-redovisning: bolag @2024-01-01..2024-12-31 where key = 'v48558' and release = 'r20104'"
+fields = { "definition" = "Namn på det företag som levererat bränsle via egna återförsäljare." }
+evidence = "Rename audit #157: the 2024 bolag column retains the company-name role beside ORGNR, kommun, vara and volym; 2004 and 2012-2023 Bolag/bolag explicitly names the delivering company. SCB EN0109 quality declaration 2024, pp. 3-4, identifies energy companies delivering fuel via their own resellers, not agricultural holdings. Replace the copied agricultural-company definition; retain the renamed 2024 owner and link it to bolag. https://www.scb.se/contentassets/b520b09e924c4e2d87ca5ad016f7574b/en0109_kd_2024_20250827.pdf"
+
+[[statement]]
+kind = "link"
+subject = "var:namn-pa-foretaget"
+relation = "continues"
+object = "scb/oljeleveranser-kommunvis/bolag"
+at = "2024-01-01.."
+evidence = "Rename audit #157: the 2024 bolag column retains the company-name role beside ORGNR, kommun, vara and volym; 2004 and 2012-2023 Bolag/bolag explicitly names the delivering company. SCB EN0109 quality declaration 2024, pp. 3-4, identifies energy companies delivering fuel via their own resellers, not agricultural holdings. Replace the copied agricultural-company definition; retain the renamed 2024 owner and link it to bolag. https://www.scb.se/contentassets/b520b09e924c4e2d87ca5ad016f7574b/en0109_kd_2024_20250827.pdf"

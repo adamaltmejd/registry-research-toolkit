@@ -3790,3 +3790,21 @@ kind = "set"
 subject = "source-annual-1999-2003: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
 fields = { "description" = "Antal timmar för lärarledda kurser och konferenser." }
 evidence = "Källtextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2006-01-01..2006-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2008-01-01..2008-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"

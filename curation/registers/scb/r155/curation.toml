@@ -898,3 +898,21 @@ kind = "set"
 subject = "var:vader"
 fields = { "tags" = ["environment"] }
 evidence = "The variable measures weather conditions (r5), with codes for fog, rain and snowfall (r4), supporting environment's natural-environment scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45935"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2000-01-01..2000-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2001-01-01..2001-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2002-01-01..2002-12-31 where key = 'v2819'"
+fields = { "label" = "Kod för leasingfordon" }
+evidence = "Part of #2040. scb/trafo/leasingfordon: Correct the misspelled, separated compound leasings fordon → leasingfordon; no punctuation change. Three annual occurrences. Reviewed occurrence label: Kod för leasings fordon"
