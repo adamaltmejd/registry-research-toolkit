@@ -55,6 +55,7 @@ impl StatementRow {
 
 /// Everything the file holds, linked.
 pub struct Catalog {
+    pub external_relations: Vec<crate::external::Relation>,
     pub retired: Vec<crate::retired::Retired>,
     pub tags: BTreeMap<String, crate::sets::Tag>,
     pub meta: BTreeMap<&'static str, String>,
@@ -246,6 +247,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let mut rows = Rows::default();
     let sql = |e: rusqlite::Error| e.to_string();
     let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
+    let mut external = catalog.external_relations.clone();
+    external.sort();
+    external.dedup();
+    for (i, relation) in external.iter().enumerate() {
+        rows.push(
+            "holding_relation",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str("derived_from".into()),
+                Cell::Str(relation.subject_kind.clone()),
+                Cell::Str(relation.subject_pid.clone()),
+                Cell::Str(relation.object_kind.clone()),
+                Cell::Str(relation.object_pid.clone()),
+                opt_int(relation.start.as_deref().map(start)),
+                opt_int(relation.end.as_deref().map(end)),
+                Cell::Int(statement_id[relation.statement.as_str()]),
+                opt_str(relation.caveat.as_ref()),
+            ],
+        );
+    }
     let mut provenance_by_subject = BTreeMap::<_, Vec<_>>::new();
     for value in &catalog.provenance.values {
         provenance_by_subject
@@ -1298,7 +1319,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         reg_core::CATALOG_SCHEMA_VERSION
     ))
     .map_err(sql)?;
-    let statements: Vec<String> = SCHEMA
+    let schema = if external.is_empty() {
+        SCHEMA.to_owned()
+    } else {
+        format!("{SCHEMA}\n{}", include_str!("holdings/relations.sql"))
+    };
+    let statements: Vec<String> = schema
         .lines()
         .map(|line| line.split_once("--").map_or(line, |(code, _)| code))
         .collect::<Vec<_>>()
@@ -1349,7 +1375,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     // table in key order.
     let order: Vec<&str> = others
         .iter()
-        .filter_map(|s| s.strip_prefix("CREATE TABLE ")?.split_whitespace().next())
+        .filter_map(|s| {
+            let table = s.strip_prefix("CREATE TABLE ")?;
+            table
+                .strip_prefix("IF NOT EXISTS ")
+                .unwrap_or(table)
+                .split_whitespace()
+                .next()
+        })
         .collect();
     if let Some(table) = rows.tables.keys().find(|t| !order.contains(t)) {
         return Err(format!("{table}: not a table of schema.sql"));

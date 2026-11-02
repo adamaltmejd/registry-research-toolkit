@@ -1,0 +1,253 @@
+{
+  "attested_resolve": {
+    "columns": [
+      {
+        "column": "Old",
+        "status": "matched",
+        "matches": [
+          {"fqid": "demo/held/value", "name": "Value", "register": "demo/held", "alias": "delivered"}
+        ]
+      }
+    ]
+  },
+  "tables": 9,
+  "columns": 26,
+  "storage_extra_columns": "1",
+  "mappings": [
+    [
+      "Child",
+      "Amount",
+      "demo/projected",
+      "demo/projected/amount",
+      "2018-01-01",
+      "2019-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Child",
+      "ChildId",
+      "demo/projected",
+      "demo/projected/child-id",
+      "2018-01-01",
+      "2019-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Child",
+      "Id",
+      "demo/projected",
+      "demo/projected/id",
+      "2018-01-01",
+      "2019-01-01",
+      "row_key",
+      1
+    ],
+    [
+      "Child",
+      "Status",
+      "demo/projected",
+      "demo/projected/status",
+      "2018-01-01",
+      "2019-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Owners",
+      "Id",
+      "demo/owners",
+      "demo/owners/id",
+      "2017-01-01",
+      "2020-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Owners",
+      "Shared",
+      "demo/owners",
+      "demo/owners/first",
+      "2017-01-01",
+      "2018-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Owners",
+      "Shared",
+      "demo/owners",
+      "demo/owners/second",
+      "2019-01-01",
+      "2020-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Parent",
+      "Amount",
+      "demo/projected",
+      "demo/projected/amount",
+      "2018-01-01",
+      "2019-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Parent",
+      "Id",
+      "demo/projected",
+      "demo/projected/id",
+      "2018-01-01",
+      "2019-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Parent",
+      "Status",
+      "demo/projected",
+      "demo/projected/status",
+      "2018-01-01",
+      "2019-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Part A",
+      "Id",
+      "demo/held",
+      "demo/held/id",
+      "2021-01-01",
+      "2022-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Part A",
+      "New",
+      "demo/held",
+      "demo/held/value",
+      "2021-01-01",
+      "2022-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Part B",
+      "Id",
+      "demo/held",
+      "demo/held/id",
+      "2021-01-01",
+      "2022-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Part B",
+      "New",
+      "demo/held",
+      "demo/held/value",
+      "2021-01-01",
+      "2022-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Pool",
+      "Code",
+      "steward/slots",
+      "steward/slots/code",
+      "2017-01-01",
+      "2018-01-01",
+      "code",
+      0
+    ],
+    [
+      "Pool",
+      "Late",
+      "demo/held",
+      "demo/held/late",
+      "2019-01-01",
+      "2021-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Pool",
+      "New",
+      "demo/held",
+      "demo/held/value",
+      "2019-01-01",
+      "2021-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Pool",
+      "Old",
+      "demo/held",
+      "demo/held/value",
+      "2017-01-01",
+      "2019-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Pool",
+      "Received_Id",
+      "demo/held",
+      "demo/held/id",
+      "2017-01-01",
+      "2021-01-01",
+      "row_key",
+      0
+    ],
+    [
+      "Pool",
+      "Slot2",
+      "steward/slots",
+      "steward/slots/slot2",
+      "2017-01-01",
+      "2021-01-01",
+      "measure",
+      0
+    ],
+    [
+      "Pool",
+      "Year",
+      "demo/held",
+      "demo/held/year",
+      "2017-01-01",
+      "2021-01-01",
+      "measure",
+      0
+    ]
+  ],
+  "lineage": {
+    "nodes": [
+      {
+        "fqid": "demo/held/value",
+        "kind": "variable",
+        "name": "Value"
+      },
+      {
+        "fqid": "steward/slots/slot2",
+        "kind": "variable",
+        "name": "Second position"
+      }
+    ],
+    "edges": [
+      {
+        "kind": "derived_from",
+        "from": "steward/slots/slot2",
+        "to": "demo/held/value",
+        "at": null,
+        "prov": "curated",
+        "caveat": "Lineage preserves distinct variable identity and grants no possession."
+      }
+    ]
+  },
+  "held_key_unmatched_columns": "1"
+}

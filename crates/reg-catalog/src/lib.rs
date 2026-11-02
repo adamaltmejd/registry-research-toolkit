@@ -3,6 +3,7 @@
 //! `reg-meta` binary serves.
 
 mod error;
+mod holdings;
 pub mod ops;
 
 use std::collections::BTreeMap;
@@ -13,6 +14,7 @@ use rusqlite::{Connection, OpenFlags};
 use serde_json::Value;
 
 pub use error::{Code, Error, Spec};
+pub use holdings::Steward;
 
 /// `contract_version` in `conformance/api/operations.toml`.
 pub const CONTRACT_VERSION: &str = "5.1.0";
@@ -38,6 +40,8 @@ pub struct Catalog {
     path: PathBuf,
     meta: BTreeMap<String, String>,
     mmap_size: i64,
+    holdings: Option<holdings::Holdings>,
+    generation: String,
 }
 
 impl Catalog {
@@ -92,10 +96,13 @@ impl Catalog {
                 format!("generation_id {generation:?} is not 64 lowercase hex digits"),
             ));
         }
+        let generation = meta["generation_id"].clone();
         Ok(Self {
             path,
             meta,
             mmap_size,
+            holdings: None,
+            generation,
         })
     }
 
@@ -113,7 +120,7 @@ impl Catalog {
 
     #[must_use]
     pub fn generation(&self) -> &str {
-        self.meta("generation_id")
+        &self.generation
     }
 
     /// A fresh read-only connection; the server opens one per request.
@@ -156,7 +163,7 @@ pub const DEFAULT_MMAP_SIZE: i64 = 1 << 31;
 /// `immutable=1`: the published files never change in place (they are replaced by
 /// rename), so SQLite skips locking and never creates `-wal`/`-shm` sidecars, which
 /// a read-only directory would refuse.
-fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
+pub(crate) fn read_uri(path: &Path) -> String {
     let mut uri = String::from("file:");
     for c in path.to_string_lossy().chars() {
         match c {
@@ -167,8 +174,12 @@ fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
         }
     }
     uri.push_str("?mode=ro&immutable=1");
+    uri
+}
+
+pub(crate) fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
     let conn = Connection::open_with_flags(
-        uri,
+        read_uri(path),
         OpenFlags::SQLITE_OPEN_READ_ONLY
             | OpenFlags::SQLITE_OPEN_URI
             | OpenFlags::SQLITE_OPEN_NO_MUTEX,
@@ -177,7 +188,7 @@ fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
     Ok(conn)
 }
 
-fn read_meta(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<String, String>> {
+pub(crate) fn read_meta(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<String, String>> {
     let conn = connect(path, mmap_size)?;
     let mut stmt = conn.prepare("SELECT key, value FROM meta")?;
     stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?

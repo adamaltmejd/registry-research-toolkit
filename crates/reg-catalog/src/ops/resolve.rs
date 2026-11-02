@@ -52,7 +52,10 @@ pub struct ResolvedMatch {
 }
 
 fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = match params.get("register") {
+        Some(value) => server.catalog.connect_for_ref(value)?,
+        None => server.catalog.connect()?,
+    };
     let register = params
         .get("register")
         .map(|value| {
@@ -68,27 +71,44 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
             }
         })
         .transpose()?;
-    let mut lookup = conn.prepare(
-        "SELECT v.pid, l.body, r.pid, a.kind
+    let extra = if params.get("register").is_none() {
+        server.catalog.connect_holdings()?
+    } else {
+        None
+    };
+    let mut lookups = std::iter::once(&conn)
+        .chain(extra.as_ref())
+        .map(|conn| {
+            conn.prepare(
+                "SELECT v.pid, l.body, r.pid, a.kind
          FROM name_fold f JOIN alias a ON a.fold_id = f.id
            JOIN variable v ON v.id = a.variable_id
            JOIN text l ON l.id = v.label_text
            JOIN register r ON r.id = v.register_id
          WHERE f.folded = ?1 AND (?2 IS NULL OR v.register_id = ?2)
          ORDER BY v.pid",
-    )?;
+            )
+        })
+        .collect::<rusqlite::Result<Vec<_>>>()?;
     let mut columns = Vec::new();
     for column in params.list("columns") {
-        let matches: Vec<ResolvedMatch> = lookup
-            .query_map((reg_core::fold_identity(column), register), |row| {
-                Ok(ResolvedMatch {
-                    fqid: row.get(0)?,
-                    name: row.get(1)?,
-                    register: row.get(2)?,
-                    alias: row.get(3)?,
-                })
-            })?
-            .collect::<rusqlite::Result<_>>()?;
+        let mut matches = Vec::new();
+        for lookup in &mut lookups {
+            matches.extend(
+                lookup
+                    .query_map((reg_core::fold_identity(column), register), |row| {
+                        Ok(ResolvedMatch {
+                            fqid: row.get(0)?,
+                            name: row.get(1)?,
+                            register: row.get(2)?,
+                            alias: row.get(3)?,
+                        })
+                    })?
+                    .collect::<rusqlite::Result<Vec<_>>>()?,
+            );
+        }
+        matches.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        matches.dedup_by(|a, b| a.fqid == b.fqid);
         columns.push(ResolvedColumn {
             column: (*column).to_owned(),
             status: match matches.len() {

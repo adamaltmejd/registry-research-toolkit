@@ -1,0 +1,40 @@
+{
+  "note": "The synthetic delivery document in columns.toml places one variable at positions 1, 2 and 10 in Pool. All three columns retain the complete 2017-2020 delivery. Coverage lists physical columns in census ordinal order, independently of declaration order or numeric slot order.",
+  "held": [
+    {
+      "table": "steward/slots",
+      "variable": "steward/slots/slot2",
+      "physical_table": "Pool",
+      "column": "Slot2",
+      "period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "role": "measure",
+      "carried": false,
+      "caveat": null
+    },
+    {
+      "table": "steward/slots",
+      "variable": "steward/slots/slot2",
+      "physical_table": "Pool",
+      "column": "Position10",
+      "period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "role": "measure",
+      "carried": false,
+      "caveat": null
+    },
+    {
+      "table": "steward/slots",
+      "variable": "steward/slots/slot2",
+      "physical_table": "Pool",
+      "column": "Position1",
+      "period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "role": "measure",
+      "carried": false,
+      "caveat": null
+    }
+  ],
+  "verify_refusal": {
+    "sql": "UPDATE holding_column SET slot_family='invented-family' WHERE slot_family='received-position'",
+    "code": "holdings_slot_source_mismatch",
+    "location": "census:row=3:column=6"
+  }
+}

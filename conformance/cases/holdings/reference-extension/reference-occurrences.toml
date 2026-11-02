@@ -1,0 +1,17 @@
+[[occurrence]]
+table_pid = "demo/held"
+variable_pid = "demo/held/value"
+locator = "synthetic-delivery:row=2"
+evidence = "Same named uncoded measure, with earlier years explicitly stated in the delivery document."
+
+[[occurrence]]
+table_pid = "demo/held"
+variable_pid = "demo/held/id"
+locator = "synthetic-delivery:row=3"
+evidence = "The same received entity key is attested in the earlier delivery."
+
+[[occurrence]]
+table_pid = "demo/owners/received"
+variable_pid = "demo/owners/id"
+locator = "synthetic-delivery:new-membership"
+evidence = "Entity key attested in a received table whose global metadata omits that key; same register and variable, no global interval overwritten."

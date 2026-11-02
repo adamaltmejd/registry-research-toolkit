@@ -92,7 +92,7 @@ const SCOPE_VARIABLE: &str = "(f.subject_kind = 'variable' AND f.subject_id = :i
         AND f.subject_id IN (SELECT id FROM occurrence WHERE variable_id = :id))";
 
 fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
     let entity = refs::resolve(&conn, value)?;
     let scope = match entity.kind.as_str() {

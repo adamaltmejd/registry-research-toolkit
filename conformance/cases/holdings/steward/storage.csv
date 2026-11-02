@@ -1,0 +1,24 @@
+table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position
+dbo,Owners,BASE TABLE,Shared,int,,10,0,1
+dbo,Pool,BASE TABLE,Received_Id,int,,10,0,1
+dbo,Pool,BASE TABLE,Old,int,,10,0,2
+dbo,Pool,BASE TABLE,New,int,,10,0,3
+dbo,Pool,BASE TABLE,Late,nvarchar,10,,,4
+dbo,Pool,BASE TABLE,Unknown,varchar,10,,,5
+dbo,Pool,BASE TABLE,Slot2,int,,10,0,6
+dbo,Pool,BASE TABLE,Code,int,,10,0,7
+dbo,Part A,BASE TABLE,Id,int,,10,0,1
+dbo,Part A,BASE TABLE,New,int,,10,0,2
+dbo,Part B,BASE TABLE,Id,int,,10,0,1
+dbo,Part B,BASE TABLE,New,int,,10,0,2
+dbo,Parent,BASE TABLE,Id,int,,10,0,1
+dbo,Child,BASE TABLE,Id,int,,10,0,1
+dbo,Outside,BASE TABLE,Extra,int,,10,0,1
+dbo,Pool,BASE TABLE,Year,int,,10,0,9
+dbo,Owners,BASE TABLE,Id,int,,10,0,2
+dbo,Child,BASE TABLE,ChildId,int,,10,0,2
+dbo,Owners,BASE TABLE,Unmatched,int,,10,0,3
+dbo,Parent,BASE TABLE,Amount,int,,10,0,2
+dbo,Parent,BASE TABLE,Status,int,,10,0,3
+dbo,Child,BASE TABLE,Amount,int,,10,0,3
+dbo,Child,BASE TABLE,Status,int,,10,0,4

@@ -465,6 +465,8 @@ pub struct Meta {
     pub contract_version: &'static str,
     pub generation: String,
     pub catalog_version: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub steward: Option<crate::Steward>,
 }
 
 impl Meta {
@@ -474,6 +476,7 @@ impl Meta {
             contract_version: CONTRACT_VERSION,
             generation: catalog.generation().to_owned(),
             catalog_version: catalog.meta("catalog_version").to_owned(),
+            steward: catalog.steward(),
         }
     }
 }
