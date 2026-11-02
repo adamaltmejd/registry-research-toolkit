@@ -18887,3 +18887,9 @@ kind = "set"
 subject = "var:lan-lan"
 fields = { "tags" = ["digital"] }
 evidence = "The enterprise-survey passage describes wired LAN and wireless local networks, supporting the digital theme.\nstaged:37d1ad69df26cc5b67c4abb3bcc888697f09da73958fba6dcc7ffa91785c9a95:page:60:chars:129-1429"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: D8 @2016-01-01..2016-12-31 where key = 'v35542' and release = 'r12032'"
+fields = { "definition" = "Har du köpt eller beställt någon vara eller tjänst via internet genom att klicka vidare i en annons på sociala nätverssajter eller appar de senaste 12 månaderna?" }
+evidence = "Rename audit d8: the sole D8 occurrence (2016, r12032/v35542) has a social-network-ad purchase label but a copied stock-trading/three-month definition. SCB LE0108 documentation 2016, p. 19, question D8 explicitly asks about purchases through social-network advertisements in the last 12 months. Retain the correctly renamed owner and replace only the definition. https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2016_jv_170117.pdf"
