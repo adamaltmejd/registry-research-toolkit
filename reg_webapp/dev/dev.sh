@@ -17,13 +17,10 @@
 #                          a server.
 #   dev.sh flows <out-dir> [scenario...]
 #                          ONE-SHOT — start, run the Playwright driver (driver.mjs)
-#                          (the /project error+retry cases, the catalog-authored
-#                          draft cases, the deliberate-replacement case, the
-#                          /project card's source-period edit and the period
-#                          card's keyboard focus, at four viewports), tear down,
+#                          (the shell/search case at four viewports), tear down,
 #                          exit with the driver's status. The PNGs land in
 #                          <out-dir>. Named scenarios run only those cases;
-#                          no names runs all nine.
+#                          no names runs the shell/search case.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive
@@ -297,7 +294,7 @@ trap 'exit 143' TERM
 # idle for 6 hours, and serving requests does not mark it used, so a long session
 # served straight from the cache would lose its catalog mid-run.
 if [ -n "$fixture_db" ]; then
-	fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py webapp-dev 2>/dev/null) || {
+	fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py webapp-dev) || {
 		echo "dev: building the webapp-dev fixture failed — see 'conformance/fixture_cache.py webapp-dev'." >&2
 		exit 1
 	}
@@ -377,64 +374,10 @@ for e in (json.load(sys.stdin).get("data") or {}).get("errors", []):
 	ab console --clear >/dev/null && ab errors --clear >/dev/null
 }
 
-# The catalog smoke: /catalog → provider → register → variable, then narrow the
-# leaf's Period slider from the keyboard (the key press applies it), assert what
-# the app wrote to the URL and what it shows, and cold-reload the deep link.
-# Desktop only.
+# The restored shell only. Entity-page smoke steps return in W2–W5.
 smoke() {
-	local here period seeded from to deep
-	local slider='[role="group"][aria-label="Period window (years)"]'
 	ab set viewport 1280 900 >/dev/null &&
 		ab open "$dev_url/catalog" >/dev/null && settled && capture 01-root || return 1
-	# The home page links into nothing (the register list is beside it), so the
-	# provider is opened from the list: its first provider row.
-	ab click '[role="treegrid"] [role="row"][aria-level="1"]' >/dev/null && settled || return 1
-	echo "opened provider → $(ab get url)"
-	capture 02-provider || return 1
-	# Then drill by clicking the first link STRICTLY DEEPER than the current
-	# path — `a[href^="/catalog"]` alone matches the header nav link first and
-	# goes nowhere. The SPA's `link` action intercepts these (pushState, no
-	# reload).
-	for step in 03-register 04-variable; do
-		here=$(ab eval 'location.pathname.replace(/\/$/, "")' | tr -d '"')
-		ab click "a[href^=\"$here/\"]" >/dev/null && settled || return 1
-		echo "clicked from $here → $(ab get url)"
-		capture "$step" || return 1
-	done
-	# Real form interaction, the way a keyboard researcher does it: one ArrowRight
-	# on "From year" (the thumbs clamp to the subject's own coverage, so the result
-	# is a range the catalog delivers). Scoped to the leaf's slider group: the
-	# header's project-window slider has the same thumb labels.
-	seeded=$(ab get value "$slider input[aria-label=\"From year\"]")
-	to=$(ab get value "$slider input[aria-label=\"To year\"]")
-	[ "$seeded" -lt "$to" ] || {
-		echo "smoke: period slider seeded a single year ($seeded) — no range to narrow" >&2
-		return 1
-	}
-	ab focus "$slider input[aria-label=\"From year\"]" >/dev/null &&
-		ab press ArrowRight >/dev/null || return 1
-	from=$(ab get value "$slider input[aria-label=\"From year\"]")
-	[ "$from" -eq $((seeded + 1)) ] || {
-		echo "smoke: From year did not step: $seeded → $from" >&2
-		return 1
-	}
-	period="$from..$to"
-	if ! { ab wait --fn "new URLSearchParams(location.search).get('period') === '$period'" >/dev/null &&
-		settled && ab wait --text "narrowed to $period" >/dev/null; }; then
-		echo "smoke: applying period $period did not land in the URL and the page" >&2
-		return 1
-	fi
-	echo "period $seeded..$to → $period at $(ab get url)"
-	capture 04b-period-resolved || return 1
-	# Deep-link reload: a cold load of the nested path renders the same view
-	# (vite's SPA fallback in dev; the edge worker in production).
-	deep=$(ab eval 'location.pathname' | tr -d '"')
-	ab open "$dev_url$deep" >/dev/null && settled || return 1
-	[ "$(ab get text body | wc -c)" -ge 40 ] || {
-		echo "smoke: deep link $deep rendered ~empty body" >&2
-		return 1
-	}
-	capture 05-deep-link-reload || return 1
 	echo "smoke: OK"
 }
 

@@ -1,6 +1,5 @@
 import { useMemo, useSyncExternalStore } from "react";
 import { subscribeCatalogNames } from "./catalog_names";
-import { projectStore } from "./project_store";
 
 /** Same value for React's purposes: identical, or a plain object or array whose
  * entries are identical. Lets a reader build a fresh snapshot object each run
@@ -52,13 +51,6 @@ function useStoreRead<A, T>(
     [subscribe, read, arg],
   );
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
-}
-
-/** Read something derived from the project store. `read` is a module-level
- * function of `arg`, so the subscription is rebuilt only when either changes; it
- * may return a fresh object or array (compared entry by entry). */
-export function useProjectRead<A, T>(read: (arg: A) => T, arg: A): T {
-  return useStoreRead(projectStore.subscribe, read, arg);
 }
 
 /** Read from the catalog display-name cache (`catalog_names.ts`), starting the

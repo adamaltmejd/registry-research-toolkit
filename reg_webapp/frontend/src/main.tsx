@@ -4,18 +4,7 @@ import "./lib/ui/motion.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
-import { IndexedDBPersistence } from "./lib/indexeddb_persistence";
-import {
-  AUTOSAVE_KEY,
-  setPersistence,
-  startDraftLifecycle,
-  storeSchemaVersion,
-} from "./lib/project_store";
 import { initRegCore } from "./lib/reg_core";
-
-// A5.4 production persistence wiring (the store default stays InMemoryPersistence
-// for tests; this swaps in the IndexedDB drop-in before the lifecycle starts).
-setPersistence(new IndexedDBPersistence(AUTOSAVE_KEY, storeSchemaVersion));
 
 const target = document.getElementById("app");
 if (!target) {
@@ -27,7 +16,6 @@ if (!target) {
 // rather than render one that throws on the first edit.
 initRegCore().then(
   () => {
-    startDraftLifecycle();
     createRoot(target).render(
       <StrictMode>
         <App />

@@ -1,27 +1,15 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
-import type { Steward } from "./api";
 import {
   browseFilter,
   useBrowseFilter,
   useBrowseMatches,
 } from "./browse_filter";
 import { CommandPalette } from "./CommandPalette";
-import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
 import { Button } from "./ui/Button";
-import type { WindowBounds } from "./window_bounds";
-
-interface Props {
-  /** The deployment's branding, or null until /api/context resolves. */
-  steward: Steward | null;
-  /** The server's version, the seed of a new project; empty until
-   * /api/context resolves. */
-  regMetaVersion: string;
-  bounds: WindowBounds;
-}
 
 const mac = isMacPlatform();
 
@@ -53,8 +41,8 @@ function isOtherTextEntry(
  * are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
-export function TopBar({ steward, regMetaVersion, bounds }: Props) {
-  const brand = steward?.long_name ?? "Registry Research Toolkit";
+export function TopBar() {
+  const brand = "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -160,17 +148,6 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       <div className={styles.inner} data-search-open={searchOpen || undefined}>
         <a href="/" className={styles.brand}>
           <span className={styles.brandName}>{brand}</span>
-          {/* The steward's logo (`stewards/<catalog>/logo.svg`, also the
-              favicon): shown only where the full name would push the banner
-              off the row. Sized here so the bar's measured height does not
-              jump when it loads. */}
-          <img
-            className={styles.brandMark}
-            src="/api/steward/logo.svg"
-            alt=""
-            width={28}
-            height={28}
-          />
         </a>
         {/* Text here filters both browse columns in place, never the open
           page. Enter opens the palette under it, the way to codes,
@@ -182,7 +159,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         <Autocomplete inputValue={filter} onInputChange={browseFilter.set}>
           <SearchField
             ref={field}
-            aria-label="Search registers, variables, codes"
+            aria-label="Search registers, variables"
             className={styles.search}
             onSubmit={() => {
               if (!palette) openPalette();
@@ -206,7 +183,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
             <Input
               ref={input}
               className={styles.searchInput}
-              placeholder="Search registers, variables, codes…"
+              placeholder="Search registers, variables…"
               autoComplete="off"
               // No aria-expanded: ARIA does not allow it on a searchbox (axe
               // aria-allowed-attr); it would take role="combobox".
@@ -281,16 +258,13 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         <span className={styles.searchToggle}>
           <Button
             ref={toggle}
-            aria-label="Search registers, variables, codes"
+            aria-label="Search registers, variables"
             onPress={openSearch}
           >
             Search
           </Button>
         </span>
-        <ProjectBanner
-          bounds={bounds}
-          seed={{ regMetaVersion, steward: steward?.id ?? "" }}
-        />
+        <a href="/project">Project</a>
       </div>
     </header>
   );

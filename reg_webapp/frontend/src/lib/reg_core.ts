@@ -10,7 +10,6 @@
  */
 
 import type { ValidationResultModel } from "./api";
-import type { ProjectSourcePeriod } from "./project_data";
 import init, {
   check_project,
   fold_search,
@@ -21,10 +20,6 @@ import init, {
   period_token_for_bounds,
   project_schema_version,
   render,
-  source_period_from_wire,
-  source_period_intervals,
-  source_period_to_wire,
-  source_period_years,
   study_window_interval,
 } from "./reg-core-wasm/reg_core_wasm";
 
@@ -120,48 +115,6 @@ export function parsePeriod(text: string): ParsedPeriod {
 export function periodTokenForBounds(lo: string, hi: string): string {
   requireReady();
   return period_token_for_bounds(lo, hi);
-}
-
-/** The `Source.period` a `?period` wire spells, shaped and not validated: a
- * comma list becomes segments, `from..to` a range object, a grammar year an int;
- * other text stays a trimmed string for the validator to report. A null wire is
- * the unset period `""`. */
-export function sourcePeriodFromWire(wire: string | null): ProjectSourcePeriod {
-  requireReady();
-  return JSON.parse(source_period_from_wire(wire ?? "")) as ProjectSourcePeriod;
-}
-
-/** The `?period` wire of a `Source.period` (any draft value), or null when it
- * has none: blank, an empty list, or not a period's shape. Not validated. */
-export function sourcePeriodToWire(period: unknown): string | null {
-  requireReady();
-  return JSON.parse(source_period_to_wire(JSON.stringify(period ?? null))) as
-    | string
-    | null;
-}
-
-/** The days a `Source.period` (any draft value) requests, merged: `intervals`
- * is null for the year-independent `"_default"`; `error` when the period's
- * structural check or its range order refuses it. */
-export type SourcePeriodIntervals =
-  | { intervals: Interval[] | null }
-  | { error: string; message: string };
-
-export function sourcePeriodIntervals(period: unknown): SourcePeriodIntervals {
-  requireReady();
-  return JSON.parse(
-    source_period_intervals(JSON.stringify(period ?? null)),
-  ) as SourcePeriodIntervals;
-}
-
-/** The calendar-year spans of a `Source.period` (any draft value), merged
- * (`2015..2017` and `2018` are one span), or null unless the period is valid and
- * every endpoint is a year. */
-export function sourcePeriodYears(period: unknown): [number, number][] | null {
-  requireReady();
-  return JSON.parse(source_period_years(JSON.stringify(period ?? null))) as
-    | [number, number][]
-    | null;
 }
 
 /** The days a study window (`{from, to}` int years) covers, January 1 through

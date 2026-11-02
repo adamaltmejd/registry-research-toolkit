@@ -277,10 +277,10 @@ This is the complete list of boundaries a test may assert at.
    full Python suite, then the `release`-marked admission checks on the synthetic
    catalog artifact. The `lint` job runs `gate.py lint` (ruff, panache, ty, plugin
    schema drift and provider vocabulary). The OpenAPI snapshot is a `crates/reg-meta`
-   test. The `reg-webapp-frontend` job runs install, WASM generation, type checks,
-   lint, unit tests, build and codegen drift; `reg-webapp-flows` runs the production
-   bootstrap and shell/search browser flows against a source-built synthetic fixture.
-   Each frontend job has a 6-minute timeout. A job that exceeds its budget fails.
+   test. The `reg-webapp-frontend` job runs install, WASM generation, type checks, lint,
+   unit tests, build and codegen drift; `reg-webapp-flows` runs the production bootstrap
+   and shell/search browser flows against a source-built synthetic fixture. Each
+   frontend job has a 6-minute timeout. A job that exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -299,10 +299,10 @@ This is the complete list of boundaries a test may assert at.
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
 from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
 `bun run test`, or the pytest line of `gate.py rust`) on a 10-core developer Mac; CI is
-the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite over budget
-is a finding for the `test-audit` skill, not a reason to raise the number. The R
-packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat suites are
-run by hand, not by the gate or CI.
+the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite
+over budget is a finding for the `test-audit` skill, not a reason to raise the number.
+The R packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat
+suites are run by hand, not by the gate or CI.
 
   | Suite                                | Local | CI job | Rationale                                                                                                                           |
   | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -310,8 +310,8 @@ run by hand, not by the gate or CI.
   | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.        |
   | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                    |
   | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.       |
-  | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
-  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup. |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                 |
+  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                |
 
 One verification gate cuts across the tiers. It is named G0 so it is not confused with
 the tiers. G1 and G2 (the byte-for-byte differential harness against the previous

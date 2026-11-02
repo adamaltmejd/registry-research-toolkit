@@ -23,11 +23,9 @@ import {
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
-import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
+import { catalogHref, leafSlug, rankFilter } from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
-import { safeSourceBindings, safeSourceSlots } from "./project_data";
-import { projectStore } from "./project_store";
 import { type Route, router } from "./router";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { Button } from "./ui/Button";
@@ -38,7 +36,7 @@ import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
-import { useCatalogRead, useProjectRead } from "./use_store_read";
+import { useCatalogRead } from "./use_store_read";
 
 /** One row: a provider (or the classification root) at level 1, a register under
  * it. `children` is null while a provider's registers are still loading. */
@@ -77,21 +75,6 @@ function writeCollapsed(collapsed: Set<string>): void {
   } catch {
     // Not fatal: the collapse state lasts this session only.
   }
-}
-
-/** Columns in the open project, per register FQID. */
-function readInProject(): Record<string, number> {
-  const counts: Record<string, number> = {};
-  for (const source of safeSourceSlots(projectStore.draft?.sources)) {
-    const variant = source?.register_variant;
-    const register =
-      typeof variant === "string" ? registerPrefixOf(variant) : "";
-    if (register) {
-      counts[register] =
-        (counts[register] ?? 0) + safeSourceBindings(source).length;
-    }
-  }
-  return counts;
 }
 
 function inProjectCount(
@@ -177,16 +160,14 @@ function browseNodes(
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
     children:
-      child.kind !== "provider"
-        ? []
-        : registers === null
-          ? null
-          : (registers[child.fqid] ?? []).map((register) => ({
-              id: register.fqid,
-              name: register.name ?? register.fqid,
-              href: catalogHref(register.fqid),
-              children: [],
-            })),
+      registers === null
+        ? null
+        : (registers[child.fqid] ?? []).map((register) => ({
+            id: register.fqid,
+            name: register.name ?? register.fqid,
+            href: catalogHref(register.fqid),
+            children: [],
+          })),
   }));
 }
 
@@ -207,8 +188,8 @@ export function BrowseTree({ className }: { className?: string }) {
   useSelectionBar(boxRef, barRef);
   const route = useRoute();
   const root = useCatalogRead(catalogRootChildren, undefined);
-  const counts = useProjectRead(readInProject, undefined);
-  const providers = (root.value ?? []).filter((c) => c.kind === "provider");
+  const counts: Record<string, number> = {};
+  const providers = root.value ?? [];
   // One request per provider, all at once: every group starts open.
   const registers = useAsyncResource(
     root.value === null ? null : providers.map((p) => p.fqid).join(" "),
@@ -219,7 +200,7 @@ export function BrowseTree({ className }: { className?: string }) {
       return Object.fromEntries(
         shown.map((node, i) => [
           providers[i].fqid,
-          node.kind === "provider" ? node.children : [],
+          node.kind === "provider" ? node.registers : [],
         ]),
       );
     },

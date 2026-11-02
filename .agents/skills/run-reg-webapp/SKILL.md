@@ -34,9 +34,9 @@ no-op when in sync, so a fresh worktree needs no setup. It then runs
 - For `flows`: Playwright's Chromium, once:
   `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog: `--fixture-db` (below), or `REG_META_DB` set to a directory holding a
-  release asset (`reg_meta.db` + `reg_meta_docs.db`; root `README.md`). The server
-  refuses a catalog whose schema it does not admit (`SCHEMA` in
-  `crates/reg-catalog/src/lib.rs`) with `schema_incompatible`.
+  release asset (`reg_meta.db`; root `README.md`). The server refuses a catalog whose
+  schema it does not admit (`CATALOG_SCHEMA_VERSION` in `crates/reg-core/src/lib.rs`)
+  with `schema_incompatible`.
 
 ## Modes
 
@@ -57,19 +57,15 @@ summary line, then the page's console errors (`[error] …`) and uncaught except
 (`[pageerror] …`). Axe violations do not fail the run; judging them is the reviewer's
 job.
 
-- **`smoke`** drills `/catalog` → provider → register → variable, narrows the leaf's
-  **Period** slider from the keyboard, applies it (asserting `?period=` and the
-  "narrowed to …" text), then cold-reloads the deep link. Steps land as `01-root` …
-  `05-deep-link-reload`. Desktop only — not a substitute for the four widths.
+- **`smoke`** captures the restored catalog shell as `01-root`. Entity-page steps return
+  with their owning W2–W5 ports. Desktop only — not a substitute for the four widths.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
   design-reviewer skill judges.
-- **`flows`** runs the project and catalog scenarios at four viewports, each in a fresh
-  browser context against the real servers, and writes the PNGs into `<out-dir>`. The
-  `scenarios` table in `driver.mjs` names them; name some to run a subset. It asserts on
-  the `--fixture-db` content (`scb/lisa/kon` at `individer-15plus`, `scb/rams/syss`,
-  `scb/lisa/forsamling`), so run it with `--fixture-db`. The gate's `flows` step
-  (`uv run --no-project scripts/gate.py flows`) runs all of them that way.
+- **`flows`** runs the shell/search scenario at four viewports, each in a fresh browser
+  context against the real servers, and writes the PNGs into `<out-dir>`. It uses the
+  `demo` / `demo2` content of `--fixture-db`. Entity and project flows return with
+  W2–W5; their routes currently show a not-ported notice.
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 
@@ -82,16 +78,11 @@ dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots
 
 `REG_WEBAPP_SHOTS=<dir>` collects a run elsewhere (relative to the repo root).
 
-**`--fixture-db`** serves a deterministic synthetic catalog + docs DB pair as
-`REG_META_DB`: the real builder's output for `conformance/cases/fixtures/webapp-dev`,
-from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss), copied
-into a temp dir that is deleted on exit. It is byte-identical run to run, so a
-screenshot diff means a code change. It covers every route the design reviewer walks
-(`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`, `/catalog/scb/lisa/kon`,
-`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/project`, `/doc/Kon.md`)
-but has a handful of rows — use a real DB for density questions. With
-`REG_WEBAPP_STEWARD` set, the catalog is the conformance suite's synthetic steward
-artifact (`conformance/fixture_cache.py`) instead.
+**`--fixture-db`** serves a deterministic synthetic catalog as `REG_META_DB`: current
+`reg-build` output for `conformance/cases/fixtures/webapp-dev`, from the shared fixture
+cache (`conformance/fixture_cache.py`, built on a miss), copied into a temp dir that is
+deleted on exit. It contains `demo/bas`, `demo/hush` and `demo2/reg`. Use a real DB for
+density questions.
 
 **A scratch DB** verifies content not yet released (a `build-db` / curation change):
 
@@ -102,9 +93,9 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
 ## Parallel instances (concurrent worktrees)
 
 - **`preview_start`**: `.claude/launch.json`'s `reg-webapp` config (`autoPort: true`)
-  runs `dev.sh preview`, which binds the frontend to the MCP-assigned `$PORT` and the
-  Rust server to a private free port wired through `REG_META_SERVER_URL`. Sessions never
-  collide.
+  runs `dev.sh --fixture-db preview`, which binds the frontend to the MCP-assigned
+  `$PORT` and the Rust server to a private free port wired through
+  `REG_META_SERVER_URL`. Sessions never collide.
 
 - **`dev.sh smoke` / `shot`**: free ports, per-run shots directory, guaranteed teardown.
   The path to reach for.
