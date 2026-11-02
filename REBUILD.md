@@ -44,14 +44,14 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
 
 ## Milestones
 
-  | M   | Content                                                                                            | Proves                                                                                            | Status |
-  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------ |
-  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done   |
-  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done   |
-  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done   |
-  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | done   |
-  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —      |
-  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —      |
+  | M   | Content                                                                                            | Proves                                                                                            | Status  |
+  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
+  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done    |
+  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done    |
+  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done    |
+  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | done    |
+  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | stopped |
+  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —       |
 
 The hosted global catalog switches in C, uncurated, and curation in D happens against
 it. There are no users to protect yet, and one live pipeline is simpler than two.
@@ -634,6 +634,10 @@ catalog remains for a later release decision.
 
 #### Post-D order
 
+Done: the identity batches, 0.68.0, and the id sprint (#2053–#2063, released in 0.70.0).
+What the sprint left open is in #2073 (review queue) and #2074 (named identity cases).
+The text below is the plan as it was run.
+
 1. **Mechanical triage of the §D rows** into the maintainer's two groups (2026-10-29):
    before the id sprint, only work that changes which occurrences a variable id covers:
    identity/endpoint claims, recovered identity setters, keyless-default alignment,
@@ -700,6 +704,14 @@ source inventories; per-entry reasons stay in the F-deleted conversion reports.
   | Dropped: nothing left to do           |                              9,949 accounted entries | Satisfied claims, obsolete findings, folded aliases, no-op clears, bookkeeping, panel presentation (750) and case-only splits (8). | B: dropped; details stay in the conversion reports.                                              |
 
 ### E: the holdings layer
+
+**Status (maintainer, 2026-11-02): stopped after e-holdings.** The real run on the
+pinned steward repo is green (44,970 census columns: 35,592 offered, 982 held, 940
+unmatched) on draft #2052; whether it merges is the maintainer's call. Steps 4–9 and the
+exit below are not started and live in issues: e-order #2068, e-compare and e-release
+#2070, e-runner #2069, e-types #2071, the held and unmatched columns #2072, and the SPA
+#2066 (with #2067). F's SWECOV deletions wait on #2068, #2069 and #2070; SWECOV is
+served at 0.64.0 from the old stack until then.
 
 - **Design first, for the maintainer's review.** The design covers:
   - steward and project holdings, and the three questions holdings answer: what is in my
