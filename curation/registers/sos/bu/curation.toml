@@ -16,27 +16,6 @@ evidence = "reg_meta_build/curation/registers/sos/bu.toml:319\n\nComplete accept
 
 [[statement]]
 kind = "set"
-subject = "bu-insats-19602013: avsldat"
-fields = { "label" = "Datum för slut av insats" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: avsldat"
-fields = { "label" = "Datum för slut av insats" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: avsldat"
-fields = { "label" = "Datum för slut av insats" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-
-[[statement]]
-kind = "set"
 subject = "bu-plac-19602013: avsldat"
 fields = { "label" = "Datum då placeringen avslutades/upphörde" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."

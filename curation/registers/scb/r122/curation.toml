@@ -16954,3 +16954,9 @@ kind = "set"
 subject = "var:vilken-typ-av-anstallning-har-du-nu"
 fields = { "sets" = ["anstallningstyp"] }
 evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; codes are fast/tidsbegränsad/fast i botten plus two non-employee codes. Peers saansttyp and typ-av-anstallning-huvud-aldre are members. Extra non-employee codes do not make it yrkesställning.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:31\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6933\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2725\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/anstallningstyp"
+
+[[statement]]
+kind = "set"
+subject = "var:om-barn-under-25-ar-som-bor-tillsammans"
+fields = { "sets" = ["barns-hemmaboende"] }
+evidence = "Audit correction 2026-11-02: The question asks whether any children under 25 live with the respondent at least half the time. This is children living at home, matching barns-hemmaboende; use it when the two-member sammanboende group is dissolved. Catalog variable 2274."

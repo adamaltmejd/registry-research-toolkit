@@ -22929,3 +22929,9 @@ kind = "set"
 subject = "var:typ-av-debiterad-forekomst"
 fields = { "sets" = ["deklarationstyp"] }
 evidence = "Despite the debiterad label (r588), the complete valueset explicitly describes income-declaration type, with Inkomstdeklaration and Nolltaxerad categories (r446), supporting r670's declaration-occurrence concept.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2532\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31756\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/deklarationstyp"
+
+[[statement]]
+kind = "set"
+subject = "var:folkfort"
+fields = { "sets" = ["folkpensionsbelopp"] }
+evidence = "Audit correction 2026-11-02: The operational definition derives the amount from the folkpension own-benefit flag (code 2) and the folkpension amount. The eight other folkpension amounts establish a fitting non-singleton group; use this candidate when fortidspension is dissolved. Catalog variable 30859."
