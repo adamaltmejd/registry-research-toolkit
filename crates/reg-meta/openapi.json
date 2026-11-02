@@ -3741,7 +3741,6 @@
               "period",
               "unit_types",
               "texts",
-              "descriptions",
               "spellings",
               "tables",
               "kind"
@@ -3753,11 +3752,9 @@
                   "null"
                 ]
               },
-              "descriptions": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ShowDescription"
-                }
+              "description": {
+                "type": "string",
+                "description": "The one curated description, separate from source text runs."
               },
               "fqid": {
                 "type": "string"
@@ -3807,29 +3804,6 @@
           }
         ],
         "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back."
-      },
-      "ShowDescription": {
-        "type": "object",
-        "description": "An occurrence description, separate from definitions; equal texts in one table\nshare merged periods. Different tables or texts remain separate.",
-        "required": [
-          "table",
-          "description",
-          "periods"
-        ],
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "periods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Period"
-            }
-          },
-          "table": {
-            "type": "string"
-          }
-        }
       },
       "ShowProviderRef": {
         "type": "object",
