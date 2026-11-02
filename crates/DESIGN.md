@@ -1718,16 +1718,26 @@ cell. Stable key ordering derives from column ordinals. Holdings listings are me
 (§13 D9); this does not authorize publishing private source documents, secrets or
 microdata.
 
-Partition and projection are mutually exclusive. Projection parents must exist and cover
-each projected data cell's interval and logical variable. A projection's required held
-keys may add entity components absent from the parent (recipient × child); they serve no
-projected data cell and are independently key-validated. A parent is not itself a
-projection; no projection is an SQL join instruction. Index mappings by logical table,
-variable and start/end and columns by holding/name. Coverage is computed from indexed
-facts, not stored guesses about future UI summaries. Include source digests and the
-accepted census accounting in `meta`/`input`; publish no raw private locators that
-expose confidential document paths. Published locators use input-role ids and safe
-relative metadata locations.
+Partition and projection are mutually exclusive. A projection parent must exist and must
+not itself be a projection. The relationship claims a shared key served by the parent;
+the child remains a separate extract with its own key and file. It does not require the
+parent to hold every child data variable or cover its interval. A child-only data cell
+is an ordinary placement ordered from the child's file. If the same logical cell is
+placed in both parent and child, the duplicate is authorized by the declared projection;
+undeclared duplicates still refuse. Carried-key rules remain in force. A child's
+required held keys may add entity components absent from the parent (recipient × child)
+and are independently key-validated. No projection is an SQL join instruction.
+
+This follows the maintainer's 2026-10-18 rulings "Projection, all 6 years" for
+`RTB_PostNr_YYYY` of `RTBYYYY` (`series/rtb-postnr.toml`) and "HUSH projection of PERS"
+(`series/swecov-sos-ekb-hush.toml`) for the EKB household extract: postal codes and
+household amounts are child-only data, not claims that the parent holds them.
+
+Index mappings by logical table, variable and start/end and columns by holding/name.
+Coverage is computed from indexed facts, not stored guesses about future UI summaries.
+Include source digests and the accepted census accounting in `meta`/`input`; publish no
+raw private locators that expose confidential document paths. Published locators use
+input-role ids and safe relative metadata locations.
 
 `reg-build verify` is the sole publication validator. It checks exact census accounting
 (one disposition per table; every physical column represented), referential integrity,

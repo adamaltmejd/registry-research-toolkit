@@ -431,27 +431,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
     if !conflicts.is_empty() {
         return Err(conflicts.into_iter().collect::<Vec<_>>().join("\n"));
     }
-    let mut children=db.prepare("SELECT h.id,h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m
-      JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id WHERE h.projection_of IS NOT NULL AND m.carried=0")
-        .map_err(|e|e.to_string())?;
-    let mut children = children.query([]).map_err(|e| e.to_string())?;
-    let mut failures = BTreeSet::new();
-    while let Some(child) = children.next().map_err(|e| e.to_string())? {
-        let table: i64 = child.get(0).map_err(|e| e.to_string())?;
-        let parent: i64 = child.get(1).map_err(|e| e.to_string())?;
-        let variable: String = child.get(2).map_err(|e| e.to_string())?;
-        let required = (
-            child.get(3).map_err(|e| e.to_string())?,
-            child.get(4).map_err(|e| e.to_string())?,
-        );
-        let admitted = compile::held_intervals(&db, parent, &variable)?;
-        if !compile::covered(&[required], &admitted) {
-            failures.insert(format!("holdings:table={table}:parent={parent}:variable={variable}:period={}..{}: holdings_projection_invalid: parent lacks projected variable/window", required.0, required.1));
-        }
-    }
-    if !failures.is_empty() {
-        return Err(failures.into_iter().collect::<Vec<_>>().join("\n"));
-    }
     Ok(())
 }
 

@@ -175,23 +175,43 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
         assert case["location"] in refused.stderr
 
 
-def test_projection_refusal_reports_every_missing_parent_cell(tmp_path):
-    # Fails if verification stops at the first absent parent mapping or omits its
-    # child/parent/variable/window location. The ordinary fixture admits both data
-    # cells; these authored parent holds leave both child mappings unsupported.
-    # Expected locations come from the synthetic topology, ledger and 2018 window.
-    _, root, command = prepare_holdings(tmp_path)
+def test_projection_keeps_child_only_data_beside_parent_holds(tmp_path):
+    # Fails if projections require parent coverage of child data, drop child-only
+    # placements, or lose the parent's explicit holds. The ordinary fixture has
+    # both data cells in both files; these holds exercise child-only possession.
+    # The oracle retains each file's declared key and the child's own data cells.
+    base, root, command = prepare_holdings(tmp_path)
     path = root / "holdings.toml"
     text = path.read_text()
     child = '[[table]]\nphysical_name = "Child"'
     holds = (HOLDINGS_CASE / "projection-parent-holds.toml").read_text()
     path.write_text(text.replace(child, holds + child, 1))
     pin_steward(root, tmp_path / "stewards.toml")
-    result = run([*command, "--out", tmp_path / "refused.db"])
-    assert result.returncode == 1
-    expected = json.loads((HOLDINGS_CASE / "projection-refusal.json").read_text())
-    for failure in expected["failures"]:
-        assert failure in result.stderr
+    output = tmp_path / "child-only.db"
+    result = run([*command, "--out", output])
+    assert result.returncode == 0, result.stderr
+    verified = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert verified.returncode == 0, verified.stderr
+    expected = json.loads((HOLDINGS_CASE / "projection-child-only.json").read_text())
+    with closing(sqlite3.connect(output)) as db:
+        mappings = db.execute(
+            """SELECT t.physical_name,c.name,m.table_pid,m.variable_pid,
+                      date(m.start * 86400,'unixepoch'),date(m.end * 86400,'unixepoch'),m.role,m.carried
+               FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+               JOIN holding_table t ON t.id=c.holding_id
+               WHERE t.physical_name IN ('Parent','Child')
+               ORDER BY t.physical_name,c.name,m.table_pid,m.variable_pid,m.start"""
+        ).fetchall()
+        assert [list(row) for row in mappings] == expected["mappings"]
+        held = db.execute(
+            """SELECT t.physical_name,c.name,c.reason,c.follow_up
+               FROM holding_column c JOIN holding_table t ON t.id=c.holding_id
+               WHERE t.physical_name IN ('Parent','Child') AND c.disposition='hold'
+               ORDER BY t.physical_name,c.name"""
+        ).fetchall()
+        assert [list(row) for row in held] == expected["held"]
 
 
 def test_explicit_missing_row_key_holds_the_received_table(tmp_path):

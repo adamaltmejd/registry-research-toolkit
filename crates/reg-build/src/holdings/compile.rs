@@ -151,26 +151,6 @@ fn column_periods(column: Option<&input::Column>, spans: &[Span]) -> Result<Vec<
     }
 }
 
-pub(super) fn held_intervals(
-    db: &Connection,
-    holding: i64,
-    variable: &str,
-) -> Result<Vec<Span>, String> {
-    let mut query = db
-        .prepare(
-            "SELECT m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-      WHERE c.holding_id=? AND m.variable_pid=?",
-        )
-        .map_err(|e| e.to_string())?;
-    query
-        .query_map(params![holding, variable], |row| {
-            Ok((row.get(0)?, row.get(1)?))
-        })
-        .map_err(|e| e.to_string())?
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())
-}
-
 #[allow(clippy::too_many_arguments)]
 fn notice(
     db: &Connection,
