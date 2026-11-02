@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, leafSlug, rankFilter, svCollator } from "./catalog";
@@ -37,14 +38,35 @@ export function VariableList({
         ),
       ]
     : ranked;
-  const items = rows.map((row) => ({
-    id: row.fqid,
-    name: row.name,
-    href: catalogHref(row.fqid),
-    inProject: 0,
-    period: catalogPeriodLabel(row.period),
-  }));
-  const periods = new Map(items.map((item) => [item.id, item.period]));
+  const nameCounts = new Map<string, number>();
+  for (const variable of variables) {
+    nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
+  }
+  const items = rows.map((row) => {
+    const period = catalogPeriodLabel(row.period);
+    return {
+      id: row.fqid,
+      name: row.name,
+      label:
+        (nameCounts.get(row.name) ?? 0) > 1
+          ? `${row.name}, ${period}`
+          : undefined,
+      href: catalogHref(row.fqid),
+      inProject: 0,
+      period,
+    };
+  });
+  // ColumnList passes this renderer into RAC's Collection dependencies. A fresh
+  // function rebuilds every row, so keep it stable until the search text changes.
+  const renderName = useCallback(
+    (item: ColumnItem) => (
+      <span className={styles.variableName}>
+        <Highlight text={item.name} needle={needle} />
+        <span className={styles.period}>{item.period}</span>
+      </span>
+    ),
+    [needle],
+  );
   return (
     <ColumnList
       label="Variables"
@@ -58,12 +80,7 @@ export function VariableList({
         items.some((item) => item.id === selectedFqid) ? selectedFqid : null
       }
       selectedExact={items.some((item) => item.id === selectedFqid)}
-      renderName={(item: ColumnItem) => (
-        <span className={styles.variableName}>
-          <Highlight text={item.name} needle={needle} />
-          <span className={styles.period}>{periods.get(item.id)}</span>
-        </span>
-      )}
+      renderName={renderName}
       empty={
         needle.trim()
           ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
