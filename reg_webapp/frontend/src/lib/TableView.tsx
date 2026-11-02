@@ -7,6 +7,7 @@ import {
 import type { TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
+import { registerRead } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -15,20 +16,52 @@ import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { TreeChevron } from "./ui/TreeChevron";
+import { useCatalogRead } from "./use_store_read";
+
+type Release = TableShow["releases"][number];
+type Population = Release["populations"][number];
+type PopulationApplication = Pick<Release, "name" | "period"> &
+  Pick<Population, "ref_day">;
+type PopulationGroup = Pick<Population, "name" | "definition"> & {
+  releases: PopulationApplication[];
+};
 
 export function TableView({ node }: { node: TableShow }) {
+  const register = useCatalogRead(registerRead, node.register).value;
   const releases = [...node.releases].sort(
     (a, b) =>
       svCollator.compare(a.edition, b.edition) ||
       svCollator.compare(a.name, b.name),
   );
-  const populations = node.releases.flatMap((release) =>
-    release.populations.map((population) => ({
-      ...population,
-      release: release.name,
-      edition: release.edition,
-    })),
-  );
+  const populations = new Map<string, PopulationGroup>();
+  for (const release of releases) {
+    for (const population of release.populations) {
+      const key = JSON.stringify([population.name, population.definition]);
+      const application = {
+        name: release.name,
+        period: release.period,
+        ref_day: population.ref_day,
+      };
+      const group = populations.get(key);
+      if (group) {
+        if (
+          !group.releases.some(
+            (applied) =>
+              applied.name === application.name &&
+              applied.ref_day === application.ref_day,
+          )
+        ) {
+          group.releases.push(application);
+        }
+      } else {
+        populations.set(key, {
+          name: population.name,
+          definition: population.definition,
+          releases: [application],
+        });
+      }
+    }
+  }
   return (
     <article className={styles.page}>
       <Definitions
@@ -36,7 +69,7 @@ export function TableView({ node }: { node: TableShow }) {
         memberOf={[
           {
             relation: "Register",
-            label: <code>{node.register}</code>,
+            label: register?.name ?? node.register,
             href: catalogHref(node.register),
           },
         ]}
@@ -88,21 +121,71 @@ export function TableView({ node }: { node: TableShow }) {
           />
         )}
       </Panel>
-      <Panel title="Populations" flush={populations.length > 0}>
-        {populations.length === 0 ? (
+      <Panel title="Populations" flush={populations.size > 0}>
+        {populations.size === 0 ? (
           <EmptyState title="No populations recorded for this table’s releases." />
         ) : (
           <DataTable
             columns={[
               { key: "name", label: "Population" },
               { key: "definition", label: "Definition" },
-              { key: "ref_day", label: "Reference day", mono: true },
-              { key: "release", label: "Release" },
-              { key: "edition", label: "Edition" },
+              { key: "releases", label: "Applies to" },
             ]}
-            rows={populations}
-            getRowId={(row) => JSON.stringify(row)}
-            renderCell={(row, column) => row[column.key] ?? "Not stated"}
+            rows={[...populations.values()]}
+            getRowId={(row) => JSON.stringify([row.name, row.definition])}
+            renderCell={(row, column) =>
+              column.key === "releases" ? (
+                <Disclosure className={styles.disclosure}>
+                  {({ isExpanded }) => (
+                    <>
+                      <Heading level={3} className={styles.disclosureHeading}>
+                        <Button
+                          slot="trigger"
+                          className={styles.disclosureButton}
+                          aria-label={`Applies to releases for ${row.name}`}
+                        >
+                          <TreeChevron />
+                          <span>Applies to releases</span>
+                        </Button>
+                      </Heading>
+                      <DisclosurePanel
+                        className={`motion-disclose ${isExpanded ? "open" : ""}`}
+                      >
+                        <div>
+                          {isExpanded && (
+                            <ul className={styles.plainList}>
+                              {row.releases.map((release) => (
+                                <li
+                                  key={JSON.stringify([
+                                    release.name,
+                                    release.ref_day,
+                                  ])}
+                                >
+                                  {release.name}:{" "}
+                                  <code>
+                                    {release.period
+                                      ? catalogPeriodLabel(release.period)
+                                      : "Not stated"}
+                                  </code>
+                                  {release.ref_day && (
+                                    <>
+                                      ; reference day:{" "}
+                                      <code>{release.ref_day}</code>
+                                    </>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </DisclosurePanel>
+                    </>
+                  )}
+                </Disclosure>
+              ) : (
+                row[column.key] || "Not stated"
+              )
+            }
           />
         )}
       </Panel>
@@ -116,49 +199,51 @@ export function TableView({ node }: { node: TableShow }) {
                 <Heading level={3} className={styles.disclosureHeading}>
                   <Button slot="trigger" className={styles.disclosureButton}>
                     <TreeChevron />
-                    <span>
-                      Releases (<code>{releases.length}</code>)
-                    </span>
+                    <span>Releases</span>
                   </Button>
                 </Heading>
-                <DisclosurePanel>
-                  {isExpanded && (
-                    <DataTable
-                      columns={[
-                        { key: "edition", label: "Edition" },
-                        { key: "name", label: "Release" },
-                        { key: "period", label: "Period", mono: true },
-                        { key: "primary", label: "Primary" },
-                        { key: "qualifier", label: "Qualifier" },
-                        { key: "parse_state", label: "Parse state" },
-                      ]}
-                      rows={releases}
-                      getRowId={(row) => row.name}
-                      renderCell={(row, column) => {
-                        switch (column.key) {
-                          case "period":
-                            return row.period
-                              ? catalogPeriodLabel(row.period)
-                              : "Not placed in time";
-                          case "primary":
-                            return row.primary === null
-                              ? "Not determined"
-                              : row.primary
-                                ? "Primary"
-                                : "No";
-                          default:
-                            return String(row[column.key] || "None");
-                        }
-                      }}
-                    />
-                  )}
+                <DisclosurePanel
+                  className={`motion-disclose ${isExpanded ? "open" : ""}`}
+                >
+                  <div>
+                    {isExpanded && (
+                      <DataTable
+                        columns={[
+                          { key: "edition", label: "Edition" },
+                          { key: "name", label: "Release" },
+                          { key: "period", label: "Period", mono: true },
+                          { key: "primary", label: "Primary" },
+                          { key: "qualifier", label: "Qualifier" },
+                          { key: "parse_state", label: "Parse state" },
+                        ]}
+                        rows={releases}
+                        getRowId={(row) => row.name}
+                        renderCell={(row, column) => {
+                          switch (column.key) {
+                            case "period":
+                              return row.period
+                                ? catalogPeriodLabel(row.period)
+                                : "Not stated";
+                            case "primary":
+                              return row.primary === null
+                                ? "Not stated"
+                                : row.primary
+                                  ? "Yes"
+                                  : "No";
+                            default:
+                              return String(row[column.key] || "Not stated");
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
                 </DisclosurePanel>
               </>
             )}
           </Disclosure>
         )}
       </Panel>
-      <ScopedDataWarnings fqid={node.fqid} />
+      <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
     </article>
   );
 }

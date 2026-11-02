@@ -1,10 +1,16 @@
-import { getFindings } from "./api";
+import { getFindings, type RegisterShow } from "./api";
 import { DataWarnings } from "./DataWarnings";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
-export function ScopedDataWarnings({ fqid }: { fqid: string }) {
+export function ScopedDataWarnings({
+  fqid,
+  register,
+}: {
+  fqid: string;
+  register?: RegisterShow;
+}) {
   const resource = useAsyncResource(fqid, (signal) =>
     getFindings(fqid, { signal }),
   );
@@ -20,5 +26,12 @@ export function ScopedDataWarnings({ fqid }: { fqid: string }) {
         Findings did not load ({resource.error}). Reload the page to try again.
       </StatusRow>
     );
-  return <DataWarnings findings={resource.data} />;
+  const names = new Map<string, string>();
+  if (register) {
+    names.set(register.fqid, register.name);
+    for (const subject of [...register.tables, ...register.variables]) {
+      names.set(subject.fqid, subject.name);
+    }
+  }
+  return <DataWarnings findings={resource.data} names={names} />;
 }

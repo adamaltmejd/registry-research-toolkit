@@ -271,15 +271,15 @@ async function browsePagesCase(page, shoot) {
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
   // Stacked cells include their CSS label prefix in the accessible name.
   // Match the value at the end while retaining the table-cell boundary.
-  const releases = main.getByRole("button", { name: /^Releases \(2\)/ });
+  const releases = main.getByRole("button", { name: "Releases", exact: true });
   check((await releases.getAttribute("aria-expanded")) === "false", "releases must start collapsed");
   check((await main.getByRole("cell", { name: /fam 2021$/ }).count()) === 0, "collapsed releases mounted their entries");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
-  const code = findings.getByRole("button", { name: /^notice:/ });
+  const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
   await releases.click();
   await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
-  await main.getByRole("cell", { name: /Primary$/ }).first().waitFor();
+  await main.getByRole("cell", { name: /^(?:Primary )?Yes$/ }).first().waitFor();
   await code.click();
   await findings.getByText("Familjebegreppet ändrades 2021.", { exact: true }).waitFor();
   // This release notice has no subject.fqid. Rendering only fqid loses its
@@ -287,7 +287,7 @@ async function browsePagesCase(page, shoot) {
   const notice = findings.getByRole("listitem").filter({ hasText: "Familjebegreppet ändrades 2021." });
   await notice.getByText("Release: fam 2021", { exact: true }).waitFor();
   check(
-    (await notice.getByRole("link", { name: "demo/hush/fam", exact: true }).getAttribute("href")) === "/catalog/demo/hush/fam",
+    (await notice.getByRole("link", { name: "Familjer", exact: true }).getAttribute("href")) === "/catalog/demo/hush/fam",
     "the release finding lost its table page link",
   );
   await shoot("browse-table");

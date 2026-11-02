@@ -7,7 +7,7 @@ export interface MemberOf {
   /** What the link is to the subject, in sentence case: "Member of",
    * "Family". */
   relation: string;
-  label: ReactNode;
+  label: string;
   href: string;
 }
 

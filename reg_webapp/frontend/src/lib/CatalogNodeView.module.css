@@ -43,7 +43,7 @@
 .disclosureButton svg {
   flex-shrink: 0;
 }
-.disclosureButton[data-expanded] svg {
+.disclosure[data-expanded] .disclosureButton svg {
   transform: rotate(90deg);
 }
 .disclosureButton[data-hovered] {
@@ -51,7 +51,7 @@
 }
 .disclosureButton[data-focus-visible] {
   outline: none;
-  box-shadow: var(--focus-ring-inset);
+  box-shadow: var(--focus-ring);
 }
 .findings,
 .plainList {
@@ -70,14 +70,6 @@
   flex-direction: column;
   gap: var(--space-1);
   overflow-wrap: anywhere;
-}
-.severities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin: 0 0 var(--space-3);
-  padding: 0;
-  list-style: none;
 }
 .variableName {
   display: flex;

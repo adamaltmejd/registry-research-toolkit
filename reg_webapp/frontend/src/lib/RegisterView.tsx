@@ -34,8 +34,6 @@ export function RegisterView({ node }: { node: RegisterShow }) {
               { key: "name", label: "Table" },
               { key: "role", label: "Role" },
               { key: "cadence", label: "Cadence" },
-              { key: "timeless", label: "Timeless" },
-              { key: "implicit", label: "Implicit" },
               { key: "period", label: "Period", mono: true },
             ]}
             rows={[...node.tables].sort((a, b) =>
@@ -52,9 +50,6 @@ export function RegisterView({ node }: { node: RegisterShow }) {
                   );
                 case "period":
                   return catalogPeriodLabel(row.period);
-                case "timeless":
-                case "implicit":
-                  return row[column.key] ? "Yes" : "No";
                 default:
                   return row[column.key] ?? "Not stated";
               }
@@ -93,16 +88,14 @@ export function RegisterView({ node }: { node: RegisterShow }) {
           <p className={styles.prose}>
             These releases could not be placed in time.
           </p>
-          <ul>
+          <ul className={styles.plainList}>
             {node.unplaced.map((name) => (
-              <li key={name}>
-                <code>{name}</code>
-              </li>
+              <li key={name}>{name}</li>
             ))}
           </ul>
         </Panel>
       )}
-      <ScopedDataWarnings fqid={node.fqid} />
+      <ScopedDataWarnings fqid={node.fqid} register={node} />
     </article>
   );
 }

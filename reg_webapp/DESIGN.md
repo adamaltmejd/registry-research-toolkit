@@ -28,12 +28,14 @@ to reg-core's inclusive interval renderer, without copying its period grammar. T
 register's `unplaced` list contains release names, not variable identities. Populations
 belong to releases and keep that context on the table page.
 
-Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: severity totals and
-counts per severity/code, with entries mounted only when a code is expanded. This keeps
-large registers usable without mounting thousands of notices on load. `Finding.tsx`
-remains the separate project-validation renderer. Table releases also start collapsed
-and expand in edition order, marking primary releases. The obsolete variants browser has
-no route or data source; editions remain deferred.
+Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: review items before
+notices, grouped under human titles with stable codes in delayed tooltips. Entries mount
+only when a group is expanded, keeping large registers usable without mounting thousands
+of notices on load. Subject links use register, table and variable names from the
+register response, falling back to identifiers only when names are unknown.
+`Finding.tsx` remains the separate project-validation renderer. Table releases also
+start collapsed and expand in edition order, marking primary releases. The obsolete
+variants browser has no route or data source; editions remain deferred.
 
 ## Why no auth — cost protection instead
 

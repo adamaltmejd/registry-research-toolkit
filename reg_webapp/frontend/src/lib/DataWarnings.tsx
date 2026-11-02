@@ -1,30 +1,42 @@
+import { useState } from "react";
 import {
   Button,
   Disclosure,
   DisclosurePanel,
   Heading,
+  Tooltip,
+  TooltipTrigger,
 } from "react-aria-components";
 import type { CatalogFinding } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogPeriodLabel } from "./catalog_period";
+import findingStyles from "./Finding.module.css";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 
+type Names = ReadonlyMap<string, string>;
+
+function SubjectLink({ fqid, names }: { fqid: string; names?: Names }) {
+  return (
+    <a className="link" href={catalogHref(fqid)}>
+      {names?.get(fqid) ?? <code>{fqid}</code>}
+    </a>
+  );
+}
+
 /** Catalog findings, grouped before any entries are mounted. */
 export function DataWarnings({
   findings,
+  names,
 }: {
   findings: readonly CatalogFinding[];
+  names?: Names;
 }) {
-  const severities = new Map<string, number>();
+  if (findings.length === 0) return null;
   const groups = new Map<string, CatalogFinding[]>();
   for (const finding of findings) {
-    severities.set(
-      finding.severity,
-      (severities.get(finding.severity) ?? 0) + 1,
-    );
     const key = JSON.stringify([finding.severity, finding.code]);
     const group = groups.get(key);
     if (group) group.push(finding);
@@ -32,107 +44,124 @@ export function DataWarnings({
   }
   return (
     <Panel title="Findings">
-      {findings.length === 0 ? (
-        <StatusRow tone="info">
-          No findings recorded for this subject.
-        </StatusRow>
-      ) : (
+      {[...groups]
+        .sort(
+          ([, a], [, b]) =>
+            Number(b[0].severity === "review") -
+              Number(a[0].severity === "review") ||
+            a[0].code.localeCompare(b[0].code),
+        )
+        .map(([key, entries]) => (
+          <FindingGroup key={key} entries={entries} names={names} />
+        ))}
+    </Panel>
+  );
+}
+
+function FindingGroup({
+  entries,
+  names,
+}: {
+  entries: readonly CatalogFinding[];
+  names?: Names;
+}) {
+  const [copied, setCopied] = useState(false);
+  const { severity, code } = entries[0];
+  const label = code.includes(":")
+    ? code.slice(code.indexOf(":") + 1).replaceAll("-", " ")
+    : "catalog finding";
+  return (
+    <Disclosure className={styles.disclosure}>
+      {({ isExpanded }) => (
         <>
-          <ul className={styles.severities} aria-label="Findings by severity">
-            {[...severities]
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([severity, count]) => (
-                <li key={severity}>
-                  {severity}: <code>{count}</code>
-                </li>
-              ))}
-          </ul>
-          {[...groups]
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([key, entries]) => {
-              const { severity, code } = entries[0];
-              return (
-                <Disclosure key={key} className={styles.disclosure}>
-                  {({ isExpanded }) => (
-                    <>
-                      <Heading level={3} className={styles.disclosureHeading}>
-                        <Button
-                          slot="trigger"
-                          className={styles.disclosureButton}
-                        >
-                          <TreeChevron />
+          <Heading level={3} className={styles.disclosureHeading}>
+            <TooltipTrigger
+              delay={600}
+              shouldCloseOnPress={false}
+              onOpenChange={(open) => {
+                if (!open) setCopied(false);
+              }}
+            >
+              <Button
+                slot="trigger"
+                className={styles.disclosureButton}
+                onPress={() => {
+                  void navigator.clipboard?.writeText(code).then(
+                    () => setCopied(true),
+                    () => {},
+                  );
+                }}
+              >
+                <TreeChevron />
+                <span>
+                  {severity === "review" ? "Needs review" : "Notice"}: {label} (
+                  <code>{entries.length}</code>)
+                </span>
+              </Button>
+              <Tooltip
+                className={({ isEntering, isExiting }) =>
+                  `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
+                }
+                offset={6}
+                style={{ zIndex: "var(--z-popover)" }}
+              >
+                <code>{code}</code>
+                <span>{copied ? "Copied" : "Press title to copy"}</span>
+              </Tooltip>
+            </TooltipTrigger>
+          </Heading>
+          <span className="visually-hidden" aria-live="polite">
+            {copied ? `Code ${code} copied` : ""}
+          </span>
+          <DisclosurePanel
+            className={`motion-disclose ${isExpanded ? "open" : ""}`}
+          >
+            <div>
+              {isExpanded && (
+                <ul className={styles.findings}>
+                  {entries.map((finding) => (
+                    <li key={JSON.stringify(finding)}>
+                      <StatusRow tone={severity === "review" ? "warn" : "info"}>
+                        <div className={styles.finding}>
+                          <span>{finding.message}</span>
                           <span>
-                            {severity}: <code>{code}</code> (
-                            <code>{entries.length}</code>)
+                            Period:{" "}
+                            {finding.period ? (
+                              <code>{catalogPeriodLabel(finding.period)}</code>
+                            ) : (
+                              "Not stated"
+                            )}
                           </span>
-                        </Button>
-                      </Heading>
-                      <DisclosurePanel>
-                        {isExpanded && (
-                          <ul className={styles.findings}>
-                            {entries.map((finding) => (
-                              <li key={JSON.stringify(finding)}>
-                                <StatusRow
-                                  tone={severity === "review" ? "warn" : "info"}
-                                >
-                                  <div className={styles.finding}>
-                                    <span>{finding.message}</span>
-                                    <span>
-                                      Period:{" "}
-                                      {finding.period ? (
-                                        <code>
-                                          {catalogPeriodLabel(finding.period)}
-                                        </code>
-                                      ) : (
-                                        "Not stated"
-                                      )}
-                                    </span>
-                                    {finding.subject.fqid && (
-                                      <a
-                                        className="link"
-                                        href={catalogHref(finding.subject.fqid)}
-                                      >
-                                        <code>{finding.subject.fqid}</code>
-                                      </a>
-                                    )}
-                                    {finding.subject.table &&
-                                      finding.subject.table !==
-                                        finding.subject.fqid && (
-                                        <span>
-                                          Table:{" "}
-                                          <a
-                                            className="link"
-                                            href={catalogHref(
-                                              finding.subject.table,
-                                            )}
-                                          >
-                                            <code>{finding.subject.table}</code>
-                                          </a>
-                                        </span>
-                                      )}
-                                    {finding.subject.release && (
-                                      <span>
-                                        Release:{" "}
-                                        <code>{finding.subject.release}</code>
-                                      </span>
-                                    )}
-                                    {finding.caveat && (
-                                      <span>{finding.caveat}</span>
-                                    )}
-                                  </div>
-                                </StatusRow>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </DisclosurePanel>
-                    </>
-                  )}
-                </Disclosure>
-              );
-            })}
+                          {finding.subject.fqid && (
+                            <SubjectLink
+                              fqid={finding.subject.fqid}
+                              names={names}
+                            />
+                          )}
+                          {finding.subject.table &&
+                            finding.subject.table !== finding.subject.fqid && (
+                              <span>
+                                Table:{" "}
+                                <SubjectLink
+                                  fqid={finding.subject.table}
+                                  names={names}
+                                />
+                              </span>
+                            )}
+                          {finding.subject.release && (
+                            <span>Release: {finding.subject.release}</span>
+                          )}
+                          {finding.caveat && <span>{finding.caveat}</span>}
+                        </div>
+                      </StatusRow>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </DisclosurePanel>
         </>
       )}
-    </Panel>
+    </Disclosure>
   );
 }
