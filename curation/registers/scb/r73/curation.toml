@@ -1744,3 +1744,9 @@ kind = "set"
 subject = "var:ovriga-upplysningar-blankett"
 fields = { "tags" = ["housing"] }
 evidence = "These are builder-to-SCB form remarks (r60). The sibling remarks field's house-information section (r59) and register theme context (r68, r1) support housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:redviskvartal"
+fields = { "description" = "År och kvartal som den faktiska påbörjandemånaden för byggandet infaller under." }
+evidence = "Definition pass 2026-11-02: The definition establishes the start quarter, not an unspecified reporting quarter.\nrel070-base/reg_meta.db:occurrence:397445\nrel070-base/reg_meta.db:occurrence:397588\nrel070-base/reg_meta.db:occurrence:397731\nrel070-base/reg_meta.db:occurrence:397874\nrel070-base/reg_meta.db:occurrence:398017\nrel070-base/reg_meta.db:occurrence:398160\nrel070-base/reg_meta.db:occurrence:398303\nrel070-base/reg_meta.db:occurrence:398446\nrel070-base/reg_meta.db:occurrence:398589\nrel070-base/reg_meta.db:occurrence:398732\nrel070-base/reg_meta.db:occurrence:398874\nrel070-base/reg_meta.db:occurrence:399015\nrel070-base/reg_meta.db:occurrence:399156\nrel070-base/reg_meta.db:occurrence:399297\nrel070-base/reg_meta.db:occurrence:399438\nrel070-base/reg_meta.db:occurrence:399579\nrel070-base/reg_meta.db:occurrence:399718\nrel070-base/reg_meta.db:occurrence:399857"

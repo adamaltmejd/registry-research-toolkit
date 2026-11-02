@@ -9813,8 +9813,8 @@ evidence = "Ersättningen hör till militär tjänstgöring.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:ersattning-vid-arbetsloshet"
-fields = { "sets" = [] }
-evidence = "Beloppet avser ersättning vid arbetslöshet.\ncatalog:variable_text:37599:18993:19723"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "Beloppet avser ersättning vid arbetslöshet.\ncatalog:variable_text:37599:18993:19723\n\nDefinition pass 2026-11-02: The approved scope includes the named total of unemployment, programme, establishment and housing compensation; main already describes its sum before tax.\nrel070-base/reg_meta.db:occurrence:375565\nrel070-base/reg_meta.db:occurrence:375965"
 
 [[statement]]
 kind = "set"

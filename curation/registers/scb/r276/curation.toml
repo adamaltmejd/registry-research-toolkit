@@ -2712,3 +2712,27 @@ kind = "set"
 subject = "var:totalareal"
 fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "var:gdatb"
+fields = { "description" = "Datum för detaljplanens genomförandetids början. Datumet gäller planen i dess helhet." }
+evidence = "Definition pass 2026-11-02: The own operational definition gives the date event; the generic decision-date template does not describe this field.\nrel070-base/reg_meta.db:occurrence:84232\nrel070-base/reg_meta.db:occurrence:84258\nrel070-base/reg_meta.db:occurrence:84284\nrel070-base/reg_meta.db:occurrence:84310\nrel070-base/reg_meta.db:occurrence:84336\nrel070-base/reg_meta.db:occurrence:84362\nrel070-base/reg_meta.db:occurrence:84388\nrel070-base/reg_meta.db:occurrence:84414\nrel070-base/reg_meta.db:occurrence:84440\nrel070-base/reg_meta.db:occurrence:84466"
+
+[[statement]]
+kind = "set"
+subject = "var:gdatu"
+fields = { "description" = "Datum för detaljplanens genomförandetids utgång. Datumet gäller planen i dess helhet." }
+evidence = "Definition pass 2026-11-02: The own operational definition gives the date event; the generic decision-date template does not describe this field.\nrel070-base/reg_meta.db:occurrence:84233\nrel070-base/reg_meta.db:occurrence:84259\nrel070-base/reg_meta.db:occurrence:84285\nrel070-base/reg_meta.db:occurrence:84311\nrel070-base/reg_meta.db:occurrence:84337\nrel070-base/reg_meta.db:occurrence:84363\nrel070-base/reg_meta.db:occurrence:84389\nrel070-base/reg_meta.db:occurrence:84415\nrel070-base/reg_meta.db:occurrence:84441\nrel070-base/reg_meta.db:occurrence:84467"
+
+[[statement]]
+kind = "set"
+subject = "var:gtill"
+fields = { "description" = "Datum för planens eller bestämmelsens giltighet i dess helhet." }
+evidence = "Definition pass 2026-11-02: The own operational definition gives the date event; the generic decision-date template does not describe this field.\nrel070-base/reg_meta.db:occurrence:84235\nrel070-base/reg_meta.db:occurrence:84261\nrel070-base/reg_meta.db:occurrence:84287\nrel070-base/reg_meta.db:occurrence:84313\nrel070-base/reg_meta.db:occurrence:84339\nrel070-base/reg_meta.db:occurrence:84365\nrel070-base/reg_meta.db:occurrence:84391\nrel070-base/reg_meta.db:occurrence:84417\nrel070-base/reg_meta.db:occurrence:84443\nrel070-base/reg_meta.db:occurrence:84469"
+
+[[statement]]
+kind = "set"
+subject = "var:ldat"
+fields = { "description" = "Datum då planen eller bestämmelsen vinner laga kraft." }
+evidence = "Definition pass 2026-11-02: The own operational definition gives the date event; the generic decision-date template does not describe this field.\nrel070-base/reg_meta.db:occurrence:84238\nrel070-base/reg_meta.db:occurrence:84264\nrel070-base/reg_meta.db:occurrence:84290\nrel070-base/reg_meta.db:occurrence:84316\nrel070-base/reg_meta.db:occurrence:84342\nrel070-base/reg_meta.db:occurrence:84368\nrel070-base/reg_meta.db:occurrence:84394\nrel070-base/reg_meta.db:occurrence:84420\nrel070-base/reg_meta.db:occurrence:84446\nrel070-base/reg_meta.db:occurrence:84472"
