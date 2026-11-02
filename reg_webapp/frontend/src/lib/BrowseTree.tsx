@@ -223,7 +223,14 @@ export function BrowseTree({ className }: { className?: string }) {
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
   );
-  const { nodes, matched } = filterNodes(allNodes, needle, facets);
+  // Without facets, name-only filtering would hide possible variable matches.
+  // Keep the loaded registers visible until the researcher retries the search.
+  const facetError = facetResource.error;
+  const { nodes, matched } = filterNodes(
+    allNodes,
+    facetError ? "" : needle,
+    facets,
+  );
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
@@ -235,7 +242,11 @@ export function BrowseTree({ className }: { className?: string }) {
     facetResource.loading ||
     (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
   const matchCount =
-    filtering && !registers.loading && root.value !== null && !facetsPending
+    filtering &&
+    !registers.loading &&
+    root.value !== null &&
+    !facetsPending &&
+    !facetError
       ? nodes
           .filter((node) => matched.has(node.id))
           .reduce((sum, node) => sum + (node.children?.length ?? 0), 0)
@@ -246,11 +257,12 @@ export function BrowseTree({ className }: { className?: string }) {
   }, [matchCount]);
   // The kept registers in the tree's order, for the variables column (#1828).
   // FQIDs hold no space, so the joined list keys the effect.
-  const order = filtering
-    ? nodes
-        .flatMap((node) => (node.children ?? []).map((child) => child.id))
-        .join(" ")
-    : "";
+  const order =
+    filtering && !facetError
+      ? nodes
+          .flatMap((node) => (node.children ?? []).map((child) => child.id))
+          .join(" ")
+      : "";
   useEffect(() => {
     browseOrder.set(order === "" ? [] : order.split(" "));
     return () => browseOrder.set([]);
@@ -278,11 +290,12 @@ export function BrowseTree({ className }: { className?: string }) {
   if (!filtering && filterExpanded !== null) {
     setFilterExpanded(null);
   }
-  const expandedKeys: Set<Key> = !filtering
-    ? new Set(expandable.filter((id) => !collapsed.has(id)))
-    : filterExpanded?.needle === needle
-      ? filterExpanded.keys
-      : matched;
+  const expandedKeys: Set<Key> =
+    !filtering || facetError
+      ? new Set(expandable.filter((id) => !collapsed.has(id)))
+      : filterExpanded?.needle === needle
+        ? filterExpanded.keys
+        : matched;
 
   // RAC has no controlled focused key, and a focused key on a hidden row takes
   // the whole tree out of the Tab order; so every focus move goes through
@@ -343,7 +356,7 @@ export function BrowseTree({ className }: { className?: string }) {
 
   function onExpandedChange(keys: Set<Key>): void {
     keepFocusVisible(treeState.current, keys);
-    if (filtering) {
+    if (filtering && !facetError) {
       setFilterExpanded({ needle, keys });
       return;
     }
@@ -419,6 +432,12 @@ export function BrowseTree({ className }: { className?: string }) {
                 to try again.
               </StatusRow>
             )}
+            {facetError && (
+              <StatusRow tone="error" live="alert" className={styles.error}>
+                Variable search failed ({facetError}). Showing all loaded
+                registers. Clear the search and enter it again to retry.
+              </StatusRow>
+            )}
             <Tree
               aria-labelledby={labelId}
               className={({ state }) => {
@@ -439,7 +458,9 @@ export function BrowseTree({ className }: { className?: string }) {
               // Device-neutral copy: below the breakpoint this column is
               // the whole screen, often on a phone with no Escape key.
               renderEmptyState={() =>
-                filtering && (
+                filtering &&
+                !facetsPending &&
+                !facetError && (
                   <p className={styles.note}>
                     No registers match “{needle.trim()}”. Clear the search to
                     see them all.
@@ -452,6 +473,8 @@ export function BrowseTree({ className }: { className?: string }) {
                 current?.exact,
                 needle,
                 facetResource.data,
+                facetError,
+                facetsPending,
               ]}
             >
               {(node) => (

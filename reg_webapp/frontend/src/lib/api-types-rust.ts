@@ -299,7 +299,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance. */
+        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance. */
         get: operations["search"];
         put?: never;
         post?: never;
@@ -372,6 +372,9 @@ export interface components {
             reg_meta_version: string;
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
+            steward?: components["schemas"]["Steward"] | null;
+            steward_config?: Record<string, never>;
+            steward_sizes?: components["schemas"]["Sizes"] | null;
         };
         /** @description `shape.Coverage`. */
         Coverage: {
@@ -381,9 +384,16 @@ export interface components {
              */
             columns: components["schemas"]["CoverageColumn"][] | null;
             fqid: string;
+            /** @description Accepted physical placements, absent in reference-only mode. */
+            held?: components["schemas"]["HeldPlacement"][] | null;
             kind: string;
             /** @description The entity's hull. */
             period: components["schemas"]["Period"];
+            /**
+             * @description Same canonical variable, documented in additional steward-attested periods.
+             *     Reference spans above retain the global catalog's meaning.
+             */
+            steward_occurrences?: components["schemas"]["StewardOccurrence"][] | null;
             tables: components["schemas"]["CoverageTable"][];
         };
         CoverageColumn: {
@@ -542,6 +552,17 @@ export interface components {
             /** @description A register's or table's name, a variable's or class version's label. */
             name: string;
         };
+        /** @description A physical placement's public semantic coordinates and held interval. */
+        HeldPlacement: {
+            carried: boolean;
+            caveat: string | null;
+            column: string;
+            period: components["schemas"]["Period"];
+            physical_table: string;
+            role: string;
+            table: string;
+            variable: string;
+        };
         /** @description `shape.Issue`: a project issue or an order finding, located in the project. */
         Issue: {
             code: string;
@@ -584,6 +605,7 @@ export interface components {
             catalog_version: string;
             contract_version: string;
             generation: string;
+            steward?: components["schemas"]["Steward"] | null;
         };
         /** @description One occurrence behind a segment (`shape.Segment.evidence`). */
         Occurrence: {
@@ -785,6 +807,7 @@ export interface components {
         /** @description `search_facets`' result. */
         RegisterFacets: {
             registers: components["schemas"]["RegisterFacet"][];
+            steward?: components["schemas"]["StewardRegisterFacets"] | null;
         };
         /** @description `shape.RelatedDocument`. */
         RelatedDocument: {
@@ -913,10 +936,13 @@ export interface components {
             /** @enum {string} */
             type: "document";
         };
-        /** @description `Page<SearchHit>`. */
+        /** @description `Page<SearchHit>`; paired mode adds a count and an independently ranked steward group. */
         SearchPage: {
             items: components["schemas"]["SearchHit"][];
             next_cursor: string | null;
+            steward?: components["schemas"]["StewardSearchPage"] | null;
+            /** Format: int64 */
+            total?: number | null;
         };
         /** @description `shape.Segment`. */
         Segment: {
@@ -954,12 +980,14 @@ export interface components {
             /** @enum {string} */
             kind: "root";
             providers: components["schemas"]["ShowProviderRef"][];
+            steward_providers?: components["schemas"]["ShowProviderRef"][] | null;
         } | {
             fqid: string;
             /** @enum {string} */
             kind: "provider";
             name: string;
             registers: components["schemas"]["ShowRegisterRef"][];
+            steward_registers?: components["schemas"]["ShowRegisterRef"][] | null;
         } | {
             description: string | null;
             fqid: string;
@@ -1064,6 +1092,46 @@ export interface components {
             file: string;
             /** Format: int64 */
             line: number;
+        };
+        /** @description The selected steward and the identities of its admitted catalog/holdings pair. */
+        Steward: {
+            catalog_generation: string;
+            holdings_generation: string;
+            owner: string;
+            schema_version: string;
+        };
+        /**
+         * @description A source occurrence in the steward's supplemental semantics. Its identity
+         *     declaration and ordinary transcription locators both remain available.
+         */
+        StewardOccurrence: {
+            coded: string;
+            definition: string | null;
+            evidence: string;
+            label: string | null;
+            locator: string;
+            period: components["schemas"]["Period"];
+            sources: components["schemas"]["Locator"][];
+            spelling: string;
+            table: string;
+            type: string | null;
+            value_set: components["schemas"]["ValueSetRef"] | null;
+            variable: string;
+        };
+        StewardRegisterFacets: {
+            owner: string;
+            registers: components["schemas"]["RegisterFacet"][];
+        };
+        /**
+         * @description Supplemental matches have their own rank, count and cursor. Independent bm25
+         *     scores from different databases are never compared.
+         */
+        StewardSearchPage: {
+            items: components["schemas"]["SearchHit"][];
+            next_cursor?: string | null;
+            owner: string;
+            /** Format: int64 */
+            total: number;
         };
         /** @description `shape.Subject`: what a finding is about, by natural key. */
         Subject: {
@@ -1698,6 +1766,8 @@ export interface operations {
                 period?: string;
                 limit?: number;
                 cursor?: string;
+                steward_cursor?: string;
+                scope?: "reference" | "steward";
             };
             header?: never;
             path?: never;
@@ -1737,6 +1807,7 @@ export interface operations {
                 q: string;
                 register?: string;
                 limit?: number;
+                scope?: "reference" | "steward";
             };
             header?: never;
             path?: never;
