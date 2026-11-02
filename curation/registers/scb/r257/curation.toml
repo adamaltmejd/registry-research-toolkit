@@ -10368,13 +10368,13 @@ evidence = "Id:t är en ogenomskinlig källkod för utbyte av immateriella rätt
 
 [[statement]]
 kind = "set"
-subject = "var:ipr-out-lic"
+subject = "var:utlicensiering-av-immateriella-rattigheter"
 fields = { "sets" = [] }
 evidence = "IPR_OUT_LIC är en ogenomskinlig källkod; etiketten anger utlicensiering.\ncatalog:variable_text:28727:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ipr-out-lic"
+subject = "var:utlicensiering-av-immateriella-rattigheter"
 fields = { "tags" = ["research"] }
 evidence = "IPR_OUT_LIC är en ogenomskinlig källkod; etiketten anger utlicensiering.\ncatalog:variable_text:28727:18262:20089"
 
@@ -11922,13 +11922,13 @@ evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group memb
 
 [[statement]]
 kind = "set"
-subject = "var:q16c"
+subject = "var:allvarligt-forsenad-innovationsverksamhet-eller-projekt"
 fields = { "sets" = [] }
 evidence = "Etiketten och definitionen anger olika orsakssamband.\ncatalog:variable_text:28940:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q16c"
+subject = "var:allvarligt-forsenad-innovationsverksamhet-eller-projekt"
 fields = { "tags" = ["research"] }
 evidence = "Etiketten och definitionen anger olika orsakssamband.\ncatalog:variable_text:28940:11688:13514"
 

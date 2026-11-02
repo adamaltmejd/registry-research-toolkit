@@ -670,13 +670,13 @@ evidence = "Källorna beskriver samma levererade bränslemängd som scb/bransles
 
 [[statement]]
 kind = "set"
-subject = "var:lnamn"
+subject = "var:landnamn-import-export"
 fields = { "sets" = ["land-for-import-export"] }
 evidence = "Källan anger landkod i äldre perioder och landnamn i senare perioder.\ncatalog:variable_text:6360:16071:16436\ncatalog:variable_text:6360:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:lnamn"
+subject = "var:landnamn-import-export"
 fields = { "tags" = ["geography", "trade"] }
 evidence = "Källan anger landkod i äldre perioder och landnamn i senare perioder.\ncatalog:variable_text:6360:16071:16436\ncatalog:variable_text:6360:17167:20454"
 

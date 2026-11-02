@@ -1015,13 +1015,13 @@ evidence = "Antalet mottagare hör till annan förmån.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:antbilers"
+subject = "var:antal-med-bilersattning"
 fields = { "sets" = ["bilersattning"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39022:14610:17532\ncatalog:variable_text:39022:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:antbilers"
+subject = "var:antal-med-bilersattning"
 fields = { "tags" = ["transport"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39022:14610:17532\ncatalog:variable_text:39022:18628:20089"
 
@@ -1039,13 +1039,13 @@ evidence = "Antalet uppgifter med bilersättning hör till kandidatgruppen.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:antbostforman"
+subject = "var:antal-med-bostadsforman"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39024:14610:17532\ncatalog:variable_text:39024:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:antbostforman"
+subject = "var:antal-med-bostadsforman"
 fields = { "tags" = ["income"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39024:14610:17532\ncatalog:variable_text:39024:17897:20089"
 
@@ -1099,37 +1099,37 @@ evidence = "Antalet och delägarkodningen mäter samma koncept.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:antinrikes"
+subject = "var:antal-med-inrikes-tjansteresa-over-tre-manader"
 fields = { "sets" = [] }
 evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antinrikes"
+subject = "var:antal-med-inrikes-tjansteresa-over-tre-manader"
 fields = { "tags" = ["transport"] }
 evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antkostforman"
+subject = "var:antal-med-kostforman"
 fields = { "sets" = [] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39096:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antkostforman"
+subject = "var:antal-med-kostforman"
 fields = { "tags" = ["income"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39096:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antlogiers"
+subject = "var:antal-med-logiersattning-for-utlagg"
 fields = { "sets" = [] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39101:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antlogiers"
+subject = "var:antal-med-logiersattning-for-utlagg"
 fields = { "tags" = ["income"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39101:15340:17897"
 
@@ -1207,13 +1207,13 @@ evidence = "Antalet hör till representationsersättning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:antreseers"
+subject = "var:antal-med-resekostnadsersattning-for-utlagg"
 fields = { "sets" = [] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Förekomstkodningen och den uttryckligen inkluderade ersättningen för utomlands bosatta stöds. Antreseers mäter kontrolluppgifter snarare än belagt mottagarantal.\ncatalog:variable_text:39038:14610:17532\ncatalog:variable_text:39038:17532:17897\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39120:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antreseers"
+subject = "var:antal-med-resekostnadsersattning-for-utlagg"
 fields = { "tags" = ["transport"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Förekomstkodningen och den uttryckligen inkluderade ersättningen för utomlands bosatta stöds. Antreseers mäter kontrolluppgifter snarare än belagt mottagarantal.\ncatalog:variable_text:39038:14610:17532\ncatalog:variable_text:39038:17532:17897\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39120:15340:17897"
 
@@ -1255,37 +1255,37 @@ evidence = "Antalet uppgifter hör till traktamente.\ncatalog:variable_text:3904
 
 [[statement]]
 kind = "set"
-subject = "var:anttraktinr"
+subject = "var:antal-med-inrikes-schablontraktamente"
 fields = { "sets" = ["traktamente"] }
 evidence = "Enheten ändras och källbeskrivningen specificerar inte inrikes traktamente.\ncatalog:variable_text:39042:14610:17532\ncatalog:variable_text:39042:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:anttraktinr"
+subject = "var:antal-med-inrikes-schablontraktamente"
 fields = { "tags" = ["income"] }
 evidence = "Enheten ändras och källbeskrivningen specificerar inte inrikes traktamente.\ncatalog:variable_text:39042:14610:17532\ncatalog:variable_text:39042:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:anttraktutr"
+subject = "var:antal-med-utrikes-schablontraktamente"
 fields = { "sets" = ["traktamente"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39043:14610:17532\ncatalog:variable_text:39043:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:anttraktutr"
+subject = "var:antal-med-utrikes-schablontraktamente"
 fields = { "tags" = ["income"] }
 evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39043:14610:17532\ncatalog:variable_text:39043:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antutrikes"
+subject = "var:antal-med-utrikes-tjansteresa-over-tre-manader"
 fields = { "sets" = [] }
 evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antutrikes"
+subject = "var:antal-med-utrikes-tjansteresa-over-tre-manader"
 fields = { "tags" = ["transport"] }
 evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
 

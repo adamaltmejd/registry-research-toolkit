@@ -1729,13 +1729,13 @@ evidence = "Variabeln anger moderns utbildningsnivå.\ncatalog:variable_text:415
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:utbildningsniva-mor-sun2000-3-positioner"
 fields = { "sets" = ["moderns-utbildningsniva"] }
 evidence = "Suffixet är en räknare som inte kommer från källkolumnen.\ncatalog:variable_text:41556:11323:14245\ncatalog:variable_text:41556:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:utbildningsniva-mor-sun2000-3-positioner"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet är en räknare som inte kommer från källkolumnen.\ncatalog:variable_text:41556:11323:14245\ncatalog:variable_text:41556:16801:17897"
 

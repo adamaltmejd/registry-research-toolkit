@@ -529,13 +529,13 @@ evidence = "M och G är enbokstavskoder för månadslön respektive grundlön.\n
 
 [[statement]]
 kind = "set"
-subject = "var:mskift"
+subject = "var:manadsbelopp-skift-och-ob-tillagg-heltid"
 fields = { "sets" = ["manadslon"] }
 evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42919:12784:13149\ncatalog:variable_text:42919:17167:20089\ncatalog:variable_text:42919:9496:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:mskift"
+subject = "var:manadsbelopp-skift-och-ob-tillagg-heltid"
 fields = { "tags" = ["income"] }
 evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42919:12784:13149\ncatalog:variable_text:42919:17167:20089\ncatalog:variable_text:42919:9496:12418"
 
@@ -697,7 +697,7 @@ evidence = "Källkolumnen är densamma som för lonesumma-formaner men den äldr
 
 [[statement]]
 kind = "set"
-subject = "var:sumhelglon"
+subject = "var:beraknad-helglon-arbetare"
 fields = { "tags" = ["income"] }
 evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable_text:42935:12418:12784\ncatalog:variable_text:42935:17167:20089"
 
@@ -987,6 +987,6 @@ evidence = "r168 explicitly defines the total wage sum in SEK, with the basic-pa
 
 [[statement]]
 kind = "set"
-subject = "var:sumhelglon"
+subject = "var:beraknad-helglon-arbetare"
 fields = { "sets" = ["lonesumma"] }
 evidence = "r170 defines compensation for wages lost on public holidays, and r159 records the derived holiday-pay wage sum in SEK. This fits the included holiday-pay component despite the conflicting hectare unit in r48.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42792\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:445229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446108\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42935"

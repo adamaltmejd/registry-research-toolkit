@@ -7479,18 +7479,6 @@ evidence = "RTB settlement grounds: derived grouping (1987-2005) -> Migration Ag
 
 [[statement]]
 kind = "set"
-subject = "var:icke-territoriell-forsamling"
-fields = { "tags" = ["culture"] }
-evidence = "Membership in named religious congregations fits culture's associational-life theme (r199, r303).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41641\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:539"
-
-[[statement]]
-kind = "set"
-subject = "var:icketerrforsfg"
-fields = { "tags" = ["culture"] }
-evidence = "Previous congregation membership fits culture's associational-life theme; the operational definition and codes establish its meaning (r200, r299).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41642\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432970\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4183"
-
-[[statement]]
-kind = "set"
 subject = "var:lan"
 fields = { "sets" = ["lan"] }
 evidence = "Registered residence and event-time residence fit lan (r282, r11). Birth entries specify the child's registered residence at birth (r225), rather than birthplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:423540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:427595\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428861"
@@ -7536,3 +7524,21 @@ kind = "set"
 subject = "var:omyndig"
 fields = { "tags" = ["crime"] }
 evidence = "Court-imposed removal of an adult's legal capacity is a legal proceeding, covered by crime's justice scope (r322).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41845"
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "tags" = ["culture", "language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41641\ncatalog:variable_text:41641:-731:-365\ncatalog:variable_text:41641:-365:1096\ncatalog:variable_text:41641:1096:9862\ncatalog:variable_text:41641:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:icketerrforsfg"
+fields = { "tags" = ["culture", "language-religion"] }
+evidence = "The operational definition explicitly records the non-territorial religious congregation the person leaves. This settles the theme despite a contradictory territorial wording in the short definition.\ncatalog:variable:41642\ncatalog:variable_text:41642:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:infosprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41645\ncatalog:variable_text:41645:6209:14975"

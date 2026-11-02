@@ -809,3 +809,9 @@ kind = "set"
 subject = "var:den-lagsta-totala-kommunala-skattesatsen-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "T, Sk och L är ogenomskinliga källkoder.\ncatalog:variable_text:34363:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kyrkoavgiftssats"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:34235\ncatalog:variable_text:34235:13514:15340\ncatalog:variable_text:34235:16801:20819"

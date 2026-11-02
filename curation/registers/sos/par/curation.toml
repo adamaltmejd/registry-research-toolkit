@@ -1300,3 +1300,51 @@ kind = "set"
 subject = "var:diagnoskod-atc-skada-forgiftning"
 fields = { "sets" = ["diagnoskod"] }
 evidence = "DIA stores clinically relevant diagnosis codes and may contain a drug ATC code for medication-related conditions (r19, r31), which the fixed group explicitly includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57115\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522847"
+
+[[statement]]
+kind = "set"
+subject = "par-ov: atc where key = 'n:atc' and label = 'ATC-kod som komplement till diagnos- eller yttre orsakskod'"
+fields = { "variable" = "atc-koder-diagnos-yttre-orsak" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!7"
+
+[[statement]]
+kind = "set"
+subject = "par-ov: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+fields = { "variable" = "tillhorande-dia-eller-yo-kod-ar-en-atc-kod" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!8"
+
+[[statement]]
+kind = "set"
+subject = "par-ov: atco where key = 'n:atco' and label = 'ATC-kod som komplement till åtgärdskod'"
+fields = { "variable" = "atc-koder-atgard" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!9"
+
+[[statement]]
+kind = "set"
+subject = "par-ov: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+fields = { "variable" = "tillhorande-atg-kod-ar-en-atc-kod" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!10"
+
+[[statement]]
+kind = "set"
+subject = "par-sv: atc where key = 'n:atc' and label = 'ATC-kod som komplement till diagnos- eller yttre orsakskod'"
+fields = { "variable" = "atc-koder-diagnos-yttre-orsak" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!81"
+
+[[statement]]
+kind = "set"
+subject = "par-sv: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+fields = { "variable" = "tillhorande-dia-eller-yo-kod-ar-en-atc-kod" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!80"
+
+[[statement]]
+kind = "set"
+subject = "par-sv: atco where key = 'n:atco' and label = 'ATC-kod som komplement till åtgärdskod, finns i plattfil, flera koder i en sträng'"
+fields = { "variable" = "atc-koder-atgard" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!82"
+
+[[statement]]
+kind = "set"
+subject = "par-sv: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+fields = { "variable" = "tillhorande-atg-kod-ar-en-atc-kod" }
+evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!83"

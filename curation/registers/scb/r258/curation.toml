@@ -2310,13 +2310,13 @@ evidence = "Definitionen och motpartens definition beskriver fast bredband av ok
 
 [[statement]]
 kind = "set"
-subject = "var:a3x2"
+subject = "var:ingen-fast-bredbandsanslutning-i-hemmet"
 fields = { "tags" = ["digital"] }
 evidence = "A3X2 är en ogenomskinlig källkod. Variabeln avser avsaknad av fast bredbandsanslutning.\ncatalog:occurrence:289820\ncatalog:variable_text:32258:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:a3x5"
+subject = "var:ingen-icke-bredbandsanslutning-i-hemmet"
 fields = { "tags" = ["digital"] }
 evidence = "A3X5 är en ogenomskinlig källkod. Etiketten och definitionen avser avsaknad av annan anslutning än bredband.\ncatalog:occurrence:289822\ncatalog:variable_text:32259:15340:15706"
 
@@ -2334,13 +2334,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32260
 
 [[statement]]
 kind = "set"
-subject = "var:a4g"
+subject = "var:inte-internet-bredband-ej-tillgangligt-i-omradet"
 fields = { "sets" = ["skal-till-saknad-internettillgang"] }
 evidence = "A4g är en ogenomskinlig källkod. Variabeln anger bredbandets otillgänglighet som skäl till saknad internettillgång.\ncatalog:occurrence:290480\ncatalog:variable_text:32261:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:a4g"
+subject = "var:inte-internet-bredband-ej-tillgangligt-i-omradet"
 fields = { "tags" = ["digital"] }
 evidence = "A4g är en ogenomskinlig källkod. Variabeln anger bredbandets otillgänglighet som skäl till saknad internettillgång.\ncatalog:occurrence:290480\ncatalog:variable_text:32261:17167:17532"
 
@@ -2670,7 +2670,7 @@ evidence = "Det läsbara id:t behålls; variabeln avser anskaffning och modifier
 
 [[statement]]
 kind = "set"
-subject = "var:ai-pbam"
+subject = "var:ai-for-foretagsadministration-eller-foretagsledning"
 fields = { "tags" = ["digital"] }
 evidence = "PBAM är en ogenomskinlig källkod; etiketten anger användningsändamålet.\ncatalog:variable_text:32315:19358:20454"
 
@@ -5094,13 +5094,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32558:19
 
 [[statement]]
 kind = "set"
-subject = "var:cc"
+subject = "var:koper-molntjanster"
 fields = { "sets" = ["kop-av-molntjanster"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger molntjänstköp.\ncatalog:variable_text:32559:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:cc"
+subject = "var:koper-molntjanster"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger molntjänstköp.\ncatalog:variable_text:32559:20089:20454"
 
@@ -5142,13 +5142,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger användning av digital
 
 [[statement]]
 kind = "set"
-subject = "var:cc-mus"
+subject = "var:anvant-internettjanster-for-musik-film-eller-tv-serier"
 fields = { "sets" = ["sammansatt-digital-medieanvandning"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger sammansatt medieanvändning.\ncatalog:variable_text:32563:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:cc-mus"
+subject = "var:anvant-internettjanster-for-musik-film-eller-tv-serier"
 fields = { "tags" = ["culture", "digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger sammansatt medieanvändning.\ncatalog:variable_text:32563:16071:16436"
 
@@ -5940,13 +5940,13 @@ evidence = "Id:t är en källkod.\ncatalog:variable_text:32631:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:d8"
+subject = "var:kop-bestallning-via-sociala-natverksannonser-12-manader"
 fields = { "sets" = [] }
 evidence = "The source label and definition describe different activities, so the meaning of the opaque source code cannot be resolved.\ncatalog:occurrence:290430\ncatalog:variable_text:32632:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:d8"
+subject = "var:kop-bestallning-via-sociala-natverksannonser-12-manader"
 fields = { "tags" = ["digital"] }
 evidence = "The source label and definition describe different activities, so the meaning of the opaque source code cannot be resolved.\ncatalog:occurrence:290430\ncatalog:variable_text:32632:16801:17167"
 
@@ -8340,13 +8340,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger anskaffning av kommers
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-ec"
+subject = "var:overvagt-anvandning-av-ai-teknologier"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger övervägande av AI-användning.\ncatalog:variable_text:32844:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-ec"
+subject = "var:overvagt-anvandning-av-ai-teknologier"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger övervägande av AI-användning.\ncatalog:variable_text:32844:19358:20454"
 
@@ -8382,97 +8382,97 @@ evidence = "E_AI_PPP är en ogenomskinlig källkod; etiketten anger användnings
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tar"
+subject = "var:anvander-ai-for-autonom-maskinforflyttning"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32850:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tar"
+subject = "var:anvander-ai-for-autonom-maskinforflyttning"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32850:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tir"
+subject = "var:anvander-ai-for-bildigenkanning"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32851:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tir"
+subject = "var:anvander-ai-for-bildigenkanning"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32851:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tml"
+subject = "var:anvander-maskininlarning-for-dataanalys"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32852:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tml"
+subject = "var:anvander-maskininlarning-for-dataanalys"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32852:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tnlg"
+subject = "var:anvander-ai-for-sprakgenerering"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32853:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tnlg"
+subject = "var:anvander-ai-for-sprakgenerering"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32853:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tpa"
+subject = "var:anvander-ai-for-arbetsfloden-eller-beslutsstod"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32854:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tpa"
+subject = "var:anvander-ai-for-arbetsfloden-eller-beslutsstod"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32854:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tpvsg"
+subject = "var:anvander-ai-for-generering-av-bild-video-eller-ljud"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32855:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tpvsg"
+subject = "var:anvander-ai-for-generering-av-bild-video-eller-ljud"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32855:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tsr"
+subject = "var:anvander-ai-for-taligenkanning"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32856:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-tsr"
+subject = "var:anvander-ai-for-taligenkanning"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32856:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-ttm"
+subject = "var:anvander-ai-for-textanalys"
 fields = { "sets" = ["anvanda-ai-tekniker"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32857:19358:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-ai-ttm"
+subject = "var:anvander-ai-for-textanalys"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog:variable_text:32857:19358:20454"
 
@@ -8586,25 +8586,25 @@ evidence = "Id:t är en källkod.\ncatalog:variable_text:32866:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cc-pdev"
+subject = "var:kop-av-molnplattform-for-applikationsutveckling"
 fields = { "sets" = ["kop-av-molntjanster"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger typen av molntjänstköp.\ncatalog:variable_text:32867:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cc-pdev"
+subject = "var:kop-av-molnplattform-for-applikationsutveckling"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger typen av molntjänstköp.\ncatalog:variable_text:32867:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cc-perp"
+subject = "var:kop-av-erp-som-molntjanst"
 fields = { "sets" = ["kop-av-molntjanster"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger typen av molntjänstköp.\ncatalog:variable_text:32868:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cc-perp"
+subject = "var:kop-av-erp-som-molntjanst"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger typen av molntjänstköp.\ncatalog:variable_text:32868:20089:20454"
 
@@ -12810,7 +12810,7 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33292:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:iumdx-iss"
+subject = "var:handburen-utrustning-obekvam-liten-skarm-eller-textinmatning"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda mobilfrågor anger anslutning eller frånvaro av anslutning, inte inträffade problem. membership-0329: Valda anslutningsenheter anger inte användningsproblem. membership-0330: Valda problemlösningsvariabler saknar mobil avgränsning och anger inte problemtyper. membership-0331: Enhetsanpassningsproblem i myndighetstjänster och hinder för e-legitimation är inte generella problem vid mobil internetanvändning. membership-0332: Valda anslutningsfrågor mäter teknik och övriga hinder saknar mobil avgränsning. membership-0333: Ingen vald variabel mäter problem vid mobil internetanvändning. membership-0334: Inget valt mått avser mobila internetproblem. membership-0335: Smartphonevirus och appars personuppgiftsåtkomst mäter andra säkerhetskoncept än mobilanslutningens användningsproblem. membership-0336: Avstående från mobil internetanvändning av säkerhetsskäl är uttryckligen undantaget från problemkandidaten. membership-0337: Mobilfrågorna mäter frekvens, inte problem. membership-0338: Inga valda variabler mäter problem särskilt vid mobil internetanvändning. membership-0339: Frågorna mäter inträffade kostnads-, täcknings-, inställnings- och skärmproblem. PBISS anger motstridiga avståendeskäl och hålls utanför. membership-0340: Inga valda variabler mäter mobilanvändningsproblem. membership-0341: Frågan mäter andra problem som inträffat vid mobil internetanvändning utanför hemmet. membership-0342: Valda problemfrågor avser internetköp eller kontoradering, inte mobil internetanvändning. membership-0343: Valda problemfrågor avser smartphonevirus eller funktionsnedsättningsrelaterade svårigheter, inte mobil internetanvändning. membership-0344: Ingen vald variabel mäter problem vid mobil internetanvändning. membership-0345: Inget valt sektionsid mäter problem vid mobil internetanvändning. membership-0346: Ingen vald variabel mäter problem vid mobil internetanvändning. membership-0347: Inga valda variabler mäter problem vid mobil internetanvändning. membership-0348: Ingen vald variabel har belagda problem vid mobil internetanvändning. membership-0349: Tillhandahållande av mobil arbetsutrustning mäter inte problem vid mobil internetanvändning. membership-0350: Inga belagda mobila internetproblem i denna sektion. membership-0351: Inga valda variabler mäter problem vid mobil internetanvändning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Vald frånvaro av mobil anslutning anger inget skäl att avstå. membership-0329: Anslutningsenheter mäter inte skäl till utebliven mobil internetanvändning. membership-0330: Ingen vald variabel mäter skäl att avstå från mobil internetanvändning. membership-0331: d3f gäller utebliven e-legitimation på mobil utrustning, inte utebliven mobil internetanvändning. membership-0332: Valda hinderfrågor saknar avgränsning till utebliven mobil internetanvändning. membership-0333: Ingen vald variabel mäter skäl till utebliven mobil internetanvändning. membership-0334: Inget valt mått avser utebliven mobil internetanvändning. membership-0335: Inga valda variabler mäter skäl att avstå från mobil internetanvändning. membership-0336: Frågan anger säkerhetsbekymmer som skäl till att inte använda internet med mobil utrustning och uppfyller definitionen. membership-0337: Mobilfrågorna anger användningsfrekvens, inte skäl att avstå. membership-0338: Frågorna om saknad mobil anslutning mäter anslutningstyp, inte orsaken till avstående. membership-0339: Frågorna gäller skäl till utebliven mobil uppkoppling. PBISS hör hit oavsett om det motstridiga skälet är liten skärm eller kostnad; ISS mäter däremot användningsproblem. membership-0340: Inga valda variabler mäter skäl till utebliven mobil internetanvändning. membership-0341: Mobilfrågan mäter inträffade problem; p49 gäller internet generellt. Ingen mäter skäl att avstå från just mobil internetanvändning. membership-0342: Inga valda variabler mäter skäl till utebliven mobil internetanvändning. membership-0343: Inga valda variabler mäter skäl att avstå från mobil internetanvändning. membership-0344: Ingen vald variabel mäter skäl att avstå från mobilt internet. membership-0345: Inget valt sektionsid mäter skäl till utebliven mobil internetanvändning. membership-0346: Ingen vald variabel mäter skäl till utebliven mobil internetanvändning. membership-0347: Inga valda variabler mäter skäl till utebliven mobil internetanvändning. membership-0348: Ingen vald variabel har belagda skäl att avstå från mobil internetanvändning. membership-0349: De outvecklade PMD-koderna belägger inte skäl att avstå från mobil internetanvändning. membership-0350: Inga belagda skäl till utebliven mobil internetanvändning i denna sektion. membership-0351: Inga valda variabler mäter skäl till utebliven mobil internetanvändning.\ncatalog:variable_text:32255:16071:16436\ncatalog:variable_text:32342:17167:18262\ncatalog:variable_text:32379:14610:15340\ncatalog:variable_text:32389:15706:16436\ncatalog:variable_text:32456:20089:20454\ncatalog:variable_text:32457:17532:17897\ncatalog:variable_text:32458:20089:20454\ncatalog:variable_text:32459:17532:17897\ncatalog:variable_text:32462:20089:20454\ncatalog:variable_text:32484:20089:20454\ncatalog:variable_text:32485:20089:20454\ncatalog:variable_text:32486:20089:20454\ncatalog:variable_text:32487:20089:20454\ncatalog:variable_text:32488:20089:20454\ncatalog:variable_text:32557:19723:20089\ncatalog:variable_text:32625:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32687:13514:13879\ncatalog:variable_text:32689:13514:13879\ncatalog:variable_text:32694:13514:13879\ncatalog:variable_text:32695:13514:13879\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32923:17532:17897\ncatalog:variable_text:32971:16436:16801\ncatalog:variable_text:33094:15340:15706\ncatalog:variable_text:33095:15340:15706\ncatalog:variable_text:33178:15340:15706\ncatalog:variable_text:33286:15340:15706\ncatalog:variable_text:33287:15340:15706\ncatalog:variable_text:33288:15340:15706\ncatalog:variable_text:33289:15340:15706\ncatalog:variable_text:33290:15340:15706\ncatalog:variable_text:33292:15340:15706\ncatalog:variable_text:33293:15340:15706\ncatalog:variable_text:33294:15340:15706\ncatalog:variable_text:33295:15340:15706\ncatalog:variable_text:33296:15340:15706\ncatalog:variable_text:33297:15340:15706\ncatalog:variable_text:33298:15340:15706\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33388:17167:18262\ncatalog:variable_text:33423:16071:16436\ncatalog:variable_text:33467:20089:20454\ncatalog:variable_text:33468:20089:20454\ncatalog:variable_text:33469:20089:20454\ncatalog:variable_text:33470:20089:20454\ncatalog:variable_text:33471:20089:20454\ncatalog:variable_text:33472:20089:20454\ncatalog:variable_text:33473:20089:20454\ncatalog:variable_text:33481:15706:16071\ncatalog:variable_text:33486:13879:18628\ncatalog:variable_text:33487:13879:18628\ncatalog:variable_text:33488:13879:18628\ncatalog:variable_text:33489:13879:18628\ncatalog:variable_text:33490:13879:18628\ncatalog:variable_text:33491:13879:18628\ncatalog:variable_text:33500:20089:20454\ncatalog:variable_text:33501:20089:20454\ncatalog:variable_text:33502:19723:20454\ncatalog:variable_text:33503:20089:20454\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33704:15706:17897"
 
@@ -17762,13 +17762,13 @@ evidence = "r172 defines a3x1 as broadband access with unknown connection type, 
 
 [[statement]]
 kind = "set"
-subject = "var:a3x2"
+subject = "var:ingen-fast-bredbandsanslutning-i-hemmet"
 fields = { "sets" = ["teknik-for-internetanslutning"] }
 evidence = "r108 records no fixed broadband at home; the fixed definition includes absent connection types. | r108 records no fixed broadband at home; the fixed definition includes absent connection types. | r108 records no fixed broadband at home; the fixed definition includes absent connection types. | r108 records no fixed broadband at home; the fixed definition includes absent connection types.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32257"
 
 [[statement]]
 kind = "set"
-subject = "var:a3x5"
+subject = "var:ingen-icke-bredbandsanslutning-i-hemmet"
 fields = { "sets" = ["teknik-for-internetanslutning"] }
 evidence = "r109 records no non-broadband home connection; the fixed definition includes absent connection types. | r109 records no non-broadband home connection; the fixed definition includes absent connection types. | r109 records no non-broadband home connection; the fixed definition includes absent connection types. | r109 records no non-broadband home connection; the fixed definition includes absent connection types.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32149\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32258"
 
@@ -17786,7 +17786,7 @@ evidence = "r194 describes AI use for marketing or sales, with customer-support 
 
 [[statement]]
 kind = "set"
-subject = "var:ai-pbam"
+subject = "var:ai-for-foretagsadministration-eller-foretagsledning"
 fields = { "sets" = ["anvandningsandamal-for-ai"] }
 evidence = "r195 describes AI use for administration or management, including assistants and HR management, within the purpose scope of r250.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32208\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32317\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandningsandamal-for-ai"
 
@@ -18530,7 +18530,7 @@ evidence = "r228's question asks why the person did not connect and specifies ex
 
 [[statement]]
 kind = "set"
-subject = "var:iumdx-iss"
+subject = "var:handburen-utrustning-obekvam-liten-skarm-eller-textinmatning"
 fields = { "sets" = ["problem-vid-mobil-internetanvandning"] }
 evidence = "r229 asks about small-screen or text-entry problems experienced during use, not reasons for abstaining. | r229 asks about small-screen or text-entry problems experienced during use, not reasons for abstaining.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33134\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33261"
 
@@ -18881,3 +18881,9 @@ kind = "set"
 subject = "var:wifi-barbar-dator-surfplatta-utanfor-hem-arbete-3-man"
 fields = { "sets" = ["teknik-for-internetanslutning"] }
 evidence = "r128 asks about wireless networks such as WiFi for laptop/tablet internet access, explicitly measuring connection technology. | r128 asks about wireless networks such as WiFi for laptop/tablet internet access, explicitly measuring connection technology. | r128 asks about wireless networks such as WiFi for laptop/tablet internet access, explicitly measuring connection technology. | r128 asks about wireless networks such as WiFi for laptop/tablet internet access, explicitly measuring connection technology.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33680\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33259"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan"
+fields = { "tags" = ["digital"] }
+evidence = "The enterprise-survey passage describes wired LAN and wireless local networks, supporting the digital theme.\nstaged:37d1ad69df26cc5b67c4abb3bcc888697f09da73958fba6dcc7ffa91785c9a95:page:60:chars:129-1429"

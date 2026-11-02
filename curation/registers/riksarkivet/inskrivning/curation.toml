@@ -1240,3 +1240,9 @@ kind = "set"
 subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
 fields = { "description" = "Femte typhinder" }
 evidence = "Rättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The current label and definition both say Språk. The broad language theme is established even though the purpose of this language field remains unspecified.\ncatalog:variable:826\ncatalog:variable_text:826:-365:10227"
