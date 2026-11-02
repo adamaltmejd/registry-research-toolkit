@@ -269,15 +269,17 @@ async function browsePagesCase(page, shoot) {
   await page.waitForURL("**/catalog/demo/hush/fam");
   await settled(page);
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
+  // Stacked cells include their CSS label prefix in the accessible name.
+  // Match the value at the end while retaining the table-cell boundary.
   const releases = main.getByRole("button", { name: /^Releases \(2\)/ });
   check((await releases.getAttribute("aria-expanded")) === "false", "releases must start collapsed");
-  check((await main.getByRole("cell", { name: "fam 2021", exact: true }).count()) === 0, "collapsed releases mounted their entries");
+  check((await main.getByRole("cell", { name: /fam 2021$/ }).count()) === 0, "collapsed releases mounted their entries");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
   const code = findings.getByRole("button", { name: /^notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
   await releases.click();
-  await main.getByRole("cell", { name: "fam 2021", exact: true }).waitFor();
-  await main.getByRole("cell", { name: "Primary", exact: true }).first().waitFor();
+  await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
+  await main.getByRole("cell", { name: /Primary$/ }).first().waitFor();
   await code.click();
   await findings.getByText("Familjebegreppet ändrades 2021.", { exact: true }).waitFor();
   await shoot("browse-table");
