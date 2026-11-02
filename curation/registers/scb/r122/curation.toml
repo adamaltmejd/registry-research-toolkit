@@ -16532,8 +16532,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:ersattningsform-af-inskrivna-eller-programdeltagare"
-fields = { "description" = "Ersättning från försäkringskassan" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:63\n\nP1105_Variabellista 2022.xlsx"
+fields = { "description" = "Hur personen får sin ersättning: lön, stöd via Försäkringskassan, A-kassa eller annat, eller ingen ersättning. Frågan ställs till inskrivna på Arbetsförmedlingen eller deltagare i arbetsmarknadspolitiskt program." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:63\n\nP1105_Variabellista 2022.xlsx\n\nMaintainer audit follow-up 2026-11-02: AMPP5b question and valueset 5193 establish the form of compensation (including none), not only FK; opdef specifies the AF/program population.\nrel070-base/reg_meta.db:occurrence:8136\nrel070-base/reg_meta.db:occurrence:12186"
 
 [[statement]]
 kind = "set"
@@ -16978,3 +16978,9 @@ kind = "set"
 subject = "var:vilken-typ-av-anstallning-har-du-nu"
 fields = { "sets" = ["anstallningstyp"] }
 evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; codes are fast/tidsbegränsad/fast i botten plus two non-employee codes. Peers saansttyp and typ-av-anstallning-huvud-aldre are members. Extra non-employee codes do not make it yrkesställning.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:31\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6933\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2725\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/anstallningstyp"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsform-inte-inskrivna-af"
+fields = { "description" = "Hur personen får eller fick sin ersättning: lön, stöd via Försäkringskassan, A-kassa eller annat, eller ingen ersättning. Frågan ställs till personer som inte är inskrivna på Arbetsförmedlingen för att utreda deltagande i arbetsmarknadspolitiskt program." }
+evidence = "Maintainer audit follow-up 2026-11-02: AMPP4a/AMPP4aa opdef explicitly asks form of compensation; valueset 5193 includes wages, FK, unemployment/social assistance, other and no compensation. This sibling is not the AF-enrolled population.\nrel070-base/reg_meta.db:occurrence:8133\nrel070-base/reg_meta.db:occurrence:12184"

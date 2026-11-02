@@ -6274,8 +6274,8 @@ evidence = "Previous mantal registration county explicitly fits lan; the current
 [[statement]]
 kind = "set"
 subject = "var:omyndig"
-fields = { "tags" = ["crime"] }
-evidence = "Court-imposed removal of an adult's legal capacity is a legal proceeding, covered by crime's justice scope (r322).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41845"
+fields = { "tags" = [] }
+evidence = "catalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41845\n\nMaintainer audit follow-up 2026-11-02: Definition concerns civil legal capacity rather than criminal justice. Neither social-care (social services/interventions) nor demographics (population characteristics) explicitly covers this status; untagged is valid.\nrel070-base/reg_meta.db:occurrence:428872"
 
 [[statement]]
 kind = "set"

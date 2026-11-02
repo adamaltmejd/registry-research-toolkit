@@ -161,8 +161,8 @@ evidence = "Den äldre småortskoden och småortskoden beskriver samma geografis
 [[statement]]
 kind = "set"
 subject = "var:folkmangd"
-fields = { "description" = "Antal personer folkbokförda i småorten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
+fields = { "description" = "Antal personer folkbokförda i småorten. Uppgifterna bygger normalt på RTB den 31 december referensåret kopplat till Lantmäteriets fastighets- eller adresskoordinater; i 1990 års uppgifter används i vissa kommuner i stället 1992." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670\n\nMaintainer audit follow-up 2026-11-02: Source dates usually follow edition year, but 1990 explicitly substitutes 1992 in named municipalities, and occurrence 448777 on release r18051 (2015) cites 2020. Apply the qualified date/coordinate rule; flag the 2015 source inconsistency separately rather than treating it as identity.\nrel070-base/reg_meta.db:occurrence:448707\nrel070-base/reg_meta.db:occurrence:448721\nrel070-base/reg_meta.db:occurrence:448735\nrel070-base/reg_meta.db:occurrence:448749\nrel070-base/reg_meta.db:occurrence:448763\nrel070-base/reg_meta.db:occurrence:448777\nrel070-base/reg_meta.db:occurrence:448804"
 
 
 [[statement]]

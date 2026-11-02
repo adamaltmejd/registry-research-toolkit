@@ -17928,8 +17928,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:vbbel"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas direkt från Försäkringskassan och avser ersättning längst till månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:350393:opdef_text. One variable, one description."
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Ersättning kan lämnas till och med månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:350393:opdef_text. One variable, one description.\n\nMaintainer audit follow-up 2026-11-02: Provider opdef supports age limit and amount by care needs/extra costs; source-provenance clause adds no measurement rule and is omitted for consistent style.\nrel070-base/reg_meta.db:occurrence:334943"
 
 [[statement]]
 kind = "set"

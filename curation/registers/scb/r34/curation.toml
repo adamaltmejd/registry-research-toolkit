@@ -17143,8 +17143,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:aktivitetsstod-sjuk-belopp"
-fields = { "description" = "Aktivitetsstöd med sjukpenning,utbetalt belopp (netto)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A569\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Aktivitetsstöd vid utbildning, sjuk med sjukpenning, utbetalt bruttobelopp under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A569\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Verified against own occurrence definition, opdef and response domain: Description error: \"(netto)\" is unsupported; opdef says gross amount in every year. Description edit.\nrel070-base/reg_meta.db:occurrence:371617\nrel070-base/reg_meta.db:occurrence:373611"
 
 [[statement]]
 kind = "set"
@@ -17905,8 +17905,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-sarskilt-pensionarer"
-fields = { "description" = "Bostadstillägg (individens delkomponent) (Bostadstillägg och Särskilt bostadstillägg för pensionärer, Bostadstillägg och Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A730\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Bostadstillägg och särskilt bostadstillägg för pensionärer (individens delkomponent)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A730\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Verified against own occurrence definition, opdef and response domain: Description error: label and DEF are pensioners only; the description adds sjuk- och aktivitetsersättning recipients. Description edit.\nrel070-base/reg_meta.db:occurrence:372523\nrel070-base/reg_meta.db:occurrence:375895"
 
 [[statement]]
 kind = "set"
@@ -19807,8 +19807,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-arbetsstalle-sni2002b"
-fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:577\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:577\n\nBilaga 2 - Variabellista.xlsx\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: 41 vs 42 is an opdef miscount (valueset 3809 has 42). Description edit possible.\nrel070-base/reg_meta.db:occurrence:368569"
 
 [[statement]]
 kind = "set"
@@ -19843,8 +19843,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-foretag-sni2002b"
-fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:889\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/lisa.toml:889\n\nBilaga 2 - Variabellista.xlsx\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: Same 41/42 miscount.\nrel070-base/reg_meta.db:occurrence:369747"
 
 [[statement]]
 kind = "set"
@@ -19885,8 +19885,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-individ-sni2002b"
-fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A187\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A187\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: Same 41/42 miscount.\nrel070-base/reg_meta.db:occurrence:378778\nrel070-base/reg_meta.db:occurrence:371644"
 
 [[statement]]
 kind = "set"
@@ -19927,14 +19927,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-nast-storsta-agi-sni2007g"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A311\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper). Uppgiften avser arbetsstället för personens näst största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A311\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the näst största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374217\nrel070-base/reg_meta.db:occurrence:375355"
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-nast-storsta-agi-sni2007u"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A310\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper). Uppgiften avser arbetsstället för personens näst största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A310\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the näst största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374218\nrel070-base/reg_meta.db:occurrence:375356"
 
 [[statement]]
 kind = "set"
@@ -19945,8 +19945,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-nast-storsta-ku-sni2002b"
-fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A336\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens näst största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A336\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: Same 41/42 miscount.\nrel070-base/reg_meta.db:occurrence:371753"
 
 [[statement]]
 kind = "set"
@@ -19993,14 +19993,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-storsta-agi-sni2007g"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A245\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper). Uppgiften avser arbetsstället för personens största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A245\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374186\nrel070-base/reg_meta.db:occurrence:375325\nrel070-base/reg_meta.db:occurrence:375716"
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-storsta-agi-sni2007u"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A244\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper). Uppgiften avser arbetsstället för personens största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A244\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374187\nrel070-base/reg_meta.db:occurrence:375326"
 
 [[statement]]
 kind = "set"
@@ -20017,8 +20017,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-storsta-ku-sni2002b"
-fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A270\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A270\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: Same 41/42 miscount.\nrel070-base/reg_meta.db:occurrence:378860\nrel070-base/reg_meta.db:occurrence:371732"
 
 [[statement]]
 kind = "set"
@@ -20065,14 +20065,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-tredje-storsta-agi-sni2007g"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A378\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, grov nivå (15 grupper). Uppgiften avser arbetsstället för personens tredje största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A378\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the tredje största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374247\nrel070-base/reg_meta.db:occurrence:375384"
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-tredje-storsta-agi-sni2007u"
-fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A377\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2007, utökad nivå (51 grupper). Uppgiften avser arbetsstället för personens tredje största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A377\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Every own source definition selects the tredje största earnings source. The later generic principal-employment opdef is a template copy error; retain the label/definition selection rule.\nrel070-base/reg_meta.db:occurrence:374248\nrel070-base/reg_meta.db:occurrence:375385"
 
 [[statement]]
 kind = "set"
@@ -20083,8 +20083,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-tredje-storsta-ku-sni2002b"
-fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A398\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
+fields = { "description" = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper). Uppgiften avser arbetsstället för personens tredje största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A398\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Label/definition and stable response domain resolve source template/count error: Same 41/42 miscount.\nrel070-base/reg_meta.db:occurrence:371773"
 
 [[statement]]
 kind = "set"
@@ -20743,8 +20743,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:sjukersattning-bruttodagar"
-fields = { "description" = "Antal bruttodagar med icke tidsbegränsad och/eller tidsbegränsad sjukersättning. Samtliga bruttodagar under året summeras." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A634\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:373221:opdef_text; rel070-base/reg_meta.db:occurrence:373824:opdef_text. One variable, one description."
+fields = { "description" = "Antal bruttodagar med icke tidsbegränsad och/eller tidsbegränsad sjukersättning" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A634\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:373221:opdef_text; rel070-base/reg_meta.db:occurrence:373824:opdef_text. One variable, one description.\n\nMaintainer audit follow-up 2026-11-02: Source opdef restates the count of gross days; remove the redundant added sentence, as requested.\nrel070-base/reg_meta.db:occurrence:373221\nrel070-base/reg_meta.db:occurrence:373523\nrel070-base/reg_meta.db:occurrence:373824"
 
 [[statement]]
 kind = "set"

@@ -89217,8 +89217,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-polis-domstol"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:478268"
 
 [[statement]]
 kind = "set"
@@ -89241,8 +89241,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479
 [[statement]]
 kind = "set"
 subject = "var:polis-domstol-typ-av-atgard"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:478270"
 
 [[statement]]
 kind = "set"
@@ -89661,8 +89661,8 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-polismyndighet"
-fields = { "tags" = ["democracy"] }
-evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:3287\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:3287\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:470680"
 
 [[statement]]
 kind = "set"
@@ -89733,8 +89733,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287
 [[statement]]
 kind = "set"
 subject = "var:domstol-typ-av-atgard"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:470691"
 
 [[statement]]
 kind = "set"
@@ -90153,8 +90153,8 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766"
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-1"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:483105"
 
 [[statement]]
 kind = "set"
@@ -90165,8 +90165,8 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-3"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719:8401:8766\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:483107"
 
 [[statement]]
 kind = "set"
@@ -90177,8 +90177,8 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polism
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-4"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polismyndighet eller domstol.\ncatalog:variable_text:51720:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polismyndighet eller domstol.\ncatalog:variable_text:51720:8401:8766\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:483108"
 
 [[statement]]
 kind = "set"
@@ -90189,8 +90189,8 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polism
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-5"
-fields = { "tags" = ["democracy"] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polismyndighet eller domstol.\ncatalog:variable_text:51721:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polismyndighet eller domstol.\ncatalog:variable_text:51721:8401:8766\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:483109"
 
 [[statement]]
 kind = "set"
@@ -109097,14 +109097,14 @@ evidence = "r2 identifies the relationship to a second dependent person and refe
 [[statement]]
 kind = "set"
 subject = "var:polis-typ-av-atgard"
-fields = { "tags" = ["democracy"] }
-evidence = "r154 and r132 describe recourse concerning police treatment, including written appeals, fitting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50929\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "r154 and r132 describe recourse concerning police treatment, including written appeals, fitting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50929\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:470683"
 
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-2"
-fields = { "tags" = ["democracy"] }
-evidence = "r155 concerns police or courts, and r150 includes written appeals and legal assistance, supporting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50967\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "r155 concerns police or courts, and r150 includes written appeals and legal assistance, supporting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50967\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:483106"
 
 [[statement]]
 kind = "set"
@@ -109121,8 +109121,8 @@ evidence = "Coordinator-approved audit correction: Def: 'Om Up missnöjd enl FT6
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-domstol"
-fields = { "tags" = ["democracy"] }
-evidence = "r176 explicitly records a written appeal concerning a court, fitting judicial proceedings within the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51702\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
+fields = { "tags" = ["crime"] }
+evidence = "r176 explicitly records a written appeal concerning a court, fitting judicial proceedings within the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51702\n\nMaintainer audit follow-up 2026-11-02: SS grievance grid for police/courts, not MA02xx appeal capacity: the source spellings and selection references identify the counterparty-specific battery. Maintainer clarification 2026-11-02.\nrel070-base/reg_meta.db:occurrence:470688"
 
 [[statement]]
 kind = "set"
@@ -110081,8 +110081,8 @@ evidence = "r265 records complaints to the tax-assessment board, matching the ta
 [[statement]]
 kind = "set"
 subject = "var:nagon-gang-skriftligt-overklagande"
-fields = { "tags" = ["democracy"] }
-evidence = "r269 and r155 explicitly measure written appeals after unfair treatment, an appeal of an authority decision; per the audited formaga-att-overklaga-harledd correction this is civic redress (democracy), not criminal-justice procedure.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:794\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50379"
+fields = { "tags" = [] }
+evidence = "Maintainer clarification 2026-11-02: SS0305 is derived from the counterparty-specific SS grievance grid, not the MA02xx appeal-capacity battery. The opdef names insurance agency, hospital/doctor, tax board and other counterparties, so no single domain tag applies; leave untagged.\nrel070-base/reg_meta.db:occurrence:478329:definition_text,opdef_text"
 
 [[statement]]
 kind = "set"

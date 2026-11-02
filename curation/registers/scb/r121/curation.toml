@@ -76559,8 +76559,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:garantipension"
-fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
+fields = { "description" = "Garantipension i kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167\n\nMaintainer audit follow-up 2026-11-02: Verified against own occurrence definition, opdef and response domain: Source typo (1998 for 1938), not identity. Description edit: drop or correct the cohort clause; the current description repeats the typo.\nrel070-base/reg_meta.db:occurrence:173116"
 
 [[statement]]
 kind = "set"
