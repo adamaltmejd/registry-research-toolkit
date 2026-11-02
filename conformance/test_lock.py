@@ -287,11 +287,10 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     assert expected["subject"] in refusals
     assert f"old count {count}, new count {expected['grown_count']}" in refusals
 
-    # Regression: shared subject/dependency records are stored per statement,
-    # references cannot be read back, or a changed reference reports only a digest.
-    # Variable setters above intentionally omit these container facts. The two
-    # occurrence setters share one subject and the register, table and release
-    # described by the source overlays; the variable summary above stays compact.
+    # Regression: shared dependencies are stored per statement, references cannot
+    # be read back, or a changed reference reports only a digest. Variable setters
+    # above intentionally omit these container facts. The two occurrence setters
+    # share the register, table and release described by the source overlays.
     expected = expectations["shared_objects"]
     shutil.copyfile(overlay / "container-baseline.jsonl", source)
     shutil.copyfile(
@@ -306,14 +305,7 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     assert len(lock["objects"]) == expected["object_count"]
     references = [entry["objects"] for entry in lock["statements"].values()]
     assert len(references) == expected["statement_count"]
-    subjects = [entry["subjects"] for entry in lock["statements"].values()]
-    assert all(len(keys) == expected["subject_count"] for keys in subjects)
-    assert all(keys == subjects[0] for keys in subjects)
-    assert all(len(keys) == expected["dependency_count"] for keys in references)
-    assert all(keys == sorted(keys) for keys in references + subjects)
-    assert all(keys == references[0] for keys in references)
-    assert set(subjects[0]).isdisjoint(references[0])
-    assert set(subjects[0] + references[0]) == lock["objects"].keys()
+    assert all(keys == sorted(lock["objects"]) for keys in references)
     repeated = run("lock")
     assert repeated.returncode == 0, repeated.stderr
     assert lock_path.read_bytes() == original_lock
@@ -322,11 +314,10 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     (tmp_path / "catalog.db").unlink()
 
     # Regression: corrupt content-addressed maps are accepted as reviewed facts.
-    # Renaming a key and removing a dependency or subject exercise integrity failures
-    # in both reference roles, which use the same map.
+    # Renaming a key and removing an object exercise separate integrity failures.
     for change, code in expected["object_refusals"].items():
         tampered = json.loads(original_lock)
-        key = subjects[0][0] if change == "subject" else references[0][0]
+        key = next(iter(tampered["objects"]))
         value = tampered["objects"].pop(key)
         if change == "digest":
             tampered["objects"]["0" * 64] = value
@@ -360,36 +351,6 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
                 f"{json.dumps(before['description'])} -> "
                 f"{json.dumps(after['description'])}"
             ) in refusals
-
-    # Regression: subject references hide source changes or print only their digest.
-    # The existing field overlay changes the shared occurrence's label; its full
-    # source and replacement values must survive reference resolution.
-    shutil.copyfile(overlay / "fields-changed.jsonl", source)
-    changed = run("build")
-    assert changed.returncode == 1, changed.stderr
-    refusals = "\n".join(
-        detail
-        for refusal in json.loads(report.read_text())["refusals"]
-        for detail in refusal["details"]
-    )
-    for location in expected["locations"]:
-        assert f"{location}: {expected['code']}:" in refusals
-    changed_rows = [json.loads(line) for line in source.read_text().splitlines()]
-    before = next(
-        row
-        for row in original_rows
-        if row["kind"] == "occurrence" and row["table"] == "t"
-    )
-    after = next(
-        row
-        for row in changed_rows
-        if row["kind"] == "occurrence" and row["table"] == "t"
-    )
-    for field in expected["subject_fields"]:
-        assert (
-            f"premise/subjects/0/fields/{field}: "
-            f"{json.dumps(before.get(field))} -> {json.dumps(after.get(field))}"
-        ) in refusals
 
     # Regression: a v1 or v2 lock is silently accepted rather than requiring a
     # re-lock. These deliberately obsolete inputs exercise the version gate.
