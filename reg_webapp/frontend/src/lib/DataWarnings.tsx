@@ -95,6 +95,27 @@ export function DataWarnings({
                                         <code>{finding.subject.fqid}</code>
                                       </a>
                                     )}
+                                    {finding.subject.table &&
+                                      finding.subject.table !==
+                                        finding.subject.fqid && (
+                                        <span>
+                                          Table:{" "}
+                                          <a
+                                            className="link"
+                                            href={catalogHref(
+                                              finding.subject.table,
+                                            )}
+                                          >
+                                            <code>{finding.subject.table}</code>
+                                          </a>
+                                        </span>
+                                      )}
+                                    {finding.subject.release && (
+                                      <span>
+                                        Release:{" "}
+                                        <code>{finding.subject.release}</code>
+                                      </span>
+                                    )}
                                     {finding.caveat && (
                                       <span>{finding.caveat}</span>
                                     )}

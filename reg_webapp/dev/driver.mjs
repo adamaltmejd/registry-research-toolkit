@@ -282,6 +282,14 @@ async function browsePagesCase(page, shoot) {
   await main.getByRole("cell", { name: /Primary$/ }).first().waitFor();
   await code.click();
   await findings.getByText("Familjebegreppet ändrades 2021.", { exact: true }).waitFor();
+  // This release notice has no subject.fqid. Rendering only fqid loses its
+  // release and table, even though the message remains visible.
+  const notice = findings.getByRole("listitem").filter({ hasText: "Familjebegreppet ändrades 2021." });
+  await notice.getByText("Release: fam 2021", { exact: true }).waitFor();
+  check(
+    (await notice.getByRole("link", { name: "demo/hush/fam", exact: true }).getAttribute("href")) === "/catalog/demo/hush/fam",
+    "the release finding lost its table page link",
+  );
   await shoot("browse-table");
   await code.focus();
   await code.press("Enter");
