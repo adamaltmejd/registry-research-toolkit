@@ -43,7 +43,7 @@
 .disclosureButton svg {
   flex-shrink: 0;
 }
-.disclosure[data-expanded] .disclosureButton svg {
+.disclosure[data-expanded] > .disclosureHeading .disclosureButton svg {
   transform: rotate(90deg);
 }
 .disclosureButton[data-hovered] {
@@ -70,6 +70,10 @@
   flex-direction: column;
   gap: var(--space-1);
   overflow-wrap: anywhere;
+}
+.finding > a {
+  align-self: flex-start;
+  max-width: 100%;
 }
 .variableName {
   display: flex;

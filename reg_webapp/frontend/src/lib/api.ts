@@ -401,6 +401,45 @@ export type RegisterChild = ProviderShow["registers"][number];
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
+export type CatalogSegment = RustSchemas["Segment"];
+export type VariableEvidence = RustSchemas["VariableEvidence"];
+
+/** All structural segments, following the server's generation-bound cursor. */
+export async function getSegments(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<CatalogSegment[]> {
+  const items: CatalogSegment[] = [];
+  let cursor: string | null = null;
+  do {
+    const query = new URLSearchParams({ limit: "200" });
+    if (cursor !== null) query.set("cursor", cursor);
+    const page = await rustGet<RustSchemas["SegmentPage"]>(
+      `/segments/${encodeFqid(ref)}`,
+      query,
+      options,
+    );
+    items.push(...page.items);
+    cursor = page.next_cursor;
+  } while (cursor !== null);
+  return items;
+}
+
+/** Requested only when the variable's provenance disclosure is first opened. */
+export async function getVariableEvidence(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<VariableEvidence> {
+  const node = await rustGet<ShowNode>(
+    `/catalog/${encodeFqid(ref)}`,
+    new URLSearchParams({ evidence: "true" }),
+    options,
+  );
+  if (node.kind !== "variable" || !node.evidence) {
+    throw new Error("The catalog returned no variable evidence.");
+  }
+  return node.evidence;
+}
 
 /** Review items and notices for a catalog subject, including its descendants. */
 export function getFindings(

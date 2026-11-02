@@ -179,6 +179,20 @@ export function registerRead(ref: string): Read<RegisterShow> {
   });
 }
 
+/** Display names shared by register descendants and their located findings. */
+export function registerSubjectNames(
+  register?: RegisterShow | null,
+): ReadonlyMap<string, string> {
+  const names = new Map<string, string>();
+  if (register) {
+    names.set(register.fqid, register.name);
+    for (const subject of [...register.tables, ...register.variables]) {
+      names.set(subject.fqid, subject.name);
+    }
+  }
+  return names;
+}
+
 /** A named catalog subject outside a register (for example a successor class). */
 export function showRead(ref: string): Read<ShowNode> {
   return read(`show:${ref}`, () => sharedShow(ref));
@@ -201,9 +215,8 @@ export function catalogNames(
   for (const ref of registers) {
     const register = registerRead(ref).value;
     if (!register) continue;
-    names.set(register.fqid, register.name);
-    for (const node of [...register.tables, ...register.variables]) {
-      names.set(node.fqid, node.name);
+    for (const [fqid, name] of registerSubjectNames(register)) {
+      names.set(fqid, name);
     }
   }
   return names;

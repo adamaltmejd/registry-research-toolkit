@@ -63,11 +63,12 @@
 {"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2020","column":"Bransch","source_key":"bransch","label":"Bransch","dtype":"char","valueset":"bransch"}
 {"kind":"release","provider":"demo","register":"hush","table":"ind","release":"i2021","name":"ind 2021","grain":"year","edition":"final","from":"2021-01-01","to":"2021-12-31"}
 {"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Bransch","source_key":"bransch","label":"Bransch","dtype":"char","valueset":"bransch"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int","definition":"Antal personer i hushållet vid årets slut."}
 {"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Namn","source_key":"namn-a","label":"Namn","dtype":"char"}
 {"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Namn","source_key":"namn-b","label":"Namn, tilltalsnamn","dtype":"char"}
 {"kind":"release","provider":"demo","register":"hush","table":"fam","release":"f2021","name":"fam 2021","grain":"year","edition":"final","from":"2021-01-01","to":"2021-12-31"}
 {"kind":"release","provider":"demo","register":"hush","table":"fam","release":"f2022p","name":"fam 2022","grain":"year","edition":"preliminary","from":"2022-01-01","to":"2022-12-31"}
-{"kind":"occurrence","provider":"demo","register":"hush","table":"fam","release":"f2021","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"fam","release":"f2021","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int","definition":"Antal personer i hushållet vid årets slut."}
 {"kind":"occurrence","provider":"demo","register":"hush","table":"fam","release":"f2022p","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int"}
 {"kind":"release","provider":"demo","register":"hush","table":"famgammal","release":"g2016","name":"famgammal 2016","grain":"year","edition":"final","from":"2016-01-01","to":"2016-12-31"}
 {"kind":"occurrence","provider":"demo","register":"hush","table":"famgammal","release":"g2016","column":"AntalGammal","source_key":"antalgammal","label":"Antal personer, äldre","dtype":"int"}
@@ -89,5 +90,6 @@
 {"kind":"link","relation":"derived_from","subject":{"provider":"demo","kind":"variable","register":"bas","key":"kommun"},"object":{"provider":"demo","kind":"register","register_name":"Hushållsregistret"}}
 {"kind":"notice","subject":{"provider":"demo","kind":"variable","register":"bas","key":"inkomst"},"text":"Inkomst mäts efter skatt från 2019."}
 {"kind":"notice","subject":{"provider":"demo","kind":"release","register":"hush","table":"fam","key":"f2021"},"text":"Familjebegreppet ändrades 2021."}
+{"kind":"notice","subject":{"provider":"demo","kind":"variable","register":"hush","key":"antal"},"text":"Antal redovisas på både individ- och familjetabellen."}
 {"kind":"doc","doc_kind":"parsed","hash":"dc21907157479e321cfd863e89d10ef001130ef0818a64d4eab4b09941f7b6f6","title":"Beskrivning av Basregistret","licence":"CC BY 4.0","bytes":117,"url":"https://example.org/basregistret","sections":[{"heading":"Inledning","page":1,"body":"Basregistret innehåller en post per person och år."},{"heading":"Variabler","page":2,"body":"Inkomst avser förvärvsinkomst efter skatt från och med 2019."}],"subjects":[{"endpoint":{"provider":"demo","kind":"register","register":"bas"},"page":0}]}
 {"kind":"doc","doc_kind":"pdf","hash":"ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9","title":"Bilaga","licence":"CC BY 4.0","bytes":24,"content":"255044462d312e340a252062696c6167610a2525454f460a","subjects":[{"endpoint":{"provider":"demo","kind":"register","register":"hush"},"page":0}]}

@@ -368,6 +368,50 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
+// #2056, browser boundary over webapp-dev's Antal occurrences, provider text
+// and variable notice. Fails if variable dispatch or cross-table segments are
+// lost, named table links/storage are lost in the compact layout, evidence is
+// fetched eagerly, or reopening refetches it. Existing cases
+// only browse register/table pages and never request variable evidence.
+async function browseVariableCase(page, shoot) {
+  const evidenceRequests = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).searchParams.get("evidence") === "true") {
+      evidenceRequests.push(request.url());
+    }
+  });
+  const main = page.getByRole("main");
+  await main.locator('a[href="/catalog/demo/hush/antal"]').click();
+  await page.waitForURL("**/catalog/demo/hush/antal");
+  await settled(page);
+  const segments = main.locator("section").filter({ has: page.getByRole("heading", { name: "Segments", exact: true }) });
+  await segments.getByRole("link", { name: "Familjer", exact: true }).waitFor();
+  await segments.getByRole("link", { name: "Individer", exact: true }).waitFor();
+  await segments.getByRole("cell", { name: /^(?:Storage )?int$/ }).first().waitFor();
+  check(
+    (await segments.getByRole("row").count()) >= 3,
+    "the variable lost its segments across the family and individual tables",
+  );
+  const source = main.getByRole("button", { name: "Source and provenance", exact: true });
+  check((await source.getAttribute("aria-expanded")) === "false", "source and provenance must start collapsed");
+  check(evidenceRequests.length === 0, "variable evidence was fetched before opening its disclosure");
+  await shoot("browse-variable");
+  await source.click();
+  await settled(page);
+  check(evidenceRequests.length === 1, "opening source and provenance must issue exactly one evidence request");
+  const sourcePanel = main.locator(`[id="${await source.getAttribute("aria-controls")}"]`);
+  await sourcePanel.getByRole("button", { name: /^Provider wording/ }).first().click();
+  await sourcePanel.getByText("Antal personer i hushållet vid årets slut.", { exact: true }).waitFor();
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
+  await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
+  await shoot("browse-variable-evidence");
+  await source.click();
+  await source.click();
+  await settled(page);
+  check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
+}
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -407,6 +451,11 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 const scenarios = {
+  "browse-variable": {
+    shots: 2,
+    route: "/catalog/demo/hush",
+    run: browseVariableCase,
+  },
   "project-pages": {
     shots: 3,
     route: "/project",

@@ -9,8 +9,9 @@ issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
 The SPA shell, search, provider, register, table and loaded-project pages use the
-current API. Variable and classification pages remain disconnected until their owning
-workstreams restore them. The earlier SPA is archived on `archive/reg-webapp-spa`.
+current API, alongside the variable page. Classification pages remain disconnected until
+their owning workstream restores them. The earlier SPA is archived on
+`archive/reg-webapp-spa`.
 
 ## Loaded projects
 

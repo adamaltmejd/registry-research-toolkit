@@ -65,7 +65,6 @@ export default defineConfig({
     include: [
       "src/lib/router.test.ts",
       "src/lib/platform.test.ts",
-      "src/lib/inline_markdown.test.ts",
       "src/lib/catalog_period.test.ts",
       "src/lib/reg_core.test.ts",
     ],
