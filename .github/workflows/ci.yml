@@ -74,14 +74,16 @@ jobs:
             command: uv run --no-project scripts/gate.py release
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
+            # The curation locks are most of the ~1 GB tree and alone push
+            # checkout toward the budget; both suites read only fixture
+            # curation (conformance/cases/fixtures), never curation/.
+            sparse: &no-locks |
+              /*
+              !curation/**/*.lock
           - suite: scripts/tests
             budget: 2
             command: uv run python -m pytest scripts/tests -n auto
-            # The curation locks are most of the ~1 GB tree and alone push
-            # checkout past this budget; scripts/tests never reads them.
-            sparse: |
-              /*
-              !curation/**/*.lock
+            sparse: *no-locks
     steps:
       - uses: actions/checkout@v7.0.1
         with:
