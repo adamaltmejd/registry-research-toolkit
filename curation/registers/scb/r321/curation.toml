@@ -4045,13 +4045,13 @@ evidence = "Källans operativa definitioner anger olika delmått mellan perioder
 
 [[statement]]
 kind = "set"
-subject = "var:medbkont"
+subject = "var:medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Källan beskriver olika innehåll för de redovisade perioderna.\ncatalog:occurrence:382939\ncatalog:occurrence:383001\ncatalog:occurrence:383075"
 
 [[statement]]
 kind = "set"
-subject = "var:medbkont"
+subject = "var:medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Källan beskriver olika innehåll för de redovisade perioderna.\ncatalog:occurrence:382939\ncatalog:occurrence:383001\ncatalog:occurrence:383075"
 

@@ -1615,13 +1615,13 @@ evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning
 
 [[statement]]
 kind = "set"
-subject = "var:nov2ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-jobb-tva-i-november"
 fields = { "sets" = ["arbets-och-foretagarinkomst"] }
 evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55657:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nov2ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-jobb-tva-i-november"
 fields = { "tags" = ["income"] }
 evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55657:11323:20089"
 
@@ -1669,13 +1669,13 @@ evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/
 
 [[statement]]
 kind = "set"
-subject = "var:nov2tjomf"
+subject = "var:tjanstgoringsomfattning-jobb-tva-i-november"
 fields = { "sets" = ["tjanstgoringsomfattning"] }
 evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55663:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nov2tjomf"
+subject = "var:tjanstgoringsomfattning-jobb-tva-i-november"
 fields = { "tags" = ["employment"] }
 evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55663:11323:20089"
 

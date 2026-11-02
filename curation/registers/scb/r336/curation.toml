@@ -1075,20 +1075,8 @@ evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:diskriminerad-f20-02"
-fields = { "tags" = [] }
-evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54756:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:diskriminerad-f20-03"
 fields = { "sets" = ["upplevd-diskriminering"] }
-evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54757:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:diskriminerad-f20-03"
-fields = { "tags" = [] }
 evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54757:15706:16071"
 
 [[statement]]
@@ -1111,20 +1099,8 @@ evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:diskriminerad-f26-02"
-fields = { "tags" = [] }
-evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54759:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:diskriminerad-f26-03"
 fields = { "sets" = ["upplevd-diskriminering"] }
-evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54760:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:diskriminerad-f26-03"
-fields = { "tags" = [] }
 evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54760:15706:16071"
 
 [[statement]]
@@ -2566,3 +2542,27 @@ kind = "set"
 subject = "utlandska-doktorander: F8 @2013-01-01..2013-12-31 where key = 'v30020'"
 fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop." }
 evidence = "Frågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54859:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:diskriminerad-f20-02"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54579\ncatalog:variable_text:54579:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:diskriminerad-f20-03"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54580\ncatalog:variable_text:54580:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:diskriminerad-f26-02"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54582\ncatalog:variable_text:54582:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:diskriminerad-f26-03"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54583\ncatalog:variable_text:54583:15706:16071"

@@ -356,13 +356,13 @@ evidence = "Poängen avser matematikprovet.\ncatalog:variable_text:22218:15706:1
 
 [[statement]]
 kind = "set"
-subject = "var:ak9-sva"
+subject = "var:har-betyg-i-sva-ak9-elevregistret"
 fields = { "sets" = [] }
 evidence = "Ak9 är en ogenomskinlig källkod; etiketten identifierar variabeln, men den operationella definitionen anger att den mäter förekomst av betyg.\ncatalog:occurrence:205583\ncatalog:variable_text:22220:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ak9-sva"
+subject = "var:har-betyg-i-sva-ak9-elevregistret"
 fields = { "tags" = ["education"] }
 evidence = "Ak9 är en ogenomskinlig källkod; etiketten identifierar variabeln, men den operationella definitionen anger att den mäter förekomst av betyg.\ncatalog:occurrence:205583\ncatalog:variable_text:22220:20089:20270"
 
@@ -440,13 +440,13 @@ evidence = "Variabeln kodar deltagande i NO-prov.\ncatalog:valueset:12919\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:laser-sva-enligt-amnesprovsinsamlingen"
 fields = { "sets" = [] }
 evidence = "Den tidiga ämneskodningen och den senare deltagandeindikatorn har olika innehåll.\ncatalog:valueset:10571\ncatalog:valueset:11824\ncatalog:variable_text:22228:12053:12234"
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:laser-sva-enligt-amnesprovsinsamlingen"
 fields = { "tags" = ["education"] }
 evidence = "Den tidiga ämneskodningen och den senare deltagandeindikatorn har olika innehåll.\ncatalog:valueset:10571\ncatalog:valueset:11824\ncatalog:variable_text:22228:12053:12234"
 

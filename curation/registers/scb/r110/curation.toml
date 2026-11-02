@@ -613,7 +613,7 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidiga
 
 [[statement]]
 kind = "set"
-subject = "var:f25-4"
+subject = "var:upplevd-orattvis-behandling-kompetensutveckling"
 fields = { "tags" = ["employment"] }
 evidence = "Källans etikett och de senare svarsalternativen beskriver olika omfattning av behandlingen. Gruppen omfattar den uppmätta behandlingen på arbetet.\ncatalog:register:146\ncatalog:valueset:8368\ncatalog:valueset:9175\ncatalog:valueset:9972\ncatalog:variable_text:26060:16436:16801\ncatalog:variable_text:26060:17532:17897"
 
@@ -709,44 +709,20 @@ evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsför
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
-fields = { "tags" = [] }
-evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på svenska.\ncatalog:variable_text:26068:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26069:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
-fields = { "tags" = [] }
-evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26069:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
 fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på engelska.\ncatalog:variable_text:26070:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
-fields = { "tags" = [] }
-evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på engelska.\ncatalog:variable_text:26070:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
 fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
-evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26071:12418:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
-fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26071:12418:12784"
 
 [[statement]]
@@ -1069,20 +1045,8 @@ evidence = "Källan beskriver självskattad förmåga att kommunicera på engels
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-argumentera-engelska"
-fields = { "tags" = [] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26098:17532:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-argumentera-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26099:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:klarar-argumentera-svenska"
-fields = { "tags" = [] }
 evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26099:17532:17897"
 
 [[statement]]
@@ -1093,20 +1057,8 @@ evidence = "Källan beskriver självskattad förmåga att kommunicera på engels
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-diskussion-engelska"
-fields = { "tags" = [] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26100:17532:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-diskussion-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26101:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:klarar-diskussion-svenska"
-fields = { "tags" = [] }
 evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26101:17532:17897"
 
 [[statement]]
@@ -1117,20 +1069,8 @@ evidence = "Källan beskriver självskattad förmåga att kommunicera på engels
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-muntlig-presentation-engelska"
-fields = { "tags" = [] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26102:17532:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-muntlig-presentation-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
-evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26103:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:klarar-muntlig-presentation-svenska"
-fields = { "tags" = [] }
 evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26103:17532:17897"
 
 [[statement]]
@@ -1141,20 +1081,8 @@ evidence = "Källan beskriver självskattad skrivförmåga på engelska.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:klarar-skriftlig-rapport-engelska"
-fields = { "tags" = [] }
-evidence = "Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26104:17532:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:klarar-skriftlig-rapport-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
-evidence = "Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26105:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:klarar-skriftlig-rapport-svenska"
-fields = { "tags" = [] }
 evidence = "Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26105:17532:17897"
 
 [[statement]]
@@ -1477,6 +1405,78 @@ evidence = "Experienced unfair career treatment is measured in r7. The later fai
 
 [[statement]]
 kind = "set"
-subject = "var:f25-4"
+subject = "var:upplevd-orattvis-behandling-kompetensutveckling"
 fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
 evidence = "Experienced unfair treatment in competence development is measured in r8. The later fair/unfair scale still explicitly measures unfair treatment (r36, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235341\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25989\ncatalog:variable_text:25989:12418:12784\ncatalog:variable_text:25989:14245:14610\ncatalog:variable_text:25989:16436:16801\ncatalog:variable_text:25989:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25990\ncatalog:variable_text:25990:12418:12784\ncatalog:variable_text:25990:14245:14610\ncatalog:variable_text:25990:16436:16801\ncatalog:variable_text:25990:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25991\ncatalog:variable_text:25991:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25992\ncatalog:variable_text:25992:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25993\ncatalog:variable_text:25993:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25994\ncatalog:variable_text:25994:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25995\ncatalog:variable_text:25995:12418:12784\ncatalog:variable_text:25995:14245:14610\ncatalog:variable_text:25995:16436:16801\ncatalog:variable_text:25995:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25996\ncatalog:variable_text:25996:12418:12784\ncatalog:variable_text:25996:14245:14610\ncatalog:variable_text:25996:16436:16801\ncatalog:variable_text:25996:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25997\ncatalog:variable_text:25997:12418:12784\ncatalog:variable_text:25997:14245:14610\ncatalog:variable_text:25997:16436:16801\ncatalog:variable_text:25997:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25998\ncatalog:variable_text:25998:12418:12784\ncatalog:variable_text:25998:14245:14610\ncatalog:variable_text:25998:16436:16801\ncatalog:variable_text:25998:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25999\ncatalog:variable_text:25999:12418:12784\ncatalog:variable_text:25999:14245:14610\ncatalog:variable_text:25999:16436:16801\ncatalog:variable_text:25999:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:26000\ncatalog:variable_text:26000:12418:12784\ncatalog:variable_text:26000:14245:14610\ncatalog:variable_text:26000:16436:16801\ncatalog:variable_text:26000:17532:17897"

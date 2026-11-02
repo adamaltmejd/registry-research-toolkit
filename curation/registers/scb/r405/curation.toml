@@ -3007,13 +3007,13 @@ evidence = "Variabeln mäter tillgång till mobiltelefon.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:mon-buy"
+subject = "var:ej-rad-att-kopa-nagot-kompisar-har"
 fields = { "sets" = ["ej-rad-att-kopa-som-kompisar"] }
 evidence = "Mon är en opak källförkortning. Variabeln mäter ett ekonomiskt hinder för köp.\ncatalog:variable_text:5461:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:mon-buy"
+subject = "var:ej-rad-att-kopa-nagot-kompisar-har"
 fields = { "tags" = ["consumption"] }
 evidence = "Mon är en opak källförkortning. Variabeln mäter ett ekonomiskt hinder för köp.\ncatalog:variable_text:5461:13879:16801"
 
@@ -3031,13 +3031,13 @@ evidence = "Mon är en opak källförkortning. Variabeln är härledd från frå
 
 [[statement]]
 kind = "set"
-subject = "var:mon-buy2a"
+subject = "var:ej-rad-att-kopa-som-jamnariga-ja-nej"
 fields = { "sets" = ["ej-rad-att-kopa-som-kompisar"] }
 evidence = "Mon är en opak källförkortning. Variabeln avser A-frågan om ett ekonomiskt hinder för köp; etiketten delas med andra variabler och målnamnet kräver därför särskiljning.\ncatalog:occurrence:36052\ncatalog:variable_text:5463:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:mon-buy2a"
+subject = "var:ej-rad-att-kopa-som-jamnariga-ja-nej"
 fields = { "tags" = ["consumption"] }
 evidence = "Mon är en opak källförkortning. Variabeln avser A-frågan om ett ekonomiskt hinder för köp; etiketten delas med andra variabler och målnamnet kräver därför särskiljning.\ncatalog:occurrence:36052\ncatalog:variable_text:5463:16801:18262"
 

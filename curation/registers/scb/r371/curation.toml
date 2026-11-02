@@ -7767,13 +7767,13 @@ evidence = "Källmnemoniken är inte ett läsbart namn; etiketten anger arbetsl�
 
 [[statement]]
 kind = "set"
-subject = "var:baeers"
+subject = "var:a-kassa-eller-aktivitetsstod"
 fields = { "sets" = ["arbetsloshetsersattningens-typ-och-niva"] }
 evidence = "Etiketten anger nivå men värdena anger ersättningstyper.\ncatalog:valueset:92\ncatalog:variable_text:8227:15340:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:baeers"
+subject = "var:a-kassa-eller-aktivitetsstod"
 fields = { "tags" = ["transfers"] }
 evidence = "Etiketten anger nivå men värdena anger ersättningstyper.\ncatalog:valueset:92\ncatalog:variable_text:8227:15340:19358"
 
@@ -8079,13 +8079,13 @@ evidence = "Familjens källkoder är ogenomskinliga; numret är en källplats.\n
 
 [[statement]]
 kind = "set"
-subject = "var:baldbob16"
+subject = "var:alder-barn-16"
 fields = { "sets" = [] }
 evidence = "Familjens källkoder är ogenomskinliga; numret är en källplats.\ncatalog:register:89\ncatalog:variable_text:8256:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:baldbob16"
+subject = "var:alder-barn-16"
 fields = { "tags" = ["demographics"] }
 evidence = "Familjens källkoder är ogenomskinliga; numret är en källplats.\ncatalog:register:89\ncatalog:variable_text:8256:18628:19723"
 
@@ -18699,37 +18699,37 @@ evidence = "Juridisk form.\ncatalog:variable_text:9212:13149:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandebr"
+subject = "var:agarandel-ny-bostad-bostadsratt-kronor"
 fields = { "sets" = ["agarandel-ny-bostad"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9213:16071:17167\ncatalog:variable_text:9213:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandebr"
+subject = "var:agarandel-ny-bostad-bostadsratt-kronor"
 fields = { "tags" = ["property"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9213:16071:17167\ncatalog:variable_text:9213:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandebrt"
+subject = "var:agarandel-ny-bostad-bostadsratt-kronor-foregaende-ar"
 fields = { "sets" = ["agarandel-ny-bostad"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9214:16071:17167\ncatalog:variable_text:9214:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandebrt"
+subject = "var:agarandel-ny-bostad-bostadsratt-kronor-foregaende-ar"
 fields = { "tags" = ["property"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9214:16071:17167\ncatalog:variable_text:9214:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandes"
+subject = "var:agarandel-ny-bostad-smahus-kronor"
 fields = { "sets" = ["agarandel-ny-bostad"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9215:16071:17167\ncatalog:variable_text:9215:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:kagandes"
+subject = "var:agarandel-ny-bostad-smahus-kronor"
 fields = { "tags" = ["property"] }
 evidence = "Enheten växlar mellan kvot och kronor.\ncatalog:variable_text:9215:16071:17167\ncatalog:variable_text:9215:17167:17532"
 
@@ -31698,3 +31698,15 @@ kind = "set"
 subject = "var:zexpfond"
 fields = { "sets" = ["expansionsfond"] }
 evidence = "r786 measures the expansion fund at the beginning of the year, an included fund amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:9987\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10000"
+
+[[statement]]
+kind = "set"
+subject = "var:bkyrka"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:8445\ncatalog:variable_text:8445:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:8803\ncatalog:variable_text:8803:13149:16071"

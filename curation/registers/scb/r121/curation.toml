@@ -78919,3 +78919,27 @@ subject = "forsakringsbolag: l19 @2017-01-01..2017-12-31 where key = 'v26287' an
 fields = { "variable" = "orealiserade-forluster-l18" }
 evidence = "FRIDA insurers 2017 shift chain: L13=transfer to financial operations (old L12), L14=technical result (old L13), L15=capital-return income (old L14), L16=unrealised gains (old L15), L17=transfer from insurance operations (old L16), L18=capital-return costs (old L17), L19=unrealised losses (old L18), L20=other income (old L19). L19/v26287 retains the stale other-income label in release r13707; the shifted chain and explicit 2018-2023 L19 loss labels establish its loss meaning. Restore the 2017 L19 occurrence to the separate unrealised-losses series, retaining source text."
 caveat = "Open question (FRIDA insurers 2017 L18, continues audit #55): release r13707 has L18/v26212 labelled Kapavkast., kostnader (L17) and L18/v26224 labelled Orealiserade förluster (L18). The shift chain suggests the latter is stale, but it remains owned by l18. Assigning both rows to kapavkast-kostnader-l17 makes its existing sets/tags setters ambiguous: they expand to whole-variable membership, including both overlapping source keys. Variable addresses accept no guards, and guarded occurrence membership setters also expand to the entire variable. Existing grammar therefore cannot express a narrow metadata guard; preserve the conflict pending a separate decision rather than discard metadata or change resolver rules."
+
+[[statement]]
+kind = "set"
+subject = "var:bkyrka"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:16121\ncatalog:variable_text:16121:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:17334\ncatalog:variable_text:17334:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:samfundskod-samfundskod-for-avgift-for-1-a-samfundet"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:19216\ncatalog:variable_text:19216:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:samfundskod-samfundskod-for-avgift-for-2-a-samfundet"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:19217\ncatalog:variable_text:19217:11688:12053"

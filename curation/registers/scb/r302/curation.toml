@@ -589,25 +589,25 @@ evidence = "F21_2 är en opak frågekod för utbildningens nytta för lön.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:f21-3"
+subject = "var:utbildningsnytta-karriarmojligheter"
 fields = { "sets" = [] }
 evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen behöver klargöras före namnbyte.\ncatalog:valueset:5533\ncatalog:variable_text:26184:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-3"
+subject = "var:utbildningsnytta-karriarmojligheter"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen behöver klargöras före namnbyte.\ncatalog:valueset:5533\ncatalog:variable_text:26184:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-4"
+subject = "var:utbildningsnytta-arbetstider"
 fields = { "sets" = [] }
 evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen behöver klargöras före namnbyte.\ncatalog:valueset:5533\ncatalog:variable_text:26185:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-4"
+subject = "var:utbildningsnytta-arbetstider"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen behöver klargöras före namnbyte.\ncatalog:valueset:5533\ncatalog:variable_text:26185:14245:14610"
 

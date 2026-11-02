@@ -4648,3 +4648,11 @@ kind = "set"
 subject = "kostnadsenkaten: Tk_for @2024-01-01..2024-12-31 where key = 'v16988'"
 fields = { "description" = "Arbetskostnad för företagare." }
 evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:produktion-av-roding-for-utsattning"
+relation = "continues"
+object = "scb/vattenbruk/produktion-av-oring-for-utsattning"
+at = "2019-01-01.."
+evidence = "The 2018 SRodp_salt source label says öring, but SOringp_salt separately carries öring in 2018 and SRodp_salt otherwise carries röding. Per maintainer correction after Opus audit, retain the held succession from the mislabelled 2018 row to the 2019+ röding variable; record the 2018 label error as open rather than merge identities or override the label here.\ncatalog:occurrence:514034\ncatalog:occurrence:513994\ncatalog:occurrence:514271\nmaintainer:2026-11-02:Opus-audit-correction-210"

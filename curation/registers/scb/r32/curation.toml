@@ -2269,13 +2269,13 @@ evidence = "Variabeln anger en persons ålder.\ncatalog:occurrence:97766\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:hhfmakasyss"
+subject = "var:sysselsattning-hushallsforestandarens-maka-eller-sambo"
 fields = { "sets" = ["sysselsattning"] }
 evidence = "Hhf är en bokstavsförkortning för hushållsföreståndare och id:t bedöms därför som ogenomskinligt inom hhfm-familjen.\ncatalog:occurrence:97767\ncatalog:variable_text:11250:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:hhfmakasyss"
+subject = "var:sysselsattning-hushallsforestandarens-maka-eller-sambo"
 fields = { "tags" = ["employment"] }
 evidence = "Hhf är en bokstavsförkortning för hushållsföreståndare och id:t bedöms därför som ogenomskinligt inom hhfm-familjen.\ncatalog:occurrence:97767\ncatalog:variable_text:11250:1826:2191"
 

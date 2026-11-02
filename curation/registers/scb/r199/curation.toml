@@ -404,13 +404,13 @@ evidence = "Variabeln kodar status för hyresförhandling; källans periodskilln
 
 [[statement]]
 kind = "set"
-subject = "var:forsamling"
+subject = "var:forsamling-vid-urvalsdragning"
 fields = { "sets" = [] }
 evidence = "Källans församlingsetikett och senare länsvärdemängd behöver utredas.\ncatalog:valueset:7128\ncatalog:variable_text:25767:13514:15340\ncatalog:variable_text:25767:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:forsamling"
+subject = "var:forsamling-vid-urvalsdragning"
 fields = { "tags" = ["geography"] }
 evidence = "Källans församlingsetikett och senare länsvärdemängd behöver utredas.\ncatalog:valueset:7128\ncatalog:variable_text:25767:13514:15340\ncatalog:variable_text:25767:15340:16071"
 

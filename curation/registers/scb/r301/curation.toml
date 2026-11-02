@@ -2785,20 +2785,8 @@ evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:frsprak"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:952:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:frsprak2"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:953:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:frsprak2"
-fields = { "tags" = [] }
 evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:953:12965:13330"
 
 [[statement]]
@@ -4117,20 +4105,8 @@ evidence = "Langbest är en källmnemonik; etiketten anger språk som personen k
 
 [[statement]]
 kind = "set"
-subject = "var:langbest"
-fields = { "tags" = [] }
-evidence = "Langbest är en källmnemonik; etiketten anger språk som personen kan använda. Gruppen omfattar även andra språk och antal språk.\ncatalog:variable_text:1066:15156:15522\ncatalog:variable_text:1066:16801:17167\ncatalog:variable_text:1066:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:langbest2"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Langbest är en källmnemonik; etiketten anger språk som personen kan använda. Gruppen omfattar även andra språk och antal språk.\ncatalog:variable_text:1067:15156:15522\ncatalog:variable_text:1067:16801:17167\ncatalog:variable_text:1067:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:langbest2"
-fields = { "tags" = [] }
 evidence = "Langbest är en källmnemonik; etiketten anger språk som personen kan använda. Gruppen omfattar även andra språk och antal språk.\ncatalog:variable_text:1067:15156:15522\ncatalog:variable_text:1067:16801:17167\ncatalog:variable_text:1067:18993:19358"
 
 [[statement]]
@@ -4177,20 +4153,8 @@ evidence = "Identitetsfaktorn behöver samordnas med den tidigare ägaren. Varia
 
 [[statement]]
 kind = "set"
-subject = "var:langlevel1"
-fields = { "tags" = [] }
-evidence = "Identitetsfaktorn behöver samordnas med den tidigare ägaren. Variabeln och dess motsvarande nivåvariabel ingår i språkfärdighetsgruppen.\ncatalog:occurrence:1452\ncatalog:occurrence:1721\ncatalog:variable_text:1071:16801:17167\ncatalog:variable_text:1071:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:langlevel2"
 fields = { "sets" = ["kunskapsniva-i-sprak"] }
-evidence = "Identitetsfaktorn behöver samordnas med den tidigare ägaren. Variabeln och dess motsvarande nivåvariabel ingår i språkfärdighetsgruppen.\ncatalog:occurrence:1453\ncatalog:occurrence:1722\ncatalog:variable_text:1072:16801:17167\ncatalog:variable_text:1072:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:langlevel2"
-fields = { "tags" = [] }
 evidence = "Identitetsfaktorn behöver samordnas med den tidigare ägaren. Variabeln och dess motsvarande nivåvariabel ingår i språkfärdighetsgruppen.\ncatalog:occurrence:1453\ncatalog:occurrence:1722\ncatalog:variable_text:1072:16801:17167\ncatalog:variable_text:1072:18993:19358"
 
 [[statement]]
@@ -4201,20 +4165,8 @@ evidence = "Räknarsuffixet 24959 finns inte i källkolumnen. Samma begrepp är 
 
 [[statement]]
 kind = "set"
-subject = "var:langlevel2-24959"
-fields = { "tags" = [] }
-evidence = "Räknarsuffixet 24959 finns inte i källkolumnen. Samma begrepp är perioduppdelat med scb/aes/langlevel2; målet behöver R6-prövning.\ncatalog:occurrence:1453\ncatalog:occurrence:1722"
-
-[[statement]]
-kind = "set"
 subject = "var:langmoth"
 fields = { "sets" = ["modersmal"] }
-evidence = "Langmoth är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1964\ncatalog:variable_text:1074:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:langmoth"
-fields = { "tags" = [] }
 evidence = "Langmoth är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1964\ncatalog:variable_text:1074:18993:19358"
 
 [[statement]]
@@ -4225,20 +4177,8 @@ evidence = "Langmoth är en källmnemonik för modersmål. Gruppen omfattar pers
 
 [[statement]]
 kind = "set"
-subject = "var:langmoth2"
-fields = { "tags" = [] }
-evidence = "Langmoth är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1965\ncatalog:variable_text:1075:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:langmother"
 fields = { "sets" = ["modersmal"] }
-evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1723\ncatalog:variable_text:1076:15156:15522\ncatalog:variable_text:1076:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:langmother"
-fields = { "tags" = [] }
 evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1723\ncatalog:variable_text:1076:15156:15522\ncatalog:variable_text:1076:16801:17167"
 
 [[statement]]
@@ -4249,20 +4189,8 @@ evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar pe
 
 [[statement]]
 kind = "set"
-subject = "var:langmother2"
-fields = { "tags" = [] }
-evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1724\ncatalog:variable_text:1077:15156:15522\ncatalog:variable_text:1077:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:langused"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Langused är en källmnemonik. Gruppen omfattar både språk som personen kan använda och antal sådana språk.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:langused"
-fields = { "tags" = [] }
 evidence = "Langused är en källmnemonik. Gruppen omfattar både språk som personen kan använda och antal sådana språk.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
 
 [[statement]]
@@ -4273,20 +4201,8 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:langused-1"
-fields = { "tags" = [] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1079:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1080:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
-fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1080:18993:19358"
 
 [[statement]]
@@ -4297,20 +4213,8 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
-fields = { "tags" = [] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1081:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1082:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
-fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1082:18993:19358"
 
 [[statement]]
@@ -4321,32 +4225,14 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-femte-spraket"
-fields = { "tags" = [] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1083:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1084:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
-fields = { "tags" = [] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1084:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1085:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
-fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1085:18993:19358"
 
 [[statement]]
@@ -4413,12 +4299,6 @@ evidence = "Intervjumetoden är ett insamlingssätt.\ncatalog:variable_text:1091
 kind = "set"
 subject = "var:modersmal"
 fields = { "sets" = ["modersmal"] }
-evidence = "Variabeln anger personens modersmål.\ncatalog:variable_text:1092:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:modersmal"
-fields = { "tags" = [] }
 evidence = "Variabeln anger personens modersmål.\ncatalog:variable_text:1092:12965:13330"
 
 [[statement]]
@@ -6757,32 +6637,14 @@ evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:sprak"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1288:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak-niva-fold"
 fields = { "sets" = ["kunskapsniva-i-sprak"] }
 evidence = "Samma begrepp är perioduppdelat med scb/aes/langlevel1.\ncatalog:occurrence:1452\ncatalog:occurrence:1721"
 
 [[statement]]
 kind = "set"
-subject = "var:sprak-niva-fold"
-fields = { "tags" = [] }
-evidence = "Samma begrepp är perioduppdelat med scb/aes/langlevel1.\ncatalog:occurrence:1452\ncatalog:occurrence:1721"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak2"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1290:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak2"
-fields = { "tags" = [] }
 evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1290:12965:13330"
 
 [[statement]]
@@ -6793,32 +6655,14 @@ evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:sprak3"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1291:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak4"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1292:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:sprak4"
-fields = { "tags" = [] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1292:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak5"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1293:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak5"
-fields = { "tags" = [] }
 evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1293:12965:13330"
 
 [[statement]]
@@ -7354,3 +7198,159 @@ relation = "continues"
 object = "scb/aes/difftype"
 at = "2022-01-01.."
 evidence = "AES DIFFTYPE: number of difficulties with participation (2011, vs933) -> any-reason indicator for not participating more (2022, vs6720); same topic, measure redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:frsprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:978\ncatalog:variable_text:978:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:frsprak2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:979\ncatalog:variable_text:979:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:langbest"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1089\ncatalog:variable_text:1089:15156:15522\ncatalog:variable_text:1089:16801:17167\ncatalog:variable_text:1089:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langbest2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1090\ncatalog:variable_text:1090:15156:15522\ncatalog:variable_text:1090:16801:17167\ncatalog:variable_text:1090:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel1"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1094\ncatalog:variable_text:1094:16801:17167\ncatalog:variable_text:1094:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1095\ncatalog:variable_text:1095:16801:17167\ncatalog:variable_text:1095:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel2-24959"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1096\ncatalog:variable_text:1096:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:langmoth"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1097\ncatalog:variable_text:1097:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langmoth2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1098\ncatalog:variable_text:1098:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langmother"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1099\ncatalog:variable_text:1099:15156:15522\ncatalog:variable_text:1099:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:langmother2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1100\ncatalog:variable_text:1100:15156:15522\ncatalog:variable_text:1100:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:langused"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1101\ncatalog:variable_text:1101:15156:15522\ncatalog:variable_text:1101:16801:17167\ncatalog:variable_text:1101:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langused-1"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1102\ncatalog:variable_text:1102:15156:15522\ncatalog:variable_text:1102:16801:17167\ncatalog:variable_text:1102:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1115\ncatalog:variable_text:1115:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1261\ncatalog:variable_text:1261:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-niva-fold"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1262\ncatalog:variable_text:1262:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1263\ncatalog:variable_text:1263:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak3"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1264\ncatalog:variable_text:1264:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak4"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1265\ncatalog:variable_text:1265:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak5"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1266\ncatalog:variable_text:1266:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1267\ncatalog:variable_text:1267:15156:15522\ncatalog:variable_text:1267:16801:17167\ncatalog:variable_text:1267:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-femte-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1268\ncatalog:variable_text:1268:15156:15522\ncatalog:variable_text:1268:16801:17167\ncatalog:variable_text:1268:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1269\ncatalog:variable_text:1269:15156:15522\ncatalog:variable_text:1269:16801:17167\ncatalog:variable_text:1269:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1270\ncatalog:variable_text:1270:15156:15522\ncatalog:variable_text:1270:16801:17167\ncatalog:variable_text:1270:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1271\ncatalog:variable_text:1271:15156:15522\ncatalog:variable_text:1271:16801:17167\ncatalog:variable_text:1271:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1272\ncatalog:variable_text:1272:15156:15522\ncatalog:variable_text:1272:16801:17167\ncatalog:variable_text:1272:18993:19358"
