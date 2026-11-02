@@ -434,8 +434,8 @@ evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:lon-vid-sjukdom-m-m"
-fields = { "sets" = ["loner", "sociala-avgifter"] }
-evidence = "Koden är opak och etiketten anger lönekomponenten.\ncatalog:variable_text:36096:13879:14245"
+fields = { "sets" = ["sociala-avgifter"] }
+evidence = "Audit correction 2026-11-02: LCS defines employer-paid sickness/parental/injury compensation as direct payments, matching tillraknade-sociala-avgifter. lon-for-ej-arbetad-tid explicitly excludes sick pay. Read-only catalog variables 35968, 35992, 35967; source definitions across all documented years."
 
 [[statement]]
 kind = "set"

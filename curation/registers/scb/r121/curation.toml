@@ -37081,18 +37081,6 @@ evidence = "L1 är en opak källkod för premieinkomst.\ncatalog:variable_text:1
 
 [[statement]]
 kind = "set"
-subject = "var:l11"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har angränsande mappningar till andra variabler.\ncatalog:occurrence:163688\ncatalog:occurrence:163823\ncatalog:occurrence:163960\ncatalog:variable_text:17696:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:l11"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har angränsande mappningar till andra variabler.\ncatalog:occurrence:163688\ncatalog:occurrence:163823\ncatalog:occurrence:163960\ncatalog:variable_text:17696:17167:17532"
-
-[[statement]]
-kind = "set"
 subject = "var:l18"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn är samtidigt mappad till en annan variabel.\ncatalog:occurrence:163830\ncatalog:occurrence:163831\ncatalog:variable_text:17697:12784:17167\ncatalog:variable_text:17697:17167:17532"
@@ -76355,8 +76343,7 @@ evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and
 kind = "set"
 subject = "forsakringsbolag: l19 @2017-01-01..2017-12-31 where key = 'v26287' and release = 'r13707'"
 fields = { "variable" = "orealiserade-forluster-l18" }
-evidence = "FRIDA insurers 2017 shift chain: L13=transfer to financial operations (old L12), L14=technical result (old L13), L15=capital-return income (old L14), L16=unrealised gains (old L15), L17=transfer from insurance operations (old L16), L18=capital-return costs (old L17), L19=unrealised losses (old L18), L20=other income (old L19). L19/v26287 retains the stale other-income label in release r13707; the shifted chain and explicit 2018-2023 L19 loss labels establish its loss meaning. Restore the 2017 L19 occurrence to the separate unrealised-losses series, retaining source text."
-caveat = "Open question (FRIDA insurers 2017 L18, continues audit #55): release r13707 has L18/v26212 labelled Kapavkast., kostnader (L17) and L18/v26224 labelled Orealiserade förluster (L18). The shift chain suggests the latter is stale, but it remains owned by l18. Assigning both rows to kapavkast-kostnader-l17 makes its existing sets/tags setters ambiguous: they expand to whole-variable membership, including both overlapping source keys. Variable addresses accept no guards, and guarded occurrence membership setters also expand to the entire variable. Existing grammar therefore cannot express a narrow metadata guard; preserve the conflict pending a separate decision rather than discard metadata or change resolver rules."
+evidence = "Audit correction 2026-11-02: FRIDA insurers: the new L2/v40681 first occurs in 2017; all 23 intact 2017 columns match the same-column 2018 key and label. L19/2017 is already assigned to unrealised losses under the accepted shifted layout. In release r13707, keep L18/v26212 as capital-return costs (old L17), keep L10/v26150 as capital-return costs (old L9), withhold the stale loss duplicates on L18/v26224 and L10/v26151, and place L11/v26224 with unrealised losses (old L10). 2018 L11/v26151 establishes that loss-series placement. Source Registerinformation.csv: rows 499180,499185,499181,499186,507840,841373; 2018 rows 318864,318865,318871."
 
 [[statement]]
 kind = "set"
@@ -76777,3 +76764,21 @@ kind = "set"
 subject = "var:vg7"
 fields = { "tags" = ["business"] }
 evidence = "The latest observation explicitly concerns fixed assets (r123); the earlier monetary accounting entries and matching business-tagged peer support business broadly (r54, r241).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:156986\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:162019\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18735"
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l18 @2017-01-01..2017-12-31 where key = 'v26224' and release = 'r13707'"
+fields = { "variable" = "none" }
+evidence = "Audit correction 2026-11-02: FRIDA insurers: the new L2/v40681 first occurs in 2017; all 23 intact 2017 columns match the same-column 2018 key and label. L19/2017 is already assigned to unrealised losses under the accepted shifted layout. In release r13707, keep L18/v26212 as capital-return costs (old L17), keep L10/v26150 as capital-return costs (old L9), withhold the stale loss duplicates on L18/v26224 and L10/v26151, and place L11/v26224 with unrealised losses (old L10). 2018 L11/v26151 establishes that loss-series placement. Source Registerinformation.csv: rows 499180,499185,499181,499186,507840,841373; 2018 rows 318864,318865,318871."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l10 @2017-01-01..2017-12-31 where key = 'v26151' and release = 'r13707'"
+fields = { "variable" = "none" }
+evidence = "Audit correction 2026-11-02: FRIDA insurers: the new L2/v40681 first occurs in 2017; all 23 intact 2017 columns match the same-column 2018 key and label. L19/2017 is already assigned to unrealised losses under the accepted shifted layout. In release r13707, keep L18/v26212 as capital-return costs (old L17), keep L10/v26150 as capital-return costs (old L9), withhold the stale loss duplicates on L18/v26224 and L10/v26151, and place L11/v26224 with unrealised losses (old L10). 2018 L11/v26151 establishes that loss-series placement. Source Registerinformation.csv: rows 499180,499185,499181,499186,507840,841373; 2018 rows 318864,318865,318871."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l11 @2017-01-01..2017-12-31 where key = 'v26224' and release = 'r13707'"
+fields = { "variable" = "orealiserade-forluster-l10" }
+evidence = "Audit correction 2026-11-02: FRIDA insurers: the new L2/v40681 first occurs in 2017; all 23 intact 2017 columns match the same-column 2018 key and label. L19/2017 is already assigned to unrealised losses under the accepted shifted layout. In release r13707, keep L18/v26212 as capital-return costs (old L17), keep L10/v26150 as capital-return costs (old L9), withhold the stale loss duplicates on L18/v26224 and L10/v26151, and place L11/v26224 with unrealised losses (old L10). 2018 L11/v26151 establishes that loss-series placement. Source Registerinformation.csv: rows 499180,499185,499181,499186,507840,841373; 2018 rows 318864,318865,318871."

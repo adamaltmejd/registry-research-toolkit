@@ -735,8 +735,8 @@ evidence = "Ursprungsland för parallellimport.\ncatalog:variable_text:56707:129
 [[statement]]
 kind = "set"
 subject = "var:patkost"
-fields = { "sets" = ["egenavgift", "expeditionskostnad"] }
-evidence = "Patientens avgift är en del av expeditionskostnaden och hör till egenavgift.\ncatalog:variable_text:56708:12965:2932897"
+fields = { "sets" = ["egenavgift"] }
+evidence = "Patientens avgift är en del av expeditionskostnaden och hör till egenavgift.\ncatalog:variable_text:56708:12965:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to egenavgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

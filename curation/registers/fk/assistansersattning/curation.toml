@@ -422,8 +422,8 @@ evidence = "Beviljade timmar för ärenden är en komponent av assistanstiden.\n
 [[statement]]
 kind = "set"
 subject = "var:timmar-andra-dubbel-assistans"
-fields = { "sets" = ["assistanstid", "dubbel-assistans"] }
-evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:65:17805:2932897"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:65:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -446,8 +446,8 @@ evidence = "Beviljade timmar för att fungera som förälder är en komponent av
 [[statement]]
 kind = "set"
 subject = "var:timmar-andra-foraldraavdrag"
-fields = { "sets" = ["assistanstid", "foraldraavdrag"] }
-evidence = "Tidsavdraget för andra behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:67:19358:2932897"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget för andra behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:67:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -614,8 +614,8 @@ evidence = "Beviljad beredskapstid är en komponent av assistanstiden.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:timmar-dubbel-assistans"
-fields = { "sets" = ["assistanstid", "dubbel-assistans"] }
-evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:81:17805:2932897"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:81:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -626,8 +626,8 @@ evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:timmar-foraldraavdrag"
-fields = { "sets" = ["assistanstid", "foraldraavdrag"] }
-evidence = "Tidsavdraget ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:82:19358:2932897"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:82:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -674,8 +674,8 @@ evidence = "Beviljade timmar för andning är en komponent av assistanstiden.\nc
 [[statement]]
 kind = "set"
 subject = "var:timmar-grund-dubbel-assistans"
-fields = { "sets" = ["assistanstid", "dubbel-assistans"] }
-evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:86:17805:2932897"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:86:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -686,8 +686,8 @@ evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:timmar-grund-foraldraavdrag"
-fields = { "sets" = ["assistanstid", "foraldraavdrag"] }
-evidence = "Tidsavdraget för grundläggande behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:87:19358:2932897"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget för grundläggande behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:87:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

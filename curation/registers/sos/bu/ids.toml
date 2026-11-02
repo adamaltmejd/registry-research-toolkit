@@ -15,9 +15,9 @@
 [variables]
 "andrat-avslut-datum-insats" = ["bu_insats: ANDRAT_AVSLUT_DATUM_INSATS"]
 "andrat-beslut-datum-insats" = ["bu_insats: ANDRAT_BESLUT_DATUM_INSATS"]
-"avsldat" = ["bu_insats_19602013: AVSLDAT"]
+"avsldat" = ["bu_plac_19602013: AVSLDAT @ 1963-01-01"]
 "besldat" = ["bu_insats_19602013: BESLDAT"]
-"datum-start-placering" = ["bu_insats_19602013: PLACDAT1"]
+"datum-start-placering" = ["bu_plac_19602013: PLACDAT1 @ 1960-01-01"]
 "debutar" = ["bu_barn_19602013: DEBUTAR"]
 "distrikt" = ["bu_insats_19602013: DISTRIKT"]
 "efter-insats" = ["bu_insats: EFTER_INSATS"]
@@ -67,3 +67,7 @@
 "vardst" = ["bu_insats_19602013: VARDST"]
 "vartbarn" = ["bu_insats_19602013: VARTBARN"]
 "fodelsedatum-fod-datumn" = ["bu_insats: FOD_DATUMN"]
+
+"datum-slut-insats" = ["bu_insats_19602013: AVSLDAT @ 1960-01-01"]
+
+"datum-forsta-placering-insats" = ["bu_insats_19602013: PLACDAT1 @ 1960-01-01"]

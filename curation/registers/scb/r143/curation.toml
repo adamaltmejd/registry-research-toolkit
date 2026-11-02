@@ -200,8 +200,8 @@ evidence = "Antal lägenheter och antal per lägenhetstyp är samma antalbegrepp
 [[statement]]
 kind = "set"
 subject = "var:antal-per-lagenhetstyp"
-fields = { "sets" = ["antal-bostadslagenheter", "lagenhetstyp-och-bestandsklassificering"] }
-evidence = "Antalsuppgifterna är uttryckligen fördelade efter lägenhetstyp och beståndsklassificering; antalbegreppet fortsätter i scb/oha/antal-lagenheter.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Antalsuppgifterna är uttryckligen fördelade efter lägenhetstyp och beståndsklassificering; antalbegreppet fortsätter i scb/oha/antal-lagenheter.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610\n\nSingle-group ruling 2026-11-02: This is a count broken down by dwelling type, not a dwelling-type code."
 
 [[statement]]
 kind = "set"

@@ -182,8 +182,8 @@ evidence = "Samma årshyra eller årsavgift är korrekt uppdelad mellan perioder
 [[statement]]
 kind = "set"
 subject = "var:bokod"
-fields = { "sets" = ["lagenhetstyp", "upplatelseform"] }
-evidence = "Den intilliggande mappningen till kategoribostad kräver identitetsgranskning; etiketten omfattar lägenhetstyp och boendeform.\ncatalog:occurrence:34047\ncatalog:occurrence:34075"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Den intilliggande mappningen till kategoribostad kräver identitetsgranskning; etiketten omfattar lägenhetstyp och boendeform.\ncatalog:occurrence:34047\ncatalog:occurrence:34075\n\nSingle-group ruling 2026-11-02: The definition distinguishes normal, special and other dwellings, not rental versus ownership tenure."
 
 [[statement]]
 kind = "set"

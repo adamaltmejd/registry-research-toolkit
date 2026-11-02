@@ -2192,8 +2192,8 @@ evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45077:16801:
 [[statement]]
 kind = "set"
 subject = "var:ulagarbskadeavgper3"
-fields = { "sets" = ["underlag-for-arbetsskadeavgift", "underlag-for-sjukforsakringsavgift"] }
-evidence = "Källkolumn och etikett anger olika avgifter.\ncatalog:occurrence-locators:variable:45078\ncatalog:variable_text:45078:16801:17167"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumn och etikett anger olika avgifter.\ncatalog:occurrence-locators:variable:45078\ncatalog:variable_text:45078:16801:17167\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to underlag-for-sjukforsakringsavgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2612,8 +2612,8 @@ evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och p
 [[statement]]
 kind = "set"
 subject = "var:underlag-summerat-for-berakning-av-allman-loneavgift"
-fields = { "sets" = ["underlag-for-allman-loneavgift", "underlag-for-sjukforsakringsavgift"] }
-evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to underlag-for-allman-loneavgift; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

@@ -332,8 +332,8 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26034:12
 [[statement]]
 kind = "set"
 subject = "var:studerat-i-sverige-pa-sfi"
-fields = { "sets" = ["deltagande-i-svenskundervisning", "studiedeltagande-i-sverige"] }
-evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to deltagande-i-svenskundervisning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

@@ -2361,7 +2361,10 @@ out: gross income goes into disposable income but is not a quantity of it. A lon
 variable gets no set. The build refuses fewer than two distinct final member variables
 at the originating curation statement, after all memberships resolve. Repeated
 occurrences of one variable never supply a second member. Artifact verification also
-checks this minimum and that every member belongs to the set's register.
+checks this minimum and that every member belongs to the set's register. Lock and build
+refuse a variable assigned to more than one set, naming every set and originating
+statement after identity resolution and before membership setters apply; tags are
+exempt.
 
 **A tag** is a curated thematic vocabulary across providers and registers, so a
 researcher can find "a measure of income" without knowing the register. A tag is broad:

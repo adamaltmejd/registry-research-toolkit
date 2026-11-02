@@ -188,12 +188,6 @@ evidence = "Area per person är ett härlett mått på bostadsarea.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:boendeform"
-fields = { "sets" = ["bostadstyp", "upplatelseform"] }
-evidence = "Koderna kombinerar bostadstyp och upplåtelseform.\ncatalog:valueset:2546\ncatalog:variable_text:26480:15340:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:boendeform"
 fields = { "tags" = ["housing"] }
 evidence = "Koderna kombinerar bostadstyp och upplåtelseform.\ncatalog:valueset:2546\ncatalog:variable_text:26480:15340:20089"
 
@@ -400,12 +394,6 @@ kind = "set"
 subject = "var:medborgarskapsland"
 fields = { "tags" = ["demographics"] }
 evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:26503:15340:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:scb-upplatform"
-fields = { "sets" = ["upplatelseform"] }
-evidence = "Variabeln kodar bostadens upplåtelseform.\ncatalog:variable_text:26507:15340:20089"
 
 [[statement]]
 kind = "set"

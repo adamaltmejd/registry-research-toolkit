@@ -17,6 +17,16 @@
     "code": "retired-id-live",
     "pid": "demo/r/concept"
   },
+  "multi-group": {
+    "command": "lock",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "variable-multiple-groups",
+    "pid": "demo/r/published",
+    "groups": {
+      "demo/r/first": "registers/demo/r/curation.toml:1",
+      "demo/r/second": "registers/demo/r/curation.toml:7"
+    }
+  },
   "variable_premise": {
     "location": "registers/demo/r/curation.toml:1",
     "code": "premise-changed",

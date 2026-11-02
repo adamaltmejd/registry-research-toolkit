@@ -272,12 +272,6 @@ evidence = "Variabeln är en kvalitetsmarkör för imputerade eller rättade dek
 [[statement]]
 kind = "set"
 subject = "var:inrikes-oms-exkl-moms"
-fields = { "sets" = ["omsattning-i-sverige"] }
-evidence = "Variabeln mäter inrikes omsättning exklusive moms.\ncatalog:variable_text:39283:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:inrikes-oms-exkl-moms"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln mäter inrikes omsättning exklusive moms.\ncatalog:variable_text:39283:13879:19358"
 
@@ -308,8 +302,8 @@ evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:39
 [[statement]]
 kind = "set"
 subject = "var:m05-forsmomspl"
-fields = { "sets" = ["momspliktig-omsattning", "omsattning-i-sverige"] }
-evidence = "Variabeln mäter momspliktig omsättning. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Variabeln mäter momspliktig omsättning. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -356,8 +350,8 @@ evidence = "Variabeln mäter hyresinkomster vid frivillig skattskyldighet.\ncata
 [[statement]]
 kind = "set"
 subject = "var:m11-omssver"
-fields = { "sets" = ["momspliktig-omsattning", "omsattning-i-sverige"] }
-evidence = "Definitionen anger momspliktig omsättning inom Sverige. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Definitionen anger momspliktig omsättning inom Sverige. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -656,8 +650,8 @@ evidence = "Variabeln mäter tjänsteexport till land utanför EU.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:m41-forssvkopare"
-fields = { "sets" = ["momsfri-omsattning", "omsattning-i-sverige"] }
-evidence = "Variabeln mäter momsfri omsättning inom Sverige. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momsfri-omsattning"] }
+evidence = "Variabeln mäter momsfri omsättning inom Sverige. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momsfri-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -752,8 +746,8 @@ evidence = "Markeringen beskriver registerkoppling.\ncatalog:variable_text:39326
 [[statement]]
 kind = "set"
 subject = "var:momsfri-omsattning"
-fields = { "sets" = ["momsfri-omsattning", "omsattning-i-sverige"] }
-evidence = "Variabeln mäter momsfri omsättning. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momsfri-omsattning"] }
+evidence = "Variabeln mäter momsfri omsättning. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momsfri-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -836,8 +830,8 @@ evidence = "Variabeln mäter total omsättning inom och utom landet.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:omsattning-i-sverige"
-fields = { "sets" = ["momspliktig-omsattning", "omsattning-i-sverige"] }
-evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige moms2007. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige moms2007. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -848,8 +842,8 @@ evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder me
 [[statement]]
 kind = "set"
 subject = "var:omsattning-i-sverige-moms2007"
-fields = { "sets" = ["momspliktig-omsattning", "omsattning-i-sverige"] }
-evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige; moms2007 finns i källans etikett. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige; moms2007 finns i källans etikett. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
