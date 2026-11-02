@@ -11278,3 +11278,9 @@ kind = "set"
 subject = "var:utbnojd"
 fields = { "sets" = ["nojdhet-med-utbildningen"] }
 evidence = "The operational definition asks satisfaction with the completed upper-secondary education, supported by satisfaction categories (r138, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30095\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064"
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr98f @2000-03-01..2000-03-31 where key = 'v41838'"
+fields = { "label" = "Huvudsaklig sysselsättning juni 1998" }
+evidence = "Part of #2040. scb/intradet-pa-arbetsmarknaden/huvudsaklig-sysselsattning-juni-1998: Restore missing separator between month and year in juni1998. Reviewed occurrence label: Huvudsaklig sysselsättning juni1998"
