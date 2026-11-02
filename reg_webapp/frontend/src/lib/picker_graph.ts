@@ -4,8 +4,7 @@
  * unit-tested in `picker_graph.test.ts`. The renderer stays presentational over
  * these. A CLASSIFICATION node is a POINT at `version_year` (an edition is not
  * "dead" after its successor), ordered into an edition sequence. Variable nodes
- * are drawn by the LaneGraph (`picker_lanes.ts`); here they only join clusters
- * and gate representation-grain edges.
+ * only join clusters and gate representation-grain edges here.
  *
  * Clusters group nodes sharing `group_key` under a `group_label` heading (Fork B);
  * both node kinds carry a `group_label` (a variable's concept-group label, a

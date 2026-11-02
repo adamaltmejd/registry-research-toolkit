@@ -1,0 +1,4 @@
+/* Short structural values stay legible; the shared table owns horizontal scroll. */
+.atomic {
+  white-space: nowrap;
+}

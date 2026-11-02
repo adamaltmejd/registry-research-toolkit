@@ -6,6 +6,7 @@ import { TableView } from "./TableView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
+import { VariableView } from "./VariableView";
 
 // Retained for the disconnected authoring views restored in later workstreams.
 export interface PeriodProps {
@@ -54,6 +55,8 @@ export function CatalogNodeView({ fqidPath }: { fqidPath: string }) {
       return <RegisterView node={node} />;
     case "table":
       return <TableView node={node} />;
+    case "variable":
+      return <VariableView key={node.fqid} node={node} />;
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>

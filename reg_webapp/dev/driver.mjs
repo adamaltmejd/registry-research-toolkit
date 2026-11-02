@@ -1,6 +1,6 @@
 // Shell and browse-search flows × four viewports, against the source-built
 // webapp-dev fixture. Run from reg_webapp/frontend via dev.sh flows; screenshots
-// land in the required <out-dir>. Variable and project scenarios return in W3–W5.
+// land in the required <out-dir>. Project scenarios return in W5.
 import { existsSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -79,7 +79,6 @@ async function launchBrowser() {
   }
   throw new Error(`driver: chromium would not launch\n${failures.join("\n\n")}`);
 }
-const browser = await launchBrowser();
 
 // Print the page's console errors and uncaught exceptions. The returned array
 // is the ledger of exception messages, which each case asserts is empty.
@@ -296,6 +295,48 @@ async function browsePagesCase(page, shoot) {
   check((await code.getAttribute("aria-expanded")) === "false", "keyboard activation did not collapse the finding code");
 }
 
+// #2056, browser boundary over webapp-dev's Antal occurrences, provider text
+// and variable notice. Fails if variable dispatch or cross-table segments are
+// lost, evidence is fetched eagerly, or reopening refetches it. Existing cases
+// only browse register/table pages and never request variable evidence.
+async function browseVariableCase(page, shoot) {
+  const evidenceRequests = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).searchParams.get("evidence") === "true") {
+      evidenceRequests.push(request.url());
+    }
+  });
+  const main = page.getByRole("main");
+  await main.locator('a[href="/catalog/demo/hush/antal"]').click();
+  await page.waitForURL("**/catalog/demo/hush/antal");
+  await settled(page);
+  const segments = main.locator("section").filter({ has: page.getByRole("heading", { name: "Segments", exact: true }) });
+  await segments.locator('a[href="/catalog/demo/hush/fam"]').first().waitFor();
+  await segments.locator('a[href="/catalog/demo/hush/ind"]').first().waitFor();
+  check(
+    (await segments.getByRole("row").count()) >= 3,
+    "the variable lost its segments across the family and individual tables",
+  );
+  const source = main.getByRole("button", { name: "Source and provenance", exact: true });
+  check((await source.getAttribute("aria-expanded")) === "false", "source and provenance must start collapsed");
+  check(evidenceRequests.length === 0, "variable evidence was fetched before opening its disclosure");
+  await shoot("browse-variable");
+  await source.click();
+  await settled(page);
+  check(evidenceRequests.length === 1, "opening source and provenance must issue exactly one evidence request");
+  const sourcePanel = main.locator(`[id="${await source.getAttribute("aria-controls")}"]`);
+  await sourcePanel.getByRole("button", { name: /^Provider wording/ }).first().click();
+  await sourcePanel.getByText("Antal personer i hushållet vid årets slut.", { exact: true }).waitFor();
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
+  await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
+  await shoot("browse-variable-evidence");
+  await source.click();
+  await source.click();
+  await settled(page);
+  check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
+}
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -309,10 +350,13 @@ async function menuGone(page) {
 // Each viewport gets fresh storage and its own page-error ledger.
 async function runCase(viewport, name, body, route) {
   const label = `${viewport.width}x${viewport.height}`;
-  const context = await browser.newContext({ viewport });
-  const page = await context.newPage();
-  const pageErrors = logPageOutput(page);
+  // Single-process Chromium exits when its context closes. Give each case its
+  // own browser so the sandbox fallback can run more than the first scenario.
+  const browser = await launchBrowser();
   try {
+    const context = await browser.newContext({ viewport });
+    const page = await context.newPage();
+    const pageErrors = logPageOutput(page);
     await open(page, route);
     await settled(page);
     await body(page, (shot) => capture(page, `${shot}-${label}`));
@@ -325,11 +369,11 @@ async function runCase(viewport, name, body, route) {
     console.log(`flows: FAIL ${name} ${label} route=${route} — ${e.message}`);
     throw e;
   } finally {
-    await context.close();
+    await browser.close();
   }
 }
 
-try {
+{
   mkdirSync(outDir, { recursive: true });
   const scenarios = {
     "browse-pages": {
@@ -341,6 +385,11 @@ try {
       shots: 2,
       route: "/catalog/demo/bas",
       run: browseSearchCase,
+    },
+    "browse-variable": {
+      shots: 2,
+      route: "/catalog/demo/hush",
+      run: browseVariableCase,
     },
   };
   for (const name of selection) {
@@ -362,6 +411,4 @@ try {
     `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
       `${shots * FLOW_VIEWPORTS.length} shots`,
   );
-} finally {
-  await browser.close();
 }
