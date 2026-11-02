@@ -35,6 +35,19 @@
     "original_count": 1,
     "grown_count": 3
   },
+  "shared_objects": {
+    "object_count": 3,
+    "statement_count": 2,
+    "locations": [
+      "registers/demo/r/curation.toml:1",
+      "registers/demo/r/curation.toml:7"
+    ],
+    "code": "premise-changed",
+    "object_refusals": {
+      "digest": "object digest mismatch",
+      "missing": "missing object"
+    }
+  },
   "tag_text": ["Inkomst", "Personers och hushålls inkomster."],
   "reworded_definition": "Inkomster för personer och hushåll."
 }
