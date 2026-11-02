@@ -1,5 +1,5 @@
 {
-  "note": "Fails if occurrence descriptions replace definitions, lose concurrent table-specific texts or period gaps, fail to merge adjacent equal texts, or are omitted from compiled variable search and its facets. Expected texts and periods come from the descriptions source fixture and curation.",
+  "note": "Fails if occurrence descriptions replace definitions, lose concurrent table-specific texts or period gaps, fail to merge adjacent equal texts, or are omitted from compiled variable search and its facets. The Concurrent query must still match in the 2021 gap through the variable hull. Expected texts and periods come from the descriptions source fixture and curation. Also fails if indexing descriptions reverses the two equal-label primary hits (Weighted is shorter than Comparator before descriptions), duplicates a primary hit in the fallback, or loses an AND across source definition and supplementary description.",
   "fixture": "descriptions",
   "requests": [
     {
@@ -20,7 +20,7 @@
       "query": {
         "q": "Concurrent",
         "type": "variable",
-        "period": "2019"
+        "period": "2021"
       }
     },
     {
@@ -28,6 +28,44 @@
       "path": "/api/search/facets",
       "query": {
         "q": "Revised"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Source Historical",
+        "type": "variable"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Vikt",
+        "type": "variable",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Vikt",
+        "type": "variable",
+        "limit": 1
+      },
+      "cursor_from": [
+        5,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search_facets",
+      "path": "/api/search/facets",
+      "query": {
+        "q": "Vikt",
+        "register": "demo/descriptions"
       }
     }
   ]

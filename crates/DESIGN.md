@@ -2091,9 +2091,10 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 
 ## Search
 
-`search` and `search_facets` read one FTS5 index, `search` (columns `name`: pid and
-delivered spellings; `label`: labels; `body`: definitions, descriptions and document
-text), whose rowid is `search_item.id`. The builder indexes raw text under
+`search` and `search_facets` read the primary FTS5 index `search` (columns `name`: pid
+and delivered spellings; `label`: labels; `body`: definitions, register/table
+descriptions and document text), plus `search_description` for supplementary occurrence
+text. Both use `search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
 of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
 A call returns one ranked list.
@@ -2105,10 +2106,12 @@ A call returns one ranked list.
    characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
-2. **Rank.** `bm25(search, 10.0, 5.0, 1.0)` (name, label, body), ascending. FTS5 scores
-   a row by its weighted hit count against its whole token count, so a hit weighs most
-   in an id or spelling and least in a definition or document text: a variable labelled
-   `Vikt` ranks above a longer one whose definition says vikt.
+2. **Rank.** Primary matches first, then description matches absent from the primary
+   match set. Within each index, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
+   ascending. The primary corpus and its scores are unaffected by descriptions. FTS5
+   scores a row by its weighted hit count against its whole token count, so a hit weighs
+   most in an id or spelling and least in a definition or document text: a variable
+   labelled `Vikt` ranks above a longer one whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
    `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
    unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
@@ -2134,41 +2137,29 @@ A call returns one ranked list.
    - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.
-7. **Facets.** One `GROUP BY register_id` over the match with `kind = 'variable'`,
-   registers in pid order, each `{fqid, variable_matches}`. With `register` (resolved as
-   in 4), only that register, adding `variables`: every matched variable `{fqid, name}`
-   in pid order, `limit` ignored; `registers: []` when none matches. Without it, `limit`
-   adds `name` and the first `limit` matched variables in pid order. With neither,
-   counts only. A key a mode does not list is omitted, never `null`.
+7. **Facets.** One `GROUP BY register_id` over the deduplicated matches with
+   `kind = 'variable'`, registers in pid order, each `{fqid, variable_matches}`. With
+   `register` (resolved as in 4), only that register, adding `variables`: every matched
+   variable `{fqid, name}` in pid order, `limit` ignored; `registers: []` when none
+   matches. Without it, `limit` adds `name` and the first `limit` matched variables in
+   pid order. With neither, counts only. A key a mode does not list is omitted, never
+   `null`.
 
-**Occurrence descriptions (#2039).** The builder appends each variable's distinct,
-nonempty used-occurrence descriptions to its FTS `body`, after definitions and
-operational definitions, deduplicating equal text. They participate in the existing
-low-weight body rank and in facets; search hits keep their definition field and `show`
-supplies the descriptions with their table and periods. The period filter still selects
-the variable's coverage hull, not the date of the matching text (as for historical
-definitions). A match therefore does not assert that its wording applies throughout the
-returned hull. No reader-side scan, second index or schema change is needed. Existing
-catalogs gain these matches only after a coordinated rebuild.
+**Occurrence descriptions (#2039).** Each variable's distinct, nonempty used-occurrence
+descriptions live in the separate `search_description` FTS, alongside its primary name,
+labels, definitions and operational definitions so AND queries can span both kinds of
+text. Text equal to a definition or operational definition is not added twice. Primary
+hits retain their scores and positions; only new matches follow, ranked by the same
+weights and ties. Facets count each variable once. Search hits keep their definition
+field; `show` supplies description texts with their tables and periods. The period
+filter still selects the variable's coverage hull, not the date of the matching text (as
+for historical definitions), so a match does not assert that its wording applies
+throughout the hull. The additional index requires catalog schema 5.
 
-Measurement on 2026-11-02, `labelfix2-pr-ev/reg_meta.db` (1,231,941,632 bytes),
-read-only in place: 22,984 description overrides, 22,539 on used occurrences. The
-indexed occurrence/override lookup over 1,970 described variables took median 0.052 ms,
-p95 0.242 ms after clearing SQLite's connection cache. HTTP with the dev binary, 100
-first requests for the most-described variables: baseline/new p95 2.86/4.56 ms; maximum
-response 15,510/17,684 bytes. Repeat requests for the largest occurrence count were p95
-3.66/5.12 ms, response 3,253/3,980 bytes. These are fresh SQLite connections with an
-uncontrolled, warm OS cache, not a cold-disk or production latency guarantee.
-
-One disposable copy measured the FTS change without a real-seed build: reconstruct
-affected rows from their indexed token positions, append distinct descriptions, and
-optimize. 1,779 variable rows gained 111,398 UTF-8 bytes of text after deduplication
-against definitions/opdefs. FTS pages grew 74,018,816 → 74,100,736 bytes (80 KiB,
-0.11%); the unvacuumed probe file grew 5,054,464 bytes including free pages, not a
-prediction of packed build size. Across 50 variable searches (ten each of `inkomst`,
-`barn`, `utbildning`, `pension`, `arbete`), baseline/probe p95 was 14.59/14.14 ms; local
-scheduling noise prevents a speedup claim. The copy was deleted immediately. The
-coordinator's real build remains the check of final artifact size and indexing.
+Measured `show` p95 was 2.86 → 4.56 ms with warm OS cache, and the separate description
+index added 872 KiB (1.21%) to FTS pages. Unlike appending descriptions to primary rows,
+the separate index preserved all baseline top-10 items and existing name/label hit ranks
+across 25 probe queries.
 
 `resolve` is different: exact `fold_identity` lookup of delivered column names, no
 full-text fallback and no scoring. It maps known headers; it is not discovery.

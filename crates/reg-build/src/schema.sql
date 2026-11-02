@@ -547,3 +547,12 @@ CREATE VIRTUAL TABLE search USING fts5(
   tokenize = 'unicode61 remove_diacritics 0',
   prefix = '2 3'
 );
+
+-- Supplementary occurrence text with the primary row's name, label and body as
+-- context for AND queries. Keeping a separate corpus preserves primary BM25 scores.
+CREATE VIRTUAL TABLE search_description USING fts5(
+  name, label, body,
+  content = '',
+  tokenize = 'unicode61 remove_diacritics 0',
+  prefix = '2 3'
+);

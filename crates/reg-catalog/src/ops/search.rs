@@ -25,7 +25,18 @@ const TYPES: &[&str] = &[
 const DEPTH: usize = 1000;
 
 /// The rank (rule 2) and its ties (rule 3).
-const ORDER: &str = "bm25(search, 10.0, 5.0, 1.0), i.kind, i.sort_key";
+const ORDER: &str = "m.tier, m.rank, i.kind, i.sort_key";
+
+// Keep the original corpus and its scores unchanged. Only description matches that
+// miss the primary index follow it, with base text retained for cross-field ANDs.
+const MATCHES: &str = "WITH matched AS (
+    SELECT rowid AS id, 0 AS tier, bm25(search, 10.0, 5.0, 1.0) AS rank
+    FROM search WHERE search MATCH ?1
+    UNION ALL
+    SELECT rowid, 1, bm25(search_description, 10.0, 5.0, 1.0)
+    FROM search_description WHERE search_description MATCH ?1
+      AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
+)";
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -201,9 +212,10 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
     let mut rows: Vec<(i64, String, Option<i64>, String)> = conn
         .prepare(&format!(
-            "SELECT i.id, i.kind, i.entity_id, i.sort_key
-             FROM search JOIN search_item i ON i.id = search.rowid
-             WHERE search MATCH ?1
+            "{MATCHES}
+             SELECT i.id, i.kind, i.entity_id, i.sort_key
+             FROM matched m JOIN search_item i ON i.id = m.id
+             WHERE 1 = 1
                AND (?2 IS NULL OR i.kind = ?2)
                AND (?3 IS NULL OR i.register_id = ?3)
                AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end))
@@ -406,17 +418,18 @@ fn facets(
     limit: Option<usize>,
 ) -> Result<Vec<RegisterFacet>, Error> {
     let mut registers: Vec<(i64, RegisterFacet)> = conn
-        .prepare(
-            "SELECT r.id, r.pid, n.body, m.matches
+        .prepare(&format!(
+            "{MATCHES}
+             SELECT r.id, r.pid, n.body, m.matches
              FROM (SELECT i.register_id AS id, COUNT(*) AS matches
-                   FROM search JOIN search_item i ON i.id = search.rowid
-                   WHERE search MATCH ?1 AND i.kind = 'variable'
+                   FROM matched m JOIN search_item i ON i.id = m.id
+                   WHERE i.kind = 'variable'
                      AND (?2 IS NULL OR i.register_id = ?2)
                    GROUP BY i.register_id) m
                JOIN register r ON r.id = m.id
                JOIN text n ON n.id = r.name_text
-             ORDER BY r.pid",
-        )?
+             ORDER BY r.pid"
+        ))?
         .query_map(params![expression, register], |row| {
             Ok((
                 row.get(0)?,
@@ -443,18 +456,19 @@ fn facets(
     };
     let mut variables: BTreeMap<i64, Vec<FacetVariable>> = BTreeMap::new();
     let rows = conn
-        .prepare(
-            "SELECT register_id, pid, label FROM (
+        .prepare(&format!(
+            "{MATCHES}
+             SELECT register_id, pid, label FROM (
                SELECT i.register_id, v.pid, l.body AS label,
                       ROW_NUMBER() OVER (PARTITION BY i.register_id ORDER BY v.pid) AS n
-               FROM search JOIN search_item i ON i.id = search.rowid
+               FROM matched m JOIN search_item i ON i.id = m.id
                  JOIN variable v ON v.id = i.entity_id
                  JOIN text l ON l.id = v.label_text
-               WHERE search MATCH ?1 AND i.kind = 'variable'
+               WHERE i.kind = 'variable'
                  AND (?2 IS NULL OR i.register_id = ?2))
              WHERE n <= ?3
-             ORDER BY register_id, pid",
-        )?
+             ORDER BY register_id, pid"
+        ))?
         .query_map(params![expression, register, listed], |row| {
             Ok((
                 row.get::<_, i64>(0)?,

@@ -21,3 +21,9 @@ kind = "set"
 subject = "other: Measure @2019"
 fields.description = "Concurrent supplement"
 evidence = "Synthetic concurrent tables disagree."
+
+[[statement]]
+kind = "set"
+subject = "main: Weighted @2019"
+fields.description = "Supplementary weighting evidence"
+evidence = "Equal labels: Weighted has the shorter primary row, but appending its description would make it longer than Comparator."
