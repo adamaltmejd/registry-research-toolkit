@@ -904,5 +904,5 @@ evidence = "Definition pass 2026-11-02: The variable specifies the intervention 
 [[statement]]
 kind = "set"
 subject = "var:insats-form"
-fields = { "description" = "Insatsens lagrum, kodat som SoL-vård, omedelbart omhändertagande enligt LVU eller LVU-vård." }
-evidence = "Definition pass 2026-11-02: The coded legal basis is BU intervention form, not a separate placement form.\nrel070-base/reg_meta.db:occurrence:520875"
+fields = { "description" = "Insatsens lagrum: placering enligt 4 kap. 1 § SoL, omedelbart omhändertagande enligt 6 § LVU eller vård enligt 2 eller 3 § LVU." }
+evidence = "Definition pass 2026-11-02: The coded legal basis is BU intervention form, not a separate placement form.\nrel070-base/reg_meta.db:occurrence:520875\n\nDefinition-pass audit follow-up 2026-11-02: Use the actual 2018 INSATS_FORM code labels, not the older INSTYP wording.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:520875\nrel070-base/reg_meta.db:valueset:6376:codes:02,05,26"

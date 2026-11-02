@@ -6454,3 +6454,9 @@ kind = "set"
 subject = "var:medborgarskap"
 fields = { "description" = "Anger om sökande eller medsökande i hushållet är utrikesfödd." }
 evidence = "Definition pass 2026-11-02: Both the definition and the binary valueset concern foreign birth rather than citizenship.\nrel070-base/reg_meta.db:occurrence:521392"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalning-livsforing-ovrigt"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt avseende hälso- och sjukvård har betalats ut under respektive månad." }
+evidence = "Definition-pass audit follow-up 2026-11-02: HSIND is the monthly health-care subcategory payment marker; HSIND01–12 explicitly identify the same subcategory and HSBEL/HSBELOPP distinguish its amount fields. Stay ungrouped.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:521849\nrel070-base/reg_meta.db:occurrences:521457-521468,521847-521848"

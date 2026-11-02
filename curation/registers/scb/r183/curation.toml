@@ -1250,8 +1250,8 @@ evidence = "Källan avser investeringar i fastighetsinköp.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:investeringar-verkstallda-maskiner"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251580\ncatalog:occurrence:251589"
+fields = { "sets" = ["investeringar-i-maskiner-och-inventarier"] }
+evidence = "Definition-pass audit follow-up 2026-11-02: Source key v2786 measures annual completed machinery/equipment investment and is an explicit candidate member. BKbyggm is a shared spelling; it does not make v2786 the planned v2826 measure.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:250940\nrel070-base/reg_meta.db:occurrence:251032\nrel070-base/reg_meta.db:occurrence:251124\nrel070-base/reg_meta.db:occurrence:251216\nrel070-base/reg_meta.db:occurrence:251308\nrel070-base/reg_meta.db:occurrence:251400\nrel070-base/reg_meta.db:occurrence:251491\nrel070-base/reg_meta.db:occurrence:251580\nrel070-base/reg_meta.db:occurrence:251632\nrel070-base/reg_meta.db:occurrence:251683\nrel070-base/reg_meta.db:occurrence:251734\nrel070-base/reg_meta.db:occurrence:251788\nrel070-base/reg_meta.db:occurrence:251879\nrel070-base/reg_meta.db:occurrence:251970\nrel070-base/reg_meta.db:occurrence:252062\nrel070-base/reg_meta.db:occurrence:252145\nrel070-base/reg_meta.db:occurrence:252228\nrel070-base/reg_meta.db:occurrence:252311"
 
 [[statement]]
 kind = "set"
