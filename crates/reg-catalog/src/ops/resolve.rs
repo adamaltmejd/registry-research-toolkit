@@ -108,6 +108,7 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
             );
         }
         matches.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        matches.dedup_by(|a, b| a.fqid == b.fqid);
         columns.push(ResolvedColumn {
             column: (*column).to_owned(),
             status: match matches.len() {

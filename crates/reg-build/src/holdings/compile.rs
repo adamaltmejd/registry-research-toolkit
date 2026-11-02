@@ -181,8 +181,8 @@ fn notice(
 }
 
 #[derive(Clone)]
-struct Candidate {
-    segment: Segment,
+pub(super) struct Candidate {
+    pub segment: Segment,
     spans: Vec<Span>,
     carried: bool,
     caveat: Option<String>,
@@ -190,7 +190,7 @@ struct Candidate {
     locator: String,
 }
 
-fn candidates(
+pub(super) fn candidates(
     table: &input::Table,
     column: &census::Column,
     decision: Option<&input::Column>,
@@ -291,6 +291,67 @@ fn candidates(
     Ok(out)
 }
 
+pub(super) enum Placement<'a> {
+    Accepted(Span, &'a Candidate),
+    Blocked(Span, &'static str, &'static str),
+}
+
+/// Apply interval-local ownership once for both emission and publication verification.
+pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, String> {
+    let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
+    for candidate in candidates {
+        by_table
+            .entry(&candidate.segment.table)
+            .or_default()
+            .push(candidate);
+    }
+    let mut placements = Vec::new();
+    for cs in by_table.values() {
+        let cuts: BTreeSet<_> = cs
+            .iter()
+            .flat_map(|c| c.spans.iter().flat_map(|(a, b)| [*a, *b]))
+            .collect();
+        let cuts: Vec<_> = cuts.into_iter().collect();
+        for pair in cuts.windows(2) {
+            let span = (pair[0], pair[1]);
+            let active: Vec<_> = cs
+                .iter()
+                .filter(|c| covered(&[span], &c.spans))
+                .copied()
+                .collect();
+            if active.is_empty() {
+                continue;
+            }
+            let owners: BTreeSet<_> = active.iter().map(|c| &c.segment.variable).collect();
+            if owners.len() > 1 {
+                placements.push(Placement::Blocked(span, "ambiguous_delivered_owners",
+                    "Distinct documented owners claim this physical column over the contested interval"));
+                continue;
+            }
+            if active.iter().any(|c| c.segment.state == "ambiguous") {
+                placements.push(Placement::Blocked(
+                    span,
+                    "ambiguous_catalog_segment",
+                    "Catalog ambiguity cannot be cleared by a physical owner choice",
+                ));
+                continue;
+            }
+            // Final preference has already been resolved into catalog segments.
+            let c = active[0];
+            if active.iter().any(|other| {
+                other.carried != c.carried || other.caveat != c.caveat || other.window != c.window
+            }) {
+                return Err(
+                    "inventory_cell_conflict: incompatible declarations of the same placement"
+                        .into(),
+                );
+            }
+            placements.push(Placement::Accepted(span, c));
+        }
+    }
+    Ok(placements)
+}
+
 /// Emit only uncontested interval slices. Distinct variables remain rival owners;
 /// several routes to the same variable are separate valid placements.
 #[allow(clippy::too_many_lines)]
@@ -321,100 +382,57 @@ fn placements(
         )?;
         return Ok(Vec::new());
     }
-    let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
-    for candidate in candidates {
-        by_table
-            .entry(&candidate.segment.table)
-            .or_default()
-            .push(candidate);
-    }
     let mut accepted = Vec::new();
     let mut admitted = Vec::new();
     let mut documented = Vec::new();
-    for cs in by_table.values() {
-        let cuts: BTreeSet<_> = cs
-            .iter()
-            .flat_map(|c| c.spans.iter().flat_map(|(a, b)| [*a, *b]))
-            .collect();
-        let cuts: Vec<_> = cuts.into_iter().collect();
-        for pair in cuts.windows(2) {
-            let span = (pair[0], pair[1]);
-            let active: Vec<_> = cs
-                .iter()
-                .filter(|c| covered(&[span], &c.spans))
-                .copied()
-                .collect();
-            if active.is_empty() {
-                continue;
-            }
-            documented.push(span);
-            let owners: BTreeSet<_> = active.iter().map(|c| &c.segment.variable).collect();
-            if owners.len() > 1 {
+    for placement in plan(candidates)? {
+        let (span, c) = match placement {
+            Placement::Accepted(span, c) => (span, c),
+            Placement::Blocked(span, code, message) => {
+                documented.push(span);
                 notice(
                     db,
                     holding,
                     Some(column),
-                    "ambiguous_delivered_owners",
+                    code,
                     Some(span),
                     (&[], &[], &[]),
-                    "Distinct documented owners claim this physical column over the contested interval",
+                    message,
                     locator,
                 )?;
                 continue;
             }
-            if active.iter().any(|c| c.segment.state == "ambiguous") {
-                notice(
-                    db,
-                    holding,
-                    Some(column),
-                    "ambiguous_catalog_segment",
-                    Some(span),
-                    (&[], &[], &[]),
-                    "Catalog ambiguity cannot be cleared by a physical owner choice",
-                    locator,
-                )?;
-                continue;
-            }
-            // Final preference has already been resolved into catalog segments.
-            let c = active[0];
-            if active.iter().any(|other| {
-                other.carried != c.carried || other.caveat != c.caveat || other.window != c.window
-            }) {
-                return Err(
-                    "inventory_cell_conflict: incompatible declarations of the same placement"
-                        .into(),
-                );
-            }
-            db.execute("INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,caveat,window,locator)
+        };
+        documented.push(span);
+        db.execute("INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,caveat,window,locator)
               VALUES(?,?,?,?,?,?,?,?,?,?)",params![column,c.segment.table,c.segment.variable,span.0,span.1,c.segment.role,
               c.carried,c.caveat,c.window,c.locator]).map_err(|_|"inventory_cell_conflict: duplicate placement".to_owned())?;
-            if c.segment.state == "preliminary" {
-                notice(
-                    db,
-                    holding,
-                    Some(column),
-                    "preliminary_data",
-                    Some(span),
-                    (&[], &[], &[]),
-                    "Documented coverage is preliminary",
-                    &c.locator,
-                )?;
-            }
-            if let Some(caveat) = &c.caveat {
-                notice(
-                    db,
-                    holding,
-                    Some(column),
-                    "mapping_caveat",
-                    Some(span),
-                    (&[], &[], &[]),
-                    caveat,
-                    &c.locator,
-                )?;
-            }
-            admitted.push(span);
-            accepted.push(c.segment.clone());
+        if c.segment.state == "preliminary" {
+            notice(
+                db,
+                holding,
+                Some(column),
+                "preliminary_data",
+                Some(span),
+                (&[], &[], &[]),
+                "Documented coverage is preliminary",
+                &c.locator,
+            )?;
         }
+        if let Some(caveat) = &c.caveat {
+            notice(
+                db,
+                holding,
+                Some(column),
+                "mapping_caveat",
+                Some(span),
+                (&[], &[], &[]),
+                caveat,
+                &c.locator,
+            )?;
+        }
+        admitted.push(span);
+        accepted.push(c.segment.clone());
     }
     let admitted = merge(admitted);
     if admitted.is_empty() {

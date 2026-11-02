@@ -1,4 +1,15 @@
 {
+  "attested_resolve": {
+    "columns": [
+      {
+        "column": "Old",
+        "status": "matched",
+        "matches": [
+          {"fqid": "demo/held/value", "name": "Value", "register": "demo/held", "alias": "delivered"}
+        ]
+      }
+    ]
+  },
   "tables": 9,
   "columns": 26,
   "storage_extra_columns": "1",

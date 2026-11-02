@@ -180,6 +180,8 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # while retaining source coordinates and consistent mapped/unmatched accounting.
     # Mutations also fail if stored delivery bounds replace authored bounds, if a
     # child data cell is carried as a key, or if a projection loses its parent key.
+    # Swapping Code/Year must refuse even though both targets have compatible coverage:
+    # explicit Code decisions and automatic Year spellings bind physical associations.
     verify_refusals(tmp_path, outputs[0], base, root)
 
 
@@ -769,6 +771,18 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     (tmp_path / "reg_meta.db").symlink_to(base)
     pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
     try:
+        # Fails if reference and steward occurrences of one canonical variable
+        # count as rival matches. The earlier cases have distinct identities;
+        # this oracle uses Old's shared identity and label in both source fixtures.
+        expected_resolve = json.loads((HOLDINGS_CASE / "expected.json").read_text())[
+            "attested_resolve"
+        ]
+        for query in [{"columns": "Old"}, {"columns": "Old", "register": "demo/held"}]:
+            resolved = pool.client(artifact_env(output)).get(
+                "/api/resolve", params=query
+            )
+            assert resolved.status_code == 200, resolved.text
+            assert resolved.json()["data"] == expected_resolve
         answer = pool.client(artifact_env(output)).get("/api/coverage/demo/held/value")
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]

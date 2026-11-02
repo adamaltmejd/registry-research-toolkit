@@ -1556,8 +1556,10 @@ recorded in the holdings file, then independently re-reads the census and storag
 export. Every census table and exact physical column must be present, with no extra
 coordinates; offered columns must match the source schema, table type, storage type,
 length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
-Refusals locate source rows/column ordinals or artifact table/column ids without
-printing private physical identifiers.
+Each stored physical association is checked against the admitted explicit mapping or
+automatic spelling match over its interval; a different association refuses with located
+`holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
+artifact table/column ids without printing private physical identifiers.
 
 The census is the authority for physical possession (maintainer, 2026-11-02), and its
 replacement is an ordinary pinned input change followed by recompilation. Reviewed
