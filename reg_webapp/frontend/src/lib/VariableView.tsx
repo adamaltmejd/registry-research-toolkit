@@ -14,7 +14,11 @@ import {
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref, formatDataType } from "./catalog";
+import {
+  catalogHref,
+  formatDataType,
+  humanizeClassificationSlug,
+} from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
@@ -30,6 +34,7 @@ import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead } from "./use_store_read";
+import { ValueSetView } from "./ValueSetView";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 
@@ -75,12 +80,10 @@ export function ValueSetLabel({
       <Button className={variableStyles.valueSet}>
         <span className={variableStyles.firstName}>{names[0]}</span>
         {names.length > 1 && (
-          <>
+          <span className={variableStyles.more}>
             {" "}
-            <span className={variableStyles.more}>
-              and {names.length - 1} more
-            </span>
-          </>
+            and {names.length - 1} more
+          </span>
         )}
       </Button>
       <Tooltip
@@ -126,6 +129,9 @@ export function VariableView({ node }: { node: VariableShow }) {
       varying.some((field) => field.term === fact.term),
     ),
   }));
+  const hasCoding = rows.some(
+    (row) => row.value_set !== null || row.classification !== null,
+  );
   return (
     <article className={styles.page}>
       <Definitions
@@ -210,7 +216,7 @@ export function VariableView({ node }: { node: VariableShow }) {
                 {
                   key: "table",
                   label: "Table",
-                  width: varying.length ? "20%" : "25%",
+                  width: varying.length ? "13%" : "18%",
                 },
                 {
                   key: "period",
@@ -220,18 +226,22 @@ export function VariableView({ node }: { node: VariableShow }) {
                 {
                   key: "spelling",
                   label: "Spelling",
-                  width: varying.length ? "18%" : "20%",
+                  width: varying.length ? "11%" : "15%",
                 },
                 {
                   key: "storage",
                   label: "Storage",
-                  width: varying.length ? "13%" : "14%",
+                  width: "14%",
                 },
-                {
-                  key: "value_set",
-                  label: "Value set",
-                  width: varying.length ? "22%" : "28%",
-                },
+                ...(hasCoding
+                  ? [
+                      {
+                        key: "value_set" as const,
+                        label: "Value set",
+                        width: varying.length ? "35%" : "40%",
+                      },
+                    ]
+                  : []),
                 ...(varying.length
                   ? [{ key: "notes" as const, label: "Notes", width: "14%" }]
                   : []),
@@ -258,7 +268,21 @@ export function VariableView({ node }: { node: VariableShow }) {
                   case "storage":
                     return <Storage row={row} />;
                   case "value_set":
-                    return <ValueSetLabel valueSet={row.value_set} />;
+                    return (
+                      <span className={variableStyles.valueSetCell}>
+                        <ValueSetLabel valueSet={row.value_set} />
+                        {row.classification && (
+                          <a
+                            className={`link ${variableStyles.classification}`}
+                            href={catalogHref(row.classification)}
+                          >
+                            {humanizeClassificationSlug(
+                              row.classification.split("/").at(-1) ?? "",
+                            )}
+                          </a>
+                        )}
+                      </span>
+                    );
                   case "notes":
                     return (
                       <ul
@@ -279,6 +303,7 @@ export function VariableView({ node }: { node: VariableShow }) {
           <EmptyState title="No segments recorded for this variable." />
         )}
       </Panel>
+      {segments.data && <ValueSetView segments={segments.data} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
       <Disclosure
         className={styles.disclosure}

@@ -22,3 +22,36 @@ export function sourcePeriodLabel(period: unknown): string | null {
     ? "Unbounded"
     : renderIntervals(parsed.intervals);
 }
+
+/** Coalesce half-open segment periods before displaying coverage runs. */
+export function catalogPeriodRuns(periods: readonly CatalogPeriod[]): string {
+  const sorted = periods
+    .map((period) => ({ ...period }))
+    .sort((a, b) =>
+      a.start === b.start
+        ? 0
+        : a.start === null
+          ? -1
+          : b.start === null
+            ? 1
+            : a.start < b.start
+              ? -1
+              : 1,
+    );
+  const runs: CatalogPeriod[] = [];
+  for (const period of sorted) {
+    const last = runs.at(-1);
+    if (
+      last &&
+      (last.end === null || period.start === null || period.start <= last.end)
+    ) {
+      last.end =
+        last.end === null || period.end === null
+          ? null
+          : last.end > period.end
+            ? last.end
+            : period.end;
+    } else runs.push(period);
+  }
+  return runs.map(catalogPeriodLabel).join(", ");
+}

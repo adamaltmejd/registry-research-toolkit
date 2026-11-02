@@ -5,6 +5,7 @@ import { getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
+import { ClassificationView } from "./lib/ClassificationView";
 import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
@@ -105,8 +106,10 @@ function RoutedView({ route }: { route: Route }) {
       );
     case "catalog-node":
       if (route.fqidPath === "class" || route.fqidPath.startsWith("class/")) {
-        return (
-          <StatusRow tone="info">Not ported to the current API yet</StatusRow>
+        return route.fqidPath.split("/").length === 3 ? (
+          <ClassificationView key={route.fqidPath} fqidPath={route.fqidPath} />
+        ) : (
+          <NotFound path={`/catalog/${route.fqidPath}`} />
         );
       }
       return <CatalogNodeView key={route.fqidPath} fqidPath={route.fqidPath} />;
@@ -118,16 +121,20 @@ function RoutedView({ route }: { route: Route }) {
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>
       );
     case "not-found":
-      return (
-        <article>
-          <h1 className={styles.notFoundTitle}>Not found</h1>
-          <p>
-            No page at <code>{route.path}</code>.
-          </p>
-          <p>
-            <a href="/catalog">Back to the data browser</a>
-          </p>
-        </article>
-      );
+      return <NotFound path={route.path} />;
   }
+}
+
+function NotFound({ path }: { path: string }) {
+  return (
+    <article>
+      <h1 className={styles.notFoundTitle}>Not found</h1>
+      <p>
+        No page at <code>{path}</code>.
+      </p>
+      <p>
+        <a href="/catalog">Back to the data browser</a>
+      </p>
+    </article>
+  );
 }
