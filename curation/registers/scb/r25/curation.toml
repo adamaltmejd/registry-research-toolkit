@@ -22891,8 +22891,8 @@ evidence = "r457 describes household-head status, and r382 supplies its yes/no c
 [[statement]]
 kind = "set"
 subject = "var:individbaserad-ekvivalerad-loneinkomst"
-fields = { "sets" = ["kontant-bruttolon"] }
-evidence = "r465 defines individual equivalized wage income adjusted for alternating-residence children. r637 explicitly includes the equivalized variant. | r465 identifies individual equivalized wage income and explains the alternating-residence adjustment. This is the equivalized variant expressly covered by r637.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30980\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/kontant-bruttolon"
+fields = { "sets" = [] }
+evidence = "r465 defines individual equivalized wage income adjusted for alternating-residence children. r637 explicitly includes the equivalized variant. | r465 identifies individual equivalized wage income and explains the alternating-residence adjustment. This is the equivalized variant expressly covered by r637.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30980\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/kontant-bruttolon\n\nDefinition pass 2026-11-02: TLONTKEVX is the model-based equivalised wage-income measure, with shared residence of children modelled from logistic regression. It is not cash gross pay; the existing narrow membership is removed without changing identity.\nrel070-base/reg_meta.db:occurrence:283343\nrel070-base/reg_meta.db:occurrence:284626\nrel070-base/reg_meta.db:occurrence:284627\nrel070-base/reg_meta.db:occurrence:285908\nrel070-base/reg_meta.db:occurrence:285909"
 
 [[statement]]
 kind = "set"

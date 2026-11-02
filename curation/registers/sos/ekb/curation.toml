@@ -4166,8 +4166,8 @@ evidence = "Utbetalningsmarkeringen avser delkategorier av livsföring i övrigt
 [[statement]]
 kind = "set"
 subject = "var:medborgarskap"
-fields = { "sets" = [] }
-evidence = "Källans etikett står i konflikt med definitionen och värdekoderna. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897"
+fields = { "sets" = ["utrikes-fodelse"] }
+evidence = "Källans etikett står i konflikt med definitionen och värdekoderna. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897\n\nDefinition pass 2026-11-02: Both the definition and the binary valueset concern foreign birth rather than citizenship.\nrel070-base/reg_meta.db:occurrence:521392"
 
 [[statement]]
 kind = "set"
@@ -6448,3 +6448,9 @@ kind = "set"
 subject = "var:aldstes-hinder-september-sok1"
 fields = { "tags" = ["transfers"] }
 evidence = "The September obstacle field belongs to the subsistence-obstacle battery (r46, r45), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55904\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "description" = "Anger om sökande eller medsökande i hushållet är utrikesfödd." }
+evidence = "Definition pass 2026-11-02: Both the definition and the binary valueset concern foreign birth rather than citizenship.\nrel070-base/reg_meta.db:occurrence:521392"

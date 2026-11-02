@@ -982,3 +982,15 @@ kind = "set"
 subject = "var:utbild-sen"
 fields = { "sets" = ["gymnasieutbildning"] }
 evidence = "Records the upper-secondary programme or education in which the person was most recently registered (r22), matching gymnasieutbildning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34303\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302041"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokford-rapporterande-kommun-halvar-eller-inte"
+fields = { "description" = "Anger om personen är folkbokförd i den rapporterande kommunen under halvåret." }
+evidence = "Definition pass 2026-11-02: This is a yes/no municipality comparison, not a municipality code.\nrel070-base/reg_meta.db:occurrence:302126\nrel070-base/reg_meta.db:occurrence:302160\nrel070-base/reg_meta.db:occurrence:302195\nrel070-base/reg_meta.db:occurrence:302236\nrel070-base/reg_meta.db:occurrence:302279\nrel070-base/reg_meta.db:occurrence:302320\nrel070-base/reg_meta.db:occurrence:302357\nrel070-base/reg_meta.db:occurrence:302391\nrel070-base/reg_meta.db:occurrence:302425\nrel070-base/reg_meta.db:occurrence:302459\nrel070-base/reg_meta.db:occurrence:302493\nrel070-base/reg_meta.db:occurrence:302527\nrel070-base/reg_meta.db:occurrence:302563\nrel070-base/reg_meta.db:occurrence:302598\nrel070-base/reg_meta.db:occurrence:302629\nrel070-base/reg_meta.db:occurrence:302661"
+
+[[statement]]
+kind = "set"
+subject = "var:utbild-byte"
+fields = { "description" = "Anger om personen har bytt program under sin studietid i gymnasieskolan. Uppgiften skapas genom sambearbetning av gymnasieskolans betygs- och elevregister." }
+evidence = "Definition pass 2026-11-02: The operative derivation identifies programme change, not the programme attended.\nrel070-base/reg_meta.db:occurrence:302040"

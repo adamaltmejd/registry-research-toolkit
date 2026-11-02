@@ -11286,3 +11286,9 @@ kind = "set"
 subject = "var:ovriga-kommentarer-till-enkaten-3"
 fields = { "tags" = ["methods"] }
 evidence = "Interviewer comments (r207) are survey-collection notes, supporting methods consistently with questionnaire-feedback siblings (r129, r206). The mixed register themes (r326) supply no narrower subject.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29499\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29906\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29907\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:fr12"
+fields = { "description" = "Viktigaste skälet till att personen inte arbetade inom ett yrke som motsvarade den avslutade utbildningen. Ett svarsalternativ anges." }
+evidence = "Definition pass 2026-11-02: The question asks for a reason for mismatch, not a direct reverse-coded match indicator.\nrel070-base/reg_meta.db:occurrence:249776"

@@ -16570,3 +16570,27 @@ kind = "set"
 subject = "var:samtal-med-nagon-vuxen-studie-och-yrkesvagledare-pa-skolan"
 fields = { "tags" = ["education"] }
 evidence = "r87 records contact with a school study/career counsellor in the youth education survey, alongside teacher contact (r271). Education fits the conversation battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:511327\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54153"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-amnesomradet-bitradande-lektor"
+fields = { "description" = "Anger om personen efter forskarutbildningen har haft en anställning som biträdande lektor." }
+evidence = "Definition pass 2026-11-02: The question asks about a named appointment, not a comparison with the education subject area.\nrel070-base/reg_meta.db:occurrence:510415"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-amnesomradet-forskarassistent"
+fields = { "description" = "Anger om personen efter forskarutbildningen har haft en anställning som forskarassistent." }
+evidence = "Definition pass 2026-11-02: The question asks about a named appointment, not a comparison with the education subject area.\nrel070-base/reg_meta.db:occurrence:510414"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-amnesomradet-postdoktor"
+fields = { "description" = "Anger om personen efter forskarutbildningen har haft en anställning som postdoktor." }
+evidence = "Definition pass 2026-11-02: The question asks about a named appointment, not a comparison with the education subject area.\nrel070-base/reg_meta.db:occurrence:510413"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-sysselsattning-efter-utbildningen"
+fields = { "description" = "Anger om personen arbetar vid samma universitet eller högskola som personen disputerade vid." }
+evidence = "Definition pass 2026-11-02: The question compares employer institution with the doctoral institution, not main activity.\nrel070-base/reg_meta.db:occurrence:510429"

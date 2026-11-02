@@ -385,8 +385,8 @@ evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55752:17532:29328
 [[statement]]
 kind = "set"
 subject = "var:insats-form"
-fields = { "sets" = [] }
-evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167"
+fields = { "sets" = ["insatsform"] }
+evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167\n\nDefinition pass 2026-11-02: The three codes give the same intervention types as INSTYP.\nrel070-base/reg_meta.db:occurrence:520875"
 
 [[statement]]
 kind = "set"
@@ -409,8 +409,8 @@ evidence = "Grund för omhändertagande eller vård enligt LVU.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:instyp"
-fields = { "sets" = [] }
-evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167"
+fields = { "sets" = ["insatsform"] }
+evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167\n\nDefinition pass 2026-11-02: The intervention type is coded by its legal basis, as shown by valueset 3282.\nrel070-base/reg_meta.db:occurrence:520891\nrel070-base/reg_meta.db:occurrence:520920\nrel070-base/reg_meta.db:occurrence:520948\nrel070-base/reg_meta.db:occurrence:520970\nrel070-base/reg_meta.db:occurrence:520906\nrel070-base/reg_meta.db:occurrence:520960"
 
 [[statement]]
 kind = "set"
@@ -589,8 +589,8 @@ evidence = "Kommun där barnet eller den unga placerades.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:specifikation-insatsen"
-fields = { "sets" = [] }
-evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167"
+fields = { "sets" = ["insatsform"] }
+evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167\n\nDefinition pass 2026-11-02: The variable specifies the intervention through LVU environment/behaviour grounds.\nrel070-base/reg_meta.db:occurrence:520897\nrel070-base/reg_meta.db:occurrence:520926\nrel070-base/reg_meta.db:occurrence:520977\nrel070-base/reg_meta.db:occurrence:520912"
 
 [[statement]]
 kind = "set"
@@ -888,3 +888,21 @@ kind = "set"
 subject = "var:datum-forsta-placering-insats"
 fields = { "tags" = [] }
 evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "description" = "Typ av insats enligt SoL eller LVU: SoL-vård, omedelbart omhändertagande enligt 6 § LVU eller LVU-vård enligt 2 och 3 §§ LVU." }
+evidence = "Definition pass 2026-11-02: The intervention type is coded by its legal basis, as shown by valueset 3282.\nrel070-base/reg_meta.db:occurrence:520891\nrel070-base/reg_meta.db:occurrence:520920\nrel070-base/reg_meta.db:occurrence:520948\nrel070-base/reg_meta.db:occurrence:520970\nrel070-base/reg_meta.db:occurrence:520906\nrel070-base/reg_meta.db:occurrence:520960"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "description" = "Grund för LVU-insatsen: brister i hemmiljön enligt 2 § LVU, den ungas beteende enligt 3 § LVU eller båda grunderna. Miljö avser 0–17-åringar och beteende 10–20-åringar; fältet är blankt för SoL-vård." }
+evidence = "Definition pass 2026-11-02: The variable specifies the intervention through LVU environment/behaviour grounds.\nrel070-base/reg_meta.db:occurrence:520897\nrel070-base/reg_meta.db:occurrence:520926\nrel070-base/reg_meta.db:occurrence:520977\nrel070-base/reg_meta.db:occurrence:520912"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "description" = "Insatsens lagrum, kodat som SoL-vård, omedelbart omhändertagande enligt LVU eller LVU-vård." }
+evidence = "Definition pass 2026-11-02: The coded legal basis is BU intervention form, not a separate placement form.\nrel070-base/reg_meta.db:occurrence:520875"
