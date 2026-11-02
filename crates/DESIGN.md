@@ -1684,6 +1684,10 @@ digest, plus input/curation/compiler pins. Admission checks both schemas exactly
 pairing pins; it does not accept another generation because the public ids happen to
 resolve.
 
+Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
+recompiled. Family declarations and their evidence remain steward input facts, with no
+register or physical-table naming rules in the compiler.
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
@@ -1765,12 +1769,12 @@ roles and presence, disjointness/uniqueness of emitted placements, projection ru
 located caveats. Competing candidate owners have already become
 `ambiguous_delivered_owners` notices with their contested placements omitted, so they do
 not violate uniqueness. Partitions authorize several explicitly disjoint locations;
-projections and carried keys authorize duplicates only under their stated rules. A
-warning cannot license an otherwise ambiguous mapping. Unmatched columns are
-notices/worklist entries, not publication blockers; they count in coverage but do not
-order until a valid mapping exists. Excluded, lookup and retained-unknown tables are
-accounted with reasons; a lookup used as a logical codelist is not thereby observation
-data.
+projections, carried keys and documented position families authorize duplicates only
+under their stated rules. A warning cannot license an otherwise ambiguous mapping.
+Unmatched columns are notices/worklist entries, not publication blockers; they count in
+coverage but do not order until a valid mapping exists. Excluded, lookup and
+retained-unknown tables are accounted with reasons; a lookup used as a logical codelist
+is not thereby observation data.
 
 For example, `Swedbank_V15` is explicitly partition `v15` for 2020
 (`series/swedbank-v15.toml`); its label is not inferred from its name. Conversely,
@@ -1881,16 +1885,27 @@ resolution; only unmatched slots need new ids. In particular the five legacy yea
 uses are resolution/retargeting work, not an automatic minting queue. D32 still governs
 catalog identity: no catalog series entity and no merge of co-delivered slot variables.
 
-Under this decision, `holding_mapping` has one slot `variable_pid` per physical
+Under this decision, `holding_mapping` has one `variable_pid` per physical
 column/window; it has no member discriminator. Optional `slot_kind/index` on
-`holding_column` describes topology/order only, never N:1 identity. For a worked target
-shape (illustrative ids pending the normal ledger review),
+`holding_column` describes topology/order and never invents variable identity. A
+documented position family may place the same existing variable in several columns of
+one physical table (maintainer e-slots ruling, 2026-11-02). Each member explicitly
+declares the same nonblank `slot_family`, `slot_kind = "position"`, a distinct positive
+integer `slot_index`, and a locator evidencing the slot association. The exception is
+local to the same physical table and logical table/variable; it grants no cross-file
+duplication or temporal coverage. Index spellings such as `2` and `"02"` denote the same
+position and refuse as duplicates. The verifier compares family, kind, index and
+evidence locator with the pinned steward input before accepting the exception. Bare slot
+tags, different families and undeclared duplicates still refuse. Existing distinct
+steward slot variables keep their identities. For a worked target shape (illustrative
+ids pending the normal ledger review),
 `(table_pid = swecov/par-sv-slots, variable_pid = swecov/par-sv-slots/dia1, interval = [2019-01-01,2021-01-01))`
 points to `SWECOV_SOS_SV.DIA1` and carries `slot_kind = position`, `slot_index = 1` on
 its physical column. The provider long DIA is lineage evidence, not the target of that
-placement. Before these ids exist, an order of provider DIA does **not** select
-`DIA1`…`DIA30`. Do not publish mappings against invented ids. There is no holdings-only
-one-to-many expansion contract.
+placement. Without an explicit evidenced family mapping, an order of provider DIA does
+**not** select `DIA1`…`DIA30`. Do not publish mappings against invented ids. A family
+declaration authorizes physical placements; it does not add a logical-order expansion or
+a new catalog series entity.
 
 For example, in the adopted SV slot model, select the thirty adopted slot variables as a
 set; each maps to exactly one literal `DIA<N>` column, and the person row key is added

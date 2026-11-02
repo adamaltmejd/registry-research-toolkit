@@ -130,13 +130,23 @@ pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>, String> {
     }
 }
 
-fn column_periods(column: Option<&input::Column>, spans: &[Span]) -> Result<Vec<Span>, String> {
+pub(super) fn column_periods(
+    column: Option<&input::Column>,
+    spans: &[Span],
+) -> Result<Vec<Span>, String> {
     let Some(column) = column else {
         return Ok(spans.to_vec());
     };
+    if column.slot_family.as_ref().is_some_and(|family| {
+        family.trim().is_empty() || column.slot_kind.as_deref() != Some("position")
+    }) {
+        return Err("holdings_slot_invalid: a documented family requires position slots".into());
+    }
     match (column.slot_kind.as_deref(), column.slot_index.as_ref()) {
         (None, None) => Ok(spans.to_vec()),
-        (Some("position"), Some(index)) if index.to_string().parse::<u32>().is_ok() => {
+        (Some("position"), Some(index))
+            if index.to_string().parse::<u32>().is_ok_and(|n| n > 0) =>
+        {
             Ok(spans.to_vec())
         }
         (Some(kind @ ("year" | "month")), Some(index))
@@ -688,7 +698,7 @@ pub(super) fn write(
                         "candidate"
                     };
                     tx.execute(
-                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         params![
                             cid,
                             id,
@@ -698,6 +708,7 @@ pub(super) fn write(
                             storage.and_then(|s| s.length),
                             storage.and_then(|s| s.precision),
                             storage.and_then(|s| s.scale),
+                            decision.and_then(|c| c.slot_family.as_deref()),
                             decision.and_then(|c| c.slot_kind.as_deref()),
                             decision.and_then(|c| c.slot_index.as_ref().map(ToString::to_string)),
                             disposition,

@@ -41,6 +41,7 @@ CREATE TABLE holding_column (
  length INTEGER,
  precision INTEGER,
  scale INTEGER,
+ slot_family TEXT CHECK(slot_family IS NULL OR (length(trim(slot_family)) > 0 AND slot_kind IS NOT NULL AND slot_kind = 'position' AND slot_index IS NOT NULL)),
  slot_kind TEXT CHECK(slot_kind IN ('position','month','year')),
  slot_index TEXT,
  disposition TEXT NOT NULL CHECK(disposition IN ('candidate','hold','unmap')),

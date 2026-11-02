@@ -13,6 +13,10 @@ struct StoredColumn {
     precision: Option<i64>,
     scale: Option<i64>,
     offered: bool,
+    slot_family: Option<String>,
+    slot_kind: Option<String>,
+    slot_index: Option<String>,
+    locator: String,
 }
 
 /// Compare artifact coordinates with the independently re-read, admitted sources.
@@ -94,6 +98,15 @@ fn sources(db: &Connection, root: &Path) -> Result<input::Topology, String> {
         .table
         .iter()
         .map(|t| (t.physical_name.clone(), t.schema_name.clone()))
+        .collect();
+    let authored_columns: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .flat_map(|t| {
+            t.column
+                .iter()
+                .map(move |c| ((t.physical_name.as_str(), c.name.as_str()), c))
+        })
         .collect();
     let mut query = db
         .prepare("SELECT physical_name,id,schema_name,table_type FROM holding_table")
@@ -183,6 +196,7 @@ fn sources(db: &Connection, root: &Path) -> Result<input::Topology, String> {
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
             EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
               OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0) AND ?2)
+            ,c.slot_family,c.slot_kind,c.slot_index,c.locator
             FROM holding_column c WHERE c.holding_id=?1",
             )
             .map_err(|e| e.to_string())?;
@@ -197,6 +211,10 @@ fn sources(db: &Connection, root: &Path) -> Result<input::Topology, String> {
                         precision: r.get(4)?,
                         scale: r.get(5)?,
                         offered: r.get(6)?,
+                        slot_family: r.get(7)?,
+                        slot_kind: r.get(8)?,
+                        slot_index: r.get(9)?,
+                        locator: r.get(10)?,
                     },
                 ))
             })
@@ -210,6 +228,19 @@ fn sources(db: &Connection, root: &Path) -> Result<input::Topology, String> {
                 .ok_or_else(|| format!("{location}: holdings_census_column_missing"))?;
             if stored.ordinal != column.ordinal {
                 return Err(format!("{location}: holdings_census_ordinal_mismatch"));
+            }
+            let authored = authored_columns
+                .get(&(table.name.as_str(), column.name.as_str()))
+                .copied();
+            compile::column_periods(authored, &[])
+                .map_err(|error| format!("{location}: {error}"))?;
+            if stored.slot_family.as_deref() != authored.and_then(|c| c.slot_family.as_deref())
+                || stored.slot_kind.as_deref() != authored.and_then(|c| c.slot_kind.as_deref())
+                || stored.slot_index
+                    != authored.and_then(|c| c.slot_index.as_ref().map(ToString::to_string))
+                || authored.is_some_and(|c| stored.locator != c.locator)
+            {
+                return Err(format!("{location}: holdings_slot_source_mismatch"));
             }
             if stored.offered {
                 let declared_schema = schemas.get(&table.name).and_then(Option::as_deref);
@@ -481,14 +512,17 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         }
     }
     super::keys::verify(&db, &base, &topology)?;
-    // Same logical cell in two columns needs an explicit partition, a projection,
-    // or a carried key. Shared spelling and labels alone never authorize possession.
+    // A documented position family only authorizes distinct positions in one file.
+    // Other duplicates still need a partition, projection, or carried key.
     let mut duplicates = db.prepare(
         "SELECT ha.id,hb.id,a.table_pid,a.variable_pid,max(a.start,b.start),min(a.end,b.end) FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
       AND a.start<b.end AND b.start<a.end JOIN holding_column ca ON ca.id=a.column_id JOIN holding_column cb ON cb.id=b.column_id
       JOIN holding_table ha ON ha.id=ca.holding_id JOIN holding_table hb ON hb.id=cb.holding_id
       WHERE a.carried=0 AND b.carried=0 AND NOT(ha.id!=hb.id AND ha.partition IS NOT NULL AND hb.partition IS NOT NULL AND ha.partition!=hb.partition)
-      AND ha.projection_of IS NOT hb.id AND hb.projection_of IS NOT ha.id"
+      AND ha.projection_of IS NOT hb.id AND hb.projection_of IS NOT ha.id
+      AND NOT(ha.id=hb.id AND ca.slot_family IS NOT NULL AND cb.slot_family IS NOT NULL
+        AND ca.slot_family=cb.slot_family AND ca.slot_kind='position' AND cb.slot_kind='position'
+        AND CAST(ca.slot_index AS INTEGER)!=CAST(cb.slot_index AS INTEGER))"
     ).map_err(|e| e.to_string())?;
     let mut conflicts = BTreeSet::new();
     for row in duplicates

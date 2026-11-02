@@ -95,6 +95,7 @@ pub(super) struct RowKey {
 #[serde(deny_unknown_fields)]
 pub(super) struct Column {
     pub name: String,
+    pub slot_family: Option<String>,
     pub slot_kind: Option<String>,
     pub slot_index: Option<SlotIndex>,
     pub hold: Option<String>,

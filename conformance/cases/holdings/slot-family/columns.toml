@@ -1,0 +1,35 @@
+# Synthetic delivery documentation: one variable occupies positions 1, 2 and 10.
+# Names and declaration order deliberately differ from numeric position order.
+[[table.column]]
+name = "Position10"
+slot_family = "received-position"
+slot_kind = "position"
+slot_index = 10
+locator = "fixture:received-position-document:position=10"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:received-position-document:same-variable"
+
+[[table.column]]
+name = "Slot2"
+slot_family = "received-position"
+slot_kind = "position"
+slot_index = 2
+locator = "fixture:received-position-document:position=2"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:received-position-document:same-variable"
+
+[[table.column]]
+name = "Position1"
+slot_family = "received-position"
+slot_kind = "position"
+slot_index = 1
+locator = "fixture:received-position-document:position=1"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:received-position-document:same-variable"
+
