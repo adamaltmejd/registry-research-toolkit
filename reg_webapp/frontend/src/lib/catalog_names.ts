@@ -178,3 +178,17 @@ export function registerRead(ref: string): Read<RegisterShow> {
     return node;
   });
 }
+
+/** Display names shared by register descendants and their located findings. */
+export function registerSubjectNames(
+  register?: RegisterShow | null,
+): ReadonlyMap<string, string> {
+  const names = new Map<string, string>();
+  if (register) {
+    names.set(register.fqid, register.name);
+    for (const subject of [...register.tables, ...register.variables]) {
+      names.set(subject.fqid, subject.name);
+    }
+  }
+  return names;
+}

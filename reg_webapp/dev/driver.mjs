@@ -297,7 +297,8 @@ async function browsePagesCase(page, shoot) {
 
 // #2056, browser boundary over webapp-dev's Antal occurrences, provider text
 // and variable notice. Fails if variable dispatch or cross-table segments are
-// lost, evidence is fetched eagerly, or reopening refetches it. Existing cases
+// lost, named table links/storage are lost in the compact layout, evidence is
+// fetched eagerly, or reopening refetches it. Existing cases
 // only browse register/table pages and never request variable evidence.
 async function browseVariableCase(page, shoot) {
   const evidenceRequests = [];
@@ -311,8 +312,9 @@ async function browseVariableCase(page, shoot) {
   await page.waitForURL("**/catalog/demo/hush/antal");
   await settled(page);
   const segments = main.locator("section").filter({ has: page.getByRole("heading", { name: "Segments", exact: true }) });
-  await segments.locator('a[href="/catalog/demo/hush/fam"]').first().waitFor();
-  await segments.locator('a[href="/catalog/demo/hush/ind"]').first().waitFor();
+  await segments.getByRole("link", { name: "Familjer", exact: true }).waitFor();
+  await segments.getByRole("link", { name: "Individer", exact: true }).waitFor();
+  await segments.getByRole("cell", { name: /^(?:Storage )?int$/ }).first().waitFor();
   check(
     (await segments.getByRole("row").count()) >= 3,
     "the variable lost its segments across the family and individual tables",

@@ -4,6 +4,8 @@ import {
   Disclosure,
   DisclosurePanel,
   Heading,
+  Tooltip,
+  TooltipTrigger,
 } from "react-aria-components";
 import {
   type CatalogSegment,
@@ -12,8 +14,11 @@ import {
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref } from "./catalog";
+import { catalogHref, formatDataType } from "./catalog";
+import { catalogWords, yesNo } from "./catalog_labels";
+import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import findingStyles from "./Finding.module.css";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -24,14 +29,77 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
+import { useCatalogRead } from "./use_store_read";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 
-function flag(value: boolean | null): string {
-  return value === null ? "Not stated" : value ? "Yes" : "No";
+function segmentFacts(row: CatalogSegment) {
+  return [
+    { term: "Role", value: catalogWords(row.role) },
+    { term: "Coded", value: yesNo(row.coded) },
+    { term: "State", value: catalogWords(row.state) },
+    {
+      term: "Identifier",
+      value: `${yesNo(row.identifier)}${row.identifier && row.id_kind ? ` (${catalogWords(row.id_kind)})` : ""}`,
+    },
+    { term: "Sensitive", value: yesNo(row.sensitive) },
+    { term: "Temporality", value: catalogWords(row.temporality) },
+  ];
+}
+
+function Storage({ row }: { row: CatalogSegment }) {
+  const type = formatDataType(row.type || row.format, row.length?.toString());
+  const format =
+    row.type && row.format && row.format !== row.type ? row.format : "";
+  const storage = [type, format].filter(Boolean).join(" ");
+  if (storage) return <code>{storage}</code>;
+  if (row.length !== null)
+    return (
+      <>
+        Length <code>{row.length}</code>
+      </>
+    );
+  return <>Not stated</>;
+}
+
+function ValueSetLabel({
+  valueSet,
+}: {
+  valueSet: CatalogSegment["value_set"];
+}) {
+  if (!valueSet)
+    return <span className={variableStyles.singleLine}>Not stated</span>;
+  const names = valueSet.names.length ? valueSet.names : ["Unnamed value set"];
+  return (
+    <TooltipTrigger delay={600}>
+      <Button className={variableStyles.valueSet}>
+        <span className={variableStyles.firstName}>{names[0]}</span>
+        {names.length > 1 && (
+          <span className={variableStyles.more}>
+            and {names.length - 1} more
+          </span>
+        )}
+      </Button>
+      <Tooltip
+        className={({ isEntering, isExiting }) =>
+          `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
+        }
+        offset={6}
+        style={{ zIndex: "var(--z-popover)" }}
+      >
+        <ul className={styles.plainList}>
+          {names.map((name) => (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
+      </Tooltip>
+    </TooltipTrigger>
+  );
 }
 
 export function VariableView({ node }: { node: VariableShow }) {
+  const register = useCatalogRead(registerRead, node.register).value;
+  const names = registerSubjectNames(register);
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
@@ -41,58 +109,38 @@ export function VariableView({ node }: { node: VariableShow }) {
     evidenceRequested ? node.fqid : null,
     (signal) => getVariableEvidence(node.fqid, { signal }),
   );
-  const segmentCell = (row: CatalogSegment, key: keyof CatalogSegment) => {
-    switch (key) {
-      case "table":
-        return (
-          <a className="link" href={catalogHref(row.table)}>
-            <code>{row.table}</code>
-          </a>
-        );
-      case "period":
-        return catalogPeriodLabel(row.period);
-      case "spelling":
-        return <ColumnChip name={row.spelling} />;
-      case "identifier":
-        return (
-          <span className={variableStyles.atomic}>
-            {flag(row.identifier)}
-            {row.id_kind && (
-              <>
-                {" "}
-                (<code>{row.id_kind}</code>)
-              </>
-            )}
-          </span>
-        );
-      case "sensitive":
-        return (
-          <span className={variableStyles.atomic}>{flag(row.sensitive)}</span>
-        );
-      case "value_set":
-        return row.value_set ? (
-          <>
-            {row.value_set.names.join(", ") || (
-              <code>{row.value_set.hash}</code>
-            )}
-          </>
-        ) : (
-          "Not stated"
-        );
-      default:
-        return (
-          <span className={variableStyles.atomic}>
-            {String(row[key] ?? "Not stated")}
-          </span>
-        );
-    }
-  };
+  const facts = (segments.data ?? []).map(segmentFacts);
+  const common = (facts[0] ?? []).filter((fact, index) =>
+    facts.every((row) => row[index].value === fact.value),
+  );
+  const varying = (facts[0] ?? []).filter(
+    (fact) => !common.some((shared) => shared.term === fact.term),
+  );
+  const rows = (segments.data ?? []).map((row) => ({
+    ...row,
+    storage: row,
+    notes: segmentFacts(row).filter((fact) =>
+      varying.some((field) => field.term === fact.term),
+    ),
+  }));
   return (
     <article className={styles.page}>
       <Definitions
         kind="variable"
         title={node.name}
+        memberOf={
+          register
+            ? [
+                {
+                  relation: "Register",
+                  label: register.name,
+                  href: catalogHref(node.register),
+                },
+              ]
+            : []
+        }
         definitions={[
+          ...common,
           {
             term: "Period",
             value: <code>{catalogPeriodLabel(node.period)}</code>,
@@ -121,19 +169,19 @@ export function VariableView({ node }: { node: VariableShow }) {
         </Panel>
       ) : node.source_definition ? (
         <Panel title="Provider wording">
-          <p className={styles.period}>
-            {catalogPeriodLabel(node.source_definition.period)}
+          <p className={variableStyles.wordingPeriod}>
+            Wording for {catalogPeriodLabel(node.source_definition.period)}
           </p>
           <p className={styles.prose}>{node.source_definition.text}</p>
         </Panel>
       ) : null}
       <Panel title="Tables">
         {node.tables.length ? (
-          <ul className={styles.plainList}>
+          <ul className={`${styles.plainList} ${variableStyles.listGap}`}>
             {node.tables.map((fqid) => (
-              <li key={fqid} className={styles.finding}>
+              <li key={fqid}>
                 <a className="link" href={catalogHref(fqid)}>
-                  <code>{fqid}</code>
+                  {names.get(fqid) ?? "Table name unavailable"}
                 </a>
               </li>
             ))}
@@ -153,31 +201,82 @@ export function VariableView({ node }: { node: VariableShow }) {
             again.
           </StatusRow>
         ) : segments.data?.length ? (
-          <DataTable
-            columns={[
-              { key: "table", label: "Table" },
-              { key: "period", label: "Period", mono: true },
-              { key: "spelling", label: "Spelling" },
-              { key: "type", label: "Type", mono: true },
-              { key: "format", label: "Format", mono: true },
-              { key: "length", label: "Length", numeric: true },
-              { key: "role", label: "Role" },
-              { key: "coded", label: "Coded" },
-              { key: "value_set", label: "Value set" },
-              { key: "state", label: "State" },
-              { key: "identifier", label: "Identifier" },
-              { key: "sensitive", label: "Sensitive" },
-              { key: "temporality", label: "Temporality" },
-            ]}
-            rows={segments.data}
-            getRowId={(row) => JSON.stringify(row)}
-            renderCell={(row, column) => segmentCell(row, column.key)}
-          />
+          <div className={variableStyles.segments}>
+            <DataTable
+              columns={[
+                {
+                  key: "table",
+                  label: "Table",
+                  width: varying.length ? "20%" : "25%",
+                },
+                {
+                  key: "period",
+                  label: "Period",
+                  width: "13%",
+                },
+                {
+                  key: "spelling",
+                  label: "Spelling",
+                  width: varying.length ? "18%" : "20%",
+                },
+                {
+                  key: "storage",
+                  label: "Storage",
+                  width: varying.length ? "13%" : "14%",
+                },
+                {
+                  key: "value_set",
+                  label: "Value set",
+                  width: varying.length ? "22%" : "28%",
+                },
+                ...(varying.length
+                  ? [{ key: "notes" as const, label: "Notes", width: "14%" }]
+                  : []),
+              ]}
+              rows={rows}
+              getRowId={(row) => JSON.stringify(row)}
+              renderCell={(row, column) => {
+                switch (column.key) {
+                  case "table":
+                    return (
+                      <a className="link" href={catalogHref(row.table)}>
+                        {names.get(row.table) ?? "Table name unavailable"}
+                      </a>
+                    );
+                  case "period":
+                    return <code>{catalogPeriodLabel(row.period)}</code>;
+                  case "spelling":
+                    return (
+                      <ColumnChip
+                        name={row.spelling}
+                        className={variableStyles.spelling}
+                      />
+                    );
+                  case "storage":
+                    return <Storage row={row} />;
+                  case "value_set":
+                    return <ValueSetLabel valueSet={row.value_set} />;
+                  case "notes":
+                    return (
+                      <ul
+                        className={`${styles.plainList} ${variableStyles.listGap}`}
+                      >
+                        {row.notes.map((fact) => (
+                          <li key={fact.term}>
+                            {fact.term}: {fact.value}
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                }
+              }}
+            />
+          </div>
         ) : (
           <EmptyState title="No segments recorded for this variable." />
         )}
       </Panel>
-      <ScopedDataWarnings fqid={node.fqid} />
+      <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
       <Disclosure
         className={styles.disclosure}
         onExpandedChange={(expanded) => {
@@ -207,7 +306,11 @@ export function VariableView({ node }: { node: VariableShow }) {
                       Reload the page to try again.
                     </StatusRow>
                   ) : evidence.data ? (
-                    <EvidenceContent evidence={evidence.data} />
+                    <EvidenceContent
+                      evidence={evidence.data}
+                      node={node}
+                      names={names}
+                    />
                   ) : null)}
               </div>
             </DisclosurePanel>

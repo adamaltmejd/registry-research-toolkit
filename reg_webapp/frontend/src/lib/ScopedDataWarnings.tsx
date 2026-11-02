@@ -1,4 +1,5 @@
 import { getFindings, type RegisterShow } from "./api";
+import { registerSubjectNames } from "./catalog_names";
 import { DataWarnings } from "./DataWarnings";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
@@ -26,12 +27,6 @@ export function ScopedDataWarnings({
         Findings did not load ({resource.error}). Reload the page to try again.
       </StatusRow>
     );
-  const names = new Map<string, string>();
-  if (register) {
-    names.set(register.fqid, register.name);
-    for (const subject of [...register.tables, ...register.variables]) {
-      names.set(subject.fqid, subject.name);
-    }
-  }
+  const names = registerSubjectNames(register);
   return <DataWarnings findings={resource.data} names={names} />;
 }
