@@ -208,8 +208,8 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     # same-count locator replacement. Existing vocabulary wording coverage never
     # changes source rows. Source overlays and expected JSON supply the allowed
     # field drift, entry-size ceiling, matched-row counts and located refusal.
-    fixture, overlay, curation, expected = membership_case
-    expected = expected["variable_premise"]
+    fixture, overlay, curation, expectations = membership_case
+    expected = expectations["variable_premise"]
     shutil.copyfile(
         overlay / "variable-level.toml", curation / "registers/demo/r/curation.toml"
     )
@@ -287,12 +287,81 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     assert expected["subject"] in refusals
     assert f"old count {count}, new count {expected['grown_count']}" in refusals
 
-    # Regression: a v1 lock is silently accepted rather than requiring a re-lock.
-    shutil.copyfile(overlay / "v1.lock", curation / "registers/demo/r/curation.lock")
-    obsolete = run("build")
-    assert obsolete.returncode == 1, obsolete.stderr
-    assert "unsupported premise lock version 1" in obsolete.stderr
-    assert "run reg-build lock" in obsolete.stderr
+    # Regression: shared dependencies are stored per statement, references cannot
+    # be read back, or a changed reference reports only a digest. Variable setters
+    # above intentionally omit these container facts. The two occurrence setters
+    # share the register, table and release described by the source overlays.
+    expected = expectations["shared_objects"]
+    shutil.copyfile(overlay / "container-baseline.jsonl", source)
+    shutil.copyfile(
+        overlay / "shared-objects.toml", curation / "registers/demo/r/curation.toml"
+    )
+    locked = run("lock")
+    assert locked.returncode == 0, locked.stderr
+    lock_path = curation / "registers/demo/r/curation.lock"
+    original_lock = lock_path.read_bytes()
+    lock = json.loads(original_lock)
+    assert lock["version"] == 3
+    assert len(lock["objects"]) == expected["object_count"]
+    references = [entry["objects"] for entry in lock["statements"].values()]
+    assert len(references) == expected["statement_count"]
+    assert all(keys == sorted(lock["objects"]) for keys in references)
+    repeated = run("lock")
+    assert repeated.returncode == 0, repeated.stderr
+    assert lock_path.read_bytes() == original_lock
+    allowed = run("build")
+    assert allowed.returncode == 0, allowed.stderr
+    (tmp_path / "catalog.db").unlink()
+
+    # Regression: corrupt content-addressed maps are accepted as reviewed facts.
+    # Renaming a key and removing an object exercise separate integrity failures.
+    for change, code in expected["object_refusals"].items():
+        tampered = json.loads(original_lock)
+        key = next(iter(tampered["objects"]))
+        value = tampered["objects"].pop(key)
+        if change == "digest":
+            tampered["objects"]["0" * 64] = value
+        lock_path.write_text(json.dumps(tampered))
+        refused = run("build")
+        assert refused.returncode == 1, refused.stderr
+        assert f"{lock_path}: invalid premise lock:" in refused.stderr
+        assert code in refused.stderr
+        assert "run reg-build lock" in refused.stderr
+    lock_path.write_bytes(original_lock)
+
+    shutil.copyfile(overlay / "containers-changed.jsonl", source)
+    changed = run("build")
+    assert changed.returncode == 1, changed.stderr
+    refusals = "\n".join(
+        detail
+        for refusal in json.loads(report.read_text())["refusals"]
+        for detail in refusal["details"]
+    )
+    for location in expected["locations"]:
+        assert f"{location}: {expected['code']}:" in refusals
+    assert "/fields/description:" in refusals
+    original_rows = [
+        json.loads(line)
+        for line in (overlay / "container-baseline.jsonl").read_text().splitlines()
+    ]
+    changed_rows = [json.loads(line) for line in source.read_text().splitlines()]
+    for before, after in zip(original_rows, changed_rows, strict=True):
+        if before.get("description") != after.get("description"):
+            assert (
+                f"{json.dumps(before['description'])} -> "
+                f"{json.dumps(after['description'])}"
+            ) in refusals
+
+    # Regression: a v1 or v2 lock is silently accepted rather than requiring a
+    # re-lock. These deliberately obsolete inputs exercise the version gate.
+    obsolete_lock = json.loads((overlay / "v1.lock").read_text())
+    for version in (1, 2):
+        obsolete_lock["version"] = version
+        lock_path.write_text(json.dumps(obsolete_lock))
+        obsolete = run("build")
+        assert obsolete.returncode == 1, obsolete.stderr
+        assert f"unsupported premise lock version {version}" in obsolete.stderr
+        assert "run reg-build lock" in obsolete.stderr
 
 
 @pytest.mark.parametrize("scenario", ["occurrence", "conflict"])

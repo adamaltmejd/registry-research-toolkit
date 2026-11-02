@@ -13,7 +13,85 @@ use sha2::Digest;
 #[serde(deny_unknown_fields)]
 struct Lock {
     version: u32,
-    statements: BTreeMap<String, LockedPremise>,
+    objects: BTreeMap<String, SourcePremise>,
+    statements: BTreeMap<String, StoredPremise>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StoredPremise {
+    subjects: LockedSubjects,
+    objects: Vec<String>,
+}
+
+impl Lock {
+    fn new(premises: BTreeMap<String, LockedPremise>) -> Self {
+        let mut objects = BTreeMap::new();
+        let statements = premises
+            .into_iter()
+            .map(|(identity, premise)| {
+                let mut keys = Vec::new();
+                for object in premise.objects {
+                    let key = object_key(&object);
+                    objects.entry(key.clone()).or_insert(object);
+                    keys.push(key);
+                }
+                keys.sort();
+                (
+                    identity,
+                    StoredPremise {
+                        subjects: premise.subjects,
+                        objects: keys,
+                    },
+                )
+            })
+            .collect();
+        Self {
+            version: 3,
+            objects,
+            statements,
+        }
+    }
+
+    fn resolve(self) -> Result<BTreeMap<String, LockedPremise>, String> {
+        for (key, object) in &self.objects {
+            if object_key(object) != *key {
+                return Err(format!(
+                    "object digest mismatch for {key}; run reg-build lock"
+                ));
+            }
+        }
+        self.statements
+            .into_iter()
+            .map(|(identity, premise)| {
+                let mut objects = premise
+                    .objects
+                    .iter()
+                    .map(|key| {
+                        self.objects.get(key).cloned().ok_or_else(|| {
+                            format!(
+                                "statement {identity}: missing object {key}; run reg-build lock"
+                            )
+                        })
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                // Digest order is only a storage convention. Restore the resolver's
+                // canonical object order for unchanged field-level diagnostics.
+                objects.sort_by_key(reg_frame::canonical_line);
+                Ok((
+                    identity,
+                    LockedPremise {
+                        subjects: premise.subjects,
+                        objects,
+                    },
+                ))
+            })
+            .collect()
+    }
+}
+
+fn object_key(object: &SourcePremise) -> String {
+    reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(object)))
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
@@ -56,24 +134,23 @@ impl LockedPremise {
         } else {
             LockedSubjects::Rows(premise.subjects.clone())
         };
-        Self {
-            subjects,
-            objects: premise
-                .objects
-                .iter()
-                .filter(|object| {
-                    variable.is_none()
-                        || !matches!(
-                            object
-                                .fields
-                                .get("kind")
-                                .and_then(serde_json::Value::as_str),
-                            Some("register" | "table" | "release")
-                        )
-                })
-                .cloned()
-                .collect(),
-        }
+        let mut objects = premise
+            .objects
+            .iter()
+            .filter(|object| {
+                variable.is_none()
+                    || !matches!(
+                        object
+                            .fields
+                            .get("kind")
+                            .and_then(serde_json::Value::as_str),
+                        Some("register" | "table" | "release")
+                    )
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        objects.sort_by_key(reg_frame::canonical_line);
+        Self { subjects, objects }
     }
 }
 
@@ -833,16 +910,17 @@ fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, LockedPremise>
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let value: serde_json::Value = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if value["version"] != 2 {
+    if value["version"] != 3 {
         return Err(format!(
-            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 2",
+            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
             path.display(),
             value["version"]
         ));
     }
     let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    Ok(lock.statements)
+    lock.resolve()
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
 }
 
 fn checked_premise(
@@ -1654,13 +1732,7 @@ fn run_selected(
         if reviewed.is_empty() {
             continue;
         }
-        pending.push((
-            path,
-            Lock {
-                version: 2,
-                statements: reviewed,
-            },
-        ));
+        pending.push((path, Lock::new(reviewed)));
     }
     if record {
         for register in registers {

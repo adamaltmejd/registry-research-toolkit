@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "t: X"
+fields.label = "Published income"
+evidence = "The occurrence label uses the reviewed register, table and release facts."
+
+[[statement]]
+kind = "set"
+subject = "t: X"
+fields.definition = "Income in source units."
+evidence = "The independent definition uses the same register, table and release facts."

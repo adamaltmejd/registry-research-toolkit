@@ -433,8 +433,13 @@ Accepting one requires reviewed curation and a premise lock.
   value-set identity; revisit when a dropped scoped entry needs it. Register name
   corrections that differ from source remain deferred: they need a register address in
   the grammar.
-- `curation.lock` is canonical JSON with `version = 2` and normalized statement hashes
-  as keys. Version 1 refuses with an instruction to run `reg-build lock`; locks are
+- `curation.lock` is minified canonical JSON with `version = 3` and normalized statement
+  hashes as keys. The top-level `objects` map stores each full object once, keyed by the
+  SHA-256 of its canonical JSON. Each statement's `objects` is a sorted list of those
+  keys; `subjects` is unchanged. References are resolved and digest keys checked when
+  reading. Object order is not semantic; comparison uses canonical full-object order,
+  retaining field-level old/new diagnostics rather than reporting only changed hashes.
+  Versions 1 and 2 refuse with an instruction to run `reg-build lock`; locks are
   regenerated, never migrated. Variable-level setters are `var:` setters containing only
   `sets`, `tags`, `label`, `description`, `definition`, `operational_definition` or
   `synonyms`. Their locked `subjects` record the variable slug, distinct matched locator
