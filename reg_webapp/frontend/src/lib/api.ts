@@ -93,9 +93,14 @@ export async function apiGet<T>(
  * validation failure: a validation failure is a 200 with `ok:false`, which this
  * RETURNS (see `validateProject`).
  */
-export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
+export async function apiPostJson<T>(
+  path: string,
+  body: unknown,
+  options?: { signal?: AbortSignal },
+): Promise<T> {
   const resp = await fetch(`${API_BASE}${path}`, {
     method: "POST",
+    signal: options?.signal,
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(body),
   });
@@ -225,6 +230,32 @@ export function getShow(
  * emission order. */
 export type ValidationResultModel = RustSchemas["Validation"];
 
+export type LogicalOrder = RustSchemas["LogicalOrder"];
+
+/** The logical order, checked against the loaded catalog. */
+export async function getProjectOrder(
+  draft: RustSchemas["ProjectData"],
+  options?: { signal?: AbortSignal },
+): Promise<LogicalOrder> {
+  return (
+    await apiPostJson<{ data: LogicalOrder }>("/project/order", draft, options)
+  ).data;
+}
+
+/** Read only the value-set identity and names; its item page is not displayed. */
+export async function getValueSet(
+  hash: string,
+  options?: { signal?: AbortSignal },
+): Promise<RustSchemas["ValueSetRef"]> {
+  return (
+    await rustGet<RustSchemas["ValueItemsPage"]>(
+      "/values",
+      new URLSearchParams({ value_set: hash, limit: "1" }),
+      options,
+    )
+  ).value_set;
+}
+
 /**
  * POST a draft to `/api/project/validate` and RETURN its `data`
  * (`ValidationResultModel`, `{ok, issues}`). A validation FAILURE is a 200 with
@@ -236,11 +267,13 @@ export type ValidationResultModel = RustSchemas["Validation"];
  */
 export async function validateProject(
   draft: Record<string, unknown>,
+  options?: { signal?: AbortSignal },
 ): Promise<ValidationResultModel> {
   return (
     await apiPostJson<{ data: ValidationResultModel }>(
       "/project/validate",
       draft,
+      options,
     )
   ).data;
 }

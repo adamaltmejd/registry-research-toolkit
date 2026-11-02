@@ -7,6 +7,7 @@ import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
 import { Home } from "./lib/Home";
+import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
@@ -37,7 +38,7 @@ export function App() {
     <RouterProvider navigate={router.navigate} useHref={useHref}>
       <I18nProvider locale="en-US">
         <div className={styles.app}>
-          <TopBar />
+          <TopBar context={context.data} />
           {context.error && (
             <StatusRow
               tone="error"
@@ -69,7 +70,11 @@ export function App() {
             <main className={styles.detail}>
               <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
               <div className={styles.routed}>
-                <RoutedView route={route} />
+                {route.name === "project" ? (
+                  <ProjectEditor context={context.data} />
+                ) : (
+                  <RoutedView route={route} />
+                )}
               </div>
             </main>
           </div>

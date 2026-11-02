@@ -1,7 +1,7 @@
 // Shell and browse-search flows × four viewports, against the source-built
 // webapp-dev fixture. Run from reg_webapp/frontend via dev.sh flows; screenshots
-// land in the required <out-dir>. Variable and project scenarios return in W3–W5.
-import { existsSync, mkdirSync } from "node:fs";
+// land in the required <out-dir>.
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 
@@ -79,7 +79,6 @@ async function launchBrowser() {
   }
   throw new Error(`driver: chromium would not launch\n${failures.join("\n\n")}`);
 }
-const browser = await launchBrowser();
 
 // Print the page's console errors and uncaught exceptions. The returned array
 // is the ledger of exception messages, which each case asserts is empty.
@@ -296,6 +295,79 @@ async function browsePagesCase(page, shoot) {
   check((await code.getAttribute("aria-expanded")) === "false", "keyboard activation did not collapse the finding code");
 }
 
+// The project + artifact → logical order boundary, through the loaded-project UI.
+// Fails if opening a file does not reach catalog validation, ordering loses a
+// binding, reload loses the draft, or a structurally invalid file is accepted.
+// Names and spellings are from webapp-dev's readable JSONL; the invalid type and
+// located refusal code come from reg-core's binding_type_null corpus case. No
+// existing browser case exercises project files or the order page.
+async function projectPagesCase(page, shoot) {
+  const main = page.getByRole("main");
+  const projectFile = new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  );
+  const invalidProject = JSON.parse(readFileSync(projectFile, "utf8"));
+  invalidProject.sources[0].bindings[0].type = null;
+  const invalidRaw = JSON.stringify(invalidProject);
+  await main.getByLabel("Open project file", { exact: true }).setInputFiles(projectFile.pathname);
+  await main.getByRole("button", { name: "Check catalog", exact: true }).click();
+  await main.getByText("Project is valid against this catalog.", { exact: true }).waitFor();
+  await shoot("project-valid");
+
+  // The draft is restored from local storage across a complete document load,
+  // rather than surviving only because routing leaves the JS store alive.
+  await page.reload();
+  await settled(page);
+  await main.getByRole("link", { name: "Order", exact: true }).click();
+  await page.waitForURL("**/project?tab=order");
+  await settled(page);
+  const entries = main.getByRole("region", { name: "Entries", exact: true });
+  for (const { variable, display, spelling } of [
+    { variable: "Kön", display: "sex", spelling: "KON" },
+    { variable: "Ålder", display: "age", spelling: "Alder" },
+  ]) {
+    const row = entries.getByRole("row").filter({
+      has: page.getByRole("link", { name: variable, exact: true }),
+    });
+    await row.waitFor();
+    check((await row.count()) === 1, `order did not list one ${variable} entry`);
+    await row.getByText(spelling, { exact: true }).waitFor();
+    check((await row.innerText()).includes("2020"), `${variable} order entry lost its period`);
+    await row.getByRole("button", { name: `Details for ${variable}, 2020`, exact: true }).click();
+    await page.getByRole("dialog").getByText(display, { exact: true }).waitFor();
+    await page.keyboard.press("Escape");
+    await page.getByRole("dialog").waitFor({ state: "hidden" });
+  }
+  await shoot("project-order");
+
+  await main.getByRole("navigation", { name: "Project pages" }).getByRole("link", { name: "Project", exact: true }).click();
+  await main.getByLabel("Open project file", { exact: true }).setInputFiles({ name: "invalid-project.json", mimeType: "application/json", buffer: Buffer.from(invalidRaw) });
+  const replacement = page.getByRole("alertdialog", { name: "Replace the working project?", exact: true });
+  await replacement.getByRole("button", { name: "Replace project", exact: true }).click();
+  const issues = main.locator("section").filter({
+    has: page.getByRole("heading", { name: "Draft check", exact: true }),
+  });
+  await issues.getByText("/sources/0/bindings/0/type", { exact: true }).waitFor();
+  // Rejected documents survive reload and download byte-for-byte; accepting or
+  // normalizing one during persistence would lose the original invalid input.
+  await page.reload();
+  await settled(page);
+  await issues.getByText("/sources/0/bindings/0/type", { exact: true }).waitFor();
+  const issueTitle = issues.getByRole("button").first();
+  await issueTitle.focus();
+  await issueTitle.press("Tab");
+  await page.keyboard.press("Shift+Tab");
+  await page.getByRole("tooltip").getByText("invalid_field_type", { exact: true }).waitFor();
+  await page.keyboard.press("Escape");
+  await page.getByRole("tooltip").waitFor({ state: "hidden" });
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  check(readFileSync(await (await downloaded).path(), "utf8") === invalidRaw,
+    "the rejected project changed during persistence or download");
+  await shoot("project-invalid");
+}
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -309,6 +381,9 @@ async function menuGone(page) {
 // Each viewport gets fresh storage and its own page-error ledger.
 async function runCase(viewport, name, body, route) {
   const label = `${viewport.width}x${viewport.height}`;
+  // Single-process Chromium cannot survive closing its last context. Give each
+  // case its own process as well as its own storage (#1049).
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const pageErrors = logPageOutput(page);
@@ -326,42 +401,44 @@ async function runCase(viewport, name, body, route) {
     throw e;
   } finally {
     await context.close();
+    await browser.close();
   }
 }
 
-try {
-  mkdirSync(outDir, { recursive: true });
-  const scenarios = {
-    "browse-pages": {
-      shots: 2,
-      route: "/catalog/demo/hush",
-      run: browsePagesCase,
-    },
-    "browse-search": {
-      shots: 2,
-      route: "/catalog/demo/bas",
-      run: browseSearchCase,
-    },
-  };
-  for (const name of selection) {
-    check(
-      name in scenarios,
-      `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
-    );
-  }
-  // No names = every scenario; explicit names select a focused subset.
-  const names = selection.length > 0 ? selection : Object.keys(scenarios);
-  for (const viewport of FLOW_VIEWPORTS) {
-    for (const name of names) {
-      const { run, route } = scenarios[name];
-      await runCase(viewport, name, run, route);
-    }
-  }
-  const shots = names.reduce((n, name) => n + scenarios[name].shots, 0);
-  console.log(
-    `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
-      `${shots * FLOW_VIEWPORTS.length} shots`,
+mkdirSync(outDir, { recursive: true });
+const scenarios = {
+  "project-pages": {
+    shots: 3,
+    route: "/project",
+    run: projectPagesCase,
+  },
+  "browse-pages": {
+    shots: 2,
+    route: "/catalog/demo/hush",
+    run: browsePagesCase,
+  },
+  "browse-search": {
+    shots: 2,
+    route: "/catalog/demo/bas",
+    run: browseSearchCase,
+  },
+};
+for (const name of selection) {
+  check(
+    name in scenarios,
+    `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
   );
-} finally {
-  await browser.close();
 }
+// No names = every scenario; explicit names select a focused subset.
+const names = selection.length > 0 ? selection : Object.keys(scenarios);
+for (const viewport of FLOW_VIEWPORTS) {
+  for (const name of names) {
+    const { run, route } = scenarios[name];
+    await runCase(viewport, name, run, route);
+  }
+}
+const shots = names.reduce((n, name) => n + scenarios[name].shots, 0);
+console.log(
+  `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
+    `${shots * FLOW_VIEWPORTS.length} shots`,
+);

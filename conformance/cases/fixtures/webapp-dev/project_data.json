@@ -1,0 +1,25 @@
+{
+  "schema_version": "5.1.0",
+  "reg_meta_version": "0.70.0",
+  "name": "Baseline study",
+  "sources": [
+    {
+      "name": "baseline",
+      "table": "demo/bas",
+      "period": 2020,
+      "bindings": [
+        {
+          "variable": "demo/bas/kon",
+          "type": "categorical",
+          "display_name": "sex"
+        },
+        {
+          "variable": "demo/bas/alder",
+          "type": "numeric",
+          "numeric_subtype": "integer",
+          "display_name": "age"
+        }
+      ]
+    }
+  ]
+}

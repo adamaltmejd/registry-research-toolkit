@@ -178,3 +178,33 @@ export function registerRead(ref: string): Read<RegisterShow> {
     return node;
   });
 }
+
+/** A named catalog subject outside a register (for example a successor class). */
+export function showRead(ref: string): Read<ShowNode> {
+  return read(`show:${ref}`, () => sharedShow(ref));
+}
+
+/** Resolve display names through the same register read used by the browser. */
+export function catalogNames(
+  refs: readonly string[],
+): ReadonlyMap<string, string> {
+  const names = new Map<string, string>();
+  const registers = new Set<string>();
+  for (const ref of refs) {
+    if (ref.startsWith("class/")) {
+      const node = showRead(ref).value;
+      if (node && "name" in node) names.set(ref, node.name);
+      continue;
+    }
+    registers.add(ref.split("/").slice(0, 2).join("/"));
+  }
+  for (const ref of registers) {
+    const register = registerRead(ref).value;
+    if (!register) continue;
+    names.set(register.fqid, register.name);
+    for (const node of [...register.tables, ...register.variables]) {
+      names.set(node.fqid, node.name);
+    }
+  }
+  return names;
+}
