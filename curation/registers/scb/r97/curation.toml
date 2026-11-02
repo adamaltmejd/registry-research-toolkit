@@ -26107,93 +26107,73 @@ evidence = "The received gift amount in r272 fits the broad transfers theme, con
 [[statement]]
 kind = "set"
 subject = "individregister: UMED @2003-01-01..2003-12-31 where key = 'v4455'"
-fields = { "variable" = "lakemedelsforman-utgift-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedelsforman-utgift-vuxna"
-fields = { "description" = "Den vuxnes utgift under året för läkemedel och andra produkter som omfattas av högkostnadsskyddet, angiven i kronor." }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedelsforman-utgift-vuxna"
-fields = { "sets" = ["lakemedelsutgifter"] }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedelsforman-utgift-vuxna"
-fields = { "tags" = ["consumption", "medicines"] }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
-
-[[statement]]
-kind = "link"
-subject = "var:lakemedelsforman-utgift-vuxna"
-relation = "continues"
-object = "scb/hek/lakemedel-utgift-vuxna"
-at = "2003-01-01.."
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+fields = { "variable" = "umed" }
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2004-01-01..2004-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2005-01-01..2005-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2006-01-01..2006-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2007-01-01..2007-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2008-01-01..2008-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "individregister: BMED @2009-01-01..2009-12-31 where key = 'v4455'"
 fields = { "variable" = "lakemedelsforman-utgiftsklass-vuxna" }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "var:lakemedelsforman-utgiftsklass-vuxna"
 fields = { "description" = "Den vuxnes årsutgift för läkemedel och andra produkter inom högkostnadsskyddet, angiven som utgiftsklass. Koderna skiljer beloppsintervall, ingen utgift och bortfall; det högsta intervallet hänvisar till beloppet i UMED." }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "var:lakemedelsforman-utgiftsklass-vuxna"
 fields = { "sets" = ["lakemedelsutgifter"] }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "set"
 subject = "var:lakemedelsforman-utgiftsklass-vuxna"
 fields = { "tags" = ["consumption", "medicines"] }
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
+
+[[statement]]
+kind = "set"
+subject = "var:umed"
+fields = { "description" = "Den vuxnes utgift under året för läkemedel och andra produkter som omfattas av högkostnadsskyddet, angiven i kronor." }
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
 
 [[statement]]
 kind = "link"
-subject = "var:lakemedelsforman-utgiftsklass-vuxna"
+subject = "var:umed"
 relation = "continues"
-object = "scb/hek/lakemedelsforman-utgift-vuxna"
-at = "2004-01-01.."
-evidence = "rel070-base/reg_meta.db UMED v4455 (1997-2000 prescription amount; 2003 high-cost-protection amount); BMED v4455 2004-2009, value set 2099 (amount bands and no-expense/nonresponse codes). SCB HEK 1999 SCBDOK questionnaire p27 distinguishes BMED and UMED."
+object = "scb/hek/lakemedel-utgift-vuxna"
+at = "2003-01-01.."
+evidence = "Identity audit follow-up: rel070-base/reg_meta.db occurrence 221212 (UMED v4455, 2003) asks the same high-cost-protection amount question as UMED v4519 in occurrences 222593, 223369, 224148, 224967, 225816 (2005-2009), whose opdef says UMED-Ny fråga 2003. BMED v4455 and value set 2099 are categorical and coexist with UMED in the same 2005-2009 releases; BMED is parallel, not a successor."
