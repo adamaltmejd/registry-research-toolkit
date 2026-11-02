@@ -77,8 +77,16 @@ jobs:
           - suite: scripts/tests
             budget: 2
             command: uv run python -m pytest scripts/tests -n auto
+            # The curation locks are most of the ~1 GB tree and alone push
+            # checkout past this budget; scripts/tests never reads them.
+            sparse: |
+              /*
+              !curation/**/*.lock
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: ${{ matrix.sparse }}
+          sparse-checkout-cone-mode: false
       - uses: astral-sh/setup-uv@v10.3.2
         with:
           version: "0.13.5"
