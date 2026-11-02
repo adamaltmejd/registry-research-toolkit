@@ -1,5 +1,6 @@
 import { getValues } from "./api";
 import styles from "./CatalogNodeView.module.css";
+import { humanizeClassificationSlug } from "./catalog";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
@@ -31,9 +32,16 @@ export function ClassificationView({ fqidPath }: { fqidPath: string }) {
   return (
     <article className={styles.page}>
       <Definitions
-        title={fqidPath.split("/").at(-1) ?? "Classification"}
+        title={humanizeClassificationSlug(
+          fqidPath.split("/").at(-1) ?? "Classification",
+        )}
         definitions={[
-          { term: "Names", value: valueSet.names.join(", ") || "Not stated" },
+          {
+            term: "Names",
+            value:
+              valueSet.names.map(humanizeClassificationSlug).join(", ") ||
+              "Not stated",
+          },
         ]}
       />
       <Panel title="Codes">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Disclosure,
   Button as DisclosureButton,
@@ -29,20 +29,26 @@ interface Props {
 export function ValueSetCodes({ subject, valueSet }: Props) {
   const [filter, setFilter] = useState("");
   const [query, setQuery] = useState("");
+  const [matches, setMatches] = useState<{
+    query: string;
+    total: number;
+  } | null>(null);
+  const showTotal = (total: number) => setMatches({ query, total });
   useEffect(() => {
     const timer = setTimeout(() => setQuery(filter.trim()), 200);
     return () => clearTimeout(timer);
   }, [filter]);
   return (
     <div className={styles.panel}>
-      <p className={styles.note}>
-        <code>{valueSet.n_items}</code> items in this value set.
-      </p>
       <FilterInput
         value={filter}
         onChange={setFilter}
         total={valueSet.n_items}
-        shown={null}
+        shown={
+          filter.trim() === query && matches?.query === query
+            ? matches.total
+            : null
+        }
         label="Search codes"
         placeholder="Search codes…"
       />
@@ -58,6 +64,7 @@ export function ValueSetCodes({ subject, valueSet }: Props) {
               subject={subject}
               hierarchical
               query={query}
+              onTotal={showTotal}
             />
           )}
         </>
@@ -67,6 +74,7 @@ export function ValueSetCodes({ subject, valueSet }: Props) {
           subject={subject}
           hierarchical={false}
           query={query}
+          onTotal={showTotal}
         />
       )}
     </div>
@@ -139,12 +147,16 @@ function CodePage({
   hierarchical,
   query,
   parent,
+  onTotal,
 }: {
   subject: ValuesSubject;
   hierarchical: boolean;
   query: string;
   parent?: string;
+  onTotal?: (total: number) => void;
 }) {
+  const list = useRef<HTMLUListElement>(null);
+  const moreButton = useRef<HTMLButtonElement>(null);
   const [carried, setCarried] = useState<{
     items: ValueItem[];
     cursor?: string;
@@ -152,8 +164,8 @@ function CodePage({
   const [attempt, setAttempt] = useState(0);
   const resource = useAsyncResource(
     JSON.stringify([subject, query, parent, carried.cursor, attempt]),
-    (signal) =>
-      getValues(
+    async (signal) => {
+      const page = await getValues(
         subject,
         {
           limit: 200,
@@ -163,14 +175,32 @@ function CodePage({
           cursor: carried.cursor,
         },
         { signal },
-      ),
+      );
+      if (!signal.aborted) {
+        onTotal?.(page.total);
+        // The last page removes its button. Move focus only if the reader is still on it.
+        if (
+          carried.cursor &&
+          page.next_cursor === null &&
+          moreButton.current &&
+          document.activeElement === moreButton.current
+        )
+          list.current?.focus({ preventScroll: true });
+      }
+      return page;
+    },
   );
   const items = [...carried.items, ...(resource.data?.items ?? [])];
   const cursor = resource.data?.next_cursor;
   return (
     <div className={styles.panel}>
       {items.length > 0 && (
-        <ul className={pageStyles.plainList}>
+        <ul
+          ref={list}
+          tabIndex={-1}
+          aria-label="Codes"
+          className={`${pageStyles.plainList} ${styles.list}`}
+        >
           {items.map((item) => (
             <li key={item.code}>
               {hierarchical && !query && (item.child_count ?? 0) > 0 ? (
@@ -203,6 +233,7 @@ function CodePage({
       )}
       {(cursor || (resource.loading && carried.cursor)) && (
         <Button
+          ref={moreButton}
           isBusy={resource.loading}
           onPress={() => {
             if (!resource.loading && cursor) setCarried({ items, cursor });

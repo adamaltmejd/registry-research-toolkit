@@ -40,7 +40,7 @@ export function ValueSetView({
   }
   if (!sets.size) return null;
   return (
-    <Panel title="Value sets">
+    <Panel title={<span className={valueStyles.panelTitle}>Value sets</span>}>
       {[...sets].map(([hash, entry]) => (
         <ValueSetEntry key={hash} {...entry} names={names} />
       ))}
@@ -58,7 +58,9 @@ function ValueSetEntry({
   names: ReadonlyMap<string, string>;
 }) {
   const [requested, setRequested] = useState(false);
-  const label = valueSet.names.join(", ") || "Unnamed value set";
+  const firstName = valueSet.names[0] ?? "Unnamed value set";
+  const more = valueSet.names.length - 1;
+  const label = `${firstName}${more > 0 ? ` and ${more} more` : ""}`;
   const coverage = [...tables]
     .map(
       ([table, periods]) =>
@@ -80,11 +82,14 @@ function ValueSetEntry({
           >
             <Button
               slot="trigger"
-              className={styles.disclosureButton}
+              className={`${styles.disclosureButton} ${valueStyles.trigger}`}
               aria-label={`${label}; ${coverage}`}
             >
               <TreeChevron />
-              <span>{label}</span>
+              <span className={valueStyles.firstName}>{firstName}</span>
+              {more > 0 && (
+                <span className={valueStyles.more}> and {more} more</span>
+              )}
             </Button>
           </Heading>
           <ul className={`${styles.plainList} ${valueStyles.coverage}`}>
@@ -101,6 +106,11 @@ function ValueSetEntry({
             className={`motion-disclose ${isExpanded ? "open" : ""}`}
           >
             <div className={valueStyles.codes}>
+              <ul className={`${styles.plainList} ${valueStyles.names}`}>
+                {valueSet.names.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
               {requested && (
                 <ValueSetCodes
                   subject={{ value_set: valueSet.hash }}

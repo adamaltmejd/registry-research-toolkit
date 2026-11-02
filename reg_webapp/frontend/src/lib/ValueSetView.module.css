@@ -1,7 +1,8 @@
+.panelTitle,
 .heading {
   margin: 0;
-  font-size: var(--micro-label-size);
-  font-weight: var(--micro-label-weight);
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
 }
 .coverage {
   padding-bottom: var(--space-2);
@@ -11,4 +12,21 @@
 }
 .codes {
   padding-block: var(--space-2) var(--space-3);
+}
+
+.trigger {
+  white-space: nowrap;
+}
+.firstName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.more {
+  flex-shrink: 0;
+}
+.names {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
 }

@@ -365,6 +365,8 @@ async function browseValuesCase(page, shoot) {
   await values.getByText("Man", { exact: true }).waitFor({ state: "detached" });
   await values.getByText("Kvinna", { exact: true }).waitFor();
   await settled(page);
+  // Fails if a successful server search omits its matching count.
+  await values.getByText("1 of 3", { exact: true }).waitFor();
   await shoot("browse-values-search");
 
   await open(page, "/catalog/demo/hush/bransch");

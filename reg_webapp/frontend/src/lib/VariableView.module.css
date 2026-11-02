@@ -72,14 +72,7 @@
   white-space: nowrap;
 }
 
-/* Ellipsize the complete name phrase before it can crowd the version link. */
 .valueSetCell .valueSet {
-  display: block;
   flex: 1;
-  width: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.valueSetCell .more {
-  margin-inline-start: var(--space-1);
+  min-width: 0;
 }

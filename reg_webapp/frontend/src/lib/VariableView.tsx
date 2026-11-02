@@ -14,7 +14,11 @@ import {
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref, formatDataType } from "./catalog";
+import {
+  catalogHref,
+  formatDataType,
+  humanizeClassificationSlug,
+} from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
@@ -77,6 +81,7 @@ function ValueSetLabel({
         <span className={variableStyles.firstName}>{names[0]}</span>
         {names.length > 1 && (
           <span className={variableStyles.more}>
+            {" "}
             and {names.length - 1} more
           </span>
         )}
@@ -124,6 +129,9 @@ export function VariableView({ node }: { node: VariableShow }) {
       varying.some((field) => field.term === fact.term),
     ),
   }));
+  const hasCoding = rows.some(
+    (row) => row.value_set !== null || row.classification !== null,
+  );
   return (
     <article className={styles.page}>
       <Definitions
@@ -208,7 +216,7 @@ export function VariableView({ node }: { node: VariableShow }) {
                 {
                   key: "table",
                   label: "Table",
-                  width: varying.length ? "20%" : "25%",
+                  width: varying.length ? "13%" : "18%",
                 },
                 {
                   key: "period",
@@ -218,18 +226,22 @@ export function VariableView({ node }: { node: VariableShow }) {
                 {
                   key: "spelling",
                   label: "Spelling",
-                  width: varying.length ? "18%" : "20%",
+                  width: varying.length ? "11%" : "15%",
                 },
                 {
                   key: "storage",
                   label: "Storage",
-                  width: varying.length ? "13%" : "14%",
+                  width: "14%",
                 },
-                {
-                  key: "value_set",
-                  label: "Value set",
-                  width: varying.length ? "22%" : "28%",
-                },
+                ...(hasCoding
+                  ? [
+                      {
+                        key: "value_set" as const,
+                        label: "Value set",
+                        width: varying.length ? "35%" : "40%",
+                      },
+                    ]
+                  : []),
                 ...(varying.length
                   ? [{ key: "notes" as const, label: "Notes", width: "14%" }]
                   : []),
@@ -264,7 +276,9 @@ export function VariableView({ node }: { node: VariableShow }) {
                             className={`link ${variableStyles.classification}`}
                             href={catalogHref(row.classification)}
                           >
-                            {row.classification.split("/").at(-1)}
+                            {humanizeClassificationSlug(
+                              row.classification.split("/").at(-1) ?? "",
+                            )}
                           </a>
                         )}
                       </span>

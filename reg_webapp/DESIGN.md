@@ -41,15 +41,15 @@ Variable value sets stay inline, deduplicated by hash across segments, with tabl
 period coverage. Disclosures fetch codes on first expansion through `values`; hashes
 never become routes. Flat sets use debounced server search and cursor paging.
 Hierarchical sets start at level one, load children by parent code, and keep expanded
-branches while search shows flat matches with levels. The whole-set item count stays
-constant during search; sentinel items are labelled in plain words.
+branches while search shows flat matches with levels. Only active search shows a
+matching result count; sentinel items are labelled in plain words.
 
 Classification-version routes (`/catalog/class/<family>/<version>`) read `values` with
-`classification` directly: classifications are not `Show` nodes. The version slug and
-value-set names are the available title metadata. A family has no page because the API
-cannot list its versions. Classification umbrella group routes remain separate. Segments
-supply their own classification links; a null value-set classification is never inferred
-from its names.
+`classification` directly: classifications are not `Show` nodes. Humanized version slugs
+and value-set names are the available title metadata. A family has no page because the
+API cannot list its versions. Classification umbrella group routes remain separate.
+Segments supply their own classification links; a null value-set classification is never
+inferred from its names.
 
 ## Why no auth — cost protection instead
 
