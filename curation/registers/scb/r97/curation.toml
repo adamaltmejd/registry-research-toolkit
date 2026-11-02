@@ -26104,3 +26104,9 @@ kind = "set"
 subject = "var:mottaget-gavobelopp"
 fields = { "tags" = ["transfers"] }
 evidence = "The received gift amount in r272 fits the broad transfers theme, consistent with maintenance-receipt siblings r270/r273 and HEK's theme context r480; donor identity is unnecessary.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:24850\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:24852\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:24853\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avgift"
+fields = { "description" = "Anger om avgiften för kommunalt beslutad hemtjänst har gjort att personen eller hushållet avstått från hjälp." }
+evidence = "Definition pass 2026-11-02: The response measures foregoing help because of its fee, not the fee amount.\nrel070-base/reg_meta.db:occurrence:230338\nrel070-base/reg_meta.db:occurrence:222060\nrel070-base/reg_meta.db:occurrence:222801\nrel070-base/reg_meta.db:occurrence:223585\nrel070-base/reg_meta.db:occurrence:224367\nrel070-base/reg_meta.db:occurrence:225195"

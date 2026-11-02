@@ -16903,3 +16903,9 @@ kind = "set"
 subject = "var:orghem"
 fields = { "tags" = ["research"] }
 evidence = "r314/r545 place organisational affiliation in FoU university personnel data. This administrative field fits the register's research theme, supported by r937.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:136612\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:13698\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:uppskattade-utgifter-for-egen-fou-verksamhet-under-2004"
+fields = { "description" = "Uppskattade driftkostnader för egen FoU-verksamhet, i tusental kronor. Uppgiften är en prognos." }
+evidence = "Definition pass 2026-11-02: The definition specifies estimated operating expenditure, not total FoU investment and current expenditure.\nrel070-base/reg_meta.db:occurrence:135138"

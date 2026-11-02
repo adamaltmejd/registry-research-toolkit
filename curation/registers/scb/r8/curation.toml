@@ -3076,3 +3076,9 @@ kind = "set"
 subject = "motorcyklar: avrors @2009-12-31..2009-12-31 where key = 'v19640'"
 fields = { "variable" = "avregorsak" }
 evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:datutl"
+fields = { "description" = "Datum för registrering av uppgiften. För fordon som var i bruk före registreringen i Vägtrafikregistret anges datum då fordonet först togs i bruk." }
+evidence = "Definition-pass audit follow-up 2026-11-02: The own definition and operational exception jointly settle the description. The group question remains open.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:113734\nrel070-base/reg_meta.db:occurrence:113810\nrel070-base/reg_meta.db:occurrence:113890\nrel070-base/reg_meta.db:occurrence:113971\nrel070-base/reg_meta.db:occurrence:114056\nrel070-base/reg_meta.db:occurrence:114147\nrel070-base/reg_meta.db:occurrence:114246\nrel070-base/reg_meta.db:occurrence:114346\nrel070-base/reg_meta.db:occurrence:114461\nrel070-base/reg_meta.db:occurrence:114596\nrel070-base/reg_meta.db:occurrence:114742\nrel070-base/reg_meta.db:occurrence:114889\nrel070-base/reg_meta.db:occurrence:115037\nrel070-base/reg_meta.db:occurrence:115185\nrel070-base/reg_meta.db:occurrence:115333\nrel070-base/reg_meta.db:occurrence:115481\nrel070-base/reg_meta.db:occurrence:115629\nrel070-base/reg_meta.db:occurrence:115778"
