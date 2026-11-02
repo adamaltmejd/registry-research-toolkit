@@ -1,0 +1,211 @@
+/* The code viewer and the classification code tree: one row shape, mono code
+   and wrapping label, in a bounded scroll so a long set stays on screen. */
+
+/* ValueSetCodes: stretched, so the filter spans the panel. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.scroll {
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.codes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+}
+
+/* Below the top loaded level: one indent step per level, with a hairline guide
+   so the depth reads without the parent row on screen. */
+.levelled {
+  margin-inline-start: calc(
+    (var(--code-depth) - 1) *
+    (0.45rem + var(--space-2))
+  );
+  padding-inline-start: calc(0.45rem + var(--space-2) - 1px);
+  border-inline-start: 1px solid var(--border);
+}
+
+/* A code is a machine identifier: mono (DESIGN.md → Typography). */
+.key {
+  flex: 0 0 auto;
+  min-width: 3.5rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sentinel {
+  display: block;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.evidence p {
+  margin: var(--space-1) 0 0;
+}
+
+.evidenceToggle {
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.evidenceToggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── The code tree (#1297), a RAC Tree ─────────────────────────────────── */
+.tree {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+/* The DOM is flat: every row is a sibling, so depth is `data-level` and RAC's
+   `--tree-item-level`, never nesting. One indent step per level is the chevron
+   column plus the gap, so a child's chevron sits under its parent's code; the
+   indent carries a hairline guide per level, so the depth reads without the
+   parent row on screen. */
+.treeRow {
+  --tree-step: calc(20px + var(--space-2));
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1)
+    calc((var(--tree-item-level, 1) - 1) * var(--tree-step));
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0 9px,
+    var(--border) 9px 10px,
+    transparent 10px var(--tree-step)
+  );
+  background-repeat: no-repeat;
+  background-size: calc((var(--tree-item-level, 1) - 1) * var(--tree-step)) 100%;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+.treeRow[data-hovered] {
+  background-color: var(--surface-hover);
+}
+/* Inset, so the bounded scroll never clips the ring. */
+.treeRow[data-focus-visible] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.treeRow[data-has-child-items],
+.treeError {
+  cursor: pointer;
+}
+
+.chevron {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.chevron svg {
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+.treeRow[data-expanded] .chevron svg {
+  transform: rotate(90deg);
+}
+.chevronSpacer {
+  flex: none;
+  width: 20px;
+}
+
+/* A failed level and an empty one: a row in the tree, so the keyboard reaches
+   it. */
+.treeError {
+  color: var(--err);
+  font-size: var(--text-sm);
+}
+.retry {
+  color: var(--text);
+  text-decoration: underline 2px var(--accent);
+  text-underline-offset: 3px;
+}
+.treeNote {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* The loader row of a node whose children are being read: it reserves one
+   skeleton row per announced child, indented as those children will be. */
+.treeLoader {
+  padding-left: calc(
+    (var(--tree-item-level, 1) - 1) *
+    (20px + var(--space-2)) +
+    20px +
+    var(--space-2)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron svg {
+    transition: none;
+  }
+}
+
+.childCount {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.treeLoading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+/* A reserved row is as tall as the code row it stands in for. */
+.reserve {
+  display: flex;
+  align-items: center;
+  min-height: 1lh;
+  padding: var(--space-1) 0;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.status p,
+.empty {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.empty {
+  color: var(--text-muted);
+}

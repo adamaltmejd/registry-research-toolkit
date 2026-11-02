@@ -1,0 +1,45 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.1em 0.5em;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.glyph {
+  display: inline-flex;
+  font-size: 0.85em;
+}
+
+.neutral {
+  border-color: var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+}
+
+.accent {
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+}
+
+.error {
+  background: var(--err-bg);
+  color: var(--err);
+}
+.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.info {
+  background: var(--info-bg);
+  color: var(--info);
+}
+.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}

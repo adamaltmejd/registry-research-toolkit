@@ -1,0 +1,72 @@
+/* A catalog page: the h1, then its sections, the gap owned here. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* The one `h1` treatment (DESIGN.md → typography.h1; the Definitions head). */
+.title {
+  max-width: 30ch;
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+  line-height: 1.1;
+}
+
+/* The loading placeholder keeps the loaded page's rhythm: a title, then the
+   body (three blocks on a classification page, which has more surfaces). */
+.loading,
+.loadingGeometry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.loadingGeometry {
+  max-width: 64rem;
+}
+/* The loaded page's wrapper: a flex item of the detail pane, so it must let a wide
+   table scroll inside its own wrapper instead of widening the page. */
+.loaded {
+  min-width: 0;
+}
+
+/* A row's name is the row's link, and what leads it: a plain link (`link`) at
+   600. A group row's whole anchor is the link, so its name carries the border. */
+.rowLink {
+  color: var(--text);
+  font-weight: var(--heading-weight);
+}
+.groupLink:hover .rowLink {
+  background: var(--surface-hover);
+}
+
+/* A register's description, two lines at most; the whole text is on its page. */
+.clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.groupLink {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+.groupLink:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+/* A classification's short name is a human code: kept, muted, secondary. */
+.edition {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

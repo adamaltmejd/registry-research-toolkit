@@ -6,10 +6,11 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust and release;
+first failure. `all` runs g0, rust, release, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
-`release`; the legacy Python builder suite runs in `release` until cutover F.
+`release`, `frontend` and `flows`; the legacy Python builder suite runs in
+`release` until cutover F.
 `regen` also refreshes the plugin project schema. Stdlib only.
 """
 
@@ -17,10 +18,12 @@ from __future__ import annotations
 
 import argparse
 import filecmp
+import gzip
 import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -28,6 +31,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+FRONTEND = ROOT / "reg_webapp/frontend"
 # The repo takes new releases immediately (`exclude-newer = false` in pyproject.toml), but
 # project-less `uvx` reads only the host uv config, which may delay them; without this a
 # freshly bumped tool pin fails locally until the host cutoff passes.
@@ -40,7 +44,7 @@ SERVER_CMD = (
     " --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
-ALL = ("g0", "rust", "release")
+ALL = ("g0", "rust", "release", "flows", "frontend")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
 # builder"). These words fail `lint` in the other builder crates and in the catalog
 # reader and server, which read only the catalog: providers, their template
@@ -55,6 +59,10 @@ PROVIDER_WORDS = re.compile(
 )
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
+# The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
+# it, the frontend step fails: raising the budget is a maintainer call. It includes the
+# search fold (about 145 KB gz measured with it).
+WASM_GZ_BUDGET = 200_000
 
 
 def run(command, cwd=ROOT, env=None, **kwargs):
@@ -168,6 +176,41 @@ def release() -> None:
     )
 
 
+def flows() -> None:
+    # The production bootstrap and interactive flows share the browser-only job.
+    run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
+    run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
+    run(["bun", "run", "build"], cwd=FRONTEND)
+    run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
+    out = Path(tempfile.mkdtemp(prefix="gate-flows-"))
+    dev = ROOT / "reg_webapp/dev/dev.sh"
+    run(["bash", dev, "--fixture-db", "flows", out], stdin=subprocess.DEVNULL)
+    # Kept on failure: the screenshots are the evidence.
+    shutil.rmtree(out)
+
+
+def frontend() -> None:
+    # On demand, so a fresh worktree needs no setup; a no-op when in sync.
+    run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
+    run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
+    wasm = FRONTEND / "src/lib/reg-core-wasm/reg_core_wasm_bg.wasm"
+    size = len(gzip.compress(wasm.read_bytes(), compresslevel=9))
+    print(f"gate: {wasm.name} {size} bytes gzipped (budget {WASM_GZ_BUDGET})")
+    if size > WASM_GZ_BUDGET:
+        sys.exit(f"gate: {wasm.name} is over its gzipped budget; see WASM_GZ_BUDGET")
+    for script in ("check", "lint", "test", "build", "gen:types"):
+        run(["bun", "run", script], cwd=FRONTEND)
+    # A diff means the SPA's types, or the plugin's project_data.json schema, drifted
+    # from the committed API contract. `ls-files` fails on an untracked one, which
+    # `git diff` ignores.
+    generated = (
+        "src/lib/api-types-rust.ts"
+        " ../../plugins/microdata-tools-se/skills/register-project/project_data.schema.json"
+    )
+    run(f"git ls-files --error-unmatch -- {generated}", cwd=FRONTEND)
+    run(f"git diff --exit-code -- {generated}", cwd=FRONTEND)
+
+
 def regen() -> None:
     run("cargo build --workspace --locked")
     run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
@@ -210,6 +253,8 @@ STEPS = {
         crates,
         rust,
         release,
+        flows,
+        frontend,
         regen,
     )
 }

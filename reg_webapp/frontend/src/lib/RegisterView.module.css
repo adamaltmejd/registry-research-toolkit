@@ -1,0 +1,110 @@
+/* The variable list: its label header, the variant chips, the rows, the add
+   bar and its status. */
+.variables {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* "Variables", then how many a filter leaves, only while one narrows. */
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.listLabel {
+  margin: 0;
+}
+.listLabel:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.shown {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The variant chips (Y-82): one fieldset whose legend names the axis in text. No
+   box: the legend floats so it reads as an inline label before the chips. */
+.variantFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.variantFilter {
+  /* Hug the label and chips: a bare fieldset spans the pane. */
+  inline-size: fit-content;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.variantFilter legend {
+  float: left;
+  margin-inline-end: var(--space-2);
+  padding: 0;
+  /* One chip tall, so the label sits on the chips' centre line. */
+  line-height: 1.85rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* One delivery column: the tick, its chip and eras, the whole line the tick's
+   target. */
+.column {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.pick {
+  cursor: pointer;
+}
+.years {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
+}
+.era {
+  white-space: nowrap;
+}
+/* Why an out-of-window column has no tick to offer. */
+.reason {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
+/* Taller than the sticky add bar, so a focused tick is scrolled clear of
+   it (WCAG 2.4.11). */
+.tick {
+  scroll-margin-bottom: 7rem;
+}
+.tick:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* The add bar, only while something is ticked: the pane's one primary button.
+   Sticky against the viewport, opaque, no shadow (Y-97). */
+.addBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}

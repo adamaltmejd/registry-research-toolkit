@@ -1,0 +1,93 @@
+{"kind":"value_set","items":[{"code":"1","label":"Man"},{"code":"2","label":"Kvinna"},{"code":"","label":"Uppgift saknas"}],"names":["kon"]}
+{"kind":"value_set","items":[{"code":"1","label":"Sysselsatt"},{"code":"2","label":"Arbetslös"},{"code":"3","label":"Utanför arbetskraften"},{"code":"","label":"Uppgift saknas"}],"names":["syss15"]}
+{"kind":"value_set","items":[{"code":"1","label":"Sysselsatt"},{"code":"2","label":"Arbetslös"},{"code":"3","label":"Utanför arbetskraften"},{"code":"4","label":"Studerande"},{"code":"","label":"Uppgift saknas"}],"names":["syss19"]}
+{"kind":"value_set","items":[{"code":"A","label":"Jordbruk"},{"code":"A1","label":"Jordbruk, grupp 1","parent":"A"},{"code":"A1a","label":"Jordbruk, grupp 1a","parent":"A1"},{"code":"A1b","label":"Jordbruk, grupp 1b","parent":"A1"},{"code":"A2","label":"Jordbruk, grupp 2","parent":"A"},{"code":"A2a","label":"Jordbruk, grupp 2a","parent":"A2"},{"code":"A2b","label":"Jordbruk, grupp 2b","parent":"A2"},{"code":"A3","label":"Jordbruk, grupp 3","parent":"A"},{"code":"A3a","label":"Jordbruk, grupp 3a","parent":"A3"},{"code":"A3b","label":"Jordbruk, grupp 3b","parent":"A3"},{"code":"B","label":"Industri"},{"code":"B1","label":"Industri, grupp 1","parent":"B"},{"code":"B1a","label":"Industri, grupp 1a","parent":"B1"},{"code":"B1b","label":"Industri, grupp 1b","parent":"B1"},{"code":"B2","label":"Industri, grupp 2","parent":"B"},{"code":"B2a","label":"Industri, grupp 2a","parent":"B2"},{"code":"B2b","label":"Industri, grupp 2b","parent":"B2"},{"code":"B3","label":"Industri, grupp 3","parent":"B"},{"code":"B3a","label":"Industri, grupp 3a","parent":"B3"},{"code":"B3b","label":"Industri, grupp 3b","parent":"B3"},{"code":"C","label":"Handel"},{"code":"C1","label":"Handel, grupp 1","parent":"C"},{"code":"C1a","label":"Handel, grupp 1a","parent":"C1"},{"code":"C1b","label":"Handel, grupp 1b","parent":"C1"},{"code":"C2","label":"Handel, grupp 2","parent":"C"},{"code":"C2a","label":"Handel, grupp 2a","parent":"C2"},{"code":"C2b","label":"Handel, grupp 2b","parent":"C2"},{"code":"C3","label":"Handel, grupp 3","parent":"C"},{"code":"C3a","label":"Handel, grupp 3a","parent":"C3"},{"code":"C3b","label":"Handel, grupp 3b","parent":"C3"},{"code":"D","label":"Tjänster"},{"code":"D1","label":"Tjänster, grupp 1","parent":"D"},{"code":"D1a","label":"Tjänster, grupp 1a","parent":"D1"},{"code":"D1b","label":"Tjänster, grupp 1b","parent":"D1"},{"code":"D2","label":"Tjänster, grupp 2","parent":"D"},{"code":"D2a","label":"Tjänster, grupp 2a","parent":"D2"},{"code":"D2b","label":"Tjänster, grupp 2b","parent":"D2"},{"code":"D3","label":"Tjänster, grupp 3","parent":"D"},{"code":"D3a","label":"Tjänster, grupp 3a","parent":"D3"},{"code":"D3b","label":"Tjänster, grupp 3b","parent":"D3"}],"names":["bransch"]}
+{"kind":"register","provider":"demo","register":"bas","name":"Basregistret"}
+{"kind":"table","provider":"demo","register":"bas","table":"","name":"Basregistret"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2015","name":"Basregistret 2015","grain":"year","edition":"final","from":"2015-01-01","to":"2015-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2016","name":"Basregistret 2016","grain":"year","edition":"final","from":"2016-01-01","to":"2016-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2017","name":"Basregistret 2017","grain":"year","edition":"final","from":"2017-01-01","to":"2017-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2018","name":"Basregistret 2018","grain":"year","edition":"final","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2019","name":"Basregistret 2019","grain":"year","edition":"final","from":"2019-01-01","to":"2019-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2020","name":"Basregistret 2020","grain":"year","edition":"final","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2021","name":"Basregistret 2021","grain":"year","edition":"final","from":"2021-01-01","to":"2021-12-31"}
+{"kind":"release","provider":"demo","register":"bas","table":"","release":"b2022","name":"Basregistret 2022","grain":"year","edition":"final","from":"2022-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2015","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2015","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2015","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2015","column":"Inkomst","source_key":"inkomst","label":"Inkomst före skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster före skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2015","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Inkomst","source_key":"inkomst","label":"Inkomst före skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster före skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2018","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2018","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2018","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2018","column":"Inkomst","source_key":"inkomst","label":"Inkomst före skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster före skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2018","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"KON","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss19"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"Inkomst","source_key":"inkomst","label":"Inkomst efter skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster efter skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2019","column":"Kommun","source_key":"kommun","label":"Kommun","dtype":"char"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"KON","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss19"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"Inkomst","source_key":"inkomst","label":"Inkomst efter skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster efter skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2020","column":"Kommun","source_key":"kommun","label":"Kommun","dtype":"char"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"KON","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss19"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"Inkomst","source_key":"inkomst","label":"Inkomst efter skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster efter skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2021","column":"Kommun","source_key":"kommun","label":"Kommun","dtype":"char"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"KON","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss19"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"Inkomst","source_key":"inkomst","label":"Inkomst efter skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster efter skatt."}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2022","column":"Kommun","source_key":"kommun","label":"Kommun","dtype":"char"}
+{"kind":"register","provider":"demo","register":"hush","name":"Hushållsregistret"}
+{"kind":"table","provider":"demo","register":"hush","table":"ind","name":"Individer"}
+{"kind":"table","provider":"demo","register":"hush","table":"fam","name":"Familjer"}
+{"kind":"table","provider":"demo","register":"hush","table":"famgammal","name":"Familjer (äldre)"}
+{"kind":"release","provider":"demo","register":"hush","table":"ind","release":"i2020","name":"ind 2020","grain":"year","edition":"final","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2020","column":"Bransch","source_key":"bransch","label":"Bransch","dtype":"char","valueset":"bransch"}
+{"kind":"release","provider":"demo","register":"hush","table":"ind","release":"i2021","name":"ind 2021","grain":"year","edition":"final","from":"2021-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Bransch","source_key":"bransch","label":"Bransch","dtype":"char","valueset":"bransch"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Namn","source_key":"namn-a","label":"Namn","dtype":"char"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"ind","release":"i2021","column":"Namn","source_key":"namn-b","label":"Namn, tilltalsnamn","dtype":"char"}
+{"kind":"release","provider":"demo","register":"hush","table":"fam","release":"f2021","name":"fam 2021","grain":"year","edition":"final","from":"2021-01-01","to":"2021-12-31"}
+{"kind":"release","provider":"demo","register":"hush","table":"fam","release":"f2022p","name":"fam 2022","grain":"year","edition":"preliminary","from":"2022-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"fam","release":"f2021","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"fam","release":"f2022p","column":"Antal","source_key":"antal","label":"Antal personer","dtype":"int"}
+{"kind":"release","provider":"demo","register":"hush","table":"famgammal","release":"g2016","name":"famgammal 2016","grain":"year","edition":"final","from":"2016-01-01","to":"2016-12-31"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"famgammal","release":"g2016","column":"AntalGammal","source_key":"antalgammal","label":"Antal personer, äldre","dtype":"int"}
+{"kind":"release","provider":"demo","register":"hush","table":"famgammal","release":"g2017","name":"famgammal 2017","grain":"year","edition":"final","from":"2017-01-01","to":"2017-12-31"}
+{"kind":"occurrence","provider":"demo","register":"hush","table":"famgammal","release":"g2017","column":"AntalGammal","source_key":"antalgammal","label":"Antal personer, äldre","dtype":"int"}
+{"kind":"register","provider":"demo2","register":"reg","name":"Andra registret"}
+{"kind":"table","provider":"demo2","register":"reg","table":"gammal","name":"Gammal tabell"}
+{"kind":"table","provider":"demo2","register":"reg","table":"ny","name":"Ny tabell"}
+{"kind":"table","provider":"demo2","register":"reg","table":"tidlos","name":"Tidlös tabell"}
+{"kind":"release","provider":"demo2","register":"reg","table":"gammal","release":"g2019","name":"Gammal 2019","grain":"year","edition":"final","from":"2019-01-01","to":"2019-12-31"}
+{"kind":"release","provider":"demo2","register":"reg","table":"ny","release":"n2020","name":"Ny 2020","grain":"year","edition":"final","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"release","provider":"demo2","register":"reg","table":"tidlos","release":"tl","name":"Tidlös leverans","edition":"final"}
+{"kind":"occurrence","provider":"demo2","register":"reg","table":"gammal","release":"g2019","column":"Kod","source_key":"kod-g","label":"Kod","dtype":"char"}
+{"kind":"occurrence","provider":"demo2","register":"reg","table":"ny","release":"n2020","column":"Kod","source_key":"kod-n","label":"Kod","dtype":"char"}
+{"kind":"occurrence","provider":"demo2","register":"reg","table":"tidlos","release":"tl","column":"Typ","source_key":"typ","label":"Typ","dtype":"char"}
+{"kind":"link","relation":"continues","subject":{"provider":"demo","kind":"table","register":"hush","table":"fam"},"object":{"provider":"demo","kind":"table","register":"hush","table":"famgammal"},"at":"2018-01-01"}
+{"kind":"link","relation":"continues","subject":{"kind":"table","provider":"demo2","register":"reg","table":"ny"},"object":{"kind":"table","provider":"demo2","register":"reg","table":"gammal"}}
+{"kind":"link","relation":"continues","subject":{"provider":"demo","kind":"variable","register":"hush","key":"antal"},"object":{"provider":"demo","kind":"variable","register":"hush","key":"antalgammal"},"note":"Antal ersätter AntalGammal från 2021."}
+{"kind":"link","relation":"derived_from","subject":{"provider":"demo","kind":"variable","register":"bas","key":"kommun"},"object":{"provider":"demo","kind":"register","register_name":"Hushållsregistret"}}
+{"kind":"notice","subject":{"provider":"demo","kind":"variable","register":"bas","key":"inkomst"},"text":"Inkomst mäts efter skatt från 2019."}
+{"kind":"notice","subject":{"provider":"demo","kind":"release","register":"hush","table":"fam","key":"f2021"},"text":"Familjebegreppet ändrades 2021."}
+{"kind":"doc","doc_kind":"parsed","hash":"dc21907157479e321cfd863e89d10ef001130ef0818a64d4eab4b09941f7b6f6","title":"Beskrivning av Basregistret","licence":"CC BY 4.0","bytes":117,"url":"https://example.org/basregistret","sections":[{"heading":"Inledning","page":1,"body":"Basregistret innehåller en post per person och år."},{"heading":"Variabler","page":2,"body":"Inkomst avser förvärvsinkomst efter skatt från och med 2019."}],"subjects":[{"endpoint":{"provider":"demo","kind":"register","register":"bas"},"page":0}]}
+{"kind":"doc","doc_kind":"pdf","hash":"ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9","title":"Bilaga","licence":"CC BY 4.0","bytes":24,"content":"255044462d312e340a252062696c6167610a2525454f460a","subjects":[{"endpoint":{"provider":"demo","kind":"register","register":"hush"},"page":0}]}
