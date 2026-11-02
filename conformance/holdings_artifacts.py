@@ -10,7 +10,9 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sqlite3
 import subprocess
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 from reader_artifacts import CASES, REG_BUILD, REPO, cached_reader_artifact
@@ -147,3 +149,19 @@ def prepare_holdings(directory: Path) -> tuple[Path, Path, list]:
         registry,
     ]
     return base, root, command
+
+
+def verify_refusals(tmp_path, output, base, root, variant="base"):
+    for case in json.loads((HOLDINGS_CASE / "verify-refusals.json").read_text()):
+        if case.get("variant", "base") != variant:
+            continue
+        damaged = tmp_path / "damaged.db"
+        shutil.copyfile(output, damaged)
+        with closing(sqlite3.connect(damaged)) as db:
+            db.executescript(case["sql"])
+        refused = run(
+            [REG_BUILD, "verify", damaged, "--catalog", base, "--steward-repo", root]
+        )
+        assert refused.returncode == 1
+        assert case["code"] in refused.stderr, refused.stderr
+        assert case["location"] in refused.stderr, refused.stderr
