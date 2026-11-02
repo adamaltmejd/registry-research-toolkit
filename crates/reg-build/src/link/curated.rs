@@ -11,6 +11,7 @@ pub(crate) struct Curated {
     pub relations: Vec<Relation>,
     pub statements: Vec<crate::emit::StatementRow>,
     pub refusals: Vec<(String, String)>,
+    pub external: Vec<crate::external::Relation>,
 }
 
 fn relation_kind(relation: reg_frame::statement::Relation) -> &'static str {
@@ -123,11 +124,13 @@ fn validity(at: Option<&reg_frame::address::PeriodSet>) -> Vec<(Option<String>, 
 
 /// Validate both endpoints, curated conflicts and the combined succession graph before
 /// locks are written. Refused statements have no effect; dev callers rerun without them.
+#[allow(clippy::too_many_lines)]
 pub(crate) fn curate(
     root: &std::path::Path,
     registers: &[Resolved],
     records: &[Record],
     statements: &[(LocatedStatement, Premise)],
+    base: Option<&crate::external::Context>,
 ) -> Result<Curated, String> {
     let source = resolve(registers, records, &[])?;
     let mut result = Curated::default();
@@ -148,7 +151,51 @@ pub(crate) fn curate(
         let hash = statement
             .statement
             .scoped_identity(&statement.provider, &statement.register);
+        origins.insert(hash.clone(), statement);
         let kind = relation_kind(*relation);
+        if endpoints(
+            registers,
+            &statement.provider,
+            &statement.register,
+            object,
+            &premise.objects,
+        )
+        .is_err()
+            && let Some(base) = base
+            && let Some(object_kind) = base.kind(object)?
+        {
+            let external = external_link(registers, statement, premise, kind);
+            match external {
+                Ok(subjects) => {
+                    for (subject_kind, subject_pid) in subjects {
+                        for (start, end) in validity(at.as_ref()) {
+                            result.external.push(crate::external::Relation {
+                                subject_kind: subject_kind.clone(),
+                                subject_pid: subject_pid.clone(),
+                                object_kind: object_kind.clone(),
+                                object_pid: object.clone(),
+                                start,
+                                end,
+                                statement: hash.clone(),
+                                caveat: caveat.clone(),
+                            });
+                        }
+                    }
+                    result
+                        .statements
+                        .push(crate::curation::statement_row(root, statement)?);
+                }
+                Err(reason) => result.refusals.push((
+                    hash,
+                    format!(
+                        "{}:{}: curated-link: {reason}",
+                        statement.path.display(),
+                        statement.line
+                    ),
+                )),
+            }
+            continue;
+        }
         let matched = endpoints(
             registers,
             &statement.provider,
@@ -166,7 +213,6 @@ pub(crate) fn curate(
             )?;
             pairs(kind, &subjects, &objects)
         });
-        origins.insert(hash.clone(), statement);
         match matched {
             Err(reason) => result.refusals.push((
                 hash.clone(),
@@ -205,6 +251,38 @@ pub(crate) fn curate(
     Ok(result)
 }
 
+fn external_link(
+    registers: &[Resolved],
+    statement: &LocatedStatement,
+    premise: &Premise,
+    kind: &str,
+) -> Result<Vec<(String, String)>, String> {
+    if kind != "derived_from" {
+        return Err("only derived_from may target the immutable reference catalog".into());
+    }
+    let Statement::Link { subject, .. } = &statement.statement else {
+        unreachable!("link statement")
+    };
+    endpoints(
+        registers,
+        &statement.provider,
+        &statement.register,
+        &subject.to_string(),
+        &premise.subjects,
+    )?
+    .into_iter()
+    .map(|subject| {
+        let pid = match subject {
+            Entity::Register(r) => crate::emit::pid_of_register(&registers[r]),
+            Entity::Table(r, t) => crate::emit::pid_of_table(&registers[r], t),
+            Entity::Variable(r, v) => crate::emit::pid_of_variable(&registers[r], v),
+            Entity::Release(..) => return Err("release-kind derived_from".into()),
+        };
+        Ok((subject.kind().into(), pid))
+    })
+    .collect()
+}
+
 fn refuse(
     result: &mut Curated,
     origins: &BTreeMap<String, &LocatedStatement>,
@@ -223,6 +301,16 @@ fn refuse(
     ));
 }
 
+fn overlap(
+    left: (&Option<String>, &Option<String>),
+    right: (&Option<String>, &Option<String>),
+) -> bool {
+    match (left, right) {
+        ((Some(a), Some(b)), (Some(c), Some(d))) => a <= d && c <= b,
+        _ => true,
+    }
+}
+
 fn check_conflicts(
     curated: &[Relation],
     origins: &BTreeMap<String, &LocatedStatement>,
@@ -230,14 +318,10 @@ fn check_conflicts(
 ) {
     for (i, left) in curated.iter().enumerate() {
         for right in &curated[i + 1..] {
-            let overlap = match (&left.at, &left.end, &right.at, &right.end) {
-                (Some(a), Some(b), Some(c), Some(d)) => a <= d && c <= b,
-                _ => true,
-            };
             if left.kind == right.kind
                 && left.subject == right.subject
                 && left.object == right.object
-                && overlap
+                && overlap((&left.at, &left.end), (&right.at, &right.end))
             {
                 refuse(
                     result,
@@ -251,6 +335,29 @@ fn check_conflicts(
                     right,
                     "overlapping curated relations for one subject",
                 );
+            }
+        }
+    }
+    let external = result.external.clone();
+    for (i, left) in external.iter().enumerate() {
+        for right in &external[i + 1..] {
+            if left.subject_kind == right.subject_kind
+                && left.subject_pid == right.subject_pid
+                && left.object_kind == right.object_kind
+                && left.object_pid == right.object_pid
+                && overlap((&left.start, &left.end), (&right.start, &right.end))
+            {
+                for relation in [left, right] {
+                    let statement = origins[relation.statement.as_str()];
+                    result.refusals.push((
+                        relation.statement.clone(),
+                        format!(
+                            "{}:{}: curated-link: overlapping curated relations for one subject",
+                            statement.path.display(),
+                            statement.line
+                        ),
+                    ));
+                }
             }
         }
     }

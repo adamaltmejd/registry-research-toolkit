@@ -122,7 +122,7 @@ pub struct StatementLocation {
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let given = params["ref"];
     let variable = refs::resolve(&conn, given)?;
     if variable.kind != "variable" {

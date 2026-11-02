@@ -1,0 +1,18 @@
+{"kind":"register","provider":"demo","register":"held","name":"Held reference metadata"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"Id","source_key":"id","label":"Identifier","dtype":"int","identifier":true,"from":"2017-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"Old","source_key":"value","label":"Value","dtype":"int","from":"2017-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"New","source_key":"value","label":"Value","dtype":"int","from":"2019-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"Late","source_key":"late","label":"Late measure","dtype":"int","from":"2019-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"Year","source_key":"year","label":"Reference year","dtype":"int","from":"2017-01-01","to":"2020-12-31"}
+{"kind":"register","provider":"demo","register":"projected","name":"Projection reference"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Id","source_key":"id","label":"Identifier","dtype":"int","identifier":true,"from":"2018-01-01","to":"2018-12-31"}
+{"kind":"register","provider":"demo","register":"owners","name":"Interval-local rival owners"}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"","column":"Alpha","source_key":"a","label":"First owner","dtype":"int","from":"2017-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"","column":"Beta","source_key":"b","label":"Second owner","dtype":"int","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"","column":"Id","source_key":"id","label":"Observation identity","dtype":"int","identifier":true,"from":"2017-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"","column":"RelativeId","source_key":"relative-id","label":"Relative identifier, ordinary orderable column","dtype":"int","identifier":true,"from":"2017-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"received","column":"Other","source_key":"other","label":"Received table measure","dtype":"int","from":"2017-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"ChildId","source_key":"child-id","label":"Child entity component","dtype":"int","identifier":true,"from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Amount","source_key":"amount","label":"Amount","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Status","source_key":"status","label":"Status","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"table","provider":"demo","register":"owners","table":"empty","name":"Segmentless routed table"}

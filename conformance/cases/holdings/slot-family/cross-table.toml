@@ -1,0 +1,23 @@
+[[table]]
+physical_name = "Other positions"
+disposition = "dated"
+delivery = "2018"
+table_pids = ["demo/held"]
+locator = "fixture:other-physical-table"
+
+[[table.column]]
+name = "Position3"
+slot_family = "received-position"
+slot_kind = "position"
+slot_index = 3
+locator = "fixture:received-position-document:position=3"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:received-position-document:same-variable"
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+locator = "fixture:other-physical-table-key"
+

@@ -1,0 +1,10 @@
+[[table.column]]
+name = "Old"
+locator = "fixture:held-only-binding"
+[[table.column.mapping]]
+table_pid = "demo/held"
+variable_pid = "demo/held/old"
+hold = "Documentary owner remains unreviewed despite a matching default spelling"
+follow_up = "https://example.invalid/issues/old-owner"
+locator = "fixture:held-old-owner"
+

@@ -23,7 +23,8 @@ from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
-from http_cases import CASES, artifact_env, cached_case_artifact
+from holdings_artifacts import HOLDINGS_CASE, prepare_holdings, run
+from http_cases import CASES, ServerPool, artifact_env, cached_case_artifact
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -79,3 +80,33 @@ def test_logical_order_or_located_finding(case: Path, http_servers) -> None:
         assert not validation["ok"]
         blocking = [f for f in error["fields"]["findings"] if f["level"] == "error"]
         assert [i for i in validation["issues"] if i["level"] == "error"] == blocking
+
+
+def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
+    tmp_path, server_cmd
+):
+    # Fails if catalog identifier roles auto-carry RelativeId or replace the
+    # declared received Id. The corpus keeps RelativeId as an explicit binding;
+    # reference-only order cases cannot exercise the holdings key authority.
+    base, _, command = prepare_holdings(tmp_path)
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    expected = json.loads((HOLDINGS_CASE / "order-key-requirements.json").read_text())
+    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
+    try:
+        answer = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=expected["project"]
+        )
+        assert answer.status_code == 200, answer.text
+        data = answer.json()["data"]
+        assert data["row_keys"] == expected["row_keys"]
+        linking = expected["explicit_linking_entry"]
+        assert [
+            {key: entry[key] for key in linking}
+            for entry in data["entries"]
+            if entry["variable"] == linking["variable"]
+        ] == [linking]
+    finally:
+        pool.close()
