@@ -37,7 +37,16 @@ jobs:
     # ARCHITECTURE.md "Tiers"; sized for a cold rust-cache plus its save (#1410).
     timeout-minutes: 6
     steps:
+      # The curation locks are most of the ~1 GB tree and alone push checkout
+      # toward each job's budget. No job here reads them: Rust tests, the
+      # conformance run and the suites below use fixture curation only
+      # (conformance/cases/fixtures), never curation/.
       - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: &no-locks |
+            /*
+            !curation/**/*.lock
+          sparse-checkout-cone-mode: false
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -74,12 +83,7 @@ jobs:
             command: uv run --no-project scripts/gate.py release
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
-            # The curation locks are most of the ~1 GB tree and alone push
-            # checkout toward the budget; both suites read only fixture
-            # curation (conformance/cases/fixtures), never curation/.
-            sparse: &no-locks |
-              /*
-              !curation/**/*.lock
+            sparse: *no-locks
           - suite: scripts/tests
             budget: 2
             command: uv run python -m pytest scripts/tests -n auto
@@ -99,3 +103,144 @@ jobs:
       - run: ${{ matrix.command }}
         env:
           HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
+
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      webapp: ${{ steps.filter.outputs.webapp }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: *no-locks
+          sparse-checkout-cone-mode: false
+      - uses: dorny/paths-filter@v4.0.3
+        id: filter
+        with:
+          filters: |
+            webapp:
+              - 'reg_webapp/frontend/**'
+              - 'reg_webapp/dev/**'
+              - 'crates/reg-meta/**'
+              - 'crates/reg-catalog/**'
+              - 'crates/reg-build/**'
+              - 'conformance/cases/fixtures/**'
+              - 'crates/reg-meta/openapi.json'
+              # Oracles the frontend unit tests read: the fold corpus
+              # and the server's unsupported-version case
+              # (reg_core.test.ts); reg-core's structural corpus is under
+              # crates/reg-core below. The grammar corpus pins the periods the
+              # module parses.
+              - 'conformance/cases/folds/**'
+              - 'conformance/cases/api/validate-unsupported-schema-version/**'
+              - 'conformance/cases/grammar/**'
+              # The SPA's reg-core module (`bun run gen:wasm`).
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+              - 'crates/reg-core/**'
+              - 'crates/reg-core-wasm/**'
+              - '.github/workflows/ci.yml'
+              - 'scripts/gate.py'
+
+  reg-webapp-frontend:
+    runs-on: ubuntu-latest
+    # The frontend CI budget (ARCHITECTURE.md "Tiers").
+    timeout-minutes: 6
+    needs: changes
+    if: needs.changes.outputs.webapp == 'true'
+    defaults:
+      run:
+        working-directory: reg_webapp/frontend
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: *no-locks
+          sparse-checkout-cone-mode: false
+      # The frontend bins (biome, vitest, vite, openapi-typescript)
+      # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
+      # they get: without this step the gates run on whatever node the runner
+      # happens to ship, and stop exercising the one production builds use.
+      # Keep the archived frontend runtime while the deployment remains unchanged.
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "26.12.1"
+      - uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: "1.4.4"
+      # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
+      # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
+      # both together; a mismatch fails the bindgen run).
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2.9.3
+      - uses: taiki-e/install-action@v2.87.31
+        with:
+          tool: wasm-bindgen@0.2.129
+      # The gate script runs from the repository root on a uv-managed Python; it
+      # needs no workspace sync. `frontend`: gen:wasm and its size budget, check
+      # (tsgo), lint, test (`vitest run`, jsdom), build, the codegen drift check (TS types are codegen'd from the
+      # committed Rust `openapi.json` snapshot, so regenerating must leave them
+      # unchanged). Browser checks run in the separate flows job.
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          version: "0.13.5"
+      - run: uv run --no-project scripts/gate.py frontend
+        working-directory: .
+
+  reg-webapp-flows:
+    runs-on: ubuntu-latest
+    # The browser-flow CI budget (ARCHITECTURE.md "Tiers").
+    timeout-minutes: 6
+    needs: changes
+    if: needs.changes.outputs.webapp == 'true'
+    defaults:
+      run:
+        working-directory: reg_webapp/frontend
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: *no-locks
+          sparse-checkout-cone-mode: false
+      # The frontend bins (biome, vitest, vite, openapi-typescript)
+      # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
+      # they get: without this step the gates run on whatever node the runner
+      # happens to ship, and stop exercising the one production builds use.
+      # Keep the archived frontend runtime while the deployment remains unchanged.
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "26.12.1"
+      - uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: "1.4.4"
+      # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
+      # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
+      # both together; a mismatch fails the bindgen run).
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2.9.3
+      - uses: taiki-e/install-action@v2.87.31
+        with:
+          tool: wasm-bindgen@0.2.129
+      - run: bun install --frozen-lockfile
+      # The build smoke (scripts/smoke_build.ts) loads the built app in a real
+      # headless Chromium via Playwright. Cache the browser binary (keyed on the
+      # lockfile, so it re-downloads only when deps change) so the ~90 MB download is a one-time cost, not per-run.
+      - name: Cache Playwright browser
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}
+      # A no-op on a cache hit. No `--with-deps`/`install-deps`: the runner image
+      # ships Chrome, so every shared library headless Chromium needs is already
+      # there, and apt would only add fonts and xvfb the smoke never uses. That apt
+      # fetch is what timed the job out when the Azure Ubuntu mirror slowed to
+      # ~40 kB/s (Oct 2026). If the image ever drops a library, launch fails fast
+      # naming it; restore `install-deps` then.
+      - run: bunx playwright install chromium
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          version: "0.13.5"
+      # Bootstrap plus shell/search against the source-built synthetic fixture.
+      - run: uv run --no-project scripts/gate.py flows
+        working-directory: .
