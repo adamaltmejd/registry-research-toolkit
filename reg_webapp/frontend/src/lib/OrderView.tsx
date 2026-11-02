@@ -440,7 +440,12 @@ function OrderFindings({
   const names = useCatalogNames(refs);
   const located: CatalogFinding[] = findings.map((issue) => {
     const place = issuePlace(issue, raw);
-    const message = plainIssueText(issue.message, issueRefs(issue, raw), names);
+    const message = plainIssueText(
+      issue.message,
+      issueRefs(issue, raw),
+      names,
+      raw,
+    );
     return {
       caveat: null,
       code: issue.code,

@@ -1,5 +1,6 @@
 /** Presentation only. WASM and the catalog own validation and issue levels. */
 import type { components } from "./api-types-rust";
+import { catalogPeriodLabel } from "./catalog_period";
 
 export type ValidationIssue = components["schemas"]["Issue"];
 
@@ -70,12 +71,23 @@ function objectOf(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
+function panelPlace(panels: unknown, path: readonly string[]): string | null {
+  if (path[0] !== "panels") return null;
+  if (path.length === 1) return "Panels";
+  if (!/^\d+$/.test(path[1])) return null;
+  const index = Number(path[1]);
+  if (!Number.isSafeInteger(index)) return null;
+  const id = Array.isArray(panels) ? objectOf(panels[index])?.panel_id : null;
+  return `Panel ${typeof id === "string" && id.trim() ? id : index + 1}`;
+}
+
 /** Read only the named slots of a rejected document; never coerce it into a draft. */
 export function issuePlace(
   issue: ValidationIssue,
   raw: string | null,
 ): {
   source: string | null;
+  panel: string | null;
   variable: string | null;
   table: string | null;
   classification: string | null;
@@ -105,6 +117,7 @@ export function issuePlace(
     : null;
   const bindingObject = objectOf(binding);
   return {
+    panel: panelPlace(objectOf(root)?.panels, path),
     source:
       issue.source ?? (typeof object?.name === "string" ? object.name : null),
     variable:
@@ -149,10 +162,27 @@ export function plainIssueText(
   text: string,
   refs: readonly (string | null)[],
   names: ReadonlyMap<string, string>,
+  raw: string | null = null,
 ): string {
+  if (raw && (text.includes("/panels") || text.includes("/sources"))) {
+    try {
+      const panels = objectOf(JSON.parse(raw))?.panels;
+      text = text
+        .replace(
+          /(?<![\p{L}\p{N}_/-])\/panels(?:\/\d+)?(?![\p{L}\p{N}_/-])/gu,
+          (pointer) => panelPlace(panels, parseJsonPointer(pointer)) ?? pointer,
+        )
+        .replace(
+          /(?<![\p{L}\p{N}_/-])\/sources(?![\p{L}\p{N}_/-])/gu,
+          "project sources",
+        );
+    } catch {
+      // An unreadable draft has no panel identities to resolve.
+    }
+  }
   // A register-level refusal can list its tables in the message without naming
   // them in Issue.table. Resolve those names from the already-read register too.
-  return [
+  const message = [
     ...new Set(
       [...refs, ...names.keys()].filter((ref): ref is string => Boolean(ref)),
     ),
@@ -163,4 +193,23 @@ export function plainIssueText(
         message.replaceAll(ref, names.get(ref) ?? "this catalog item"),
       text,
     );
+  // Adapt only the server's exact ISO half-open notation. Keep malformed
+  // intervals and other authored prose intact; the existing formatter owns display.
+  return message.replace(
+    /\[(\d{4}-\d{2}-\d{2}),\s*(\d{4}-\d{2}-\d{2})\)/g,
+    (interval, start: string, end: string) => {
+      if (
+        start >= end ||
+        [start, end].some((date) => {
+          const parsed = new Date(`${date}T00:00:00Z`);
+          return (
+            !Number.isFinite(parsed.getTime()) ||
+            parsed.toISOString().slice(0, 10) !== date
+          );
+        })
+      )
+        return interval;
+      return catalogPeriodLabel({ start, end });
+    },
+  );
 }

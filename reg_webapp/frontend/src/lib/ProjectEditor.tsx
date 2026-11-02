@@ -182,7 +182,7 @@ export function ProjectEditor({
           )}
         </>
       )}
-      {tab !== "order" && (
+      {(!draft || tab !== "order") && (
         <Panel title="Open a project">
           <div className={`${styles.toolbar} ${styles.openActions}`}>
             <FileTrigger

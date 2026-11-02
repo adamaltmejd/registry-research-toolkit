@@ -99,7 +99,7 @@ function IssueLink({
       >
         {place.source}
         {place.variable && variable.value ? `: ${variable.value}` : ""}:{" "}
-        {plainIssueText(issueTitle(issue), refs, names)}
+        {plainIssueText(issueTitle(issue), refs, names, raw)}
       </Link>
     </li>
   );
@@ -128,10 +128,11 @@ export function LocatedIssue({
       <StatusRow tone={issue.level === "warning" ? "warn" : issue.level}>
         <div className={styles.body}>
           <FindingTitle
-            title={plainIssueText(issueTitle(issue), refs, names)}
+            title={plainIssueText(issueTitle(issue), refs, names, raw)}
             code={issue.code}
           />
           {place.source && <span>Source: {place.source}</span>}
+          {place.panel && <span>{place.panel}</span>}
           {place.variable && !variable.loading && (
             <span>Variable: {variable.value ?? "Name unavailable"}</span>
           )}
@@ -149,7 +150,7 @@ export function LocatedIssue({
             </span>
           )}
           <span className={styles.message}>
-            {plainIssueText(issue.message, refs, names)}
+            {plainIssueText(issue.message, refs, names, raw)}
           </span>
           {issue.successor_fqid &&
             (successor.loading ? (
