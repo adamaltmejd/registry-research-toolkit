@@ -3502,8 +3502,8 @@ evidence = "Organizational affiliation mainly follows university faculties (r17)
 [[statement]]
 kind = "set"
 subject = "var:forskarexamen-kod"
-fields = { "description" = "Högskolans kod för forskarexamen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en lärosätesspecifik kod, inte benämningen.\ncatalog:variable_text:26362:0:20089"
+fields = { "description" = "Högskolans kod för forskarexamen. Koden är endast unik tillsammans med uppgift om lärosäte eftersom nationell standard saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en lärosätesspecifik kod, inte benämningen.\ncatalog:variable_text:26362:0:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:236122:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -3516,15 +3516,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:hogskolekod"
-fields = { "description" = "Lärosäte, kod (klartext i hjälptabell)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Lärosäte, kod (klartext i hjälptabell). Lärosätets externa namnkod översätts till SCB:s interna kod och avser lärosäten med examensrätt på forskarnivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:236015:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hogskolenamn"
-fields = { "description" = "Lärosäte, klartext" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Lärosäte, klartext. Namnet avser lärosäten utan eller med begränsat examenstillstånd på forskarnivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:236091:opdef_text. One variable, one description."
 
 
 [[statement]]

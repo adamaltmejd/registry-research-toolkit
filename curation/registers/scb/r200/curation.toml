@@ -9856,8 +9856,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar 
 [[statement]]
 kind = "set"
 subject = "var:br-prod"
-fields = { "description" = "Producerad värme" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger effekt, medan källans etikett och enhet anger producerad värmeenergi under samtliga perioder.\ncatalog:variable_text:4258:14245:17532\ncatalog:variable_text:4258:17532:17897\ncatalog:variable_text:4258:17897:20089"
+fields = { "description" = "Producerad värme. Uppgiften avser bränslebaserad produktion av enbart värme." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger effekt, medan källans etikett och enhet anger producerad värmeenergi under samtliga perioder.\ncatalog:variable_text:4258:14245:17532\ncatalog:variable_text:4258:17532:17897\ncatalog:variable_text:4258:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:28469:opdef_text; rel070-base/reg_meta.db:occurrence:30508:opdef_text; rel070-base/reg_meta.db:occurrence:29189:opdef_text; rel070-base/reg_meta.db:occurrence:29271:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -9875,7 +9875,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 kind = "set"
 subject = "var:bransleforbrukning-transporter-brkod"
 fields = { "description" = "Bränsleslag för egna transporter." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden visar bränsleslag, inte förbrukad mängd.\ncatalog:valueset:3241\ncatalog:variable_text:4269:14245:17532\ncatalog:variable_text:4269:17897:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden visar bränsleslag, inte förbrukad mängd.\ncatalog:valueset:3241\ncatalog:variable_text:4269:14245:17532\ncatalog:variable_text:4269:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:29769:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Opdef says fuel type in plain text, but every occurrence uses numeric valueset 3241 (1 petrol, 2 diesel, 3–5 other fuels). Drop the contradicted plain-text claim. Evidence: rel070-base/reg_meta.db occurrences 29769, 30228."
 
 [[statement]]
 kind = "set"
@@ -9904,8 +9904,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:el-prod"
-fields = { "description" = "Producerad värme, MWh." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger producerad värmemängd i MWh, inte värmeeffekt.\ncatalog:variable_text:4281:14245:17532\ncatalog:variable_text:4281:17532:17897\ncatalog:variable_text:4281:17897:20089"
+fields = { "description" = "Producerad värme, MWh. Uppgiften avser värme som producerats i kombination med el i kraftvärmeproduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger producerad värmemängd i MWh, inte värmeeffekt.\ncatalog:variable_text:4281:14245:17532\ncatalog:variable_text:4281:17532:17897\ncatalog:variable_text:4281:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:28475:opdef_text; rel070-base/reg_meta.db:occurrence:30515:opdef_text; rel070-base/reg_meta.db:occurrence:29196:opdef_text; rel070-base/reg_meta.db:occurrence:29276:opdef_text; rel070-base/reg_meta.db:occurrence:31201:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -10012,20 +10012,20 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:panna-prod"
-fields = { "description" = "Producerad värme" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4898:14245:17532\ncatalog:variable_text:4898:17897:20089"
+fields = { "description" = "Producerad värme. Uppgiften avser värme producerad i elpanna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4898:14245:17532\ncatalog:variable_text:4898:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:28506:opdef_text; rel070-base/reg_meta.db:occurrence:30541:opdef_text; rel070-base/reg_meta.db:occurrence:29234:opdef_text; rel070-base/reg_meta.db:occurrence:29312:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:pump-prod"
-fields = { "description" = "Producerad värme" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4907:14245:17532\ncatalog:variable_text:4907:17897:20089"
+fields = { "description" = "Producerad värme. Uppgiften avser värme producerad med värmepump." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4907:14245:17532\ncatalog:variable_text:4907:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:28509:opdef_text; rel070-base/reg_meta.db:occurrence:30543:opdef_text; rel070-base/reg_meta.db:occurrence:29241:opdef_text; rel070-base/reg_meta.db:occurrence:29319:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:rok-prod"
-fields = { "description" = "Producerad värme" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4912:14245:17532\ncatalog:variable_text:4912:17532:17897\ncatalog:variable_text:4912:17897:20089"
+fields = { "description" = "Producerad värme. Uppgiften avser värme från rökgaskondens." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4912:14245:17532\ncatalog:variable_text:4912:17532:17897\ncatalog:variable_text:4912:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:28523:opdef_text; rel070-base/reg_meta.db:occurrence:30553:opdef_text; rel070-base/reg_meta.db:occurrence:29252:opdef_text; rel070-base/reg_meta.db:occurrence:29328:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

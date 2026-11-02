@@ -932,5 +932,5 @@ evidence = "Counts foreign arrivals at accommodation establishments, supporting 
 [[statement]]
 kind = "set"
 subject = "var:hemland"
-fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard. Stadigvarande bosättning avser mer än tolv månader, oavsett medborgarskap." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:245417:opdef_text. One variable, one description."

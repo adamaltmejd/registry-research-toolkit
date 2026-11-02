@@ -5168,15 +5168,15 @@ evidence = "r198 and r231 define household total income, including maritime inco
 [[statement]]
 kind = "set"
 subject = "var:antsamrakinkhh"
-fields = { "description" = "Anger antal personer med sammanräknad inkomst i hushållet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inkomstbelopp men variabeln räknar personer.\ncatalog:variable_text:11115:7305:7670"
+fields = { "description" = "Anger antal personer med sammanräknad inkomst i hushållet. Inkomsten summerar tjänst, kapital, annan fastighet, tillfällig förvärvsverksamhet, jordbruksfastighet och rörelse med uppgifter från FoB-blanketten och IoF." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inkomstbelopp men variabeln räknar personer.\ncatalog:variable_text:11115:7305:7670\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:97927:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:famfkon"
-fields = { "description" = "Anger familjeföreståndarens kön." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:11219:7305:7670"
+fields = { "description" = "Anger familjeföreståndarens kön. Familjens äldsta person väljs till familjeföreståndare och kön härleds ur personnumret med uppgifter från FoB-blanketten och RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:11219:7305:7670\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:96914:opdef_text. One variable, one description."
 
 
 [[statement]]

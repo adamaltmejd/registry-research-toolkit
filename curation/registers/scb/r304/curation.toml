@@ -835,5 +835,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:obtidfth"
-fields = { "description" = "Eleven/barnet är inskriven i fritidshem på obekväm tid." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller inskrivning på obekväm tid, inte all inskrivning.\ncatalog:variable_text:21116:18915:18916"
+fields = { "description" = "Eleven/barnet är inskriven i fritidshem på obekväm tid. Obekväm tid avser vardagar klockan 19–06 eller helger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMarkeringen gäller inskrivning på obekväm tid, inte all inskrivning.\ncatalog:variable_text:21116:18915:18916\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:191820:opdef_text. One variable, one description."

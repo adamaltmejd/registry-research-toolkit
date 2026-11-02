@@ -2568,14 +2568,14 @@ evidence = "r280's complete codes combine variable, activity subset and market, 
 [[statement]]
 kind = "set"
 subject = "var:faxnummer"
-fields = { "description" = "Faxnummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
+fields = { "description" = "Faxnummer. Numret avser företaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:396515:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:handelsmarginal"
-fields = { "description" = "Handelsmarginalen uttryckt i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nProcenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
+fields = { "description" = "Handelsmarginalen uttryckt i procent. Marginalen avser nettot mellan intäkter och kostnader vid handel med produkter mellan två aktörer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nProcenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:396947:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

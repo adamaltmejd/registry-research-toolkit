@@ -1718,20 +1718,20 @@ evidence = "This is the statistics' reference quarter, adjusted by assigning cer
 [[statement]]
 kind = "set"
 subject = "var:energikomplement"
-fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
+fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen. Uppgiften avser respektive hustyp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:397404:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningkomplement"
-fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
+fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning. Uppgiften avser respektive hustyp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:397469:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ytterligare-uppvarmningssystem"
-fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
+fields = { "description" = "Förekomst av ytterligare uppvärmningssystem. Variabeln sätts till 1 om de flesta lägenheterna i projektet har ytterligare uppvärmningssystem, annars till 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:397378:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

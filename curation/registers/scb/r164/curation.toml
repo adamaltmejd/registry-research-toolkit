@@ -2276,29 +2276,29 @@ evidence = "The questions explicitly ask whether the respondent participated in 
 [[statement]]
 kind = "set"
 subject = "var:fr-euro-folkrost"
-fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402345:opdef_text; rel070-base/reg_meta.db:occurrence:402434:opdef_text; rel070-base/reg_meta.db:occurrence:402527:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402345, 402434, 402527."
 
 
 [[statement]]
 kind = "set"
 subject = "var:fr30"
-fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402150:opdef_text; rel070-base/reg_meta.db:occurrence:402241:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402150, 402241."
 
 
 [[statement]]
 kind = "set"
 subject = "var:fr31-eufolk"
 fields = { "description" = "Anger röstalternativ eller uteblivet deltagande i folkomröstningen om EU-medlemskap." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ och deltagande, inte enbart om personen röstade.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ och deltagande, inte enbart om personen röstade.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402153:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event date; it does not describe a change in measurement. Evidence: rel070-base/reg_meta.db occurrences 402153."
 
 
 [[statement]]
 kind = "set"
 subject = "var:medlemskap-i-fackforening"
-fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602"
+fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör. Frågan ställs till dem som svarat anställd i fråga 16, kod 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401567:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Question number and routing code are documented only through May 2015; do not impose that questionnaire-specific routing on later waves. Evidence: rel070-base/reg_meta.db occurrences 401567, 404355, 404837.\n\nFaithfulness review 2026-11-02: Specify the last supported survey wave (May 2015); November 2015 has no routing instruction. Source: 401567 (rel070-base/reg_meta.db:opdef_text).\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401567, 404355."
 
 
 [[statement]]
@@ -2311,8 +2311,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvar
 [[statement]]
 kind = "set"
 subject = "var:pbsvar"
-fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249"
+fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från. Giltiga svar 1–8 prioriteras i ordningen pbval_nu, pbsymp och pbvrv_sen, med resultatkoderna 1, 2 och 3; annars sätts 9 om reskont<8 och 0 i övriga fall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401589:opdef_text; rel070-base/reg_meta.db:occurrence:401671:opdef_text; rel070-base/reg_meta.db:occurrence:404389:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed coding algorithm is supplied only from November 2015, while earlier opdefs give inputs only. Bound the algorithm. Evidence: rel070-base/reg_meta.db occurrences 401589, 401671, 402802, 404389.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401589, 401671, 402802, 404389."
 
 
 [[statement]]
@@ -2325,5 +2325,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:valdplan"
-fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240"
+fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Härleds från fr8; sätts till 100 vid reskont=6, till 101 vid reskont=4 eller 5 och till 0 för kvarvarande saknade värden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed derivation is documented only from November 2015; earlier sources name the inputs without the recoding rule. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415."

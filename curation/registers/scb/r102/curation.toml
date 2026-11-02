@@ -7128,14 +7128,14 @@ evidence = "The operational definitions identify the curriculum followed (r69, r
 [[statement]]
 kind = "set"
 subject = "var:amnekod17"
-fields = { "description" = "Elevens 17:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678"
+fields = { "description" = "Elevens 17:e ämne. Ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22449:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208454:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:amnekod18"
-fields = { "description" = "Elevens 18:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678"
+fields = { "description" = "Elevens 18:e ämne. Ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalets stavning utan att ändra betydelsen.\ncatalog:variable_text:22450:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208455:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7146,8 +7146,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-a-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget A." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget A. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22471:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206154:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7158,8 +7158,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-b-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget B." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget B. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22473:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206156:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7170,8 +7170,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-c-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget C." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget C. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22475:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206158:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7182,8 +7182,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-d-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget D." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget D. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22477:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206160:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7194,8 +7194,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-e-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget E." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget E. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22479:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206162:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7206,8 +7206,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ant-f-gr"
-fields = { "description" = "Antal kurser där eleven har fått betyget F." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905"
+fields = { "description" = "Antal kurser där eleven har fått betyget F. Summeringen avser grundskoleämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter ett antal, inte en kurs.\ncatalog:variable_text:22481:15156:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:206164:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7224,14 +7224,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa/n
 [[statement]]
 kind = "set"
 subject = "var:betyg20"
-fields = { "description" = "Betyg i elevens 20:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678"
+fields = { "description" = "Betyg i elevens 20:e ämne. Ämnet anges i variabeln ”Ämne nr 20”, och ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men fältet innehåller betyget.\ncatalog:valueset:5293\ncatalog:variable_text:22597:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208487:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:betyg28"
-fields = { "description" = "Betyg i elevens 28:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678"
+fields = { "description" = "Betyg i elevens 28:e ämne. Ämnet anges i variabeln ”Ämne nr 28”, och ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:22605:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208495:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -7248,8 +7248,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa o
 [[statement]]
 kind = "set"
 subject = "var:gymnasiearbete"
-fields = { "description" = "Betyg i gymnasiearbete." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270"
+fields = { "description" = "Betyg i gymnasiearbete för elever med samlat betygsdokument eller högskoleförberedande examen och GYAR-kurskod. Gymnasiearbetet omfattar 100 poäng och högsta betyg är E; till och med läsåret 2014/15 omfattas även elever med slutbetyg enligt Lpf94." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och de daterade operationaliseringarna avser betyg i arbetet, inte själva uppgiften.\ncatalog:valueset:2659\ncatalog:variable_text:22660:15887:16617\ncatalog:variable_text:22660:16617:20270\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:211801:opdef_text; rel070-base/reg_meta.db:occurrence:212199:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. The explicitly listed pupil group is removed after 2014/15; retain this minor scope change as a direct fact, not a mention in documentation. Evidence: rel070-base/reg_meta.db occurrences 211801, 212199."
 
 [[statement]]
 kind = "set"
@@ -7440,32 +7440,32 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:refkod14"
-fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678"
+fields = { "description" = "Referensgruppstillhörighet för elevens 14:e ämne. Referensgruppen omfattar elever i hela riket med samma ämne och årskurs, normalt med samma timplan; ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och skiljetecken utan att ändra betydelsen.\ncatalog:variable_text:22824:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208512:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:refkod2"
-fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678"
+fields = { "description" = "Referensgruppstillhörighet för elevens 2:a ämne. Referensgruppen omfattar elever i hela riket med samma ämne och årskurs, normalt med samma timplan; ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och ordningstal utan att ändra innebörden.\ncatalog:variable_text:22830:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208518:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:refkod27"
-fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678"
+fields = { "description" = "Referensgruppstillhörighet för elevens 27:e ämne. Referensgruppen omfattar elever i hela riket med samma ämne och årskurs, normalt med samma timplan; ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ordningstalet utan att ändra betydelsen.\ncatalog:variable_text:22838:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208526:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:refkod4"
-fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678"
+fields = { "description" = "Referensgruppstillhörighet för elevens 4:e ämne. Referensgruppen omfattar elever i hela riket med samma ämne och årskurs, normalt med samma timplan; ämnenas nummer innebär ingen rangordning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:22841:5295:9678\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208529:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:skolkod"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans). Koden avser skolan som utfärdade elevens slutbetyg, gymnasieintyg eller nya grundskolebetyg, beroende på tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208293:opdef_text; rel070-base/reg_meta.db:occurrence:211384:opdef_text; rel070-base/reg_meta.db:occurrence:206221:opdef_text; rel070-base/reg_meta.db:occurrence:208039:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

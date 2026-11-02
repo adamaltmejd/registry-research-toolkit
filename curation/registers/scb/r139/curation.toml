@@ -929,5 +929,5 @@ evidence = "Both describe detailed fuel names in the same register: the earlier 
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager"
-fields = { "description" = "Mängd av respektive bränsle i lager vid kvartalets ingång." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger lagervärde, men källan mäter bränslemängd vid kvartalets ingång.\ncatalog:variable_text:6351:17532:20454"
+fields = { "description" = "Mängd av respektive bränsle i lager vid kvartalets ingång. Mängden anges i naturliga mått för respektive bränsle." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger lagervärde, men källan mäter bränslemängd vid kvartalets ingång.\ncatalog:variable_text:6351:17532:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:45117:opdef_text; rel070-base/reg_meta.db:occurrence:45158:opdef_text; rel070-base/reg_meta.db:occurrence:44337:opdef_text. One variable, one description."

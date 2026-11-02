@@ -5636,14 +5636,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:trygghet-i-bostadsomradet-dagtid"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262"
+fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg utomhus på dagen i området där barnet bor. Barnet får vid intervjun information om att vara trygg kan handla om att känna sig bekväm och orädd i olika situationer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger kväll, men frågorna avser dagtid.\ncatalog:variable_text:5635:16801:18262\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:36074:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Interviewer instruction is documented only in 2016–2019; earlier 2008–2015 sources use another response scale without this instruction. Evidence: rel070-base/reg_meta.db occurrences 34602, 36074.\n\nFaithfulness review 2026-11-02: The instruction informs the child about the meaning of safety; it does not select children based on interviewer observation. Source: 36074 (rel070-base/reg_meta.db:opdef_text).\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 34602, 36074."
 
 [[statement]]
 kind = "set"
 subject = "var:trygghet-rasterna"
-fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262"
+fields = { "description" = "Variabeln anger om intervjuat barn känner sig trygg på rasterna i skolan. Barnet får vid intervjun information om att vara trygg kan handla om att känna sig bekväm och orädd i olika situationer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens inledning säger klassrummet, men frågorna avser rasterna.\ncatalog:variable_text:5639:16801:18262\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:36073:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Interviewer instruction is documented only in 2016–2019; earlier 2008–2015 sources use another response scale without this instruction. Evidence: rel070-base/reg_meta.db occurrences 34601, 36073.\n\nFaithfulness review 2026-11-02: The instruction informs the child about the meaning of safety; it does not select children based on interviewer observation. Source: 36073 (rel070-base/reg_meta.db:opdef_text).\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 34601, 36073."
 
 [[statement]]
 kind = "set"

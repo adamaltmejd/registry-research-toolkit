@@ -816,5 +816,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-namn"
-fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089"
+fields = { "description" = "Namn på riksdagsvalkrets, en regional indelning som det utses ledamöter och ersättare för vid riksdagsval. Valkretsen avser erhållna mandat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men variabeln anger valkretsens namn i samtliga operationella definitioner.\ncatalog:variable_text:7879:10592:10957\ncatalog:variable_text:7879:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:56916:opdef_text; rel070-base/reg_meta.db:occurrence:56978:opdef_text. One variable, one description."

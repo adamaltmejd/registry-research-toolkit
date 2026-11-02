@@ -117,5 +117,5 @@ evidence = "TUtvIxFast är också mappad till arsmanadslank-fast-kal under en ö
 [[statement]]
 kind = "set"
 subject = "var:tutvixfast"
-fields = { "description" = "Årsmånadslänk i fasta priser" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436"
+fields = { "description" = "Årsmånadslänk i fasta priser. Utvecklingstalet beräknas för respektive branschgrupp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401537:opdef_text. One variable, one description."

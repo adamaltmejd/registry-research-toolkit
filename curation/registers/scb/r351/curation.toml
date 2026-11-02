@@ -5690,36 +5690,36 @@ evidence = "The operational definition asks whether the respondent mentioned mor
 [[statement]]
 kind = "set"
 subject = "var:andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften är den uppskattade andelen utbildningstid som var yrkesrelaterad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394777:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:onskad-utbildning-inte-deltagit-senaste-12-manader"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften avser önskat men uteblivet deltagande i organiserad utbildning, både reguljär utbildning och andra utbildningsaktiviteter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394778:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildning-antal-dagar-senaste-ar"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som antal dagar räknat bakåt från intervjutillfället." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394775:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildning-antal-veckor-senaste-ar"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som antal veckor räknat bakåt från intervjutillfället." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394774:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildning-timmar-totalt-inte-restid-senaste-ar"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som totalt antal timmar utan restid till och från studieplatsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394776:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -5732,29 +5732,29 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:utbildning-viktigaste-hinder-deltagande-senaste-ar"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Den svarande anger den viktigaste anledningen till att inte delta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394779:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsaktivitet-huvudsaklig-anledning-senaste-aret"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Den svarande anger den huvudsakliga anledningen till deltagandet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394768:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsaktivitet-samtidigt-arbete-senaste-aret"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften anger om personen arbetade heltid eller deltid under någon del av utbildningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394769:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsaktivitet-yrkesrelaterad-senaste-aret"
-fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39986:15340:15706"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften anger om utbildningen huvudsakligen var yrkesrelaterad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39986:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394767:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

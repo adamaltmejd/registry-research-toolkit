@@ -1276,3 +1276,15 @@ kind = "set"
 subject = "var:yttre-orsakskoder"
 fields = { "description" = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "var:tillhorande-atg-kod-ar-en-atc-kod"
+fields = { "description" = "Binär variabel i flerfil som anger om koden i ATG är en ATC-kod. Alla ATC-koder är inte korrekt markerade, framför allt inte ATC-koder med färre än sju tecken." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider metadata explicitly distinguishes the flat-file code string from the binary flerfil marker from 2015. The supplied catalog already puts the strings on separate PIDs. Exact source-label guards address only the matching binary marker in PAR_OV/PAR_SV; the older and concurrent string definitions are preserved.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-patientregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 31, column ATCO; staged:be4516db2554057f7e715278111798b7816031365678bda2896c0b977daee603:page:9:chars:9198-9494\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Code sentence duplicates valueset 1072; omits the provider quality caveat that matters for analysis.\nrel070-base/reg_meta.db:occurrence:522735"
+
+[[statement]]
+kind = "set"
+subject = "var:tillhorande-dia-eller-yo-kod-ar-en-atc-kod"
+fields = { "description" = "Binär variabel i flerfil som anger om koden i DIA eller YO är en ATC-kod. Alla ATC-koder är inte korrekt markerade, framför allt inte ATC-koder med färre än sju tecken." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider metadata explicitly distinguishes the flat-file code string from the binary flerfil marker from 2015. The supplied catalog already puts the strings on separate PIDs. Exact source-label guards address only the matching binary marker in PAR_OV/PAR_SV; the older and concurrent string definitions are preserved.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-patientregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 24, column ATC; staged:be4516db2554057f7e715278111798b7816031365678bda2896c0b977daee603:page:9:chars:5763-6078\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Same as the ATG flag.\nrel070-base/reg_meta.db:occurrence:522734"

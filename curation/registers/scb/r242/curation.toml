@@ -1749,12 +1749,12 @@ evidence = "X är en opak källkod i variabelnamnet.\ncatalog:variable_text:2945
 [[statement]]
 kind = "set"
 subject = "var:gift-sambo-ensamstaende"
-fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nCivilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539"
+fields = { "description" = "Anger om personen är gift, sambo, ensamstående eller registrerad partner. Värde finns endast för personer i AKU-urvalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nCivilstånd ensamt omfattar inte sambo; svarsalternativen anger även samboende.\ncatalog:valueset:2497\ncatalog:valueset:9539\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:19294:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:rostat-i-omval-till-kommunfullmaktige"
 fields = { "description" = "Variabeln anger om uppgiftspersonen har röstat i omvalet till kommunfullmäktige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra innebörden.\ncatalog:variable_text:2886:14975:15340"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra innebörden.\ncatalog:variable_text:2886:14975:15340\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:19806:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire year, which is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 19806."

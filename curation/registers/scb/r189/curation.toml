@@ -1799,29 +1799,29 @@ evidence = "VT är en källkod; den delade etiketten kräver disambiguering med 
 [[statement]]
 kind = "set"
 subject = "var:beh-yrk"
-fields = { "description" = "Gy-behörighet till yrkesprogram" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Gy-behörighet till yrkesprogram. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200229:opdef_text; rel070-base/reg_meta.db:occurrence:200710:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-estetiska-program"
-fields = { "description" = "Gy-behörighet till estetiska programmet" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Gy-behörighet till estetiska programmet. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200225:opdef_text; rel070-base/reg_meta.db:occurrence:200706:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-naturvetenskapsprogram-teknikprogram"
-fields = { "description" = "Gy-behörighet till naturvetenskapsprogrammet och teknikprogrammet" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Gy-behörighet till naturvetenskapsprogrammet och teknikprogrammet. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200228:opdef_text; rel070-base/reg_meta.db:occurrence:200709:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-programinriktade-individuella-val"
-fields = { "description" = "Programinriktat individuellt val" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Programinriktat individuellt val. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-ak9.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200227:opdef_text; rel070-base/reg_meta.db:occurrence:200708:opdef_text. One variable, one description."
 
 
 [[statement]]
