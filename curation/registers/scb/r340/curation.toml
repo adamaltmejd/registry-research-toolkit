@@ -844,9 +844,8 @@ evidence = "Klassificering av svensk och utländsk bakgrund.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:antal-amnen-ej-natt"
-fields = { "description" = "Antal ämnen i vilka eleven inte har nått kunskapskraven." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9"
-
+fields = { "description" = "Antal ämnen i årskurs 6 som eleven har fått betyget F i. Blankt värde innebär att eleven inte har betygssatts enligt skolförordningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade texten anger felaktigt A–E som ej godkänt. Källans övergripande definition gäller båda perioderna.\ncatalog:variable_text:21784:16436:16801\ncatalog:variable_text:21784:16801:20454\nregisters/scb/r340/curation.toml:9\n\nIdentity review: rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
 
 [[statement]]
 kind = "set"
@@ -1021,3 +1020,35 @@ kind = "set"
 subject = "var:skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf @2016-01-01..2025-12-31 where key = 'v3594'"
+fields = { "variable" = "antal-amnen-utan-godkant-betyg" }
+evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-utan-godkant-betyg"
+fields = { "description" = "Antal ämnen i årskurs 6 där eleven inte har fått ett godkänt betyg, A–E. Blankt värde innebär att eleven inte har betygssatts enligt skolförordningen." }
+evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-utan-godkant-betyg"
+fields = { "sets" = ["antal-amnen-med-ej-nadda-kunskapskrav"] }
+evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-utan-godkant-betyg"
+fields = { "tags" = ["education"] }
+evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
+
+[[statement]]
+kind = "link"
+subject = "var:antal-amnen-utan-godkant-betyg"
+relation = "continues"
+object = "scb/grundskola-betyg-ak6/antal-amnen-ej-natt"
+at = "2016-01-01.."
+evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."

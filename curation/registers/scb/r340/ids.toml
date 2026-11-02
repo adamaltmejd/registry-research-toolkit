@@ -4,7 +4,7 @@ public = "grundskola-betyg-ak6"
 
 [variables]
 "antal" = ["Grundskolan: betyg årskurs 6: Antal"]
-"antal-amnen-ej-natt" = ["Grundskolan: betyg årskurs 6: AntalF"]
+"antal-amnen-ej-natt" = ["Grundskolan: betyg årskurs 6: AntalF @ 2015-01-01"]
 "betyg-bild" = ["Grundskolan: betyg årskurs 6: Bl"]
 "betyg-religion" = ["Grundskolan: betyg årskurs 6: Re"]
 "betyg-samhallskunskap" = ["Grundskolan: betyg årskurs 6: Sh"]
@@ -75,3 +75,4 @@ public = "grundskola-betyg-ak6"
 "utlbakgr" = ["Grundskolan: betyg årskurs 6: UtlBakGr"]
 "utlbakgr2" = ["Grundskolan: betyg årskurs 6: UtlBakGr2"]
 "utlsvbakg" = ["Grundskolan: betyg årskurs 6: UtlSvBakg"]
+"antal-amnen-utan-godkant-betyg" = ["Grundskolan: betyg årskurs 6: antalf @ 2016-01-01"]
