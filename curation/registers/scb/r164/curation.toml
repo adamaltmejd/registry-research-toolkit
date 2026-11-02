@@ -2297,8 +2297,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvar
 [[statement]]
 kind = "set"
 subject = "var:medlemskap-i-fackforening"
-fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör. Frågan ställs endast till dem som svarat att de är anställda i fråga 16, kod 1." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401567:opdef_text. One variable, one description."
+fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör. I källbeskrivningarna 2000–2015 ställs frågan till dem som svarat anställd i fråga 16, kod 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401567:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Question number and routing code are documented only through May 2015; do not impose that questionnaire-specific routing on later waves. Evidence: rel070-base/reg_meta.db occurrences 401567, 404355, 404837."
 
 
 [[statement]]
@@ -2311,8 +2311,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvar
 [[statement]]
 kind = "set"
 subject = "var:pbsvar"
-fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från. Härledningen prioriterar giltiga svar 1–8 i pbval_nu, därefter pbsymp och sedan pbvrv_sen, med resultatkoderna 1, 2 respektive 3; annars sätts 9 om reskont<8 och 0 i övriga fall." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401589:opdef_text; rel070-base/reg_meta.db:occurrence:401671:opdef_text; rel070-base/reg_meta.db:occurrence:404389:opdef_text. One variable, one description."
+fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från. Källbeskrivningarna från november 2015 prioriterar giltiga svar 1–8 i pbval_nu, därefter pbsymp och pbvrv_sen, med resultatkoderna 1, 2 och 3; annars sätts 9 om reskont<8 och 0 i övriga fall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401589:opdef_text; rel070-base/reg_meta.db:occurrence:401671:opdef_text; rel070-base/reg_meta.db:occurrence:404389:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed coding algorithm is supplied only from November 2015, while earlier opdefs give inputs only. Bound the algorithm. Evidence: rel070-base/reg_meta.db occurrences 401589, 401671, 402802, 404389."
 
 
 [[statement]]
@@ -2325,5 +2325,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:valdplan"
-fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Variabeln utgår från fr8, sätts till 100 vid reskont=6 och till 101 vid reskont=4 eller 5; kvarvarande saknade värden sätts till 0." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description."
+fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Källbeskrivningarna från november 2015 utgår från fr8, sätter 100 vid reskont=6 och 101 vid reskont=4 eller 5 samt kvarvarande saknade värden till 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed derivation is documented only from November 2015; earlier sources name the inputs without the recoding rule. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415."

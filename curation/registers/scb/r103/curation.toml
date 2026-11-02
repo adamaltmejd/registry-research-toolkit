@@ -2294,8 +2294,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:studnivaisced"
-fields = { "description" = "Nivå på personens studier enligt ISCED. Uppgiften avser högsta fullföljda utbildning och är grupperad för internationell redovisning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:421925:opdef_text. One variable, one description."
+fields = { "description" = "Nivå på personens studier enligt ISCED." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:421925:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Valueset 7130 includes 0 no study this term and 9 unknown study level: the completed-attainment template contradicts the response domain (occurrence 421925). Evidence: rel070-base/reg_meta.db occurrences 421925."
 
 [[statement]]
 kind = "set"

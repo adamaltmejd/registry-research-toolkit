@@ -17784,8 +17784,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKont
 [[statement]]
 kind = "set"
 subject = "var:markering-traff-rtb"
-fields = { "description" = "Markering för träff mot Registret över totalbefolkningen. Matchningen avser Skatteverkets taxeringsmaterial mot RTB." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349732:opdef_text; rel070-base/reg_meta.db:occurrence:335272:opdef_text; rel070-base/reg_meta.db:occurrence:354154:opdef_text; rel070-base/reg_meta.db:occurrence:339098:opdef_text. One variable, one description."
+fields = { "description" = "Markering för träff mot Registret över totalbefolkningen. Källbeskrivningarna 1993–2003 anger matchning av Skatteverkets taxeringsmaterial mot RTB, medan 2004 anger SCBTB mot RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349732:opdef_text; rel070-base/reg_meta.db:occurrence:335272:opdef_text; rel070-base/reg_meta.db:occurrence:354154:opdef_text; rel070-base/reg_meta.db:occurrence:339098:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The old sentence incorrectly collapses changing input sources and undocumented earlier years into one permanent match recipe. Evidence: rel070-base/reg_meta.db occurrences 334859, 335272, 354154, 339098."
 
 [[statement]]
 kind = "set"

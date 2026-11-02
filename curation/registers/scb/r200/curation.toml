@@ -9874,8 +9874,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:bransleforbrukning-transporter-brkod"
-fields = { "description" = "Bränsleslag för egna transporter. Bränsleslaget anges i klartext." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden visar bränsleslag, inte förbrukad mängd.\ncatalog:valueset:3241\ncatalog:variable_text:4269:14245:17532\ncatalog:variable_text:4269:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:29769:opdef_text. One variable, one description."
+fields = { "description" = "Bränsleslag för egna transporter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden visar bränsleslag, inte förbrukad mängd.\ncatalog:valueset:3241\ncatalog:variable_text:4269:14245:17532\ncatalog:variable_text:4269:17897:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:29769:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Opdef says fuel type in plain text, but every occurrence uses numeric valueset 3241 (1 petrol, 2 diesel, 3–5 other fuels). Drop the contradicted plain-text claim. Evidence: rel070-base/reg_meta.db occurrences 29769, 30228."
 
 [[statement]]
 kind = "set"

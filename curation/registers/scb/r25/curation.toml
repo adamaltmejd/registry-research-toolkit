@@ -22526,8 +22526,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:givet-underhallsbidrag-individ"
-fields = { "description" = "Modellberäknat givet underhållsbidrag för individen. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott, justerat för andelen icke växelvis boende barn och månader med rätt till bidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger enbart modellberäknade värden, inte observerade betalningar.\ncatalog:variable_text:31091:15340:15706\ncatalog:variable_text:31091:15706:16071\ncatalog:variable_text:31091:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:271100:opdef_text; rel070-base/reg_meta.db:occurrence:272319:opdef_text; rel070-base/reg_meta.db:occurrence:280893:opdef_text. One variable, one description."
+fields = { "description" = "Modellberäknat givet underhållsbidrag för individen. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger enbart modellberäknade värden, inte observerade betalningar.\ncatalog:variable_text:31091:15340:15706\ncatalog:variable_text:31091:15706:16071\ncatalog:variable_text:31091:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:271100:opdef_text; rel070-base/reg_meta.db:occurrence:272319:opdef_text; rel070-base/reg_meta.db:occurrence:280893:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only the 2013 opdef gives the full months-entitled adjustment; earlier text is truncated and later text only specifies adjustment for alternating residence. Retain the formula common to every source text. Evidence: rel070-base/reg_meta.db occurrences 271100, 272319, 280893."
 
 
 [[statement]]
@@ -22673,8 +22673,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag-individ"
-fields = { "description" = "Modellberäknat mottaget underhållsbidrag per individ. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott, justerat för andelen icke växelvis boende barn och månader med rätt till bidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden under samtliga perioder.\ncatalog:variable_text:31361:15340:15706\ncatalog:variable_text:31361:15706:16071\ncatalog:variable_text:31361:16071:18262\ncatalog:variable_text:31361:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:270451:opdef_text; rel070-base/reg_meta.db:occurrence:271671:opdef_text; rel070-base/reg_meta.db:occurrence:280211:opdef_text. One variable, one description."
+fields = { "description" = "Modellberäknat mottaget underhållsbidrag per individ. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden under samtliga perioder.\ncatalog:variable_text:31361:15340:15706\ncatalog:variable_text:31361:15706:16071\ncatalog:variable_text:31361:16071:18262\ncatalog:variable_text:31361:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:270451:opdef_text; rel070-base/reg_meta.db:occurrence:271671:opdef_text; rel070-base/reg_meta.db:occurrence:280211:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only the 2013 opdef gives the full months-entitled adjustment; earlier text is truncated and later text only specifies adjustment for alternating residence. Retain the formula common to every source text. Evidence: rel070-base/reg_meta.db occurrences 270451, 271671, 280211."
 
 
 [[statement]]
@@ -22827,8 +22827,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:vardb"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Källan anger vårdbehov i minst sex månader, ersättning längst till månaden före 16-årsdagen och belopp efter vårdbehov och merkostnader; underlaget är kontroll- eller deklarationsuppgift beroende på källperiod." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32065:3652:7305\ncatalog:variable_text:32065:7670:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:259469:opdef_text; rel070-base/reg_meta.db:occurrence:259757:opdef_text. One variable, one description."
+fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Källbeskrivningen 1990 anger vårdbehov i minst sex månader, ersättning till och med månaden före 16-årsdagen och belopp efter vårdbehov och merkostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32065:3652:7305\ncatalog:variable_text:32065:7670:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:259469:opdef_text; rel070-base/reg_meta.db:occurrence:259757:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The substantive eligibility and age rules are supplied only for 1990; 1980–1989 lack opdefs and 1991–1992 supply only tax-return provenance. Evidence: rel070-base/reg_meta.db occurrences 257207, 259469, 259757."
 
 
 [[statement]]
@@ -22855,8 +22855,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:vbbel"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Ersättning kan lämnas till och med månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32068:7305:7670\ncatalog:variable_text:32068:7670:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:259470:opdef_text. One variable, one description.\n\nMaintainer audit follow-up 2026-11-02: Provider opdef supports age limit and amount by care needs/extra costs; source-provenance clause adds no measurement rule and is omitted for consistent style.\nrel070-base/reg_meta.db:occurrence:259470\nrel070-base/reg_meta.db:occurrence:259758"
+fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Källbeskrivningen 1990 anger ersättning till och med månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32068:7305:7670\ncatalog:variable_text:32068:7670:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:259470:opdef_text. One variable, one description.\n\nMaintainer audit follow-up 2026-11-02: Provider opdef supports age limit and amount by care needs/extra costs; source-provenance clause adds no measurement rule and is omitted for consistent style.\nrel070-base/reg_meta.db:occurrence:259470\nrel070-base/reg_meta.db:occurrence:259758\n\nOccurrence-scope review 2026-11-02: The age/amount rule is documented only in 1990; 1991–1992 have no opdef and must not inherit a universal dated eligibility rule. Evidence: rel070-base/reg_meta.db occurrences 259470, 259758."
 
 [[statement]]
 kind = "set"

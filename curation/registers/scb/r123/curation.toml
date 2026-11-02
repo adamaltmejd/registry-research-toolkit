@@ -14164,8 +14164,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:ssyk4-huvud"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan. Kodningen bygger på Hs20a eller Hs20yrke tillsammans med Hs20b." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:26713:opdef_text. One variable, one description."
+fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan. Källbeskrivningen 2021 anger kodning från Hs20a eller Hs20yrke tillsammans med Hs20b." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:26713:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The named question inputs are supplied only for the 2021 occurrence; older occupational classifications and input questions are not established by that opdef. Evidence: rel070-base/reg_meta.db occurrences 24560, 26244, 26713."
 
 [[statement]]
 kind = "set"

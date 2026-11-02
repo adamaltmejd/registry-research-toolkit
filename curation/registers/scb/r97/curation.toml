@@ -25776,15 +25776,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:bsjresa"
-fields = { "description" = "Antal sjukresor under aktuellt år. Frågan avser år 2009." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:24224:14245:14610\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:225340:opdef_text. One variable, one description."
+fields = { "description" = "Antal sjukresor under aktuellt år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:24224:14245:14610\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:225340:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Only the 2009 occurrence quotes a question naming 2009; occurrences cover 2004–2009. The existing current-year meaning is sufficient. Evidence: rel070-base/reg_meta.db occurrences 221466, 225340."
 
 
 [[statement]]
 kind = "set"
 subject = "var:btandhk"
-fields = { "description" = "Utgifter för tandhygienist under året. Beloppet är den svarandes ungefärliga uppskattning av årets utgifter." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet i tandhygienist utan att ändra innebörden.\ncatalog:variable_text:24252:14245:14610\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:225364:opdef_text. One variable, one description."
+fields = { "description" = "Utgifter för tandhygienist under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet i tandhygienist utan att ändra innebörden.\ncatalog:variable_text:24252:14245:14610\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:225364:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Approximation instruction is quoted only for 2009, not earlier 2003–2008 occurrences. Preserve annual cost meaning. Evidence: rel070-base/reg_meta.db occurrences 220911, 225364."
 
 
 [[statement]]
@@ -25839,8 +25839,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-stod-mellan-hushall-givet"
-fields = { "description" = "Givet ekonomiskt stöd till andra hushåll. Frågan avser gåvor eller stöd till närstående eller släktingar till ett värde av minst 5 000 kronor under året." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel om stödets riktning.\ncatalog:variable_text:24282:12418:13879\ncatalog:variable_text:24282:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:230433:opdef_text; rel070-base/reg_meta.db:occurrence:231593:opdef_text. One variable, one description."
+fields = { "description" = "Givet ekonomiskt stöd till andra hushåll. Källbeskrivningarna 2004–2008 avser sammanlagt minst 5 000 kronor under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel om stödets riktning.\ncatalog:variable_text:24282:12418:13879\ncatalog:variable_text:24282:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:230433:opdef_text; rel070-base/reg_meta.db:occurrence:231593:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The minimum annual amount is documented in 2004–2008; later 2009–2013 occurrences lack this operational text. Evidence: rel070-base/reg_meta.db occurrences 230433, 231593, 231860."
 
 
 [[statement]]
@@ -25909,15 +25909,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:inkomststandard-1"
-fields = { "description" = "Inkomststandard beräknad med boendeutgift enligt trångboddhetsnorm 2. Disponibel inkomst divideras med boendeutgift 1 plus svensk konsumtionsenhetsskala gånger prisbasbeloppet, för kosthushållet och ingående HINK-hushåll." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBefintlig text beskriver en komponent, medan variabeln mäter inkomststandard.\ncatalog:variable_text:24676:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229505:opdef_text; rel070-base/reg_meta.db:occurrence:230369:opdef_text; rel070-base/reg_meta.db:occurrence:231544:opdef_text; rel070-base/reg_meta.db:occurrence:231812:opdef_text. One variable, one description."
+fields = { "description" = "Inkomststandard beräknad med boendeutgift enligt trångboddhetsnorm 2. Disponibel inkomst divideras med boendeutgift 1 plus svensk konsumtionsenhetsskala gånger prisbasbeloppet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBefintlig text beskriver en komponent, medan variabeln mäter inkomststandard.\ncatalog:variable_text:24676:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229505:opdef_text; rel070-base/reg_meta.db:occurrence:230369:opdef_text; rel070-base/reg_meta.db:occurrence:231544:opdef_text; rel070-base/reg_meta.db:occurrence:231812:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Keep the common formula; drop cost-household and HINK-household scope supplied only by later occurrences. Evidence: rel070-base/reg_meta.db occurrences 229505, 230369, 231544, 231812."
 
 
 [[statement]]
 kind = "set"
 subject = "var:inkomststandard-2"
-fields = { "description" = "Inkomststandard beräknad med verklig boendeutgift. Disponibel inkomst divideras med boendeutgift 2 plus normer för baskonsumtion gånger prisbasbeloppet, för kosthushållet och ingående HINK-hushåll." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBefintlig text beskriver en komponent, medan variabeln mäter inkomststandard.\ncatalog:variable_text:24677:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229506:opdef_text; rel070-base/reg_meta.db:occurrence:230370:opdef_text; rel070-base/reg_meta.db:occurrence:231545:opdef_text. One variable, one description."
+fields = { "description" = "Inkomststandard beräknad med verklig boendeutgift. Disponibel inkomst divideras med boendeutgift 2 plus normer för baskonsumtion gånger prisbasbeloppet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBefintlig text beskriver en komponent, medan variabeln mäter inkomststandard.\ncatalog:variable_text:24677:15340:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:229506:opdef_text; rel070-base/reg_meta.db:occurrence:230370:opdef_text; rel070-base/reg_meta.db:occurrence:231545:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Keep the common formula; drop cost-household and HINK-household scope supplied only by later occurrences. Evidence: rel070-base/reg_meta.db occurrences 229506, 230370, 231545."
 
 
 [[statement]]
