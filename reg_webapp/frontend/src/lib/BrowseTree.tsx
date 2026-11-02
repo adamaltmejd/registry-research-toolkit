@@ -96,7 +96,7 @@ interface CurrentRow {
 }
 
 /** The row the current page belongs to, by key (the row's FQID): a variable,
- * group or variants page lives under its register, a classification page under
+ * group or table page lives under its register, a classification page under
  * the classification root. */
 function currentRow(route: Route): CurrentRow | null {
   switch (route.name) {
@@ -109,7 +109,6 @@ function currentRow(route: Route): CurrentRow | null {
       return { key, exact: key === route.fqidPath };
     }
     case "group":
-    case "variants":
       return { key: `${route.provider}/${route.register}`, exact: false };
     case "class-group":
       return { key: "class", exact: false };

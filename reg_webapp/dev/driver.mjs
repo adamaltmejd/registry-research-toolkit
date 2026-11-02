@@ -1,6 +1,6 @@
 // Shell and browse-search flows × four viewports, against the source-built
 // webapp-dev fixture. Run from reg_webapp/frontend via dev.sh flows; screenshots
-// land in the required <out-dir>. W2–W5 restore the entity and project scenarios.
+// land in the required <out-dir>. Variable and project scenarios return in W3–W5.
 import { existsSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -252,6 +252,50 @@ async function browseSearchCase(page, shoot) {
   );
 }
 
+// Source: webapp-dev's hush/fam releases and its 2021 release notice. Fails if
+// register/table dispatch, table links, collapsed releases or grouped findings
+// are lost. The older shell/search case never opened these entity surfaces.
+async function browsePagesCase(page, shoot) {
+  const main = page.getByRole("main");
+  await main.getByRole("link", { name: "demo", exact: true }).click();
+  await page.waitForURL("**/catalog/demo");
+  await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
+  await page.waitForURL("**/catalog/demo/hush");
+  await settled(page);
+  const tables = main.locator("section").filter({ has: page.getByRole("heading", { name: "Tables", exact: true }) });
+  await tables.getByRole("link", { name: "Individer", exact: true }).waitFor();
+  await shoot("browse-register");
+  await tables.getByRole("link", { name: "Familjer", exact: true }).click();
+  await page.waitForURL("**/catalog/demo/hush/fam");
+  await settled(page);
+  await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
+  // Stacked cells include their CSS label prefix in the accessible name.
+  // Match the value at the end while retaining the table-cell boundary.
+  const releases = main.getByRole("button", { name: "Releases", exact: true });
+  check((await releases.getAttribute("aria-expanded")) === "false", "releases must start collapsed");
+  check((await main.getByRole("cell", { name: /fam 2021$/ }).count()) === 0, "collapsed releases mounted their entries");
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const code = findings.getByRole("button", { name: /^Notice:/ });
+  check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
+  await releases.click();
+  await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
+  await main.getByRole("cell", { name: /^(?:Primary )?Yes$/ }).first().waitFor();
+  await code.click();
+  await findings.getByText("Familjebegreppet ändrades 2021.", { exact: true }).waitFor();
+  // This release notice has no subject.fqid. Rendering only fqid loses its
+  // release and table, even though the message remains visible.
+  const notice = findings.getByRole("listitem").filter({ hasText: "Familjebegreppet ändrades 2021." });
+  await notice.getByText("Release: fam 2021", { exact: true }).waitFor();
+  check(
+    (await notice.getByRole("link", { name: "Familjer", exact: true }).getAttribute("href")) === "/catalog/demo/hush/fam",
+    "the release finding lost its table page link",
+  );
+  await shoot("browse-table");
+  await code.focus();
+  await code.press("Enter");
+  check((await code.getAttribute("aria-expanded")) === "false", "keyboard activation did not collapse the finding code");
+}
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -288,6 +332,11 @@ async function runCase(viewport, name, body, route) {
 try {
   mkdirSync(outDir, { recursive: true });
   const scenarios = {
+    "browse-pages": {
+      shots: 2,
+      route: "/catalog/demo/hush",
+      run: browsePagesCase,
+    },
     "browse-search": {
       shots: 2,
       route: "/catalog/demo/bas",

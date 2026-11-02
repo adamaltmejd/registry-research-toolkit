@@ -364,3 +364,19 @@ export async function searchFacets(
 /** Provider and register entries of the current catalog summary. */
 export type RootChild = RootShow["providers"][number];
 export type RegisterChild = ProviderShow["registers"][number];
+
+export type TableShow = Extract<ShowNode, { kind: "table" }>;
+export type CatalogPeriod = RustSchemas["Period"];
+export type CatalogFinding = RustSchemas["Finding"];
+
+/** Review items and notices for a catalog subject, including its descendants. */
+export function getFindings(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<CatalogFinding[]> {
+  return rustGet<CatalogFinding[]>(
+    `/findings/${encodeFqid(ref)}`,
+    undefined,
+    options,
+  );
+}

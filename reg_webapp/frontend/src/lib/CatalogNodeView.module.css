@@ -6,67 +6,77 @@
   min-width: 0;
 }
 
-/* The one `h1` treatment (DESIGN.md → typography.h1; the Definitions head). */
-.title {
-  max-width: 30ch;
-  margin: 0;
-  font-size: var(--text-h1);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--h1-tracking);
-  line-height: 1.1;
-}
-
-/* The loading placeholder keeps the loaded page's rhythm: a title, then the
-   body (three blocks on a classification page, which has more surfaces). */
-.loading,
-.loadingGeometry {
+.loading {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
-.loadingGeometry {
-  max-width: 64rem;
+
+.prose {
+  max-width: 60ch;
+  margin: 0;
+  white-space: pre-wrap;
 }
-/* The loaded page's wrapper: a flex item of the detail pane, so it must let a wide
-   table scroll inside its own wrapper instead of widening the page. */
-.loaded {
+
+.disclosure {
+  border-top: 1px solid var(--border);
   min-width: 0;
 }
-
-/* A row's name is the row's link, and what leads it: a plain link (`link`) at
-   600. A group row's whole anchor is the link, so its name carries the border. */
-.rowLink {
-  color: var(--text);
-  font-weight: var(--heading-weight);
+.disclosureHeading {
+  margin: 0;
+  font-size: var(--text-sm);
 }
-.groupLink:hover .rowLink {
+.disclosureButton {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.disclosureButton svg {
+  flex-shrink: 0;
+}
+.disclosure[data-expanded] .disclosureButton svg {
+  transform: rotate(90deg);
+}
+.disclosureButton[data-hovered] {
   background: var(--surface-hover);
 }
-
-/* A register's description, two lines at most; the whole text is on its page. */
-.clamp {
-  display: -webkit-box;
-  overflow: hidden;
-  color: var(--text-muted);
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
-.groupLink {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2) var(--space-3);
-}
-.groupLink:focus-visible {
+.disclosureButton[data-focus-visible] {
   outline: none;
-  border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
 }
-
-/* A classification's short name is a human code: kept, muted, secondary. */
-.edition {
+.findings,
+.plainList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+}
+.finding {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-wrap: anywhere;
+}
+.variableName {
+  display: flex;
+  flex-direction: column;
+}
+.period {
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: var(--text-micro);
+  font-family: var(--font-mono);
 }

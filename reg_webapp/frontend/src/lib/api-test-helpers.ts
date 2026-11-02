@@ -6,7 +6,6 @@
 // test.
 import { onTestFinished, vi } from "vitest";
 import type { RegisterShow, RootShow, VariableStateModel } from "./api";
-import { variant } from "./variants-test-helpers";
 
 /** Stub `fetch` at the HTTP boundary, the one process boundary the SPA's reads
  * cross, instead of mocking `./api`: the request URL, query and envelope are then
@@ -117,7 +116,6 @@ export function registerShow(
     purpose: null,
     tags: [],
     groups: [],
-    variants: [variant("_default")],
     children: [],
     ...fields,
   };

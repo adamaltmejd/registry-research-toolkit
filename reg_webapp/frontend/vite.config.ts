@@ -66,6 +66,7 @@ export default defineConfig({
       "src/lib/router.test.ts",
       "src/lib/platform.test.ts",
       "src/lib/inline_markdown.test.ts",
+      "src/lib/catalog_period.test.ts",
     ],
     setupFiles: ["./src/test-setup.unit.ts"],
   },

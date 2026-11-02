@@ -24,6 +24,8 @@ export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
   id: string;
   name: string;
+  /** Already formatted period, available to a stable row renderer. */
+  period?: string;
   /** The option's accessible name where `name` repeats across sections
    * (another register's match); the visible text stays `name`. */
   label?: string;
@@ -226,44 +228,50 @@ export function ColumnList({
         ) : (
           <>
             {notice !== null && <p className={styles.note}>{notice}</p>}
-            <ListBox
-              aria-labelledby={labelId}
-              className={styles.list}
-              selectionMode="single"
-              selectionBehavior="replace"
-              disallowEmptySelection
-              selectedKeys={selectedId === null ? [] : [selectedId]}
-              onSelectionChange={onSelectionChange}
-              renderEmptyState={() => <p className={styles.note}>{empty}</p>}
-            >
-              {/* A flat list is plain options; only labelled runs get a section
+            {items?.length === 0 ? (
+              <p className={styles.note}>{empty}</p>
+            ) : (
+              <ListBox
+                aria-labelledby={labelId}
+                className={styles.list}
+                selectionMode="single"
+                selectionBehavior="replace"
+                disallowEmptySelection
+                selectedKeys={selectedId === null ? [] : [selectedId]}
+                onSelectionChange={onSelectionChange}
+              >
+                {/* A flat list is plain options; only labelled runs get a section
               (an unnamed group would be noise to a screen reader). */}
-              {sections.map((section) =>
-                section.label === null ? (
-                  <Collection
-                    key={section.id}
-                    items={section.items}
-                    dependencies={[renderName, selectedId, selectedExact]}
-                  >
-                    {option}
-                  </Collection>
-                ) : (
-                  section.items.length > 0 && (
-                    <ListBoxSection key={section.id} id={section.id}>
-                      <Header className={styles.register} title={section.label}>
-                        {section.label}
-                      </Header>
-                      <Collection
-                        items={section.items}
-                        dependencies={[renderName, selectedId, selectedExact]}
-                      >
-                        {option}
-                      </Collection>
-                    </ListBoxSection>
-                  )
-                ),
-              )}
-            </ListBox>
+                {sections.map((section) =>
+                  section.label === null ? (
+                    <Collection
+                      key={section.id}
+                      items={section.items}
+                      dependencies={[renderName, selectedId, selectedExact]}
+                    >
+                      {option}
+                    </Collection>
+                  ) : (
+                    section.items.length > 0 && (
+                      <ListBoxSection key={section.id} id={section.id}>
+                        <Header
+                          className={styles.register}
+                          title={section.label}
+                        >
+                          {section.label}
+                        </Header>
+                        <Collection
+                          items={section.items}
+                          dependencies={[renderName, selectedId, selectedExact]}
+                        >
+                          {option}
+                        </Collection>
+                      </ListBoxSection>
+                    )
+                  ),
+                )}
+              </ListBox>
+            )}
           </>
         )}
         <span

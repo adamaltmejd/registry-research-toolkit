@@ -1,4 +1,9 @@
-import { getShow, type RootChild, type ShowNode } from "./api";
+import {
+  getShow,
+  type RegisterShow,
+  type RootChild,
+  type ShowNode,
+} from "./api";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -162,5 +167,14 @@ export function catalogRootChildren(): Read<RootChild[]> {
   return read("root", async () => {
     const root = await getShow();
     return root.kind === "root" ? root.providers : [];
+  });
+}
+
+/** A register's display names, shared by table headers and located findings. */
+export function registerRead(ref: string): Read<RegisterShow> {
+  return read(`register:${ref}`, async () => {
+    const node = await sharedShow(ref);
+    if (node.kind !== "register") throw new Error(`${ref} is not a register`);
+    return node;
   });
 }
