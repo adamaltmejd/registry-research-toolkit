@@ -18,7 +18,6 @@ struct Attributes {
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
-    locator: String,
 }
 
 struct Claim {
@@ -133,7 +132,6 @@ fn claims(
                     mapping.carried,
                     mapping.caveat.clone(),
                     mapping.delivery.clone(),
-                    &mapping.locator,
                 ));
             }
         }
@@ -145,7 +143,7 @@ fn claims(
                 reg_core::fold_identity(&s.spelling) == spelling
                     && s.timeless == (table.disposition == "timeless")
             }) {
-                claims.push(claim(segment, &spans, false, None, None, &table.locator));
+                claims.push(claim(segment, &spans, false, None, None));
             }
         }
     }
@@ -159,7 +157,6 @@ fn claim(
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
-    locator: &str,
 ) -> Claim {
     Claim {
         attributes: Attributes {
@@ -169,7 +166,6 @@ fn claim(
             carried,
             caveat,
             window,
-            locator: locator.to_owned(),
         },
         spans: compile::overlap(wanted, &[(segment.start, segment.end)]),
         ambiguous: segment.state == "ambiguous",
@@ -260,11 +256,13 @@ pub(super) fn verify(
         .iter()
         .map(|t| (t.physical_name.as_str(), t))
         .collect();
-    let mut query = db.prepare(
-        "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.locator,m.start,m.end
+    let mut query = db
+        .prepare(
+            "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.start,m.end
          FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2"
-    ).map_err(|e| e.to_string())?;
+         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2",
+        )
+        .map_err(|e| e.to_string())?;
     let mut rivals = db
         .prepare(
             "SELECT n.code,r.table_pid,r.variable_pid,n.start,n.end
@@ -291,9 +289,8 @@ pub(super) fn verify(
                                 carried: r.get(3)?,
                                 caveat: r.get(4)?,
                                 window: r.get(5)?,
-                                locator: r.get(6)?,
                             },
-                            (r.get(7)?, r.get(8)?),
+                            (r.get(6)?, r.get(7)?),
                         ))
                     })
                     .map_err(|e| e.to_string())?;
