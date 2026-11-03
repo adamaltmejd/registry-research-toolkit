@@ -158,7 +158,9 @@ function browseNodes(
   heldOnly: boolean,
   current: string | null,
 ): BrowseNode[] {
-  const pinned = new Set(current === null ? [] : [current, current.split("/")[0]]);
+  const pinned = new Set(
+    current === null ? [] : [current, current.split("/")[0]],
+  );
   const kept = <T extends { fqid: string; held?: boolean }>(items: T[]) =>
     heldOnly
       ? items.filter((item) => item.held !== false || pinned.has(item.fqid))
