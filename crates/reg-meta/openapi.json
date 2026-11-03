@@ -4328,6 +4328,7 @@
         "oneOf": [
           {
             "type": "object",
+            "description": "In steward mode, the steward's own providers too.",
             "required": [
               "providers",
               "kind"
@@ -4341,15 +4342,6 @@
               },
               "providers": {
                 "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ShowProviderRef"
-                }
-              },
-              "steward_providers": {
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "$ref": "#/components/schemas/ShowProviderRef"
                 }
@@ -4381,16 +4373,8 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ShowRegisterRef"
-                }
-              },
-              "steward_registers": {
-                "type": [
-                  "array",
-                  "null"
-                ],
-                "items": {
-                  "$ref": "#/components/schemas/ShowRegisterRef"
-                }
+                },
+                "description": "In steward mode, the steward's own registers too."
               }
             }
           },
@@ -4677,6 +4661,10 @@
           "fqid": {
             "type": "string"
           },
+          "held": {
+            "type": "boolean",
+            "description": "In steward mode, whether the steward holds any of its registers."
+          },
           "name": {
             "type": "string"
           }
@@ -4692,6 +4680,10 @@
         "properties": {
           "fqid": {
             "type": "string"
+          },
+          "held": {
+            "type": "boolean",
+            "description": "In steward mode, whether the steward holds any of its tables."
           },
           "name": {
             "type": "string"

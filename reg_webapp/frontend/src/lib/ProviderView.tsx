@@ -1,7 +1,6 @@
 import type { ProviderShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
-import { uniqueCatalogRefs } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
@@ -9,10 +8,7 @@ import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 
 export function ProviderView({ node }: { node: ProviderShow }) {
-  const registers = uniqueCatalogRefs([
-    ...node.registers,
-    ...(node.steward_registers ?? []),
-  ]);
+  const registers = node.registers;
   return (
     <article className={styles.page}>
       <Definitions title={node.name} />

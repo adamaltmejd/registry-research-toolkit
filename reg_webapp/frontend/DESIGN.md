@@ -348,9 +348,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   iOS Safari zooms the page into a focused field under 16px and leaves it zoomed, cut
   off at the left.
 - **Browse columns (`ColumnList`):** in paired mode, the Registers header places a
-  Select beside Collapse all, with accessible labels for the register list and scope,
-  limiting variable search matches to held or all reference variables; browsing without
-  search text stays unscoped. Registers grouped under sticky provider headers, then the
+  Select beside Collapse all, with accessible labels for the register list and scope.
+  Under the default held scope the register list holds only the providers and registers
+  the steward holds anything in, and variable search matches only held variables
+  (maintainer 2026-11-03: "Held only"); "All matches" lists every register and matches
+  every reference variable. A register outside the list stays reachable through the
+  palette, "All matches" and links; opened that way, it and its provider keep a row
+  while its page is open. The variables column of a chosen register stays unscoped
+  without search text. Registers grouped under sticky provider headers, then the
   selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
   to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
