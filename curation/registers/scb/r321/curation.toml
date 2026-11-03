@@ -230,8 +230,8 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:beslut-om-medborgardialoger"
-fields = { "sets" = [] }
-evidence = "Beslut om medborgardialoger hör till den angivna gruppen och avser demokratiskt inflytande.\ncatalog:variable_text:38357:19723:20089"
+fields = { "sets" = ["beslut-om-medborgardialoger"] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
 
 [[statement]]
 kind = "set"
@@ -242,8 +242,8 @@ evidence = "Beslut om medborgardialoger hör till den angivna gruppen och avser 
 [[statement]]
 kind = "set"
 subject = "var:beslut-om-medborgardialoger-fr27"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382724\ncatalog:occurrence:382835"
+fields = { "sets" = ["beslut-om-medborgardialoger"] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
 
 [[statement]]
 kind = "set"
@@ -4658,8 +4658,8 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:offentlig-utfragning-hearing"
-fields = { "sets" = [] }
-evidence = "Förekomst av offentlig utfrågning.\ncatalog:occurrence:382615\ncatalog:variable_text:38761:16801:17167"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
 
 [[statement]]
 kind = "set"
@@ -4670,8 +4670,8 @@ evidence = "Förekomst av offentlig utfrågning.\ncatalog:occurrence:382615\ncat
 [[statement]]
 kind = "set"
 subject = "var:offentlig-utfragning-hearing-fr7"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande och senare andra ägare.\ncatalog:occurrence:383190\ncatalog:occurrence:383191\ncatalog:occurrence:383275"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
 
 [[statement]]
 kind = "set"
@@ -4682,8 +4682,8 @@ evidence = "Samma källkolumn har överlappande och senare andra ägare.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:offentlig-utfragning-hearing-medbdia"
-fields = { "sets" = [] }
-evidence = "Förekomst av offentlig utfrågning.\ncatalog:occurrence:382543\ncatalog:variable_text:38763:15340:15706"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
 
 [[statement]]
 kind = "set"
@@ -7238,19 +7238,19 @@ evidence = "Maintainer-approved Opus audit correction: Old pattern 1 persists, s
 [[statement]]
 kind = "set"
 subject = "set:allmanhetens-fragestund"
-fields = { "label" = "Allmänhetens frågestund" }
+fields = { "label" = "Allmänhetens frågestund", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:andra-organ-under-fullmaktige"
-fields = { "label" = "Andra organ under fullmäktige" }
+fields = { "label" = "Andra organ under fullmäktige", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:ansvar-for-fortroendevaldas-trygghet"
-fields = { "label" = "Ansvar för förtroendevaldas trygghet" }
+fields = { "label" = "Ansvar för förtroendevaldas trygghet", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7268,13 +7268,13 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:beslut-om-foraldraledighet"
-fields = { "label" = "Beslut om föräldraledighet" }
+fields = { "label" = "Beslut om föräldraledighet", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:bolag-under-moderbolag"
-fields = { "label" = "Bolag under moderbolag" }
+fields = { "label" = "Bolag under moderbolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7286,25 +7286,25 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:brukarrepresentation"
-fields = { "label" = "Brukarrepresentation" }
+fields = { "label" = "Brukarrepresentation", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:debattforum-pa-webbplats"
-fields = { "label" = "Debattforum på webbplats" }
+fields = { "label" = "Debattforum på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"
 subject = "set:delagda-bolag"
-fields = { "label" = "Delägda bolag" }
+fields = { "label" = "Delägda bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:digitalt-diarie-och-arendesystem-pa-webbplats"
-fields = { "label" = "Digitalt diarie- och ärendesystem på webbplats" }
+fields = { "label" = "Digitalt diarie- och ärendesystem på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
 
 [[statement]]
@@ -7322,13 +7322,13 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "set:forekomst-av-bolag"
-fields = { "label" = "Förekomst av bolag" }
+fields = { "label" = "Förekomst av bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:forekomst-av-namndsammantraden"
-fields = { "label" = "Förekomst av nämndsammanträden" }
+fields = { "label" = "Förekomst av nämndsammanträden", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -7346,31 +7346,31 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:fullmaktigesammantradens-webbtillganglighet"
-fields = { "label" = "Fullmäktigesammanträdens webbtillgänglighet" }
+fields = { "label" = "Fullmäktigesammanträdens webbtillgänglighet", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
 subject = "set:funktion-for-hot-hat-och-vald-mot-fortroendevalda"
-fields = { "label" = "Funktion för hot, hat och våld mot förtroendevalda" }
+fields = { "label" = "Funktion för hot, hat och våld mot förtroendevalda", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (commas)."
 
 [[statement]]
 kind = "set"
 subject = "set:genomforda-medborgarundersokningar"
-fields = { "label" = "Genomförda medborgarundersökningar" }
+fields = { "label" = "Genomförda medborgarundersökningar", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
 subject = "set:helagda-bolag"
-fields = { "label" = "Helägda bolag" }
+fields = { "label" = "Helägda bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:ideburet-offentligt-partnerskap"
-fields = { "label" = "Idéburet offentligt partnerskap" }
+fields = { "label" = "Idéburet offentligt partnerskap", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7412,7 +7412,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:medborgardialog-via-webbplats"
-fields = { "label" = "Medborgardialog via webbplats" }
+fields = { "label" = "Medborgardialog via webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
@@ -7436,7 +7436,7 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:medel-for-demokratifragor"
-fields = { "label" = "Medel för demokratifrågor" }
+fields = { "label" = "Medel för demokratifrågor", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7454,19 +7454,19 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:mojlighet-att-lamna-e-forslag"
-fields = { "label" = "Möjlighet att lämna e-förslag" }
+fields = { "label" = "Möjlighet att lämna e-förslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:mojlighet-att-lamna-medborgarforslag"
-fields = { "label" = "Möjlighet att lämna medborgarförslag" }
+fields = { "label" = "Möjlighet att lämna medborgarförslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:moteshandlingar-pa-webbplats"
-fields = { "label" = "Möteshandlingar på webbplats" }
+fields = { "label" = "Möteshandlingar på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
@@ -7478,19 +7478,19 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:offentlig-privat-samverkan"
-fields = { "label" = "Offentlig-privat samverkan" }
+fields = { "label" = "Offentlig-privat samverkan", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
 
 [[statement]]
 kind = "set"
 subject = "set:offentliga-utfragningar"
-fields = { "label" = "Offentliga utfrågningar" }
+fields = { "label" = "Offentliga utfrågningar", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:organ-for-demokratifragor"
-fields = { "label" = "Organ för demokratifrågor" }
+fields = { "label" = "Organ för demokratifrågor", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -7502,13 +7502,13 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:overenskommelse-med-civilsamhallet"
-fields = { "label" = "Överenskommelse med civilsamhället" }
+fields = { "label" = "Överenskommelse med civilsamhället", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:partistod"
-fields = { "label" = "Partistöd" }
+fields = { "label" = "Partistöd", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -7520,7 +7520,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:politiska-sekreterare"
-fields = { "label" = "Politiska sekreterare" }
+fields = { "label" = "Politiska sekreterare", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7532,7 +7532,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:rad-for-sarskilda-fokusgrupper"
-fields = { "label" = "Råd för särskilda fokusgrupper" }
+fields = { "label" = "Råd för särskilda fokusgrupper", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -7550,19 +7550,19 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:revisorer-med-undantag-fran-granskning"
-fields = { "label" = "Revisorer med undantag från granskning" }
+fields = { "label" = "Revisorer med undantag från granskning", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:sammantradeskalendarium-pa-webbplats"
-fields = { "label" = "Sammanträdeskalendarium på webbplats" }
+fields = { "label" = "Sammanträdeskalendarium på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
 subject = "set:sammantradesprotokoll-pa-webbplats"
-fields = { "label" = "Sammanträdesprotokoll på webbplats" }
+fields = { "label" = "Sammanträdesprotokoll på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
@@ -7586,37 +7586,37 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:stod-for-e-forslag"
-fields = { "label" = "Stöd för e-förslag" }
+fields = { "label" = "Stöd för e-förslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:strategi-for-demokratiutveckling"
-fields = { "label" = "Strategi för demokratiutveckling" }
+fields = { "label" = "Strategi för demokratiutveckling", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:strategi-for-samarbete-om-verksamhetsutveckling"
-fields = { "label" = "Strategi för samarbete om verksamhetsutveckling" }
+fields = { "label" = "Strategi för samarbete om verksamhetsutveckling", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:tidpunkt-for-mojlighet-att-lamna-e-forslag"
-fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag" }
+fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:tidpunkt-for-mojlighet-att-lamna-medborgarforslag"
-fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag" }
+fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:tjanstegarantier-och-servicedeklarationer"
-fields = { "label" = "Tjänstegarantier och servicedeklarationer" }
+fields = { "label" = "Tjänstegarantier och servicedeklarationer", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -9808,3 +9808,1575 @@ kind = "set"
 subject = "var:fr46-5"
 fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, Fr46_5)" }
 evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "set:beslut-om-medborgardialoger"
+fields = { "label" = "Beslut om medborgardialoger", "axes" = [{ "id" = "population", "label" = "Population" }] }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr20"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr23"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-under-fullmaktige"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-politiska-sekreterare"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-politiska-sekreterare-fr8-text"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-foraldraledighet"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-foraldraledighet-fr7"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-medborgardialoger"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-medborgardialoger-fr27"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:borttagen-mojlighet-att-lamna-e-forslag-fr15c"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:borttagen-mojlighet-att-lamna-medborgarforslag-fr11c"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-aldreomsorg-2020"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-annat-omrade-2020"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-fr27"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-grundskola"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-till-fr42-7-text"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsys-utover-delegering"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysald"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfs"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfunk"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgs"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgym"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysifo"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysovr"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:delagda-bolag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:delagda-bolag-fr36c"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr21"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr23"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr36"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr37"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-offentlig-privat-samverkan-ops-fr34"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-offentligt-privat-partnerskap-opp-fr20"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-offentligt-privat-partnerskap-opp-fr22"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:demokratistrategi"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:e-forslag-mojlighet-borttagen"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:e-forslag-mojlighet-tidpunkt"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fokusgrupp"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-bolag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-bolag-fr36a"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden-fr23a"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fortroendevaldas-trygghet-ansvar"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr10"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-2"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-3"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-4"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-5"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2-28613"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-3"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-4"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-5"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-5"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-7"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-8"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-2"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-3"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-4"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-7"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-8"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr39"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-2"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-3"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-2-35983"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-3-35983"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-4"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-5"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-7"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-8"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-2-28613"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-3-28613"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-5-28613"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-7"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-8"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-2"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-3"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-4"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-5"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-7"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktigesammantraden-webb-tillgang"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning-fr15"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning-fr26"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning-fr27"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning-fr29"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:genomford-medborgarundersokning-medund"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:helagda-bolag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:helagda-bolag-fr36b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:hot-hat-vald-mot-fortroendevalda"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:ideburet-offentligt-partnerskap-iop"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-rad-fokusgrupper"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-rad-kommitte-for-sarskilda-fokusgrupper-fr24-8"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:interreligiosa-rad-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-inte-brukarrepresentation-2020"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunala-bolag-under-moderbolag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarforslag-mojlighet-borttagen"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarforslag-mojlighet-tidpunkt"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradald"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradannat"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradfunk"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradnatmin"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradung"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradutlb"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor-fr17"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor-fr19"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor-fr28"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor-fr29"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:medel-avsatt-for-demokratifragor-fr31"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr14"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15a"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr10"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11a"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr7"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr9"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-medbforslag"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-privat-partnerskap-opp"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-privat-samverkan-ops"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-fr7"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-medbdia"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-offutfragn"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-via-webbplatsen-fr14b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-via-webbplatsen-medbdiaweb"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-direkt-under-fullmaktige"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-direkt-under-kommunfullmaktige"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-fr28b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-text"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-text-fr28b-text"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-civila-samhallet"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr22"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr24"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr36"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr37"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-fr3"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-fr4"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-partstod"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-till-ungdomsforbund"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-till-ungdomsforbund-fr5"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr4"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr6"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr7"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr8"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr16"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr18"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr27"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr28"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr28a"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:politiskt-organ-for-demokratifragor-fr30a"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:polsekr"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:polsekrant"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-aldre-kommuner-2015"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-aldre-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-2019-2023"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-2023"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-kommuner-2015"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-fokusgrupper-fr26"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-fokusgrupper-textsvar"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-funktionsnedsattning-kommuner-2015"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-funktionsnedsattning-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-interreligiosa-2019-2023"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-interreligiosa-2023"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-aldre-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-annan-grupp-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-for-sarskilda-fokusgrupper-textsvar-fr24-7-text"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-nationella-minoriteter-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-personer-funktionsnedsattning-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-personer-utlandsk-bakgrund-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-ungdomar-2015"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-nationella-minoriteter-kommuner-2015"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-nationella-minoriteter-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-ungdomar-kommuner-2011"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-ungdomar-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-utlandsk-bakgrund-kommuner-2015"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-utlandsk-bakgrund-regioner-2019"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-annat"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-fritext"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr33"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr36"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-granskning"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samarbete-verksamhetsutveckling-fr40"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samarbete-verksamhetsutveckling-fr41"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr23"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr37"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr38"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr40"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-samlbolag"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr15"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr18"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-for-demokratifragor-demokratiutveckling-fr18"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-for-demokratifragor-demokratiutveckling-fr20"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-for-demokratifragor-demokratiutveckling-fr29"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-for-demokratifragor-demokratiutveckling-fr30"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-for-demokratifragor-demokratiutveckling-fr32"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-om-samarbete-rorande-utveckling-av-fr43-7-text"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-mojlighet-att-lamna-e-forslag-fr15b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-mojlighet-att-lamna-medborgarforslag-fr11b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tillanglighet-pa-webb-fullmaktigesammantradena-fr22b"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer-for-service-fr28"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer-for-service-fr30"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer-for-service-fr42"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer-for-service-servdekl"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr30"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr33"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr31"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr34"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-diarie-arendesystem"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-kalendarium"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-moteshandlingar"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-protokoll-sammantraden"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-fr30-6"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-webbdebatt"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-digitalt-diarie-arendesystem-fr30-3"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-digitalt-diarie-arendesystem-fr42-1"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-digitalt-diarie-arendesystem-fr44-1"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-digitalt-diarie-arendesystem-fr45-2"
+fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-digitalt-diarie-arendesystem-webbdiarie"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-fr30-1"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-webbkal"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-fr30-2"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-webbhandl"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-fr30-4"
+fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-webbprot"
+fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
+evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
