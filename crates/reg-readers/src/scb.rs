@@ -158,6 +158,9 @@ pub fn read(
     let register_name = col("Registernamn")?;
     let register_purpose = col("Registersyfte")?;
     let variant_id = col("RegVarID")?;
+    // SCB's `*namn` is the official long heading ("FEK Slutdata (lokal
+    // verksamhetsenhet)"), `*rubrik` a short label ("FEK Slutdata (LVE)"). The table
+    // is keyed and named by namn (maintainer ruling 2026-11-03); rubrik only fills in.
     let variant_name = col("Registervariantnamn")?;
     let variant_title = col("Registervariantrubrik")?;
     let variant_description = col("Registervariantbeskrivning")?;
@@ -239,7 +242,7 @@ pub fn read(
                 provider: provider.to_owned(),
                 register: handle.clone(),
                 table: table.clone(),
-                name: get(variant_title),
+                name: get(variant_name).or_else(|| get(variant_title)),
                 description: get(variant_description),
                 from: None,
                 to: None,
