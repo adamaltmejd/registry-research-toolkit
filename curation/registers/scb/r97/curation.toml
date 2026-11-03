@@ -28647,12 +28647,6 @@ evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variable
 
 [[statement]]
 kind = "set"
-subject = "var:ifa208"
-fields = { "label" = "Underskott av fritidsfastighet, första förekomsten" }
-evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
-
-[[statement]]
-kind = "set"
 subject = "var:ifa302"
 fields = { "label" = "Ränta hyresfastighet (förekomst 1)" }
 evidence = "#2102 same-label cluster 'Ränta hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3021 and IFA3022 are concurrent numbered columns; the suffix is the förekomst number."
@@ -29055,12 +29049,6 @@ evidence = "#2102 same-label cluster 'Antal fastigheter med en specifik typkod' 
 
 [[statement]]
 kind = "set"
-subject = "var:kjb110"
-fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 1)" }
-evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
-
-[[statement]]
-kind = "set"
 subject = "var:klassning-jordbruksfastighet-forekomst-1"
 fields = { "label" = "Klassning jordbruksfastighet (förekomst 1)" }
 evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; KJB1011-KJB1013 are concurrent numbered columns with the same value set; the first pid names förekomst 1."
@@ -29394,18 +29382,6 @@ kind = "set"
 subject = "var:procentandel-av-intakt-eller-underskott-for-rorelse-krr1103"
 fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 3)" }
 evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, medium confidence; KRR1101-KRR1103 are concurrent numbered columns; the suffix is the förekomst number."
-
-[[statement]]
-kind = "set"
-subject = "var:procentandet-av-intakt-underskott-for-kjb1102"
-fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 2)" }
-evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
-
-[[statement]]
-kind = "set"
-subject = "var:procentandet-av-intakt-underskott-for-kjb1103"
-fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 3)" }
-evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
 
 [[statement]]
 kind = "set"
@@ -29802,18 +29778,6 @@ kind = "set"
 subject = "var:underskott-av-eget-hem-ifa1084"
 fields = { "label" = "Underskott av eget hem (förekomst 4)" }
 evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, medium confidence; IFA1081-IFA1084 are concurrent numbered columns; the suffix is the förekomst number."
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-av-firtidsfastighet-ifa2082"
-fields = { "label" = "Underskott av fritidsfastighet, andra förekomsten" }
-evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-av-firtidsfastighet-ifa2083"
-fields = { "label" = "Underskott av fritidsfastighet, tredje förekomsten" }
-evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
 
 [[statement]]
 kind = "set"

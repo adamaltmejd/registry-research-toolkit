@@ -4817,12 +4817,6 @@ evidence = "#2102 same-label cluster 'Produktion av alger' (2 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:produktion-av-roding-for-utsattning"
-fields = { "label" = "Produktion av röding för utsättning, i havet" }
-evidence = "#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): judged different meaning, medium confidence; SRodp och SRodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
-
-[[statement]]
-kind = "set"
 subject = "var:produktion-flodkraftor-konsumtion-hav-kg"
 fields = { "label" = "Produktion av flodkräftor för konsumtion, i havet" }
 evidence = "#2102 same-label cluster 'Produktion av flodkräftor för konsumtion' (2 variables): judged different meaning, medium confidence; MFlodp och MFlodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."

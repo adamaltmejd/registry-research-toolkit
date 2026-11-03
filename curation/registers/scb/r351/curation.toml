@@ -6118,12 +6118,6 @@ evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (andel yrkesrelaterad utbildningstid)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
 subject = "var:andra-utnyttjar-dig-om-du-inte-ar-forsiktig"
 fields = { "label" = "Om dig själv (andra utnyttjar dig om du inte är försiktig)" }
 evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
@@ -6592,12 +6586,6 @@ evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variable
 
 [[statement]]
 kind = "set"
-subject = "var:onskad-utbildning-inte-deltagit-senaste-12-manader"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (önskad men uteblivet deltagande)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
 subject = "var:pagaende-utbildning-deltagande"
 fields = { "label" = "Utbildning som pågår, deltagande" }
 evidence = "#2102 same-label cluster 'Utbildning som pågår' (3 variables): judged different meaning, high confidence; Three distinct PIAAC items (B_Q02a/b/c) with different value sets: participation yes/no, education level, main field; the prior labels for level and field were swapped."
@@ -6970,57 +6958,9 @@ evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (2
 
 [[statement]]
 kind = "set"
-subject = "var:utbildning-antal-dagar-senaste-ar"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal dagar)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-antal-veckor-senaste-ar"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal veckor)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-timmar-totalt-inte-restid-senaste-ar"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal timmar totalt)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-under-eller-utanfor-arbetstid-senaste-ar"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (under eller utanför arbetstid)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-viktigaste-hinder-deltagande-senaste-ar"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (viktigaste hinder för deltagande)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningens-niva-2"
 fields = { "label" = "Utbildningens nivå (grupperad)" }
 evidence = "#2102 same-label cluster 'Utbildningens nivå' (3 variables): judged different meaning, high confidence; B_Q01a is the detailed level, B_Q01a_T a three-category grouping (förgymnasial/gymnasial/eftergymnasial), B_Q01a3 the level of the highest education completed abroad."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsaktivitet-huvudsaklig-anledning-senaste-aret"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (huvudsaklig anledning)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsaktivitet-samtidigt-arbete-senaste-aret"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (samtidigt med arbete)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsaktivitet-yrkesrelaterad-senaste-aret"
-fields = { "label" = "Utbildningsaktiviteter under det senaste året (yrkesrelaterad)" }
-evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
 
 [[statement]]
 kind = "set"

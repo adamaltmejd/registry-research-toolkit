@@ -7695,96 +7695,6 @@ evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 v
 
 [[statement]]
 kind = "set"
-subject = "var:betalare-icke-formell-andra-arbetsformedlingen"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: Arbetsförmedlingen" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-andra-arbetsgivare"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: arbetsgivare" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-andra-hushallsmedlem-eller-slakting"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: hushållsmedlem eller släkting" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-andra-intervjupersonen-sjalv"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: intervjupersonen själv" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-andra-offentlig-eller-privat-sektor"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: offentlig eller privat sektor" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-forsta-arbetsformedlingen"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: Arbetsförmedlingen" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-forsta-arbetsgivare"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: arbetsgivare" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-forsta-hushallsmedlem-eller-slakting"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: hushållsmedlem eller släkting" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-forsta-intervjupersonen-sjalv"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: intervjupersonen själv" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-forsta-offentlig-eller-privat-sektor"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: offentlig eller privat sektor" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-tredje-arbetsformedlingen"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, tredje aktiviteten: Arbetsförmedlingen" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-tredje-arbetsgivare"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, tredje aktiviteten: arbetsgivare" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-tredje-hushallsmedlem-eller-slakting"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, tredje aktiviteten: hushållsmedlem eller släkting" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-tredje-intervjupersonen-sjalv"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, tredje aktiviteten: intervjupersonen själv" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:betalare-icke-formell-tredje-offentlig-sektor"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, tredje aktiviteten: offentlig eller privat sektor" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
 subject = "var:betald-arbetstid-senaste-formella-utbildning-12-manader"
 fields = { "label" = "Arbetstid formell utbildning, senaste utbildningen (12 månader)" }
 evidence = "#2102 same-label cluster 'Arbetstid formell utbildning' (3 variables): judged different meaning, medium confidence; farbtid1 and farbtid2 are the first and second education slots (2005-06); FEDWORKTIME (2011-2023) is a later question about the latest education with different missing codes and no 'inget arbete' answer."
@@ -8271,12 +8181,6 @@ evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell 
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact01-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 1" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
 subject = "var:nfeact01-purp"
 fields = { "label" = "Syfte icke-formell utbildning, aktivitet 1" }
 evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Columns hold the purpose for activity 1..7 over three survey waves, plus one Ja/Nej-coded column; items 1..7 differ, waves are renames."
@@ -8298,12 +8202,6 @@ kind = "set"
 subject = "var:nfeact02-mainstat"
 fields = { "label" = "Sysselsättning vid start av icke-formell utbildning, aktivitet 2" }
 evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Concurrent columns NFEACT01..05_MAINSTAT, one per activity."
-
-[[statement]]
-kind = "set"
-subject = "var:nfeact02-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 2" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
 
 [[statement]]
 kind = "set"
@@ -8331,12 +8229,6 @@ evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell 
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact03-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 3" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
 subject = "var:nfeact03-purp"
 fields = { "label" = "Syfte icke-formell utbildning, aktivitet 3" }
 evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Columns hold the purpose for activity 1..7 over three survey waves, plus one Ja/Nej-coded column; items 1..7 differ, waves are renames."
@@ -8358,12 +8250,6 @@ kind = "set"
 subject = "var:nfeact04-mainstat"
 fields = { "label" = "Sysselsättning vid start av icke-formell utbildning, aktivitet 4" }
 evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Concurrent columns NFEACT01..05_MAINSTAT, one per activity."
-
-[[statement]]
-kind = "set"
-subject = "var:nfeact04-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 4" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
 
 [[statement]]
 kind = "set"
@@ -8391,12 +8277,6 @@ evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell 
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact05-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 5" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
 subject = "var:nfeact05-purp"
 fields = { "label" = "Syfte icke-formell utbildning, aktivitet 5" }
 evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Columns hold the purpose for activity 1..7 over three survey waves, plus one Ja/Nej-coded column; items 1..7 differ, waves are renames."
@@ -8412,12 +8292,6 @@ kind = "set"
 subject = "var:nfeact05-worktime"
 fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej), aktivitet 5" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Per-activity columns with two codings: a graded paid-working-time scale for activities 1-3 (ifarbtid 2005-06, NFEWORKTIME 2011-12, treated as the same variable over time) and a plain yes/no for activities 1-7 (NFEACT01-07_WORKTIME, 2016-2023)."
-
-[[statement]]
-kind = "set"
-subject = "var:nfeact06-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 6" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
 
 [[statement]]
 kind = "set"
@@ -8439,12 +8313,6 @@ evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 var
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact07-paidby"
-fields = { "label" = "Betalande objekt, icke-formell utbildning (arbetsgivare), aktivitet 7" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
 subject = "var:nfeact07-purp"
 fields = { "label" = "Syfte icke-formell utbildning, aktivitet 7" }
 evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Columns hold the purpose for activity 1..7 over three survey waves, plus one Ja/Nej-coded column; items 1..7 differ, waves are renames."
@@ -8457,39 +8325,9 @@ evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 var
 
 [[statement]]
 kind = "set"
-subject = "var:nfedist"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten, distans ja/nej" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD1), distance yes/no (NFEDIST1) and degree of distance (NFEPLACE1)."
-
-[[statement]]
-kind = "set"
 subject = "var:nfefield3"
 fields = { "label" = "Inriktning icke-formell utbildning, tredje aktiviteten" }
 evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered columns per non-formal activity: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-2023), treated as the same first/second/third variables over time."
-
-[[statement]]
-kind = "set"
-subject = "var:nfemethod"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten, typ av undervisningsmetod" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD1), distance yes/no (NFEDIST1) and degree of distance (NFEPLACE1)."
-
-[[statement]]
-kind = "set"
-subject = "var:nfepaidby1"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, första aktiviteten: minst ett alternativ" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:nfepaidby2"
-fields = { "label" = "Betalande objekt, icke-formell utbildning, andra aktiviteten: minst ett alternativ" }
-evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): judged different meaning, medium confidence; NFEPAIDBY1-3_1..5 cross activity (first/second/third) with payer; NFEPAIDBY1/2 (2022-2023) are summary flags for any payer; NFEACT01-07_PAIDBY (2016-2023) are employer-paid yes/no items per numbered activity, which may overlap NFEPAIDBY*_1 for the same years (not determinable here)."
-
-[[statement]]
-kind = "set"
-subject = "var:nfeplace"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten, grad av distans" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD1), distance yes/no (NFEDIST1) and degree of distance (NFEPLACE1)."
 
 [[statement]]
 kind = "set"
@@ -8646,24 +8484,6 @@ kind = "set"
 subject = "var:typ-utbildningsanordnare-tredje-aktiviteten"
 fields = { "label" = "Typ av utbildningsanordnare, tredje aktiviteten" }
 evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Providers of the first, second and third activity are separate concurrent columns."
-
-[[statement]]
-kind = "set"
-subject = "var:undervisningsmetod-icke-formell-utbildning-nfedist2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten, distans ja/nej" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD2), distance yes/no (NFEDIST2) and degree of distance (NFEPLACE2)."
-
-[[statement]]
-kind = "set"
-subject = "var:undervisningsmetod-icke-formell-utbildning-nfemethod2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten, typ av undervisningsmetod" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD2), distance yes/no (NFEDIST2) and degree of distance (NFEPLACE2)."
-
-[[statement]]
-kind = "set"
-subject = "var:undervisningsmetod-icke-formell-utbildning-nfeplace2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten, grad av distans" }
-evidence = "#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): judged different meaning, medium confidence; Three disjoint-period items with different value sets: method type (NFEMETHOD2), distance yes/no (NFEDIST2) and degree of distance (NFEPLACE2)."
 
 [[statement]]
 kind = "set"

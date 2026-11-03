@@ -10053,30 +10053,6 @@ evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged d
 
 [[statement]]
 kind = "set"
-subject = "var:bransle-fjarrvarme-drivmedel-kvant"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (kvantitet)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the cost."
-
-[[statement]]
-kind = "set"
-subject = "var:bransle-lokaluppvarmning-transport-kvant"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (kvantitet)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the purchase cost."
-
-[[statement]]
-kind = "set"
-subject = "var:bransle-lokaluppvarmning-transport-radnr"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (radnummer)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the purchase cost."
-
-[[statement]]
-kind = "set"
-subject = "var:bransle-lokaluppvarmning-transport-tkr"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (tusentals kronor)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the purchase cost."
-
-[[statement]]
-kind = "set"
 subject = "var:bransleforbrukning-transporter-brkod"
 fields = { "label" = "Bränsleförbrukning för egna transporter (bränsleslag)" }
 evidence = "#2102 same-label cluster 'Bränsleförbrukning för egna transporter' (3 variables): judged different meaning, high confidence; brkod is the fuel type, kvant the quantity and tkr the cost in thousand SEK."
@@ -10116,24 +10092,6 @@ kind = "set"
 subject = "var:el-prod"
 fields = { "label" = "Producerad värme (kraftvärme)" }
 evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Five concurrent columns each hold produced heat from a different source (fuel-only, cogeneration, electric boiler, heat pump, flue-gas condensation)."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukning-bransle-drivmedel-od-radnr"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (radnummer)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the cost."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukning-bransle-drivmedel-od-tkr"
-fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (tusentals kronor)" }
-evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): judged different meaning, high confidence; kvant is the quantity, radnr the row number and tkr the cost."
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-mwh"
-fields = { "label" = "Mottagen värmemängd (värmeförlust, MWh)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
 
 [[statement]]
 kind = "set"
@@ -10179,90 +10137,6 @@ evidence = "#2102 same-label cluster 'Kompressorkylmaskin' (2 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:lev-mwh"
-fields = { "label" = "Mottagen värmemängd (levererad, MWh)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fardig-varme"
-fields = { "label" = "Leveranser av färdig värme (antal abonnemang)" }
-evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fardig-varme-mwh"
-fields = { "label" = "Leveranser av färdig värme (MWh)" }
-evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fardig-varme-radnr"
-fields = { "label" = "Leveranser av färdig värme (radnummer)" }
-evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrkyla"
-fields = { "label" = "Leveranser av fjärrkyla (antal abonnemang)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrkyla-mwh"
-fields = { "label" = "Leveranser av fjärrkyla (MWh)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrkyla-radnr"
-fields = { "label" = "Leveranser av fjärrkyla (radnummer)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): judged different meaning, high confidence; antab is the number of subscriptions, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrvarme"
-fields = { "label" = "Leveranser av fjärrvärme (antal abonnemang)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): judged different meaning, high confidence; antab is subscriptions, antlgh dwellings, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrvarme-antlgh"
-fields = { "label" = "Leveranser av fjärrvärme (antal bostadslägenheter)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): judged different meaning, high confidence; antab is subscriptions, antlgh dwellings, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrvarme-mwh"
-fields = { "label" = "Leveranser av fjärrvärme (MWh)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): judged different meaning, high confidence; antab is subscriptions, antlgh dwellings, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-av-fjarrvarme-radnr"
-fields = { "label" = "Leveranser av fjärrvärme (radnummer)" }
-evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): judged different meaning, high confidence; antab is subscriptions, antlgh dwellings, mwh the delivered quantity and radnr the row number."
-
-[[statement]]
-kind = "set"
-subject = "var:mot-mwh"
-fields = { "label" = "Mottagen värmemängd (mottagen, MWh)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
-
-[[statement]]
-kind = "set"
-subject = "var:mottagen-varmemangd"
-fields = { "label" = "Mottagen värmemängd (fjärrvärme, MWh)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
-
-[[statement]]
-kind = "set"
-subject = "var:mottagen-varmemangd-radnr"
-fields = { "label" = "Mottagen värmemängd (radnummer)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
-
-[[statement]]
-kind = "set"
 subject = "var:overford-el-slutlig-forbrukare-naringsgren-sni-2007"
 fields = { "label" = "Överförd el till slutlig förbrukare (näringsgren SNI 2007)" }
 evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): judged different meaning, medium confidence; Concurrent columns in elnatforetag-nat: SNI 2007 row code, row text and plain row number."
@@ -10296,48 +10170,6 @@ kind = "set"
 subject = "var:rok-prod"
 fields = { "label" = "Producerad värme (rökgaskondensering)" }
 evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Five concurrent columns each hold produced heat from a different source (fuel-only, cogeneration, electric boiler, heat pump, flue-gas condensation)."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelseintakter-el-varme-kyla"
-fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla, mängd (MWh)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): judged different meaning, high confidence; Concurrent columns in one table: mwh (quantity), radnr (row code with a value set) and tkr (amount) hold different things."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelseintakter-el-varme-kyla-radnr"
-fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla, radnummer" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): judged different meaning, high confidence; Concurrent columns in one table: mwh (quantity), radnr (row code with a value set) and tkr (amount) hold different things."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelseintakter-el-varme-kyla-tkr"
-fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla, belopp (tusen kronor)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): judged different meaning, high confidence; Concurrent columns in one table: mwh (quantity), radnr (row code with a value set) and tkr (amount) hold different things."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelseintakter-hogspanning"
-fields = { "label" = "Vissa rörelseintäkter (högspänning, tkr)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): judged different meaning, high confidence; Separate columns for high-voltage and low-voltage revenue, plus the row number and the total tkr value column."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelseintakter-lagspanning"
-fields = { "label" = "Vissa rörelseintäkter (lågspänning, tkr)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): judged different meaning, high confidence; Separate columns for high-voltage and low-voltage revenue, plus the row number and the total tkr value column."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelsekostnader-inkopt-el-radnr"
-fields = { "label" = "Vissa rörelsekostnader samt inköpt el (radnummer)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): judged different meaning, medium confidence; Concurrent columns hold row number, tkr and MWh for the same cost block."
-
-[[statement]]
-kind = "set"
-subject = "var:rorelsekostnader-inkopt-el-tkr"
-fields = { "label" = "Vissa rörelsekostnader samt inköpt el (tkr)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): judged different meaning, medium confidence; Concurrent columns hold row number, tkr and MWh for the same cost block."
 
 [[statement]]
 kind = "set"
@@ -10380,45 +10212,3 @@ kind = "set"
 subject = "var:tillforsel-av-el-brutto-tkr"
 fields = { "label" = "Tillförsel av el brutto (tkr)" }
 evidence = "#2102 same-label cluster 'Tillförsel av el brutto' (3 variables): judged different meaning, medium confidence; Concurrent columns hold row number, MWh and tkr for the same table block."
-
-[[statement]]
-kind = "set"
-subject = "var:total-mwh"
-fields = { "label" = "Mottagen värmemängd (totalt, MWh)" }
-evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): judged different meaning, medium confidence; Separate MWh measures (loss, delivered, received, district heat, total) plus a row-number column."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelseintakter-radnr"
-fields = { "label" = "Vissa rörelseintäkter (radnummer)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): judged different meaning, high confidence; Separate columns for high-voltage and low-voltage revenue, plus the row number and the total tkr value column."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelseintakter-tkr"
-fields = { "label" = "Vissa rörelseintäkter (tkr)" }
-evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): judged different meaning, high confidence; Separate columns for high-voltage and low-voltage revenue, plus the row number and the total tkr value column."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelsekostnader-mwh"
-fields = { "label" = "Vissa rörelsekostnader (MWh)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): judged different meaning, medium confidence; Concurrent columns hold MWh, row number and tkr for the same cost block."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelsekostnader-radnr"
-fields = { "label" = "Vissa rörelsekostnader (radnummer)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): judged different meaning, medium confidence; Concurrent columns hold MWh, row number and tkr for the same cost block."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
-fields = { "label" = "Vissa rörelsekostnader samt inköpt el (MWh)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): judged different meaning, medium confidence; Concurrent columns hold row number, tkr and MWh for the same cost block."
-
-[[statement]]
-kind = "set"
-subject = "var:vissa-rorelsekostnader-tkr"
-fields = { "label" = "Vissa rörelsekostnader (tkr)" }
-evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): judged different meaning, medium confidence; Concurrent columns hold MWh, row number and tkr for the same cost block."

@@ -11979,60 +11979,6 @@ evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-utomlands"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-ejarbut"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-f08"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-f08-5"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-f09-5"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-f13-05"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-f9-5"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-fr20"
-fields = { "label" = "Arbete utomlands (Europa, utanför Europa eller nej)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-utomlands-fr21c"
-fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
-evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
-
-[[statement]]
-kind = "set"
 subject = "var:blankettstatus"
 fields = { "label" = "Blankettens statuskod (resultatkod)" }
 evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, high confidence; Three concurrent columns in one table with different code lists: result code, information source and unit status."

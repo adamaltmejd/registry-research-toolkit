@@ -3383,30 +3383,6 @@ evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogr
 
 [[statement]]
 kind = "set"
-subject = "var:hemkommun"
-fields = { "label" = "Kommun (hemkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:hemkommun-ans"
-fields = { "label" = "Kommun (hemkommun vid ansökan)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:hkom"
-fields = { "label" = "Kommun (hemkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:hkom-ans"
-fields = { "label" = "Kommun (hemkommun vid ansökan)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
 subject = "var:hman-ak9"
 fields = { "label" = "Huvudman (årskurs 9)" }
 evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different meaning, medium confidence; U_Hman renamed Hman in 2002 (same variable); Hman_Ar9/Hman_Ak9 are the årskurs 9 huvudman; Hman_HT is a concurrent höstterminen variant in the antagna tables."
@@ -3479,18 +3455,6 @@ evidence = "#2102 same-label cluster 'Jämförelsetal för utbildningsansökan' 
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "label" = "Kommun (hemkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-ht"
-fields = { "label" = "Kommun (skolkommun, höstterminen)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
 subject = "var:lan-hgylan"
 fields = { "label" = "Län (hemlän)" }
 evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; HGYLÄN and IGYLÄN are concurrent columns; I-prefixed columns elsewhere in the table (ISKENH, IGREN) are the finally admitted education, H the home."
@@ -3500,12 +3464,6 @@ kind = "set"
 subject = "var:lan-igylan"
 fields = { "label" = "Län (slutligt antagen utbildning)" }
 evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; HGYLÄN and IGYLÄN are concurrent columns; I-prefixed columns elsewhere in the table (ISKENH, IGREN) are the finally admitted education, H the home."
-
-[[statement]]
-kind = "set"
-subject = "var:skola-kommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
 
 [[statement]]
 kind = "set"
@@ -3530,24 +3488,6 @@ kind = "set"
 subject = "var:skolenhetskod-ht"
 fields = { "label" = "Skolenhet (höstterminen)" }
 evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Skolenhetskod, _HT (höstterminen, concurrent in the antagna table) and _Ak9 (årskurs 9) are different columns."
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun-ht"
-fields = { "label" = "Kommun (skolkommun, höstterminen)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:skom"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
 
 [[statement]]
 kind = "set"
@@ -3692,30 +3632,6 @@ kind = "set"
 subject = "var:sun2020niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
 evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped."
-
-[[statement]]
-kind = "set"
-subject = "var:u-hkom"
-fields = { "label" = "Kommun (hemkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:u-ukom"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:u-utbort"
-fields = { "label" = "Kommun (utbildningsort)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
-
-[[statement]]
-kind = "set"
-subject = "var:utbort"
-fields = { "label" = "Kommun (utbildningsort)" }
-evidence = "#2102 same-label cluster 'Kommun' (14 variables): judged different meaning, medium confidence; Home municipality (HGYREG, U_HKOM, HKom, Hemkommun), school municipality (U_UKOM, SKom, Kommun, Skolkommun), education location (U_Utbort, UtbOrt) and their application (_ans) and höstterminen (_HT) variants."
 
 [[statement]]
 kind = "set"

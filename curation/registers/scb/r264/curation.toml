@@ -13484,69 +13484,9 @@ evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2003 års taxering'
 
 [[statement]]
 kind = "set"
-subject = "var:periodiseringsfond-2004-taxering"
-fields = { "label" = "Periodiseringsfond vid 2004 års taxering (V0344, N1/N2/N3A)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2004 års taxering' (2 variables): judged different meaning, medium confidence; V0344 (N1/N2/N3A/register) and v7344 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-2005-taxering"
-fields = { "label" = "Periodiseringsfond vid 2005 års taxering (V0345, N1/N2/N3A)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2005 års taxering' (2 variables): judged different meaning, medium confidence; V0345 (N1/N2/N3A/register) and v7345 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-2006-taxering"
-fields = { "label" = "Periodiseringsfond vid 2006 års taxering (V0346, N1/N2/N3A)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2006 års taxering' (2 variables): judged different meaning, medium confidence; V0346 (N1/N2/N3A/register) and v7346 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-2008-taxering"
-fields = { "label" = "Periodiseringsfond vid 2008 års taxering, deklarationsbilaga N3A" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2008 års taxering' (2 variables): judged different meaning, medium confidence; Same definition and period, but the fields sit on different declaration forms (bilaga N3A versus INK3) with distinct field codes."
-
-[[statement]]
-kind = "set"
 subject = "var:periodiseringsfond-vid-2003-ars-taxering-v7343"
 fields = { "label" = "Periodiseringsfond vid 2003 års taxering (v7343, NE/INK3)" }
 evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2003 års taxering' (2 variables): judged different meaning, medium confidence; V0343 (N1/N2/N3A/register) and v7343 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2004-ars-taxering-v7344"
-fields = { "label" = "Periodiseringsfond vid 2004 års taxering (v7344, NE/INK3)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2004 års taxering' (2 variables): judged different meaning, medium confidence; V0344 (N1/N2/N3A/register) and v7344 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2005-ars-taxering-v7345"
-fields = { "label" = "Periodiseringsfond vid 2005 års taxering (v7345, NE/INK3)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2005 års taxering' (2 variables): judged different meaning, medium confidence; V0345 (N1/N2/N3A/register) and v7345 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2006-ars-taxering-v7346"
-fields = { "label" = "Periodiseringsfond vid 2006 års taxering (v7346, NE/INK3)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2006 års taxering' (2 variables): judged different meaning, medium confidence; V0346 (N1/N2/N3A/register) and v7346 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2007-ars-taxering"
-fields = { "label" = "Periodiseringsfond vid 2007 års taxering (V0347, N2/N3A/INK3)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2007 års taxering' (2 variables): judged different meaning, medium confidence; V0347 (N2/N3A/register/INK3) and v7347 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2007-ars-taxering-v7347"
-fields = { "label" = "Periodiseringsfond vid 2007 års taxering (v7347, NE/INK3)" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2007 års taxering' (2 variables): judged different meaning, medium confidence; V0347 (N2/N3A/register/INK3) and v7347 (NE/INK3) are concurrent in 2007-2008 on different forms."
-
-[[statement]]
-kind = "set"
-subject = "var:periodiseringsfond-vid-2008-ars-taxering-v7348"
-fields = { "label" = "Periodiseringsfond vid 2008 års taxering, inkomstdeklaration INK3" }
-evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2008 års taxering' (2 variables): judged different meaning, medium confidence; Same definition and period, but the fields sit on different declaration forms (bilaga N3A versus INK3) with distinct field codes."
 
 [[statement]]
 kind = "set"
