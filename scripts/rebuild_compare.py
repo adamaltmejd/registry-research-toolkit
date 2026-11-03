@@ -2615,7 +2615,7 @@ def rebuilt_schema(db) -> tuple[int, str | None]:
 
 
 def rebuilt_placements(db):
-    """(physical table, column) -> (disposition, {(table_pid, variable_pid)})."""
+    """(physical table, column) -> (disposition, {(table_pid, variable_pid, start, end)})."""
     columns = {
         cid: (table, name, disposition)
         for cid, table, name, disposition in db.execute(
@@ -2624,10 +2624,10 @@ def rebuilt_placements(db):
         )
     }
     placed = defaultdict(set)
-    for cid, table_pid, variable_pid in db.execute(
-        "SELECT column_id, table_pid, variable_pid FROM holding_mapping"
+    for cid, *mapping in db.execute(
+        "SELECT column_id, table_pid, variable_pid, start, end FROM holding_mapping"
     ):
-        placed[cid].add((table_pid, variable_pid))
+        placed[cid].add(tuple(mapping))
     return {
         (table, name): (disposition, placed[cid])
         for cid, (table, name, disposition) in columns.items()
@@ -2661,6 +2661,51 @@ def rebuilt_findings(db):
     )
 
 
+def rebuilt_notices(db):
+    return Counter(
+        (code, f"{table}/{column or ''}", (lo, hi))
+        for code, table, column, lo, hi in db.execute(
+            "SELECT n.code, t.physical_name, c.name, n.start, n.end FROM holding_notice n"
+            " JOIN holding_table t ON t.id = n.holding_id"
+            " LEFT JOIN holding_column c ON c.id = n.column_id"
+        )
+    )
+
+
+def rebuilt_delta(old, new):
+    """Per-code counts and the (code, subject, period) multiset differences."""
+    added, removed = new - old, old - new
+    by_code = {
+        code: {
+            "old": sum(n for k, n in old.items() if k[0] == code),
+            "new": sum(n for k, n in new.items() if k[0] == code),
+            "added": sum(n for k, n in added.items() if k[0] == code),
+            "removed": sum(n for k, n in removed.items() if k[0] == code),
+        }
+        for code in sorted({k[0] for k in old | new})
+    }
+    return by_code, added, removed
+
+
+def rebuilt_delta_lines(title, note, delta):
+    by_code, added, removed = delta
+    return [
+        "",
+        f"## {title}",
+        "",
+        f"{note} Compared by (code, subject, period): {sum(added.values())} added, {sum(removed.values())} removed.",
+        "",
+        "| code | old | new | added | removed |",
+        "|---|---:|---:|---:|---:|",
+        *(
+            f"| {code} | {n['old']} | {n['new']} | {n['added']} | {n['removed']} |"
+            for code, n in by_code.items()
+            if n["added"] or n["removed"]
+        ),
+        *(["| none | | | | |"] if not (added or removed) else []),
+    ]
+
+
 def rebuilt(args) -> int:
     if args.out and args.out.exists():
         raise ValueError("--out already exists; choose a fresh report directory")
@@ -2688,10 +2733,14 @@ def rebuilt(args) -> int:
             for key in sorted(old.keys() & new.keys())
             if old[key][1] != new[key][1]
         }
+        interval_only = sum(
+            {m[:2] for m in before} == {m[:2] for m in after}
+            for before, after in changed.values()
+        )
         moves = Counter(
             (
-                ", ".join(sorted({t for t, _ in before})) or "(none)",
-                ", ".join(sorted({t for t, _ in after})) or "(none)",
+                ", ".join(sorted({m[0] for m in before})) or "(none)",
+                ", ".join(sorted({m[0] for m in after})) or "(none)",
             )
             for before, after in changed.values()
         )
@@ -2709,17 +2758,8 @@ def rebuilt(args) -> int:
                 "added": sorted(after.keys() - before.keys()),
                 "removed": sorted(before.keys() - after.keys()),
             }
-        old_findings, new_findings = rebuilt_findings(old_db), rebuilt_findings(new_db)
-        added, removed = new_findings - old_findings, old_findings - new_findings
-        by_code = {
-            code: {
-                "old": sum(n for k, n in old_findings.items() if k[0] == code),
-                "new": sum(n for k, n in new_findings.items() if k[0] == code),
-                "added": sum(n for k, n in added.items() if k[0] == code),
-                "removed": sum(n for k, n in removed.items() if k[0] == code),
-            }
-            for code in sorted({k[0] for k in old_findings | new_findings})
-        }
+        findings = rebuilt_delta(rebuilt_findings(old_db), rebuilt_findings(new_db))
+        notices = rebuilt_delta(rebuilt_notices(old_db), rebuilt_notices(new_db))
     summary = [
         "# Rebuilt holdings comparison",
         "",
@@ -2740,9 +2780,11 @@ def rebuilt(args) -> int:
             for side, c in totals.items()
         ),
         "",
-        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)}; only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
+        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)} (validity interval only: {interval_only}); only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
         "",
         "## Changed placements",
+        "",
+        "A placement is (table_pid, variable_pid, start, end); an interval-only change keeps its table_pid on both sides.",
         "",
         "| old table_pid | new table_pid | columns |",
         "|---|---|---:|",
@@ -2765,21 +2807,13 @@ def rebuilt(args) -> int:
             f"| {kind} | {t['old']} | {t['new']} | {len(t['changed'])} | {len(t['added'])} | {len(t['removed'])} |"
             for kind, t in texts.items()
         ),
-        "",
-        "## Findings",
-        "",
-        f"Compared by (code, subject, period): {sum(added.values())} added, {sum(removed.values())} removed.",
-        "",
-        "| code | old | new | added | removed |",
-        "|---|---:|---:|---:|---:|",
-        *(
-            f"| {code} | {n['old']} | {n['new']} | {n['added']} | {n['removed']} |"
-            for code, n in by_code.items()
-            if n["added"] or n["removed"]
+        *rebuilt_delta_lines("Findings", "Semantic findings.", findings),
+        *rebuilt_delta_lines(
+            "Holdings notices",
+            "Subject: physical table/column.",
+            notices,
         ),
     ]
-    if not (added or removed):
-        summary.append("| none | | | | |")
     if args.out:
         args.out.mkdir(parents=True, exist_ok=False)
         details = {
@@ -2795,9 +2829,18 @@ def rebuilt(args) -> int:
                 for (table, column), (b, a) in sorted(changed.items())
             ],
             "text": texts,
-            "findings": by_code,
-            "findings_added": sorted(map(list, added), key=repr),
-            "findings_removed": sorted(map(list, removed), key=repr),
+            **{
+                f"{name}{suffix}": value
+                for name, (by_code, added, removed) in (
+                    ("findings", findings),
+                    ("notices", notices),
+                )
+                for suffix, value in (
+                    ("", by_code),
+                    ("_added", sorted(map(list, added), key=repr)),
+                    ("_removed", sorted(map(list, removed), key=repr)),
+                )
+            },
         }
         (args.out / "rebuilt.json").write_text(
             json.dumps(details, ensure_ascii=False, indent=1, sort_keys=True) + "\n",
