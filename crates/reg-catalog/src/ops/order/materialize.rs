@@ -323,8 +323,8 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
     }
 }
 
-/// The accepted placements of (table, variable) over `days`, without a projection's
-/// copy of what its parent also places.
+/// The accepted placements of (table, variable) over `days`; a projection keeps only
+/// the days its parent does not also place.
 fn placements(
     held: &Connection,
     table: &str,
@@ -348,14 +348,21 @@ fn placements(
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
-    let parents: BTreeSet<i64> = found.iter().map(|p| p.holding).collect();
-    Ok(found
-        .into_iter()
-        .filter(|p| {
-            p.projection_of
-                .is_none_or(|parent| !parents.contains(&parent))
-        })
-        .collect())
+    let mut covered: BTreeMap<i64, Vec<Days>> = BTreeMap::new();
+    for p in &found {
+        covered.entry(p.holding).or_default().push(p.days);
+    }
+    let mut out = Vec::new();
+    for p in found {
+        let Some(parent) = p.projection_of.and_then(|parent| covered.get(&parent)) else {
+            out.push(p);
+            continue;
+        };
+        for days in minus(&[p.days], &merge_days(parent.clone())) {
+            out.push(Placement { days, ..p.clone() });
+        }
+    }
+    Ok(out)
 }
 
 fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
@@ -876,9 +883,8 @@ fn row_filter(
         }
     }
     let ranges = intersect(&widened, &holding.held);
-    if minus(&holding.held, &ranges).is_empty() {
-        return None;
-    }
+    // The union finding comes before the whole-delivery early return: sources that
+    // jointly cover the delivery still each get every column over the union.
     if draft.days.len() > 1 {
         for (s, days) in &draft.days {
             if *days != union {
@@ -898,6 +904,9 @@ fn row_filter(
                 ));
             }
         }
+    }
+    if minus(&holding.held, &ranges).is_empty() {
+        return None;
     }
     let first = holding.held.first().map_or(i64::MIN, |d| d.0);
     let last = holding.held.last().map_or(i64::MAX, |d| d.1);

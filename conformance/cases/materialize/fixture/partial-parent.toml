@@ -1,0 +1,10 @@
+# Synthetic: Parent places the amount over the first half of 2018 only, so its
+# projection Child serves the second half. Spliced after Parent's locator.
+[[table.column]]
+name = "Amount"
+locator = "fixture:parent-amount-first-half"
+[[table.column.mapping]]
+table_pid = "demo/projected"
+variable_pid = "demo/projected/amount"
+delivery = "2018-H1"
+locator = "fixture:parent-amount-first-half"

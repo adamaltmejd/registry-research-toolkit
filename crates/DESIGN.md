@@ -2064,8 +2064,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   partial-vs-whole rule. A day of a column carrying an `ambiguous_delivered_owners`
   notice that places the variable is `mapping_missing` even when the rest is held.
 - A partition member is selected when it places a requested entry; a sibling without
-  that column is no gap. A projection's placement is dropped when its parent places the
-  same (table, variable).
+  that column is no gap. A projection serves a (table, variable) only over the days its
+  parent does not place it.
 - Keys are the holding's `key_requirements` (entity, then time, in declaration order)
   over the file's days, scoped by a requirement's `period`. A key column a binding
   orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with

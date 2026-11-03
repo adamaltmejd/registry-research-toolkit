@@ -194,7 +194,8 @@ def splice_slot_family(root: Path) -> None:
 
 
 def prepare_materialize(directory: Path) -> tuple[Path, Path]:
-    """The materialize cases' steward: the slot family, plus a long header on Part B."""
+    """The materialize cases' steward: the slot family, a long header on Part B and a
+    first-half Parent amount."""
     base, root, command = prepare_holdings(directory)
     splice_slot_family(root)
     extension = CASES / "materialize/fixture"
@@ -214,6 +215,12 @@ def prepare_materialize(directory: Path) -> tuple[Path, Path]:
     holdings.write_text(
         holdings.read_text().replace(
             anchor, anchor + "\n" + (extension / "long-column.toml").read_text(), 1
+        )
+    )
+    anchor = 'locator = "fixture:parent"\n'
+    holdings.write_text(
+        holdings.read_text().replace(
+            anchor, anchor + "\n" + (extension / "partial-parent.toml").read_text(), 1
         )
     )
     pin_steward(root, directory / "stewards.toml")

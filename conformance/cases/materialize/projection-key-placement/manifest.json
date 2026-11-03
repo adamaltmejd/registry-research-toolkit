@@ -63,7 +63,7 @@
               "variable": "demo/projected/amount",
               "period": {
                 "start": "2018-01-01",
-                "end": "2019-01-01"
+                "end": "2018-07-01"
               },
               "spelling": "Amount"
             }
@@ -98,6 +98,29 @@
                 "end": "2019-01-01"
               },
               "spelling": "ChildId"
+            }
+          ]
+        },
+        {
+          "name": "Amount",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "p",
+              "binding": 2,
+              "table": "demo/projected",
+              "variable": "demo/projected/amount",
+              "period": {
+                "start": "2018-07-01",
+                "end": "2019-01-01"
+              },
+              "spelling": "Amount"
             }
           ]
         },

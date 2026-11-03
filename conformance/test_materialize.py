@@ -5,7 +5,7 @@ Each case under `cases/materialize/` holds a `request.json` (the project and a n
 naming the regression it catches) and either `manifest.json`, the order file without
 its generation ids and project hash, or `expected.json`, the findings that block it.
 Every case runs on one steward artifact: the holdings fixture with the documented slot
-family and a long Part B header (`prepare_materialize`). Write the expectation from the
+family, a long Part B header and a first-half Parent amount (`prepare_materialize`). Write the expectation from the
 project and the fixture source before serving it; a disagreement is a server bug or a
 wrong expectation, never a golden to save.
 """
