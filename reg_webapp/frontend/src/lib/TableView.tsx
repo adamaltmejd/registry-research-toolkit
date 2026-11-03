@@ -7,8 +7,9 @@ import {
 import type { TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
-import { registerRead } from "./catalog_names";
+import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -28,6 +29,7 @@ type PopulationGroup = Pick<Population, "name" | "definition"> & {
 
 export function TableView({ node }: { node: TableShow }) {
   const register = useCatalogRead(registerRead, node.register).value;
+  const names = registerSubjectNames(register);
   const releases = [...node.releases].sort(
     (a, b) =>
       svCollator.compare(a.edition, b.edition) ||
@@ -243,7 +245,8 @@ export function TableView({ node }: { node: TableShow }) {
           </Disclosure>
         )}
       </Panel>
-      <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
+      <ScopedDataWarnings fqid={node.fqid} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} />
     </article>
   );
 }

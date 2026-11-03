@@ -16,7 +16,9 @@ interface Props {
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
   window: YearSpan | null;
-  /** The delivery columns under the name: chips and their ticks. */
+  /** The row selection checkbox, absent for bound or unavailable variables. */
+  control?: ReactNode;
+  /** The selected delivery columns under the name. */
   children?: ReactNode;
 }
 
@@ -35,6 +37,7 @@ export function VariableRow({
   coverage,
   axis,
   window,
+  control,
   children,
 }: Props) {
   // A year is a cell [year, year + 1), so a one-year span has width.
@@ -80,8 +83,9 @@ export function VariableRow({
             ) : null;
           })}
         </span>
-        <span className="visually-hidden">Delivered {years}</span>
+        <span className="visually-hidden">Delivered {years}.</span>
       </span>
+      {control && <div className={styles.control}>{control}</div>}
       {children && <div className={styles.columns}>{children}</div>}
     </li>
   );

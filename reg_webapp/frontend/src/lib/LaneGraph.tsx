@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useId, useState } from "react";
+import { Checkbox } from "react-aria-components";
 import styles from "./LaneGraph.module.css";
 import {
   COVERAGE_HEIGHT,
@@ -41,13 +42,12 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** "2015–2019", "2020–", or "year-independent". */
   years: string;
   state: ColumnChipState;
-  /** A pending change to the project, shown until Apply. */
+  /** A pending change to the project, shown until committed. */
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
   /** How the committed column relates to the study window, where it is more
-   * than "in project": shown as the span's tooltip and listed under the
-   * graph by the consumer. */
+   * than "in project": shown in its tooltip and accessible name. */
   note?: { text: string; tone: "info" | "error" } | null;
   /** Years the column's coding changed under the same name. */
   changes?: number[];
@@ -96,9 +96,9 @@ interface Props {
   addWindow?: [number, number] | null;
   coverage?: LaneCoverage;
   /** Laid over the coverage row's track (the period slider), on `axis`. */
-  overlay?: (axis: [number, number]) => ReactNode;
+  overlay?: ReactNode;
   isDisabled?: boolean;
-  onToggle: (spanId: string) => void;
+  onToggle?: (spanId: string) => void;
 }
 
 /**
@@ -206,7 +206,7 @@ export function LaneGraph({
                   height: COVERAGE_HEIGHT,
                 }}
               >
-                {overlay(axis)}
+                {overlay}
               </div>
             )}
             {!geometry.stacked && (
@@ -299,6 +299,8 @@ export function LaneGraph({
         selectable={spans.some((s) => s.selectable)}
         inProject={spans.some((s) => s.state === "in")}
         blocked={spans.some((s) => s.blocked)}
+        changes={spans.some((s) => s.changes?.length)}
+        selected={spans.some((s) => s.staged === "add")}
       />
     </div>
   );
@@ -631,7 +633,7 @@ function Span({
   span: LaneSpanModel;
   at: PlacedSpan;
   isDisabled: boolean;
-  onToggle: (id: string) => void;
+  onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
 }) {
   const showYears =
@@ -675,7 +677,7 @@ function Span({
       ))}
       {span.staged && (
         <span className={styles.glyph} aria-hidden="true">
-          {span.staged === "add" ? "+" : "−"}
+          {span.staged === "add" ? "✓" : "−"}
         </span>
       )}
       {span.blocked && !span.staged && (
@@ -700,7 +702,7 @@ function Span({
           }}
           aria-hidden="true"
         >
-          ▲ {year}
+          ▲
         </span>
       ))}
     </>
@@ -710,36 +712,30 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
-  if (!span.selectable) {
+  if (!span.selectable || !onToggle) {
     return (
-      <span className={styles.span} title={span.note?.text} {...attributes}>
+      <span className={styles.span} {...attributes}>
         {body}
         <span className="visually-hidden">{span.accessibleName}</span>
       </span>
     );
   }
   return (
-    <label
+    <Checkbox
       className={`${styles.span} ${styles.pick}`}
       style={{ height: SPAN_HEIGHT }}
-      title={span.note?.text}
-      data-disabled={isDisabled || undefined}
+      aria-label={span.accessibleName}
+      isSelected={span.isSelected ?? false}
+      isDisabled={isDisabled}
+      onChange={() => onToggle(span.id)}
+      onHoverStart={() => onActive(span.id)}
+      onHoverEnd={() => onActive(null)}
+      onFocus={() => onActive(span.id)}
+      onBlur={() => onActive(null)}
       {...attributes}
     >
       {body}
-      <input
-        type="checkbox"
-        className={styles.hit}
-        aria-label={span.accessibleName}
-        checked={span.isSelected ?? false}
-        disabled={isDisabled}
-        onChange={() => onToggle(span.id)}
-        onMouseEnter={() => onActive(span.id)}
-        onMouseLeave={() => onActive(null)}
-        onFocus={() => onActive(span.id)}
-        onBlur={() => onActive(null)}
-      />
-    </label>
+    </Checkbox>
   );
 }
 
@@ -751,6 +747,8 @@ function Legend({
   rename,
   inProject,
   blocked,
+  changes,
+  selected,
 }: {
   coverage: LaneCoverage | undefined;
   addWindow: boolean;
@@ -759,6 +757,8 @@ function Legend({
   rename: boolean;
   inProject: boolean;
   blocked: boolean;
+  changes: boolean;
+  selected: boolean;
 }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
@@ -794,18 +794,33 @@ function Legend({
       )}
       {selectable && (
         <li>
-          <ColumnChip name="COL" state="default" /> Click to select
+          <ColumnChip name="" className={styles.keyChip} /> Click to select
         </li>
       )}
       {inProject && (
         <li>
-          <ColumnChip name="COL" state="in" /> In project
+          <ColumnChip name="" state="in" className={styles.keyChip} /> In
+          project
         </li>
       )}
       {blocked && (
         <li>
           <span className={styles.keyBlocked}>✕</span> In project, outside the
           study window
+        </li>
+      )}
+      {changes && (
+        <li>
+          <span className={styles.keyChange}>▲</span> Coding change
+        </li>
+      )}
+      {selected && (
+        <li>
+          <ColumnChip
+            name=""
+            className={`${styles.keyChip} ${styles.selectedSample}`}
+          />{" "}
+          Selected
         </li>
       )}
     </ul>

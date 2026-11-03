@@ -14,6 +14,7 @@ export type ProjectStudyWindow = Schemas["ProjectStudyWindow"];
 export interface ProjectSeed {
   reg_meta_version: string;
   name?: string;
+  window?: ProjectStudyWindow;
 }
 
 export function newProjectData(seed: ProjectSeed): ProjectData {
@@ -22,6 +23,7 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
     reg_meta_version: seed.reg_meta_version,
     name: seed.name ?? "new_project",
     sources: [],
+    ...(seed.window ? { window: { ...seed.window } } : {}),
   };
 }
 

@@ -108,9 +108,11 @@ function IssueLink({
 export function LocatedIssue({
   issue,
   raw,
+  omitPlace = [],
 }: {
   issue: ValidationIssue;
   raw: string | null;
+  omitPlace?: readonly ("source" | "variable" | "table")[];
 }) {
   const place = issuePlace(issue, raw);
   const refs = issueRefs(issue, raw);
@@ -131,15 +133,20 @@ export function LocatedIssue({
             title={plainIssueText(issueTitle(issue), refs, names, raw)}
             code={issue.code}
           />
-          {place.source && <span>Source: {place.source}</span>}
-          {place.panel && <span>{place.panel}</span>}
-          {place.variable && !variable.loading && (
-            <span>Variable: {variable.value ?? "Name unavailable"}</span>
+          {place.source && !omitPlace.includes("source") && (
+            <span>Source: {place.source}</span>
           )}
-          {place.table && !table.loading && (
+          {place.panel && <span>{place.panel}</span>}
+          {place.variable &&
+            !omitPlace.includes("variable") &&
+            !variable.loading && (
+              <span>Variable: {variable.value ?? "Name unavailable"}</span>
+            )}
+          {place.table && !omitPlace.includes("table") && !table.loading && (
             <span>Table: {table.value ?? "Name unavailable"}</span>
           )}
-          {(variable.loading || table.loading) && (
+          {((variable.loading && !omitPlace.includes("variable")) ||
+            (table.loading && !omitPlace.includes("table"))) && (
             <div aria-label="Catalog names" aria-busy="true">
               <Skeleton />
             </div>
