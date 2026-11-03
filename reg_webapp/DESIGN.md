@@ -32,16 +32,14 @@ Variable pages project their segments into a single coverage LaneGraph. A column
 exact table and spelling pair; selection and its availability-bounded add window are
 local to the page. Adding creates or widens one source per table and appends one binding
 per variable, using the segments' default type and agreed classification. WASM checks
-the candidate before the existing project store writes its sources. Already-bound
-columns show their in-project state without a checkbox. Source cards author binding
-type, classification pin, removal and source period through checked candidates and the
-same sources write path. Each table supplies a coverage row over its binding lanes on
-one shared data axis. Stored periods are never narrowed on load. Variable pages read one
-hop of succession relations into read-only neighbour lanes on the same timeline, with
-arrows from predecessor to successor and names linking to their variable pages.
-Register-page row ticks lazily read and add all eligible delivery columns in the study
-window through the same checked candidate and one sources write, without topping up
-variables already bound in any source.
+the candidate before the existing project store writes its sources. Source cards author
+binding type, classification pin, removal and source period through checked candidates
+and the same sources write path. Each table supplies a coverage row over its binding
+lanes on one shared data axis. Stored periods are never narrowed on load. Variable pages
+read one hop of succession relations into read-only neighbour lanes on the same
+timeline, with arrows from predecessor to successor and names linking to their variable
+pages. Adding starts from the variable page; register rows link there, and both those
+rows and already-bound columns show in-project state without a checkbox.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
