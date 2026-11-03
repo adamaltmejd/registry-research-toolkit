@@ -2561,9 +2561,9 @@ carry that tag.
 The D-9 converter ported memberships; W6 restores unambiguously mapped legacy set
 labels, axes and member coordinates. Delivery-column hints, multi-coordinate identity
 splits, tag rank, star and note, and classification groups stay outside this
-presentation model: a tag is a broad search theme with thousands of members, so a
-ranked or starred representative per register would surface co-tagged variables, which
-the tag ruling excludes (#1794). Tags filter search and have no `show` page.
+presentation model: a tag is a broad search theme with thousands of members, so a ranked
+or starred representative per register would surface co-tagged variables, which the tag
+ruling excludes (#1794). Tags filter search and have no `show` page.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it
