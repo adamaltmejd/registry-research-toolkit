@@ -405,13 +405,10 @@ export type CatalogSegment = RustSchemas["Segment"];
 export type VariableEvidence = RustSchemas["VariableEvidence"];
 export type Graph = RustSchemas["Graph"];
 
-export async function getGraph(
+export function getGraph(
   ref: string,
   options: { kind: "continues"; signal?: AbortSignal },
 ): Promise<Graph> {
-  // StrictMode tears down its first effect immediately; do not send that read.
-  await Promise.resolve();
-  options.signal?.throwIfAborted();
   return rustGet<Graph>(
     `/graph/${encodeFqid(ref)}`,
     new URLSearchParams({ kind: options.kind }),

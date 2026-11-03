@@ -26,6 +26,7 @@ import {
 import { catalogWords, yesNo } from "./catalog_labels";
 import {
   loadRegister,
+  registerRead,
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
@@ -51,6 +52,8 @@ import variableStyles from "./VariableView.module.css";
 
 const readNeighbourSegments = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((fqid) => [fqid, segmentsRead(fqid)]));
+const readNeighbourRegisters = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, registerRead(fqid)]));
 
 function segmentFacts(row: CatalogSegment) {
   return [
@@ -133,7 +136,6 @@ export function VariableView({
     (signal) => loadRegister(node.register, signal),
   );
   const register = registerResource.data;
-  const names = registerSubjectNames(register);
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
@@ -150,19 +152,40 @@ export function VariableView({
         .map((entry) => entry.fqid),
     ),
   );
+  const neighbourRegisters = useCatalogRead(
+    readNeighbourRegisters,
+    useDistinct(
+      Object.keys(neighbours)
+        .map((fqid) => fqid.split("/").slice(0, 2).join("/"))
+        .filter((ref) => ref !== node.register),
+    ),
+  );
+  const names = new Map(registerSubjectNames(register));
+  for (const read of Object.values(neighbourRegisters)) {
+    for (const [fqid, name] of registerSubjectNames(read.value))
+      names.set(fqid, name);
+  }
   const neighbourColumns = new Map(
     Object.entries(neighbours).map(([fqid, read]) => [
       fqid,
       variableColumns(read.value ?? []),
     ]),
   );
-  const successionError =
-    graph.error ??
-    (Object.values(neighbours).some(
-      (read) => !read.loading && read.value === null,
-    )
+  const successionError = graph.error
+    ? "Succession relations did not load."
+    : Object.values(neighbours).some(
+          (read) => !read.loading && read.value === null,
+        )
       ? "Neighbour columns did not load."
-      : null);
+      : Object.values(neighbourRegisters).some(
+            (read) => !read.loading && read.value === null,
+          )
+        ? "Neighbour register names did not load."
+        : null;
+  const successionLoading =
+    graph.loading ||
+    Object.values(neighbours).some((read) => read.loading) ||
+    Object.values(neighbourRegisters).some((read) => read.loading);
   // Keep the key after closing: the resource (including a failure) lasts for this page.
   const [evidenceRequested, setEvidenceRequested] = useState(false);
   const evidence = useAsyncResource(
@@ -179,8 +202,6 @@ export function VariableView({
     succession: graph.data,
     neighbourColumns,
     successionError,
-    successionLoading:
-      graph.loading || Object.values(neighbours).some((read) => read.loading),
   });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
@@ -243,7 +264,7 @@ export function VariableView({
         ref={registerRegion}
         tabIndex={-1}
         className={variableStyles.registerRead}
-        aria-busy={registerResource.loading || undefined}
+        aria-busy={registerResource.loading || successionLoading || undefined}
       >
         {registerResource.loading ? (
           <Skeleton count={2} />

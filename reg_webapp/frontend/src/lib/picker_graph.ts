@@ -136,19 +136,36 @@ export function successionLanes({
   lanes: LaneModel[];
   spans: LaneSpanModel[];
   edges: LaneEdgeModel[];
-  relations: string[];
+  relations: ReadonlyMap<string, string[]>;
 } {
   const lanes: LaneModel[] = [];
   const spans: LaneSpanModel[] = [];
   const edges: LaneEdgeModel[] = [];
   const relations = new Map<string, string[]>();
   const byVariable = new Map<string, readonly LaneSpanModel[]>();
-  if (!graph) return { lanes, spans, edges, relations: [] };
+  if (!graph) return { lanes, spans, edges, relations };
   byVariable.set(graph.focus, focusSpans);
   const nodes = new Map(graph.nodes.map((node) => [node.fqid, node]));
   for (const [fqid, columns] of neighbourColumns) {
     const node = nodes.get(fqid);
     if (!node || node.kind !== "variable" || fqid === graph.focus) continue;
+    const register = fqid.split("/").slice(0, 2).join("/");
+    const crossRegister =
+      register !== graph.focus.split("/").slice(0, 2).join("/");
+    const tableNames = new Map(
+      columns.map((column) => {
+        const tableName = names.get(column.table) ?? "Table name unavailable";
+        const registerName = names.get(register) ?? "Register name unavailable";
+        return [
+          column.table,
+          crossRegister && column.table !== register
+            ? `${registerName}, ${tableName}`
+            : crossRegister
+              ? registerName
+              : tableName,
+        ];
+      }),
+    );
     const projected = variableSpans({
       columns,
       variable: node,
@@ -173,7 +190,7 @@ export function successionLanes({
         staged: null,
         blocked: false,
         note: null,
-        accessibleName: `${span.name}, ${node.name}, ${names.get(span.lane.slice(fqid.length + 1)) ?? "Table name unavailable"}, ${span.years}, ${inside ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
+        accessibleName: `${span.name}, ${node.name}, ${tableNames.get(span.lane.slice(fqid.length + 1))}, ${span.years}, ${inside ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
       };
     });
     byVariable.set(fqid, projected);
@@ -184,7 +201,7 @@ export function successionLanes({
       lanes.push({
         id,
         name: node.name,
-        sub: { text: names.get(table) ?? "Table name unavailable" },
+        sub: { text: tableNames.get(table) ?? "Table name unavailable" },
         href: catalogHref(fqid),
         current: false,
       });
@@ -192,34 +209,42 @@ export function successionLanes({
   }
   for (const edge of graph.edges) {
     if (edge.kind !== "continues") continue;
-    const predecessor = byVariable
-      .get(edge.to)
-      ?.toSorted((a, b) => b.to - a.to)[0];
-    const successor = byVariable
-      .get(edge.from)
-      ?.toSorted((a, b) => a.from - b.from)[0];
+    const predecessors =
+      byVariable.get(edge.to)?.toSorted((a, b) => b.to - a.to) ?? [];
+    const successors =
+      byVariable.get(edge.from)?.toSorted((a, b) => a.from - b.from) ?? [];
+    let predecessor = predecessors[0];
+    let successor = successors[0];
+    // Anchor on the neighbour's end, then prefer its table on the focus variable.
+    if (edge.from === graph.focus && predecessor) {
+      const table = predecessor.lane.slice(edge.to.length + 1);
+      successor = successors.find((span) => span.lane === table) ?? successor;
+    } else if (edge.to === graph.focus && successor) {
+      const table = successor.lane.slice(edge.from.length + 1);
+      predecessor =
+        predecessors.find((span) => span.lane === table) ?? predecessor;
+    }
     const newer = nodes.get(edge.from);
     const older = nodes.get(edge.to);
-    if (!newer || !older) continue;
+    if (!newer || !older || !predecessor || !successor) continue;
     const year = edge.at?.start ? Number(edge.at.start.slice(0, 4)) : null;
     // LaneGraph supplies the final period for each lane's relation sentences.
     const caveat = edge.caveat ? `. ${edge.caveat.replace(/\.$/, "")}` : "";
-    relations.set(edge.to, [
-      ...(relations.get(edge.to) ?? []),
+    relations.set(predecessor.lane, [
+      ...(relations.get(predecessor.lane) ?? []),
       `Succeeded by ${newer.name}${year === null ? "" : ` from ${year}`}${caveat}`,
     ]);
-    relations.set(edge.from, [
-      ...(relations.get(edge.from) ?? []),
+    relations.set(successor.lane, [
+      ...(relations.get(successor.lane) ?? []),
       `Continues ${older.name}${caveat}`,
     ]);
-    if (predecessor && successor)
-      edges.push({
-        id: `${edge.to}|${edge.from}|${edge.at?.start ?? ""}`,
-        from: predecessor.id,
-        to: successor.id,
-        kind: "succession",
-        year,
-      });
+    edges.push({
+      id: `${edge.to}|${edge.from}|${edge.at?.start ?? ""}`,
+      from: predecessor.id,
+      to: successor.id,
+      kind: "succession",
+      year,
+    });
   }
   const firstYear = new Map(
     lanes.map((lane) => [
@@ -233,8 +258,7 @@ export function successionLanes({
   );
   lanes.sort((a, b) => (firstYear.get(a.id) ?? 0) - (firstYear.get(b.id) ?? 0));
   for (const lane of lanes) {
-    const fqid = lane.id.split("|")[0];
-    lane.relations = relations.get(fqid);
+    lane.relations = relations.get(lane.id);
   }
-  return { lanes, spans, edges, relations: relations.get(graph.focus) ?? [] };
+  return { lanes, spans, edges, relations };
 }

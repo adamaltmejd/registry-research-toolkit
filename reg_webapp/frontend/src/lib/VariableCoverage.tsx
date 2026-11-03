@@ -48,7 +48,6 @@ export function useVariableCoverage({
   succession = null,
   neighbourColumns = new Map(),
   successionError = null,
-  successionLoading = false,
 }: {
   node: VariableShow;
   segments: readonly CatalogSegment[];
@@ -59,7 +58,6 @@ export function useVariableCoverage({
   succession?: Graph | null;
   neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
   successionError?: string | null;
-  successionLoading?: boolean;
 }) {
   const { draft } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
@@ -216,7 +214,7 @@ export function useVariableCoverage({
                 name: node.name,
                 sub: { text: names.get(table) ?? "Table name unavailable" },
                 current: true,
-                relations: neighbours.relations,
+                relations: neighbours.relations.get(table),
               }),
             ),
             ...neighbours.lanes,
@@ -256,14 +254,11 @@ export function useVariableCoverage({
             setError(null);
           }}
         />
-        <div aria-busy={successionLoading || undefined}>
-          {successionError && (
-            <StatusRow tone="error" live="alert">
-              Succession lanes did not load ({successionError}). Reload the page
-              to try again.
-            </StatusRow>
-          )}
-        </div>
+        {successionError && (
+          <StatusRow tone="error" live="alert">
+            {successionError} Reload the page to try again.
+          </StatusRow>
+        )}
         {!draft && (
           <p className={styles.hint}>
             Create or open a project to select columns.

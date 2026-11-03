@@ -599,7 +599,8 @@ async function browseVariableCase(page, shoot) {
 
 // Browser boundary over webapp-dev's undated Antal succession and its caveat.
 // Fails if the graph filter is lost, succession lanes/legend disappear, or a
-// neighbour becomes selectable. Existing browse cases do not check succession.
+// neighbour becomes selectable, or a cross-register lane loses its register name.
+// Existing browse cases do not check succession.
 // The two focus columns and neighbour href come from webapp-dev.jsonl; the
 // project window keeps both focus columns available, and names come from the page.
 async function variableSuccessionCase(page, shoot) {
@@ -621,21 +622,26 @@ async function variableSuccessionCase(page, shoot) {
   await open(page, "/catalog/demo/hush");
   await settled(page);
   const graphRequests = [];
-  page.on("request", (request) => {
+  page.on("requestfinished", async (request) => {
     if (new URL(request.url()).pathname.startsWith("/api/graph/")) {
-      graphRequests.push(request.url());
+      const response = await request.response();
+      if (response?.ok()) graphRequests.push(request.url());
     }
   });
   await main.locator('a[href="/catalog/demo/hush/antal"]').click();
   await page.waitForURL("**/catalog/demo/hush/antal");
   await settled(page);
-  check(graphRequests.length === 1, "the variable must issue exactly one graph request");
+  check(graphRequests.length === 1, "the variable must complete exactly one successful graph request");
   check(new URL(graphRequests[0]).searchParams.get("kind") === "continues",
     "the variable graph must request only succession relations");
   const lanes = main.getByRole("list", { name: "Variable columns", exact: true });
   const neighbour = lanes.locator('a[href="/catalog/demo/hush/antalgammal"]');
   await neighbour.waitFor();
   check((await neighbour.innerText()).trim().length > 0, "the neighbour lane lost its variable name");
+  const crossRegisterLane = lanes.getByRole("listitem").filter({
+    has: page.locator('a[href="/catalog/demo/bas/antalbas"]'),
+  });
+  await crossRegisterLane.getByText("Basregistret", { exact: true }).waitFor();
   await main.getByText("Succeeded by (definition change)", { exact: true }).waitFor();
   check(await lanes.getByRole("checkbox").count() === 2,
     "only the focus variable's two columns may be selectable");
