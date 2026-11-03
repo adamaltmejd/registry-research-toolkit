@@ -224,12 +224,6 @@ evidence = "Posten är ett aktieägartillskott redovisat i eget kapital.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:aktiekapital"
-fields = { "sets" = ["aktiekapital"] }
-evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12132:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:aktiekapital"
 fields = { "tags" = ["business"] }
 evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12132:9862:12053"
 
@@ -304,12 +298,6 @@ kind = "set"
 subject = "var:andelar-koncernforetag"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Andelsinnehav.\ncatalog:variable_text:12139:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-langfristiga-fordringar"
-fields = { "sets" = ["andra-langfristiga-fordringar"] }
-evidence = "Balanspost.\ncatalog:variable_text:12140:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4136,12 +4124,6 @@ evidence = "Kostnader för handelsvaror.\ncatalog:variable_text:12466:9862:12053
 [[statement]]
 kind = "set"
 subject = "var:kundfordringar"
-fields = { "sets" = ["kundfordringar"] }
-evidence = "Kundfordringar.\ncatalog:variable_text:12467:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:kundfordringar"
 fields = { "tags" = ["business"] }
 evidence = "Kundfordringar.\ncatalog:variable_text:12467:9862:12053"
 
@@ -4180,12 +4162,6 @@ kind = "set"
 subject = "var:lan-till-delagare"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Lån till delägare eller närstående.\ncatalog:variable_text:12471:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:leverantorsskulder"
-fields = { "sets" = ["leverantorsskulder"] }
-evidence = "Leverantörsskulder.\ncatalog:variable_text:12472:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4636,12 +4612,6 @@ kind = "set"
 subject = "var:ovriga-finansiella-kostnader"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Finansiella kostnader.\ncatalog:variable_text:12513:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-forandringar"
-fields = { "sets" = ["ovriga-kapitalforandringar"] }
-evidence = "Övriga kapitalförändringar.\ncatalog:variable_text:12514:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -5323,18 +5293,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:aktiekapital"
-fields = { "label" = "Aktiekapital" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:andra-langfristiga-fordringar"
-fields = { "label" = "Andra långfristiga fordringar" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:anskaffningar-byggnader-mark"
 fields = { "label" = "Anskaffningar byggnader mark" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -5545,12 +5503,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:kundfordringar"
-fields = { "label" = "Kundfordringar" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:lager-fardiga-egenproducerade-varor"
 fields = { "label" = "Lager färdiga egenproducerade varor" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
@@ -5578,12 +5530,6 @@ kind = "set"
 subject = "set:lagerforandring-produkter"
 fields = { "label" = "Lagerförändring produkter" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:leverantorsskulder"
-fields = { "label" = "Leverantörsskulder" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -5662,12 +5608,6 @@ kind = "set"
 subject = "set:ovriga-fordringar"
 fields = { "label" = "Övriga fordringar" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:ovriga-kapitalforandringar"
-fields = { "label" = "Övriga kapitalförändringar" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"

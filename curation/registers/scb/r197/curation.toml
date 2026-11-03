@@ -338,32 +338,14 @@ evidence = "Vatten- och avloppskostnader hör till kandidatgruppen.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:driftskostnader-for-fastighetsel-v4030"
-fields = { "sets" = ["fastighetselkostnader"] }
-evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27403:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-for-fastighetsel-v4030"
 fields = { "tags" = ["energy"] }
 evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27403:16436:16801"
 
 [[statement]]
 kind = "set"
 subject = "var:driftskostnader-for-uppvarmning-v4020"
-fields = { "sets" = ["uppvarmningskostnader"] }
-evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27404:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-for-uppvarmning-v4020"
 fields = { "tags" = ["energy"] }
 evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27404:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-ovrigt-v4070"
-fields = { "sets" = ["ovriga-driftkostnader"] }
-evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27406:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -746,12 +728,6 @@ evidence = "Identitetsfaktumet visar överlapp mellan nettointäkt och reduktion
 [[statement]]
 kind = "set"
 subject = "var:intakter-garage-och-bilplatser-v1030"
-fields = { "sets" = ["garage-och-bilplatsintakter"] }
-evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-garage-och-bilplatser-v1030"
 fields = { "tags" = ["business"] }
 evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
 
@@ -1078,12 +1054,6 @@ kind = "set"
 subject = "var:kapitalkostnader-ovriga"
 fields = { "tags" = ["business", "housing"] }
 evidence = "OFININK är en källmnemonik som inte uttrycker etikettens kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna. Samtliga poster beskriver räntekostnader. Definitionen begränsar inte medlemskap till fastighetsanknutna lån och omfattar därför även OFININK:s räntor utanför fastighetsförvaltningen.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27481:16436:16801\ncatalog:variable_text:27482:16436:16801\ncatalog:variable_text:27517:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:ombyggnad"
-fields = { "sets" = ["ombyggnad-under-rakenskapsperioden"] }
-evidence = "Källan anger ombyggnad under räkenskapsperioden.\ncatalog:variable_text:27474:13514:13879"
 
 [[statement]]
 kind = "set"
@@ -1809,12 +1779,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:fastighetselkostnader"
-fields = { "label" = "Fastighetselkostnader" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:fastighetslan"
 fields = { "label" = "Fastighetslån" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1830,12 +1794,6 @@ kind = "set"
 subject = "set:finansiella-intakter"
 fields = { "label" = "Finansiella intäkter" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:garage-och-bilplatsintakter"
-fields = { "label" = "Garage- och bilplatsintäkter" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics, suspended hyphen)."
 
 [[statement]]
 kind = "set"
@@ -1893,21 +1851,9 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:ombyggnad-under-rakenskapsperioden"
-fields = { "label" = "Ombyggnad under räkenskapsperioden" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:ombyggnads-och-forbattringsutgifter"
 fields = { "label" = "Ombyggnads- och förbättringsutgifter" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
-
-[[statement]]
-kind = "set"
-subject = "set:ovriga-driftkostnader"
-fields = { "label" = "Övriga driftkostnader" }
-evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"
@@ -1968,12 +1914,6 @@ kind = "set"
 subject = "set:totalyta"
 fields = { "label" = "Totalyta" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:uppvarmningskostnader"
-fields = { "label" = "Uppvärmningskostnader" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"

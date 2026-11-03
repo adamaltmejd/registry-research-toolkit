@@ -266,12 +266,6 @@ evidence = "Samma blankettstatusbegrepp som blankett-statuskod, fördelat på pe
 [[statement]]
 kind = "set"
 subject = "var:funktionell-bransch"
-fields = { "sets" = ["funktionell-bransch"] }
-evidence = "Funktionell bransch är en företagsklassificering.\ncatalog:variable_text:30233:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:funktionell-bransch"
 fields = { "tags" = ["business"] }
 evidence = "Funktionell bransch är en företagsklassificering.\ncatalog:variable_text:30233:16801:17897"
 
@@ -286,12 +280,6 @@ kind = "set"
 subject = "var:industrigruppering-eu"
 fields = { "tags" = ["business"] }
 evidence = "Samma MIG-indelning som mig, fördelad på perioder.\ncatalog:occurrence:251870\ncatalog:occurrence:251961\ncatalog:valueset:7132\ncatalog:valueset:7285"
-
-[[statement]]
-kind = "set"
-subject = "var:institutionell-bransch"
-fields = { "sets" = ["institutionell-bransch"] }
-evidence = "Institutionell bransch är en företagsklassificering.\ncatalog:variable_text:30238:16801:17897"
 
 [[statement]]
 kind = "set"
@@ -1112,12 +1100,6 @@ evidence = "Kommunindelning är geografisk.\ncatalog:variable_text:30325:16801:1
 [[statement]]
 kind = "set"
 subject = "var:lan"
-fields = { "sets" = ["lan"] }
-evidence = "Länskod anger geografisk indelning.\ncatalog:variable_text:30327:16071:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
 fields = { "tags" = ["geography"] }
 evidence = "Länskod anger geografisk indelning.\ncatalog:variable_text:30327:16071:17532"
 
@@ -1370,20 +1352,8 @@ evidence = "Stratum beskriver undersökningens urvalsdesign.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:undersokningsar"
-fields = { "sets" = ["undersokningsar"] }
-evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar"
 fields = { "tags" = [] }
 evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang"
-fields = { "sets" = ["undersokningsomgang"] }
-evidence = "Kodning av undersökningsomgång.\ncatalog:variable_text:30363:16071:17897"
 
 [[statement]]
 kind = "set"
@@ -1402,12 +1372,6 @@ kind = "set"
 subject = "var:upprakningsfaktor"
 fields = { "tags" = ["methods"] }
 evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:30366:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:urval"
-fields = { "sets" = ["urval"] }
-evidence = "Källan beskriver ursprungligt urval per stratum.\ncatalog:variable_text:30368:16071:17897"
 
 [[statement]]
 kind = "set"
@@ -1597,21 +1561,9 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:funktionell-bransch"
-fields = { "label" = "Funktionell bransch" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:huvudsakliga-industrigrupper"
 fields = { "label" = "Huvudsakliga industrigrupper" }
 evidence = "#2100 group name: the slug read as words; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:institutionell-bransch"
-fields = { "label" = "Institutionell bransch" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1681,12 +1633,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:lan"
-fields = { "label" = "Län" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:naringsgren"
 fields = { "label" = "Näringsgren" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1720,24 +1666,6 @@ kind = "set"
 subject = "set:underhallsutgifter"
 fields = { "label" = "Underhållsutgifter" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:undersokningsar"
-fields = { "label" = "Undersökningsår" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:undersokningsomgang"
-fields = { "label" = "Undersökningsomgång" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:urval"
-fields = { "label" = "Urval" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

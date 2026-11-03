@@ -3827,12 +3827,6 @@ evidence = "Variabeln anger nivån på studier i vuxenutbildning.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:nyinskriven-elev"
-fields = { "sets" = ["nyinskriven-elev"] }
-evidence = "Kodning av nyinskriven elev, med en motsvarande variabel för kursdeltagare.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nyinskriven-elev"
 fields = { "tags" = ["education"] }
 evidence = "Kodning av nyinskriven elev, med en motsvarande variabel för kursdeltagare.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
 
@@ -4405,12 +4399,6 @@ kind = "set"
 subject = "set:kursens-avslutsstatus"
 fields = { "label" = "Kursens avslutsstatus" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:nyinskriven-elev"
-fields = { "label" = "Nyinskriven elev" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

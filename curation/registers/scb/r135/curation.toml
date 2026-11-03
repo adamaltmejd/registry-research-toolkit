@@ -110,12 +110,6 @@ evidence = "Anger kvantitetsenhet för produktion och leveranser.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda"
-fields = { "sets" = ["antal-anstallda"] }
-evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33813:17167:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda"
 fields = { "tags" = ["employment"] }
 evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33813:17167:20089"
 
@@ -792,12 +786,6 @@ kind = "set"
 subject = "var:total-kvantitet"
 fields = { "description" = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag. Kvantiteten anges i den enhet som gäller för varunumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ivp.toml:43\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:293334:opdef_text; rel070-base/reg_meta.db:occurrence:293720:opdef_text; rel070-base/reg_meta.db:occurrence:294175:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Keep the quantity-unit rule. The survey/model-estimation paragraph belongs only to 2002 and refers to the survey generally, not necessarily this quantity variable in all years. Evidence: rel070-base/reg_meta.db occurrences 293334, 293364, 293720, 294175."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-anstallda"
-fields = { "label" = "Antal anställda" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"

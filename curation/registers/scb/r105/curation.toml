@@ -1719,12 +1719,6 @@ evidence = "Kursens namn.\ncatalog:variable_text:11583:14245:20089"
 [[statement]]
 kind = "set"
 subject = "var:kursniva-folkhogskolan"
-fields = { "sets" = ["kursniva"] }
-evidence = "Kursens utbildningsnivå.\ncatalog:variable_text:11584:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kursniva-folkhogskolan"
 fields = { "tags" = ["education"] }
 evidence = "Kursens utbildningsnivå.\ncatalog:variable_text:11584:18262:20089"
 
@@ -2634,12 +2628,6 @@ evidence = "#2100 group name: the slug read as words; kept on review."
 kind = "set"
 subject = "set:kursinriktning"
 fields = { "label" = "Kursinriktning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:kursniva"
-fields = { "label" = "Kursnivå" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]

@@ -878,12 +878,6 @@ evidence = "Årsmodell är en fordonsuppgift.\ncatalog:occurrence:105077"
 [[statement]]
 kind = "set"
 subject = "var:arsmodell-imputerad-arsmod-imp"
-fields = { "sets" = ["arsmodell-imputerad"] }
-evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
-
-[[statement]]
-kind = "set"
-subject = "var:arsmodell-imputerad-arsmod-imp"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
 
@@ -3075,12 +3069,6 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 kind = "set"
 subject = "set:agarkategori"
 fields = { "label" = "Ägarkategori" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:arsmodell-imputerad"
-fields = { "label" = "Årsmodell imputerad" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]

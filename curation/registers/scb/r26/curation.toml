@@ -1521,12 +1521,6 @@ evidence = "Antal månader och förekomst mäter tillfällig frånvaro.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:ar-ny"
-fields = { "sets" = ["arbetsstallets-startar"] }
-evidence = "Startår för arbetsställe hör till den angivna gruppen; årtal för en händelse får ingen tematisk tagg.\ncatalog:variable_text:41146:17532:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-ny"
 fields = { "tags" = [] }
 evidence = "Startår för arbetsställe hör till den angivna gruppen; årtal för en händelse får ingen tematisk tagg.\ncatalog:variable_text:41146:17532:19358"
 
@@ -3483,12 +3477,6 @@ evidence = "Variabeln anger förekomst av små barn.\ncatalog:variable_text:4134
 [[statement]]
 kind = "set"
 subject = "var:startar-ftg-fad"
-fields = { "sets" = ["foretagets-startar"] }
-evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:41345:12053:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:startar-ftg-fad"
 fields = { "tags" = [] }
 evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:41345:12053:19358"
 
@@ -4374,12 +4362,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:arbetsstallets-startar"
-fields = { "label" = "Arbetsställets startår" }
-evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:ersattning-fran-forsakringskassan"
 fields = { "label" = "Ersättning från Försäkringskassan" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -4425,12 +4407,6 @@ kind = "set"
 subject = "set:foretagets-postadress"
 fields = { "label" = "Företagets postadress" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:foretagets-startar"
-fields = { "label" = "Företagets startår" }
-evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"

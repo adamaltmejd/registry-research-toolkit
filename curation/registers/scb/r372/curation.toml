@@ -398,12 +398,6 @@ evidence = "AE är en ogenomskinlig källförkortning för arbetsställe.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:agarkontroll"
-fields = { "sets" = ["agarkontroll"] }
-evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12023:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:agarkontroll"
 fields = { "tags" = ["business"] }
 evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12023:10592:19358"
 
@@ -470,20 +464,8 @@ evidence = "Den tidigare variabeln omfattar även arbetsställen.\ncatalog:occur
 [[statement]]
 kind = "set"
 subject = "var:antal-arbetsstallen"
-fields = { "sets" = ["antal-arbetsstallen"] }
-evidence = "Antal arbetsställen.\ncatalog:variable_text:12030:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen"
 fields = { "tags" = ["business"] }
 evidence = "Antal arbetsställen.\ncatalog:variable_text:12030:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-firmor"
-fields = { "sets" = ["antal-firmor"] }
-evidence = "Antal registrerade firmor.\ncatalog:variable_text:12032:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -878,12 +860,6 @@ evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:juridisk-form"
-fields = { "sets" = ["juridisk-form"] }
-evidence = "Kodning av juridisk form.\ncatalog:variable_text:12082:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:juridisk-form"
 fields = { "tags" = ["business"] }
 evidence = "Kodning av juridisk form.\ncatalog:variable_text:12082:10592:19358"
 
@@ -1130,12 +1106,6 @@ evidence = "Postort i postadress.\ncatalog:variable_text:12112:17897:19358"
 [[statement]]
 kind = "set"
 subject = "var:privat-publikt-foretag"
-fields = { "sets" = ["privat-publikt-foretag"] }
-evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12113:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:privat-publikt-foretag"
 fields = { "tags" = ["business"] }
 evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12113:10592:19358"
 
@@ -1174,12 +1144,6 @@ kind = "set"
 subject = "var:sateslan"
 fields = { "tags" = ["geography"] }
 evidence = "Säteslän ingår i gruppen för länskodningar och beskriver geografiskt läge.\ncatalog:variable_text:12119:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sektortillhorighet"
-fields = { "sets" = ["sektortillhorighet"] }
-evidence = "Kodning av institutionell sektor.\ncatalog:variable_text:12120:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -1295,33 +1259,9 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:agarkontroll"
-fields = { "label" = "Ägarkontroll" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:antal-anstallda"
 fields = { "label" = "Antal anställda" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-arbetsstallen"
-fields = { "label" = "Antal arbetsställen" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-firmor"
-fields = { "label" = "Antal firmor" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:juridisk-form"
-fields = { "label" = "Juridisk form" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1363,18 +1303,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:postort"
 fields = { "label" = "Postort" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:privat-publikt-foretag"
-fields = { "label" = "Privat/publikt företag" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:sektortillhorighet"
-fields = { "label" = "Sektortillhörighet" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]

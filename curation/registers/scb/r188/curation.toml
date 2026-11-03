@@ -266,12 +266,6 @@ evidence = "Samma källkolumn har överlappande mappningar till olika värdebegr
 [[statement]]
 kind = "set"
 subject = "var:transaktionstyp-transtyp"
-fields = { "sets" = ["transaktionstyp"] }
-evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:transaktionstyp-transtyp"
 fields = { "tags" = ["trade"] }
 evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
 
@@ -424,12 +418,6 @@ kind = "set"
 subject = "set:produktgrupp-spin"
 fields = { "label" = "Produktgrupp SPIN" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:transaktionstyp"
-fields = { "label" = "Transaktionstyp" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

@@ -608,12 +608,6 @@ evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:barnets-fodelselangd"
-fields = { "sets" = ["barnets-fodelselangd"] }
-evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-1826:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:barnets-fodelselangd"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-1826:2932897"
 
@@ -3358,12 +3352,6 @@ kind = "set"
 subject = "set:apgarpoang"
 fields = { "label" = "Apgarpoäng" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:barnets-fodelselangd"
-fields = { "label" = "Barnets födelselängd" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
