@@ -202,3 +202,15 @@ kind = "set"
 subject = "var:variabelnummer"
 fields = { "tags" = ["business"] }
 evidence = "Koderna anger investeringsslag som hör till investeringsvärdet.\ncatalog:valueset:4946\ncatalog:variable_text:7964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
+fields = { "label" = "Status (överordnad enhet)" }
+evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; CU_StatusParent is the status code of the parent unit; CU_Status_text is the status in plain text."
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-klartext"
+fields = { "label" = "Status (klartext)" }
+evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; CU_StatusParent is the status code of the parent unit; CU_Status_text is the status in plain text."

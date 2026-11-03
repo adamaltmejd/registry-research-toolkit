@@ -94,3 +94,9 @@ kind = "set"
 subject = "var:modellskatt"
 fields = { "tags" = ["transport"] }
 evidence = "Variabeln anger om körsträckan är modellskattad.\ncatalog:variable_text:34877:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaendears-stracka"
+fields = { "label" = "Körsträcka (föregående år)" }
+evidence = "#2102 same-label cluster 'Körsträcka' (2 variables): judged different meaning, high confidence; foregaendears_stracka is the previous year's distance, concurrent with KORSTRACKA."

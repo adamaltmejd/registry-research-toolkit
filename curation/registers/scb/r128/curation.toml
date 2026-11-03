@@ -2512,3 +2512,153 @@ kind = "set"
 subject = "set:utbetald-ersattning"
 fields = { "label" = "Utbetald ersättning" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:ambassadanstsv-fel"
+fields = { "label" = "Betalar skatt i beskickningslandet (fel)" }
+evidence = "#2102 same-label cluster 'Betalar skatt i beskickningslandet' (4 variables): judged different meaning, high confidence; A 0/1 marker per employment, a count per company (Ant prefix, description), and a _Fel version of each."
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv"
+fields = { "label" = "Betalar skatt i beskickningslandet (antal per företag)" }
+evidence = "#2102 same-label cluster 'Betalar skatt i beskickningslandet' (4 variables): judged different meaning, high confidence; A 0/1 marker per employment, a count per company (Ant prefix, description), and a _Fel version of each."
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv-fel"
+fields = { "label" = "Betalar skatt i beskickningslandet (antal per företag, fel)" }
+evidence = "#2102 same-label cluster 'Betalar skatt i beskickningslandet' (4 variables): judged different meaning, high confidence; A 0/1 marker per employment, a count per company (Ant prefix, description), and a _Fel version of each."
+
+[[statement]]
+kind = "set"
+subject = "var:antbilers-fel"
+fields = { "label" = "Antal AGI/KU med Bilersättning (fel)" }
+evidence = "#2102 same-label cluster 'Antal AGI/KU med Bilersättning' (2 variables): judged different meaning, medium confidence; AntBilErs_Fel is a separate concurrent count column (2020-24) in the same table; the Fel suffix follows the same pattern as the other lsum _Fel columns, its meaning is not described."
+
+[[statement]]
+kind = "set"
+subject = "var:antbostforman-fel"
+fields = { "label" = "Antal AGI/KU med Bostadsförmån (fel)" }
+evidence = "#2102 same-label cluster 'Antal AGI/KU med Bostadsförmån' (2 variables): judged different meaning, medium confidence; AntBostForman_Fel is a separate concurrent count column (2019-24) in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:antbostsmaforman-fel"
+fields = { "label" = "Antal AGI/KU med Bostadsförmån för småhusenhet (fel)" }
+evidence = "#2102 same-label cluster 'Antal AGI/KU med Bostadsförmån för småhusenhet' (2 variables): judged different meaning, medium confidence; AntBostSmaForman_Fel is a separate concurrent count column (2019-24) in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni200"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2002"
+fields = { "label" = "Näringsgren för arbetsställe, SNI 2002" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): judged different meaning, high confidence; AstSni2002 and AstSni2007 are the same attribute under SNI 2002 and SNI 2007, overlapping 2009-2011."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007-1641"
+fields = { "label" = "Näringsgren för arbetsställe, SNI 2007" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): judged different meaning, high confidence; AstSni2002 and AstSni2007 are the same attribute under SNI 2002 and SNI 2007, overlapping 2009-2011."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning-fel"
+fields = { "label" = "Bilersättning (fel)" }
+evidence = "#2102 same-label cluster 'Bilersättning' (2 variables): judged different meaning, medium confidence; BilErs_Fel is a separate concurrent flag (2020-24) with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bostsmaforman-fel"
+fields = { "label" = "Bostadsförmån för småhusenhet (fel)" }
+evidence = "#2102 same-label cluster 'Bostadsförmån för småhusenhet' (2 variables): judged different meaning, medium confidence; BostSmaForman_Fel is a separate concurrent flag (2019-24) with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag-antejskattejbeskatt"
+fields = { "label" = "Ej skatteavdrag (antal per organisationsnummer)" }
+evidence = "#2102 same-label cluster 'Ej skatteavdrag' (2 variables): judged different meaning, high confidence; EjSkattEjBeskatt is a 0/1 marker per employment; AntEjSkattEjBeskatt counts declarations per organisation number (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni200"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2002"
+fields = { "label" = "Näringsgren för företag (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007-16323"
+fields = { "label" = "Näringsgren för företag (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92"
+fields = { "label" = "Näringsgren för företag (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-i-lsum-instkod7"
+fields = { "label" = "Institutionell sektorkod i LSUM (7 positioner)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod i LSUM' (2 variables): judged different meaning, high confidence; InstKod has five-digit codes, instkod7 seven-digit codes; they run concurrently 2001-02."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-lsum"
+fields = { "label" = "Institutionell sektorkod i LSUM (5 positioner)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod i LSUM' (2 variables): judged different meaning, high confidence; InstKod has five-digit codes, instkod7 seven-digit codes; they run concurrently 2001-02."
+
+[[statement]]
+kind = "set"
+subject = "var:justering-fel"
+fields = { "label" = "Markering för rättad post (fel)" }
+evidence = "#2102 same-label cluster 'Markering för rättad post' (2 variables): judged different meaning, medium confidence; Justering_Fel is a separate concurrent flag (2020-24) with the same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvudsaklig"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Three SNI versions (92, 2002, 2007) with different code lists; 2002 and 2007 overlap."
+
+[[statement]]
+kind = "set"
+subject = "var:pensforman-fel"
+fields = { "label" = "Förmån som pension (fel)" }
+evidence = "#2102 same-label cluster 'Förmån som pension' (2 variables): judged different meaning, medium confidence; PensForman_Fel is a separate concurrent flag (2022-23) with the same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-fel"
+fields = { "label" = "Traktamente (fel)" }
+evidence = "#2102 same-label cluster 'Traktamente' (2 variables): judged different meaning, medium confidence; Traktamente_Fel is a separate concurrent flag (2020-24) with the same code list."

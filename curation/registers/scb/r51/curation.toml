@@ -1456,3 +1456,81 @@ kind = "set"
 subject = "set:yrke"
 fields = { "label" = "Yrke" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp"
+fields = { "label" = "Åldersgrupp (femårsgrupper)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; agrupp has five-year classes, agrupp2 mostly ten-year classes, concurrent 2014-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp2"
+fields = { "label" = "Åldersgrupp (tioårsgrupper)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; agrupp has five-year classes, agrupp2 mostly ten-year classes, concurrent 2014-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:sun"
+fields = { "label" = "Utbildningskod, person (SUN, femsiffernivå)" }
+evidence = "#2102 same-label cluster 'Utbildningskod, person' (3 variables): judged different meaning, medium confidence; Five-digit older SUN, five-digit SUN 96, and the three-digit level derived from SUN 96."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr1"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, 1 siffra)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr1"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, 1 siffra)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:sun96fem"
+fields = { "label" = "Utbildningskod, person (SUN 96, femsiffernivå)" }
+evidence = "#2102 same-label cluster 'Utbildningskod, person' (3 variables): judged different meaning, medium confidence; Five-digit older SUN, five-digit SUN 96, and the three-digit level derived from SUN 96."
+
+[[statement]]
+kind = "set"
+subject = "var:sun96inr"
+fields = { "label" = "Utbildningsinriktning (SUN 96)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr"
+fields = { "label" = "Utbildningsinriktning (SUN, äldre version)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; Different SUN versions (older SUN, SUN 96, SUN 2000, SUN 2020), each with a detailed and a one-digit form where both exist."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "label" = "Tjänstledighet (grund för ledighet)" }
+evidence = "#2102 same-label cluster 'Tjänstledighet' (2 variables): judged different meaning, high confidence; tjlk lists the grounds for leave, tjlscb is a tjänstledig yes/no flag."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet-scb"
+fields = { "label" = "Tjänstledighet (tjänstledig eller inte)" }
+evidence = "#2102 same-label cluster 'Tjänstledighet' (2 variables): judged different meaning, high confidence; tjlk lists the grounds for leave, tjlscb is a tjänstledig yes/no flag."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
+fields = { "label" = "Utbildningskod, person (SUN 96, tresiffernivå)" }
+evidence = "#2102 same-label cluster 'Utbildningskod, person' (3 variables): judged different meaning, medium confidence; Five-digit older SUN, five-digit SUN 96, and the three-digit level derived from SUN 96."

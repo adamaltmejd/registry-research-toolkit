@@ -1000,3 +1000,81 @@ kind = "set"
 subject = "set:vistelsedygn"
 fields = { "label" = "Vistelsedygn" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar"
+fields = { "label" = "Belagda bäddar (alla dagar)" }
+evidence = "#2102 same-label cluster 'Belagda bäddar' (4 variables): judged different meaning, medium confidence; BBdH and BBdV split by weekday group; BBd is all days; BBdTot is the camping total."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "label" = "Belagda bäddar (fredag-söndag inklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Belagda bäddar' (4 variables): judged different meaning, medium confidence; BBdH and BBdV split by weekday group; BBd is all days; BBdTot is the camping total."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "label" = "Belagda bäddar (måndag-torsdag exklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Belagda bäddar' (4 variables): judged different meaning, medium confidence; BBdH and BBdV split by weekday group; BBd is all days; BBdTot is the camping total."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-totalt"
+fields = { "label" = "Belagda bäddar (totalt)" }
+evidence = "#2102 same-label cluster 'Belagda bäddar' (4 variables): judged different meaning, medium confidence; BBdH and BBdV split by weekday group; BBd is all days; BBdTot is the camping total."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-alla-dagar"
+fields = { "label" = "Belagda rum (alla dagar)" }
+evidence = "#2102 same-label cluster 'Belagda rum' (3 variables): judged different meaning, high confidence; BRm, BRmH and BRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-fredag-sondag-inklusive-roda-dagar"
+fields = { "label" = "Belagda rum (fredag-söndag inklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Belagda rum' (3 variables): judged different meaning, high confidence; BRm, BRmH and BRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-mandag-torsdag-exklusive-roda-dagar"
+fields = { "label" = "Belagda rum (måndag-torsdag exklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Belagda rum' (3 variables): judged different meaning, high confidence; BRm, BRmH and BRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-alla-dagar"
+fields = { "label" = "Disponibla bäddar (alla dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla bäddar' (3 variables): judged different meaning, high confidence; DBd, DBdH and DBdV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "label" = "Disponibla bäddar (fredag-söndag inklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla bäddar' (3 variables): judged different meaning, high confidence; DBd, DBdH and DBdV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "label" = "Disponibla bäddar (måndag-torsdag exklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla bäddar' (3 variables): judged different meaning, high confidence; DBd, DBdH and DBdV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-fredag-sondag-inklusive-roda-dagar"
+fields = { "label" = "Disponibla rum (fredag-söndag inklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla rum' (3 variables): judged different meaning, high confidence; DRm, DRmH and DRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-mandag-torsdag-exklusive-roda-dagar"
+fields = { "label" = "Disponibla rum (måndag-torsdag exklusive röda dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla rum' (3 variables): judged different meaning, high confidence; DRm, DRmH and DRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."
+
+[[statement]]
+kind = "set"
+subject = "var:drm"
+fields = { "label" = "Disponibla rum (alla dagar)" }
+evidence = "#2102 same-label cluster 'Disponibla rum' (3 variables): judged different meaning, high confidence; DRm, DRmH and DRmV are all days, Friday-Sunday incl. holidays, and Monday-Thursday excl. holidays."

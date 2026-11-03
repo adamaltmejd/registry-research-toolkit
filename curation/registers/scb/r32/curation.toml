@@ -5520,3 +5520,249 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bilar"
+fields = { "label" = "Bilar (individ)" }
+evidence = "#2102 same-label cluster 'Bilar' (2 variables): judged different meaning, high confidence; AntBilar counts cars for the individual, AntBilarHh cars in the household (Hh suffix, hushåll table)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bilar-hushall"
+fields = { "label" = "Bilar (hushåll)" }
+evidence = "#2102 same-label cluster 'Bilar' (2 variables): judged different meaning, high confidence; AntBilar counts cars for the individual, AntBilarHh cars in the household (Hh suffix, hushåll table)."
+
+[[statement]]
+kind = "set"
+subject = "var:antb017fam"
+fields = { "label" = "Barn 0-17 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 0-17 år' (2 variables): judged different meaning, high confidence; AntB017Fam counts children in the family, AntB017Hh children in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:antb017hh"
+fields = { "label" = "Barn 0-17 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 0-17 år' (2 variables): judged different meaning, high confidence; AntB017Fam counts children in the family, AntB017Hh children in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:antb06fam"
+fields = { "label" = "Barn 0-6 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 0-6 år' (2 variables): judged different meaning, high confidence; AntB06Fam counts children in the family, AntB06Hh children in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:antb06hh"
+fields = { "label" = "Barn 0-6 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 0-6 år' (2 variables): judged different meaning, high confidence; AntB06Fam counts children in the family, AntB06Hh children in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:antsamrakinkhh"
+fields = { "label" = "Sammanräknad inkomst (antal personer i hushållet)" }
+evidence = "#2102 same-label cluster 'Sammanräknad inkomst' (3 variables): judged different meaning, high confidence; SamRakInk is the individual income, SamRakInkHh the household income, AntSamRakInkHh the number of persons with such income in the household (per its description)."
+
+[[statement]]
+kind = "set"
+subject = "var:arbstnyko"
+fields = { "label" = "Nyckelkodsområde (NYKO) (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Nyckelkodsområde (NYKO)' (2 variables): judged different meaning, medium confidence; ArbStNYKO is the workplace (arbetsställe) NYKO; NYKO is the other (dwelling) NYKO."
+
+[[statement]]
+kind = "set"
+subject = "var:arbstostkoord"
+fields = { "label" = "Ostlig mittpunktskoordinat (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Ostlig mittpunktskoordinat' (2 variables): judged different meaning, medium confidence; ArbStOstKoord is the workplace (arbetsställe) coordinate; OstKoordinat is the other (dwelling) coordinate."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-10-12-ar"
+fields = { "label" = "Barn 10-12 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 10-12 år' (2 variables): judged different meaning, high confidence; AntB1012Hh counts children in the household, AntB1012Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-10-12-ar-antb1012hh"
+fields = { "label" = "Barn 10-12 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 10-12 år' (2 variables): judged different meaning, high confidence; AntB1012Hh counts children in the household, AntB1012Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-13-15-ar"
+fields = { "label" = "Barn 13-15 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 13-15 år' (2 variables): judged different meaning, high confidence; AntB1315Hh counts children in the household, AntB1315Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-13-15-ar-antb1315hh"
+fields = { "label" = "Barn 13-15 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 13-15 år' (2 variables): judged different meaning, high confidence; AntB1315Hh counts children in the household, AntB1315Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar"
+fields = { "label" = "Barn 16-17 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 16-17 år' (2 variables): judged different meaning, high confidence; AntB1617Hh counts children in the household, AntB1617Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar-antb1617hh"
+fields = { "label" = "Barn 16-17 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 16-17 år' (2 variables): judged different meaning, high confidence; AntB1617Hh counts children in the household, AntB1617Fam in the family."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-12-ar"
+fields = { "label" = "Barn 7-12 år (familj)" }
+evidence = "#2102 same-label cluster 'Barn 7-12 år' (2 variables): judged different meaning, high confidence; AntB712Fam counts children in the family, AntB712Hh in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-12-ar-antb712hh"
+fields = { "label" = "Barn 7-12 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Barn 7-12 år' (2 variables): judged different meaning, high confidence; AntB712Fam counts children in the family, AntB712Hh in the household."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-9-ar"
+fields = { "label" = "Barn 7-9 år, familj" }
+evidence = "#2102 same-label cluster 'Barn 7-9 år' (2 variables): judged different meaning, high confidence; AntB79Hh is counted per hushåll (individ table), AntB79Fam per familj (familj table) with different coding."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-9-ar-antb79hh"
+fields = { "label" = "Barn 7-9 år, hushåll" }
+evidence = "#2102 same-label cluster 'Barn 7-9 år' (2 variables): judged different meaning, high confidence; AntB79Hh is counted per hushåll (individ table), AntB79Fam per familj (familj table) with different coding."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp"
+fields = { "label" = "Hushållstyp (sammansättning, barn 0-15 år)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp2"
+fields = { "label" = "Hushållstyp (referenspersonens ålder)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp3"
+fields = { "label" = "Hushållstyp (personer 16-24 år)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp4"
+fields = { "label" = "Hushållstyp (personer 65 år och äldre)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp5"
+fields = { "label" = "Hushållstyp (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp6"
+fields = { "label" = "Hushållstyp (sammansättning, barn 0-17 år)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hhtyp7"
+fields = { "label" = "Hushållstyp (enpersonshushåll, makar, barn under 18 år)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp"
+fields = { "label" = "Hushållstyp (boendeform)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies (HhTyp, HhTyp1 to HhTyp7) with different code lists, described by their values."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-referensperson"
+fields = { "label" = "Kön (referensperson)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Kon is the person's sex in the individ table; RPKon is the reference person's sex in the household table."
+
+[[statement]]
+kind = "set"
+subject = "var:medbrtb"
+fields = { "label" = "Medborgarskap (RTB)" }
+evidence = "#2102 same-label cluster 'Medborgarskap' (2 variables): judged different meaning, high confidence; Medb uses numeric country codes, MedbRTB uses two-letter RTB codes: different code lists in concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:narg"
+fields = { "label" = "Näringsgren (3 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, high confidence; Four industry classifications with different digit depth: Narg (3 digits), SNI4, SNI5 and the limited-level SNI2."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-4-sifferniva"
+fields = { "label" = "Näringsgren (4 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, high confidence; Four industry classifications with different digit depth: Narg (3 digits), SNI4, SNI5 and the limited-level SNI2."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-5-sifferniva"
+fields = { "label" = "Näringsgren (5 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, high confidence; Four industry classifications with different digit depth: Narg (3 digits), SNI4, SNI5 and the limited-level SNI2."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-begransad-niva"
+fields = { "label" = "Näringsgren (begränsad nivå)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, high confidence; Four industry classifications with different digit depth: Narg (3 digits), SNI4, SNI5 and the limited-level SNI2."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-mittpunktskoord-arbst"
+fields = { "label" = "Nordlig mittpunktskoordinat (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Nordlig mittpunktskoordinat' (2 variables): judged different meaning, medium confidence; ArbStNordKoord is the workplace (ArbSt = arbetsställe) coordinate; NordKoordinat is the other (dwelling) coordinate."
+
+[[statement]]
+kind = "set"
+subject = "var:samrakink"
+fields = { "label" = "Sammanräknad inkomst (individ)" }
+evidence = "#2102 same-label cluster 'Sammanräknad inkomst' (3 variables): judged different meaning, high confidence; SamRakInk is the individual income, SamRakInkHh the household income, AntSamRakInkHh the number of persons with such income in the household (per its description)."
+
+[[statement]]
+kind = "set"
+subject = "var:samrakinkhh"
+fields = { "label" = "Sammanräknad inkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Sammanräknad inkomst' (3 variables): judged different meaning, high confidence; SamRakInk is the individual income, SamRakInkHh the household income, AntSamRakInkHh the number of persons with such income in the household (per its description)."
+
+[[statement]]
+kind = "set"
+subject = "var:samraknetink"
+fields = { "label" = "Sammanräknad nettoinkomst FoB (individ)" }
+evidence = "#2102 same-label cluster 'Sammanräknad nettoinkomst FoB' (2 variables): judged different meaning, high confidence; SamRakNetInk is the individual figure (individ table), SamRakNetInkHh the household figure (household table)."
+
+[[statement]]
+kind = "set"
+subject = "var:samraknetinkhh"
+fields = { "label" = "Sammanräknad nettoinkomst FoB (hushåll)" }
+evidence = "#2102 same-label cluster 'Sammanräknad nettoinkomst FoB' (2 variables): judged different meaning, high confidence; SamRakNetInk is the individual figure (individ table), SamRakNetInkHh the household figure (household table)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-2-sifferniva"
+fields = { "label" = "Utbildningskod (SUN, 2 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningskod' (3 variables): judged different meaning, high confidence; SUN at three levels of detail: 2, 3 and 5 digits."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-3-sifferniva"
+fields = { "label" = "Utbildningskod (SUN, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningskod' (3 variables): judged different meaning, high confidence; SUN at three levels of detail: 2, 3 and 5 digits."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-5-sifferniva"
+fields = { "label" = "Utbildningskod (SUN, 5 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningskod' (3 variables): judged different meaning, high confidence; SUN at three levels of detail: 2, 3 and 5 digits."

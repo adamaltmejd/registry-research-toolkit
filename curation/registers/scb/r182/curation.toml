@@ -16939,3 +16939,297 @@ kind = "set"
 subject = "set:samlade-fou-utgifter"
 fields = { "label" = "Samlade FoU-utgifter" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-administration-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (från 2023)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; F35 is the individual share and F35upp the scaled-up share (per the slugs); OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-annan-verksamhet-f37upp"
+fields = { "label" = "Andel av arbetstid som ägnades åt annan verksamhet (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt annan verksamhet' (2 variables): judged different meaning, medium confidence; F37 is the individual share and F37upp the scaled-up share (per the slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-for-fou-f31bupp"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-obs-value-2"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (från 2023)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-expert-och-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (från 2023)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; F36 individual share vs F36upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-f33upp"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; F33 individual share vs F33upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-obs-value-3"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (från 2023)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; F33 individual share vs F33upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-utbildning-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (från 2023)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; F34 individual share vs F34upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori"
+fields = { "label" = "Anställningskategori (kod)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, medium confidence; Code columns (AnstKat, OCCUP_CODE with the same code list) vs text columns (anstkattext, OCCUP_CAT); the pairs follow each other in time."
+
+[[statement]]
+kind = "set"
+subject = "var:anstkattext"
+fields = { "label" = "Anställningskategori (text)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, medium confidence; Code columns (AnstKat, OCCUP_CODE with the same code list) vs text columns (anstkattext, OCCUP_CAT); the pairs follow each other in time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-administration"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; F35 is the individual share and F35upp the scaled-up share (per the slugs); OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-ansoka-medel-fou"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-doktorandkurser"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; F34 individual share vs F34upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-expertuppdrag"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; F36 individual share vs F36upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-forskarutbildning"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; F33 individual share vs F33upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-under-en-genomsnittlig-arbetsvecka-vid-universitet-hogskolan-f2upp"
+fields = { "label" = "Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan (uppräknad)" }
+evidence = "#2102 same-label cluster 'Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan' (2 variables): judged different meaning, medium confidence; F2 is the individual's reported value and F2upp the scaled-up value, concurrent in the same table (same pattern as the F3x share columns)."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-i-uoh-obs-value"
+fields = { "label" = "Arbetstidens fördelning i UoH (värde)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-uoh-varcd"
+fields = { "label" = "Arbetstidens fördelning i UoH (variabelkod)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-uoh-varname"
+fields = { "label" = "Arbetstidens fördelning i UoH (variabelnamn)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:employ-title"
+fields = { "label" = "Tjänstebenämning (text)" }
+evidence = "#2102 same-label cluster 'Tjänstebenämning' (2 variables): judged different meaning, high confidence; EMPLOY_CODE holds the code (with titles as value labels) and EMPLOY_TITLE the title text."
+
+[[statement]]
+kind = "set"
+subject = "var:f2"
+fields = { "label" = "Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan (individuppgift)" }
+evidence = "#2102 same-label cluster 'Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan' (2 variables): judged different meaning, medium confidence; F2 is the individual's reported value and F2upp the scaled-up value, concurrent in the same table (same pattern as the F3x share columns)."
+
+[[statement]]
+kind = "set"
+subject = "var:field1"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:field1-text"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:field3"
+fields = { "label" = "Forskningsämnesgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, high confidence; Code columns (FIELD3, FORD3, same code list in the personnel and economy tables) vs their text columns."
+
+[[statement]]
+kind = "set"
+subject = "var:field3-text"
+fields = { "label" = "Forskningsämnesgrupp (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, high confidence; Code columns (FIELD3, FORD3, same code list in the personnel and economy tables) vs their text columns."
+
+[[statement]]
+kind = "set"
+subject = "var:ford1"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ford1-text"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3"
+fields = { "label" = "Forskningsämnesgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, high confidence; Code columns (FIELD3, FORD3, same code list in the personnel and economy tables) vs their text columns."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3-text"
+fields = { "label" = "Forskningsämnesgrupp (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, high confidence; Code columns (FIELD3, FORD3, same code list in the personnel and economy tables) vs their text columns."
+
+[[statement]]
+kind = "set"
+subject = "var:forskamneomrtext"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne"
+fields = { "label" = "Forskningsämne (forskningsämnesgrupp)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (2 variables): judged different meaning, high confidence; StAmne holds three-digit research subject groups (101..); ForskAmneOmr holds six research subject areas (1-6)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne-forskamneomr"
+fields = { "label" = "Forskningsämne (forskningsämnesområde)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (2 variables): judged different meaning, high confidence; StAmne holds three-digit research subject groups (101..); ForskAmneOmr holds six research subject areas (1-6)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamnesomrade"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, high confidence; Code columns (ForskAmneOmr, FIELD1, FORD1) vs their text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); the code columns share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:individandel-annan-verksamhetstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt annan verksamhet (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt annan verksamhet' (2 variables): judged different meaning, medium confidence; F37 is the individual share and F37upp the scaled-up share (per the slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:individandel-fou-tid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt forskning och utveckling (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt forskning och utveckling' (2 variables): judged different meaning, medium confidence; F31 individual share vs F31upp scaled-up share."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet"
+fields = { "label" = "Internationell mobilitet (värde)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet-varcd"
+fields = { "label" = "Internationell mobilitet (variabelkod)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet-varname"
+fields = { "label" = "Internationell mobilitet (variabelnamn)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE holds the value, VARCD the variable code and VARNAME the variable name."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län, länskod" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has län codes (01, 03 ...), MUN_CODE municipality codes, COUNTRY and SEAT NUTS län codes (SE110 ...); SEAT is in a different table (pnp)."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-country"
+fields = { "label" = "Län, NUTS-kod" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has län codes (01, 03 ...), MUN_CODE municipality codes, COUNTRY and SEAT NUTS län codes (SE110 ...); SEAT is in a different table (pnp)."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-mun-code"
+fields = { "label" = "Län, kommunkod" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has län codes (01, 03 ...), MUN_CODE municipality codes, COUNTRY and SEAT NUTS län codes (SE110 ...); SEAT is in a different table (pnp)."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-seat"
+fields = { "label" = "Län, NUTS-kod för säte" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has län codes (01, 03 ...), MUN_CODE municipality codes, COUNTRY and SEAT NUTS län codes (SE110 ...); SEAT is in a different table (pnp)."
+
+[[statement]]
+kind = "set"
+subject = "var:occup-cat"
+fields = { "label" = "Anställningskategori (text)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, medium confidence; Code columns (AnstKat, OCCUP_CODE with the same code list) vs text columns (anstkattext, OCCUP_CAT); the pairs follow each other in time."
+
+[[statement]]
+kind = "set"
+subject = "var:occup-code"
+fields = { "label" = "Anställningskategori (kod)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, medium confidence; Code columns (AnstKat, OCCUP_CODE with the same code list) vs text columns (anstkattext, OCCUP_CAT); the pairs follow each other in time."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstebenamning"
+fields = { "label" = "Tjänstebenämning (kod)" }
+evidence = "#2102 same-label cluster 'Tjänstebenämning' (2 variables): judged different meaning, high confidence; EMPLOY_CODE holds the code (with titles as value labels) and EMPLOY_TITLE the title text."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-administrationstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; F35 is the individual share and F35upp the scaled-up share (per the slugs); OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-egen-forskarutbildningstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; F34 individual share vs F34upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-expert-fortroendeuppdragstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; F36 individual share vs F36upp scaled-up share; OBS_VALUE is a separate 2023+ column."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-fou-tid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt forskning och utveckling (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt forskning och utveckling' (2 variables): judged different meaning, medium confidence; F31 individual share vs F31upp scaled-up share."

@@ -1114,3 +1114,33 @@ kind = "set"
 subject = "set:varmepumpens-varmeeffekt"
 fields = { "label" = "Värmepumpens värmeeffekt" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar-vuxna-18-ar-och-aldre-i-huset-klass"
+fields = { "label" = "Antal barn under 18 år och vuxna 18 år och äldre i huset (klass)" }
+evidence = "#2102 same-label cluster 'Antal' (2 variables): judged different meaning, medium confidence; BARNKLASS is the class of number of children/adults in the house (per its pid); BOKLASS is a different concurrent class variable under a generic label."
+
+[[statement]]
+kind = "set"
+subject = "var:boklass"
+fields = { "label" = "Antal (boklass)" }
+evidence = "#2102 same-label cluster 'Antal' (2 variables): judged different meaning, medium confidence; BARNKLASS is the class of number of children/adults in the house (per its pid); BOKLASS is a different concurrent class variable under a generic label."
+
+[[statement]]
+kind = "set"
+subject = "var:uppv11"
+fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (typ som använts)" }
+evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share one code list (which heat-pump type was used) and are consecutive; uppv4 has a different code list (used versus possibility exists) and is concurrent with uppv5."
+
+[[statement]]
+kind = "set"
+subject = "var:uppv4-2308"
+fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (använts eller möjlighet finns)" }
+evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share one code list (which heat-pump type was used) and are consecutive; uppv4 has a different code list (used versus possibility exists) and is concurrent with uppv5."
+
+[[statement]]
+kind = "set"
+subject = "var:uppv5"
+fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (typ som använts)" }
+evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share one code list (which heat-pump type was used) and are consecutive; uppv4 has a different code list (used versus possibility exists) and is concurrent with uppv5."

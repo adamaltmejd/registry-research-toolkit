@@ -4203,3 +4203,57 @@ kind = "set"
 subject = "set:wc-standard"
 fields = { "label" = "WC-standard" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad, ombyggnad" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; ArOmbygg is the year of rebuilding and ArTillbygg the year of extension (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad, tillbyggnad" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; ArOmbygg is the year of rebuilding and ArTillbygg the year of extension (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor"
+fields = { "label" = "H-nivåfaktor, bostäder" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; NivaFaktBost is the level factor for bostäder and NivaFaktLokal for lokaler (slug), concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-literal-nivafaktlokal"
+fields = { "label" = "H-nivåfaktor, lokaler" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; NivaFaktBost is the level factor for bostäder and NivaFaktLokal for lokaler (slug), concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskod-literal-typhyraovriglok"
+fields = { "label" = "Hyreskod, övriga lokaler" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, high confidence; TypHyraOvrigLok is the rent code for other premises and TypHyraOvrigBost for other dwellings, concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-for-vardeomradet-literal-idvobost"
+fields = { "label" = "Identitetsnummer för värdeområdet, bostäder" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; IdVo, IdVoBost and IdVoLokal are concurrent: general, dwelling and premises value-area identities."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
+fields = { "label" = "Identitetsnummer för värdeområdet, lokaler" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; IdVo, IdVoBost and IdVoLokal are concurrent: general, dwelling and premises value-area identities."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-literal-sni2002"
+fields = { "label" = "Näringsgren (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, medium confidence; SNI holds the industry code under several SNI versions over time, SNI2002 is explicitly the SNI 2002 coding, concurrent 2008-2010."
+
+[[statement]]
+kind = "set"
+subject = "var:typhyraovrigbost"
+fields = { "label" = "Hyreskod, övriga bostäder" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, high confidence; TypHyraOvrigLok is the rent code for other premises and TypHyraOvrigBost for other dwellings, concurrent in fastigheter."

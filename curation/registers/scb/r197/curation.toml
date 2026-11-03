@@ -2114,3 +2114,15 @@ kind = "set"
 subject = "set:vatten-och-avloppskostnader"
 fields = { "label" = "Vatten- och avloppskostnader" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-ingar-i-fastighetselkostnader"
+fields = { "label" = "Hushållsel, kostnader (ingår i fastighetselkostnader)" }
+evidence = "#2102 same-label cluster 'Hushållsel, kostnader' (2 variables): judged different meaning, high confidence; Both are V4081; one is the cost amount, the other a yes/no code for whether household electricity is included in property electricity costs."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-kostnader-belopp"
+fields = { "label" = "Hushållsel, kostnader (belopp)" }
+evidence = "#2102 same-label cluster 'Hushållsel, kostnader' (2 variables): judged different meaning, high confidence; Both are V4081; one is the cost amount, the other a yes/no code for whether household electricity is included in property electricity costs."

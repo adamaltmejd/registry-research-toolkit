@@ -1122,3 +1122,165 @@ kind = "set"
 subject = "set:upprakningstal"
 fields = { "label" = "Uppräkningstal" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalht"
+fields = { "label" = "Elevens val (höstterminen)" }
+evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; ElevValHT and ElevValVT are concurrent columns for the autumn and spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalvt"
+fields = { "label" = "Elevens val (vårterminen)" }
+evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; ElevValHT and ElevValVT are concurrent columns for the autumn and spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:ml-betyg"
+fields = { "label" = "Modersmål, ämne (betyg)" }
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+
+[[statement]]
+kind = "set"
+subject = "var:ml-sprak"
+fields = { "label" = "Modersmål, ämne (språk)" }
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-betyg"
+fields = { "label" = "Moderna språk inom ramen för elevens val (betyg)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak"
+fields = { "label" = "Moderna språk inom ramen för elevens val (språk)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval"
+fields = { "label" = "Moderna språk inom ramen för språkval (språk)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-betyg"
+fields = { "label" = "Moderna språk inom ramen för språkval (betyg)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+
+[[statement]]
+kind = "set"
+subject = "var:ny-skolenhetskod"
+fields = { "label" = "Skolenhet (ny skolenhet)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Skolenhetskod (2013) and Skolenhkod (2014-2020) are the same variable renamed; NySkolEnhKod is a concurrent 'new school unit' column with an 'Eleven har ej flyttat' code."
+
+[[statement]]
+kind = "set"
+subject = "var:nykommun"
+fields = { "label" = "Kommun för skola/skolenhet (ny skola)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, medium confidence; NyKommun and Kommun are concurrent in elevpanel-8 2015-2020; the 'Ny' columns in sibling variables mean the new school after a move."
+
+[[statement]]
+kind = "set"
+subject = "var:nyskolkod"
+fields = { "label" = "Skola (ny skola)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, medium confidence; NySkolkod and Skolkod overlap in 2002-2004 in elevpanel-6; 'Ny' marks the new school after a move (cf. 'Eleven har ej flyttat' in NySkolEnhKod)."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakval"
+fields = { "label" = "Moderna språk inom ramen för språkval (deltagande)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "label" = "Svarskod (årskurs 8)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak3"
+fields = { "label" = "Svarskod (årskurs 3)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak4"
+fields = { "label" = "Svarskod (årskurs 4)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak5"
+fields = { "label" = "Svarskod (årskurs 5)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak6"
+fields = { "label" = "Svarskod (årskurs 6)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak7"
+fields = { "label" = "Svarskod (årskurs 7)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak9"
+fields = { "label" = "Svarskod (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "label" = "Uppräkningstal (årskurs 3)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-elevvikt"
+fields = { "label" = "Uppräkningstal (elevvikt)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak4"
+fields = { "label" = "Uppräkningstal (årskurs 4)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak5"
+fields = { "label" = "Uppräkningstal (årskurs 5)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak6"
+fields = { "label" = "Uppräkningstal (årskurs 6)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak7"
+fields = { "label" = "Uppräkningstal (årskurs 7)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak8"
+fields = { "label" = "Uppräkningstal (årskurs 8)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak9"
+fields = { "label" = "Uppräkningstal (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."

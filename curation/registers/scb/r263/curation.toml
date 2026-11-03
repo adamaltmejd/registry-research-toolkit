@@ -118,3 +118,33 @@ kind = "set"
 subject = "var:produktgruppsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variable_text:6207:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivnsv"
+fields = { "label" = "Delkostnadsslag (beskrivning)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalvariant"
+fields = { "label" = "Produkttyp, lokal variant" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table: ProdKod holds coded products, LokalVariant has no value set and is a local variant of the product."
+
+[[statement]]
+kind = "set"
+subject = "var:namnsv"
+fields = { "label" = "Delkostnadsslag (namn)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpkod"
+fields = { "label" = "Delkostnadsslag (kod)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+
+[[statement]]
+kind = "set"
+subject = "var:prodkod"
+fields = { "label" = "Produkttyp, produktkod" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table: ProdKod holds coded products, LokalVariant has no value set and is a local variant of the product."

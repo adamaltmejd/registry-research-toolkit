@@ -1896,3 +1896,129 @@ kind = "set"
 subject = "set:undervisningsgrupp"
 fields = { "label" = "Undervisningsgrupp" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "label" = "Poäng på betygsnivå A (matematik, muntligt delprov A)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, medium confidence; Concurrent columns MA_A_POM and MA_A_POT; sibling levels C and E name them as the oral sub-test A and all sub-tests."
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-delt"
+fields = { "label" = "Deltagande i prov A i NO, helt prov (från 2023)" }
+evidence = "#2102 same-label cluster 'Deltagande i prov A i NO' (4 variables): judged different meaning, high confidence; A1, A2 and A3 are separate sub-test participation columns in 2014-2022; NO_A_DELT from 2023 covers the whole prov A with a different value set."
+
+[[statement]]
+kind = "set"
+subject = "var:no-a1-delt"
+fields = { "label" = "Deltagande i prov A i NO, del A1" }
+evidence = "#2102 same-label cluster 'Deltagande i prov A i NO' (4 variables): judged different meaning, high confidence; A1, A2 and A3 are separate sub-test participation columns in 2014-2022; NO_A_DELT from 2023 covers the whole prov A with a different value set."
+
+[[statement]]
+kind = "set"
+subject = "var:no-a2-delt"
+fields = { "label" = "Deltagande i prov A i NO, del A2" }
+evidence = "#2102 same-label cluster 'Deltagande i prov A i NO' (4 variables): judged different meaning, high confidence; A1, A2 and A3 are separate sub-test participation columns in 2014-2022; NO_A_DELT from 2023 covers the whole prov A with a different value set."
+
+[[statement]]
+kind = "set"
+subject = "var:no-a3-delt"
+fields = { "label" = "Deltagande i prov A i NO, del A3" }
+evidence = "#2102 same-label cluster 'Deltagande i prov A i NO' (4 variables): judged different meaning, high confidence; A1, A2 and A3 are separate sub-test participation columns in 2014-2022; NO_A_DELT from 2023 covers the whole prov A with a different value set."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå A (matematik, samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, medium confidence; Concurrent columns MA_A_POM and MA_A_POT; sibling levels C and E name them as the oral sub-test A and all sub-tests."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
+fields = { "label" = "Poäng på betygsnivå C (matematik, muntligt delprov A)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Concurrent columns MA_C_POM (muntligt delprov A) and MA_C_POT (samtliga delprov) per the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå C (matematik, samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Concurrent columns MA_C_POM (muntligt delprov A) and MA_C_POT (samtliga delprov) per the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
+fields = { "label" = "Poäng på betygsnivå E (matematik, muntligt delprov A)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Concurrent columns MA_E_POM (muntligt delprov A) and MA_E_POT (samtliga delprov) per the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå E (matematik, samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Concurrent columns MA_E_POM (muntligt delprov A) and MA_E_POT (samtliga delprov) per the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:skola-matematikkurser"
+fields = { "label" = "Skola (matematik)" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Skolkod is the general school code; Skolkod_Ma, _Sv and _En are concurrent per-subject school codes in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:skola-svenskakurser"
+fields = { "label" = "Skola (svenska)" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Skolkod is the general school code; Skolkod_Ma, _Sv and _En are concurrent per-subject school codes in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-en"
+fields = { "label" = "Skola (engelska)" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Skolkod is the general school code; Skolkod_Ma, _Sv and _En are concurrent per-subject school codes in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Four members differ in SUN version (2000 vs 2020) and in detailed vs grouped (_Grupperad) value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Four members differ in SUN version (2000 vs 2020) and in detailed vs grouped (_Grupperad) value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Four members differ in SUN version (2000 vs 2020) and in detailed vs grouped (_Grupperad) value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Four members differ in SUN version (2000 vs 2020) and in detailed vs grouped (_Grupperad) value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg-sv"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two categories (UTLBAKGR), three categories (UTL_BAKG_SV, UTLBAKGR2, same coding in disjoint periods) and four categories (UtlSvBakg)."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr-alt"
+fields = { "label" = "Utländsk/svensk bakgrund (2 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two categories (UTLBAKGR), three categories (UTL_BAKG_SV, UTLBAKGR2, same coding in disjoint periods) and four categories (UtlSvBakg)."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two categories (UTLBAKGR), three categories (UTL_BAKG_SV, UTLBAKGR2, same coding in disjoint periods) and four categories (UtlSvBakg)."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two categories (UTLBAKGR), three categories (UTL_BAKG_SV, UTLBAKGR2, same coding in disjoint periods) and four categories (UtlSvBakg)."

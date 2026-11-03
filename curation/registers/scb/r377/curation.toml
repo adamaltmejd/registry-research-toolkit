@@ -2433,3 +2433,327 @@ kind = "set"
 subject = "set:yh-utbildningens-niva"
 fields = { "label" = "YH-utbildningens nivå" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation hyphen, diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (år)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Alder är ålder i år, AldersGrupp är grupperad ålder."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp-31-12"
+fields = { "label" = "Ålder 31/12 (åldersgrupp)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Alder är ålder i år, AldersGrupp är grupperad ålder."
+
+[[statement]]
+kind = "set"
+subject = "var:behorig-20procent"
+fields = { "label" = "Behörig till utbildningsomgången, 20-procentsregeln" }
+evidence = "#2102 same-label cluster 'Behörig till utbildningsomgången' (3 variables): judged different meaning, high confidence; Three eligibility variants as concurrent columns in the same table: general, 20-percent rule and fourth-point rule."
+
+[[statement]]
+kind = "set"
+subject = "var:behorig-4punkten"
+fields = { "label" = "Behörig till utbildningsomgången, fjärde punkten" }
+evidence = "#2102 same-label cluster 'Behörig till utbildningsomgången' (3 variables): judged different meaning, high confidence; Three eligibility variants as concurrent columns in the same table: general, 20-percent rule and fourth-point rule."
+
+[[statement]]
+kind = "set"
+subject = "var:fa15namn-senaste"
+fields = { "label" = "Studieregion, senaste (namn)" }
+evidence = "#2102 same-label cluster 'Studieregion, senaste' (2 variables): judged different meaning, high confidence; FA15Namn_senaste är regionens namn, FA15Nr_senaste är dess nummer."
+
+[[statement]]
+kind = "set"
+subject = "var:fa15namn-start"
+fields = { "label" = "Studieregion, start, namn" }
+evidence = "#2102 same-label cluster 'Studieregion, start' (2 variables): judged different meaning, high confidence; Region name and region number code of the same classification are separate columns in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:fa15nr-senaste"
+fields = { "label" = "Studieregion, senaste (nummer)" }
+evidence = "#2102 same-label cluster 'Studieregion, senaste' (2 variables): judged different meaning, high confidence; FA15Namn_senaste är regionens namn, FA15Nr_senaste är dess nummer."
+
+[[statement]]
+kind = "set"
+subject = "var:fa15nr-start"
+fields = { "label" = "Studieregion, start, kod" }
+evidence = "#2102 same-label cluster 'Studieregion, start' (2 variables): judged different meaning, high confidence; Region name and region number code of the same classification are separate columns in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodelselandnamn-flergen"
+fields = { "label" = "Födelseland (flergenerationsregistret)" }
+evidence = "#2102 same-label cluster 'Födelseland' (2 variables): judged different meaning, medium confidence; FodelseLandNamn och FodelseLandNamn_Flergen löper samtidigt i samma tabell från 2019; Flergen tolkas som flergenerationsregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-gruppering-yh"
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Landgrupp (5 grupper, Gruppering) och världsdel (Varldsdel) är olika indelningar, med flergenerationsregistret som egen källa; Gruppering i sökande och studerande har samma kodlista."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Landgrupp (5 grupper, Gruppering) och världsdel (Varldsdel) är olika indelningar, med flergenerationsregistret som egen källa; Gruppering i sökande och studerande har samma kodlista."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel-2"
+fields = { "label" = "Födelseland, världsdel/landgrupp (världsdel)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Landgrupp (5 grupper, Gruppering) och världsdel (Varldsdel) är olika indelningar, med flergenerationsregistret som egen källa; Gruppering i sökande och studerande har samma kodlista."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel-flergen"
+fields = { "label" = "Födelseland, världsdel/landgrupp (världsdel, flergenerationsregistret)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Landgrupp (5 grupper, Gruppering) och världsdel (Varldsdel) är olika indelningar, med flergenerationsregistret som egen källa; Gruppering i sökande och studerande har samma kodlista."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-klartext"
+fields = { "label" = "Typ av gymnasieprogram (klartext)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (5 variables): judged different meaning, medium confidence; Gymnasiebakgrund finns som programtyp (kod och klartext) och som utbildningsnivå enligt SUN 2000 respektive SUN 2020; Gymnasiebakgrund och _kod har samma kodlista men löper samtidigt."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-kod"
+fields = { "label" = "Typ av gymnasieprogram (kod)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (5 variables): judged different meaning, medium confidence; Gymnasiebakgrund finns som programtyp (kod och klartext) och som utbildningsnivå enligt SUN 2000 respektive SUN 2020; Gymnasiebakgrund och _kod har samma kodlista men löper samtidigt."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2000niva"
+fields = { "label" = "Typ av gymnasieprogram (utbildningsnivå SUN 2000)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (5 variables): judged different meaning, medium confidence; Gymnasiebakgrund finns som programtyp (kod och klartext) och som utbildningsnivå enligt SUN 2000 respektive SUN 2020; Gymnasiebakgrund och _kod har samma kodlista men löper samtidigt."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2020niva"
+fields = { "label" = "Typ av gymnasieprogram (utbildningsnivå SUN 2020)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (5 variables): judged different meaning, medium confidence; Gymnasiebakgrund finns som programtyp (kod och klartext) och som utbildningsnivå enligt SUN 2000 respektive SUN 2020; Gymnasiebakgrund och _kod har samma kodlista men löper samtidigt."
+
+[[statement]]
+kind = "set"
+subject = "var:regionfa15-klartext-utb"
+fields = { "label" = "Funktionell analysregion (klartext)" }
+evidence = "#2102 same-label cluster 'Funktionell analysregion' (2 variables): judged different meaning, high confidence; RegionFA15_Utb är koden, RegionFA15_klartext_Utb är klartextnamnet."
+
+[[statement]]
+kind = "set"
+subject = "var:regionfa15-utb"
+fields = { "label" = "Funktionell analysregion (kod)" }
+evidence = "#2102 same-label cluster 'Funktionell analysregion' (2 variables): judged different meaning, high confidence; RegionFA15_Utb är koden, RegionFA15_klartext_Utb är klartextnamnet."
+
+[[statement]]
+kind = "set"
+subject = "var:regiontyptillvaxtverket-klartext-utb"
+fields = { "label" = "Funktionella analysregioner, grov indelning (klartext)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grov indelning' (2 variables): judged different meaning, high confidence; RegiontypTillvaxtverket_Utb är koden, _klartext_Utb är klartexten."
+
+[[statement]]
+kind = "set"
+subject = "var:regiontyptillvaxtverket-utb"
+fields = { "label" = "Funktionella analysregioner, grov indelning (kod)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grov indelning' (2 variables): judged different meaning, high confidence; RegiontypTillvaxtverket_Utb är koden, _klartext_Utb är klartexten."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommun-senaste"
+fields = { "label" = "Studiekommun, senaste (namn)" }
+evidence = "#2102 same-label cluster 'Studiekommun, senaste' (2 variables): judged different meaning, high confidence; StudieKommun_senaste är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommun-senaste-kod"
+fields = { "label" = "Studiekommun, senaste (kod)" }
+evidence = "#2102 same-label cluster 'Studiekommun, senaste' (2 variables): judged different meaning, high confidence; StudieKommun_senaste är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommun-start"
+fields = { "label" = "Studiekommun, start (namn)" }
+evidence = "#2102 same-label cluster 'Studiekommun, start' (2 variables): judged different meaning, high confidence; StudieKommun_start är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommun-start-kod"
+fields = { "label" = "Studiekommun, start (kod)" }
+evidence = "#2102 same-label cluster 'Studiekommun, start' (2 variables): judged different meaning, high confidence; StudieKommun_start är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommun-utb"
+fields = { "label" = "Studiekommun (kod)" }
+evidence = "#2102 same-label cluster 'Studiekommun' (2 variables): judged different meaning, high confidence; StudieKommun_Utb är koden, StudieKommunNamn_Utb är namnet."
+
+[[statement]]
+kind = "set"
+subject = "var:studiekommunnamn-utb"
+fields = { "label" = "Studiekommun (namn)" }
+evidence = "#2102 same-label cluster 'Studiekommun' (2 variables): judged different meaning, high confidence; StudieKommun_Utb är koden, StudieKommunNamn_Utb är namnet."
+
+[[statement]]
+kind = "set"
+subject = "var:studielan-senaste"
+fields = { "label" = "Studielän, senaste (namn)" }
+evidence = "#2102 same-label cluster 'Studielän, senaste' (2 variables): judged different meaning, high confidence; Studielan_senaste är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studielan-senaste-kod"
+fields = { "label" = "Studielän, senaste (kod)" }
+evidence = "#2102 same-label cluster 'Studielän, senaste' (2 variables): judged different meaning, high confidence; Studielan_senaste är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studielan-start"
+fields = { "label" = "Studielän, start (namn)" }
+evidence = "#2102 same-label cluster 'Studielän, start' (2 variables): judged different meaning, high confidence; Studielan_start är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studielan-start-kod"
+fields = { "label" = "Studielän, start (kod)" }
+evidence = "#2102 same-label cluster 'Studielän, start' (2 variables): judged different meaning, high confidence; Studielan_start är namnet, _kod är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studielan-utb"
+fields = { "label" = "Studielän (kod)" }
+evidence = "#2102 same-label cluster 'Studielän' (2 variables): judged different meaning, high confidence; StudieLanNamn_Utb är namnet, StudieLan_Utb är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studielannamn-utb"
+fields = { "label" = "Studielän (namn)" }
+evidence = "#2102 same-label cluster 'Studielän' (2 variables): judged different meaning, high confidence; StudieLanNamn_Utb är namnet, StudieLan_Utb är koden."
+
+[[statement]]
+kind = "set"
+subject = "var:studietakt"
+fields = { "label" = "Studietakt (kod)" }
+evidence = "#2102 same-label cluster 'Studietakt' (2 variables): judged different meaning, high confidence; StudieTakt_Utb är koden, StudieTaktKlartext_Utb är klartexten."
+
+[[statement]]
+kind = "set"
+subject = "var:studietakt-klartext"
+fields = { "label" = "Studietakt (klartext)" }
+evidence = "#2102 same-label cluster 'Studietakt' (2 variables): judged different meaning, high confidence; StudieTakt_Utb är koden, StudieTaktKlartext_Utb är klartexten."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2000" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; Concurrent columns in the same table with different SUN classification versions (SUN 2000 and SUN 2020)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor-2"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2020" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; Concurrent columns in the same table with different SUN classification versions (SUN 2000 and SUN 2020)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun1inr-utb"
+fields = { "label" = "Utbildningsinriktning YH (1-siffernivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning YH' (4 variables): judged different meaning, high confidence; SUN1Inr är 1-siffernivå, SUN4Inr 4-siffernivå, var och en med kod och klartext."
+
+[[statement]]
+kind = "set"
+subject = "var:sun1inrklartext-utb"
+fields = { "label" = "Utbildningsinriktning YH (1-siffernivå, klartext)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning YH' (4 variables): judged different meaning, high confidence; SUN1Inr är 1-siffernivå, SUN4Inr 4-siffernivå, var och en med kod och klartext."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020 för faderns utbildningsnivå."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med kodkolumn och klartextkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-for-klartext"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, klartext)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med kodkolumn och klartextkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020 för faderns utbildningsnivå."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med kodkolumn och klartextkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old-for-klartext"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, klartext)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med kodkolumn och klartextkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:sun4inr-utb"
+fields = { "label" = "Utbildningsinriktning YH (4-siffernivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning YH' (4 variables): judged different meaning, high confidence; SUN1Inr är 1-siffernivå, SUN4Inr 4-siffernivå, var och en med kod och klartext."
+
+[[statement]]
+kind = "set"
+subject = "var:sun4inrklartext-utb"
+fields = { "label" = "Utbildningsinriktning YH (4-siffernivå, klartext)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning YH' (4 variables): judged different meaning, high confidence; SUN1Inr är 1-siffernivå, SUN4Inr 4-siffernivå, var och en med kod och klartext."
+
+[[statement]]
+kind = "set"
+subject = "var:sun5inr-utb"
+fields = { "label" = "Utbildningsinriktning MYH, kod" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning MYH' (2 variables): judged different meaning, high confidence; Code column and clear-text (Klartext) column of the same classification are separate columns in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:sun5inrklartext-utb"
+fields = { "label" = "Utbildningsinriktning MYH, klartext" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning MYH' (2 variables): judged different meaning, high confidence; Code column and clear-text (Klartext) column of the same classification are separate columns in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningslangdgrp-utb"
+fields = { "label" = "Utbildningslängd (grupperad)" }
+evidence = "#2102 same-label cluster 'Utbildningslängd' (3 variables): judged different meaning, medium confidence; UtbildningsLangdGrp är grupperad längd, de två andra anger veckor (heltid respektive YH)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningslangdveckor-utb-heltid"
+fields = { "label" = "Utbildningslängd (veckor, heltid)" }
+evidence = "#2102 same-label cluster 'Utbildningslängd' (3 variables): judged different meaning, medium confidence; UtbildningsLangdGrp är grupperad längd, de två andra anger veckor (heltid respektive YH)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningslangdveckoryh-utb"
+fields = { "label" = "Utbildningslängd (veckor, YH)" }
+evidence = "#2102 same-label cluster 'Utbildningslängd' (3 variables): judged different meaning, medium confidence; UtbildningsLangdGrp är grupperad längd, de två andra anger veckor (heltid respektive YH)."

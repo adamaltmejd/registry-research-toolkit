@@ -124,3 +124,9 @@ kind = "set"
 subject = "var:typeofinstrument"
 fields = { "tags" = ["finance"] }
 evidence = "The variable classifies credit instruments.\ncatalog:valueset:12613\ncatalog:variable_text:34897:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outstandingnominalamountcreditorview"
+fields = { "label" = "Utestående nominellt belopp (kreditgivarens vy)" }
+evidence = "#2102 same-label cluster 'Utestående nominellt belopp' (2 variables): judged different meaning, medium confidence; OutstandingNominalAmountCreditorView is a separate concurrent column reported from the creditor's view."

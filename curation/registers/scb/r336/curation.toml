@@ -2734,3 +2734,15 @@ kind = "set"
 subject = "set:utlandsstudier-inom-forskarutbildningen"
 fields = { "label" = "Utlandsstudier inom forskarutbildningen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-forskarniva"
+fields = { "label" = "Behörighet till utbildning på forskarnivå (Sverige, hemlandet eller annat land)" }
+evidence = "#2102 same-label cluster 'Behörighet till utbildning på forskarnivå' (2 variables): judged different meaning, high confidence; F13 har tre svarsalternativ inklusive hemlandet, F9 har två (Sverige eller annat land)."
+
+[[statement]]
+kind = "set"
+subject = "var:f9"
+fields = { "label" = "Behörighet till utbildning på forskarnivå (Sverige eller annat land)" }
+evidence = "#2102 same-label cluster 'Behörighet till utbildning på forskarnivå' (2 variables): judged different meaning, high confidence; F13 har tre svarsalternativ inklusive hemlandet, F9 har två (Sverige eller annat land)."

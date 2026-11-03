@@ -646,3 +646,135 @@ kind = "set"
 subject = "set:motoreffektnorm"
 fields = { "label" = "Motoreffektnorm" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "label" = "Bränsleslag (kod)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (2 variables): judged different meaning, high confidence; Bid holds the fuel code, BTEXT the fuel name."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-text"
+fields = { "label" = "Bränsleslag (text)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (2 variables): judged different meaning, high confidence; Bid holds the fuel code, BTEXT the fuel name."
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-1"
+fields = { "label" = "Fartygsvikt (fartyg 1)" }
+evidence = "#2102 same-label cluster 'Fartygsvikt' (5 variables): judged different meaning, high confidence; EUton1 to EUton5 are the weights of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-2"
+fields = { "label" = "Fartygsvikt (fartyg 2)" }
+evidence = "#2102 same-label cluster 'Fartygsvikt' (5 variables): judged different meaning, high confidence; EUton1 to EUton5 are the weights of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-3"
+fields = { "label" = "Fartygsvikt (fartyg 3)" }
+evidence = "#2102 same-label cluster 'Fartygsvikt' (5 variables): judged different meaning, high confidence; EUton1 to EUton5 are the weights of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-4"
+fields = { "label" = "Fartygsvikt (fartyg 4)" }
+evidence = "#2102 same-label cluster 'Fartygsvikt' (5 variables): judged different meaning, high confidence; EUton1 to EUton5 are the weights of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-5"
+fields = { "label" = "Fartygsvikt (fartyg 5)" }
+evidence = "#2102 same-label cluster 'Fartygsvikt' (5 variables): judged different meaning, high confidence; EUton1 to EUton5 are the weights of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:langd1"
+fields = { "label" = "Fartygets längd (fartyg 1)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): judged different meaning, high confidence; Langd1 to Langd5 are the lengths of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:langd2"
+fields = { "label" = "Fartygets längd (fartyg 2)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): judged different meaning, high confidence; Langd1 to Langd5 are the lengths of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:langd3"
+fields = { "label" = "Fartygets längd (fartyg 3)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): judged different meaning, high confidence; Langd1 to Langd5 are the lengths of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:langd4"
+fields = { "label" = "Fartygets längd (fartyg 4)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): judged different meaning, high confidence; Langd1 to Langd5 are the lengths of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:langd5"
+fields = { "label" = "Fartygets längd (fartyg 5)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): judged different meaning, high confidence; Langd1 to Langd5 are the lengths of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-1"
+fields = { "label" = "Motoreffektnorm i kW (fartyg 1)" }
+evidence = "#2102 same-label cluster 'Motoreffektnorm i kW' (5 variables): judged different meaning, high confidence; kW1 to kW5 are the engine power norms of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-2"
+fields = { "label" = "Motoreffektnorm i kW (fartyg 2)" }
+evidence = "#2102 same-label cluster 'Motoreffektnorm i kW' (5 variables): judged different meaning, high confidence; kW1 to kW5 are the engine power norms of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-3"
+fields = { "label" = "Motoreffektnorm i kW (fartyg 3)" }
+evidence = "#2102 same-label cluster 'Motoreffektnorm i kW' (5 variables): judged different meaning, high confidence; kW1 to kW5 are the engine power norms of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-4"
+fields = { "label" = "Motoreffektnorm i kW (fartyg 4)" }
+evidence = "#2102 same-label cluster 'Motoreffektnorm i kW' (5 variables): judged different meaning, high confidence; kW1 to kW5 are the engine power norms of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-5"
+fields = { "label" = "Motoreffektnorm i kW (fartyg 5)" }
+evidence = "#2102 same-label cluster 'Motoreffektnorm i kW' (5 variables): judged different meaning, high confidence; kW1 to kW5 are the engine power norms of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:signal"
+fields = { "label" = "Fartygets identitetssnummer (fartyg 5)" }
+evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Signal1 to Signal5 are the identity numbers of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:signal1-2"
+fields = { "label" = "Fartygets identitetssnummer (fartyg 1)" }
+evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Signal1 to Signal5 are the identity numbers of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:signal2-2"
+fields = { "label" = "Fartygets identitetssnummer (fartyg 2)" }
+evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Signal1 to Signal5 are the identity numbers of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:signal3-2"
+fields = { "label" = "Fartygets identitetssnummer (fartyg 3)" }
+evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Signal1 to Signal5 are the identity numbers of up to five vessels per respondent."
+
+[[statement]]
+kind = "set"
+subject = "var:signal4-2"
+fields = { "label" = "Fartygets identitetssnummer (fartyg 4)" }
+evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Signal1 to Signal5 are the identity numbers of up to five vessels per respondent."

@@ -773,3 +773,45 @@ kind = "set"
 subject = "set:produktionsomrade"
 fields = { "label" = "Produktionsområde" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-resultatkod"
+fields = { "label" = "Blankettens statuskod, resultatkod (insamlingssätt)" }
+evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, medium confidence; Status has no code list, Resultatkod is the collection-mode code list (Telefonintervju, Besöksintervju...) and Bortfall the response/non-response code list, concurrent 2010-2013."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-statuskod"
+fields = { "label" = "Blankettens statuskod, bortfallskod" }
+evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, medium confidence; Status has no code list, Resultatkod is the collection-mode code list (Telefonintervju, Besöksintervju...) and Bortfall the response/non-response code list, concurrent 2010-2013."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, high confidence; PO (2007-2013) and po8 (from 2016) are the same eight-area division; po18 is the 18-area division."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-2007-2013"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, high confidence; PO (2007-2013) and po8 (from 2016) are the same eight-area division; po18 is the 18-area division."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-fran-2016"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, high confidence; PO (2007-2013) and po8 (from 2016) are the same eight-area division; po18 is the 18-area division."
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-po8-lan"
+fields = { "label" = "Kalibreringsvikt, produktionsområde och län" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; wkout_po8_lan is calibrated by production area (8) and county, wkout_strl by size class; concurrent weights 2018-2022."
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-strl"
+fields = { "label" = "Kalibreringsvikt, storleksklass" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; wkout_po8_lan is calibrated by production area (8) and county, wkout_strl by size class; concurrent weights 2018-2022."

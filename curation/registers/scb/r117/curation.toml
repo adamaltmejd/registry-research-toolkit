@@ -1862,3 +1862,189 @@ kind = "set"
 subject = "set:utjamningsar"
 fields = { "label" = "Utjämningsår" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-3-29625"
+fields = { "label" = "Antal barn 1-3 år, år t-2" }
+evidence = "#2102 same-label cluster 'Antal barn 1-5 år, år t-2' (2 variables): judged different meaning, high confidence; Ant1_3 and Ant4_5 are concurrent counts for different age ranges; the shared label spans both so it is rewritten."
+
+[[statement]]
+kind = "set"
+subject = "var:ant4-5"
+fields = { "label" = "Antal barn 4-5 år, år t-2" }
+evidence = "#2102 same-label cluster 'Antal barn 1-5 år, år t-2' (2 variables): judged different meaning, high confidence; Ant1_3 and Ant4_5 are concurrent counts for different age ranges; the shared label spans both so it is rewritten."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar"
+fields = { "label" = "Antal barn 7-12 år" }
+evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, high confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both so it is rewritten."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar-ant6"
+fields = { "label" = "Antal barn 6 år" }
+evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, high confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both so it is rewritten."
+
+[[statement]]
+kind = "set"
+subject = "var:ba"
+fields = { "label" = "Gymnasieprogram: Bygg- och anläggningsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bf"
+fields = { "label" = "Gymnasieprogram: Barn- och fritidsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ee"
+fields = { "label" = "Gymnasieprogram: El- och energiprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ek"
+fields = { "label" = "Gymnasieprogram: Ekonomiprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:es"
+fields = { "label" = "Gymnasieprogram: Estetiska programmet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:forvdoda-29649"
+fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (förväntat antal döda)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för ohälsa, kr/inv' (2 variables): judged different meaning, medium confidence; ForvDoda (expected deaths) and ObsDoda (observed deaths) are different concurrent columns filed under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:ft"
+fields = { "label" = "Gymnasieprogram: Fordons- och transportprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ha"
+fields = { "label" = "Gymnasieprogram: Handels- och administrationsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ht"
+fields = { "label" = "Gymnasieprogram: Hotell- och turismprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hu"
+fields = { "label" = "Gymnasieprogram: Humanistiska programmet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hv"
+fields = { "label" = "Gymnasieprogram: Hantverksprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:im"
+fields = { "label" = "Gymnasieprogram: Introduktionsprogrammen" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:in"
+fields = { "label" = "Gymnasieprogram: Industritekniska programmet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; Kommun holds the municipality code, namn the municipality name (lss-utjamning table); the name column may duplicate the Kommunnamn variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-namn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; Kommun holds the municipality code, namn the municipality name (lss-utjamning table); the name column may duplicate the Kommunnamn variable."
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "label" = "Tillägg/avdrag för institutionsboende i glesbygd, kr/inv (landareal)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för institutionsboende i glesbygd, kr/inv' (2 variables): judged different meaning, medium confidence; LandAreal and Tatortsgrad10 are different concurrent columns (land area and degree of urbanisation) filed under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:na"
+fields = { "label" = "Gymnasieprogram: Naturvetenskapsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:nb"
+fields = { "label" = "Gymnasieprogram: Naturbruksprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:obsdoda"
+fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (observerat antal döda)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för ohälsa, kr/inv' (2 variables): judged different meaning, medium confidence; ForvDoda (expected deaths) and ObsDoda (observed deaths) are different concurrent columns filed under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:rl"
+fields = { "label" = "Gymnasieprogram: Restaurang- och livsmedelsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sa"
+fields = { "label" = "Gymnasieprogram: Samhällsvetenskapsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad10"
+fields = { "label" = "Tillägg/avdrag för institutionsboende i glesbygd, kr/inv (tätortsgrad)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för institutionsboende i glesbygd, kr/inv' (2 variables): judged different meaning, medium confidence; LandAreal and Tatortsgrad10 are different concurrent columns (land area and degree of urbanisation) filed under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:te"
+fields = { "label" = "Gymnasieprogram: Teknikprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:utfallavg"
+fields = { "label" = "LSS-utjämningsavgift, kr per inv" }
+evidence = "#2102 same-label cluster 'LSS-utjämningsbidrag eller -avgift, kr per inv' (4 variables): judged different meaning, medium confidence; UtfallBid (bidrag) and UtfallAvg (avgift) are concurrent separate columns in 2015-2024; UtjBerBidAvgKrinv (to 2015) and Utfall (from 2024) look like the combined bidrag/avgift value before and after."
+
+[[statement]]
+kind = "set"
+subject = "var:utfallbid"
+fields = { "label" = "LSS-utjämningsbidrag, kr per inv" }
+evidence = "#2102 same-label cluster 'LSS-utjämningsbidrag eller -avgift, kr per inv' (4 variables): judged different meaning, medium confidence; UtfallBid (bidrag) and UtfallAvg (avgift) are concurrent separate columns in 2015-2024; UtjBerBidAvgKrinv (to 2015) and Utfall (from 2024) look like the combined bidrag/avgift value before and after."
+
+[[statement]]
+kind = "set"
+subject = "var:vf"
+fields = { "label" = "Gymnasieprogram: VVS- och fastighetsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vo"
+fields = { "label" = "Gymnasieprogram: Vård- och omsorgsprogrammet" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): judged different meaning, medium confidence; Nineteen concurrent columns, one per gymnasieprogram, named by the standard program code; BA, BF, EE and EK are confirmed by the code list, the rest follow the standard GY11 codes."

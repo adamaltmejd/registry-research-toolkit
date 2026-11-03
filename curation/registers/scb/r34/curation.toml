@@ -22919,3 +22919,939 @@ kind = "set"
 subject = "set:yrkesuppgiftens-matar"
 fields = { "label" = "Yrkesuppgiftens mätår" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:alderspension-folkpension-atp"
+fields = { "label" = "Summa inkomst föranledd av ålderspension, folkpension och ATP" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension' (2 variables): judged different meaning, high confidence; Descriptions show different pension components: folkpension and ATP up to 2003 versus inkomst-, tilläggs-, premie- and garantipension from 2003."
+
+[[statement]]
+kind = "set"
+subject = "var:alderspension-inkomst-premie-garanti"
+fields = { "label" = "Summa inkomst föranledd av ålderspension, inkomst-, premie- och garantipension" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension' (2 variables): judged different meaning, high confidence; Descriptions show different pension components: folkpension and ATP up to 2003 versus inkomst-, tilläggs-, premie- and garantipension from 2003."
+
+[[statement]]
+kind = "set"
+subject = "var:alu-fran-akassa"
+fields = { "label" = "Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS (EES-avtal)" }
+evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; ALUEES is ALU under the EES agreement via unemployment insurance, ALUKAS is ALU paid as KAS by RFV; both run concurrently 1994-98."
+
+[[statement]]
+kind = "set"
+subject = "var:alukas"
+fields = { "label" = "Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS (kontant arbetsmarknadsstöd)" }
+evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; ALUEES is ALU under the EES agreement via unemployment insurance, ALUKAS is ALU paid as KAS by RFV; both run concurrently 1994-98."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { "label" = "Arbetsmarknadsstatus (alternativ definition)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BASAlt merges students, pensioners and sick into one group; its code list differs from BAS."
+
+[[statement]]
+kind = "set"
+subject = "var:arbstidlopnr"
+fields = { "label" = "Löpnummer, arbetsställe-id" }
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+
+[[statement]]
+kind = "set"
+subject = "var:ast-ftgtyp"
+fields = { "label" = "Typ av företag (arbetsställetabell)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-mfl"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (huvudsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; BostBidr is the main applicant's component, BostBidrU is split between main applicant and co-applicant; they run concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-sarskilt-pensionarer"
+fields = { "label" = "Bostadstillägg och särskilt bostadstillägg för pensionärer (individ)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component; BostTillHB (HB = hushåll) is the household total in hundreds of kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:bostbidru"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (uppdelad huvud-/medsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; BostBidr is the main applicant's component, BostBidrU is split between main applicant and co-applicant; they run concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:bosttillhb"
+fields = { "label" = "Bostadstillägg och särskilt bostadstillägg för pensionärer (hushåll)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component; BostTillHB (HB = hushåll) is the household total in hundreds of kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:cfarlopnr"
+fields = { "label" = "Löpnummer, CFAR-nummer" }
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+
+[[statement]]
+kind = "set"
+subject = "var:europeisk-socioekonomisk-grupp-inkl-harledda-foretagaryrken"
+fields = { "label" = "Europeisk socioekonomisk gruppering (inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, medium confidence; ESeG_J16 includes derived occupations for business owners (description), concurrent with ESeG in 2016-17."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsst-iot"
+fields = { "label" = "Hushållsställning (enligt IoT)" }
+evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsst-rtb"
+fields = { "label" = "Hushållsställning (enligt RTB)" }
+evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits."
+
+[[statement]]
+kind = "set"
+subject = "var:huvinkkallaalt"
+fields = { "label" = "Huvudsaklig inkomstkälla (alternativ definition)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its alternative have three different code lists and definitions."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-rorelse-inkomst-av-jordbruksfastighet-fink90"
+fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (1990)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different years (1990 and 1989) delivered side by side."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-arbetsloshet-2"
+fields = { "label" = "Summa inkomst föranledd av arbetslöshet (RAKS)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av arbetslöshet' (2 variables): judged different meaning, high confidence; Raks_ArblosInk is the RAKS calendar-year income (2016-17), ArbLos the IoT-based sum over income year."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-fortidspension-2"
+fields = { "label" = "Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsstöd (RAKS)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsstöd' (2 variables): judged different meaning, high confidence; Raks_ForTidInk is the RAKS calendar-year income (2016-17), ForTid the IoT/AGS-based sum."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-sjukdom"
+fields = { "label" = "Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering (RAKS)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering' (2 variables): judged different meaning, high confidence; Raks_SjukInk is the RAKS calendar-year income (2016-17), SjukRe the IoT-based sum."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-studier"
+fields = { "label" = "Summa inkomst föranledd av studier (RAKS)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av studier' (2 variables): judged different meaning, high confidence; Raks_StudInk is the RAKS calendar-year income (2016-17), Stud the IoT-based sum."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-rorelse-jordbruksfastighet-1989"
+fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (1989)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different years (1990 and 1989) delivered side by side."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag"
+fields = { "label" = "Institutionell sektorkod (företag), 5-siffrig kod, företagstabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-instkod"
+fields = { "label" = "Institutionell sektorkod (företag), 5-siffrig kod, individtabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-instkod10"
+fields = { "label" = "Institutionell sektorkod (företag), 10-siffrig kod, individtabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-instkod6"
+fields = { "label" = "Institutionell sektorkod (företag), 6-siffrig kod, individtabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-instkod7"
+fields = { "label" = "Institutionell sektorkod (företag), 7-siffrig kod, individtabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-org-instkod10"
+fields = { "label" = "Institutionell sektorkod (företag), 10-siffrig kod, företagstabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-org-instkod6"
+fields = { "label" = "Institutionell sektorkod (företag), 6-siffrig kod, företagstabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-foretag-org-instkod7"
+fields = { "label" = "Institutionell sektorkod (företag), 7-siffrig kod, företagstabell" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1968"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1999"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-2000"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1968"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1999"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-2000"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-yrke-huvudsaklig-inkl-harledda-foretagare"
+fields = { "label" = "Källa för yrkesuppgift, huvudsaklig sysselsättning (inklusive härledda företagare)" }
+evidence = "#2102 same-label cluster 'Källa för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, medium confidence; SsykKalla_J16 is the variant including derived occupations for business owners (pid), concurrent with SsykKalla in 2016-17."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 10-siffrig kod, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 10-siffrig kod, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 10-siffrig kod, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 10-siffrig kod, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3faman"
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-1999"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2000"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 10-siffrig kod, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 10-siffrig kod, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): judged different meaning, high confidence; Code lists of 5, 6, 7 and 10 digits are different coding versions; the two 10-digit columns share the code list but change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
+fields = { "label" = "Mätår för yrkesuppgift, huvudsaklig sysselsättning, inkl. härledda yrken för företagare" }
+evidence = "#2102 same-label cluster 'Mätår för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, medium confidence; SsykAr_J16 is a concurrent column in the same table (2016-2017) whose description adds derived occupations for entrepreneurs."
+
+[[statement]]
+kind = "set"
+subject = "var:medbgreg-eu27-2007"
+fields = { "label" = "Medborgarskapsland, grupperad EU(27) (2007)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland, grupperad EU(27)' (2 variables): judged different meaning, high confidence; MedbGrEg3 groups by EU27 as of 2007 and MedbGrEg5 by EU27 as of 2020; both are delivered 2020-24."
+
+[[statement]]
+kind = "set"
+subject = "var:medbgreg-eu27-2020"
+fields = { "label" = "Medborgarskapsland, grupperad EU(27) (2020)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland, grupperad EU(27)' (2 variables): judged different meaning, high confidence; MedbGrEg3 groups by EU27 as of 2007 and MedbGrEg5 by EU27 as of 2020; both are delivered 2020-24."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-ast-sni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni69"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 69, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2002"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-nast-storsta-ku2astsni2007"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-tredje-storsta-ku3astsni2007"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92/2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): judged different meaning, high confidence; Members differ in unit (individ, arbetsställe, företag table), SNI version (69, 92, 2002, 2007) and level (five-digit, 42, 10, 15 or 51 groups), all stated in the descriptions and column names."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92/2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni69"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-forvarvskalla-ku1astsni2007"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92/2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni69"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92/2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni69"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): judged different meaning, high confidence; Different SNI versions and levels (five-digit, 42, 10, 15, 51 groups); KU and AGI columns of the same SNI 2007 level are the same variable over time (source switch 2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:operativ-verksamhetsledare-opvledare"
+fields = { "label" = "Operativ verksamhetsledare (markering för individ)" }
+evidence = "#2102 same-label cluster 'Operativ verksamhetsledare' (2 variables): judged different meaning, high confidence; OpVLedare is a 0/1 marker in the individual table; PersonNr_OpV is the leader's person identifier in the company table."
+
+[[statement]]
+kind = "set"
+subject = "var:operativ-verksamhetsledare-personnr-opv"
+fields = { "label" = "Operativ verksamhetsledare (person-id i företagstabell)" }
+evidence = "#2102 same-label cluster 'Operativ verksamhetsledare' (2 variables): judged different meaning, high confidence; OpVLedare is a 0/1 marker in the individual table; PersonNr_OpV is the leader's person identifier in the company table."
+
+[[statement]]
+kind = "set"
+subject = "var:opftgledare"
+fields = { "label" = "Operativ företagsledare (markering för individ)" }
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+
+[[statement]]
+kind = "set"
+subject = "var:opftgledarej"
+fields = { "label" = "Operativ företagsledare (markering för individ, justerad metod)" }
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+
+[[statement]]
+kind = "set"
+subject = "var:org-typ"
+fields = { "label" = "Typ av företag (företagstabell)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+
+[[statement]]
+kind = "set"
+subject = "var:org-typbas"
+fields = { "label" = "Typ av företag (BAS-variant)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+
+[[statement]]
+kind = "set"
+subject = "var:peorglopnr"
+fields = { "label" = "Löpnummer, företagets organisationsnummer" }
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-opf"
+fields = { "label" = "Operativ företagsledare (person-id i företagstabell)" }
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-opfj"
+fields = { "label" = "Operativ företagsledare (person-id i företagstabell, justerad metod)" }
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+
+[[statement]]
+kind = "set"
+subject = "var:raks-huvinkkalla"
+fields = { "label" = "Huvudsaklig inkomstkälla (RAKS)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its alternative have three different code lists and definitions."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 adds derived occupations for business owners."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan, SSYK 1996" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast-2012"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan, SSYK 2012, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast-2012-agi"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan, SSYK 2012, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan, SSYK 1996" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta-2012"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan, SSYK 2012, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta-2012-agi"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan, SSYK 2012, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; SSYK 1996 code list up to 2014, SSYK 2012 afterwards; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 adds derived occupations for business owners."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012-j16"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inkl. härledda företagaryrken)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 adds derived occupations for business owners."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan, SSYK 1996" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast-2012"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan, SSYK 2012, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast-2012-agi"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan, SSYK 2012, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan, SSYK 1996" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta-2012"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan, SSYK 2012, kontrolluppgift" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta-2012-agi"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan, SSYK 2012, arbetsgivardeklaration" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): judged different meaning, high confidence; Pre-2014 value set is the SSYK 1996 list, later ones SSYK 2012; the two SSYK 2012 columns change source from KU to AGI in 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, 4 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Sun2000Inr and Sun2020Inr are different SUN versions that run concurrently 2019-22."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020grp"
+fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2020Grp has about 100 groups, Sun2020Grp_Detalj about 130 with finer codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, 4 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Sun2000Inr and Sun2020Inr are different SUN versions that run concurrently 2019-22."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning 1993/2011)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): judged different meaning, high confidence; Four delimitation methods (until 1992, 1993/2011, 2004, 2019) with overlapping periods and different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-avgransning-2004"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning 2004)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): judged different meaning, high confidence; Four delimitation methods (until 1992, 1993/2011, 2004, 2019) with overlapping periods and different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-avgransning-till-1992"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning till 1992)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): judged different meaning, high confidence; Four delimitation methods (until 1992, 1993/2011, 2004, 2019) with overlapping periods and different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-fran-2019"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning 2019)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): judged different meaning, high confidence; Four delimitation methods (until 1992, 1993/2011, 2004, 2019) with overlapping periods and different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-detaljerad-sun-2020"
+fields = { "label" = "Utbildningsgrupp (SUN 2020, detaljerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2020Grp has about 100 groups, Sun2020Grp_Detalj about 130 with finer codes."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inkl. härledda företagaryrken)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 adds derived occupations for business owners."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (YSEG)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; The Swedish YSEG (codes 01-) and the European ESeG (codes 1.1-) are different classifications."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg-eseg"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (europeisk indelning, ESeG)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; The Swedish YSEG (codes 01-) and the European ESeG (codes 1.1-) are different classifications."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
+fields = { "label" = "Yrkeskodens överensstämmelse med organisationsnumret (inkl. härledda företagaryrken)" }
+evidence = "#2102 same-label cluster 'Yrkeskodens överensstämmelse med organisationsnumret' (2 variables): judged different meaning, medium confidence; SsykStatus_J16 has a different imputation code list (1, 11, ...) and includes derived occupations for business owners; it runs beside SsykStatus 2016-17."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-byrkstalln"
+fields = { "label" = "Yrkesställning, med kombinationer av anställning och företagande" }
+evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, high confidence; Old value set 0-4 versus 2022 value set with combinations of employment and self-employment (200-series codes)."

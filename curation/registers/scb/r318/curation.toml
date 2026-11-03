@@ -119,3 +119,21 @@ kind = "set"
 subject = "var:tutvixfast"
 fields = { "description" = "Årsmånadslänk i fasta priser. Utvecklingstalet beräknas för respektive branschgrupp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401537:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:kortnamn"
+fields = { "label" = "Näringsgren (kortnamn)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-koder-delindex"
+fields = { "label" = "Näringsgren (SNI-koder för delindex)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."
+
+[[statement]]
+kind = "set"
+subject = "var:taggbranschgr"
+fields = { "label" = "Näringsgren (branschgrupp, TAggBranschgr)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."

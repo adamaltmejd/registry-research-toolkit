@@ -527,3 +527,27 @@ kind = "set"
 subject = "set:svensk-och-utlandsk-bakgrund"
 fields = { "label" = "Svensk och utländsk bakgrund" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4"
+fields = { "label" = "Ämnesområde (4-teckenskod)" }
+evidence = "#2102 same-label cluster 'Ämnesområde' (2 variables): judged different meaning, medium confidence; Amne_4_5_unik has detailed unique subject codes (up to 7 characters), Amne_4 a 4-character subject code list."
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4-5-unik"
+fields = { "label" = "Ämnesområde (detaljerad, unik kod)" }
+evidence = "#2102 same-label cluster 'Ämnesområde' (2 variables): judged different meaning, medium confidence; Amne_4_5_unik has detailed unique subject codes (up to 7 characters), Amne_4 a 4-character subject code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-kon-pnr"
+fields = { "label" = "Kön (från personnummer)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, medium confidence; Kon_PNR (2012 table, 2012-2020) has only Man/Woman, apparently derived from the personnummer, while Kon has missing and unknown values."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "label" = "Kommun (län- och kommunkod med årtal)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Kommun holds the 4-digit municipality code; LanKom is a county-and-municipality code with a year prefix (e.g. 20120114)."

@@ -110341,3 +110341,555 @@ kind = "set"
 subject = "var:viktigt-lara-svenska"
 fields = { "tags" = ["language-religion"] }
 evidence = "Rates the importance of children acquiring good Swedish before school (r528), directly concerning language proficiency.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:53033"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-fordjupning"
+fields = { "label" = "Bakgrund vid beräkning: Antal svarande (fördjupning)" }
+evidence = "#2102 same-label cluster 'Bakgrund vid beräkning: Antal svarande' (3 variables): judged different meaning, medium confidence; nresp_t_fd is the fördjupning (in-depth) sample count beside nresp_t, and nrespn_panel (2021+) counts respondents among sampled persons and household members in the panel design."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-urvalsperson-hushallsmedlem"
+fields = { "label" = "Bakgrund vid beräkning: Antal svarande (urvalsperson och hushållsmedlem, panel)" }
+evidence = "#2102 same-label cluster 'Bakgrund vid beräkning: Antal svarande' (3 variables): judged different meaning, medium confidence; nresp_t_fd is the fördjupning (in-depth) sample count beside nresp_t, and nrespn_panel (2021+) counts respondents among sampled persons and household members in the panel design."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillfalligt-arbete-sy1222"
+fields = { "label" = "Antal timmar tillfälligt arbete (arbete 2)" }
+evidence = "#2102 same-label cluster 'Antal timmar tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1212, SY1222 and SY1232 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillfalligt-arbete-sy1232"
+fields = { "label" = "Antal timmar tillfälligt arbete (arbete 3)" }
+evidence = "#2102 same-label cluster 'Antal timmar tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1212, SY1222 and SY1232 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ba0140"
+fields = { "label" = "Intervjumetod, kodning besök före telefon (1977–1984)" }
+evidence = "#2102 same-label cluster 'Intervjumetod' (3 variables): judged different meaning, high confidence; Codes 1 and 2 swap meaning between BA0140 (besök=1) and BA0141 (telefon=1); the 2021 column has a five-method scale including web forms."
+
+[[statement]]
+kind = "set"
+subject = "var:ba0141"
+fields = { "label" = "Intervjumetod, kodning telefon före besök (1984–2021)" }
+evidence = "#2102 same-label cluster 'Intervjumetod' (3 variables): judged different meaning, high confidence; Codes 1 and 2 swap meaning between BA0140 (besök=1) and BA0141 (telefon=1); the 2021 column has a five-method scale including web forms."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-2"
+fields = { "label" = "Besvärens svårighetsgrad 2 (skala från obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 2' (2 variables): judged different meaning, high confidence; HA0638 is a 4-step severity scale (obetydliga to mycket svåra); HA0644 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-3"
+fields = { "label" = "Besvärens svårighetsgrad 3 (skala från obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 3' (2 variables): judged different meaning, high confidence; HA0639 is a 4-step severity scale (obetydliga to mycket svåra); HA0645 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-5"
+fields = { "label" = "Besvärens svårighetsgrad 5 (skala från obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 5' (2 variables): judged different meaning, high confidence; HA0641 is a 4-step severity scale (obetydliga to mycket svåra); HA0647 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-6"
+fields = { "label" = "Besvärens svårighetsgrad 6, svårighetsgrad (obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 6' (2 variables): judged different meaning, high confidence; HA0642 is a severity scale (obetydliga to mycket svåra); HA0648 is a frequency-of-severe-troubles scale, with overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-1-ha0643"
+fields = { "label" = "Besvärens svårighetsgrad 1 (svårighet och frekvens)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 1' (2 variables): judged different meaning, high confidence; HA0637 is a 4-step severity scale (obetydliga to mycket svåra); HA0643 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-2-ha0644"
+fields = { "label" = "Besvärens svårighetsgrad 2 (svårighet och frekvens)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 2' (2 variables): judged different meaning, high confidence; HA0638 is a 4-step severity scale (obetydliga to mycket svåra); HA0644 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-3-ha0645"
+fields = { "label" = "Besvärens svårighetsgrad 3 (svårighet och frekvens)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 3' (2 variables): judged different meaning, high confidence; HA0639 is a 4-step severity scale (obetydliga to mycket svåra); HA0645 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-4-ha0646"
+fields = { "label" = "Besvärens svårighetsgrad 4 (svårighet och frekvens)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 4' (2 variables): judged different meaning, high confidence; HA0640 is a 4-step severity scale (obetydliga to mycket svåra); HA0646 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-5-ha0647"
+fields = { "label" = "Besvärens svårighetsgrad 5 (svårighet och frekvens)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 5' (2 variables): judged different meaning, high confidence; HA0641 is a 4-step severity scale (obetydliga to mycket svåra); HA0647 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-6-ha0648"
+fields = { "label" = "Besvärens svårighetsgrad 6, frekvens av svåra besvär" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 6' (2 variables): judged different meaning, high confidence; HA0642 is a severity scale (obetydliga to mycket svåra); HA0648 is a frequency-of-severe-troubles scale, with overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bo0244m"
+fields = { "label" = "Hur ofta använt internet på fritiden (skala från 2008)" }
+evidence = "#2102 same-label cluster 'Hur ofta använt internet på fritiden' (3 variables): judged different meaning, medium confidence; Different answer scales: BO0244M (2008-2014, 6 steps), BO0264M (from 2014, varje dag/vecka/månad) and BO0264AA (2014-2016, asked of internet users)."
+
+[[statement]]
+kind = "set"
+subject = "var:bo0264m"
+fields = { "label" = "Hur ofta använt internet på fritiden (skala från 2014)" }
+evidence = "#2102 same-label cluster 'Hur ofta använt internet på fritiden' (3 variables): judged different meaning, medium confidence; Different answer scales: BO0244M (2008-2014, 6 steps), BO0264M (from 2014, varje dag/vecka/månad) and BO0264AA (2014-2016, asked of internet users)."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (gift man och kvinna särskiljs)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-ba0021"
+fields = { "label" = "Civilstånd (gift man och kvinna särskiljs)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-ba0170"
+fields = { "label" = "Civilstånd (grov indelning)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "label" = "Ekonomiskt bistånd, brutto" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, high confidence; Descriptions state HY060G is the gross amount and HY060N the net amount paid to the household."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-netto"
+fields = { "label" = "Ekonomiskt bistånd, netto" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, high confidence; Descriptions state HY060G is the gross amount and HY060N the net amount paid to the household."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-1"
+fields = { "label" = "Födelseår barn 1 (FU1399)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 1' (2 variables): judged different meaning, medium confidence; GO0101 is the childcare-block item (pid: barnomsorg 0-12 år, 1975-2021); FU1399 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-1-barnomsorg-0-12-ar"
+fields = { "label" = "Födelseår barn 1 (barntillsyn 0-12 år)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 1' (2 variables): judged different meaning, medium confidence; GO0101 is the childcare-block item (pid: barnomsorg 0-12 år, 1975-2021); FU1399 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-2"
+fields = { "label" = "Födelseår barn 2 (FU1499)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 2' (2 variables): judged different meaning, medium confidence; GO0201 is the childcare-block item (pid: barnomsorg 0-12 år, 1975-2021); FU1499 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-2-barnomsorg-0-12-ar"
+fields = { "label" = "Födelseår barn 2 (barntillsyn 0-12 år)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 2' (2 variables): judged different meaning, medium confidence; GO0201 is the childcare-block item (pid: barnomsorg 0-12 år, 1975-2021); FU1499 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-3"
+fields = { "label" = "Födelseår barn 3 (FU1599)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 3' (2 variables): judged different meaning, medium confidence; GO0301 is the childcare-block item (pid: barntillsyn 0-12 år, 1975-2021); FU1599 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-3-barntillsyn-0-12-ar"
+fields = { "label" = "Födelseår barn 3 (barntillsyn 0-12 år)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 3' (2 variables): judged different meaning, medium confidence; GO0301 is the childcare-block item (pid: barntillsyn 0-12 år, 1975-2021); FU1599 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-4-barntillsyn"
+fields = { "label" = "Födelseår barn 4 (FU1699)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 4' (2 variables): judged different meaning, medium confidence; GO0401 is the childcare-block item (pid: barntillsyn 0-12 år, 1975-2021); FU1699 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-4-barntillsyn-0-12-ar"
+fields = { "label" = "Födelseår barn 4 (barntillsyn 0-12 år)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 4' (2 variables): judged different meaning, medium confidence; GO0401 is the childcare-block item (pid: barntillsyn 0-12 år, 1975-2021); FU1699 is a separate 1993-1994 item with the same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:forestallning-antal-ganger-bland-besokare-2014"
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare)" }
+evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, medium confidence; Two different questions: the all-respondent version (FT2243M, FT2243MFDJ) and the version among visitors with 1-3 / more than 3 only (FT2243AA, FT2243AAFDJ); the FDJ columns follow the plain ones in the next year."
+
+[[statement]]
+kind = "set"
+subject = "var:forestallning-antal-ganger-bland-besokare-2015"
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare)" }
+evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, medium confidence; Two different questions: the all-respondent version (FT2243M, FT2243MFDJ) and the version among visitors with 1-3 / more than 3 only (FT2243AA, FT2243AAFDJ); the FDJ columns follow the plain ones in the next year."
+
+[[statement]]
+kind = "set"
+subject = "var:ha06"
+fields = { "label" = "Besvärens svårighetsgrad 1 (skala från obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 1' (2 variables): judged different meaning, high confidence; HA0637 is a 4-step severity scale (obetydliga to mycket svåra); HA0643 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:ha064"
+fields = { "label" = "Besvärens svårighetsgrad 4 (skala från obetydliga till mycket svåra)" }
+evidence = "#2102 same-label cluster 'Besvärens svårighetsgrad 4' (2 variables): judged different meaning, high confidence; HA0640 is a 4-step severity scale (obetydliga to mycket svåra); HA0646 (1979-1982) is a combined severity and frequency code."
+
+[[statement]]
+kind = "set"
+subject = "var:halsa-allmanhet-16-ar-och-aldre"
+fields = { "label" = "Hälsa i allmänhet, personer 16 år och äldre" }
+evidence = "#2102 same-label cluster 'Hälsa i allmänhet' (3 variables): judged different meaning, medium confidence; RCH010 is for children 0-15; PH010U14 (to 2021) and PH010 (from 2021) are taken as the same item for persons 16 and older renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:halsa-allmanhet-barn-0-15-ar"
+fields = { "label" = "Hälsa i allmänhet, barn 0-15 år" }
+evidence = "#2102 same-label cluster 'Hälsa i allmänhet' (3 variables): judged different meaning, medium confidence; RCH010 is for children 0-15; PH010U14 (to 2021) and PH010 (from 2021) are taken as the same item for persons 16 and older renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:halsa-allmanhet-direkt-intervjuade"
+fields = { "label" = "Hälsa i allmänhet, personer 16 år och äldre" }
+evidence = "#2102 same-label cluster 'Hälsa i allmänhet' (3 variables): judged different meaning, medium confidence; RCH010 is for children 0-15; PH010U14 (to 2021) and PH010 (from 2021) are taken as the same item for persons 16 and older renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:hhbo0945"
+fields = { "label" = "Hushållstyp (HHBO0945)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (2 variables): judged different meaning, medium confidence; HHBO0945 and HB110 have different category lists for household type (HHBO0945 with young people living with parents, HB110 starting with single-person households) in the same table and years."
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-internet-fritiden-internetanvandare"
+fields = { "label" = "Hur ofta använt internet på fritiden (skala från 2014, bland internetanvändare)" }
+evidence = "#2102 same-label cluster 'Hur ofta använt internet på fritiden' (3 variables): judged different meaning, medium confidence; Different answer scales: BO0244M (2008-2014, 6 steps), BO0264M (from 2014, varje dag/vecka/månad) and BO0264AA (2014-2016, asked of internet users)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp"
+fields = { "label" = "Hushållstyp (HB110)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (2 variables): judged different meaning, medium confidence; HHBO0945 and HB110 have different category lists for household type (HHBO0945 with young people living with parents, HB110 starting with single-person households) in the same table and years."
+
+[[statement]]
+kind = "set"
+subject = "var:i-bostaden-tillfalligt-arbete-sy1223"
+fields = { "label" = "I bostaden tillfälligt arbete (arbete 2)" }
+evidence = "#2102 same-label cluster 'I bostaden tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1213, SY1223 and SY1233 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:i-bostaden-tillfalligt-arbete-sy1233"
+fields = { "label" = "I bostaden tillfälligt arbete (arbete 3)" }
+evidence = "#2102 same-label cluster 'I bostaden tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1213, SY1223 and SY1233 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsar-hushall"
+fields = { "label" = "Årtal som statistiken gäller för, hushåll" }
+evidence = "#2102 same-label cluster 'Årtal som statistiken gäller för' (4 variables): judged different meaning, medium confidence; From 2021 three concurrent year columns by unit: HB010 household, RB010 persons 0 and older, PB010 persons 16 and older (per pids); ZP0010 is the earlier single year column."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsar-personer-0-ar-och-aldre"
+fields = { "label" = "Årtal som statistiken gäller för, personer 0 år och äldre" }
+evidence = "#2102 same-label cluster 'Årtal som statistiken gäller för' (4 variables): judged different meaning, medium confidence; From 2021 three concurrent year columns by unit: HB010 household, RB010 persons 0 and older, PB010 persons 16 and older (per pids); ZP0010 is the earlier single year column."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsar-personer-16-ar-aldre"
+fields = { "label" = "Årtal som statistiken gäller för, personer 16 år och äldre" }
+evidence = "#2102 same-label cluster 'Årtal som statistiken gäller för' (4 variables): judged different meaning, medium confidence; From 2021 three concurrent year columns by unit: HB010 household, RB010 persons 0 and older, PB010 persons 16 and older (per pids); ZP0010 is the earlier single year column."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "label" = "Insamlingsmetod, hushåll" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): judged different meaning, medium confidence; HB130 is the household-level collection method, PB270 the person-level one (HB and PB prefixes) in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod-2"
+fields = { "label" = "Insamlingsmetod, person" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): judged different meaning, medium confidence; HB130 is the household-level collection method, PB270 the person-level one (HB and PB prefixes) in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:intervju-ar-webbformular-hushall"
+fields = { "label" = "Intervju, år (även webbformulär), hushåll" }
+evidence = "#2102 same-label cluster 'Intervju, år  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB060 is the household-level and PB110 the person-level interview year (pid names hushåll for HB060)."
+
+[[statement]]
+kind = "set"
+subject = "var:intervju-dag-webbformular-hushall"
+fields = { "label" = "Intervju, dag (även webbformulär), hushåll" }
+evidence = "#2102 same-label cluster 'Intervju, dag (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB040 is the household-level and PB090 the person-level interview day (pid names hushåll for HB040)."
+
+[[statement]]
+kind = "set"
+subject = "var:intervju-manad-webbformular-hushall"
+fields = { "label" = "Intervju, månad (även webbformulär), hushåll" }
+evidence = "#2102 same-label cluster 'Intervju, månad  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB050 is the household-level and PB100 the person-level interview month (pid names hushåll for HB050)."
+
+[[statement]]
+kind = "set"
+subject = "var:intervjumetod-2"
+fields = { "label" = "Intervjumetod, fem metoder inklusive webbformulär (från 2021)" }
+evidence = "#2102 same-label cluster 'Intervjumetod' (3 variables): judged different meaning, high confidence; Codes 1 and 2 swap meaning between BA0140 (besök=1) and BA0141 (telefon=1); the 2021 column has a five-method scale including web forms."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupper-3-grupper-kommunsklgrupp-nationell17"
+fields = { "label" = "Kommungrupper (3 grupper), 2017 års indelning" }
+evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, medium confidence; Three SKL/SKR classification versions with different category codes: the older 1-3 list (KommunSKLGrupp_Nationell and Nationell11, a rename), the 2017 A-C list and the 2023 A-C list."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsklgrupp-nationell"
+fields = { "label" = "Kommungrupper (3 grupper), äldre indelning (1-3)" }
+evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, medium confidence; Three SKL/SKR classification versions with different category codes: the older 1-3 list (KommunSKLGrupp_Nationell and Nationell11, a rename), the 2017 A-C list and the 2023 A-C list."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsklgrupp-nationell1"
+fields = { "label" = "Kommungrupper (3 grupper), äldre indelning (1-3)" }
+evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, medium confidence; Three SKL/SKR classification versions with different category codes: the older 1-3 list (KommunSKLGrupp_Nationell and Nationell11, a rename), the 2017 A-C list and the 2023 A-C list."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsklgrupp-nationell23"
+fields = { "label" = "Kommungrupper (3 grupper), 2023 års indelning" }
+evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, medium confidence; Three SKL/SKR classification versions with different category codes: the older 1-3 list (KommunSKLGrupp_Nationell and Nationell11, a rename), the 2017 A-C list and the 2023 A-C list."
+
+[[statement]]
+kind = "set"
+subject = "var:nedsatt-aktivitetsformaga-halsoproblem-barn-0-15-ar"
+fields = { "label" = "Nedsatt aktivitetsförmåga på grund av hälsoproblem, barn 0-15 år" }
+evidence = "#2102 same-label cluster 'Nedsatt aktivitetsförmåga på grund av hälsoproblem' (2 variables): judged different meaning, medium confidence; RCH020 is the children (0-15 år) version per its pid, PH030 the 16-and-older version; same pattern as RCH010/PH010."
+
+[[statement]]
+kind = "set"
+subject = "var:nedsatt-aktivitetsformaga-halsoproblem-minst-6-manader"
+fields = { "label" = "Nedsatt aktivitetsförmåga på grund av hälsoproblem, personer 16 år och äldre" }
+evidence = "#2102 same-label cluster 'Nedsatt aktivitetsförmåga på grund av hälsoproblem' (2 variables): judged different meaning, medium confidence; RCH020 is the children (0-15 år) version per its pid, PH030 the 16-and-older version; same pattern as RCH010/PH010."
+
+[[statement]]
+kind = "set"
+subject = "var:oro-for-arbetsloshet"
+fields = { "label" = "Oro för arbetslöshet (graderad)" }
+evidence = "#2102 same-label cluster 'Oro för arbetslöshet' (2 variables): judged different meaning, high confidence; TR0053A is a Ja/Nej answer, TR0053M a graded answer (mycket orolig, lite orolig, nej); both run 2016-2021."
+
+[[statement]]
+kind = "set"
+subject = "var:oro-hushallets-ekonomi"
+fields = { "label" = "Oro för hushållets ekonomi (graderad)" }
+evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the Ja/Nej item over time; TR0051M is the graded version running concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:oro-hushallets-ekonomi-narmaste-aret"
+fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
+evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the Ja/Nej item over time; TR0051M is the graded version running concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:pb090"
+fields = { "label" = "Intervju, dag (även webbformulär), person" }
+evidence = "#2102 same-label cluster 'Intervju, dag (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB040 is the household-level and PB090 the person-level interview day (pid names hushåll for HB040)."
+
+[[statement]]
+kind = "set"
+subject = "var:pb100"
+fields = { "label" = "Intervju, månad (även webbformulär), person" }
+evidence = "#2102 same-label cluster 'Intervju, månad  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB050 is the household-level and PB100 the person-level interview month (pid names hushåll for HB050)."
+
+[[statement]]
+kind = "set"
+subject = "var:pb110"
+fields = { "label" = "Intervju, år (även webbformulär), person" }
+evidence = "#2102 same-label cluster 'Intervju, år  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB060 is the household-level and PB110 the person-level interview year (pid names hushåll for HB060)."
+
+[[statement]]
+kind = "set"
+subject = "var:pb190"
+fields = { "label" = "Civilstånd (aldrig gift, gift, separerat, änka/änkling, skild)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
+
+[[statement]]
+kind = "set"
+subject = "var:pstr0051a"
+fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
+evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the Ja/Nej item over time; TR0051M is the graded version running concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:rel121"
+fields = { "label" = "Relation till urvalsperson (sifferkod)" }
+evidence = "#2102 same-label cluster 'Relation till urvalsperson' (2 variables): judged different meaning, high confidence; REL121 uses numeric codes 1-10, Info uses two-letter codes (AP, BA, FF, FM, MA) over the same years and table."
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson"
+fields = { "label" = "Relation till urvalsperson (bokstavskod)" }
+evidence = "#2102 same-label cluster 'Relation till urvalsperson' (2 variables): judged different meaning, high confidence; REL121 uses numeric codes 1-10, Info uses two-letter codes (AP, BA, FF, FM, MA) over the same years and table."
+
+[[statement]]
+kind = "set"
+subject = "var:studerande-vid-mattillfallet-ut2350"
+fields = { "label" = "Studerande vid mättillfället (ja/nej)" }
+evidence = "#2102 same-label cluster 'Studerande vid mättillfället' (2 variables): judged different meaning, high confidence; UT2350 distinguishes studerade/studerade ej, UT2360 heltid/deltid/ej studerande."
+
+[[statement]]
+kind = "set"
+subject = "var:sy12"
+fields = { "label" = "Antal timmar tillfälligt arbete (arbete 1)" }
+evidence = "#2102 same-label cluster 'Antal timmar tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1212, SY1222 and SY1232 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:sygrad1"
+fields = { "label" = "Huvudsaklig sysselsättning (härledd), detaljerad" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning (härledd)' (2 variables): judged different meaning, medium confidence; SYGRAD1 (2008-2014) separates hemarbetande and militärtjänst; SYHUSYSS (2008-2021) has a coarser list with Övriga and partiellt bortfall."
+
+[[statement]]
+kind = "set"
+subject = "var:syhusyss"
+fields = { "label" = "Huvudsaklig sysselsättning (härledd), grupperad" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning (härledd)' (2 variables): judged different meaning, medium confidence; SYGRAD1 (2008-2014) separates hemarbetande and militärtjänst; SYHUSYSS (2008-2021) has a coarser list with Övriga and partiellt bortfall."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt"
+fields = { "label" = "Sysselsatt (indikator)" }
+evidence = "#2102 same-label cluster 'Sysselsatt' (2 variables): judged different meaning, high confidence; SY0030 has three categories (sysselsatt, ej sysselsatt, övriga); SY0031 is a 0/1 indicator."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt-sy0030"
+fields = { "label" = "Sysselsatt (sysselsatt, ej sysselsatt, övriga)" }
+evidence = "#2102 same-label cluster 'Sysselsatt' (2 variables): judged different meaning, high confidence; SY0030 has three categories (sysselsatt, ej sysselsatt, övriga); SY0031 is a 0/1 indicator."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfalligt-arbete-i-bostaden"
+fields = { "label" = "I bostaden tillfälligt arbete (arbete 1)" }
+evidence = "#2102 same-label cluster 'I bostaden tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1213, SY1223 and SY1233 follow SY1211 (temporary job number 1) and its parallels for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:tr0053a"
+fields = { "label" = "Oro för arbetslöshet (ja/nej)" }
+evidence = "#2102 same-label cluster 'Oro för arbetslöshet' (2 variables): judged different meaning, high confidence; TR0053A is a Ja/Nej answer, TR0053M a graded answer (mycket orolig, lite orolig, nej); both run 2016-2021."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-stratum-fordjupning"
+fields = { "label" = "Lilla_n (fördjupning)" }
+evidence = "#2102 same-label cluster 'Lilla_n' (2 variables): judged different meaning, medium confidence; lilla_n_fd is the fördjupning (in-depth) sample counterpart of lilla_n."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-stratum-kant-okant-telefon-fordjupning"
+fields = { "label" = "Bakgrund vid beräkning: Urvalsstorlek per grupp (fördjupning)" }
+evidence = "#2102 same-label cluster 'Bakgrund vid beräkning: Urvalsstorlek per grupp' (2 variables): judged different meaning, medium confidence; ngroup_t_fd is the fördjupning (in-depth) sample counterpart of ngroup_t over the same years."
+
+[[statement]]
+kind = "set"
+subject = "var:ut23"
+fields = { "label" = "Studerande vid mättillfället (heltid, deltid, ej)" }
+evidence = "#2102 same-label cluster 'Studerande vid mättillfället' (2 variables): judged different meaning, high confidence; UT2350 distinguishes studerade/studerade ej, UT2360 heltid/deltid/ej studerande."
+
+[[statement]]
+kind = "set"
+subject = "var:vistelsetid-i-sverige-visttidar-grov-old"
+fields = { "label" = "Vistelsetid i Sverige (grov, äldre: 0-10 år / 11 år eller längre)" }
+evidence = "#2102 same-label cluster 'Vistelsetid i Sverige' (3 variables): judged different meaning, high confidence; Three different groupings of years in Sweden: 0-9 / 10+, the older 0-10 / 11+, and the finer 0-5 / 6-10 / 11+."
+
+[[statement]]
+kind = "set"
+subject = "var:visttidar-fin"
+fields = { "label" = "Vistelsetid i Sverige (fin: 0-5, 6-10, 11 år eller mer)" }
+evidence = "#2102 same-label cluster 'Vistelsetid i Sverige' (3 variables): judged different meaning, high confidence; Three different groupings of years in Sweden: 0-9 / 10+, the older 0-10 / 11+, and the finer 0-5 / 6-10 / 11+."
+
+[[statement]]
+kind = "set"
+subject = "var:visttidar-grov"
+fields = { "label" = "Vistelsetid i Sverige (grov, 0-9 år / 10 år eller längre)" }
+evidence = "#2102 same-label cluster 'Vistelsetid i Sverige' (3 variables): judged different meaning, high confidence; Three different groupings of years in Sweden: 0-9 / 10+, the older 0-10 / 11+, and the finer 0-5 / 6-10 / 11+."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-1996-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_1) and SSYK 2012 (SSYK12UP) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-2012-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_1) and SSYK 2012 (SSYK12UP) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsakligt-arbete-yrkeslivet-ssyk-1996-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen under yrkeslivet (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen under yrkeslivet' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_2) and SSYK 2012 (SSYK12UP_2) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsakligt-arbete-yrkeslivet-ssyk-2012-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen under yrkeslivet (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen under yrkeslivet' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_2) and SSYK 2012 (SSYK12UP_2) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-nuvarande-arbete-isco-4-siffrig-iscoup-2"
+fields = { "label" = "Yrke, nuvarande arbete (ISCO, 4-siffrig), ytterligare arbete" }
+evidence = "#2102 same-label cluster 'Yrke, nuvarande arbete (ISCO, 4-siffrig)' (4 variables): judged different meaning, medium confidence; ISCOUP_2 is the occupation in an additional job (per its description), distinct from ISCOUP_1/ISCOup and PLISCO08kod, which are taken as the main-job item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk-1996-4-siffrig-make-maka-sambo"
+fields = { "label" = "Yrke, make/maka/sambo (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke, make/maka/sambo' (2 variables): judged different meaning, high confidence; Spouse's occupation coded in SSYK 1996 (SSYKSLP) and SSYK 2012 (SSYK12SLP) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk-2012-4-siffrig-make-maka-sambo"
+fields = { "label" = "Yrke, make/maka/sambo (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke, make/maka/sambo' (2 variables): judged different meaning, high confidence; Spouse's occupation coded in SSYK 1996 (SSYKSLP) and SSYK 2012 (SSYK12SLP) per the pids; the two overlap in 2014-2016."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete"
+fields = { "label" = "Yrke tillfälligt arbete (arbete 1)" }
+evidence = "#2102 same-label cluster 'Yrke tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1211 is the occupation code for temporary job number 1 per the definition; SY1221 and SY1231 follow the same pattern for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete-sy1221"
+fields = { "label" = "Yrke tillfälligt arbete (arbete 2)" }
+evidence = "#2102 same-label cluster 'Yrke tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1211 is the occupation code for temporary job number 1 per the definition; SY1221 and SY1231 follow the same pattern for jobs 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete-sy1231"
+fields = { "label" = "Yrke tillfälligt arbete (arbete 3)" }
+evidence = "#2102 same-label cluster 'Yrke tillfälligt arbete' (3 variables): judged different meaning, medium confidence; SY1211 is the occupation code for temporary job number 1 per the definition; SY1221 and SY1231 follow the same pattern for jobs 2 and 3."

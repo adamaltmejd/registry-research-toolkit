@@ -628,3 +628,15 @@ kind = "set"
 subject = "set:vattenforbrukning"
 fields = { "label" = "Vattenförbrukning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (kod)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; One column holds the county code, the other the county name."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lansnamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; One column holds the county code, the other the county name."

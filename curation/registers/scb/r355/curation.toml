@@ -256,3 +256,33 @@ kind = "set"
 subject = "var:stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln anger stratum vid urval.\ncatalog:variable_text:45853:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "label" = "Adress, allmän adressuppgift" }
+evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, medium confidence; Generic address column versus a postal address column (pid postadress-anst) in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:avfallsmangd"
+fields = { "label" = "Bränsleförbrukning (avfallsmängd)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (2 variables): judged different meaning, medium confidence; Bransle (from 2014) and Avfallsmangd (from 2021) are different quantities: fuel use versus waste amount."
+
+[[statement]]
+kind = "set"
+subject = "var:avfallstyp"
+fields = { "label" = "Bränsleslag (avfallstyp)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (2 variables): judged different meaning, high confidence; Brslag has wood-fuel and peat categories; Avfallstyp has waste types (household, business, import)."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad"
+fields = { "label" = "Total kostnad för förbrukat bränsle (inköpskostnad)" }
+evidence = "#2102 same-label cluster 'Total kostnad för förbrukat bränsle' (2 variables): judged different meaning, medium confidence; Kostnad (from 2014) and Inkopskostnad (from 2021, purchase cost) are concurrent cost columns."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-anst"
+fields = { "label" = "Adress, postadress" }
+evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, medium confidence; Generic address column versus a postal address column (pid postadress-anst) in the same table."

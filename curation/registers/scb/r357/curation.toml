@@ -1300,3 +1300,207 @@ kind = "set"
 subject = "set:uppvarmningsutgift"
 fields = { "label" = "Uppvärmningsutgift" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (hushållstabell)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALDZ is in the household table and BALD in the individual table; the unit of observation differs, although both hold age."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "label" = "Ålder 31/12 (individtabell)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALDZ is in the household table and BALD in the individual table; the unit of observation differs, although both hold age."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadslan-belopp-kronor"
+fields = { "label" = "Bostadslån (belopp, kronor)" }
+evidence = "#2102 same-label cluster 'Bostadslån' (2 variables): judged different meaning, high confidence; FBOLANZ is the loan amount in kronor, BBOLANZ whether the household has a housing loan."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadslan-forekomst"
+fields = { "label" = "Bostadslån (förekomst)" }
+evidence = "#2102 same-label cluster 'Bostadslån' (2 variables): judged different meaning, high confidence; FBOLANZ is the loan amount in kronor, BBOLANZ whether the household has a housing loan."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-hushallssammansattning"
+fields = { "label" = "Hushållstyp (hushållssammansättning)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (2 variables): judged different meaning, high confidence; BHT9Z classifies household composition, BEGSZ the adults in the shared-meal household (kosthushåll)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-vuxna-kosthushall"
+fields = { "label" = "Hushållstyp (vuxna i kosthushåll)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (2 variables): judged different meaning, high confidence; BHT9Z classifies household composition, BEGSZ the adults in the shared-meal household (kosthushåll)."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-amortering"
+fields = { "label" = "Imputerat: amortering" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-bostadsarea"
+fields = { "label" = "Imputerat: bostadsarea" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-hushallsel"
+fields = { "label" = "Imputerat: hushållsel" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-kokstyp"
+fields = { "label" = "Imputerat: kökstyp" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-ombyggnad-tillbyggnad"
+fields = { "label" = "Imputerat: ombyggnad och tillbyggnad" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-skattereduktion-ombyggnation"
+fields = { "label" = "Imputerat: skattereduktion ombyggnation" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-sophamtning"
+fields = { "label" = "Imputerat: sophämtning" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-sotning"
+fields = { "label" = "Imputerat: sotning" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-underhall-reparation"
+fields = { "label" = "Imputerat: underhåll och reparation" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-uppvarmningsutgift-pellets-ved-flis-span"
+fields = { "label" = "Imputerat: uppvärmningsutgift pellets, ved, flis, spån" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-vatten-avlopp"
+fields = { "label" = "Imputerat: vatten och avlopp" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-villaforsakring"
+fields = { "label" = "Imputerat: villaförsäkring" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (hushållstabell)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, medium confidence; BKONZ is in the household table and BKON in the individual table; the unit of observation differs, although both hold sex."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "label" = "Kön (individtabell)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, medium confidence; BKONZ is in the household table and BKON in the individual table; the unit of observation differs, although both hold sex."
+
+[[statement]]
+kind = "set"
+subject = "var:mbantrumz"
+fields = { "label" = "Imputerat: antal rum" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:mbbohelarz"
+fields = { "label" = "Imputerat: helårsboende" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:mbbolanz"
+fields = { "label" = "Imputerat: bostadslån (förekomst)" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:mbkontrz"
+fields = { "label" = "Imputerat: hyreskontrakt" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:mbohelarz"
+fields = { "label" = "Imputerat: helårsboende" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:mfbolanz"
+fields = { "label" = "Imputerat: bostadslån (belopp)" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muarhyraz"
+fields = { "label" = "Imputerat: årshyra" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:murantaz"
+fields = { "label" = "Imputerat: ränteutgifter" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:murotrepz"
+fields = { "label" = "Imputerat: skattereduktion underhåll och reparation" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvanz"
+fields = { "label" = "Imputerat: uppvärmningsutgift annat bränsle" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvelz"
+fields = { "label" = "Imputerat: uppvärmningsutgift el" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvfjz"
+fields = { "label" = "Imputerat: uppvärmningsutgift fjärrvärme" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvoljz"
+fields = { "label" = "Imputerat: uppvärmningsutgift olja" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:muvagundz"
+fields = { "label" = "Imputerat: vägunderhåll" }
+evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; 26 imputation flags, one per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same flag (helårsboende) under two spellings and get one label."

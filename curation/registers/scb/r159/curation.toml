@@ -205,3 +205,21 @@ kind = "set"
 subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN is the municipality code, KOMMUNNAMN its name."
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN is the county code, LANNAMN its name."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid"
+fields = { "label" = "Objekt-ID (UUID)" }
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, medium confidence; OBJECTID and UUID are two concurrent identifier columns with different periods (UUID ends 2021)."

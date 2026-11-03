@@ -27906,3 +27906,2037 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aallmfl"
+fields = { "label" = "Allmänna avdrag samt förlustavdrag (individ)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): judged different meaning, medium confidence; AALLMFL in individregister vs AALLMFLZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:agande-andel-hyresfastighet-kfa1102"
+fields = { "label" = "Ägande andel hyresfastighet, nr 2" }
+evidence = "#2102 same-label cluster 'Ägande andel hyresfastighet' (2 variables): judged different meaning, medium confidence; KFA1101 and KFA1102 are numbered concurrent columns in the same table and period, i.e. separate slots (probably occurrences, as for the IFA208 columns)."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1072"
+fields = { "label" = "Ägarandel eget hem (post 2)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA1071-KFA1074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1073"
+fields = { "label" = "Ägarandel eget hem (post 3)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA1071-KFA1074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1074"
+fields = { "label" = "Ägarandel eget hem (post 4)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA1071-KFA1074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2072"
+fields = { "label" = "Ägarandel fritidsfastighet (post 2)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA2071-KFA2074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2073"
+fields = { "label" = "Ägarandel fritidsfastighet (post 3)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA2071-KFA2074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2074"
+fields = { "label" = "Ägarandel fritidsfastighet (post 4)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA2071-KFA2074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiva-rorelseidkare-jordbrukare-bforz"
+fields = { "label" = "Aktiva rörelseidkare, jordbrukare (hushåll)" }
+evidence = "#2102 same-label cluster 'Aktiva rörelseidkare, jordbrukare' (2 variables): judged different meaning, medium confidence; BFOR is in individregister, BFORZ (Z = hushåll, cf. CARBZ) in kosthushall: person-level vs household-level flag."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanna-avdrag-samt-forlustavdrag"
+fields = { "label" = "Allmänna avdrag samt förlustavdrag (hushåll)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): judged different meaning, medium confidence; AALLMFL in individregister vs AALLMFLZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:allmant-avdrag-avseende-premie-for-pensionsforsakring-apensz"
+fields = { "label" = "Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto (hushåll)" }
+evidence = "#2102 same-label cluster 'Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto' (2 variables): judged different meaning, medium confidence; APENS in individregister vs APENSZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:allmant-avdrag-pensionsforsakring"
+fields = { "label" = "Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto (individ)" }
+evidence = "#2102 same-label cluster 'Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto' (2 variables): judged different meaning, medium confidence; APENS in individregister vs APENSZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-hyresfastighet-ifa3052"
+fields = { "label" = "Andel av nettointäkt hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3051 and IFA3052 are concurrent numbered columns; the numeric suffix is the occurrence (förekomst) number, cf. the pid of KNAAV1."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-jordbruksfastighet-ijb1542"
+fields = { "label" = "Andel av nettointäkt jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1541 and IJB1542 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-rorelsefastighet-irr1542"
+fields = { "label" = "Andel av nettointäkt rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1541 and IRR1542 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-hyresfastighet-ifa3072"
+fields = { "label" = "Andel av underskott hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3071 and IFA3072 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-jordbruksfastighet-ijb1502"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1501-IJB1503 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-jordbruksfastighet-ijb1503"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1501-IJB1503 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-rorelsefastighet-irr1502"
+fields = { "label" = "Andel av underskott rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1501 and IRR1502 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-procent-naringsfastighet-bknand2"
+fields = { "label" = "Andel i procent, näringsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel i procent, näringsfastighet' (2 variables): judged different meaning, medium confidence; BKNAND1 and BKNAND2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-reavinst-forlust-bostadsratt-bkband2"
+fields = { "label" = "Andel reavinst/förlust, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel reavinst/förlust, bostadsrätt' (2 variables): judged different meaning, medium confidence; BKBAND1 and BKBAND2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-andel-handelsbolag"
+fields = { "label" = "Anskaffningsutgift (andel i handelsbolag)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): judged different meaning, medium confidence; Distinct items per pid: share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBAC (2003-04) follows KPTUBA (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-aterfort-uppskov-andelbyteslagen"
+fields = { "label" = "Anskaffningsutgift (återfört uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): judged different meaning, medium confidence; Distinct items per pid: share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBAC (2003-04) follows KPTUBA (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-uppskov-andelbyteslagen"
+fields = { "label" = "Anskaffningsutgift (uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): judged different meaning, medium confidence; Distinct items per pid: share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBAC (2003-04) follows KPTUBA (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld"
+fields = { "label" = "Anställd (individ)" }
+evidence = "#2102 same-label cluster 'Anställd' (2 variables): judged different meaning, medium confidence; BAN in individregister vs BANZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-banz"
+fields = { "label" = "Anställd (hushåll)" }
+evidence = "#2102 same-label cluster 'Anställd' (2 variables): judged different meaning, medium confidence; BAN in individregister vs BANZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-utan-rorelseinkomster"
+fields = { "label" = "Anställning - Anställd utan rörelseinkomster, individ" }
+evidence = "#2102 same-label cluster 'Anställning - Anställd utan rörelseinkomster' (2 variables): judged different meaning, medium confidence; BRANS is in the individregister and BRANSZ in the kosthushåll table with the same coding and overlapping periods, i.e. different observation units."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning-anstalld-utan-rorelseinkomster-bransz"
+fields = { "label" = "Anställning - Anställd utan rörelseinkomster, kosthushåll" }
+evidence = "#2102 same-label cluster 'Anställning - Anställd utan rörelseinkomster' (2 variables): judged different meaning, medium confidence; BRANS is in the individregister and BRANSZ in the kosthushåll table with the same coding and overlapping periods, i.e. different observation units."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar"
+fields = { "label" = "Antal barn 0-19 år (individ)" }
+evidence = "#2102 same-label cluster 'Antal barn 0-19 år' (2 variables): judged different meaning, medium confidence; BBRN19 in individregister vs BANTBRNZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar-bantbrnz"
+fields = { "label" = "Antal barn 0-19 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Antal barn 0-19 år' (2 variables): judged different meaning, medium confidence; BBRN19 in individregister vs BANTBRNZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "label" = "Antal barn under 18 år (individ)" }
+evidence = "#2102 same-label cluster 'Antal barn under 18 år' (2 variables): judged different meaning, medium confidence; BANT18 in individregister vs BANTBRNZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar-bantbrnz"
+fields = { "label" = "Antal barn under 18 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Antal barn under 18 år' (2 variables): judged different meaning, medium confidence; BANT18 in individregister vs BANTBRNZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fastigheter-med-en-specifik-typkod-kfa702"
+fields = { "label" = "Antal fastigheter med en specifik typkod (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter med en specifik typkod' (2 variables): judged different meaning, medium confidence; KFA701 and KFA702 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstod"
+fields = { "label" = "Arbetsmarknadsstöd (individ)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstöd' (2 variables): judged different meaning, medium confidence; TARBST in individregister vs TARBSTZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstod-tarbstz"
+fields = { "label" = "Arbetsmarknadsstöd (hushåll)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstöd' (2 variables): judged different meaning, medium confidence; TARBST in individregister vs TARBSTZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-egenavgifter"
+fields = { "label" = "Egenavgifter (årets egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate components per their pids; ITN014 (1975-76) and SEGEN (1996-2014) are assumed to be the sum over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-jordbruksfastighet-ijb1242"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1241-IJB1243 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-jordbruksfastighet-ijb1243"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1241-IJB1243 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-rorelsefastighet-irr1242"
+fields = { "label" = "Arrendeintäkt rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1241 and IRR1242 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-jordbruksfastighet-ijb1262"
+fields = { "label" = "Arrendekostnader jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1261 and IJB1262 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-rorelsesfastighet-irr1262"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, medium confidence; IRR1261-IRR1263 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-rorelsesfastighet-irr1263"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, medium confidence; IRR1261-IRR1263 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-foregaende-ars-egenavgifter"
+fields = { "label" = "Egenavgifter (återföring av föregående års egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate components per their pids; ITN014 (1975-76) and SEGEN (1996-2014) are assumed to be the sum over time."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-naring-avyttring-bostadsratt-kbna2"
+fields = { "label" = "Avdrag näring avyttring bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Avdrag näring avyttring bostadsrätt' (2 variables): judged different meaning, medium confidence; KBNA1 and KBNA2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:avgald-hyresfastighet-ifa3082"
+fields = { "label" = "Avgäld hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Avgäld hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3081 and IFA3082 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-fran-vinst-naringsfastighet-knaav2"
+fields = { "label" = "Avgår från vinst, näringsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Avgår från vinst, näringsfastighet' (2 variables): judged different meaning, high confidence; KNAAV1 is named förekomst 1 in its pid; KNAAV2 is the second."
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-vinst-naringsfastighet-forekomst-1"
+fields = { "label" = "Avgår från vinst, näringsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Avgår från vinst, näringsfastighet' (2 variables): judged different meaning, high confidence; KNAAV1 is named förekomst 1 in its pid; KNAAV2 is the second."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1012"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, medium confidence; IFA1011-IFA1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1013"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, medium confidence; IFA1011-IFA1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1014"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, medium confidence; IFA1011-IFA1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2012"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2011-IFA2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2013"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2011-IFA2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2014"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2011-IFA2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:bfackav"
+fields = { "label" = "Fackföreningsavgift (förekomst)" }
+evidence = "#2102 same-label cluster 'Fackföreningsavgift' (3 variables): judged different meaning, medium confidence; BFACKAV is a Ja/Nej survey item; UFACKAV (1996-97) and UKUFACK (2004-07) have no value sets and are assumed to be the amount, in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-av-statsmedel-och-ovriga-intakter-ijb1252"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1251 and IJB1252 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-av-statsmedel-och-ovriga-intakter-irr1252"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1251 and IRR1252 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:bkband"
+fields = { "label" = "Andel reavinst/förlust, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel reavinst/förlust, bostadsrätt' (2 variables): judged different meaning, medium confidence; BKBAND1 and BKBAND2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:bknand"
+fields = { "label" = "Andel i procent, näringsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel i procent, näringsfastighet' (2 variables): judged different meaning, medium confidence; BKNAND1 and BKNAND2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:blandad-inkomst"
+fields = { "label" = "Blandad inkomst (individ)" }
+evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged different meaning, medium confidence; CMIX in individregister vs CMIXZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-rantebidrag-belopp-eget-hem"
+fields = { "label" = "Boende - Räntebidrag belopp (eget hem)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; KIBIDEG is for eget hem, KIBIDFR for fritidshus (individregister, to 1998); WKIRBID is the household amount in kosthushall from 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-rantebidrag-belopp-fritidshus"
+fields = { "label" = "Boende - Räntebidrag belopp (fritidshus)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; KIBIDEG is for eget hem, KIBIDFR for fritidshus (individregister, to 1998); WKIRBID is the household amount in kosthushall from 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-pensionarer"
+fields = { "label" = "Bostadstillägg till pensionärer (individ)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; IBTP and IBTPAP (consecutive) are in individregister, IBTPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtp"
+fields = { "label" = "Bostadstillägg till pensionärer (individ)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; IBTP and IBTPAP (consecutive) are in individregister, IBTPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtpz"
+fields = { "label" = "Bostadstillägg till pensionärer (hushåll)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; IBTP and IBTPAP (consecutive) are in individregister, IBTPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:byrkez"
+fields = { "label" = "Yrke (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; FoB 80 occupation groups (KSY007) differ from the BYRKE code list; BYRKEZ in kosthushall uses a two-digit coding; BYRKE and WYRKE1 share one code list."
+
+[[statement]]
+kind = "set"
+subject = "var:cmixz"
+fields = { "label" = "Blandad inkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged different meaning, medium confidence; CMIX in individregister vs CMIXZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-bostadsforestandare-make-maka"
+fields = { "label" = "Hushållets disponibla inkomst (bostadsföreståndare och make/maka)" }
+evidence = "#2102 same-label cluster 'Hushållets disponibla inkomst' (3 variables): judged different meaning, high confidence; Pids and descriptions: income of bostadsföreståndare and spouse (CDISPZU), of the household (CDISPZ) and per konsumtionsenhet (CDISPKEZ)."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst (individ)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst' (2 variables): judged different meaning, medium confidence; CDISP5Z (Z = hushåll) in kosthushall vs CDISP5 in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-2004-ars-def-cdisp504z"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def (hushåll)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst, 2004 års def' (2 variables): judged different meaning, medium confidence; CDISP504Z (Z = hushåll) in kosthushall vs CDISP504 in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-cdisp5z"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst (hushåll)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst' (2 variables): judged different meaning, medium confidence; CDISP5Z (Z = hushåll) in kosthushall vs CDISP5 in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def (individ)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst, 2004 års def' (2 variables): judged different meaning, medium confidence; CDISP504Z (Z = hushåll) in kosthushall vs CDISP504 in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-per-konsumtionsenhet"
+fields = { "label" = "Hushållets disponibla inkomst (per konsumtionsenhet)" }
+evidence = "#2102 same-label cluster 'Hushållets disponibla inkomst' (3 variables): judged different meaning, high confidence; Pids and descriptions: income of bostadsföreståndare and spouse (CDISPZU), of the household (CDISPZ) and per konsumtionsenhet (CDISPKEZ)."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1042"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, medium confidence; KFA1041-KFA1044 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1043"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, medium confidence; KFA1041-KFA1044 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1044"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, medium confidence; KFA1041-KFA1044 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1052"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, medium confidence; KFA1051-KFA1054 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1053"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, medium confidence; KFA1051-KFA1054 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1054"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, medium confidence; KFA1051-KFA1054 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (hushåll)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd (socialbidrag)' (2 variables): judged different meaning, medium confidence; ISOCBIDZ (Z = hushåll) in kosthushall vs ISOCBID in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag-isocbid"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (individ)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd (socialbidrag)' (2 variables): judged different meaning, medium confidence; ISOCBIDZ (Z = hushåll) in kosthushall vs ISOCBID in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-avyttring-andel-handelsbolag"
+fields = { "label" = "Ersättning (avyttring av andel i handelsbolag)" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Distinct items per pid: sale of share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBIC (2003-04) follows KPTUBI (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-ratt-till-bete-jakt-fiske-mm-ijb1562"
+fields = { "label" = "Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1561 and IJB1562 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-ratt-till-sten-tovr-grus-mm-ijb1552"
+fields = { "label" = "Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1551 and IJB1552 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-eget-hem-ifa1062"
+fields = { "label" = "Extra avdrag eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, medium confidence; IFA1061-IFA1063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-eget-hem-ifa1063"
+fields = { "label" = "Extra avdrag eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, medium confidence; IFA1061-IFA1063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-fritidsfastighet-ifa2062"
+fields = { "label" = "Extra avdrag fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Extra avdrag fritidsfastighet' (2 variables): judged different meaning, medium confidence; IFA2061 and IFA2062 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt"
+fields = { "label" = "Familjestöd, skattefritt (individ)" }
+evidence = "#2102 same-label cluster 'Familjestöd, skattefritt' (2 variables): judged different meaning, medium confidence; IFAMZ (Z = hushåll) in kosthushall vs IFAM in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt-ifamz"
+fields = { "label" = "Familjestöd, skattefritt (hushåll)" }
+evidence = "#2102 same-label cluster 'Familjestöd, skattefritt' (2 variables): judged different meaning, medium confidence; IFAMZ (Z = hushåll) in kosthushall vs IFAM in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "label" = "Fastighetsskatt (individ)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFAST and SFASTT (consecutive) are in individregister, SFASTBOZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-sfastboz"
+fields = { "label" = "Fastighetsskatt (hushåll)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFAST and SFASTT (consecutive) are in individregister, SFASTBOZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-sfastt"
+fields = { "label" = "Fastighetsskatt (individ)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFAST and SFASTT (consecutive) are in individregister, SFASTBOZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-skattepliktig"
+fields = { "label" = "Föräldrapenning, skattepliktig (individ)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, medium confidence; TFORP in individregister vs TFORPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-skattepliktig-tforpz"
+fields = { "label" = "Föräldrapenning, skattepliktig (hushåll)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, medium confidence; TFORP in individregister vs TFORPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-ijb1282"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader jordbruksfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader jordbruksfastigheter' (2 variables): judged different meaning, medium confidence; IJB1281 and IJB1282 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-rorelse-irr1282"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, medium confidence; IRR1281-IRR1283 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-rorelse-irr1283"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, medium confidence; IRR1281-IRR1283 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsintakt-aterfort-uppskov-andelbyteslagen"
+fields = { "label" = "Ersättning (försäljningsintäkt, återfört uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Distinct items per pid: sale of share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBIC (2003-04) follows KPTUBI (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsintakt-uppskov-andelbyteslagen"
+fields = { "label" = "Ersättning (försäljningsintäkt, uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Distinct items per pid: sale of share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBIC (2003-04) follows KPTUBI (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-bostadsratt"
+fields = { "label" = "Försäljningspris, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäljningspris, bostadsrätt' (2 variables): judged different meaning, medium confidence; KBPRIS1 and KBPRIS2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-bostadsratt-kbpris2"
+fields = { "label" = "Försäljningspris, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäljningspris, bostadsrätt' (2 variables): judged different meaning, medium confidence; KBPRIS1 and KBPRIS2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-los-ej-personlig-egendom"
+fields = { "label" = "Försäljningspris (lös egendom, ej personlig)" }
+evidence = "#2102 same-label cluster 'Försäljningspris' (2 variables): judged different meaning, high confidence; KEJPRIS is the price for lös ej personlig egendom, KLEPRIS for personlig egendom (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-personlig-egendom"
+fields = { "label" = "Försäljningspris (personlig egendom)" }
+evidence = "#2102 same-label cluster 'Försäljningspris' (2 variables): judged different meaning, high confidence; KEJPRIS is the price for lös ej personlig egendom, KLEPRIS for personlig egendom (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { "label" = "Förvärvsarbetande (individ)" }
+evidence = "#2102 same-label cluster 'Förvärvsarbetande' (2 variables): judged different meaning, medium confidence; BFORV in individregister vs BFORVZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande-bforvz"
+fields = { "label" = "Förvärvsarbetande (hushåll)" }
+evidence = "#2102 same-label cluster 'Förvärvsarbetande' (2 variables): judged different meaning, medium confidence; BFORV in individregister vs BFORVZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvspris-bostadsratt-kbkop2"
+fields = { "label" = "Förvärvspris, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Förvärvspris, bostadsrätt' (2 variables): judged different meaning, medium confidence; KBKOP1 and KBKOP2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr101"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, medium confidence; FPR1011-FPR1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr103"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, medium confidence; FPR1031-FPR1034 are concurrent numbered columns (up to four förekomster); the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr201"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, medium confidence; FPR2011-FPR2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr202"
+fields = { "label" = "Skuldbelopp fritidsfastighet, statligt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, statligt' (2 variables): judged different meaning, medium confidence; FPR2021 and FPR2022 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr203"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, medium confidence; FPR2031-FPR2033 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-fardig-ej-fardig-kfa2042"
+fields = { "label" = "Fritidsfastighet färdig ej färdig (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet färdig ej färdig' (2 variables): judged different meaning, medium confidence; KFA2041 and KFA2042 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-forvarvats-eller-overlatits-kfa2052"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, medium confidence; KFA2051-KFA2053 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-forvarvats-eller-overlatits-kfa2053"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, medium confidence; KFA2051-KFA2053 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandare-kosthushall"
+fields = { "label" = "Hushållsföreståndare (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Hushållsföreståndare' (2 variables): judged different meaning, medium confidence; BHF vs BKF; the pid for BKF names kosthushåll."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa101"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, medium confidence; IFA1011-IFA1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa102"
+fields = { "label" = "Räntekostnad eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, medium confidence; IFA1021-IFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa106"
+fields = { "label" = "Extra avdrag eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, medium confidence; IFA1061-IFA1063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa107"
+fields = { "label" = "Nettointäkt eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, medium confidence; IFA1071-IFA1074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa108"
+fields = { "label" = "Underskott av eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, medium confidence; IFA1081-IFA1084 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa201"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2011-IFA2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa202"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, medium confidence; IFA2021-IFA2023 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa206"
+fields = { "label" = "Extra avdrag fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Extra avdrag fritidsfastighet' (2 variables): judged different meaning, medium confidence; IFA2061 and IFA2062 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa207"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2071-IFA2074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa208"
+fields = { "label" = "Underskott av fritidsfastighet, första förekomsten" }
+evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa302"
+fields = { "label" = "Ränta hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränta hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3021 and IFA3022 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa304"
+fields = { "label" = "Nettointäkt hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3041 and IFA3042 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa305"
+fields = { "label" = "Andel av nettointäkt hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3051 and IFA3052 are concurrent numbered columns; the numeric suffix is the occurrence (förekomst) number, cf. the pid of KNAAV1."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa306"
+fields = { "label" = "Underskott hyresfastigheter (post 1)" }
+evidence = "#2102 same-label cluster 'Underskott hyresfastigheter' (2 variables): judged different meaning, medium confidence; Concurrent columns IFA3061 and IFA3062 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa307"
+fields = { "label" = "Andel av underskott hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3071 and IFA3072 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa308"
+fields = { "label" = "Avgäld hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Avgäld hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3081 and IFA3082 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa310"
+fields = { "label" = "Koncernbidrag hyresfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Koncernbidrag hyresfastigheter' (2 variables): judged different meaning, medium confidence; IFA3101 and IFA3102 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa311"
+fields = { "label" = "Utgifter för försäkringar hyresfastigheter (post 1)" }
+evidence = "#2102 same-label cluster 'Utgifter för försäkringar hyresfastigheter' (2 variables): judged different meaning, medium confidence; Concurrent columns IFA3111 and IFA3112 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb00"
+fields = { "label" = "Inkomst av jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB001 and IJB002 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb119"
+fields = { "label" = "Nettointäkt av jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1191 and IJB1192 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb120"
+fields = { "label" = "Underskott av jordbruksfastighet (post 1)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IJB1201-IJB1203 in the same table are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb124"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1241-IJB1243 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb125"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1251 and IJB1252 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb126"
+fields = { "label" = "Arrendekostnader jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1261 and IJB1262 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb128"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader jordbruksfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader jordbruksfastigheter' (2 variables): judged different meaning, medium confidence; IJB1281 and IJB1282 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb134"
+fields = { "label" = "Värdeminskning av skog och naturtillgångar jordbruksfastighet (post 1)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av skog och naturtillgångar jordbruksfastighet' (2 variables): judged different meaning, medium confidence; Concurrent columns IJB1341 and IJB1342 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb135"
+fields = { "label" = "Ränteintäkter jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1351 and IJB1352 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb136"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1361-IJB1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb137"
+fields = { "label" = "Uttag från skogskonto jordbruksfastighet (post 1)" }
+evidence = "#2102 same-label cluster 'Uttag från skogskonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; Concurrent columns IJB1371 and IJB1372 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb138"
+fields = { "label" = "Insättning på skogskonto jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Insättning på skogskonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1381 and IJB1382 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb140"
+fields = { "label" = "Särskilt investeringsbidrag jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Särskilt investeringsbidrag jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1401 and IJB1402 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb150"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1501-IJB1503 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb151"
+fields = { "label" = "Insättning på investeringkonto jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Insättning på investeringkonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1511 and IJB1512 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb154"
+fields = { "label" = "Andel av nettointäkt jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1541 and IJB1542 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb155"
+fields = { "label" = "Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1551 and IJB1552 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb156"
+fields = { "label" = "Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1561 and IJB1562 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb157"
+fields = { "label" = "Sjukpenning jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Sjukpenning jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1571 and IJB1572 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-jordbruksfastighet-ijb002"
+fields = { "label" = "Inkomst av jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB001 and IJB002 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-rorelse-irr002"
+fields = { "label" = "Inkomst av rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (2 variables): judged different meaning, medium confidence; IRR001 and IRR002 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-vid-avyttring-av-fastighet-kspris2"
+fields = { "label" = "Inkomst vid avyttring av fastighet, nr 2" }
+evidence = "#2102 same-label cluster 'Inkomst vid avyttring av fastighet' (2 variables): judged different meaning, medium confidence; KSPRIS1 and KSPRIS2 are numbered concurrent columns in the same table and period, i.e. separate slots."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad-los-ej-personlig-egendom"
+fields = { "label" = "Inköpskostnad (lös egendom, ej personlig)" }
+evidence = "#2102 same-label cluster 'Inköpskostnad' (2 variables): judged different meaning, high confidence; KEJKOP is the cost for lös ej personlig egendom, KLEKOP for personlig egendom (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad-personlig-egendom"
+fields = { "label" = "Inköpskostnad (personlig egendom)" }
+evidence = "#2102 same-label cluster 'Inköpskostnad' (2 variables): judged different meaning, high confidence; KEJKOP is the cost for lös ej personlig egendom, KLEKOP for personlig egendom (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:insattning-pa-investeringkonto-jordbruksfastighet-ijb1512"
+fields = { "label" = "Insättning på investeringkonto jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Insättning på investeringkonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1511 and IJB1512 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:insattning-pa-skogskonto-jordbruksfastighet-ijb1382"
+fields = { "label" = "Insättning på skogskonto jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Insättning på skogskonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1381 and IJB1382 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr00"
+fields = { "label" = "Inkomst av rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (2 variables): judged different meaning, medium confidence; IRR001 and IRR002 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr119"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1191-IRR1193 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr120"
+fields = { "label" = "Underskott av rörelsesfastighet (post 1)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IRR1201-IRR1203 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:irr124"
+fields = { "label" = "Arrendeintäkt rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1241 and IRR1242 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr125"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1251 and IRR1252 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr126"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, medium confidence; IRR1261-IRR1263 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr128"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, medium confidence; IRR1281-IRR1283 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr134"
+fields = { "label" = "Värdeminskning av patenträtter och naturtillgånger, rörelse (post 1)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av patenträtter och naturtillgånger, rörelse' (2 variables): judged different meaning, medium confidence; Concurrent columns IRR1341 and IRR1342 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:irr135"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1351-IRR1353 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr136"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1361-IRR1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr148"
+fields = { "label" = "Vinst vid avyttring av inventarier (post 1)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av inventarier' (2 variables): judged different meaning, medium confidence; Concurrent columns IRR1481 and IRR1482 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:irr150"
+fields = { "label" = "Andel av underskott rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1501 and IRR1502 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr154"
+fields = { "label" = "Andel av nettointäkt rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1541 and IRR1542 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:irr157"
+fields = { "label" = "Sjukpenning rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Sjukpenning rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1571 and IRR1572 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:itp105"
+fields = { "label" = "Utbetalt från Försäkringskassan (post 1)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, medium confidence; Concurrent columns ITP1051-ITP1055 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:katomeg"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, medium confidence; KATOMEG1-KATOMEG3 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kbkop"
+fields = { "label" = "Förvärvspris, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Förvärvspris, bostadsrätt' (2 variables): judged different meaning, medium confidence; KBKOP1 and KBKOP2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kbna"
+fields = { "label" = "Avdrag näring avyttring bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Avdrag näring avyttring bostadsrätt' (2 variables): judged different meaning, medium confidence; KBNA1 and KBNA2 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa"
+fields = { "label" = "Län, äldre länskoder (1975-1976)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Different län code lists: KFA1011 (1975-76) has numeric codes including the old Kristianstads and Malmöhus län; LAN (2004-14) uses two-digit codes for the current län."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa102"
+fields = { "label" = "Kommunkod eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1021-KFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa103"
+fields = { "label" = "Typkod eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1031-KFA1034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa104"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, medium confidence; KFA1041-KFA1044 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa105"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, medium confidence; KFA1051-KFA1054 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa106"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, medium confidence; KFA1061-KFA1064 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa107"
+fields = { "label" = "Ägarandel eget hem (post 1)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA1071-KFA1074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa110"
+fields = { "label" = "Ägande andel hyresfastighet, nr 1" }
+evidence = "#2102 same-label cluster 'Ägande andel hyresfastighet' (2 variables): judged different meaning, medium confidence; KFA1101 and KFA1102 are numbered concurrent columns in the same table and period, i.e. separate slots (probably occurrences, as for the IFA208 columns)."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa202"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2021-KFA2024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa203"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2031-KFA2034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa204"
+fields = { "label" = "Fritidsfastighet färdig ej färdig (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet färdig ej färdig' (2 variables): judged different meaning, medium confidence; KFA2041 and KFA2042 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa205"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, medium confidence; KFA2051-KFA2053 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa206"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, medium confidence; KFA2061-KFA2063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa207"
+fields = { "label" = "Ägarandel fritidsfastighet (post 1)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, medium confidence; Concurrent columns KFA2071-KFA2074 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa70"
+fields = { "label" = "Antal fastigheter med en specifik typkod (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter med en specifik typkod' (2 variables): judged different meaning, medium confidence; KFA701 and KFA702 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kjb110"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-forekomst-1"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; KJB1011-KJB1013 are concurrent numbered columns with the same value set; the first pid names förekomst 1."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-kjb1012"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; KJB1011-KJB1013 are concurrent numbered columns with the same value set; the first pid names förekomst 1."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-kjb1013"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; KJB1011-KJB1013 are concurrent numbered columns with the same value set; the first pid names förekomst 1."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1022"
+fields = { "label" = "Kommunkod eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1021-KFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1023"
+fields = { "label" = "Kommunkod eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1021-KFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1024"
+fields = { "label" = "Kommunkod eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1021-KFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2022"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2021-KFA2024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2023"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2021-KFA2024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2024"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2021-KFA2024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kompletterande-belopp-till-bostadstillagg-ibtpkz"
+fields = { "label" = "Kompletterande belopp till bostadstillägg, kosthushåll" }
+evidence = "#2102 same-label cluster 'Kompletterande belopp till bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTPKZ is in the kosthushåll table and IBTPK in the individregister, with overlapping periods, i.e. different observation units."
+
+[[statement]]
+kind = "set"
+subject = "var:kompletterande-bostadstillagg"
+fields = { "label" = "Kompletterande belopp till bostadstillägg, individ" }
+evidence = "#2102 same-label cluster 'Kompletterande belopp till bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTPKZ is in the kosthushåll table and IBTPK in the individregister, with overlapping periods, i.e. different observation units."
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-hyresfastigheter-ifa3102"
+fields = { "label" = "Koncernbidrag hyresfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Koncernbidrag hyresfastigheter' (2 variables): judged different meaning, medium confidence; IFA3101 and IFA3102 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-arbetsmarknadsstod-hushall"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (hushåll)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is in individregister, TKASZ (Z = hushåll) in kosthushall, and TKASKU (KU = kontrolluppgift) is a concurrent individregister column in 1996-1998."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubac"
+fields = { "label" = "Anskaffningsutgift (återfört uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): judged different meaning, medium confidence; Distinct items per pid: share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBAC (2003-04) follows KPTUBA (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubic"
+fields = { "label" = "Ersättning (försäljningsintäkt, återfört uppskov, andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Distinct items per pid: sale of share in handelsbolag, restored deferral and deferral under andelsbyteslagen; KPTUBIC (2003-04) follows KPTUBI (1999-2000) and is assumed to be the same item."
+
+[[statement]]
+kind = "set"
+subject = "var:krr101"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, medium confidence; KRR1011-KRR1013 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:krr110"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, medium confidence; KRR1101-KRR1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:kspris"
+fields = { "label" = "Inkomst vid avyttring av fastighet, nr 1" }
+evidence = "#2102 same-label cluster 'Inkomst vid avyttring av fastighet' (2 variables): judged different meaning, medium confidence; KSPRIS1 and KSPRIS2 are numbered concurrent columns in the same table and period, i.e. separate slots."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar"
+fields = { "label" = "Kvarboende 18-29 år (individ)" }
+evidence = "#2102 same-label cluster 'Kvarboende 18-29 år' (2 variables): judged different meaning, medium confidence; BKVARBO in individregister vs BKVARBOZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar-bkvarboz"
+fields = { "label" = "Kvarboende 18-29 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Kvarboende 18-29 år' (2 variables): judged different meaning, medium confidence; BKVARBO in individregister vs BKVARBOZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarstaende-lattnadsbelopp-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp (kvarstående, skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Three distinct amounts per their pids: kvarstående, sparat and sparat från tidigare år, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande-underskott"
+fields = { "label" = "Underskott, kvarvarande" }
+evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, medium confidence; The pids name distinct deficit types in the same table and period: kvarvarande, enskilda näringsidkare, utnyttjat vid vissa intäkter."
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedel-utgift-vuxna"
+fields = { "label" = "Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor (belopp)" }
+evidence = "#2102 same-label cluster 'Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor' (2 variables): judged different meaning, high confidence; UMED is an amount in kronor; BMED is a coded expenditure class (1-400 kr, 401-900 kr ...), per the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsforman-utgiftsklass-vuxna"
+fields = { "label" = "Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor (utgiftsklass)" }
+evidence = "#2102 same-label cluster 'Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor' (2 variables): judged different meaning, high confidence; UMED is an amount in kronor; BMED is a coded expenditure class (1-400 kr, 401-900 kr ...), per the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län, tvåsiffrig länskod" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Different län code lists: KFA1011 (1975-76) has numeric codes including the old Kristianstads and Malmöhus län; LAN (2004-14) uses two-digit codes for the current län."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1062"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, medium confidence; KFA1061-KFA1064 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1063"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, medium confidence; KFA1061-KFA1064 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1064"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, medium confidence; KFA1061-KFA1064 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-kfa2062"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, medium confidence; KFA2061-KFA2063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-kfa2063"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, medium confidence; KFA2061-KFA2063 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-underhallsbidrag-forskott"
+fields = { "label" = "Mottaget underhållsbidrag inklusive bidragsförskott (individ)" }
+evidence = "#2102 same-label cluster 'Mottaget underhållsbidrag inklusive bidragsförskott' (2 variables): judged different meaning, medium confidence; IUNDBID in individregister vs IUNDBIDZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-underhallsbidrag-inklusive-bidragsforskott-iundbidz"
+fields = { "label" = "Mottaget underhållsbidrag inklusive bidragsförskott (hushåll)" }
+evidence = "#2102 same-label cluster 'Mottaget underhållsbidrag inklusive bidragsförskott' (2 variables): judged different meaning, medium confidence; IUNDBID in individregister vs IUNDBIDZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:negativ-rantefordelning-enskilda-naringsidkare"
+fields = { "label" = "Räntefördelning (negativ, enskilda näringsidkare)" }
+evidence = "#2102 same-label cluster 'Räntefördelning' (2 variables): judged different meaning, high confidence; NSINEGR is the negative and NSKPOSR the positive räntefördelning for enskilda näringsidkare (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-jordbruksfastighet-ijb1192"
+fields = { "label" = "Nettointäkt av jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1191 and IJB1192 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-rorelsefastighet-irr1192"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1191-IRR1193 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-rorelsefastighet-irr1193"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1191-IRR1193 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1072"
+fields = { "label" = "Nettointäkt eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, medium confidence; IFA1071-IFA1074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1073"
+fields = { "label" = "Nettointäkt eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, medium confidence; IFA1071-IFA1074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1074"
+fields = { "label" = "Nettointäkt eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, medium confidence; IFA1071-IFA1074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2072"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2071-IFA2074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2073"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2071-IFA2074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2074"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, medium confidence; IFA2071-IFA2074 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-hyresfastighet-ifa3042"
+fields = { "label" = "Nettointäkt hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3041 and IFA3042 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-fastighetsforvaltning"
+fields = { "label" = "Omsättning (fastighetsförvaltning)" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; NFOMS, NJOMS and NROMS are omsättning split by fastighetsförvaltning, jordbruk and rörelse (1996-1997); NOMS (2004-2014) is the unsplit figure."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-jordbruk"
+fields = { "label" = "Omsättning (jordbruk)" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; NFOMS, NJOMS and NROMS are omsättning split by fastighetsförvaltning, jordbruk and rörelse (1996-1997); NOMS (2004-2014) is the unsplit figure."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-rorelse"
+fields = { "label" = "Omsättning (rörelse)" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; NFOMS, NJOMS and NROMS are omsättning split by fastighetsförvaltning, jordbruk and rörelse (1996-1997); NOMS (2004-2014) is the unsplit figure."
+
+[[statement]]
+kind = "set"
+subject = "var:paforda-egenavgifter"
+fields = { "label" = "Egenavgifter (påförda egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate components per their pids; ITN014 (1975-76) and SEGEN (1996-2014) are assumed to be the sum over time."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattefri"
+fields = { "label" = "Pension och livränta, skattefri (individ)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattefri' (2 variables): judged different meaning, medium confidence; PPENSSF in individregister vs PPENSSFZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattefri-ppenssfz"
+fields = { "label" = "Pension och livränta, skattefri (hushåll)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattefri' (2 variables): judged different meaning, medium confidence; PPENSSF in individregister vs PPENSSFZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattepliktig"
+fields = { "label" = "Pension och livränta, skattepliktig (individ)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattepliktig' (2 variables): judged different meaning, medium confidence; PPENSSP in individregister vs PPENSSPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattepliktig-ppensspz"
+fields = { "label" = "Pension och livränta, skattepliktig (hushåll)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattepliktig' (2 variables): judged different meaning, medium confidence; PPENSSP in individregister vs PPENSSPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:personbilar-deklarationsvarde"
+fields = { "label" = "Personbilar (deklarationsvärde)" }
+evidence = "#2102 same-label cluster 'Personbilar' (2 variables): judged different meaning, high confidence; FBILSP is the deklarationsvärde and FBILMV the marknadsvärde (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:personbilar-marknadsvarde"
+fields = { "label" = "Personbilar (marknadsvärde)" }
+evidence = "#2102 same-label cluster 'Personbilar' (2 variables): judged different meaning, high confidence; FBILSP is the deklarationsvärde and FBILMV the marknadsvärde (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:positiv-rantefordelning-enskilda-naringsidkare"
+fields = { "label" = "Räntefördelning (positiv, enskilda näringsidkare)" }
+evidence = "#2102 same-label cluster 'Räntefördelning' (2 variables): judged different meaning, high confidence; NSINEGR is the negative and NSKPOSR the positive räntefördelning for enskilda näringsidkare (pids)."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandel-av-intakt-eller-underskott-for-rorelse-krr1102"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, medium confidence; KRR1101-KRR1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandel-av-intakt-eller-underskott-for-rorelse-krr1103"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, medium confidence; KRR1101-KRR1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandet-av-intakt-underskott-for-kjb1102"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandet-av-intakt-underskott-for-kjb1103"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; KJB1101-KJB1103 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ranta-hyresfastighet-ifa3022"
+fields = { "label" = "Ränta hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränta hyresfastighet' (2 variables): judged different meaning, medium confidence; IFA3021 and IFA3022 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-jordbruksfastighet-ijb1352"
+fields = { "label" = "Ränteintäkter jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1351 and IJB1352 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-rorelsefastighet-irr1352"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1351-IRR1353 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-rorelsefastighet-irr1353"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1351-IRR1353 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1022"
+fields = { "label" = "Räntekostnad eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, medium confidence; IFA1021-IFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1023"
+fields = { "label" = "Räntekostnad eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, medium confidence; IFA1021-IFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1024"
+fields = { "label" = "Räntekostnad eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, medium confidence; IFA1021-IFA1024 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-fritidsfastighet-ifa2022"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, medium confidence; IFA2021-IFA2023 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-fritidsfastighet-ifa2023"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, medium confidence; IFA2021-IFA2023 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-jordbruksfastighet-ijb1362"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1361-IJB1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-jordbruksfastighet-ijb1363"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, medium confidence; IJB1361-IJB1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-rorelsefastighet-irr1362"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1361-IRR1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-rorelsefastighet-irr1363"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, medium confidence; IRR1361-IRR1363 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningssatt-for-inkomst-av-rorelse-krr1012"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, medium confidence; KRR1011-KRR1013 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningssatt-for-inkomst-av-rorelse-krr1013"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, medium confidence; KRR1011-KRR1013 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fem-regioner"
+fields = { "label" = "Region, indelning i fem regioner (individ)" }
+evidence = "#2102 same-label cluster 'Region, indelning i fem regioner' (2 variables): judged different meaning, medium confidence; BBOREG5 (kosthushall, 2004-2013, with code 0 for no interview) and BREGION (individregister, 2011-2014) overlap in 2011-2013 with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:region-indelning-i-fem-regioner-bboreg5"
+fields = { "label" = "Region, indelning i fem regioner (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Region, indelning i fem regioner' (2 variables): judged different meaning, medium confidence; BBOREG5 (kosthushall, 2004-2013, with code 0 for no interview) and BREGION (individregister, 2011-2014) overlap in 2011-2013 with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseidkare-jordbrukare"
+fields = { "label" = "Aktiva rörelseidkare, jordbrukare (individ)" }
+evidence = "#2102 same-label cluster 'Aktiva rörelseidkare, jordbrukare' (2 variables): judged different meaning, medium confidence; BFOR is in individregister, BFORZ (Z = hushåll, cf. CARBZ) in kosthushall: person-level vs household-level flag."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "label" = "Sammanräknad förvärvsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, medium confidence; CSFVI in individregister vs CSFVIZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-csfviz"
+fields = { "label" = "Sammanräknad förvärvsinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, medium confidence; CSFVI in individregister vs CSFVIZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-investeringsbidrag-jordbruksfastighet-ijb1402"
+fields = { "label" = "Särskilt investeringsbidrag jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Särskilt investeringsbidrag jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1401 and IJB1402 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-jordbruksfastighet-ijb1572"
+fields = { "label" = "Sjukpenning jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Sjukpenning jordbruksfastighet' (2 variables): judged different meaning, medium confidence; IJB1571 and IJB1572 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-rorelsefastighet-irr1572"
+fields = { "label" = "Sjukpenning rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Sjukpenning rörelsefastighet' (2 variables): judged different meaning, medium confidence; IRR1571 and IRR1572 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri"
+fields = { "label" = "Sjukpenning, skattefri (individ)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (2 variables): judged different meaning, medium confidence; ISJUK in individregister vs ISJUKZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri-isjukz"
+fields = { "label" = "Sjukpenning, skattefri (hushåll)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (2 variables): judged different meaning, medium confidence; ISJUK in individregister vs ISJUKZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1032"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, medium confidence; FPR1031-FPR1034 are concurrent numbered columns (up to four förekomster); the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1033"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, medium confidence; FPR1031-FPR1034 are concurrent numbered columns (up to four förekomster); the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1034"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, medium confidence; FPR1031-FPR1034 are concurrent numbered columns (up to four förekomster); the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-ovriga-fpr2032"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, medium confidence; FPR2031-FPR2033 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-ovriga-fpr2033"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, medium confidence; FPR2031-FPR2033 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-statligt-fpr2022"
+fields = { "label" = "Skuldbelopp fritidsfastighet, statligt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, statligt' (2 variables): judged different meaning, medium confidence; FPR2021 and FPR2022 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-lattnadsbelopp-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp (sparat, skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Three distinct amounts per their pids: kvarstående, sparat and sparat från tidigare år, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-lattnadsbelopp-tidigare-ar-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp (sparat från tidigare år, skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Three distinct amounts per their pids: kvarstående, sparat and sparat från tidigare år, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-urvalsram-vuxna-individer"
+fields = { "label" = "Stratum (urvalsram vuxna individer)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, medium confidence; BSTRATV is the stratum and WSTRAT2 the stratum in the urvalsram for vuxna individer (pid); their code lists differ (code 0 means different things)."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestod"
+fields = { "label" = "Studiestöd (individ)" }
+evidence = "#2102 same-label cluster 'Studiestöd' (2 variables): judged different meaning, medium confidence; CSTUDT in individregister vs CSTUDTZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestod-cstudtz"
+fields = { "label" = "Studiestöd (hushåll)" }
+evidence = "#2102 same-label cluster 'Studiestöd' (2 variables): judged different meaning, medium confidence; CSTUDT in individregister vs CSTUDTZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg"
+fields = { "label" = "Summa bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTP in individregister vs IBTPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg-ibtpz"
+fields = { "label" = "Summa bostadstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTP in individregister vs IBTPZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forvarvs-och-kapitalinkomster"
+fields = { "label" = "Summa förvärvs- och kapitalinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomster' (2 variables): judged different meaning, medium confidence; CFVIKIZ (Z = hushåll) in kosthushall vs CFVIKI in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forvarvs-och-kapitalinkomster-cfviki"
+fields = { "label" = "Summa förvärvs- och kapitalinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomster' (2 variables): judged different meaning, medium confidence; CFVIKIZ (Z = hushåll) in kosthushall vs CFVIKI in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg"
+fields = { "label" = "Summa särskilt bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTPS in individregister vs IBTPSZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg-ibtpsz"
+fields = { "label" = "Summa särskilt bostadstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, medium confidence; IBTPS in individregister vs IBTPSZ (Z = hushåll) in kosthushall."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-1"
+fields = { "label" = "Sysselsättningsgrad 1 (individ)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsgrad 1' (2 variables): judged different meaning, medium confidence; BSYSS in individregister (four classes) vs BSYSSZ (Z = hushåll) in kosthushall (six hour-based classes)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-1-bsyssz"
+fields = { "label" = "Sysselsättningsgrad 1 (hushåll)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsgrad 1' (2 variables): judged different meaning, medium confidence; BSYSS in individregister (four classes) vs BSYSSZ (Z = hushåll) in kosthushall (six hour-based classes)."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1012"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, medium confidence; FPR1011-FPR1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1013"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, medium confidence; FPR1011-FPR1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1014"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, medium confidence; FPR1011-FPR1014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2012"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, medium confidence; FPR2011-FPR2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2013"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, medium confidence; FPR2011-FPR2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2014"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, medium confidence; FPR2011-FPR2014 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:tkas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (individ)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is in individregister, TKASZ (Z = hushåll) in kosthushall, and TKASKU (KU = kontrolluppgift) is a concurrent individregister column in 1996-1998."
+
+[[statement]]
+kind = "set"
+subject = "var:tkasku"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (enligt kontrolluppgift)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is in individregister, TKASZ (Z = hushåll) in kosthushall, and TKASKU (KU = kontrolluppgift) is a concurrent individregister column in 1996-1998."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-eget-hem-katomeg2"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, medium confidence; KATOMEG1-KATOMEG3 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-eget-hem-katomeg3"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, medium confidence; KATOMEG1-KATOMEG3 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1032"
+fields = { "label" = "Typkod eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1031-KFA1034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1033"
+fields = { "label" = "Typkod eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1031-KFA1034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1034"
+fields = { "label" = "Typkod eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, medium confidence; KFA1031-KFA1034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2032"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2031-KFA2034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2033"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2031-KFA2034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2034"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, medium confidence; KFA2031-KFA2034 are concurrent numbered columns with the same value set; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:ufackav"
+fields = { "label" = "Fackföreningsavgift (belopp)" }
+evidence = "#2102 same-label cluster 'Fackföreningsavgift' (3 variables): judged different meaning, medium confidence; BFACKAV is a Ja/Nej survey item; UFACKAV (1996-97) and UKUFACK (2004-07) have no value sets and are assumed to be the amount, in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:ukufack"
+fields = { "label" = "Fackföreningsavgift (belopp)" }
+evidence = "#2102 same-label cluster 'Fackföreningsavgift' (3 variables): judged different meaning, medium confidence; BFACKAV is a Ja/Nej survey item; UFACKAV (1996-97) and UKUFACK (2004-07) have no value sets and are assumed to be the amount, in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-sarskild-loneskatt-forvarvsinkomst-16-16-procent"
+fields = { "label" = "Underlag för beräkning av särskild löneskatt på förvärvsinkomsten (16,16 procent)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild löneskatt på förvärvsinkomsten' (2 variables): judged different meaning, medium confidence; ASLSFP is named as the basis at 16,16 procent (pid, 2004-2007); ASLSF (2004-2014) is a concurrent column without that qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1082"
+fields = { "label" = "Underskott av eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, medium confidence; IFA1081-IFA1084 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1083"
+fields = { "label" = "Underskott av eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, medium confidence; IFA1081-IFA1084 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1084"
+fields = { "label" = "Underskott av eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, medium confidence; IFA1081-IFA1084 are concurrent numbered columns; the suffix is the förekomst number."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-firtidsfastighet-ifa2082"
+fields = { "label" = "Underskott av fritidsfastighet, andra förekomsten" }
+evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-firtidsfastighet-ifa2083"
+fields = { "label" = "Underskott av fritidsfastighet, tredje förekomsten" }
+evidence = "#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): judged different meaning, high confidence; The descriptions say IFA2081, IFA2082 and IFA2083 are the first, second and third of at most four occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-jordbruksfastighet-ijb1202"
+fields = { "label" = "Underskott av jordbruksfastighet (post 2)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IJB1201-IJB1203 in the same table are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-jordbruksfastighet-ijb1203"
+fields = { "label" = "Underskott av jordbruksfastighet (post 3)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IJB1201-IJB1203 in the same table are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-rorelsesfastighet-irr1202"
+fields = { "label" = "Underskott av rörelsesfastighet (post 2)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IRR1201-IRR1203 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-rorelsesfastighet-irr1203"
+fields = { "label" = "Underskott av rörelsesfastighet (post 3)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, medium confidence; Concurrent columns IRR1201-IRR1203 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-enskilda-naringsidkare"
+fields = { "label" = "Underskott, enskilda näringsidkare" }
+evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, medium confidence; The pids name distinct deficit types in the same table and period: kvarvarande, enskilda näringsidkare, utnyttjat vid vissa intäkter."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-hyresfastigheter-ifa3062"
+fields = { "label" = "Underskott hyresfastigheter (post 2)" }
+evidence = "#2102 same-label cluster 'Underskott hyresfastigheter' (2 variables): judged different meaning, medium confidence; Concurrent columns IFA3061 and IFA3062 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalshushall-ub-nummer"
+fields = { "label" = "Individ-/hushållsidentitet (urvalshushåll, UB-nummer)" }
+evidence = "#2102 same-label cluster 'Individ-/hushållsidentitet' (2 variables): judged different meaning, medium confidence; BUBNRH is named urvalshushåll UB-nummer in its pid; BUBNR is the plain id; both are concurrent in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1052"
+fields = { "label" = "Utbetalt från Försäkringskassan (post 2)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, medium confidence; Concurrent columns ITP1051-ITP1055 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1053"
+fields = { "label" = "Utbetalt från Försäkringskassan (post 3)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, medium confidence; Concurrent columns ITP1051-ITP1055 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1054"
+fields = { "label" = "Utbetalt från Försäkringskassan (post 4)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, medium confidence; Concurrent columns ITP1051-ITP1055 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1055"
+fields = { "label" = "Utbetalt från Försäkringskassan (post 5)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, medium confidence; Concurrent columns ITP1051-ITP1055 are numbered items of one line."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-forsakringar-hyresfastigheter-ifa3112"
+fields = { "label" = "Utgifter för försäkringar hyresfastigheter (post 2)" }
+evidence = "#2102 same-label cluster 'Utgifter för försäkringar hyresfastigheter' (2 variables): judged different meaning, medium confidence; Concurrent columns IFA3111 and IFA3112 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:utnyttjat-underskott-vissa-intakter"
+fields = { "label" = "Underskott, utnyttjat vid vissa intäkter" }
+evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, medium confidence; The pids name distinct deficit types in the same table and period: kvarvarande, enskilda näringsidkare, utnyttjat vid vissa intäkter."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-fran-skogskonto-jordbruksfastighet-ijb1372"
+fields = { "label" = "Uttag från skogskonto jordbruksfastighet (post 2)" }
+evidence = "#2102 same-label cluster 'Uttag från skogskonto jordbruksfastighet' (2 variables): judged different meaning, medium confidence; Concurrent columns IJB1371 and IJB1372 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:uvbmed"
+fields = { "label" = "Vårdbidrag barn - utgift läkemedel (intervall)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag barn - utgift läkemedel' (2 variables): judged different meaning, medium confidence; UVBMED holds spending intervals (1-5); UVBMEDK has no code list and is probably the amount in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:uvbmedk"
+fields = { "label" = "Vårdbidrag barn - utgift läkemedel (kronor)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag barn - utgift läkemedel' (2 variables): judged different meaning, medium confidence; UVBMED holds spending intervals (1-5); UVBMEDK has no code list and is probably the amount in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeminskning-av-patentratter-och-naturtillganger-irr1342"
+fields = { "label" = "Värdeminskning av patenträtter och naturtillgånger, rörelse (post 2)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av patenträtter och naturtillgånger, rörelse' (2 variables): judged different meaning, medium confidence; Concurrent columns IRR1341 and IRR1342 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeminskning-av-skog-och-naturtillgangar-ijb1342"
+fields = { "label" = "Värdeminskning av skog och naturtillgångar jordbruksfastighet (post 2)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av skog och naturtillgångar jordbruksfastighet' (2 variables): judged different meaning, medium confidence; Concurrent columns IJB1341 and IJB1342 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-inventarier-irr1482"
+fields = { "label" = "Vinst vid avyttring av inventarier (post 2)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av inventarier' (2 variables): judged different meaning, medium confidence; Concurrent columns IRR1481 and IRR1482 are numbered items of one tax-return line."
+
+[[statement]]
+kind = "set"
+subject = "var:wkirbid"
+fields = { "label" = "Boende - Räntebidrag belopp (hushåll)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; KIBIDEG is for eget hem, KIBIDFR for fritidshus (individregister, to 1998); WKIRBID is the household amount in kosthushall from 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-fob-80"
+fields = { "label" = "Yrke (FoB 80)" }
+evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; FoB 80 occupation groups (KSY007) differ from the BYRKE code list; BYRKEZ in kosthushall uses a two-digit coding; BYRKE and WYRKE1 share one code list."

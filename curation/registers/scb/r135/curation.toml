@@ -864,3 +864,87 @@ kind = "set"
 subject = "set:varuklassificering"
 fields = { "label" = "Varuklassificering" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet1"
+fields = { "label" = "Bortfallskod kvantitet, levererad kvantitet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (Lev) vs total (Tot) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet2"
+fields = { "label" = "Bortfallskod kvantitet, levererad kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (Lev) vs total (Tot) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-total-kvantitet-enhet2"
+fields = { "label" = "Bortfallskod kvantitet, total kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (Lev) vs total (Tot) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev"
+fields = { "label" = "Imputeringsmetod, levererad kvantitet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (MetLev) vs total (MetTot) quantity, each for enhet 1 and enhet 2, with different code lists for Lev and Tot."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev-enhet2"
+fields = { "label" = "Imputeringsmetod, levererad kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (MetLev) vs total (MetTot) quantity, each for enhet 1 and enhet 2, with different code lists for Lev and Tot."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot"
+fields = { "label" = "Imputeringsmetod, total kvantitet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (MetLev) vs total (MetTot) quantity, each for enhet 1 and enhet 2, with different code lists for Lev and Tot."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot-enhet2"
+fields = { "label" = "Imputeringsmetod, total kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (MetLev) vs total (MetTot) quantity, each for enhet 1 and enhet 2, with different code lists for Lev and Tot."
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet"
+fields = { "label" = "Kvantitet, vara: levererad (enhet 1)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Four concurrent columns: total (TotKvant) vs levererad (LevKvant) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet-enhet2"
+fields = { "label" = "Kvantitet, vara: levererad (enhet 2)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Four concurrent columns: total (TotKvant) vs levererad (LevKvant) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:partiellt-bortfall-levererad-kvantitet"
+fields = { "label" = "Partiellt bortfall, levererad kvantitet" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall' (3 variables): judged different meaning, high confidence; PartBort flags the post; the Imp_pbf_ columns in returravara flag partial nonresponse separately for levererad and total quantity."
+
+[[statement]]
+kind = "set"
+subject = "var:partiellt-bortfall-totalt-producerad-kvantitet"
+fields = { "label" = "Partiellt bortfall, totalt producerad kvantitet" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall' (3 variables): judged different meaning, high confidence; PartBort flags the post; the Imp_pbf_ columns in returravara flag partial nonresponse separately for levererad and total quantity."
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet"
+fields = { "label" = "Kvantitet, vara: total (enhet 1)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Four concurrent columns: total (TotKvant) vs levererad (LevKvant) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet-enhet2"
+fields = { "label" = "Kvantitet, vara: total (enhet 2)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Four concurrent columns: total (TotKvant) vs levererad (LevKvant) quantity, each for enhet 1 and enhet 2."
+
+[[statement]]
+kind = "set"
+subject = "var:totb-kvant1"
+fields = { "label" = "Bortfallskod kvantitet, total kvantitet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns: levererad (Lev) vs total (Tot) quantity, each for enhet 1 and enhet 2."

@@ -748,3 +748,15 @@ kind = "set"
 subject = "set:undervisningskostnader"
 fields = { "label" = "Undervisningskostnader" }
 evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:elevbidrag"
+fields = { "label" = "Statsbidrag (elevbidrag)" }
+evidence = "#2102 same-label cluster 'Statsbidrag' (2 variables): judged different meaning, medium confidence; ElevBidrag and LokalBidrag are two concurrent flags for different kinds of state grant."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalbidrag"
+fields = { "label" = "Statsbidrag (lokalbidrag)" }
+evidence = "#2102 same-label cluster 'Statsbidrag' (2 variables): judged different meaning, medium confidence; ElevBidrag and LokalBidrag are two concurrent flags for different kinds of state grant."

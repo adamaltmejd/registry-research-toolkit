@@ -1495,3 +1495,171 @@ kind = "set"
 subject = "set:valdistrikt"
 fields = { "label" = "Valdistrikt" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rostberattigade"
+fields = { "label" = "Antal röstberättigade (totalt)" }
+evidence = "#2102 same-label cluster 'Antal röstberättigade' (2 variables): judged different meaning, medium confidence; rostbrsv counts Swedish citizens (riksdagsval); totTOT_antrostbr is the total electorate (kommun/region elections)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-llkk"
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "label" = "Landstingsvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Code, name and a count of other seats (Ovr_antmand) are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "label" = "Landstingsvalkrets (namn)" }
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Code, name and a count of other seats (Ovr_antmand) are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-ovr-antmand"
+fields = { "label" = "Landstingsvalkrets (antal övriga mandat)" }
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Code, name and a count of other seats (Ovr_antmand) are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "label" = "Parti (kod)" }
+evidence = "#2102 same-label cluster 'Parti' (2 variables): judged different meaning, high confidence; Party code (with code list) versus party name."
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "label" = "Parti (namn)" }
+evidence = "#2102 same-label cluster 'Parti' (2 variables): judged different meaning, high confidence; Party code (with code list) versus party name."
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-kvinnor"
+fields = { "label" = "Antal personröster (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal personröster' (3 variables): judged different meaning, high confidence; Three concurrent counts: women, men, total."
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-man"
+fields = { "label" = "Antal personröster (män)" }
+evidence = "#2102 same-label cluster 'Antal personröster' (3 variables): judged different meaning, high confidence; Three concurrent counts: women, men, total."
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-totalt"
+fields = { "label" = "Antal personröster (totalt)" }
+evidence = "#2102 same-label cluster 'Antal personröster' (3 variables): judged different meaning, high confidence; Three concurrent counts: women, men, total."
+
+[[statement]]
+kind = "set"
+subject = "var:rostberattigade-svenska"
+fields = { "label" = "Antal röstberättigade (svenska medborgare)" }
+evidence = "#2102 same-label cluster 'Antal röstberättigade' (2 variables): judged different meaning, medium confidence; rostbrsv counts Swedish citizens (riksdagsval); totTOT_antrostbr is the total electorate (kommun/region elections)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inrtext"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label says sun2000 only), each as code and text."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label says sun2000 only), each as code and text."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext"
+fields = { "label" = "Utbildningsnivå (SUN 2000, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label says sun2000 only), each as code and text."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext-2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label says sun2000 only), each as code and text."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inrtext"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 aggregate, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 aggregate, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 aggregate, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 aggregate, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov"
+fields = { "label" = "Utbildningsnivå grov (kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå grov' (2 variables): judged different meaning, high confidence; Code column versus text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-text"
+fields = { "label" = "Utbildningsnivå grov (text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå grov' (2 variables): judged different meaning, high confidence; Code column versus text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (kod)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; Code column versus text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgtext"
+fields = { "label" = "Utländsk/svensk bakgrund (text)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; Code column versus text column."

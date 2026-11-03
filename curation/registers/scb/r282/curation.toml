@@ -696,3 +696,75 @@ kind = "set"
 subject = "set:tatortstillhorighet"
 fields = { "label" = "Tätortstillhörighet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "label" = "Byggnadstyp (detaljerad)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP is the detailed building type code list, TYPBEBYGG a six-way grouping."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "label" = "Distrikt (kod)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; Distriktskod holds the district code, Distriktsnamn the name."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "label" = "Distrikt (namn)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; Distriktskod holds the district code, Distriktsnamn the name."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-markfastighet"
+fields = { "label" = "Fastighetsnyckel (markfastighet)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; FNR is the key of the land property, FNR_Lgh the key of the three-dimensional property or ownership-apartment property."
+
+[[statement]]
+kind = "set"
+subject = "var:nyckel-tredimensionellt-omrade-agarlagenhetsfastighet"
+fields = { "label" = "Fastighetsnyckel (3D-område, ägarlägenhetsfastighet)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; FNR is the key of the land property, FNR_Lgh the key of the three-dimensional property or ownership-apartment property."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "label" = "Byggnadstyp (grupperad)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP is the detailed building type code list, TYPBEBYGG a six-way grouping."
+
+[[statement]]
+kind = "set"
+subject = "var:unik-identitet-3d-utrymme-agarlagenhetsfastighet"
+fields = { "label" = "Universalt unik identitet (3D-utrymme, ägarlägenhetsfastighet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."
+
+[[statement]]
+kind = "set"
+subject = "var:unik-identitet-entre"
+fields = { "label" = "Universalt unik identitet (entré)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."
+
+[[statement]]
+kind = "set"
+subject = "var:unik-identitet-lagenhet"
+fields = { "label" = "Universalt unik identitet (lägenhet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."
+
+[[statement]]
+kind = "set"
+subject = "var:unik-identitet-registerbyggnad"
+fields = { "label" = "Universalt unik identitet (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."
+
+[[statement]]
+kind = "set"
+subject = "var:unik-identitet-registerenhet"
+fields = { "label" = "Universalt unik identitet (registerenhet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidadrpl"
+fields = { "label" = "Universalt unik identitet (adressplats)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object (apartment, entrance, building, property, 3D space, address place)."

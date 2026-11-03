@@ -682,3 +682,21 @@ kind = "set"
 subject = "set:sektor"
 fields = { "label" = "Sektor" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-myndighet-redovisningsenhet"
+fields = { "label" = "Löpnummer för myndighet (redovisningsenhet)" }
+evidence = "#2102 same-label cluster 'Löpnummer för myndighet' (2 variables): judged different meaning, medium confidence; LNrM and LNrS are concurrent; the pid of LNrS names the redovisningsenhet level, LNrM the myndighet."
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."

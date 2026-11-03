@@ -696,3 +696,51 @@ kind = "set"
 subject = "set:yrke"
 fields = { "label" = "Yrke" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-3"
+fields = { "label" = "Yrkesuppgift (SSYK 2012, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Yrkesuppgift' (2 variables): judged different meaning, high confidence; SSYK 2012 at three digits vs four digits."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-4"
+fields = { "label" = "Yrkesuppgift (SSYK 2012, 4 siffror)" }
+evidence = "#2102 same-label cluster 'Yrkesuppgift' (2 variables): judged different meaning, high confidence; SSYK 2012 at three digits vs four digits."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 inriktning code list vs a coarser one-digit field list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 and SUN 2020 detailed level codes, a seven-level aggregate, and utbnv with its own coarse code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "label" = "Utbildningsnivå (SUN 2000, aggregerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 and SUN 2020 detailed level codes, a seven-level aggregate, and utbnv with its own coarse code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 and SUN 2020 detailed level codes, a seven-level aggregate, and utbnv with its own coarse code list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "label" = "Utbildningsinriktning (1 siffra)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 inriktning code list vs a coarser one-digit field list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (grupperad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 and SUN 2020 detailed level codes, a seven-level aggregate, and utbnv with its own coarse code list."

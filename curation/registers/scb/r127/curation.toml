@@ -342,3 +342,15 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "label" = "Näringsgren" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-naringslivet"
+fields = { "label" = "Aktuellt antal anställda (näringslivet)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (3 variables): judged different meaning, medium confidence; syssa98 is the näringslivet count and syssa02 the offentlig förvaltning count (pids), concurrent from 2006; SyssA (2005-2007) is the earlier unsplit figure."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-offentlig-forvaltning"
+fields = { "label" = "Aktuellt antal anställda (offentlig förvaltning)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (3 variables): judged different meaning, medium confidence; syssa98 is the näringslivet count and syssa02 the offentlig förvaltning count (pids), concurrent from 2006; SyssA (2005-2007) is the earlier unsplit figure."

@@ -869,3 +869,147 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:chef"
+fields = { "label" = "Typ av tjänst (chef)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (2 variables): judged different meaning, high confidence; Separate J/N flags for manager and for resource/support staff."
+
+[[statement]]
+kind = "set"
+subject = "var:chefomf"
+fields = { "label" = "Tjänstgöringsomfattning (chefsuppdrag)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (2 variables): judged different meaning, medium confidence; ChefOmf (2014-2015) is the extent of a manager post, Omfatt the general extent; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "label" = "Huvudman (kod)" }
+evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different meaning, high confidence; Code column versus name column."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "label" = "Huvudman (namn)" }
+evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different meaning, high confidence; Code column versus name column."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (kommungrupp)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp holds municipality groups; VerkKom holds the activity municipality code."
+
+[[statement]]
+kind = "set"
+subject = "var:resurs"
+fields = { "label" = "Typ av tjänst (resurs/stödpersonal)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (2 variables): judged different meaning, high confidence; Separate J/N flags for manager and for resource/support staff."
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-inskr"
+fields = { "label" = "Startdatum (inskrivningsdatum)" }
+evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged different meaning, medium confidence; InskrDat (enrolment date) and StartDat (start date) are concurrent date columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, prioritet 1)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio2"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, prioritet 2)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio3"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, prioritet 3)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio"
+fields = { "label" = "Utbildningsnivå (SUN 2000, prioritet 1)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio2"
+fields = { "label" = "Utbildningsnivå (SUN 2000, prioritet 2)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio3"
+fields = { "label" = "Utbildningsnivå (SUN 2000, prioritet 3)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, prioritet 1)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio2"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, prioritet 2)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio3"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, prioritet 3)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio"
+fields = { "label" = "Utbildningsnivå (SUN 2020, prioritet 1)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, prioritet 2)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio3"
+fields = { "label" = "Utbildningsnivå (SUN 2020, prioritet 3)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with an unsuffixed column and priority 1..3 columns."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetskommun"
+fields = { "label" = "Kommun (verksamhetskommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp holds municipality groups; VerkKom holds the activity municipality code."

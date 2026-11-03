@@ -6097,3 +6097,945 @@ kind = "set"
 subject = "set:vanlig-veckoarbetstid"
 fields = { "label" = "Vanlig veckoarbetstid" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-start-hos-nuvarande-arbetsgivare"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (ålder, hos arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-start-i-nuvarande-eget-foretag"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (ålder, eget företag)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:allmant-halsotillstand"
+fields = { "label" = "Om dig själv (allmänt hälsotillstånd)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (andel yrkesrelaterad utbildningstid)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-utnyttjar-dig-om-du-inte-ar-forsiktig"
+fields = { "label" = "Om dig själv (andra utnyttjar dig om du inte är försiktig)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-betalda-arbeten-forra-veckan"
+fields = { "label" = "Sysselsättning förra veckan (antal betalda arbeten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variables): judged different meaning, high confidence; Four different items C_Q01a-c and C_Q06 named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-direkt-indirekt-ledda-anstallda-nuvarande-arbetsplats"
+fields = { "label" = "Nuvarande arbetsplats (antal direkt eller indirekt ledda anställda)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-formella-utbildningar-senaste-12-manader"
+fields = { "label" = "Formell utbildning under det senaste året (antal utbildningar)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsfranvaro-avsikt-aterga-forra-veckan"
+fields = { "label" = "Sysselsättning förra veckan (frånvarande från arbete, avser återgå)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variables): judged different meaning, high confidence; Four different items C_Q01a-c and C_Q06 named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsplats-larande"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad lär du dig nya saker (lär sig nytt i arbetet)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad lär du dig nya saker' (3 variables): judged different meaning, high confidence; Three different items (D_Q12c, D_Q13a, D_Q13c) with the same frequency scale but different learning sources."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-annat-satt-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (annat sätt)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-annonsera-svara-platsannonser-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (annonsera eller svara på platsannonser)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-anstallningstest-prov-intervju-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (anställningstest, prov eller intervju)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-arbetsformedlingen-jobbdatabaser-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (Arbetsförmedlingen och jobbdatabaser)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-direktkontakt-arbetsgivare-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (direktkontakt med arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-lasa-platsannonser-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (läsa platsannonser)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-rekrytering-privat-arbetsformedling-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (rekryteringsföretag och privat arbetsförmedling)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssok-vanner-slakt-fack-skola-kurator-forsakringskassa"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (vänner, släkt, fack, skola, kurator eller Försäkringskassan)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssokande-avlonat-arbete-antal-manader-totalt"
+fields = { "label" = "Sysselsättning förra månaden (totalt antal månader som arbetssökande eller i avlönat arbete)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden' (4 variables): judged different meaning, high confidence; Four different items C_S03, C_Q02a-c with different value sets and subjects."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstart-inom-eller-over-3-manader"
+fields = { "label" = "Sysselsättning förra månaden (arbetsstart inom eller efter 3 månader)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden' (4 variables): judged different meaning, high confidence; Four different items C_S03, C_Q02a-c with different value sets and subjects."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-b-q03c2"
+fields = { "label" = "Avbruten utbildning (årtal)" }
+evidence = "#2102 same-label cluster 'Avbruten utbildning' (5 variables): judged different meaning, high confidence; Five different survey items B_Q03a-d: occurrence (yes/no), highest level, age, calendar year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-forekomst"
+fields = { "label" = "Avbruten utbildning (förekomst)" }
+evidence = "#2102 same-label cluster 'Avbruten utbildning' (5 variables): judged different meaning, high confidence; Five different survey items B_Q03a-d: occurrence (yes/no), highest level, age, calendar year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-hogsta-niva"
+fields = { "label" = "Avbruten utbildning (högsta nivå)" }
+evidence = "#2102 same-label cluster 'Avbruten utbildning' (5 variables): judged different meaning, high confidence; Five different survey items B_Q03a-d: occurrence (yes/no), highest level, age, calendar year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-manad"
+fields = { "label" = "Avbruten utbildning (månad)" }
+evidence = "#2102 same-label cluster 'Avbruten utbildning' (5 variables): judged different meaning, high confidence; Five different survey items B_Q03a-d: occurrence (yes/no), highest level, age, calendar year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03c"
+fields = { "label" = "Avbruten utbildning (ålder)" }
+evidence = "#2102 same-label cluster 'Avbruten utbildning' (5 variables): judged different meaning, high confidence; Five different survey items B_Q03a-d: occurrence (yes/no), highest level, age, calendar year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:betalt-arbete-minst-en-timme-forra-veckan"
+fields = { "label" = "Sysselsättning förra veckan (betalt arbete minst en timme)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variables): judged different meaning, high confidence; Four different items C_Q01a-c and C_Q06 named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-01"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 1)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-02"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 2)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-03"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 3)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-04"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 4)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-05"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 5)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-06"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 6)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-07"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 7)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-08"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 8)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-09"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 9)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-10"
+fields = { "label" = "Sysselsättning förra månaden, anledning till att du inte har sökt arbete (alternativ 10)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, anledning till att du inte har sökt arbete' (10 variables): judged different meaning, medium confidence; Ten marked/not-marked indicator columns C_Q03_01-10, one per answer alternative; the alternative texts are not in the data, so they are told apart by number."
+
+[[statement]]
+kind = "set"
+subject = "var:c-q05"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (C_Q05)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:endast-fatal-personer-att-helt-lita-pa"
+fields = { "label" = "Om dig själv (endast få personer att helt lita på)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-tillstand-licenser-foretagsstart-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (finansiering, tillstånd eller licenser för företagsstart)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-anvandning-arbete-foretag-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (användning i arbetet)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-arbetsgivarbetalda-kostnader-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (arbetsgivarbetalda kostnader)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-deltagande-senaste-12-manader"
+fields = { "label" = "Formell utbildning under det senaste året (deltagande)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-huvudsakligt-innehall-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (huvudsakligt innehåll)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-niva-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (nivå)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-samtidigt-arbete-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (samtidigt med arbete)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-under-utanfor-arbetstid-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (under eller utanför arbetstid)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:formell-utbildning-yrkesrelaterade-skal-senaste-aret"
+fields = { "label" = "Formell utbildning under det senaste året (yrkesrelaterade skäl)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (9 variables): judged different meaning, high confidence; Nine different survey items B_Q04-B_Q11 (participation, count, level, content, reasons, work overlap, use, cost) with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:gillar-ga-till-botten-med-svara-uppgifter"
+fields = { "label" = "Om dig själv (gillar att gå till botten med svåra uppgifter)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-fullfoljda-utbildning-utomlands-niva"
+fields = { "label" = "Utbildningens nivå (högsta fullföljda utbildning utomlands)" }
+evidence = "#2102 same-label cluster 'Utbildningens nivå' (3 variables): judged different meaning, high confidence; B_Q01a is the detailed level, B_Q01a_T a three-category grouping (förgymnasial/gymnasial/eftergymnasial), B_Q01a3 the level of the highest education completed abroad."
+
+[[statement]]
+kind = "set"
+subject = "var:ideellt-arbete-frekvens-senaste-12-manader"
+fields = { "label" = "Om dig själv (ideellt arbete, frekvens senaste 12 månaderna)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:lasa-facktidskrift-larobok-vetenskapsrapport-utanfor-arbetet"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa facktidskrifter, läroböcker och vetenskapliga rapporter)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfardighet-poangstatus"
+fields = { "label" = "Resultat läsfärdighet (poängstatus)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-ekonomiska-redovisningar-utanfor-arbetet"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa ekonomiska redovisningar)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-utanfor-arbetet-bocker"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa böcker)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-utanfor-arbetet-brev-pm-e-post"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa brev, pm och e-post)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-utanfor-arbetet-bruksanvisning-instruktion"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa bruksanvisningar och instruktioner)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-utanfor-arbetet-manualer-referensmaterial"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa manualer och referensmaterial)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:lasfrekvens-utanfor-arbetet-tidning-tidskrift-nyhetsbrev"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa tidningar, tidskrifter och nyhetsbrev)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-bedomning-utbildningsniva-for-utforande"
+fields = { "label" = "Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas (bedömning av nödvändig nivå för att utföra arbetet)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas' (3 variables): judged different meaning, medium confidence; Three different items D_Q12a-c with different value sets (required level, assessment of necessary level, an interval scale); D_Q12c's unit is not visible in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-grad-valja-andra-arbetstider"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad kan du själv välja (arbetstider)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad kan du själv välja' (4 variables): judged different meaning, high confidence; Four concurrent items D_Q11a-d, each a different aspect the respondent can influence."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-grad-valja-andra-arbetsuppgifters-ordning"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad kan du själv välja (arbetsuppgifternas ordning)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad kan du själv välja' (4 variables): judged different meaning, high confidence; Four concurrent items D_Q11a-d, each a different aspect the respondent can influence."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-grad-valja-andra-tempo"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad kan du själv välja (arbetstakt)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad kan du själv välja' (4 variables): judged different meaning, high confidence; Four concurrent items D_Q11a-d, each a different aspect the respondent can influence."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-grad-valja-andra-utforande"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad kan du själv välja (hur arbetet utförs)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad kan du själv välja' (4 variables): judged different meaning, high confidence; Four concurrent items D_Q11a-d, each a different aspect the respondent can influence."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-lara-nytt-av-kollegor-chefer-frekvens"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad lär du dig nya saker (av kollegor och chefer)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad lär du dig nya saker' (3 variables): judged different meaning, high confidence; Three different items (D_Q12c, D_Q13a, D_Q13c) with the same frequency scale but different learning sources."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-uppdatering-nya-produkter-tjanster-frekvens"
+fields = { "label" = "Nuvarande arbetsplats - i vilken grad lär du dig nya saker (nya produkter och tjänster)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad lär du dig nya saker' (3 variables): judged different meaning, high confidence; Three different items (D_Q12c, D_Q13a, D_Q13c) with the same frequency scale but different learning sources."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete-utbildningsniva-for-att-fa-arbetet"
+fields = { "label" = "Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas (för att få arbetet)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas' (3 variables): judged different meaning, medium confidence; Three different items D_Q12a-c with different value sets (required level, assessment of necessary level, an interval scale); D_Q12c's unit is not visible in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-andring-antal-anstallda-12-manader"
+fields = { "label" = "Nuvarande arbetsplats (förändring av antal anställda, senaste 12 månaderna)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-antal-anstallda-du-har"
+fields = { "label" = "Nuvarande arbetsplats (antal anställda i eget företag)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-antal-personer-for-arbetsgivaren"
+fields = { "label" = "Nuvarande arbetsplats (antal personer som arbetar för arbetsgivaren)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-ar-du-anstalld-eller-egen-foretagare"
+fields = { "label" = "Nuvarande arbetsplats (anställd eller egen företagare)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-arbetsmarknadssektor"
+fields = { "label" = "Nuvarande arbetsplats (arbetsmarknadssektor)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-d-q09"
+fields = { "label" = "Nuvarande arbetsplats (anställningsform)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-d-q10"
+fields = { "label" = "Nuvarande arbetsplats (D_Q10, antal)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-d-q14"
+fields = { "label" = "Nuvarande arbetsplats (nöjdhet)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-del-av-storre-foretag-organisation"
+fields = { "label" = "Nuvarande arbetsplats (del av större företag eller organisation)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-leda-tillsyn-anstalldas-arbete"
+fields = { "label" = "Nuvarande arbetsplats (leder eller har tillsyn över andras arbete)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-d-q05a2"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (år, hos arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-d-q05a3"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (månad, hos arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-d-q05b2"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (år, eget företag)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-d-q05b3"
+fields = { "label" = "Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare (månad, eget företag)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - när du började arbeta för din nuvarande arbetsgivare' (6 variables): judged different meaning, high confidence; Six items: start age, year and month, for employer (D_Q05a1-3) and for own business (D_Q05b1-3), with age, year and month value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-eget-foretag-har-anstallda"
+fields = { "label" = "Nuvarande arbetsplats (eget företag har anställda)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats' (12 variables): judged different meaning, high confidence; Twelve different PIAAC items D_Q03-D_Q14 about the current workplace with different value sets; D_Q10 has no descriptive pid and is labelled by code."
+
+[[statement]]
+kind = "set"
+subject = "var:oavlonat-arbete-eget-familjeforetag-jordbruk-forra-veckan"
+fields = { "label" = "Sysselsättning förra veckan (oavlönat arbete i eget företag, familjeföretag eller jordbruk)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variables): judged different meaning, high confidence; Four different items C_Q01a-c and C_Q06 named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:onskad-utbildning-inte-deltagit-senaste-12-manader"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (önskad men uteblivet deltagande)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-utbildning-deltagande"
+fields = { "label" = "Utbildning som pågår, deltagande" }
+evidence = "#2102 same-label cluster 'Utbildning som pågår' (3 variables): judged different meaning, high confidence; Three distinct PIAAC items (B_Q02a/b/c) with different value sets: participation yes/no, education level, main field; the prior labels for level and field were swapped."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-utbildning-huvudsakligt-innehall"
+fields = { "label" = "Utbildning som pågår, huvudsakligt innehåll" }
+evidence = "#2102 same-label cluster 'Utbildning som pågår' (3 variables): judged different meaning, high confidence; Three distinct PIAAC items (B_Q02a/b/c) with different value sets: participation yes/no, education level, main field; the prior labels for level and field were swapped."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-utbildning-niva"
+fields = { "label" = "Utbildning som pågår, nivå" }
+evidence = "#2102 same-label cluster 'Utbildning som pågår' (3 variables): judged different meaning, high confidence; Three distinct PIAAC items (B_Q02a/b/c) with different value sets: participation yes/no, education level, main field; the prior labels for level and field were swapped."
+
+[[statement]]
+kind = "set"
+subject = "var:problemlosning-dator-poangstatus"
+fields = { "label" = "Resultat problemlösning (poängstatus)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 1)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit10"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 10)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit2"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 2)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit3"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 3)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit4"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 4)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit5"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 5)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit6"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 6)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit7"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 7)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit8"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 8)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit9"
+fields = { "label" = "Resultat läsfärdighet (plausibelt värde 9)" }
+evidence = "#2102 same-label cluster 'Resultat läsfärdighet' (11 variables): judged different meaning, high confidence; A score-status code (LITSTATUS) plus ten plausible-value score columns PVLIT1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 1)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum10"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 10)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum2"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 2)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum3"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 3)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum4"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 4)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum5"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 5)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum6"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 6)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum7"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 7)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum8"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 8)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum9"
+fields = { "label" = "Resultat räknefärdighet (plausibelt värde 9)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 1)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl10"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 10)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl2"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 2)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl3"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 3)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl4"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 4)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl5"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 5)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl6"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 6)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl7"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 7)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl8"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 8)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl9"
+fields = { "label" = "Resultat problemlösning (plausibelt värde 9)" }
+evidence = "#2102 same-label cluster 'Resultat problemlösning' (11 variables): judged different meaning, high confidence; A score-status code (PSLSTATUS) plus ten plausible-value score columns PVPSL1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:raknefardighet-poangstatus"
+fields = { "label" = "Resultat räknefärdighet (poängstatus)" }
+evidence = "#2102 same-label cluster 'Resultat räknefärdighet' (11 variables): judged different meaning, high confidence; A score-status code (NUMSTATUS) plus ten plausible-value score columns PVNUM1-10; the columns are distinct and numbered."
+
+[[statement]]
+kind = "set"
+subject = "var:relatera-nya-ideer-till-verkliga-situationer"
+fields = { "label" = "Om dig själv (relaterar nya idéer till verkliga situationer)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:relatera-nytt-till-nagot-jag-redan-kanner-till"
+fields = { "label" = "Om dig själv (relaterar nytt till något jag redan känner till)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:sadana-som-jag-har-inget-att-saga-till-om-regeringens-arbete"
+fields = { "label" = "Om dig själv (människor som jag har inget att säga till om regeringens arbete)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:soker-mer-information-om-nagot-jag-inte-forstar"
+fields = { "label" = "Om dig själv (söker mer information om något jag inte förstår)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-senaste-4-veckorna"
+fields = { "label" = "Sysselsättning förra månaden (sökt arbete senaste 4 veckorna)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden' (4 variables): judged different meaning, high confidence; Four different items C_S03, C_Q02a-c with different value sets and subjects."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-mark-lokaler-utrustning-foretagsstart-forra-manaden"
+fields = { "label" = "Sysselsättning förra månaden, hur du sökt arbete (mark, lokaler eller utrustning för företagsstart)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden, hur du sökt arbete' (11 variables): judged different meaning, high confidence; Eleven distinct yes/no items C_Q04a-j and C_Q05, each a different job-search method named in the pid; C_Q05 has no descriptive pid."
+
+[[statement]]
+kind = "set"
+subject = "var:tycker-om-att-lara-nya-saker"
+fields = { "label" = "Om dig själv (tycker om att lära nya saker)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-e-post-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda e-post)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-kalkylprogram-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda kalkylprogram)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-miniraknare-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda miniräknare)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-ordbehandlingsprogram-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda ordbehandlingsprogram)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-programmeringssprak-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda programmeringsspråk)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvander-dator-dagliga-livet"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använder dator i dagliga livet)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvant-dator-nagon-gang"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (har använt dator någon gång)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-avancerad-matematik-statistik-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda avancerad matematik och statistik)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-braktal-decimaler-procent-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda bråktal, decimaler och procent)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-diskussioner-realtid-internet-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (delta i diskussioner i realtid på internet)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-enkel-algebra-enkla-formler-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda enkel algebra och enkla formler)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-fylla-i-formular-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (fylla i formulär)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-gora-diagram-grafer-tabeller-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (göra diagram, grafer och tabeller)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-internet-svar-fragor-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (använda internet för att få svar på frågor)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-lasa-diagram-kartor-tabeller-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (läsa diagram, kartor och tabeller)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-rakna-priser-kostnader-budgetar-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (räkna ut priser, kostnader och budgetar)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-skriva-artiklar-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (skriva artiklar)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-skriva-brev-pm-e-post-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (skriva brev, pm och e-post)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-skriva-rapporter-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (skriva rapporter)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-utfora-transaktioner-internet-frekvens"
+fields = { "label" = "Hur ofta brukar du utanför arbetet... (utföra transaktioner via internet)" }
+evidence = "#2102 same-label cluster 'Hur ofta brukar du utanför arbetet...' (27 variables): judged different meaning, high confidence; 27 different PIAAC items H_Q01-H_Q05 (reading, writing, numeracy, ICT use), each a separate activity named in the pid; H_Q04a/b are yes/no, the rest are frequency scales."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-antal-dagar-senaste-ar"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal dagar)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-antal-veckor-senaste-ar"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal veckor)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-timmar-totalt-inte-restid-senaste-ar"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (antal timmar totalt)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-under-eller-utanfor-arbetstid-senaste-ar"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (under eller utanför arbetstid)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-viktigaste-hinder-deltagande-senaste-ar"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (viktigaste hinder för deltagande)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva-2"
+fields = { "label" = "Utbildningens nivå (grupperad)" }
+evidence = "#2102 same-label cluster 'Utbildningens nivå' (3 variables): judged different meaning, high confidence; B_Q01a is the detailed level, B_Q01a_T a three-category grouping (förgymnasial/gymnasial/eftergymnasial), B_Q01a3 the level of the highest education completed abroad."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-huvudsaklig-anledning-senaste-aret"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (huvudsaklig anledning)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-samtidigt-arbete-senaste-aret"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (samtidigt med arbete)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsaktivitet-yrkesrelaterad-senaste-aret"
+fields = { "label" = "Utbildningsaktiviteter under det senaste året (yrkesrelaterad)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviteter under det senaste året' (10 variables): judged different meaning, high confidence; Ten distinct items B_Q14-B_Q20, B_Q26 (purpose, work overlap, time measured in weeks/days/hours, share of work-related time, wanted-but-not-attended, barrier), each with its own description."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-krav"
+fields = { "label" = "Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas (D_Q12c, antalsintervall)" }
+evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas' (3 variables): judged different meaning, medium confidence; Three different items D_Q12a-c with different value sets (required level, assessment of necessary level, an interval scale); D_Q12c's unit is not visible in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:vantat-borja-erhallet-arbete-senaste-4-veckorna"
+fields = { "label" = "Sysselsättning förra månaden (väntat på att börja ett erhållet arbete)" }
+evidence = "#2102 same-label cluster 'Sysselsättning förra månaden' (4 variables): judged different meaning, high confidence; Four different items C_S03, C_Q02a-c with different value sets and subjects."
+
+[[statement]]
+kind = "set"
+subject = "var:vill-ta-reda-pa-hur-olika-ideer-hanger-ihop"
+fields = { "label" = "Om dig själv (vill ta reda på hur olika idéer hänger ihop)" }
+evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08) each named in the pid."

@@ -2916,3 +2916,957 @@ kind = "set"
 subject = "set:upplaggningsdatum"
 fields = { "label" = "Uppläggningsdatum" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adressplats)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adressplats)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adressplatstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adressplatstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adressplatsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adressplatsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdat"
+fields = { "label" = "Ajourföringsdatum (byggnad, AJOURDAT)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, medium confidence; Four update-date columns from different tables: byggnad (AJOURDAT), adress/byggnad (AJOURDATUM), fastighet (FRAJDATUM) and plan (SAJDAT)."
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdatum"
+fields = { "label" = "Ajourföringsdatum (adressplats och byggnad, AJOURDATUM)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, medium confidence; Four update-date columns from different tables: byggnad (AJOURDAT), adress/byggnad (AJOURDATUM), fastighet (FRAJDATUM) and plan (SAJDAT)."
+
+[[statement]]
+kind = "set"
+subject = "var:aktualitetsdatum"
+fields = { "label" = "Datum (aktualitet)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:andamal"
+fields = { "label" = "Textanmärkning (ändamål)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangnamnare"
+fields = { "label" = "Nämnare Lagfart/Tomträtt, förvärvad andel (fång)" }
+evidence = "#2102 same-label cluster 'Nämnare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Denominators of two different fractions: the acquired share (fång) and the granted share (beviljad andel), per the shared definition."
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangtaljare"
+fields = { "label" = "Täljare Lagfart/Tomträtt (förvärvad andel, fång)" }
+evidence = "#2102 same-label cluster 'Täljare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; One numerator is the acquired share (Fång), the other the granted share."
+
+[[statement]]
+kind = "set"
+subject = "var:anmarkning"
+fields = { "label" = "Textanmärkning (anmärkning)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:antrumdat"
+fields = { "label" = "Kvalitetsmärkning, datum (antal rum)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:antrumursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (antal rum)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldavgiftvaluta"
+fields = { "label" = "Valuta (avgäld)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldperiodlangd"
+fields = { "label" = "Antal, avgäldsperiodens längd" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Three different counts decoded from the column names: leasehold period length, future fee period, number of notice periods (years)."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldstartdatum"
+fields = { "label" = "Datum (avgäldens start)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:avsertidigareagandeav"
+fields = { "label" = "Universalt unik identitet (avser tidigare ägande av)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "label" = "Beslutsdatum, register (byggnad)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-plan-naturvardsbestammelse-utfardande"
+fields = { "label" = "Beslutsdatum, register (plan/naturvårdsbestämmelse, utfärdande)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandelnamnare"
+fields = { "label" = "Nämnare Lagfart/Tomträtt, beviljad andel" }
+evidence = "#2102 same-label cluster 'Nämnare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Denominators of two different fractions: the acquired share (fång) and the granted share (beviljad andel), per the shared definition."
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandeltaljare"
+fields = { "label" = "Täljare Lagfart/Tomträtt (beviljad andel)" }
+evidence = "#2102 same-label cluster 'Täljare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; One numerator is the acquired share (Fång), the other the granted share."
+
+[[statement]]
+kind = "set"
+subject = "var:boareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:boareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:byggardat"
+fields = { "label" = "Kvalitetsmärkning, datum (byggår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:byggarursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (byggår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:byggfnr"
+fields = { "label" = "Fastighetsnyckel (byggnadens fastighet)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Six distinct property keys: the main key, a building's key, the key of the unit a deregistered property moved to, origin key, plan key, and the key of another property the building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "label" = "Byggnadstyp, detaljerad" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP has detailed building types; TYPBEBYGG has broad main groups (Bostad, Industri, ...); same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (byggnadstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (byggnadstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "label" = "Distrikt (kod)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; Code versus name."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "label" = "Distrikt (namn)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; Code versus name."
+
+[[statement]]
+kind = "set"
+subject = "var:entretypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (entrétyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:entretypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (entrétyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fang-uuid"
+fields = { "label" = "Universalt unik identitet (fång)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:fast-uuid"
+fields = { "label" = "Universalt unik identitet (FAST_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsagandeforand-uuid"
+fields = { "label" = "Universalt unik identitet (fastighetsägandeförändring)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-byggnad-tillhor-annan-fastighet"
+fields = { "label" = "Fastighetsnyckel (byggnad tillhör annan fastighet)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Six distinct property keys: the main key, a building's key, the key of the unit a deregistered property moved to, origin key, plan key, and the key of another property the building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-enhet-dit-avregistrerad-overforts"
+fields = { "label" = "Fastighetsnyckel (enhet dit avregistrerad fastighet överförts)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Six distinct property keys: the main key, a building's key, the key of the unit a deregistered property moved to, origin key, plan key, and the key of another property the building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-ursprung"
+fields = { "label" = "Fastighetsnyckel (ursprung)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Six distinct property keys: the main key, a building's key, the key of the unit a deregistered property moved to, origin key, plan key, and the key of another property the building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:frajdatum"
+fields = { "label" = "Ajourföringsdatum (fastighet)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, medium confidence; Four update-date columns from different tables: byggnad (AJOURDAT), adress/byggnad (AJOURDATUM), fastighet (FRAJDATUM) and plan (SAJDAT)."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgperiod"
+fields = { "label" = "Antal, framtida avgäldsperiod" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Three different counts decoded from the column names: leasehold period length, future fee period, number of notice periods (years)."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgstartdat"
+fields = { "label" = "Datum (framtida avgälds start)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgsumma"
+fields = { "label" = "Tomträttsavgäld och arrendeavgifter (framtida)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld och arrendeavgifter' (2 variables): judged different meaning, medium confidence; FRAMTIDAAVGSUMMA is the future fee, AVGALDAVGIFTSUMMA the current one."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgvaluta"
+fields = { "label" = "Valuta (framtida avgift)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:galldetidigarei"
+fields = { "label" = "Universalt unik identitet (gällde tidigare i)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:gdatb"
+fields = { "label" = "Beslutsdatum, register (genomförandetidens början)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:gdatu"
+fields = { "label" = "Beslutsdatum, register (genomförandetidens utgång)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:gemensambostadsambo"
+fields = { "label" = "Textanmärkning (gemensam bostad, sambo)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:gtill"
+fields = { "label" = "Beslutsdatum, register (giltighet)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrankning"
+fields = { "label" = "Textanmärkning (inskränkning)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivenperson-uuid"
+fields = { "label" = "Universalt unik identitet (inskriven person)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningsdag"
+fields = { "label" = "Datum (inskrivningsdag)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningsfastighet-uuid"
+fields = { "label" = "Universalt unik identitet (inskrivningsfastighet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:ir-fast-uuid"
+fields = { "label" = "Universalt unik identitet (IR_FAST_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:ir-fastighet-uuid"
+fields = { "label" = "Universalt unik identitet (IR_FASTIGHET_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:kdat"
+fields = { "label" = "Kvalitetsmärkning, datum (fastighet)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kdatumursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adress och byggnad)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemdat"
+fields = { "label" = "Kvalitetsmärkning, datum (KOKGEM)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (KOKGEM)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:koktypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (köktyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:koktypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (köktyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:komkod"
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; KOMKOD reads as the municipality code and KOMMUN as the name; neither has a value set, so this is decoded from the names."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; KOMKOD reads as the municipality code and KOMMUN as the name; neither has a value set, so this is decoded from the names."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskilling-uuid"
+fields = { "label" = "Universalt unik identitet (köpeskilling)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (fastighet)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, medium confidence; Four different sums decoded from the column names: purchase price for property, for movables (LOS), intermediate payment (mellangift) and preliminary price for property."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastval"
+fields = { "label" = "Valuta (köpeskilling, fastighet)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglossum"
+fields = { "label" = "Köpeskilling fastighetsregistret (lös egendom)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, medium confidence; Four different sums decoded from the column names: purchase price for property, for movables (LOS), intermediate payment (mellangift) and preliminary price for property."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglosval"
+fields = { "label" = "Valuta (köpeskilling, lös egendom)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-datum-adress-byggnad"
+fields = { "label" = "Kvalitetsmärkning, datum (adress och byggnad)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-datum-fastighetsnyckel"
+fields = { "label" = "Kvalitetsmärkning, datum (fastighetsnyckel)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
+fields = { "label" = "Kvalitetsmärkning, ursprung (fastighetsnyckel)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lagfart-uuid"
+fields = { "label" = "Universalt unik identitet (lagfart)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:lagfartsanmarkning"
+fields = { "label" = "Textanmärkning (lagfartsanmärkning)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "label" = "Land (namn)" }
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, medium confidence; LANDSKOD has a country code list; LAND has no value set and is read as the name."
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "label" = "Land (kod)" }
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, medium confidence; LANDSKOD has a country code list; LAND has no value set and is read as the name."
+
+[[statement]]
+kind = "set"
+subject = "var:ldat"
+fields = { "label" = "Beslutsdatum, register (laga kraft)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Six different dates (building decision, plan decision, start and end of implementation period, validity, legal force) per their descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetskategori)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetskategori)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetsnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetsnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (mellangift)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, medium confidence; Four different sums decoded from the column names: purchase price for property, for movables (LOS), intermediate payment (mellangift) and preliminary price for property."
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftval"
+fields = { "label" = "Valuta (mellangift)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-i-system-sweref-xr"
+fields = { "label" = "Nordlig koordinat i system Sweref (fastighet)" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, medium confidence; XR is in fastighetsinformation (the property's point), XKOORD in adressplats- and byggnadsinformation (the address or building point): different objects."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "label" = "Nordlig koordinat i system Sweref (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, medium confidence; XR is in fastighetsinformation (the property's point), XKOORD in adressplats- and byggnadsinformation (the address or building point): different objects."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutaktnr"
+fields = { "label" = "Aktnummer (nytt beslut)" }
+evidence = "#2102 same-label cluster 'Aktnummer' (2 variables): judged different meaning, high confidence; NYTTBESLUTAKTNR is the act number of the new decision."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutdbnr"
+fields = { "label" = "Dagboksnummer (nytt beslut)" }
+evidence = "#2102 same-label cluster 'Dagboksnummer' (2 variables): judged different meaning, high confidence; NYTTBESLUTDBNR is the diary number of the new decision."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutinskdag"
+fields = { "label" = "Datum (inskrivningsdag, nytt beslut)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggardat"
+fields = { "label" = "Kvalitetsmärkning, datum (ombyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggarursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (ombyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:omradesaktualitet"
+fields = { "label" = "Datum (områdets aktualitet)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-i-system-sweref-yr"
+fields = { "label" = "Ostlig koordinat i system Sweref (fastighet)" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, medium confidence; YR is in fastighetsinformation (the property's point), YKOORD in adressplats- and byggnadsinformation (the address or building point): different objects."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "label" = "Ostlig koordinat i system Sweref (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, medium confidence; YR is in fastighetsinformation (the property's point), YKOORD in adressplats- and byggnadsinformation (the address or building point): different objects."
+
+[[statement]]
+kind = "set"
+subject = "var:overklagande"
+fields = { "label" = "Textanmärkning (överklagande)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriganmarkning"
+fields = { "label" = "Textanmärkning (övrig anmärkning)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaendearende-uuid"
+fields = { "label" = "Universalt unik identitet (pågående ärende)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:pfnr"
+fields = { "label" = "Fastighetsnyckel (plan)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Six distinct property keys: the main key, a building's key, the key of the unit a deregistered property moved to, origin key, plan key, and the key of another property the building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:pkttyp"
+fields = { "label" = "Punkttyp (fastighet)" }
+evidence = "#2102 same-label cluster 'Punkttyp' (2 variables): judged different meaning, high confidence; Different code lists: PKTTYP codes the property point (central point, not located, ...), PUNKTTYP the address point (building, entrance, driveway, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:popnamndat"
+fields = { "label" = "Kvalitetsmärkning, datum (populärnamn)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:popnamnursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (populärnamn)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postnrdat"
+fields = { "label" = "Kvalitetsmärkning, datum (postnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postnrursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (postnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postortdat"
+fields = { "label" = "Kvalitetsmärkning, datum (postort)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postortursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (postort)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (preliminär, fastighet)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, medium confidence; Four different sums decoded from the column names: purchase price for property, for movables (LOS), intermediate payment (mellangift) and preliminary price for property."
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastval"
+fields = { "label" = "Valuta (preliminär köpeskilling, fastighet)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; Six currency columns, one per amount (fee, future fee, purchase price for property and movables, intermediate payment, preliminary price)."
+
+[[statement]]
+kind = "set"
+subject = "var:punkttyp"
+fields = { "label" = "Punkttyp (adressplats)" }
+evidence = "#2102 same-label cluster 'Punkttyp' (2 variables): judged different meaning, high confidence; Different code lists: PKTTYP codes the property point (central point, not located, ...), PUNKTTYP the address point (building, entrance, driveway, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:regbybetursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (REGBYBET)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "label" = "Uppläggningsdatum (plan)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; UPPLDAT (building) and UPPLDATUM (address place and building) are concurrent in byggnadsinformation; REGDAT is the plan register's date."
+
+[[statement]]
+kind = "set"
+subject = "var:ridadrpl"
+fields = { "label" = "Riksnyckelid (adressplats)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Four keys for different objects: address place, entrance, flat and register building."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-entre"
+fields = { "label" = "Riksnyckelid (entré)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Four keys for different objects: address place, entrance, flat and register building."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-lagenhet"
+fields = { "label" = "Riksnyckelid (lägenhet)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Four keys for different objects: address place, entrance, flat and register building."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-registerbyggnad"
+fields = { "label" = "Riksnyckelid (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Four keys for different objects: address place, entrance, flat and register building."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-entre"
+fields = { "label" = "Riksnyckelprefix (entré)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Four prefixes for different objects: entrance, flat, register building and address place."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-lagenhet"
+fields = { "label" = "Riksnyckelprefix (lägenhet)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Four prefixes for different objects: entrance, flat, register building and address place."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-registerbyggnad"
+fields = { "label" = "Riksnyckelprefix (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Four prefixes for different objects: entrance, flat, register building and address place."
+
+[[statement]]
+kind = "set"
+subject = "var:rnpadrpl"
+fields = { "label" = "Riksnyckelprefix (adressplats)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Four prefixes for different objects: entrance, flat, register building and address place."
+
+[[statement]]
+kind = "set"
+subject = "var:sajdat"
+fields = { "label" = "Ajourföringsdatum (plan)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, medium confidence; Four update-date columns from different tables: byggnad (AJOURDAT), adress/byggnad (AJOURDATUM), fastighet (FRAJDATUM) and plan (SAJDAT)."
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "label" = "Nybyggnadsår (SCB)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, medium confidence; BYGGAR and SCB_Byggar are concurrent columns in byggnadsinformation; the SCB_ prefix marks SCB's own version."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehav-uuid"
+fields = { "label" = "Universalt unik identitet (tomträttsinnehav)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehavsanmarkning"
+fields = { "label" = "Textanmärkning (tomträttsinnehavsanmärkning)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsupplatelse-uuid"
+fields = { "label" = "Universalt unik identitet (tomträttsupplåtelse)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:totboarea"
+fields = { "label" = "Bostadsarea (total)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, medium confidence; BOAREA and TOTBOAREA are concurrent columns in byggnadsinformation; TOT marks the total."
+
+[[statement]]
+kind = "set"
+subject = "var:totboareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (total bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:totboareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (total bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (total lokalarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (total lokalarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:tvistavgjordtillformanfor"
+fields = { "label" = "Textanmärkning (tvist avgjord till förmån för)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:txtanm"
+fields = { "label" = "Textanmärkning (fastighet)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Ten different free-text notes, each named by its column (property note, purpose, remark, restriction, appeal, etc.)."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "label" = "Byggnadstyp, huvudgrupp" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP has detailed building types; TYPBEBYGG has broad main groups (Bostad, Industri, ...); same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggdat"
+fields = { "label" = "Kvalitetsmärkning, datum (typ av bebyggelse)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (typ av bebyggelse)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskdat"
+fields = { "label" = "Kvalitetsmärkning, datum (TYPKODSK)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (TYPKODSK)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-belagenhetsadress"
+fields = { "label" = "Universalt unik identitet (belägenhetsadress)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-registerbyggnad"
+fields = { "label" = "Universalt unik identitet (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-registerenhet-fastighet"
+fields = { "label" = "Universalt unik identitet (registerenhet, fastighet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelsedatum"
+fields = { "label" = "Datum (upplåtelse)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:uppldat"
+fields = { "label" = "Uppläggningsdatum (byggnad, UPPLDAT)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; UPPLDAT (building) and UPPLDATUM (address place and building) are concurrent in byggnadsinformation; REGDAT is the plan register's date."
+
+[[statement]]
+kind = "set"
+subject = "var:uppldatum"
+fields = { "label" = "Uppläggningsdatum (adressplats och byggnad, UPPLDATUM)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; UPPLDAT (building) and UPPLDATUM (address place and building) are concurrent in byggnadsinformation; REGDAT is the plan register's date."
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsdatum"
+fields = { "label" = "Datum (uppsägning)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsperiodar"
+fields = { "label" = "Antal, uppsägningsperioder (år)" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Three different counts decoded from the column names: leasehold period length, future fee period, number of notice periods (years)."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsdatum"
+fields = { "label" = "Datum (uppskov)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:urspstartdatum"
+fields = { "label" = "Datum (ursprunglig start)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten different dates in inskrivningsinformation, each named by its column."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidadromr"
+fields = { "label" = "Universalt unik identitet (adressområde)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidadrpl"
+fields = { "label" = "Universalt unik identitet (adressplats)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuiddistrikt"
+fields = { "label" = "Universalt unik identitet (distrikt)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidentre"
+fields = { "label" = "Universalt unik identitet (entré)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidgard"
+fields = { "label" = "Universalt unik identitet (gård)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-berorsav"
+fields = { "label" = "Universalt unik identitet (registerenhet, berörs av)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-liggerpa"
+fields = { "label" = "Universalt unik identitet (registerenhet, ligger på)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-tillhor"
+fields = { "label" = "Universalt unik identitet (registerenhet, tillhör)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; 26 UUID columns each pointing at a different register object; IR_FAST_UUID, IR_FASTIGHET_UUID and FAST_UUID are kept as codes because their differences are not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeardat"
+fields = { "label" = "Kvalitetsmärkning, datum (värdeår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute (address place, building and flat attributes, property); a few attribute names (KOKGEM, TYPKODSK) are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vardearursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (värdeår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute, same attributes as the datum columns; KOKGEM, TYPKODSK and REGBYBET are left as codes."
+
+[[statement]]
+kind = "set"
+subject = "var:versionsnr-fastighetsreg"
+fields = { "label" = "Versionsnummer fastighetsreg. (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Versionsnummer fastighetsreg.' (2 variables): judged different meaning, medium confidence; VERNR belongs to address place and building records, VERSION to inskrivning records: version numbers of different register posts."
+
+[[statement]]
+kind = "set"
+subject = "var:versionsnummer-fastighetsreg-version"
+fields = { "label" = "Versionsnummer fastighetsreg. (inskrivning)" }
+evidence = "#2102 same-label cluster 'Versionsnummer fastighetsreg.' (2 variables): judged different meaning, medium confidence; VERNR belongs to address place and building records, VERSION to inskrivning records: version numbers of different register posts."

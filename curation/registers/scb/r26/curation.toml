@@ -4623,3 +4623,309 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "label" = "Ägarkontroll, 1-siffrig ägarkategori" }
+evidence = "#2102 same-label cluster 'Ägarkontroll' (3 variables): judged different meaning, medium confidence; Old 1-digit ownership categories up to 2022 versus 2-digit control categories from 2022, where AgKat1 and AgKat2 are concurrent columns (suffix 1 = company in November the previous year, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:agkat"
+fields = { "label" = "Ägarkontroll, 2-siffrig kontrollkategori, företag november föregående år" }
+evidence = "#2102 same-label cluster 'Ägarkontroll' (3 variables): judged different meaning, medium confidence; Old 1-digit ownership categories up to 2022 versus 2-digit control categories from 2022, where AgKat1 and AgKat2 are concurrent columns (suffix 1 = company in November the previous year, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:agkat2"
+fields = { "label" = "Ägarkontroll, 2-siffrig kontrollkategori, företag aktuellt år" }
+evidence = "#2102 same-label cluster 'Ägarkontroll' (3 variables): judged different meaning, medium confidence; Old 1-digit ownership categories up to 2022 versus 2-digit control categories from 2022, where AgKat1 and AgKat2 are concurrent columns (suffix 1 = company in November the previous year, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
+fields = { "label" = "Antal arbetsställen (år 1 för individer år 2)" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen' (2 variables): judged different meaning, medium confidence; AntK2 and AntK1 are the two directions of the year pair, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
+fields = { "label" = "Antal arbetsställen (år 2 för individer år 1)" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen' (2 variables): judged different meaning, medium confidence; AntK2 and AntK1 are the two directions of the year pair, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-foretagskombinationer-fran-ar-1-till-ar-2"
+fields = { "label" = "Antal kombinationer av företag (från år 1 till år 2)" }
+evidence = "#2102 same-label cluster 'Antal kombinationer av företag' (2 variables): judged different meaning, medium confidence; Antk1 and Antk2 are the two directions of the year pair, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-foretagskombinationer-fran-ar-2-till-ar-1"
+fields = { "label" = "Antal kombinationer av företag (från år 2 till år 1)" }
+evidence = "#2102 same-label cluster 'Antal kombinationer av företag' (2 variables): judged different meaning, medium confidence; Antk1 and Antk2 are the two directions of the year pair, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antast1"
+fields = { "label" = "Antal arbetsställen per PeorgNr, företag november föregående år" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen per PeorgNr' (2 variables): judged different meaning, medium confidence; Concurrent columns AntAst1/AntAst2 in the same table and period; the definition refers to Peorgnr2 (år t) and sibling variables name suffix 1 as the company in November the previous year."
+
+[[statement]]
+kind = "set"
+subject = "var:antast2"
+fields = { "label" = "Antal arbetsställen per PeorgNr, företag aktuellt år" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen per PeorgNr' (2 variables): judged different meaning, medium confidence; Concurrent columns AntAst1/AntAst2 in the same table and period; the definition refers to Peorgnr2 (år t) and sibling variables name suffix 1 as the company in November the previous year."
+
+[[statement]]
+kind = "set"
+subject = "var:astsni07"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (92, 2002, 2007); the FAD columns Ast2Sni07 and Ast2NgS07 are separate columns in the FAD table whose NgS07 meaning is not given."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-2"
+fields = { "label" = "CFAR-Nummer (FAD, CfarNr1)" }
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (3 variables): judged different meaning, medium confidence; CfarNr is the workplace number in the main tables; CfarNr1 and CfarNr2 are two concurrent numbered columns in the FAD tables."
+
+[[statement]]
+kind = "set"
+subject = "var:cfarnr2"
+fields = { "label" = "CFAR-Nummer (FAD, CfarNr2)" }
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (3 variables): judged different meaning, medium confidence; CfarNr is the workplace number in the main tables; CfarNr1 and CfarNr2 are two concurrent numbered columns in the FAD tables."
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-ars-arbetsstallenummer-foreg"
+fields = { "label" = "Föregående års arbetsställenummer, indikator (ja/nej)" }
+evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 variables): judged different meaning, medium confidence; FOREG and ForegAstNr are successive Nej/Ja indicator columns (a rename); AstNr1 in the FAD tables has no value set and holds the number itself."
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-ars-arbetsstallenummer-foregastnr"
+fields = { "label" = "Föregående års arbetsställenummer, indikator (ja/nej)" }
+evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 variables): judged different meaning, medium confidence; FOREG and ForegAstNr are successive Nej/Ja indicator columns (a rename); AstNr1 in the FAD tables has no value set and holds the number itself."
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-ast-nr"
+fields = { "label" = "Föregående års arbetsställenummer, nummer" }
+evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 variables): judged different meaning, medium confidence; FOREG and ForegAstNr are successive Nej/Ja indicator columns (a rename); AstNr1 in the FAD tables has no value set and holds the number itself."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni02"
+fields = { "label" = "Näringsgren för företag (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni07"
+fields = { "label" = "Näringsgren för företag (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni69"
+fields = { "label" = "Näringsgren för företag (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92"
+fields = { "label" = "Näringsgren för företag (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92-19053"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92, företagets näringsgren)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:gamsektorkod"
+fields = { "label" = "Sektorkod (GAMSektorKod)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SektorKod is the main column; GAMSektorKod is a concurrent 1993-1994 column; SektorKod2 is the FAD-table column with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:gamsyssstat"
+fields = { "label" = "Sysselsättningsstatus, november (GAMSyssStat)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, medium confidence; SyssStat is the main column; GAMSyssStat is a concurrent 1993-1994 column with a different code list (saknar kontrolluppgift...)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "label" = "Institutionell sektor, 3-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (3 variables): judged different meaning, medium confidence; 3-digit sector codes up to 2022 versus 6-digit codes from 2022, where Sektor1 and Sektor2 are concurrent columns (suffix 1 = company in November the previous year per the pid, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor-foretag-november-foregaende-ar"
+fields = { "label" = "Institutionell sektor, 6-siffrig kod, företag november föregående år" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (3 variables): judged different meaning, medium confidence; 3-digit sector codes up to 2022 versus 6-digit codes from 2022, where Sektor1 and Sektor2 are concurrent columns (suffix 1 = company in November the previous year per the pid, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "label" = "Institutionell sektorkod (2 siffror)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (2 variables): judged different meaning, medium confidence; Sektor holds three-digit codes (000 = saknar kontrolluppgift) and SektorKod two-digit codes (00 = uppgift saknas), different code lists that overlap 2003-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-sektor"
+fields = { "label" = "Institutionell sektorkod (3 siffror)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (2 variables): judged different meaning, medium confidence; Sektor holds three-digit codes (000 = saknar kontrolluppgift) and SektorKod two-digit codes (00 = uppgift saknas), different code lists that overlap 2003-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:jurform2"
+fields = { "label" = "Juridisk form, företag aktuellt år" }
+evidence = "#2102 same-label cluster 'Juridisk form' (3 variables): judged different meaning, medium confidence; JurForm is the single column up to 2022; JurForm1 and JurForm2 are concurrent columns in fad-arbetsstallen (suffix 1 = company in November the previous year per the pid, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form-foretag-november-foregaende-ar"
+fields = { "label" = "Juridisk form, företag november föregående år" }
+evidence = "#2102 same-label cluster 'Juridisk form' (3 variables): judged different meaning, medium confidence; JurForm is the single column up to 2022; JurForm1 and JurForm2 are concurrent columns in fad-arbetsstallen (suffix 1 = company in November the previous year per the pid, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-ftgkommun"
+fields = { "label" = "Kommun (företagets kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; Kommun (individer, jobbregistret) and FtgKommun (foretag table) are the municipality of different entities, with different code lists (FtgKommun has uppgift saknas=0000)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t"
+fields = { "label" = "Andel gemensamma sysselsatta (av sysselsatta år t)" }
+evidence = "#2102 same-label cluster 'Andel gemensamma sysselsatta' (2 variables): judged different meaning, medium confidence; KvoT2 and KvoT1 are the two directions of the year pair; the pids say arbetsställe t and t-1."
+
+[[statement]]
+kind = "set"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t-1"
+fields = { "label" = "Andel gemensamma sysselsatta (av sysselsatta år t-1)" }
+evidence = "#2102 same-label cluster 'Andel gemensamma sysselsatta' (2 variables): judged different meaning, medium confidence; KvoT2 and KvoT1 are the two directions of the year pair; the pids say arbetsställe t and t-1."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-ftglan"
+fields = { "label" = "Län (företagets län)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Lan (individer, jobbregistret) and FtgLan (foretag table) are the county of different entities, with different code lists (FtgLan has uppgift saknas=00)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag-sni-2002"
+fields = { "label" = "Näringsgren (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag-sni-2007"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag-sni-92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ftg"
+fields = { "label" = "Näringsgren (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ftg-sni92-begransad"
+fields = { "label" = "Näringsgren (SNI 92, begränsad)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-fad-sni2007"
+fields = { "label" = "Näringsgren, huvudsaklig (FAD, SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni2002"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni92"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni92-begransad"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92, begränsad)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-stat-huvud"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (92, 2002, 2007); the FAD columns Ast2Sni07 and Ast2NgS07 are separate columns in the FAD table whose NgS07 meaning is not given."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-stat-huvud-fad-ngs07"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (FAD, Ast2NgS07)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (92, 2002, 2007); the FAD columns Ast2Sni07 and Ast2NgS07 are separate columns in the FAD table whose NgS07 meaning is not given."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-stat-huvud-fad-sni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (FAD, SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (92, 2002, 2007); the FAD columns Ast2Sni07 and Ast2NgS07 are separate columns in the FAD table whose NgS07 meaning is not given."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-stat-huvud-sni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (92, 2002, 2007); the FAD columns Ast2Sni07 and Ast2NgS07 are separate columns in the FAD table whose NgS07 meaning is not given."
+
+[[statement]]
+kind = "set"
+subject = "var:peorgnr1"
+fields = { "label" = "Person-/organisationsnummer, företag november föregående år" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): judged different meaning, medium confidence; PeOrgNr1 sits in the FAD tables and by the pattern of its siblings denotes the company in November the previous year; PeOrgNr is the main column."
+
+[[statement]]
+kind = "set"
+subject = "var:sektor2"
+fields = { "label" = "Institutionell sektor, 6-siffrig kod, företag aktuellt år" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (3 variables): judged different meaning, medium confidence; 3-digit sector codes up to 2022 versus 6-digit codes from 2022, where Sektor1 and Sektor2 are concurrent columns (suffix 1 = company in November the previous year per the pid, suffix 2 inferred as the current year)."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod2"
+fields = { "label" = "Sektorkod (FAD, SektorKod2)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SektorKod is the main column; GAMSektorKod is a concurrent 1993-1994 column; SektorKod2 is the FAD-table column with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun-2020-forsta-positionen"
+fields = { "label" = "Utbildningsnivå (SUN 2020, första positionen)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2020Niva_Old holds the first position only (pid: första positionen) and SUN2020Niva the full three-digit level."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun-2020-komplett-3-stallig"
+fields = { "label" = "Utbildningsnivå (SUN 2020, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2020Niva_Old holds the first position only (pid: första positionen) and SUN2020Niva the full three-digit level."

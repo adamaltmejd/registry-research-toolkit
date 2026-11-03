@@ -785,3 +785,21 @@ kind = "set"
 subject = "set:utrikeshandel-med-branslen"
 fields = { "label" = "Utrikeshandel med bränslen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:densitet-imp"
+fields = { "label" = "Imputerad: densitet" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (densitet, vikt, volym)."
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-imp"
+fields = { "label" = "Imputerad: vikt" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (densitet, vikt, volym)."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-imp"
+fields = { "label" = "Imputerad: volym" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (densitet, vikt, volym)."

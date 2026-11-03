@@ -803,3 +803,45 @@ kind = "set"
 subject = "set:tatortstillhorighet"
 fields = { "label" = "Tätortstillhörighet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-adress"
+fields = { "label" = "Nordlig koordinat i system Sweref, adress" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; XKOORD_Adr is the coordinate of the address and XKOORD_Fst of the property (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-fastighet"
+fields = { "label" = "Nordlig koordinat i system Sweref, fastighet" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; XKOORD_Adr is the coordinate of the address and XKOORD_Fst of the property (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref-adress"
+fields = { "label" = "Ostlig koordinat i system Sweref, adress" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; YKOORD_Adr is the coordinate of the address and YKOORD_Fst of the property (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref-fastighet"
+fields = { "label" = "Ostlig koordinat i system Sweref, fastighet" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; YKOORD_Adr is the coordinate of the address and YKOORD_Fst of the property (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade-old"
+fields = { "label" = "Postnummerområde, gammal indelning" }
+evidence = "#2102 same-label cluster 'Postnummerområde' (2 variables): judged different meaning, medium confidence; Postnromrade_Old is a separate old-version column (2013 only) concurrent with PostNrOmrade."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-adr"
+fields = { "label" = "Universalt unik identitet, adress" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (2 variables): judged different meaning, high confidence; UUID_Adr identifies the address and UUID_Fst the property."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-fst"
+fields = { "label" = "Universalt unik identitet, fastighet" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (2 variables): judged different meaning, high confidence; UUID_Adr identifies the address and UUID_Fst the property."

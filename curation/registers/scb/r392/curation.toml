@@ -886,3 +886,117 @@ kind = "set"
 subject = "set:utbetald-ersattning"
 fields = { "label" = "Utbetald ersättning" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-inte-underlag-arbetsgivaravgift"
+fields = { "label" = "Andra skattepliktiga förmåner än kontant lön (inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Andra skattepliktiga förmåner än kontant lön' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
+fields = { "label" = "Andra skattepliktiga förmåner än kontant lön (underlag för arbetsgivaravgift)" }
+evidence = "#2102 same-label cluster 'Andra skattepliktiga förmåner än kontant lön' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-egenavgift"
+fields = { "label" = "Andra skattepliktiga förmåner än kontant lön (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Andra skattepliktiga förmåner än kontant lön' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-asink"
+fields = { "label" = "Avdragen särskild inkomstskatt (artister, A-SINK)" }
+evidence = "#2102 same-label cluster 'Avdragen särskild inkomstskatt' (2 variables): judged different meaning, medium confidence; A-SINK concerns non-resident artists; SINK explicitly excludes those covered by artist tax."
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-sink"
+fields = { "label" = "Avdragen särskild inkomstskatt (ej artister, SINK)" }
+evidence = "#2102 same-label cluster 'Avdragen särskild inkomstskatt' (2 variables): judged different meaning, medium confidence; A-SINK concerns non-resident artists; SINK explicitly excludes those covered by artist tax."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-inte-underlag-arbetsgivaravgift"
+fields = { "label" = "Bilförmån, utom drivmedel (inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
+fields = { "label" = "Bilförmån, utom drivmedel (underlag för arbetsgivaravgift)" }
+evidence = "#2102 same-label cluster 'Bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
+fields = { "label" = "Bilförmån, utom drivmedel (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-inte-underlag-arbetsgivaravgift"
+fields = { "label" = "Bostadsförmåner, inte småhus (inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
+fields = { "label" = "Bostadsförmåner, inte småhus (underlag för arbetsgivaravgift)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
+fields = { "label" = "Bostadsförmåner, inte småhus (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
+fields = { "label" = "Bostadsförmåner, småhus (inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-arbetsgivaravgift-slf"
+fields = { "label" = "Bostadsförmåner, småhus (underlag för arbetsgivaravgift)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-egenavgift"
+fields = { "label" = "Bostadsförmåner, småhus (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Bostadsförmåner' (6 variables): judged different meaning, high confidence; Six flags: small house vs not, crossed with three contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-inte-underlag-socialavgift"
+fields = { "label" = "Drivmedel vid bilförmån (inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Drivmedel vid bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
+fields = { "label" = "Drivmedel vid bilförmån (underlag för arbetsgivaravgift)" }
+evidence = "#2102 same-label cluster 'Drivmedel vid bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
+fields = { "label" = "Drivmedel vid bilförmån (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Drivmedel vid bilförmån' (3 variables): judged different meaning, high confidence; Three concurrent amounts with different contribution bases."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
+fields = { "label" = "Ersättning för egenavgifter (underlag för egenavgift)" }
+evidence = "#2102 same-label cluster 'Ersättning för egenavgifter' (2 variables): judged different meaning, high confidence; One amount is the base for egenavgifter, the other is cash compensation that is not a base for socialavgifter."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
+fields = { "label" = "Ersättning för egenavgifter (kontant, inte underlag för socialavgifter)" }
+evidence = "#2102 same-label cluster 'Ersättning för egenavgifter' (2 variables): judged different meaning, high confidence; One amount is the base for egenavgifter, the other is cash compensation that is not a base for socialavgifter."

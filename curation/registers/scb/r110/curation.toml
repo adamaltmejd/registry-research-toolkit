@@ -1618,3 +1618,99 @@ kind = "set"
 subject = "set:vardering-av-utbildning"
 fields = { "label" = "Värdering av utbildning" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:f21-1"
+fields = { "label" = "Svårt att få arbete pga avsaknad av yrkeserfarenhet (enkät 2004)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av yrkeserfarenhet' (4 variables): judged different meaning, medium confidence; F24A_SV and F24A_UT are concurrent items for two groups; F21_1 is the 2004 wave and F24a the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f21-2"
+fields = { "label" = "Svårt att få arbete pga avsaknad av referenser från arbetsgivare (enkät 2004)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av referenser från arbetsgivare' (4 variables): judged different meaning, medium confidence; F24B_SV and F24B_UT are concurrent items for two groups; F21_2 is the 2004 wave and F24b the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f21-3"
+fields = { "label" = "Svårt att få arbete pga avsaknad av kontakter (enkät 2004)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av kontakter' (4 variables): judged different meaning, medium confidence; F24C_SV and F24C_UT are concurrent items for two groups; F21_3 is the 2004 wave and F24c the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av yrkeserfarenhet (sverigefödda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av yrkeserfarenhet' (4 variables): judged different meaning, medium confidence; F24A_SV and F24A_UT are concurrent items for two groups; F21_1 is the 2004 wave and F24a the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av yrkeserfarenhet (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av yrkeserfarenhet' (4 variables): judged different meaning, medium confidence; F24A_SV and F24A_UT are concurrent items for two groups; F21_1 is the 2004 wave and F24a the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av referenser från arbetsgivare (sverigefödda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av referenser från arbetsgivare' (4 variables): judged different meaning, medium confidence; F24B_SV and F24B_UT are concurrent items for two groups; F21_2 is the 2004 wave and F24b the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av referenser från arbetsgivare (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av referenser från arbetsgivare' (4 variables): judged different meaning, medium confidence; F24B_SV and F24B_UT are concurrent items for two groups; F21_2 is the 2004 wave and F24b the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av kontakter (sverigefödda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av kontakter' (4 variables): judged different meaning, medium confidence; F24C_SV and F24C_UT are concurrent items for two groups; F21_3 is the 2004 wave and F24c the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av kontakter (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av kontakter' (4 variables): judged different meaning, medium confidence; F24C_SV and F24C_UT are concurrent items for two groups; F21_3 is the 2004 wave and F24c the 2015-2019 wave."
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-sv"
+fields = { "label" = "Svårt att få arbete då utbildning svår att bedöma (sverigefödda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete då utbildning svår att bedöma' (4 variables): judged different meaning, medium confidence; F24D_SV and F24D_UT are concurrent items for two groups with different scales; F24e and F24f are the same item in adjacent waves."
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-ut"
+fields = { "label" = "Svårt att få arbete då utbildning svår att bedöma (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete då utbildning svår att bedöma' (4 variables): judged different meaning, medium confidence; F24D_SV and F24D_UT are concurrent items for two groups with different scales; F24e and F24f are the same item in adjacent waves."
+
+[[statement]]
+kind = "set"
+subject = "var:f27"
+fields = { "label" = "Grund för bosättning (fråga 27, ja/nej)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is yes/no, F28 gives the reason (family, work, studies), gfbgrp is a six-group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:f28"
+fields = { "label" = "Grund för bosättning (fråga 28, orsak)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is yes/no, F28 gives the reason (family, work, studies), gfbgrp is a six-group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-sex-grupper"
+fields = { "label" = "Grund för bosättning (sex grupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is yes/no, F28 gives the reason (family, work, studies), gfbgrp is a six-group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-sv"
+fields = { "label" = "Kalibreringsvikt (sverigefödda)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; kalvikt_SV and kalvikt_UF are concurrent weights, probably for Swedish-born and foreign-born groups."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-uf"
+fields = { "label" = "Kalibreringsvikt (utrikes födda)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; kalvikt_SV and kalvikt_UF are concurrent weights, probably for Swedish-born and foreign-born groups."

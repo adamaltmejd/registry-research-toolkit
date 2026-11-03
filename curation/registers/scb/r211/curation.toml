@@ -640,3 +640,195 @@ kind = "set"
 subject = "set:vallskord-fran-andra-akerarealer"
 fields = { "label" = "Vallskörd från andra åkerarealer" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-hektarskord-andra-skorden"
+fields = { "label" = "Andraskörd slåttervall (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Andraskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskord (yield per hectare) and Totalskord (total yield) of the second cut are different measures."
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-totalskord-andra-skorden"
+fields = { "label" = "Andraskörd slåttervall (totalskörd)" }
+evidence = "#2102 same-label cluster 'Andraskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskord (yield per hectare) and Totalskord (total yield) of the second cut are different measures."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-andra-skorden"
+fields = { "label" = "Areal bete (andra skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, high confidence; BeteHektar for the second, third and fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-fjarde-skorden"
+fields = { "label" = "Areal bete (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, high confidence; BeteHektar for the second, third and fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-tredje-skorden"
+fields = { "label" = "Areal bete (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, high confidence; BeteHektar for the second, third and fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-andra-skorden"
+fields = { "label" = "Areal slåttervall delskörd (andra skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; ArealSlattervall for the first to fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-fjarde-skorden"
+fields = { "label" = "Areal slåttervall delskörd (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; ArealSlattervall for the first to fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-forsta-skorden"
+fields = { "label" = "Areal slåttervall delskörd (första skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; ArealSlattervall for the first to fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-tredje-skorden"
+fields = { "label" = "Areal slåttervall delskörd (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; ArealSlattervall for the first to fourth cuts are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam"
+fields = { "label" = "Total vallareal (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Total vallareal' (2 variables): judged different meaning, medium confidence; ArealEnlSam (area per collective application) and EvAndradAreal (possibly changed area) are concurrent distinct columns."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-andra-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (andra skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, high confidence; Separate columns per harvest number (second, third, fourth)."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-fjarde-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, high confidence; Separate columns per harvest number (second, third, fourth)."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-tredje-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, high confidence; Separate columns per harvest number (second, third, fourth)."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal"
+fields = { "label" = "Total vallareal (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Total vallareal' (2 variables): judged different meaning, medium confidence; ArealEnlSam (area per collective application) and EvAndradAreal (possibly changed area) are concurrent distinct columns."
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-hektarskord-fjarde-skorden"
+fields = { "label" = "Fjärdeskörd slåttervall, hektarskörd" }
+evidence = "#2102 same-label cluster 'Fjärdeskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are different measures of the fourth cut, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-totalskord-fjarde-skorden"
+fields = { "label" = "Fjärdeskörd slåttervall, totalskörd" }
+evidence = "#2102 same-label cluster 'Fjärdeskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are different measures of the fourth cut, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-hektarskord-forsta-skorden"
+fields = { "label" = "Förstaskörd slåttervall, hektarskörd" }
+evidence = "#2102 same-label cluster 'Förstaskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-totalskord-forsta-skorden"
+fields = { "label" = "Förstaskörd slåttervall, totalskörd" }
+evidence = "#2102 same-label cluster 'Förstaskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:hektarskord-franandra"
+fields = { "label" = "Skörd av vall från andra åkerarealer, hektarskörd" }
+evidence = "#2102 same-label cluster 'Skörd av vall från andra åkerarealer' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "label" = "Produktionsområde (8 områden, brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, medium confidence; 18-area vs 8-area division; OrdPo8 and Po8 have the same value set and overlap in 2019-2020, Ord prefix read as brukningscentrum by analogy with OrdLan."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, medium confidence; 18-area vs 8-area division; OrdPo8 and Po8 have the same value set and overlap in 2019-2020, Ord prefix read as brukningscentrum by analogy with OrdLan."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, medium confidence; 18-area vs 8-area division; OrdPo8 and Po8 have the same value set and overlap in 2019-2020, Ord prefix read as brukningscentrum by analogy with OrdLan."
+
+[[statement]]
+kind = "set"
+subject = "var:telefon1"
+fields = { "label" = "Telefonnummer 1" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Numbered items telefon1 and telefon2 (first and second number)."
+
+[[statement]]
+kind = "set"
+subject = "var:telefon2"
+fields = { "label" = "Telefonnummer 2" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Numbered items telefon1 and telefon2 (first and second number)."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-andra-skorden"
+fields = { "label" = "Torrsubstanshalt, andra skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, medium confidence; One column per cut (första to fjärde skörden) in the same table, plus TsHalt_FranAndra (2018-2019) whose exact scope is not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-fjarde-skorden"
+fields = { "label" = "Torrsubstanshalt, fjärde skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, medium confidence; One column per cut (första to fjärde skörden) in the same table, plus TsHalt_FranAndra (2018-2019) whose exact scope is not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-forsta-skorden"
+fields = { "label" = "Torrsubstanshalt, första skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, medium confidence; One column per cut (första to fjärde skörden) in the same table, plus TsHalt_FranAndra (2018-2019) whose exact scope is not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-tredje-skorden"
+fields = { "label" = "Torrsubstanshalt, tredje skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, medium confidence; One column per cut (första to fjärde skörden) in the same table, plus TsHalt_FranAndra (2018-2019) whose exact scope is not documented."
+
+[[statement]]
+kind = "set"
+subject = "var:totalskord-franandra"
+fields = { "label" = "Skörd av vall från andra åkerarealer, totalskörd" }
+evidence = "#2102 same-label cluster 'Skörd av vall från andra åkerarealer' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures."
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-hektarskord-tredje-skorden"
+fields = { "label" = "Tredjeskörd slåttervall, hektarskörd" }
+evidence = "#2102 same-label cluster 'Tredjeskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures."
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-totalskord-tredje-skorden"
+fields = { "label" = "Tredjeskörd slåttervall, totalskörd" }
+evidence = "#2102 same-label cluster 'Tredjeskörd slåttervall' (2 variables): judged different meaning, high confidence; Hektarskörd and totalskörd are concurrent distinct measures."
+
+[[statement]]
+kind = "set"
+subject = "var:tshalt-franandra"
+fields = { "label" = "Torrsubstanshalt, från andra skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, medium confidence; One column per cut (första to fjärde skörden) in the same table, plus TsHalt_FranAndra (2018-2019) whose exact scope is not documented."

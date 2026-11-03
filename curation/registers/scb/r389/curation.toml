@@ -700,3 +700,81 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12, år" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Alder is age in years; AldersGrupp is a grouped variable with six bands (24 år och yngre ... 45 år och äldre)."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp-31-12"
+fields = { "label" = "Ålder 31/12, åldersgrupp" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Alder is age in years; AldersGrupp is a grouped variable with six bands (24 år och yngre ... 45 år och äldre)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2000niva"
+fields = { "label" = "Typ av gymnasieprogram (SUN 2000-nivå)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (3 variables): judged different meaning, high confidence; Gymnasiebakgrund has three program types; the SUN2000Niva and SUN2020Niva columns hold SUN level codes from different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2020niva"
+fields = { "label" = "Typ av gymnasieprogram (SUN 2020-nivå)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (3 variables): judged different meaning, high confidence; Gymnasiebakgrund has three program types; the SUN2000Niva and SUN2020Niva columns hold SUN level codes from different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-grupp"
+fields = { "label" = "Studiernas omfattning (grupperad)" }
+evidence = "#2102 same-label cluster 'Studiernas omfattning' (2 variables): judged different meaning, high confidence; Omfattning_grupp is the grouped version of Omfattning, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:studerande-justerad"
+fields = { "label" = "Studerande inom aktuell utbildningsform (justerad)" }
+evidence = "#2102 same-label cluster 'Studerande inom aktuell utbildningsform' (2 variables): judged different meaning, high confidence; Studerande_justerad is the adjusted version of Studerande, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:studietakt-grupp"
+fields = { "label" = "Studietakt (grupperad)" }
+evidence = "#2102 same-label cluster 'Studietakt' (2 variables): judged different meaning, high confidence; Studietakt_grupp is the grouped version of Studietakt, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with a detailed three-digit level and an _OLD column with the older coarse one-digit level scheme."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2000, äldre nivåindelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with a detailed three-digit level and an _OLD column with the older coarse one-digit level scheme."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with a detailed three-digit level and an _OLD column with the older coarse one-digit level scheme."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2020, äldre nivåindelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each with a detailed three-digit level and an _OLD column with the older coarse one-digit level scheme."

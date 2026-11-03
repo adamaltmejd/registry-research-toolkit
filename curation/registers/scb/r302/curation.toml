@@ -796,3 +796,117 @@ kind = "set"
 subject = "set:upplevd-nytta-av-utbildningen"
 fields = { "label" = "Upplevd nytta av utbildningen" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 1)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-2"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 2)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-3"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 3)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-4"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 4)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-5"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 5)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-6"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 6)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:f18a-7"
+fields = { "label" = "Huvudsaklig sysselsättning (fråga 18a, delfråga 7)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (8 variables): judged different meaning, medium confidence; F01 is the main occupation; F18a_1..F18a_7 are seven numbered columns of a different question with employment-in-field categories."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-annat"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: annat skäl" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-arbetar-inom-annan-utbildning"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: arbetar inom annan utbildning" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-avsaknad-karriarmojligheter"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: avsaknad av karriärmöjligheter" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-dalig-arbetsmiljo"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: dålig arbetsmiljö" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-daliga-arbetstider"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: dåliga arbetstider" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-lag-lon"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: låg lön" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-lag-status"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: låg status" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-mer-attraktivt-arbete"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: mer attraktivt arbete" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-mycket-stress"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: mycket stress" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: svårt få arbete" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete-dar-vill-bo"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: svårt få arbete där man vill bo" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-heltidsarbete"
+fields = { "label" = "Skäl att arbeta inom annat område än uppnådd utbildning: svårt få heltidsarbete" }
+evidence = "#2102 same-label cluster 'Skäl att arbeta inom annat område än uppnådd utbildning' (12 variables): judged different meaning, high confidence; Each F16 column is a separate reason item, named in the slugs."

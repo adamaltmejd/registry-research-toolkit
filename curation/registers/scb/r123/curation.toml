@@ -14838,3 +14838,459 @@ kind = "set"
 subject = "set:yrkesbyte-pa-grund-av-besvar"
 fields = { "label" = "Yrkesbyte på grund av besvär" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:annatarb05-3851"
+fields = { "label" = "Risk att mot sin vilja förflyttas till annat arbete (version 2005)" }
+evidence = "#2102 same-label cluster 'Risk att mot sin vilja förflyttas till annat arbete' (2 variables): judged different meaning, medium confidence; AnnatArb05 (2005-2006) has a different answer set (includes Egen företagare) and runs concurrently with ANNATARB."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukanseende"
+fields = { "label" = "Arbetat trots sjuk (anledning): anseende" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukbelasta"
+fields = { "label" = "Arbetat trots sjuk (anledning): belasta" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukbrahalsan"
+fields = { "label" = "Arbetat trots sjuk (anledning): bra hälsan" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukforloraarb"
+fields = { "label" = "Arbetat trots sjuk (anledning): förlora arbetet" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukingenannan"
+fields = { "label" = "Arbetat trots sjuk (anledning): ingen annan" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukinterad"
+fields = { "label" = "Arbetat trots sjuk (anledning): inte råd" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukkontakt"
+fields = { "label" = "Arbetat trots sjuk (anledning): kontakt" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjukstolthet"
+fields = { "label" = "Arbetat trots sjuk (anledning): stolthet" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbsjuktyckerom"
+fields = { "label" = "Arbetat trots sjuk (anledning): tycker om arbetet" }
+evidence = "#2102 same-label cluster 'Arbetat trots sjuk (anledning)' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrhandmotordriv"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: motordrivna handverktyg" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrhandverktyg"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: handverktyg" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrlyftanordning"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: lyftanordningar" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrmobilamaskiner"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: mobila maskiner" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrnejingetovan"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: nej, inget av ovanstående" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrstatmaskiner"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: stationära maskiner" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrstegarstallning"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: stegar/ställningar" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrtrycksattanord"
+fields = { "label" = "Arbetsutrustning minst 1/4 av tiden: trycksatta anordningar" }
+evidence = "#2102 same-label cluster 'Arbetsutrustning minst 1/4 av tiden' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per equipment type."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimalder"
+fields = { "label" = "Diskriminering: ålder" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimetnicitet"
+fields = { "label" = "Diskriminering: etnicitet" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimfunktion"
+fields = { "label" = "Diskriminering: funktionsnedsättning" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimkon"
+fields = { "label" = "Diskriminering: kön" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimkonsident"
+fields = { "label" = "Diskriminering: könsidentitet" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimlaggning"
+fields = { "label" = "Diskriminering: sexuell läggning" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimnej"
+fields = { "label" = "Diskriminering: nej" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimtro"
+fields = { "label" = "Diskriminering: religion eller tro" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:diskrimvillintesvara"
+fields = { "label" = "Diskriminering: vill inte svara" }
+evidence = "#2102 same-label cluster 'Diskriminering' (9 variables): judged different meaning, high confidence; Multiple-answer question: one column per ground of discrimination."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonannat"
+fields = { "label" = "Fordon använda i arbetet: annat" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonbil"
+fields = { "label" = "Fordon använda i arbetet: bil" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonbuss"
+fields = { "label" = "Fordon använda i arbetet: buss" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordoncykel"
+fields = { "label" = "Fordon använda i arbetet: cykel" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordoninget"
+fields = { "label" = "Fordon använda i arbetet: inget" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonlastbil"
+fields = { "label" = "Fordon använda i arbetet: lastbil" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonmc"
+fields = { "label" = "Fordon använda i arbetet: motorcykel" }
+evidence = "#2102 same-label cluster 'Fordon använda i arbetet' (7 variables): judged different meaning, high confidence; Multiple-answer question: one column per vehicle type."
+
+[[statement]]
+kind = "set"
+subject = "var:intepenannanorsak"
+fields = { "label" = "Ej arbeta i yrke fram till pension (anledning): annan orsak" }
+evidence = "#2102 same-label cluster 'Ej arbeta i yrke fram till pension (anledning)' (5 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetsmiljo"
+fields = { "label" = "Ej arbeta i yrke fram till pension (anledning): arbetsmiljö" }
+evidence = "#2102 same-label cluster 'Ej arbeta i yrke fram till pension (anledning)' (5 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetstider"
+fields = { "label" = "Ej arbeta i yrke fram till pension (anledning): arbetstider" }
+evidence = "#2102 same-label cluster 'Ej arbeta i yrke fram till pension (anledning)' (5 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetsupp"
+fields = { "label" = "Ej arbeta i yrke fram till pension (anledning): arbetsuppgifter" }
+evidence = "#2102 same-label cluster 'Ej arbeta i yrke fram till pension (anledning)' (5 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:intepenhalsoskal"
+fields = { "label" = "Ej arbeta i yrke fram till pension (anledning): hälsoskäl" }
+evidence = "#2102 same-label cluster 'Ej arbeta i yrke fram till pension (anledning)' (5 variables): judged different meaning, high confidence; Multiple-answer question: one column per reason."
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktandra"
+fields = { "label" = "Konflikt/bråk på arbetsplatsen (varit i): med andra" }
+evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per party."
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktchef"
+fields = { "label" = "Konflikt/bråk på arbetsplatsen (varit i): med chef" }
+evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per party."
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktkollegor"
+fields = { "label" = "Konflikt/bråk på arbetsplatsen (varit i): med kollegor" }
+evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per party."
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktnej"
+fields = { "label" = "Konflikt/bråk på arbetsplatsen (varit i): nej" }
+evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per party."
+
+[[statement]]
+kind = "set"
+subject = "var:permitte05-3922"
+fields = { "label" = "Hot om permittering eller uppsägning? (version 2005)" }
+evidence = "#2102 same-label cluster 'Hot om permittering eller uppsägning?' (2 variables): judged different meaning, medium confidence; Permitte05 (2005-2006) has a different answer set (includes Egen företagare) and runs concurrently with PERMITTE."
+
+[[statement]]
+kind = "set"
+subject = "var:saknarbefogenhet"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: befogenhet" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknarergonomi"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: ergonomi" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknarinformation"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: information" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknaringetovan"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: inget av ovanstående" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknarkunskaper"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: kunskaper" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknarsocialtstod"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: socialt stöd" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknartekniskhjalp"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: teknisk hjälp" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:saknartid"
+fields = { "label" = "Förutsättningar klara arbetsuppgifter saknas: tid" }
+evidence = "#2102 same-label cluster 'Förutsättningar klara arbetsuppgifter saknas' (8 variables): judged different meaning, high confidence; Multiple-answer question: one column per missing prerequisite."
+
+[[statement]]
+kind = "set"
+subject = "var:sarbehandandra"
+fields = { "label" = "Kränkande särbehandling: av andra" }
+evidence = "#2102 same-label cluster 'Kränkande särbehandling' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sarbehandchef"
+fields = { "label" = "Kränkande särbehandling: av chef" }
+evidence = "#2102 same-label cluster 'Kränkande särbehandling' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sarbehandkollegor"
+fields = { "label" = "Kränkande särbehandling: av kollegor" }
+evidence = "#2102 same-label cluster 'Kränkande särbehandling' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sarbehandnej"
+fields = { "label" = "Kränkande särbehandling: nej" }
+evidence = "#2102 same-label cluster 'Kränkande särbehandling' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sexuellatrakandra"
+fields = { "label" = "Sexuella trakasserier: av andra" }
+evidence = "#2102 same-label cluster 'Sexuella trakasserier' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sexuellatrakchef"
+fields = { "label" = "Sexuella trakasserier: av chef" }
+evidence = "#2102 same-label cluster 'Sexuella trakasserier' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sexuellatrakkollegor"
+fields = { "label" = "Sexuella trakasserier: av kollegor" }
+evidence = "#2102 same-label cluster 'Sexuella trakasserier' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:sexuellatraknej"
+fields = { "label" = "Sexuella trakasserier: nej" }
+evidence = "#2102 same-label cluster 'Sexuella trakasserier' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per source."
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsombudlokalt"
+fields = { "label" = "Skyddsombud på arbetsplatsen: lokalt" }
+evidence = "#2102 same-label cluster 'Skyddsombud på arbetsplatsen' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per answer option."
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsombudnej"
+fields = { "label" = "Skyddsombud på arbetsplatsen: nej" }
+evidence = "#2102 same-label cluster 'Skyddsombud på arbetsplatsen' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per answer option."
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsombudregionalt"
+fields = { "label" = "Skyddsombud på arbetsplatsen: regionalt" }
+evidence = "#2102 same-label cluster 'Skyddsombud på arbetsplatsen' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per answer option."
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsombudvetinte"
+fields = { "label" = "Skyddsombud på arbetsplatsen: vet inte" }
+evidence = "#2102 same-label cluster 'Skyddsombud på arbetsplatsen' (4 variables): judged different meaning, high confidence; Multiple-answer question: one column per answer option."
+
+[[statement]]
+kind = "set"
+subject = "var:sni1"
+fields = { "label" = "Näringsgren (avdelning)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Three levels of the industry classification: letter section, 2-digit and 3-digit code."
+
+[[statement]]
+kind = "set"
+subject = "var:sni2"
+fields = { "label" = "Näringsgren (2 positioner)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Three levels of the industry classification: letter section, 2-digit and 3-digit code."
+
+[[statement]]
+kind = "set"
+subject = "var:sni3"
+fields = { "label" = "Näringsgren (3 positioner)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Three levels of the industry classification: letter section, 2-digit and 3-digit code."
+
+[[statement]]
+kind = "set"
+subject = "var:tunga-arbetsmoment-tidigare"
+fields = { "label" = "Tunga arbetsmoment i tidigare yrke (femgradig skala)" }
+evidence = "#2102 same-label cluster 'Tunga arbetsmoment i tidigare yrke' (2 variables): judged different meaning, medium confidence; TUNGAARB has a three-step more/same/less scale; MERTUNGA a five-step increased/decreased scale; they overlap 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:tungaarb"
+fields = { "label" = "Tunga arbetsmoment i tidigare yrke (tregradig skala)" }
+evidence = "#2102 same-label cluster 'Tunga arbetsmoment i tidigare yrke' (2 variables): judged different meaning, medium confidence; TUNGAARB has a three-step more/same/less scale; MERTUNGA a five-step increased/decreased scale; they overlap 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:uveckling"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: utveckling" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-annat-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: annat" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-arbetskamrater-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: arbetskamrater" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-arbetsmiljo-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: arbetsmiljö" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-arbetsuppgifter-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: arbetsuppgifter" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-fast-jobb-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: fast jobb" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-eller-ej-arbetet-lon-ungdomar-16-29"
+fields = { "label" = "Vad som är viktigt eller ej i arbetet: lön" }
+evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Seven separate importance items (development, other, colleagues, environment, tasks, permanent job, pay)."

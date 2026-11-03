@@ -3971,3 +3971,363 @@ kind = "set"
 subject = "set:utbildningstidens-omfattning"
 fields = { "label" = "Utbildningstidens omfattning" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:amne1gr"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 1, grupperad (äldre ämnesindelning)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 1, grupperad' (3 variables): judged different meaning, high confidence; amne1gr uses the older subject grouping (Beteendevetenskap, Teknik...); fikod1gr and fikod6gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:amne2gr"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 2, grupperad (äldre ämnesindelning)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 2, grupperad' (3 variables): judged different meaning, high confidence; amne2gr uses the older subject grouping; fikod2gr and fikod7gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:amne3gr"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 3, grupperad (äldre ämnesindelning)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 3, grupperad' (3 variables): judged different meaning, high confidence; amne3gr uses the older subject grouping; fikod3gr and fikod8gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:amne4gr"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 4, grupperad (äldre ämnesindelning)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 4, grupperad' (3 variables): judged different meaning, high confidence; amne4gr uses the older subject grouping; fikod4gr and fikod9gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:amne5gr"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 5, grupperad (äldre ämnesindelning)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 5, grupperad' (3 variables): judged different meaning, high confidence; amne5gr uses the older subject grouping; fikod5gr and fikod0gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare"
+fields = { "label" = "Antal kursdeltagare (kurs a)" }
+evidence = "#2102 same-label cluster 'Antal kursdeltagare' (5 variables): judged different meaning, medium confidence; Five concurrent columns t16a-t16e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-2"
+fields = { "label" = "Antal kursdeltagare (kurs b)" }
+evidence = "#2102 same-label cluster 'Antal kursdeltagare' (5 variables): judged different meaning, medium confidence; Five concurrent columns t16a-t16e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-3"
+fields = { "label" = "Antal kursdeltagare (kurs c)" }
+evidence = "#2102 same-label cluster 'Antal kursdeltagare' (5 variables): judged different meaning, medium confidence; Five concurrent columns t16a-t16e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-4"
+fields = { "label" = "Antal kursdeltagare (kurs d)" }
+evidence = "#2102 same-label cluster 'Antal kursdeltagare' (5 variables): judged different meaning, medium confidence; Five concurrent columns t16a-t16e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-5"
+fields = { "label" = "Antal kursdeltagare (kurs e)" }
+evidence = "#2102 same-label cluster 'Antal kursdeltagare' (5 variables): judged different meaning, medium confidence; Five concurrent columns t16a-t16e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar"
+fields = { "label" = "Antal övernattningar (kurs a)" }
+evidence = "#2102 same-label cluster 'Antal övernattningar' (5 variables): judged different meaning, medium confidence; Five concurrent columns t15a-t15e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-2"
+fields = { "label" = "Antal övernattningar (kurs b)" }
+evidence = "#2102 same-label cluster 'Antal övernattningar' (5 variables): judged different meaning, medium confidence; Five concurrent columns t15a-t15e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-3"
+fields = { "label" = "Antal övernattningar (kurs c)" }
+evidence = "#2102 same-label cluster 'Antal övernattningar' (5 variables): judged different meaning, medium confidence; Five concurrent columns t15a-t15e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-4"
+fields = { "label" = "Antal övernattningar (kurs d)" }
+evidence = "#2102 same-label cluster 'Antal övernattningar' (5 variables): judged different meaning, medium confidence; Five concurrent columns t15a-t15e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-5"
+fields = { "label" = "Antal övernattningar (kurs e)" }
+evidence = "#2102 same-label cluster 'Antal övernattningar' (5 variables): judged different meaning, medium confidence; Five concurrent columns t15a-t15e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-3"
+fields = { "label" = "Kurs/utbildning 1 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 1 på arbetstid' (5 variables): judged different meaning, medium confidence; t11f/t12f are the second-half-year item (pid says andra halvåret) concurrent with t11a/t12a/T13A, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-andra-halvaret"
+fields = { "label" = "Kurs/utbildning 1 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 1 på arbetstid' (5 variables): judged different meaning, medium confidence; t11f/t12f are the second-half-year item (pid says andra halvåret) concurrent with t11a/t12a/T13A, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-3"
+fields = { "label" = "Kurs/utbildning 2 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 2 på arbetstid' (5 variables): judged different meaning, medium confidence; t11g/t12g are the second-half-year item (pid says andra halvåret) concurrent with t11b/t12b/T13B, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-andra-halvaret"
+fields = { "label" = "Kurs/utbildning 2 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 2 på arbetstid' (5 variables): judged different meaning, medium confidence; t11g/t12g are the second-half-year item (pid says andra halvåret) concurrent with t11b/t12b/T13B, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-3"
+fields = { "label" = "Kurs/utbildning 3 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 3 på arbetstid' (5 variables): judged different meaning, medium confidence; t11h/t12h are the second-half-year item (pid says andra halvåret) concurrent with t11c/t12c/T13C, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-andra-halvaret"
+fields = { "label" = "Kurs/utbildning 3 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 3 på arbetstid' (5 variables): judged different meaning, medium confidence; t11h/t12h are the second-half-year item (pid says andra halvåret) concurrent with t11c/t12c/T13C, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-3"
+fields = { "label" = "Kurs/utbildning 4 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 4 på arbetstid' (5 variables): judged different meaning, medium confidence; t11i/t12i are the second-half-year item (pid says andra halvåret) concurrent with t11d/t12d/T13D, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-andra-halvaret"
+fields = { "label" = "Kurs/utbildning 4 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 4 på arbetstid' (5 variables): judged different meaning, medium confidence; t11i/t12i are the second-half-year item (pid says andra halvåret) concurrent with t11d/t12d/T13D, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-3"
+fields = { "label" = "Kurs/utbildning 5 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 5 på arbetstid' (5 variables): judged different meaning, medium confidence; t11j/t12j are the second-half-year item (pid says andra halvåret) concurrent with t11e/t12e/T13E, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-andra-halvaret"
+fields = { "label" = "Kurs/utbildning 5 på arbetstid (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildning 5 på arbetstid' (5 variables): judged different meaning, medium confidence; t11j/t12j are the second-half-year item (pid says andra halvåret) concurrent with t11e/t12e/T13E, which are the same item renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning"
+fields = { "label" = "Kurs medförde övernattning, kurs 1" }
+evidence = "#2102 same-label cluster 'Kurs medförde övernattning' (5 variables): judged different meaning, medium confidence; Five concurrent columns t14a-e in the same table with identical value sets; they are the five courses (a-e), by analogy with t11a-e = kurs 1-5 elsewhere in the register."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-2"
+fields = { "label" = "Kurs medförde övernattning, kurs 2" }
+evidence = "#2102 same-label cluster 'Kurs medförde övernattning' (5 variables): judged different meaning, medium confidence; Five concurrent columns t14a-e in the same table with identical value sets; they are the five courses (a-e), by analogy with t11a-e = kurs 1-5 elsewhere in the register."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-3"
+fields = { "label" = "Kurs medförde övernattning, kurs 3" }
+evidence = "#2102 same-label cluster 'Kurs medförde övernattning' (5 variables): judged different meaning, medium confidence; Five concurrent columns t14a-e in the same table with identical value sets; they are the five courses (a-e), by analogy with t11a-e = kurs 1-5 elsewhere in the register."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-4"
+fields = { "label" = "Kurs medförde övernattning, kurs 4" }
+evidence = "#2102 same-label cluster 'Kurs medförde övernattning' (5 variables): judged different meaning, medium confidence; Five concurrent columns t14a-e in the same table with identical value sets; they are the five courses (a-e), by analogy with t11a-e = kurs 1-5 elsewhere in the register."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-5"
+fields = { "label" = "Kurs medförde övernattning, kurs 5" }
+evidence = "#2102 same-label cluster 'Kurs medförde övernattning' (5 variables): judged different meaning, medium confidence; Five concurrent columns t14a-e in the same table with identical value sets; they are the five courses (a-e), by analogy with t11a-e = kurs 1-5 elsewhere in the register."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa"
+fields = { "label" = "Kurs medförde resa (kurs a)" }
+evidence = "#2102 same-label cluster 'Kurs medförde resa' (5 variables): judged different meaning, medium confidence; Five concurrent columns t13a-t13e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-2"
+fields = { "label" = "Kurs medförde resa (kurs b)" }
+evidence = "#2102 same-label cluster 'Kurs medförde resa' (5 variables): judged different meaning, medium confidence; Five concurrent columns t13a-t13e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-3"
+fields = { "label" = "Kurs medförde resa (kurs c)" }
+evidence = "#2102 same-label cluster 'Kurs medförde resa' (5 variables): judged different meaning, medium confidence; Five concurrent columns t13a-t13e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-4"
+fields = { "label" = "Kurs medförde resa (kurs d)" }
+evidence = "#2102 same-label cluster 'Kurs medförde resa' (5 variables): judged different meaning, medium confidence; Five concurrent columns t13a-t13e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-5"
+fields = { "label" = "Kurs medförde resa (kurs e)" }
+evidence = "#2102 same-label cluster 'Kurs medförde resa' (5 variables): judged different meaning, medium confidence; Five concurrent columns t13a-t13e in one table, one per course."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-1-arr6"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 1 (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 1' (5 variables): judged different meaning, medium confidence; arr6 is the second-half-year item concurrent with t10a/Arr1/t11a (same item over time); T12A has a different provider code list (Annan=10, Privat utbildningsföretag=2)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-2-arr7"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 2 (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 2' (5 variables): judged different meaning, medium confidence; arr7 is the second-half-year item concurrent with t10b/Arr2/t11b (same item over time); T12B has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-3-arr8"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 3 (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 3' (5 variables): judged different meaning, medium confidence; arr8 is the second-half-year item concurrent with t10c/Arr3/t11c (same item over time); T12C has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-4-arr9"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 4 (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 4' (5 variables): judged different meaning, medium confidence; arr9 is the second-half-year item concurrent with t10d/Arr4/t11d (same item over time); T12D has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1-2"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 1 (ny indelning 2008-2010)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 1' (5 variables): judged different meaning, medium confidence; arr6 is the second-half-year item concurrent with t10a/Arr1/t11a (same item over time); T12A has a different provider code list (Annan=10, Privat utbildningsföretag=2)."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2-2"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 2 (ny indelning 2008-2010)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 2' (5 variables): judged different meaning, medium confidence; arr7 is the second-half-year item concurrent with t10b/Arr2/t11b (same item over time); T12B has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3-2"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 3 (ny indelning 2008-2010)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 3' (5 variables): judged different meaning, medium confidence; arr8 is the second-half-year item concurrent with t10c/Arr3/t11c (same item over time); T12C has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4-2"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 4 (ny indelning 2008-2010)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 4' (5 variables): judged different meaning, medium confidence; arr9 is the second-half-year item concurrent with t10d/Arr4/t11d (same item over time); T12D has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-2"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 (ny indelning 2008-2010)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 5' (4 variables): judged different meaning, medium confidence; arr10 is the second-half-year item (pid says andra halvåret) concurrent with t10e/t11e (same item over time); T12E has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-andra-halvaret"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 5' (4 variables): judged different meaning, medium confidence; arr10 is the second-half-year item (pid says andra halvåret) concurrent with t10e/t11e (same item over time); T12E has a different provider code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-andra-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 1, grupperad (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 1, grupperad' (3 variables): judged different meaning, high confidence; amne1gr uses the older subject grouping (Beteendevetenskap, Teknik...); fikod1gr and fikod6gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 1, grupperad (första halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 1, grupperad' (3 variables): judged different meaning, high confidence; amne1gr uses the older subject grouping (Beteendevetenskap, Teknik...); fikod1gr and fikod6gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-andra-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 2, grupperad (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 2, grupperad' (3 variables): judged different meaning, high confidence; amne2gr uses the older subject grouping; fikod2gr and fikod7gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 2, grupperad (första halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 2, grupperad' (3 variables): judged different meaning, high confidence; amne2gr uses the older subject grouping; fikod2gr and fikod7gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-andra-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 3, grupperad (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 3, grupperad' (3 variables): judged different meaning, high confidence; amne3gr uses the older subject grouping; fikod3gr and fikod8gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 3, grupperad (första halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 3, grupperad' (3 variables): judged different meaning, high confidence; amne3gr uses the older subject grouping; fikod3gr and fikod8gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-andra-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 4, grupperad (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 4, grupperad' (3 variables): judged different meaning, high confidence; amne4gr uses the older subject grouping; fikod4gr and fikod9gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 4, grupperad (första halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 4, grupperad' (3 variables): judged different meaning, high confidence; amne4gr uses the older subject grouping; fikod4gr and fikod9gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-andra-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 5, grupperad (andra halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 5, grupperad' (3 variables): judged different meaning, high confidence; amne5gr uses the older subject grouping; fikod5gr and fikod0gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
+fields = { "label" = "Kursinnehåll för kurs/utbildning 5, grupperad (första halvåret)" }
+evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 5, grupperad' (3 variables): judged different meaning, high confidence; amne5gr uses the older subject grouping; fikod5gr and fikod0gr use the education-field grouping and are first vs second half-year items."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod1"
+fields = { "label" = "Utbildningsinriktning (3 positioner), kurs 1" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (3 positioner)' (5 variables): judged different meaning, medium confidence; FiKod1-5 are five concurrent columns with the same SUN 2000 value set, one per course (numbered suffix)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod2"
+fields = { "label" = "Utbildningsinriktning (3 positioner), kurs 2" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (3 positioner)' (5 variables): judged different meaning, medium confidence; FiKod1-5 are five concurrent columns with the same SUN 2000 value set, one per course (numbered suffix)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod3"
+fields = { "label" = "Utbildningsinriktning (3 positioner), kurs 3" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (3 positioner)' (5 variables): judged different meaning, medium confidence; FiKod1-5 are five concurrent columns with the same SUN 2000 value set, one per course (numbered suffix)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod4"
+fields = { "label" = "Utbildningsinriktning (3 positioner), kurs 4" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (3 positioner)' (5 variables): judged different meaning, medium confidence; FiKod1-5 are five concurrent columns with the same SUN 2000 value set, one per course (numbered suffix)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod5"
+fields = { "label" = "Utbildningsinriktning (3 positioner), kurs 5" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (3 positioner)' (5 variables): judged different meaning, medium confidence; FiKod1-5 are five concurrent columns with the same SUN 2000 value set, one per course (numbered suffix)."

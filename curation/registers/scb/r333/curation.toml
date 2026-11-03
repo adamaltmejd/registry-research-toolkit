@@ -4844,3 +4844,345 @@ kind = "set"
 subject = "set:vardnadshavartyp"
 fields = { "label" = "Vårdnadshavartyp" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-aldstabarn"
+fields = { "label" = "Ålder 31/12 (äldsta barnet)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (3 variables): judged different meaning, high confidence; AlderSlut is the person's own age; AldstaBarn and YngstaBarn are the ages of the oldest and youngest child in the family table."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-yngstabarn"
+fields = { "label" = "Ålder 31/12 (yngsta barnet)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (3 variables): judged different meaning, high confidence; AlderSlut is the person's own age; AldstaBarn and YngstaBarn are the ages of the oldest and youngest child in the family table."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-median"
+fields = { "label" = "Disponibel inkomst i relation till medianinkomsten i Sverige (andel)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst i relation till medianinkomsten i Sverige' (2 variables): judged different meaning, high confidence; Andel_av_median is the continuous share of the median, AndelMedianA the grouped version with a code list."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-bostb"
+fields = { "label" = "Bostadsbidrag (procent av disponibel familjeinkomst)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag' (2 variables): judged different meaning, high confidence; Andel_Bostb is the housing allowance as a percentage of disposable family income, Bostb_INK the amount."
+
+[[statement]]
+kind = "set"
+subject = "var:andelmediana"
+fields = { "label" = "Disponibel inkomst i relation till medianinkomsten i Sverige (grupperad)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst i relation till medianinkomsten i Sverige' (2 variables): judged different meaning, high confidence; Andel_av_median is the continuous share of the median, AndelMedianA the grouped version with a code list."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-22-ar-antalgembarnunder22"
+fields = { "label" = "Antal barn under 22 år (gemensamma barn)" }
+evidence = "#2102 same-label cluster 'Antal barn under 22 år' (2 variables): judged different meaning, high confidence; AntalGemBarnUnder22 counts joint (gemensamma) children, AntalBarnUnder22 all children under 22."
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyskontot"
+fields = { "label" = "Antal syskon (totalt)" }
+evidence = "#2102 same-label cluster 'Antal syskon' (2 variables): judged different meaning, medium confidence; AntalSyskon and AntalSyskonTot coexist in the same table; Tot is read as the total count."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-bofar"
+fields = { "label" = "Arbetsmarknadsstatus (bofader)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (4 variables): judged different meaning, high confidence; Labour market status of the resident father (BoFar) or mother (BoMor), each in a baseline and a follow-up (Uppf) version."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-bofar-uppf"
+fields = { "label" = "Arbetsmarknadsstatus (bofader, uppföljning)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (4 variables): judged different meaning, high confidence; Labour market status of the resident father (BoFar) or mother (BoMor), each in a baseline and a follow-up (Uppf) version."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-bomor"
+fields = { "label" = "Arbetsmarknadsstatus (bomoder)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (4 variables): judged different meaning, high confidence; Labour market status of the resident father (BoFar) or mother (BoMor), each in a baseline and a follow-up (Uppf) version."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-bomor-uppf"
+fields = { "label" = "Arbetsmarknadsstatus (bomoder, uppföljning)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (4 variables): judged different meaning, high confidence; Labour market status of the resident father (BoFar) or mother (BoMor), each in a baseline and a follow-up (Uppf) version."
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-grupp"
+fields = { "label" = "Avstånd barn och förälder, avståndsklass" }
+evidence = "#2102 same-label cluster 'Avstånd barn och förälder' (2 variables): judged different meaning, medium confidence; Avstand_Grupp holds distance bands; AvstandBo has no value set (presumably the ungrouped distance); same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:avstandbo"
+fields = { "label" = "Avstånd barn och förälder, ogrupperat" }
+evidence = "#2102 same-label cluster 'Avstånd barn och förälder' (2 variables): judged different meaning, medium confidence; Avstand_Grupp holds distance bands; AvstandBo has no value set (presumably the ungrouped distance); same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:bostb-ink"
+fields = { "label" = "Bostadsbidrag (kronor)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag' (2 variables): judged different meaning, high confidence; Andel_Bostb is the housing allowance as a percentage of disposable family income, Bostb_INK the amount."
+
+[[statement]]
+kind = "set"
+subject = "var:civil2000bofar"
+fields = { "label" = "Civilstånd, 15 månader senare (bofader)" }
+evidence = "#2102 same-label cluster 'Civilstånd, 15 månader senare' (3 variables): judged different meaning, medium confidence; Civil2000BoFar and Civil2000BoMor are the resident father's and mother's civil status in 1998-1999; Civil (from 2001) is a separate column whose person is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:civil2000bomor"
+fields = { "label" = "Civilstånd, 15 månader senare (bomoder)" }
+evidence = "#2102 same-label cluster 'Civilstånd, 15 månader senare' (3 variables): judged different meaning, medium confidence; Civil2000BoFar and Civil2000BoMor are the resident father's and mother's civil status in 1998-1999; Civil (from 2001) is a separate column whose person is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:ekbist"
+fields = { "label" = "Ekonomiskt bistånd (ja/nej)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, high confidence; Ekbist is a yes/no flag; Andel_Isocbu is the share of disposable family income in percent."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-procent-disponibel-familjeinkomst"
+fields = { "label" = "Ekonomiskt bistånd (procent av disponibel familjeinkomst)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, high confidence; Ekbist is a yes/no flag; Andel_Isocbu is the share of disposable family income in percent."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "label" = "Familjeställning (äldre kodning)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; FamStall (to 2015) and FamStall_BarnReg (from 2014) use different code lists (11/12 vs 110/120, with and without the joint-children note)."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-famstall-barnreg"
+fields = { "label" = "Familjeställning (barnregistrets kodning)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; FamStall (to 2015) and FamStall_BarnReg (from 2014) use different code lists (11/12 vs 110/120, with and without the joint-children note)."
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp-foresep"
+fields = { "label" = "Familjetyp, variant (före separation)" }
+evidence = "#2102 same-label cluster 'Familjetyp, variant' (3 variables): judged different meaning, high confidence; FamTyp2 is the detailed variant, Famtyp2_grupperad its grouped version and Famtyp_ForeSep the living arrangement before separation."
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp-samens"
+fields = { "label" = "Familjetyp (ensamstående eller sambo)" }
+evidence = "#2102 same-label cluster 'Familjetyp' (3 variables): judged different meaning, medium confidence; FamTyp and Famtyp_BarnReg share the same code list and follow each other; Famtyp_Samens is a separate lone parent / cohabiting classification."
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp2-grupperad"
+fields = { "label" = "Familjetyp, variant (grupperad)" }
+evidence = "#2102 same-label cluster 'Familjetyp, variant' (3 variables): judged different meaning, high confidence; FamTyp2 is the detailed variant, Famtyp2_grupperad its grouped version and Famtyp_ForeSep the living arrangement before separation."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-procent-disponibel-familjeinkomst"
+fields = { "label" = "Föräldrapenning, skattepliktig (procent av disponibel familjeinkomst)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, high confidence; Andel_Fp is parental benefit as percent of disposable family income, Fp_INK the taxable amount in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-skattepliktig-kronor"
+fields = { "label" = "Föräldrapenning, skattepliktig (kronor)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, high confidence; Andel_Fp is parental benefit as percent of disposable family income, Fp_INK the taxable amount in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:helsyskonannanfam"
+fields = { "label" = "Antal helsyskon (i annan familj)" }
+evidence = "#2102 same-label cluster 'Antal helsyskon' (3 variables): judged different meaning, high confidence; Total full siblings, and the part living in another family (AnnanFam) or in the own family (EgenFam)."
+
+[[statement]]
+kind = "set"
+subject = "var:helsyskonegenfam"
+fields = { "label" = "Antal helsyskon (i egen familj)" }
+evidence = "#2102 same-label cluster 'Antal helsyskon' (3 variables): judged different meaning, high confidence; Total full siblings, and the part living in another family (AnnanFam) or in the own family (EgenFam)."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomststandarda-rn2017"
+fields = { "label" = "Inkomststandard 3 (grupperad)" }
+evidence = "#2102 same-label cluster 'Inkomststandard 3' (2 variables): judged different meaning, high confidence; InkomststandardA_RN2017 is the grouped standard with a code list; Inkstandard_RN2017 is the ungrouped measure."
+
+[[statement]]
+kind = "set"
+subject = "var:inkstandard-rn2017"
+fields = { "label" = "Inkomststandard 3 (ogrupperad)" }
+evidence = "#2102 same-label cluster 'Inkomststandard 3' (2 variables): judged different meaning, high confidence; InkomststandardA_RN2017 is the grouped standard with a code list; Inkstandard_RN2017 is the ungrouped measure."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2017-klartext"
+fields = { "label" = "Kommungruppsindelning (2017, klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (4 variables): judged different meaning, high confidence; Code and plain-text columns for the 2017 and the 2023 municipality group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2017-kod"
+fields = { "label" = "Kommungruppsindelning (2017, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (4 variables): judged different meaning, high confidence; Code and plain-text columns for the 2017 and the 2023 municipality group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2023-klartext"
+fields = { "label" = "Kommungruppsindelning (2023, klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (4 variables): judged different meaning, high confidence; Code and plain-text columns for the 2017 and the 2023 municipality group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2023-kod"
+fields = { "label" = "Kommungruppsindelning (2023, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (4 variables): judged different meaning, high confidence; Code and plain-text columns for the 2017 and the 2023 municipality group classification."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard1-15-manader-senare"
+fields = { "label" = "Personnummer vårdnadshavare 1 (15 månader senare)" }
+evidence = "#2102 same-label cluster 'Personnummer vårdnadshavare 1' (2 variables): judged different meaning, medium confidence; PersonNrVard1_2000 is the follow-up measurement 15 months later in the same table as PersonNrVard1."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard2-15-manader-senare"
+fields = { "label" = "Personnummer vårdnadshavare 2 (15 månader senare)" }
+evidence = "#2102 same-label cluster 'Personnummer vårdnadshavare 2' (2 variables): judged different meaning, medium confidence; PersonNrVard2_2000 is the follow-up measurement 15 months later in the same table as PersonNrVard2."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-adfar"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, adoptivfar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-admor"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, adoptivmor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-bofar"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, bofader)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-bomor"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, bomoder)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-far"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, biologisk far)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-foraldrar"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, föräldrar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-mor"
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov, biologisk mor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (7 variables): judged different meaning, high confidence; Same SUN 2020 coarse level for different persons: adoptive father/mother, resident father/mother, biological father/mother, and a parents' variant with its own code list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-adfar"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, adoptivfar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-adfar-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, adoptivfar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-admor"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, adoptivmor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-admor-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, adoptivmor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-bofar"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, bofader)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-bofar-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, bofader)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-bomor"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, bomoder)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-bomor-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, bomoder)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-far"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, biologisk far)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-far-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, biologisk far)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-foraldrar"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, föräldrar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-mor"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, biologisk mor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-mor-2"
+fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, biologisk mor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, medium confidence; SUN 2000 coarse level (2014-2019) for each person, plus a SUN 2020 series in 2019-12..2020-01 for the same persons; the -2 members share spelling and table with members of the Utbildningsnivå cluster (SUN 2020) and look like duplicates of them."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (fyra grupper)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; UtlSvBakg has four categories (foreign-born, native with two/one/no foreign-born parents), UtlSvBakg_grupp two (foreign vs Swedish background)."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg-grupp"
+fields = { "label" = "Utländsk/svensk bakgrund (grupperad)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; UtlSvBakg has four categories (foreign-born, native with two/one/no foreign-born parents), UtlSvBakg_grupp two (foreign vs Swedish background)."

@@ -1100,3 +1100,51 @@ kind = "set"
 subject = "set:urvalsstorlek"
 fields = { "label" = "Urvalsstorlek" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "label" = "Branschgrupp (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): judged different meaning, medium confidence; AktBr92 uses the SNI 92 group list, AktBr07 and AL2UndEjU the SNI 2007 group list, BGrupp a five-digit group code list."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "label" = "Branschgrupp (SNI 92)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): judged different meaning, medium confidence; AktBr92 uses the SNI 92 group list, AktBr07 and AL2UndEjU the SNI 2007 group list, BGrupp a five-digit group code list."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "label" = "Branschgrupp (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): judged different meaning, medium confidence; AktBr92 uses the SNI 92 group list, AktBr07 and AL2UndEjU the SNI 2007 group list, BGrupp a five-digit group code list."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "label" = "Branschgrupp (SNI 2007, 5-siffrig kod)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): judged different meaning, medium confidence; AktBr92 uses the SNI 92 group list, AktBr07 and AL2UndEjU the SNI 2007 group list, BGrupp a five-digit group code list."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92, AktSni07 and AL2UndEjU the SNI 2007 list; CU_BranschText is a separate text column in the 2015 inventory table."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92, AktSni07 and AL2UndEjU the SNI 2007 list; CU_BranschText is a separate text column in the 2015 inventory table."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92, AktSni07 and AL2UndEjU the SNI 2007 list; CU_BranschText is a separate text column in the 2015 inventory table."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "label" = "Näringsgren (SNI 2007, branschtext)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92, AktSni07 and AL2UndEjU the SNI 2007 list; CU_BranschText is a separate text column in the 2015 inventory table."

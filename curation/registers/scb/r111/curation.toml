@@ -11934,3 +11934,681 @@ kind = "set"
 subject = "set:yrkesspecifika-kunskaper-i-arbetet"
 fields = { "label" = "Yrkesspecifika kunskaper i arbetet" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:age"
+fields = { "label" = "Ålder (grupperad)" }
+evidence = "#2102 same-label cluster 'Ålder' (3 variables): judged different meaning, medium confidence; Alder has no value set, age is a three-group version (up to 30, 31-45, 46+), and AlderUtsandning is the age at dispatch."
+
+[[statement]]
+kind = "set"
+subject = "var:alderutsandning"
+fields = { "label" = "Ålder (vid utsändning)" }
+evidence = "#2102 same-label cluster 'Ålder' (3 variables): judged different meaning, medium confidence; Alder has no value set, age is a three-group version (up to 30, 31-45, 46+), and AlderUtsandning is the age at dispatch."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-utbildning-utomlands"
+fields = { "label" = "Studier utomlands (annan utbildning)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inkomna-svar-per-stratum-inklusive-overtackning"
+fields = { "label" = "Antal svarande personer (inklusive övertäckning)" }
+evidence = "#2102 same-label cluster 'Antal svarande personer' (4 variables): judged different meaning, medium confidence; Column m counts incoming answers per stratum including over-coverage (2000); svar, NSVAR04 and NSVAR are the respondent counts in successive years."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-aret-efter-gymnasiet-annat-an-utbildningsomrade"
+fields = { "label" = "Arbete inom olika områden (annat än utbildningsområdet)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables): judged different meaning, high confidence; Four concurrent F17_xx_ny columns in one table, each a different answer alternative: work within, outside, in a non-area-specific education, or not worked."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-aret-efter-gymnasiet-inom-utbildningsomrade"
+fields = { "label" = "Arbete inom olika områden (inom utbildningsområdet)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables): judged different meaning, high confidence; Four concurrent F17_xx_ny columns in one table, each a different answer alternative: work within, outside, in a non-area-specific education, or not worked."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-aret-efter-gymnasiet-utbildning-inte-omradesinriktad"
+fields = { "label" = "Arbete inom olika områden (utbildningen inte områdesinriktad)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables): judged different meaning, high confidence; Four concurrent F17_xx_ny columns in one table, each a different answer alternative: work within, outside, in a non-area-specific education, or not worked."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-ejarbut"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f08"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f08-5"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f09-5"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f13-05"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f9-5"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-fr20"
+fields = { "label" = "Arbete utomlands (Europa, utanför Europa eller nej)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-fr21c"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): judged different meaning, medium confidence; fr20 is a combined question (abroad in Europe, outside Europe, or no); the other members are the 'no, have not worked abroad' alternative (F9_5, F08_5, F13_05 etc.) renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettstatus"
+fields = { "label" = "Blankettens statuskod (resultatkod)" }
+evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, high confidence; Three concurrent columns in one table with different code lists: result code, information source and unit status."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-annat-satt"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? (fritext)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?' (3 variables): judged different meaning, medium confidence; F25 is the coded yes/no/don't know answer; F25_txt (and F23, which has no value set) is the free-text description."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-annat-satt-2"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? (ja/nej)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?' (3 variables): judged different meaning, medium confidence; F25 is the coded yes/no/don't know answer; F25_txt (and F23, which has no value set) is the free-text description."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-annat-satt-3"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? (fritext)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?' (3 variables): judged different meaning, medium confidence; F25 is the coded yes/no/don't know answer; F25_txt (and F23, which has no value set) is the free-text description."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-forandrats"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats av coronapandemin? (arbetsuppgifter)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats av coronapandemin?' (4 variables): judged different meaning, medium confidence; Four different survey questions with different answer alternatives: type of effect (F24), changed tasks (F16), increased/decreased extent (F17) and changed working hours (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-forandrats-2"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats av coronapandemin? (ökad eller minskad omfattning)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats av coronapandemin?' (4 variables): judged different meaning, medium confidence; Four different survey questions with different answer alternatives: type of effect (F24), changed tasks (F16), increased/decreased extent (F17) and changed working hours (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:corona-syss-forandrats-3"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats av coronapandemin? (arbetstid)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats av coronapandemin?' (4 variables): judged different meaning, medium confidence; Four different survey questions with different answer alternatives: type of effect (F24), changed tasks (F16), increased/decreased extent (F17) and changed working hours (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:examen2017"
+fields = { "label" = "Förekomst av examen (högskoleregistret)" }
+evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
+
+[[statement]]
+kind = "set"
+subject = "var:examengr"
+fields = { "label" = "Förekomst av examen (högskoleregistret)" }
+evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
+
+[[statement]]
+kind = "set"
+subject = "var:f24"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats av coronapandemin? (typ av påverkan)" }
+evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats av coronapandemin?' (4 variables): judged different meaning, medium confidence; Four different survey questions with different answer alternatives: type of effect (F24), changed tasks (F16), increased/decreased extent (F17) and changed working hours (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:f3-txt"
+fields = { "label" = "Anställningsform (fritext)" }
+evidence = "#2102 same-label cluster 'Anställningsform' (10 variables): judged different meaning, medium confidence; The coded employment-form question recurs across waves and tables (same meaning, changing code detail); F3_txt is the free-text companion of F3 in the same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:f32-5"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:f33-5"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:f38-5"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:f6-07"
+fields = { "label" = "Fick arbetet på något annat sätt än de tidigare uppräknade (ja/nej)" }
+evidence = "#2102 same-label cluster 'Fick arbetet på något annat sätt än de tidigare uppräknade' (2 variables): judged different meaning, high confidence; F6_07 is the coded yes/no answer; F6_txt is the accompanying free-text field, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:f6-txt"
+fields = { "label" = "Fick arbetet på något annat sätt än de tidigare uppräknade (fritext)" }
+evidence = "#2102 same-label cluster 'Fick arbetet på något annat sätt än de tidigare uppräknade' (2 variables): judged different meaning, high confidence; F6_07 is the coded yes/no answer; F6_txt is the accompanying free-text field, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-examen"
+fields = { "label" = "Förekomst av examen (enkätsvar)" }
+evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-examen-hogskoleregister-vt2021"
+fields = { "label" = "Förekomst av examen (högskoleregistret)" }
+evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-examen-sverige-enkat"
+fields = { "label" = "Förekomst av examen (enkätsvar)" }
+evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
+
+[[statement]]
+kind = "set"
+subject = "var:forskarutbildning-utomlands"
+fields = { "label" = "Studier utomlands (forskarutbildning)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:fr21"
+fields = { "label" = "Studier utomlands (Europa, utanför Europa eller nej)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:fr23c"
+fields = { "label" = "Studier utomlands (Europa, utanför Europa eller nej)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:funk-analysomr-fa2015-klartext"
+fields = { "label" = "Funktionella analysregioner (FA 2015, klartext)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner' (3 variables): judged different meaning, medium confidence; Region name text (Klartext) and region code are separate columns, and FA15_senaste has a different code numbering from Funk_Analysomr_FA2015_Kod."
+
+[[statement]]
+kind = "set"
+subject = "var:funk-analysomr-fa2015-kod"
+fields = { "label" = "Funktionella analysregioner (FA 2015, kod)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner' (3 variables): judged different meaning, medium confidence; Region name text (Klartext) and region code are separate columns, and FA15_senaste has a different code numbering from Funk_Analysomr_FA2015_Kod."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner"
+fields = { "label" = "Funktionella analysregioner (FA 2015, senaste kodning)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner' (3 variables): judged different meaning, medium confidence; Region name text (Klartext) and region code are separate columns, and FA15_senaste has a different code numbering from Funk_Analysomr_FA2015_Kod."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "label" = "Gymnasieprogram (yrkes- eller högskoleförberedande)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, high confidence; Programme code (BF, BP, EC ... in program, GYprogr, Utbild_Sl) versus the grouped vocational/higher-education-preparatory split (F9_ny, F9)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
+fields = { "label" = "Gymnasieprogram (yrkes- eller högskoleförberedande)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, high confidence; Programme code (BF, BP, EC ... in program, GYprogr, Utbild_Sl) versus the grouped vocational/higher-education-preparatory split (F9_ny, F9)."
+
+[[statement]]
+kind = "set"
+subject = "var:gyprogr"
+fields = { "label" = "Gymnasieprogram (programkod)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, high confidence; Programme code (BF, BP, EC ... in program, GYprogr, Utbild_Sl) versus the grouped vocational/higher-education-preparatory split (F9_ny, F9)."
+
+[[statement]]
+kind = "set"
+subject = "var:help"
+fields = { "label" = "Kalibreringsvariabel (kön och föräldrars utbildning)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-utomlands"
+fields = { "label" = "Studier utomlands (högskoleutbildning)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla"
+fields = { "label" = "Blankettens statuskod (informationskälla)" }
+evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, high confidence; Three concurrent columns in one table with different code lists: result code, information source and unit status."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-arbetat-aret-efter-gymnasiet"
+fields = { "label" = "Arbete inom olika områden (inte arbetat året efter gymnasiet)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables): judged different meaning, high confidence; Four concurrent F17_xx_ny columns in one table, each a different answer alternative: work within, outside, in a non-area-specific education, or not worked."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-bak"
+fields = { "label" = "Kalibreringsvariabel (kön och svensk eller utländsk bakgrund)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-beh"
+fields = { "label" = "Kalibreringsvariabel (kön och gymnasieprogram)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-ee"
+fields = { "label" = "Kalibreringsvariabel (kön och programtyp)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-fu"
+fields = { "label" = "Kalibreringsvariabel (föräldrars utbildning)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-fut"
+fields = { "label" = "Kalibreringsvariabel (kön och föräldrars utbildning)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-kg"
+fields = { "label" = "Kalibreringsvariabel (kön och gymnasieprogram)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-ko"
+fields = { "label" = "Kalibreringsvariabel (kommungrupp)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-me"
+fields = { "label" = "Kalibreringsvariabel (betyg och meritvärde)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-mer"
+fields = { "label" = "Kalibreringsvariabel (betyg och meritvärde)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-ub"
+fields = { "label" = "Kalibreringsvariabel (födelseland)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-utb"
+fields = { "label" = "Kalibreringsvariabel (kön och programtyp)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-direkta-svar-antal"
+fields = { "label" = "Vikt (kalibrerad, direkta svar, antal)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-direkta-svar-upprakningstal"
+fields = { "label" = "Vikt (kalibrerad, direkta svar, uppräkningstal)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-indirekta-svar-antal"
+fields = { "label" = "Vikt (kalibrerad, indirekta svar, antal)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-indirekta-svar-upprakningstal"
+fields = { "label" = "Vikt (kalibrerad, indirekta svar, uppräkningstal)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-registerinformation"
+fields = { "label" = "Vikt (kalibrerad, registerinformation)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvariabel-help3"
+fields = { "label" = "Kalibreringsvariabel (kön och svensk eller utländsk bakgrund)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Thirteen different calibration (weighting) variables, each a different stratification; those with matching category structure across 2017, 2020 and 2023 are treated as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt"
+fields = { "label" = "Vikt (kalibrerad, registerinformation)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights: the plain weight, a register-calibrated weight, and calibrated weights for direct and indirect responses, as counts or as scaling factors."
+
+[[statement]]
+kind = "set"
+subject = "var:lia-under-pandemin"
+fields = { "label" = "LIA under pandemin (genomförd under pandemin)" }
+evidence = "#2102 same-label cluster 'LIA under pandemin' (2 variables): judged different meaning, high confidence; Two different questions in the same survey: whether LIA took place during the pandemic (F17) and how it was carried out (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:lia-under-pandemin-2"
+fields = { "label" = "LIA under pandemin (genomförandesätt)" }
+evidence = "#2102 same-label cluster 'LIA under pandemin' (2 variables): judged different meaning, high confidence; Two different questions in the same survey: whether LIA took place during the pandemic (F17) and how it was carried out (F18)."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "label" = "Månadslön (intervall)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-f16"
+fields = { "label" = "Månadslön (intervall)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-f17"
+fields = { "label" = "Månadslön (intervall)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-lon"
+fields = { "label" = "Månadslön (intervall)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-lonmanad"
+fields = { "label" = "Månadslön (kronor)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-lonny"
+fields = { "label" = "Månadslön (intervall)" }
+evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount in kronor); the others are salary-interval codes with survey-specific bands."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning"
+fields = { "label" = "Nöjdhet med utbildning (förberedelse för arbetslivet)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med utbildning' (9 variables): judged different meaning, high confidence; F20 (2017-2021) measures how well the education prepared for working life (own description, extent scale), unlike the satisfaction scale of the rest, including F21 in the same wave."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-utomlands"
+fields = { "label" = "Studier utomlands (personalutbildning)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:planer-pa-studier-stplan2"
+fields = { "label" = "Planer på studier (ja, utomlands)" }
+evidence = "#2102 same-label cluster 'Planer på studier' (6 variables): judged different meaning, high confidence; In 2004 each answer alternative is its own column (StPlan1..4); from 2006 one column (Planer, F31) holds all alternatives."
+
+[[statement]]
+kind = "set"
+subject = "var:planer-pa-studier-stplan3"
+fields = { "label" = "Planer på studier (nej, inga planer)" }
+evidence = "#2102 same-label cluster 'Planer på studier' (6 variables): judged different meaning, high confidence; In 2004 each answer alternative is its own column (StPlan1..4); from 2006 one column (Planer, F31) holds all alternatives."
+
+[[statement]]
+kind = "set"
+subject = "var:planer-pa-studier-stplan4"
+fields = { "label" = "Planer på studier (vet ej)" }
+evidence = "#2102 same-label cluster 'Planer på studier' (6 variables): judged different meaning, high confidence; In 2004 each answer alternative is its own column (StPlan1..4); from 2006 one column (Planer, F31) holds all alternatives."
+
+[[statement]]
+kind = "set"
+subject = "var:program"
+fields = { "label" = "Gymnasieprogram (programkod)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, high confidence; Programme code (BF, BP, EC ... in program, GYprogr, Utbild_Sl) versus the grouped vocational/higher-education-preparatory split (F9_ny, F9)."
+
+[[statement]]
+kind = "set"
+subject = "var:programtyp-gymnasieprogram"
+fields = { "label" = "Programtyp, gymnasieprogram (enkätsvar)" }
+evidence = "#2102 same-label cluster 'Programtyp, gymnasieprogram' (2 variables): judged different meaning, medium confidence; Utb_Form_Sl holds a HP/YP letter code and spans 2017-2023, while F9 (2023) is the survey answer with a different coding, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-eller-inte-ja-aret-efter-gymnasiet"
+fields = { "label" = "Sökt arbete eller inte (ja)" }
+evidence = "#2102 same-label cluster 'Sökt arbete eller inte' (5 variables): judged different meaning, high confidence; Five concurrent F15_xx yes/no columns in one table, one per answer alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-eller-inte-minns-inte-aret-efter-gymnasiet"
+fields = { "label" = "Sökt arbete eller inte (minns inte)" }
+evidence = "#2102 same-label cluster 'Sökt arbete eller inte' (5 variables): judged different meaning, high confidence; Five concurrent F15_xx yes/no columns in one table, one per answer alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-eller-inte-nej-erbjuden-aret-efter-gymnasiet"
+fields = { "label" = "Sökt arbete eller inte (nej, blev erbjuden arbete)" }
+evidence = "#2102 same-label cluster 'Sökt arbete eller inte' (5 variables): judged different meaning, high confidence; Five concurrent F15_xx yes/no columns in one table, one per answer alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-eller-inte-nej-inget-arbete-aret-efter-gymnasiet"
+fields = { "label" = "Sökt arbete eller inte (nej, inget arbete)" }
+evidence = "#2102 same-label cluster 'Sökt arbete eller inte' (5 variables): judged different meaning, high confidence; Five concurrent F15_xx yes/no columns in one table, one per answer alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-eller-inte-nej-redan-arbete-gymnasieslut"
+fields = { "label" = "Sökt arbete eller inte (nej, hade redan arbete vid gymnasieslutet)" }
+evidence = "#2102 same-label cluster 'Sökt arbete eller inte' (5 variables): judged different meaning, high confidence; Five concurrent F15_xx yes/no columns in one table, one per answer alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-inom-annat-an-utbildningens-omrade"
+fields = { "label" = "Område man sökte arbete inom (annat än utbildningens område)" }
+evidence = "#2102 same-label cluster 'Område man sökte arbete inom' (4 variables): judged different meaning, high confidence; Four concurrent F16_xx answer alternatives in one table, each a different area option."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-inom-utbildningens-omrade"
+fields = { "label" = "Område man sökte arbete inom (utbildningens område)" }
+evidence = "#2102 same-label cluster 'Område man sökte arbete inom' (4 variables): judged different meaning, high confidence; Four concurrent F16_xx answer alternatives in one table, each a different area option."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-omrade-minns-inte"
+fields = { "label" = "Område man sökte arbete inom (minns inte)" }
+evidence = "#2102 same-label cluster 'Område man sökte arbete inom' (4 variables): judged different meaning, high confidence; Four concurrent F16_xx answer alternatives in one table, each a different area option."
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-utbildning-inte-inriktad-mot-sarskilt-omrade"
+fields = { "label" = "Område man sökte arbete inom (utbildningen inte inriktad mot särskilt område)" }
+evidence = "#2102 same-label cluster 'Område man sökte arbete inom' (4 variables): judged different meaning, high confidence; Four concurrent F16_xx answer alternatives in one table, each a different area option."
+
+[[statement]]
+kind = "set"
+subject = "var:stplan"
+fields = { "label" = "Planer på studier (ja, i Sverige)" }
+evidence = "#2102 same-label cluster 'Planer på studier' (6 variables): judged different meaning, high confidence; In 2004 each answer alternative is its own column (StPlan1..4); from 2006 one column (Planer, F31) holds all alternatives."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-efter-gymnasieutbildning"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-gymnasieutbildning"
+fields = { "label" = "Studier utomlands (gymnasieutbildning)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:studnej"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:studut5"
+fields = { "label" = "Studier utomlands (nej, har inte studerat utomlands)" }
+evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Five concurrent fr24a-e columns for type of education abroad; fr23c/fr21 hold where (Europe, outside Europe or no); the rest are the 'no, have not studied abroad' alternative renamed over time."
+
+[[statement]]
+kind = "set"
+subject = "var:sun4inr"
+fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun4inr-utb"
+fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun4inrklartext"
+fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner, klartext)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun5inr"
+fields = { "label" = "Utbildningsinriktning (SUN, 5 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun5inr-utb"
+fields = { "label" = "Utbildningsinriktning (SUN, 5 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sun5inrklartext"
+fields = { "label" = "Utbildningsinriktning (SUN, 5 positioner, klartext)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions (codes 010a vs 146xa), each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-kunskap"
+fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete, gymnasieavgångna" }
+evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two populations (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) with the question renumbered over time within each population."
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-examen"
+fields = { "label" = "Tillräcklig utbildningsnivå/examen, arbete i mätveckan (2006-2008)" }
+evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Concurrent pairs: work in the measurement week versus first work in the measurement week (per pids of F23 and F03, F19 and F3 by analogy); the value sets differ between 2006-08 (KY) and 2010 (licentiat, doktor)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
+fields = { "label" = "Tillräcklig utbildningsnivå/examen, arbete i mätveckan (2010)" }
+evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Concurrent pairs: work in the measurement week versus first work in the measurement week (per pids of F23 and F03, F19 and F3 by analogy); the value sets differ between 2006-08 (KY) and 2010 (licentiat, doktor)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
+fields = { "label" = "Tillräcklig utbildningsnivå/examen, första arbetet i mätveckan (2006-2008)" }
+evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Concurrent pairs: work in the measurement week versus first work in the measurement week (per pids of F23 and F03, F19 and F3 by analogy); the value sets differ between 2006-08 (KY) and 2010 (licentiat, doktor)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbetet-matveckan"
+fields = { "label" = "Tillräcklig utbildningsnivå/examen, första arbetet i mätveckan (2010)" }
+evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Concurrent pairs: work in the measurement week versus first work in the measurement week (per pids of F23 and F03, F19 and F3 by analogy); the value sets differ between 2006-08 (KY) and 2010 (licentiat, doktor)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f22"
+fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete, högskoleexaminerade" }
+evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two populations (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) with the question renumbered over time within each population."
+
+[[statement]]
+kind = "set"
+subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f23"
+fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete, gymnasieavgångna" }
+evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two populations (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) with the question renumbered over time within each population."
+
+[[statement]]
+kind = "set"
+subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f26"
+fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete, högskoleexaminerade" }
+evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two populations (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) with the question renumbered over time within each population."
+
+[[statement]]
+kind = "set"
+subject = "var:uestatus"
+fields = { "label" = "Blankettens statuskod (status för undersökningsenhet)" }
+evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, high confidence; Three concurrent columns in one table with different code lists: result code, information source and unit status."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-form-sl"
+fields = { "label" = "Programtyp, gymnasieprogram (registeruppgift)" }
+evidence = "#2102 same-label cluster 'Programtyp, gymnasieprogram' (2 variables): judged different meaning, medium confidence; Utb_Form_Sl holds a HP/YP letter code and spans 2017-2023, while F9 (2023) is the survey answer with a different coding, concurrent in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:utbild-sl"
+fields = { "label" = "Gymnasieprogram (programkod)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, high confidence; Programme code (BF, BP, EC ... in program, GYprogr, Utbild_Sl) versus the grouped vocational/higher-education-preparatory split (F9_ny, F9)."

@@ -1595,3 +1595,291 @@ kind = "set"
 subject = "set:utbildningsform"
 fields = { "label" = "Utbildningsform" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:beh-gymn-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:beh-imv-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (IMV-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-gy-ehs-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (EHS-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-gy-est-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (EST-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-gy-impro-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (IMPRO-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-gy-nt-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (NT-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-gy-yrk-ak9"
+fields = { "label" = "Behörighet till gymnasieskolan (YRK-program, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Seven concurrent eligibility flags: overall (Beh_Gymn), five programme types and IMV (starts in 2021 when IMPRO ends, but the data does not say it is the same variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:direkt"
+fields = { "label" = "Direktövergång (ja/nej)" }
+evidence = "#2102 same-label cluster 'Direktövergång' (2 variables): judged different meaning, high confidence; Direkt is a Nej/Ja flag; Direkt9 has four categories distinguishing grundskolan, grundsärskolan and träningsskolan."
+
+[[statement]]
+kind = "set"
+subject = "var:direkt9"
+fields = { "label" = "Direktövergång (från grundskola, grundsärskola eller träningsskola)" }
+evidence = "#2102 same-label cluster 'Direktövergång' (2 variables): judged different meaning, high confidence; Direkt is a Nej/Ja flag; Direkt9 has four categories distinguishing grundskolan, grundsärskolan and träningsskolan."
+
+[[statement]]
+kind = "set"
+subject = "var:gyfid-start"
+fields = { "label" = "Gymnasieförbundets identitet (vid start)" }
+evidence = "#2102 same-label cluster 'Gymnasieförbundets identitet' (2 variables): judged different meaning, medium confidence; GyFID and GyfId_Start are concurrent 2016-2024; _Start is the association at the start of the education."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Descriptions: HKom and Hemkommun are the home municipality, Kommun and Skolkommun the school municipality."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Descriptions: HKom and Hemkommun are the home municipality, Kommun and Skolkommun the school municipality."
+
+[[statement]]
+kind = "set"
+subject = "var:hman-ak9"
+fields = { "label" = "Huvudman (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Huvudman' (3 variables): judged different meaning, medium confidence; Hman, Hman_Ak9 (årskurs 9) and Hman_Start are concurrent 2016-2024."
+
+[[statement]]
+kind = "set"
+subject = "var:hman-start"
+fields = { "label" = "Huvudman (vid start)" }
+evidence = "#2102 same-label cluster 'Huvudman' (3 variables): judged different meaning, medium confidence; Hman, Hman_Ak9 (årskurs 9) and Hman_Start are concurrent 2016-2024."
+
+[[statement]]
+kind = "set"
+subject = "var:inriktninggy-start"
+fields = { "label" = "Inriktning av fristående skola/skolenhet (vid start)" }
+evidence = "#2102 same-label cluster 'Inriktning av fristående skola/skolenhet' (3 variables): judged different meaning, medium confidence; FriTypGy (to 2005) and InriktningGy (from 2006, recoded) are the same variable over time; InriktningGy_Start is a concurrent start-of-education column."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Descriptions: HKom and Hemkommun are the home municipality, Kommun and Skolkommun the school municipality."
+
+[[statement]]
+kind = "set"
+subject = "var:larl-ers-dec"
+fields = { "label" = "Lärlingsersättning (december)" }
+evidence = "#2102 same-label cluster 'Lärlingsersättning' (2 variables): judged different meaning, high confidence; Descriptions: LARL_ERS is any payment, LARL_ERS_Dec is a payment in December."
+
+[[statement]]
+kind = "set"
+subject = "var:meritvarde-ak9"
+fields = { "label" = "Meritvärde (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Meritvärde' (2 variables): judged different meaning, medium confidence; MeritVarde_Ak9 and MeritVarde_M2_Ak9 are concurrent columns; the sibling register gymnasieskola-sokande names the M2 column as the 17 best grades incl. moderna språk."
+
+[[statement]]
+kind = "set"
+subject = "var:meritvarde-m2-ak9"
+fields = { "label" = "Meritvärde (17 bästa betyg inkl. moderna språk, årskurs 9)" }
+evidence = "#2102 same-label cluster 'Meritvärde' (2 variables): judged different meaning, medium confidence; MeritVarde_Ak9 and MeritVarde_M2_Ak9 are concurrent columns; the sibling register gymnasieskola-sokande names the M2 column as the 17 best grades incl. moderna språk."
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-utbildningsniva-sun-2000-grupperad"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2000, grupperad" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, detailed versus grouped; SUN2000Niva3_Mor (to 2014) and SUN2000Niva_Mor (2015-2019) share one value set over adjacent periods and are one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-utbildningsniva-sun-2020"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2020, detaljerad" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, detailed versus grouped; SUN2000Niva3_Mor (to 2014) and SUN2000Niva_Mor (2015-2019) share one value set over adjacent periods and are one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-utbildningsniva-sun-2020-grupperad"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2020, grupperad" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, detailed versus grouped; SUN2000Niva3_Mor (to 2014) and SUN2000Niva_Mor (2015-2019) share one value set over adjacent periods and are one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod-ak9"
+fields = { "label" = "Skolenhet (årskurs 9)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Skolenhetskod, _Ak9 (årskurs 9) and _Start (start) are concurrent columns for different schools."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod-start"
+fields = { "label" = "Skolenhet (vid start)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Skolenhetskod, _Ak9 (årskurs 9) and _Start (start) are concurrent columns for different schools."
+
+[[statement]]
+kind = "set"
+subject = "var:skolid-ak9"
+fields = { "label" = "Skolans identitetsnummer, årskurs 9" }
+evidence = "#2102 same-label cluster 'Skolans identitetsnummer' (3 variables): judged different meaning, medium confidence; SkolID (1999-2012) versus concurrent Skolid_Ak9 and Skolid_Start (2016-2024), which refer to different schools of the pupil (årskurs 9 and start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolid-start"
+fields = { "label" = "Skolans identitetsnummer, vid start" }
+evidence = "#2102 same-label cluster 'Skolans identitetsnummer' (3 variables): judged different meaning, medium confidence; SkolID (1999-2012) versus concurrent Skolid_Ak9 and Skolid_Start (2016-2024), which refer to different schools of the pupil (årskurs 9 and start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "label" = "Skola, skolkod" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Different school-code variants: 7-digit SkolKod, 9-digit original code (Skolkod_Urspr, 2012 only), and Ak9 versus Start school columns concurrent in 2016-2024 (årskurs 9 school and school at start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-ak9"
+fields = { "label" = "Skola, skolkod årskurs 9" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Different school-code variants: 7-digit SkolKod, 9-digit original code (Skolkod_Urspr, 2012 only), and Ak9 versus Start school columns concurrent in 2016-2024 (årskurs 9 school and school at start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-start"
+fields = { "label" = "Skola, skolkod vid start" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Different school-code variants: 7-digit SkolKod, 9-digit original code (Skolkod_Urspr, 2012 only), and Ak9 versus Start school columns concurrent in 2016-2024 (årskurs 9 school and school at start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-urspr"
+fields = { "label" = "Skola, ursprunglig skolkod" }
+evidence = "#2102 same-label cluster 'Skola' (4 variables): judged different meaning, medium confidence; Different school-code variants: 7-digit SkolKod, 9-digit original code (Skolkod_Urspr, 2012 only), and Ak9 versus Start school columns concurrent in 2016-2024 (årskurs 9 school and school at start)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Descriptions: HKom and Hemkommun are the home municipality, Kommun and Skolkommun the school municipality."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan-lpf94"
+fields = { "label" = "Studieväg i gymnasieskolan (Lpf94)" }
+evidence = "#2102 same-label cluster 'Studieväg i gymnasieskolan' (3 variables): judged different meaning, medium confidence; StvKod, StvKod2 (named Lpf94 in its pid; concurrent 2013-2015) and Stvkod_Start are different columns."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan-utbildningsstart"
+fields = { "label" = "Studieväg i gymnasieskolan (vid start)" }
+evidence = "#2102 same-label cluster 'Studieväg i gymnasieskolan' (3 variables): judged different meaning, medium confidence; StvKod, StvKod2 (named Lpf94 in its pid; concurrent 2013-2015) and Stvkod_Start are different columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-3-mor"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2000, detaljerad" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, detailed versus grouped; SUN2000Niva3_Mor (to 2014) and SUN2000Niva_Mor (2015-2019) share one value set over adjacent periods and are one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "label" = "Moderns utbildningsnivå, SUN 2000, detaljerad" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, detailed versus grouped; SUN2000Niva3_Mor (to 2014) and SUN2000Niva_Mor (2015-2019) share one value set over adjacent periods and are one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-3-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed SUN 2000 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed SUN 2000 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed SUN 2000 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and in detailed vs grouped value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and in detailed vs grouped value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed SUN 2000 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed SUN 2000 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and in detailed vs grouped value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; Differs in SUN version (2000 vs 2020) and in detailed vs grouped value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-form-start"
+fields = { "label" = "Utbildningsform gymnasieskolan (vid start)" }
+evidence = "#2102 same-label cluster 'Utbildningsform gymnasieskolan' (2 variables): judged different meaning, medium confidence; Utb_Form and Utb_form_Start are concurrent 2016-2024 with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."

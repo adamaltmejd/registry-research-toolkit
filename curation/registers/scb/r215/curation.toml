@@ -4268,3 +4268,831 @@ kind = "set"
 subject = "set:verksamhetens-lan"
 fields = { "label" = "Verksamhetens län" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-al-av-totalproduktion-al-konsumtion-havet"
+fields = { "label" = "Dödlighet, ål för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, ål för konsumtion' (2 variables): judged different meaning, medium confidence; MAlD och MAlD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-al-utsattning-hav"
+fields = { "label" = "Dödlighet, ål för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, ål för utsättning' (2 variables): judged different meaning, medium confidence; SAlD och SAlD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-flodkraftor-konsumtion-hav"
+fields = { "label" = "Dödlighet, flodkräftor för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, flodkräftor för konsumtion' (2 variables): judged different meaning, medium confidence; MFlodD och MFlodD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-flodkraftor-utsattning-hav"
+fields = { "label" = "Dödlighet, flodkräftor för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, flodkräftor för utsättning' (2 variables): judged different meaning, medium confidence; SFlodD och SFlodD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-lax-konsumtion-hav"
+fields = { "label" = "Dödlighet, lax för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, lax för konsumtion' (2 variables): judged different meaning, medium confidence; MLaxD och MLaxD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-oring-konsumtion-hav"
+fields = { "label" = "Dödlighet, öring för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, öring för konsumtion' (2 variables): judged different meaning, medium confidence; MOringD och MOringD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-total-produktion-regnbage-konsumtion-hav"
+fields = { "label" = "Dödlighet, regnbåge för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, regnbåge för konsumtion' (2 variables): judged different meaning, medium confidence; MRblD och MRblD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-totalproduktion-lax-utsattning-havet"
+fields = { "label" = "Dödlighet, lax för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, lax för utsättning' (2 variables): judged different meaning, medium confidence; SLaxD och SLaxD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-totalproduktion-oring-utsattning-havet"
+fields = { "label" = "Dödlighet, öring för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, öring för utsättning' (2 variables): judged different meaning, medium confidence; SOringD och SOringD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-totalproduktion-ovrig-sattfisk-1-havet"
+fields = { "label" = "Dödlighet, övrig sättfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, övrig sättfisk (1)' (2 variables): judged different meaning, medium confidence; SOvrD och SOvrD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-totalproduktion-ovrig-sattfisk-2-havet"
+fields = { "label" = "Dödlighet, övrig sättfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, övrig sättfisk (2)' (2 variables): judged different meaning, medium confidence; SOvrD1 och SOvrD1_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-doda-av-totalproduktion-roding-konsumtion-hav-procent"
+fields = { "label" = "Dödlighet, röding för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, röding för konsumtion' (2 variables): judged different meaning, medium confidence; MRodD och MRodD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-kvinnor-matfisk"
+fields = { "label" = "Antal arbetade timmar, kvinnor, matfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-man-matfisk"
+fields = { "label" = "Antal arbetade timmar, män, matfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bassanger-matfisk-havet"
+fields = { "label" = "Bassänger för odling av matfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Bassänger för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MBassa och MBassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dammar-matfisk-hav"
+fields = { "label" = "Dammar för odling av matfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MJorda och MJorda_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kassar-matfisk-hav"
+fields = { "label" = "Kassar för odling av matfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Kassar för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MKassa och MKassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan1"
+fields = { "label" = "Antal odlingar, län 1" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan2"
+fields = { "label" = "Antal odlingar, län 2" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan3"
+fields = { "label" = "Antal odlingar, län 3" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-recirkulerande-system-matfisk-hav"
+fields = { "label" = "Recirkulernade system för odling av matfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Recirkulernade system för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MRecirka och MRecirka_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-recirkulerande-system-sattfisk-havet"
+fields = { "label" = "Recirkulerande system för odling av sättfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Recirkulerande system för odling av sättfisk, antal' (2 variables): judged different meaning, medium confidence; SRecirka och SRecirka_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-foretagare-kvinnor"
+fields = { "label" = "Antal arbetade timmar, företagare, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-foretagare-man"
+fields = { "label" = "Antal arbetade timmar, företagare, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-kvinnor-rom-och-yngelverksamhet"
+fields = { "label" = "Antal arbetade timmar, kvinnor, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-kvinnor-sattfisk"
+fields = { "label" = "Antal arbetade timmar, kvinnor, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-man-rom-och-yngelverksamhet"
+fields = { "label" = "Antal arbetade timmar, män, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-man-sattfisk"
+fields = { "label" = "Antal arbetade timmar, män, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb"
+fields = { "label" = "Antal arbetade timmar, avlönad personal" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb-m"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:bassanger-sattfisk-antal-hav"
+fields = { "label" = "Bassänger för odling av sättfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Bassänger för odling av sättfisk, antal' (2 variables): judged different meaning, medium confidence; SBassa och SBassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:bassanger-sattfisk-volym-hav"
+fields = { "label" = "Bassänger för odling av sättfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Bassänger för odling av sättfisk, volym' (2 variables): judged different meaning, medium confidence; SBassv och SBassv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:dammar-sattfisk-antal-hav"
+fields = { "label" = "Dammar för odling av sättfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av sättfisk, antal' (2 variables): judged different meaning, medium confidence; SJorda och SJorda_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:dammar-sattfisk-volym-hav"
+fields = { "label" = "Dammar för odling av sättfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av sättfisk, volym' (2 variables): judged different meaning, medium confidence; SJordv och SJordv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:doda-av-total-produktion-regnbage-utsattning-havet-procent"
+fields = { "label" = "Dödlighet, regnbåge för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, regnbåge för utsättning' (2 variables): judged different meaning, medium confidence; SRblD och SRblD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:doda-av-total-produktion-roding-utsattning-havet-procent"
+fields = { "label" = "Dödlighet, röding för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, röding för utsättning' (2 variables): judged different meaning, medium confidence; SRodD och SRodD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:for-tot"
+fields = { "label" = "Antal arbetade timmar, företagare" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-al-konsumtion-havet-kronor"
+fields = { "label" = "Försäljning av ål för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av ål för konsumtion' (2 variables): judged different meaning, medium confidence; MAlf och MAlf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-al-utsattning-hav-kronor"
+fields = { "label" = "Försäljning av ål för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av ål för utsättning' (2 variables): judged different meaning, medium confidence; SAlf och SAlf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-alger-havet-kronor"
+fields = { "label" = "Försäljning av alger, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av alger' (2 variables): judged different meaning, medium confidence; MAlgf och MAlgf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-regnbage-utsattning-salt"
+fields = { "label" = "Försäljning av regnbåge för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av regnbåge för utsättning' (2 variables): judged different meaning, medium confidence; SRblf och SRblf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-flodkraftor-konsumtion-hav-kronor"
+fields = { "label" = "Försäljning av flodkräftor för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av flodkräftor för konsumtion' (2 variables): judged different meaning, medium confidence; MFlodf och MFlodf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-flodkraftor-utsattning-hav-kronor"
+fields = { "label" = "Försäljning av flodkräftor för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av flodkräftor för utsättning' (2 variables): judged different meaning, medium confidence; SFlodf och SFlodf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-lax-konsumtion-hav-kronor"
+fields = { "label" = "Försäljning av lax för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av lax för konsumtion' (2 variables): judged different meaning, medium confidence; MLaxf och MLaxf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-lax-rom-eller-yngel-hav-kronor"
+fields = { "label" = "Försäljning av lax (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av lax (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYLaxf och RYLaxf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-lax-utsattning-havet-kronor"
+fields = { "label" = "Försäljning av lax för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av lax för utsättning' (2 variables): judged different meaning, medium confidence; SLaxf och SLaxf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-oring-konsumtion-hav-kronor"
+fields = { "label" = "Försäljning av öring för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av öring för konsumtion' (2 variables): judged different meaning, medium confidence; MOringf och MOringf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-oring-utsattning-havet-kronor"
+fields = { "label" = "Försäljning av öring för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av öring för utsättning' (2 variables): judged different meaning, medium confidence; SOringf och SOringf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-ovrig-sattfisk-1-havet-kronor"
+fields = { "label" = "Försäljning av övrig sättfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av övrig sättfisk (1)' (2 variables): judged different meaning, medium confidence; SOvrf och SOvrf_salt är samtidiga kolumner från 2018; pid-namnen anger sötvatten respektive havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-ovrig-sattfisk-2-havet-kronor"
+fields = { "label" = "Försäljning av övrig sättfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av övrig sättfisk (2)' (2 variables): judged different meaning, medium confidence; SOvrf1 och SOvrf1_salt är samtidiga kolumner från 2018; pid-namnen anger sötvatten respektive havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-regnbage-konsumtion-hav-kronor"
+fields = { "label" = "Försäljning av regnbåge för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av regnbåge för konsumtion' (2 variables): judged different meaning, medium confidence; MRblf och MRblf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-regnbage-rom-eller-yngel-havet-kronor"
+fields = { "label" = "Försäljning av regnbåge (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av regnbåge (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYRblf och RYRblf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-roding-konsumtion-hav-kronor"
+fields = { "label" = "Försäljning av röding för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av röding för konsumtion' (2 variables): judged different meaning, medium confidence; MRodf och MRodf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-roding-rom-eller-yngel-havet-kronor"
+fields = { "label" = "Försäljning av röding (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av röding (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYRodingf och RYRodingf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-roding-utsattning-havet-kronor"
+fields = { "label" = "Försäljning av röding för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av röding för utsättning' (2 variables): judged different meaning, medium confidence; SRodf och SRodf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-rom-yngel-ovrig-art-1-salt"
+fields = { "label" = "Försäljning av rom eller yngel, övrig art (1), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av rom eller yngel, övrig art (1)' (2 variables): judged different meaning, medium confidence; RYOvrf och RYOvrf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-matfisk-exklusive-moms-ej-reparation-underhall"
+fields = { "label" = "Investeringar, matfisk" }
+evidence = "#2102 same-label cluster 'Investeringar' (4 variables): judged different meaning, high confidence; 2015-2017 redovisas investeringar per verksamhet (matfisk, rom och yngel, sättfisk), från 2018 en totalsumma."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-rom-yngel-utan-moms-ej-reparation-underhall"
+fields = { "label" = "Investeringar, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Investeringar' (4 variables): judged different meaning, high confidence; 2015-2017 redovisas investeringar per verksamhet (matfisk, rom och yngel, sättfisk), från 2018 en totalsumma."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-sattfisk-exkl-moms-ej-reparation-underhall"
+fields = { "label" = "Investeringar, sättfisk" }
+evidence = "#2102 same-label cluster 'Investeringar' (4 variables): judged different meaning, high confidence; 2015-2017 redovisas investeringar per verksamhet (matfisk, rom och yngel, sättfisk), från 2018 en totalsumma."
+
+[[statement]]
+kind = "set"
+subject = "var:kassar-sattfisk-antal-hav"
+fields = { "label" = "Kassar för odling av sättfisk, antal, i havet" }
+evidence = "#2102 same-label cluster 'Kassar för odling av sättfisk, antal' (2 variables): judged different meaning, medium confidence; SKassa och SKassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:kassar-sattfisk-volym-havet"
+fields = { "label" = "Kassar för odling av sättfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Kassar för odling av sättfisk, volym' (2 variables): judged different meaning, medium confidence; SKassv och SKassv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:malr-salt"
+fields = { "label" = "Rymlingar, ål för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, ål för konsumtion' (2 variables): judged different meaning, high confidence; MAlR och MAlR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:matfiskproduktion-referensar"
+fields = { "label" = "Produktion under referensåret, matfisk" }
+evidence = "#2102 same-label cluster 'Produktion under referensåret' (4 variables): judged different meaning, high confidence; 2015 has one Nej/Ja flag per production type; from 2018 a single question with a Ja option and several Nej options."
+
+[[statement]]
+kind = "set"
+subject = "var:matfiskproduktion-sotvatten"
+fields = { "label" = "Produktion i sötvatten, matfisk" }
+evidence = "#2102 same-label cluster 'Produktion i sötvatten' (2 variables): judged different meaning, high confidence; MSot gäller matfiskproduktion, SSot sättfiskproduktion."
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr-salt"
+fields = { "label" = "Rymlingar, flodkräftor för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, flodkräftor för konsumtion' (2 variables): judged different meaning, high confidence; MFlodR och MFlodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr-salt"
+fields = { "label" = "Rymlingar, lax för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, lax för konsumtion' (2 variables): judged different meaning, high confidence; MLaxR och MLaxR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:moringr-salt"
+fields = { "label" = "Rymlingar, öring för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, öring för konsumtion' (2 variables): judged different meaning, high confidence; MOringR och MOringR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movr1d-salt"
+fields = { "label" = "Dödlighet, övrig matfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, övrig matfisk (2)' (2 variables): judged different meaning, medium confidence; MOvr1D och MOvr1D_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r-salt"
+fields = { "label" = "Rymlingar, övrig matfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, övrig matfisk (2)' (2 variables): judged different meaning, medium confidence; MOvr1R och MOvr1R_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrd-salt"
+fields = { "label" = "Dödlighet, övrig matfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Dödlighet, övrig matfisk (1)' (2 variables): judged different meaning, medium confidence; MOvrD och MOvrD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrf-salt"
+fields = { "label" = "Försäljning av övrig matfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av övrig matfisk (1)' (2 variables): judged different meaning, medium confidence; MOvrf och MOvrf_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrf1-salt"
+fields = { "label" = "Försäljning av övrig matfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av övrig matfisk (2)' (2 variables): judged different meaning, medium confidence; MOvrf1 och MOvrf1_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrp-salt"
+fields = { "label" = "Produktion av övrig matfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av övrig matfisk (1)' (2 variables): judged different meaning, medium confidence; MOvrp och MOvrp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrp1-salt"
+fields = { "label" = "Produktion av övrig matfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av övrig matfisk (2)' (2 variables): judged different meaning, medium confidence; MOvrp1 och MOvrp1_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrr-salt"
+fields = { "label" = "Rymlingar, övrig matfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, övrig matfisk (1)' (2 variables): judged different meaning, high confidence; MOvrR och MOvrR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext-salt"
+fields = { "label" = "Övrig art, matfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, matfisk (1)' (2 variables): judged different meaning, medium confidence; MOvrText och MOvrText_salt är samtidiga fritextkolumner från 2018; _salt avser havet."
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext1-salt"
+fields = { "label" = "Övrig art, matfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, matfisk (2)' (2 variables): judged different meaning, medium confidence; MOvrText1 och MOvrText1_salt är samtidiga fritextkolumner från 2018; _salt avser havet."
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr-salt"
+fields = { "label" = "Rymlingar, regnbåge för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, regnbåge för konsumtion' (2 variables): judged different meaning, high confidence; MRblR och MRblR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr-salt"
+fields = { "label" = "Rymlingar, röding för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, röding för konsumtion' (2 variables): judged different meaning, high confidence; MRodR och MRodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-k"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-m"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:odling-alger-havet"
+fields = { "label" = "Odling av alger, i havet" }
+evidence = "#2102 same-label cluster 'Odling av alger' (2 variables): judged different meaning, medium confidence; MAlger (sötvatten enligt pid-namnet) och MAlger_salt (havet) är samtidiga ja/nej-kolumner från 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan"
+fields = { "label" = "Antal odlingar, län 1" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan2"
+fields = { "label" = "Antal odlingar, län 2" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan3"
+fields = { "label" = "Antal odlingar, län 3" }
+evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, medium confidence; Lan1, Lan2 och Lan3 är samtidiga kolumner för företagets odlingar i första, andra och tredje länet; odling_lan* är de äldre namnen på samma."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-art-1-rom-eller-yngel-text-havet"
+fields = { "label" = "Övrig art, rom eller yngel (1), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, rom eller yngel (1)' (3 variables): judged different meaning, high confidence; RYOvrtext (2015) och RYOvrpText (från 2017) är samma sötvattenskolumn under två namn; RYOvrpText_salt (havet) löper samtidigt."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-art-2-rom-eller-yngel-text-havet"
+fields = { "label" = "Övrig art, rom eller yngel (2), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, rom eller yngel (2)' (2 variables): judged different meaning, high confidence; pid-namnen anger sötvatten respektive havet; samtidiga kolumner från 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-al-konsumtion-havet-kg"
+fields = { "label" = "Produktion av ål för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av ål för konsumtion' (2 variables): judged different meaning, medium confidence; MAlp och MAlp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-al-utsattning-hav-kg"
+fields = { "label" = "Produktion av ål för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av ål för utsättning' (2 variables): judged different meaning, medium confidence; SAlp och SAlp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-alger-konsumtion-havet-kg"
+fields = { "label" = "Produktion av alger, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av alger' (2 variables): judged different meaning, medium confidence; MAlgp och MAlgp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-roding-for-utsattning"
+fields = { "label" = "Produktion av röding för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): judged different meaning, medium confidence; SRodp och SRodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-flodkraftor-konsumtion-hav-kg"
+fields = { "label" = "Produktion av flodkräftor för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av flodkräftor för konsumtion' (2 variables): judged different meaning, medium confidence; MFlodp och MFlodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-flodkraftor-utsattning-hav-kg"
+fields = { "label" = "Produktion av flodkräftor för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av flodkräftor för utsättning' (2 variables): judged different meaning, medium confidence; SFlodp och SFlodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-lax-konsumtion-hav-kg"
+fields = { "label" = "Produktion av lax för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av lax för konsumtion' (2 variables): judged different meaning, medium confidence; MLaxp och MLaxp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-lax-rom-eller-yngel-havet-antal"
+fields = { "label" = "Produktion av lax (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av lax (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYLaxp och RYLaxp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-lax-utsattning-havet-kg"
+fields = { "label" = "Produktion av lax för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av lax för utsättning' (2 variables): judged different meaning, medium confidence; SLaxp och SLaxp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-matfisk-i-havet"
+fields = { "label" = "Produktion i havet (salt eller bräckt vatten), matfisk" }
+evidence = "#2102 same-label cluster 'Produktion i havet (salt eller bräckt vatten)' (2 variables): judged different meaning, high confidence; MHavet gäller matfiskproduktion, SHavet sättfiskproduktion."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-oring-konsumtion-hav-kg"
+fields = { "label" = "Produktion av öring för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av öring för konsumtion' (2 variables): judged different meaning, medium confidence; MOringp och MOringp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-oring-rom-eller-yngel-havet-antal"
+fields = { "label" = "Produktion av öring (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av öring (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYOringp och RYOringp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-oring-utsattning-havet-kg"
+fields = { "label" = "Produktion av öring för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av öring för utsättning' (2 variables): judged different meaning, medium confidence; SOringp och SOringp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-ovrig-sattfisk-1-havet-kg"
+fields = { "label" = "Produktion av övrig sättfisk (1), havet" }
+evidence = "#2102 same-label cluster 'Produktion av övrig sättfisk (1)' (2 variables): judged different meaning, medium confidence; Concurrent columns; the pids name sötvatten for SOvrp and havet for SOvrp_salt."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-ovrig-sattfisk-1-sotvatten-kg"
+fields = { "label" = "Produktion av övrig sättfisk (1), sötvatten" }
+evidence = "#2102 same-label cluster 'Produktion av övrig sättfisk (1)' (2 variables): judged different meaning, medium confidence; Concurrent columns; the pids name sötvatten for SOvrp and havet for SOvrp_salt."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-ovrig-sattfisk-2-havet-kg"
+fields = { "label" = "Produktion av övrig sättfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av övrig sättfisk (2)' (2 variables): judged different meaning, high confidence; SOvrp1 (sötvatten) och SOvrp1_salt (havet) enligt pid-namnen; samtidiga kolumner."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-regnbage-konsumtion-hav-kg"
+fields = { "label" = "Produktion av regnbåge för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge för konsumtion' (2 variables): judged different meaning, medium confidence; MRblp och MRblp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-roding-konsumtion-hav-kg"
+fields = { "label" = "Produktion av röding för konsumtion, i havet" }
+evidence = "#2102 same-label cluster 'Produktion av röding för konsumtion' (2 variables): judged different meaning, medium confidence; MRodp och MRodp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-roding-rom-eller-yngel-havet-antal"
+fields = { "label" = "Produktion av röding (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av röding (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYRodingp och RYRodingp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-rom-eller-yngel-ovrig-art-1-havet-antal"
+fields = { "label" = "Produktion av rom eller yngel, övrig art (1), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av rom eller yngel, övrig art (1)' (2 variables): judged different meaning, high confidence; RYOvrp (sötvatten) och RYOvrp_salt (havet) enligt pid-namnen; samtidiga kolumner."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-rom-eller-yngel-ovrig-art-2-havet-antal"
+fields = { "label" = "Produktion av rom eller yngel, övrig art (2), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av rom eller yngel, övrig art (2)' (2 variables): judged different meaning, high confidence; RYOvr1p (sötvatten) och RYOvr1p_salt (havet) enligt pid-namnen; samtidiga kolumner."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-rom-yngel-referensar"
+fields = { "label" = "Produktion under referensåret, rom och yngel" }
+evidence = "#2102 same-label cluster 'Produktion under referensåret' (4 variables): judged different meaning, high confidence; 2015 has one Nej/Ja flag per production type; from 2018 a single question with a Ja option and several Nej options."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-sattfisk-havet"
+fields = { "label" = "Produktion i havet (salt eller bräckt vatten), sättfisk" }
+evidence = "#2102 same-label cluster 'Produktion i havet (salt eller bräckt vatten)' (2 variables): judged different meaning, high confidence; MHavet gäller matfiskproduktion, SHavet sättfiskproduktion."
+
+[[statement]]
+kind = "set"
+subject = "var:r1"
+fields = { "label" = "Produktion under referensåret, flera nej-alternativ (från 2018)" }
+evidence = "#2102 same-label cluster 'Produktion under referensåret' (4 variables): judged different meaning, high confidence; 2015 has one Nej/Ja flag per production type; from 2018 a single question with a Ja option and several Nej options."
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1f-salt"
+fields = { "label" = "Försäljning av rom eller yngel, övrig art (2), i havet" }
+evidence = "#2102 same-label cluster 'Försäljning av rom eller yngel, övrig art (2)' (2 variables): judged different meaning, medium confidence; RYOvr1f och RYOvr1f_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblp-salt"
+fields = { "label" = "Produktion av regnbåge (rom eller yngel), i havet" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge (rom eller yngel)' (2 variables): judged different meaning, medium confidence; RYRblp och RYRblp_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:salr-salt"
+fields = { "label" = "Rymlingar, ål för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, ål för utsättning' (2 variables): judged different meaning, high confidence; SAlR och SAlR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sattfiskproduktion-referensaret-ja-nej"
+fields = { "label" = "Produktion under referensåret, sättfisk" }
+evidence = "#2102 same-label cluster 'Produktion under referensåret' (4 variables): judged different meaning, high confidence; 2015 has one Nej/Ja flag per production type; from 2018 a single question with a Ja option and several Nej options."
+
+[[statement]]
+kind = "set"
+subject = "var:sattfiskproduktion-sotvatten-ja-nej"
+fields = { "label" = "Produktion i sötvatten, sättfisk" }
+evidence = "#2102 same-label cluster 'Produktion i sötvatten' (2 variables): judged different meaning, high confidence; MSot gäller matfiskproduktion, SSot sättfiskproduktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr-salt"
+fields = { "label" = "Rymlingar, flodkräftor för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, flodkräftor för utsättning' (2 variables): judged different meaning, high confidence; SFlodR och SFlodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy-salt"
+fields = { "label" = "Dammar för odling av sättfisk, yta, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av sättfisk, yta' (2 variables): judged different meaning, high confidence; SJordy och SJordy_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet i salt eller bräckt vatten."
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr-salt"
+fields = { "label" = "Rymlingar, lax för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, lax för utsättning' (2 variables): judged different meaning, high confidence; SLaxR och SLaxR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:soringr-salt"
+fields = { "label" = "Rymlingar, öring för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, öring för utsättning' (2 variables): judged different meaning, high confidence; SOringR och SOringR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr-salt"
+fields = { "label" = "Rymlingar, övrig sättfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, övrig sättfisk (1)' (2 variables): judged different meaning, high confidence; SOvrR och SOvrR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr1-salt"
+fields = { "label" = "Rymlingar, övrig sättfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, övrig sättfisk (2)' (2 variables): judged different meaning, medium confidence; SOvrR1 (sötvatten enligt pid-namnet) och SOvrR1_salt är samtidiga kolumner från 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext-salt"
+fields = { "label" = "Övrig art, sättfisk (1), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, sättfisk (1)' (2 variables): judged different meaning, medium confidence; Sovrtext och Sovrtext_salt är samtidiga fritextkolumner från 2018; _salt avser havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext1-salt"
+fields = { "label" = "Övrig art, sättfisk (2), i havet" }
+evidence = "#2102 same-label cluster 'Övrig art, sättfisk (2)' (2 variables): judged different meaning, medium confidence; Sovrtext1 och Sovrtext1_salt är samtidiga fritextkolumner från 2018; _salt avser havet."
+
+[[statement]]
+kind = "set"
+subject = "var:srblr-salt"
+fields = { "label" = "Rymlingar, regnbåge för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, regnbåge för utsättning' (2 variables): judged different meaning, high confidence; SRblR och SRblR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:srodr-salt"
+fields = { "label" = "Rymlingar, röding för utsättning, i havet" }
+evidence = "#2102 same-label cluster 'Rymlingar, röding för utsättning' (2 variables): judged different meaning, high confidence; SRodR och SRodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-k"
+fields = { "label" = "Antal arbetade timmar, totalt, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-m"
+fields = { "label" = "Antal arbetade timmar, totalt, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
+
+[[statement]]
+kind = "set"
+subject = "var:tk-for"
+fields = { "label" = "Arbetskostnad företagare" }
+evidence = "#2102 same-label cluster 'Arbetskostnad anställda' (3 variables): judged different meaning, high confidence; TK_av och Tk_avlon är samma arbetskostnad för avlönad arbetskraft över två perioder, TK_for gäller företagare."
+
+[[statement]]
+kind = "set"
+subject = "var:tot-invest"
+fields = { "label" = "Investeringar, totalt" }
+evidence = "#2102 same-label cluster 'Investeringar' (4 variables): judged different meaning, high confidence; 2015-2017 redovisas investeringar per verksamhet (matfisk, rom och yngel, sättfisk), från 2018 en totalsumma."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-bassanger-matfisk-havet-kubikmeter"
+fields = { "label" = "Bassänger för odling av matfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Bassänger för odling av matfisk, volym' (2 variables): judged different meaning, medium confidence; MBassv och MBassv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-dammar-matfisk-hav"
+fields = { "label" = "Dammar för odling av matfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av matfisk, volym' (2 variables): judged different meaning, medium confidence; MJordv och MJordv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-kassar-matfisk-hav"
+fields = { "label" = "Kassar för odling av matfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Kassar för odling av matfisk, volym' (2 variables): judged different meaning, medium confidence; MKassv och MKassv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-recirkulerande-system-matfisk-hav"
+fields = { "label" = "Recirkulerande system för odling av matfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Recirkulerande system för odling av matfisk, volym' (2 variables): judged different meaning, medium confidence; MRecirkv och MRecirkv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-recirkulerande-system-sattfisk-havet"
+fields = { "label" = "Recirkulerande system för odling av sättfisk, volym, i havet" }
+evidence = "#2102 same-label cluster 'Recirkulerande system för odling av sättfisk, volym' (2 variables): judged different meaning, medium confidence; SRecirkv och SRecirkv_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
+
+[[statement]]
+kind = "set"
+subject = "var:yta-dammar-matfisk-hav"
+fields = { "label" = "Dammar för odling av matfisk, yta, i havet" }
+evidence = "#2102 same-label cluster 'Dammar för odling av matfisk, yta' (2 variables): judged different meaning, medium confidence; MJordy och MJordy_salt är samtidiga kolumner från 2018; _salt avser odling i havet."

@@ -891,3 +891,129 @@ kind = "set"
 subject = "set:utlandsk-svensk-bakgrund"
 fields = { "label" = "Utländsk/svensk bakgrund" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:hmanfth"
+fields = { "label" = "Huvudman, fritidshem" }
+evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school's huvudman and HMANFTH the fritidshem's (descriptions of the name columns separate school and fritidshem), plus a name column for each."
+
+[[statement]]
+kind = "set"
+subject = "var:hmannamnfth"
+fields = { "label" = "Huvudman, fritidshem, namn" }
+evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school's huvudman and HMANFTH the fritidshem's (descriptions of the name columns separate school and fritidshem), plus a name column for each."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "label" = "Huvudman, skola" }
+evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school's huvudman and HMANFTH the fritidshem's (descriptions of the name columns separate school and fritidshem), plus a name column for each."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "label" = "Huvudman, skola, namn" }
+evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school's huvudman and HMANFTH the fritidshem's (descriptions of the name columns separate school and fritidshem), plus a name column for each."
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-hogsta-utbildningsniva-forsta-sun-position"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 7 nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:obtidfth"
+fields = { "label" = "Inskriven i fritidshem, obekväm tid" }
+evidence = "#2102 same-label cluster 'Inskriven i fritidshem' (2 variables): judged different meaning, high confidence; OBtidFTH flags enrolment at inconvenient hours (description), FTH enrolment regardless of hours."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-sv-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-1-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 7 nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-sv-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Different SUN codings concurrent from 2008: 7 levels (_1_), 3-digit SUN 2000, 3 levels (SV), grouped 2000, SUN 2020 and grouped 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."

@@ -1618,3 +1618,15 @@ kind = "set"
 subject = "set:utskrivningsdatum"
 fields = { "label" = "Utskrivningsdatum" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "label" = "Inrapporterad klinikkod, vid inventeringstidpunkten" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; The definitions differ: the clinic where the patient has been admitted versus the clinic where the patient is admitted at the inventory date."
+
+[[statement]]
+kind = "set"
+subject = "var:lt-klin"
+fields = { "label" = "Inrapporterad klinikkod, där patienten varit inskriven" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; The definitions differ: the clinic where the patient has been admitted versus the clinic where the patient is admitted at the inventory date."

@@ -2866,3 +2866,15 @@ kind = "set"
 subject = "set:yrkesuppgiftens-ar"
 fields = { "label" = "Yrkesuppgiftens år" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-exam-kod"
+fields = { "label" = "Utbildnings eller specialitetskod, legitimation/specialitetsexamen" }
+evidence = "#2102 same-label cluster 'Utbildnings eller specialitetskod' (2 variables): judged different meaning, medium confidence; Different tables and definitions: the education or specialty exam code versus the code for the current licence."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-spec-kod"
+fields = { "label" = "Utbildnings eller specialitetskod, aktuell legitimation" }
+evidence = "#2102 same-label cluster 'Utbildnings eller specialitetskod' (2 variables): judged different meaning, medium confidence; Different tables and definitions: the education or specialty exam code versus the code for the current licence."

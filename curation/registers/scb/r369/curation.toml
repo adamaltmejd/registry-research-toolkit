@@ -106,3 +106,15 @@ kind = "set"
 subject = "var:svarskod"
 fields = { "tags" = ["methods"] }
 evidence = "Svarskoden beskriver undersökningens svar och bortfall.\ncatalog:valueset:5096\ncatalog:variable_text:29319:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "label" = "Land (kod)" }
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land carries country codes; Land_Text is the plain-text country name column."
+
+[[statement]]
+kind = "set"
+subject = "var:land-text"
+fields = { "label" = "Land (text)" }
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land carries country codes; Land_Text is the plain-text country name column."

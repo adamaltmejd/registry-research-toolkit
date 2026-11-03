@@ -995,3 +995,51 @@ kind = "set"
 subject = "set:utlandsvistelse"
 fields = { "label" = "Utlandsvistelse" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-dec-2008-feb-2009"
+fields = { "label" = "Sysselsättning/aktivitet, dec 2008-feb 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (4 variables): judged different meaning, high confidence; Four survey items F09_01..F09_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-juni-aug-2009"
+fields = { "label" = "Sysselsättning/aktivitet, juni-aug 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (4 variables): judged different meaning, high confidence; Four survey items F09_01..F09_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-mars-maj-2009"
+fields = { "label" = "Sysselsättning/aktivitet, mars-maj 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (4 variables): judged different meaning, high confidence; Four survey items F09_01..F09_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-sept-nov-2008"
+fields = { "label" = "Sysselsättning/aktivitet, sept-nov 2008" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (4 variables): judged different meaning, high confidence; Four survey items F09_01..F09_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-utomlands-dec-2008-feb-2009"
+fields = { "label" = "Sysselsättning utomlands, dec 2008-feb 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning utomlands' (4 variables): judged different meaning, high confidence; Four survey items F10_01..F10_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-utomlands-juni-aug-2009"
+fields = { "label" = "Sysselsättning utomlands, juni-aug 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning utomlands' (4 variables): judged different meaning, high confidence; Four survey items F10_01..F10_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-utomlands-mars-maj-2009"
+fields = { "label" = "Sysselsättning utomlands, mars-maj 2009" }
+evidence = "#2102 same-label cluster 'Sysselsättning utomlands' (4 variables): judged different meaning, high confidence; Four survey items F10_01..F10_04 for four consecutive periods (pids name them)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-utomlands-sept-nov-2008"
+fields = { "label" = "Sysselsättning utomlands, sept-nov 2008" }
+evidence = "#2102 same-label cluster 'Sysselsättning utomlands' (4 variables): judged different meaning, high confidence; Four survey items F10_01..F10_04 for four consecutive periods (pids name them)."

@@ -7648,3 +7648,501 @@ kind = "set"
 subject = "set:ytterligare-vardavtalssystem"
 fields = { "label" = "Ytterligare vårdavtalssystem" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:avtlakvardersant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal vårdavtal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med läkare i privat regi' (4 variables): judged different meaning, high confidence; PRIVLAKANT counts physicians (vårdgivare) while AVTLAKVARDERSANT counts care agreements; PRIVLAK and AVTLAKVARDERS are the Ja/Nej flags."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation"
+fields = { "label" = "Brukarrepresentation (område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation' (2 variables): judged different meaning, medium confidence; BRUKARSYS is the Ja/Nej question whether any system was used (matches the definition); BRUKAROMR (OMR for område) is a separate column without code list."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostant"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr13"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, regioner 2016" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr15"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, kommuner 2016" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr24"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, regioner 2020" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr28a"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, kommuner 2024" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-medbdiastrat"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, kommuner och regioner 2012" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:fr2-text"
+fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the ANT and _text count columns (STYRPROANT, PROFNAMNDANT, Fr2_text)."
+
+[[statement]]
+kind = "set"
+subject = "var:fr5-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr7-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr8-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr9-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Six Ja/Nej flags and six counts of referendums (descriptions: antal folkomröstningar), over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktigesammantraden-webb-tillgang"
+fields = { "label" = "Tillänglighet på webb fullmäktigesammanträdena, kommuner" }
+evidence = "#2102 same-label cluster 'Tillänglighet på webb fullmäktigesammanträdena' (2 variables): judged different meaning, high confidence; Same question and value set asked of kommuner and of regioner in the same year, in separate respondent tables."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering"
+fields = { "label" = "Klagomålshantering, kommuner 2020 (alla eller vissa förvaltningar)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr29"
+fields = { "label" = "Klagomålshantering, regioner 2016 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr31"
+fields = { "label" = "Klagomålshantering, kommuner 2016 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr43"
+fields = { "label" = "Klagomålshantering, regioner 2020 (alla eller vissa förvaltningar)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-klagom"
+fields = { "label" = "Klagomålshantering, kommuner och regioner 2003–2013 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysald"
+fields = { "label" = "Valfrihetssystem (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysannat"
+fields = { "label" = "Valfrihetssystem (annat område)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfs"
+fields = { "label" = "Valfrihetssystem (förskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfunk"
+fields = { "label" = "Valfrihetssystem (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgs"
+fields = { "label" = "Valfrihetssystem (grundskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgy"
+fields = { "label" = "Valfrihetssystem (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysifo"
+fields = { "label" = "Valfrihetssystem (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvomr"
+fields = { "label" = "Valfrihetssystem (område)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, high confidence; KUNDVSYS and KUNDVALSYS are the overall Ja/Nej question in 2003-09 and 2012; KUNDVOMR is an area column; the 2012 columns ending ALD, ANNAT, FS, FUNK, GS, GY and IFO are one per service area."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgardialog-strategi"
+fields = { "label" = "Förekomst av beslut om medborgardialoger, kommuner och regioner 2020–2025" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between 2012-2016 and 2020+ surveys, and the respondent group (kommuner, regioner) differs per column; Fr26a spans 2020-2025 in both tables and is concurrent with Fr24."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomald"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomannat"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (annat område)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomfs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (förskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomfunk"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomgs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (grundskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomgym"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomifo"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivald"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivannat"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (annat område)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivfs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (förskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivfunk"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivgs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (grundskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivgym"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivifo"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (ALD, ANNAT, FS, FUNK, GS, GYM, IFO), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag"
+fields = { "label" = "Möjlighet att lämna e-förslag, kommuner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr14"
+fields = { "label" = "Möjlighet att lämna e-förslag, regioner 2020 (med införandetidpunkt)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15"
+fields = { "label" = "Möjlighet att lämna e-förslag, kommuner 2020 (med införandetidpunkt)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15a"
+fields = { "label" = "Möjlighet att lämna e-förslag, regioner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, kommuner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr10"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, regioner 2020 (infört före eller efter 2019)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, kommuner 2020 (infört före eller efter 2019)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11a"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, regioner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr7"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, regioner 2016 (infört efter 2015)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr9"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, kommuner 2016 (infört efter 2015)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-medbforslag"
+fields = { "label" = "Möjlighet att lämna medborgarförslag, kommuner och regioner 2003–2013 (infört före eller efter 2007)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:namndgemant"
+fields = { "label" = "Samverkan med annat landsting eller annan kommun (antal)" }
+evidence = "#2102 same-label cluster 'Samverkan med annat landsting eller annan kommun' (2 variables): judged different meaning, high confidence; NAMNDGEM is the Ja/Nej question; NAMNDGEMANT (ANT = antal) is a count column without code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrvardvalprivbol"
+fields = { "label" = "Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården (bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården' (2 variables): judged different meaning, medium confidence; OVRVARDVALPRIVBOL and OVRVARDVALPRIVIDEL are two concurrent columns; BOL and IDEL are bolagiserade and ideella leverantörer in the sibling cluster for vårdcentral."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrvardvalprividel"
+fields = { "label" = "Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården (ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården' (2 variables): judged different meaning, medium confidence; OVRVARDVALPRIVBOL and OVRVARDVALPRIVIDEL are two concurrent columns; BOL and IDEL are bolagiserade and ideella leverantörer in the sibling cluster for vårdcentral."
+
+[[statement]]
+kind = "set"
+subject = "var:polsekrant"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries; the other six are Ja/Nej flags over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:privlakant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal läkare)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med läkare i privat regi' (4 variables): judged different meaning, high confidence; PRIVLAKANT counts physicians (vårdgivare) while AVTLAKVARDERSANT counts care agreements; PRIVLAK and AVTLAKVARDERS are the Ja/Nej flags."
+
+[[statement]]
+kind = "set"
+subject = "var:privsjukhant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal sjukhus)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med sjukhus i privat regi' (4 variables): judged different meaning, high confidence; PRIVSJUKH and VARDAVTALPRIV are the Ja/Nej flags; the ANT columns are counts, of hospitals in 2003-09 and of care agreements in 2012 (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:privvardcant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal vårdcentraler)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (BOL) and non-profit providers (IDEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:profnamndant"
+fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the ANT and _text count columns (STYRPROANT, PROFNAMNDANT, Fr2_text)."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr19"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr21"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr32"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr33"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur styret, oppositionen eller annat)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr35"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur styret, oppositionen eller annat)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-minoritet"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:sjforgant"
+fields = { "label" = "Självförvaltningsorgan med uppdrag om drift (antal)" }
+evidence = "#2102 same-label cluster 'Självförvaltningsorgan med uppdrag om drift' (2 variables): judged different meaning, high confidence; SJFORG is the Ja/Nej question; SJFORGANT (ANT = antal) is a count column without code list."
+
+[[statement]]
+kind = "set"
+subject = "var:styrproant"
+fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the ANT and _text count columns (STYRPROANT, PROFNAMNDANT, Fr2_text)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillanglighet-pa-webb-fullmaktigesammantradena-fr22b"
+fields = { "label" = "Tillänglighet på webb fullmäktigesammanträdena, regioner" }
+evidence = "#2102 same-label cluster 'Tillänglighet på webb fullmäktigesammanträdena' (2 variables): judged different meaning, high confidence; Same question and value set asked of kommuner and of regioner in the same year, in separate respondent tables."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar"
+fields = { "label" = "TV-, radio- eller webbsändningar, kommuner 2016 (tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr10"
+fields = { "label" = "TV-, radio- eller webbsändningar, regioner 2016 (tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr21"
+fields = { "label" = "TV-, radio- eller webbsändningar, regioner 2020 (tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22"
+fields = { "label" = "TV-, radio- eller webbsändningar, kommuner 2020 (tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22a"
+fields = { "label" = "TV-, radio- eller webbsändningar, regioner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr24a"
+fields = { "label" = "TV-, radio- eller webbsändningar, kommuner 2024 (ja/nej)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-radiotv"
+fields = { "label" = "TV-, radio- eller webbsändningar, kommuner och regioner 2003–2013 (varje gång eller vissa gånger)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three value-set designs (varje gång/vissa gånger, available afterwards on the website, Ja/Nej) across survey rounds; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:vardavtalprivant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal vårdavtal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med sjukhus i privat regi' (4 variables): judged different meaning, high confidence; PRIVSJUKH and VARDAVTALPRIV are the Ja/Nej flags; the ANT columns are counts, of hospitals in 2003-09 and of care agreements in 2012 (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprivbol"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (BOL) and non-profit providers (IDEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprivbolant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (BOL) and non-profit providers (IDEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprividel"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (BOL) and non-profit providers (IDEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprividelant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (BOL) and non-profit providers (IDEL)."

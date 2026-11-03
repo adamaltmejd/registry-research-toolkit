@@ -497,3 +497,15 @@ kind = "set"
 subject = "set:stratum"
 fields = { "label" = "Stratum" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:loneintjanande-fran-och-med-manad"
+fields = { "label" = "Månad (löneintjänande från och med)" }
+evidence = "#2102 same-label cluster 'Månad' (2 variables): judged different meaning, high confidence; KuFran and KuTill are the first and last month of the earning period."
+
+[[statement]]
+kind = "set"
+subject = "var:loneintjanande-till-och-med-manad"
+fields = { "label" = "Månad (löneintjänande till och med)" }
+evidence = "#2102 same-label cluster 'Månad' (2 variables): judged different meaning, high confidence; KuFran and KuTill are the first and last month of the earning period."

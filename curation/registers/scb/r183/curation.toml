@@ -2116,3 +2116,9 @@ kind = "set"
 subject = "set:urval"
 fields = { "label" = "Urval" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsenhetens-identitetsnummer-foregvenr"
+fields = { "label" = "Verksamhetsenhetens identitetsnummer (föregående)" }
+evidence = "#2102 same-label cluster 'Verksamhetsenhetens identitetsnummer' (4 variables): judged different meaning, medium confidence; ForegVENr is the previous unit number, a separate column from VENr; BKbyggm and BKelinst look like layout artefacts of VENr and take its label."

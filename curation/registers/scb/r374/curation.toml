@@ -2189,3 +2189,591 @@ kind = "set"
 subject = "set:utvardering-av-utbildning"
 fields = { "label" = "Utvärdering av utbildning" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:a1"
+fields = { "label" = "Näringsgren NACE (detaljerad)" }
+evidence = "#2102 same-label cluster 'Näringsgren NACE' (2 variables): judged different meaning, medium confidence; A1 has the detailed NACE Rev. 2 codes, NACE_SP a grouped classification."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "label" = "Antal anställda (totalt)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; A2tot, A2f and A2m are all employees, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kursdeltagare"
+fields = { "label" = "Deltog i kurs (antal anställda totalt)" }
+evidence = "#2102 same-label cluster 'Deltog i kurs' (3 variables): judged different meaning, high confidence; C1tot, C2f and C2m count course participants in total, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kvinnor"
+fields = { "label" = "Antal anställda (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; A2tot, A2f and A2m are all employees, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kvinnor-kursdeltagare"
+fields = { "label" = "Deltog i kurs (antal anställda kvinnor)" }
+evidence = "#2102 same-label cluster 'Deltog i kurs' (3 variables): judged different meaning, high confidence; C1tot, C2f and C2m count course participants in total, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-man"
+fields = { "label" = "Antal anställda (män)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; A2tot, A2f and A2m are all employees, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-man-kursdeltagare"
+fields = { "label" = "Deltog i kurs (antal anställda män)" }
+evidence = "#2102 same-label cluster 'Deltog i kurs' (3 variables): judged different meaning, high confidence; C1tot, C2f and C2m count course participants in total, women and men."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskostnader-interna-larare-ovrig-personal-kronor"
+fields = { "label" = "Kostnader: arbetskostnader interna lärare och övrig personal (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:b2a"
+fields = { "label" = "Annan utbildning: instruktioner på arbetsplatsen (andel)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:b2b"
+fields = { "label" = "Annan utbildning: arbetsrotation, utbyten, studiebesök (andel)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:b2c"
+fields = { "label" = "Annan utbildning: B2c (andel)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:b2cflag"
+fields = { "label" = "Annan utbildning: B2c (förekomst)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:b2d"
+fields = { "label" = "Annan utbildning: studiecirklar, kvalitetscirklar (andel)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:b2e"
+fields = { "label" = "Annan utbildning: självstudier (andel)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:c5flag"
+fields = { "label" = "Kompetensområden variant: förekomst" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-annan-anledning"
+fields = { "label" = "Ej anordnad utbildning: annan anledning" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-brist-passande-utbildningar"
+fields = { "label" = "Ej anordnad utbildning: brist på passande utbildningar" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-fokus-grundlaggande-yrkeskunskaper"
+fields = { "label" = "Ej anordnad utbildning: fokus på grundläggande yrkeskunskaper" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-hog-arbetsbelastning-tidsbrist"
+fields = { "label" = "Ej anordnad utbildning: hög arbetsbelastning, tidsbrist" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-hoga-utbildningskostnader"
+fields = { "label" = "Ej anordnad utbildning: höga utbildningskostnader" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-rekrytering-yrkeskunskaper"
+fields = { "label" = "Ej anordnad utbildning: rekrytering av personal med yrkeskunskaper" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-svarigheter-bedoma-utbildningsbehov"
+fields = { "label" = "Ej anordnad utbildning: svårigheter att bedöma utbildningsbehov" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-tidigare-utbildningssatsningar"
+fields = { "label" = "Ej anordnad utbildning: tidigare utbildningssatsningar" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anordnad-utbildning-tillracklig-kompetens"
+fields = { "label" = "Ej anordnad utbildning: tillräcklig kompetens" }
+evidence = "#2102 same-label cluster 'Ej anordnad utbildning' (9 variables): judged different meaning, high confidence; Nine different reasons (E1a-E1i) for not providing training."
+
+[[statement]]
+kind = "set"
+subject = "var:enbart-total-kurskostnad"
+fields = { "label" = "Kostnader: enbart total kurskostnad (förekomst)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:externa-kurser-externa-larare-interna-kurser-kronor"
+fields = { "label" = "Kostnader: externa kurser och externa lärare (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-viktiga-kompetensomraden"
+fields = { "label" = "Kompetensområden: förekomst av viktiga områden" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-personalutbildning-andra-kallor"
+fields = { "label" = "Förmåner bidrag: andra källor" }
+evidence = "#2102 same-label cluster 'Förmåner bidrag' (5 variables): judged different meaning, high confidence; Five different benefit types (B6a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-personalutbildning-eu-bidrag"
+fields = { "label" = "Förmåner bidrag: EU-bidrag" }
+evidence = "#2102 same-label cluster 'Förmåner bidrag' (5 variables): judged different meaning, high confidence; Five different benefit types (B6a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-personalutbildning-intakter-utbildningsmedel"
+fields = { "label" = "Förmåner bidrag: intäkter från utbildningsmedel" }
+evidence = "#2102 same-label cluster 'Förmåner bidrag' (5 variables): judged different meaning, high confidence; Five different benefit types (B6a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-personalutbildning-skattelattnader"
+fields = { "label" = "Förmåner bidrag: skattelättnader" }
+evidence = "#2102 same-label cluster 'Förmåner bidrag' (5 variables): judged different meaning, high confidence; Five different benefit types (B6a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-personalutbildning-statsbidrag"
+fields = { "label" = "Förmåner bidrag: statsbidrag" }
+evidence = "#2102 same-label cluster 'Förmåner bidrag' (5 variables): judged different meaning, high confidence; Five different benefit types (B6a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-yrkesutbildning-annan-anledning"
+fields = { "label" = "Grundläggande yrkesutbildning: annan anledning" }
+evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Five different reasons (F2a-e) for providing initial vocational training."
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-yrkesutbildning-framtida-anstalldas-kompetens"
+fields = { "label" = "Grundläggande yrkesutbildning: framtida anställdas kompetens" }
+evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Five different reasons (F2a-e) for providing initial vocational training."
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-yrkesutbildning-larlingskompetens-produktion"
+fields = { "label" = "Grundläggande yrkesutbildning: lärlingars kompetens i produktionen" }
+evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Five different reasons (F2a-e) for providing initial vocational training."
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-yrkesutbildning-rekrytera-basta-larlingar"
+fields = { "label" = "Grundläggande yrkesutbildning: rekrytera de bästa lärlingarna" }
+evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Five different reasons (F2a-e) for providing initial vocational training."
+
+[[statement]]
+kind = "set"
+subject = "var:hade-arbetskostnader-interna-larare-ovrig-personal"
+fields = { "label" = "Kostnader: arbetskostnader interna lärare och övrig personal (förekomst)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:hade-kostnader-externa-kurser-externa-larare-interna-kurser"
+fields = { "label" = "Kostnader: externa kurser och externa lärare (förekomst)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:hade-kostnader-utbildningsmaterial-utrustning-lokaler"
+fields = { "label" = "Kostnader: utbildningsmaterial, utrustning och lokaler (förekomst)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:hade-resekostnader-traktamenten-kursdeltagare"
+fields = { "label" = "Kostnader: resekostnader och traktamenten (förekomst)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensbehov-fortsatt-yrkesutbildning-personal"
+fields = { "label" = "Kompetensbehov: fortsatt yrkesutbildning av personal" }
+evidence = "#2102 same-label cluster 'Kompetensbehov' (4 variables): judged different meaning, high confidence; Four different ways (A10a-d) the company has acted on future skill needs."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensbehov-intern-omorganisation"
+fields = { "label" = "Kompetensbehov: intern omorganisation" }
+evidence = "#2102 same-label cluster 'Kompetensbehov' (4 variables): judged different meaning, high confidence; Four different ways (A10a-d) the company has acted on future skill needs."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensbehov-rekrytering-personal-lamplig-kompetens"
+fields = { "label" = "Kompetensbehov: rekrytering av personal med lämplig kompetens" }
+evidence = "#2102 same-label cluster 'Kompetensbehov' (4 variables): judged different meaning, high confidence; Four different ways (A10a-d) the company has acted on future skill needs."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensbehov-rekrytering-personal-som-utbildas"
+fields = { "label" = "Kompetensbehov: rekrytering av personal som utbildas" }
+evidence = "#2102 same-label cluster 'Kompetensbehov' (4 variables): judged different meaning, high confidence; Four different ways (A10a-d) the company has acted on future skill needs."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-allmanna-it-kunskaper"
+fields = { "label" = "Kompetensområden variant: allmänna IT-kunskaper" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-foretagsadministration"
+fields = { "label" = "Kompetensområden variant: företagsadministration" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-kundhantering"
+fields = { "label" = "Kompetensområden variant: kundhantering" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-ledarkompetens"
+fields = { "label" = "Kompetensområden variant: ledarkompetens" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-problemlosning"
+fields = { "label" = "Kompetensområden variant: problemlösning" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-sprak"
+fields = { "label" = "Kompetensområden variant: språk" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-teamwork"
+fields = { "label" = "Kompetensområden variant: teamwork" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomrade-kursutbud-yrkesanpassad-it"
+fields = { "label" = "Kompetensområden variant: yrkesanpassad IT" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensomraden-oklara-framtida-utvecklingsomraden"
+fields = { "label" = "Kompetensområden: oklara framtida utvecklingsområden" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-utbildningsmaterial-utrustning-lokaler-kronor"
+fields = { "label" = "Kostnader: utbildningsmaterial, utrustning och lokaler (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet-certifiering-externa-leverantorer"
+fields = { "label" = "Säkerställa kvalitet: certifiering av externa leverantörer" }
+evidence = "#2102 same-label cluster 'Säkerställa kvalitet' (5 variables): judged different meaning, high confidence; Five different quality aspects (D1a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet-ingen-sarskild-aspekt"
+fields = { "label" = "Säkerställa kvalitet: ingen särskild aspekt" }
+evidence = "#2102 same-label cluster 'Säkerställa kvalitet' (5 variables): judged different meaning, high confidence; Five different quality aspects (D1a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet-kontinuerlig-fortbildning-interna-utbildare"
+fields = { "label" = "Säkerställa kvalitet: kontinuerlig fortbildning av interna utbildare" }
+evidence = "#2102 same-label cluster 'Säkerställa kvalitet' (5 variables): judged different meaning, high confidence; Five different quality aspects (D1a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet-nationella-sektoriella-standarder"
+fields = { "label" = "Säkerställa kvalitet: nationella och sektoriella standarder" }
+evidence = "#2102 same-label cluster 'Säkerställa kvalitet' (5 variables): judged different meaning, high confidence; Five different quality aspects (D1a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet-ovriga-ej-angivna-aspekter"
+fields = { "label" = "Säkerställa kvalitet: övriga ej angivna aspekter" }
+evidence = "#2102 same-label cluster 'Säkerställa kvalitet' (5 variables): judged different meaning, high confidence; Five different quality aspects (D1a-e)."
+
+[[statement]]
+kind = "set"
+subject = "var:nace-sp"
+fields = { "label" = "Näringsgren NACE (grupperad)" }
+evidence = "#2102 same-label cluster 'Näringsgren NACE' (2 variables): judged different meaning, medium confidence; A1 has the detailed NACE Rev. 2 codes, NACE_SP a grouped classification."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-annat-kompetensomrade"
+fields = { "label" = "Kompetensområden variant: annat kompetensområde" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-arbetsrotation-utbyten-studiebesok"
+fields = { "label" = "Annan utbildning: arbetsrotation, utbyten, studiebesök (förekomst)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-instruktioner-arbetsplatsen"
+fields = { "label" = "Annan utbildning: instruktioner på arbetsplatsen (förekomst)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-matematik-laskunskaper"
+fields = { "label" = "Kompetensområden variant: matematik och läskunskaper" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-muntlig-skriftlig-kommunikation"
+fields = { "label" = "Kompetensområden variant: muntlig och skriftlig kommunikation" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-sjalvstudier"
+fields = { "label" = "Annan utbildning: självstudier (förekomst)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-studiecirklar-kvalitetscirklar"
+fields = { "label" = "Annan utbildning: studiecirklar, kvalitetscirklar (förekomst)" }
+evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; CVTS question B2: five forms of other training, each as a share category (B2a-e) and a yes/no flag (B2aflag-eflag); the topic of item c is not in the data."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildning-yrkesanpassad-teknisk-praktisk-kompetens"
+fields = { "label" = "Kompetensområden variant: yrkesanpassad teknisk och praktisk kompetens" }
+evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, medium confidence; A second question block (C5a-l) on skill areas of the training provided, separate from the A12 block of important skill areas."
+
+[[statement]]
+kind = "set"
+subject = "var:personalutbildningskostnad-kurser-bidrag-donationer-kronor"
+fields = { "label" = "Kostnader: total personalutbildningskostnad (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:resekostnader-traktamenten-kursdeltagare-kronor"
+fields = { "label" = "Kostnader: resekostnader och traktamenten (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:total-kurskostnad-kategorityp-svar-saknas-kronor"
+fields = { "label" = "Kostnader: total kurskostnad utan fördelning (kronor)" }
+evidence = "#2102 same-label cluster 'Kostnader' (11 variables): judged different meaning, high confidence; Cost components (C7a-d) each as a kronor amount and a yes/no flag, plus total (C7tot), only-total flag (C7sflag) and unallocated total (C7sub); matches the prior judgement."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-inte-begransad-tillracklig-for-behov"
+fields = { "label" = "Utbildningsbegränsningar: utbildningen är inte begränsad, tillräcklig för behovet" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-annan-anledning"
+fields = { "label" = "Utbildningsbegränsningar: annan anledning" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-brist-passande-utbildningar"
+fields = { "label" = "Utbildningsbegränsningar: brist på passande utbildningar" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-fokus-grundlaggande-yrkesutbildning"
+fields = { "label" = "Utbildningsbegränsningar: fokus på grundläggande yrkesutbildning" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-hog-arbetsbelastning-tidsbrist"
+fields = { "label" = "Utbildningsbegränsningar: hög arbetsbelastning, tidsbrist" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-hoga-utbildningskostnader"
+fields = { "label" = "Utbildningsbegränsningar: höga utbildningskostnader" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-rekrytering-yrkeskunskaper"
+fields = { "label" = "Utbildningsbegränsningar: rekrytering av personal med yrkeskunskaper" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-svarigheter-bedoma-utbildningsbehov"
+fields = { "label" = "Utbildningsbegränsningar: svårigheter att bedöma utbildningsbehov" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbegransning-tidigare-utbildningssatsningar"
+fields = { "label" = "Utbildningsbegränsningar: tidigare utbildningssatsningar" }
+evidence = "#2102 same-label cluster 'Utbildningsbegränsningar' (9 variables): judged different meaning, high confidence; Nine different limitations (D3a-i) on training."
+
+[[statement]]
+kind = "set"
+subject = "var:utvarderingsmetod-annan-metod"
+fields = { "label" = "Utvärderingsmetod: annan metod" }
+evidence = "#2102 same-label cluster 'Utvärderingsmetod' (5 variables): judged different meaning, high confidence; Five different evaluation methods (D2ba-be)."
+
+[[statement]]
+kind = "set"
+subject = "var:utvarderingsmetod-blanketter-deltagare"
+fields = { "label" = "Utvärderingsmetod: blanketter till deltagare" }
+evidence = "#2102 same-label cluster 'Utvärderingsmetod' (5 variables): judged different meaning, high confidence; Five different evaluation methods (D2ba-be)."
+
+[[statement]]
+kind = "set"
+subject = "var:utvarderingsmetod-certifiering-skriftligt-praktiskt-prov"
+fields = { "label" = "Utvärderingsmetod: certifiering, skriftligt eller praktiskt prov" }
+evidence = "#2102 same-label cluster 'Utvärderingsmetod' (5 variables): judged different meaning, high confidence; Five different evaluation methods (D2ba-be)."
+
+[[statement]]
+kind = "set"
+subject = "var:utvarderingsmetod-deltagarprestationer-efter-utbildning"
+fields = { "label" = "Utvärderingsmetod: deltagarnas prestationer efter utbildning" }
+evidence = "#2102 same-label cluster 'Utvärderingsmetod' (5 variables): judged different meaning, high confidence; Five different evaluation methods (D2ba-be)."
+
+[[statement]]
+kind = "set"
+subject = "var:utvarderingsmetod-foretaget-efter-utbildning"
+fields = { "label" = "Utvärderingsmetod: företagets resultat efter utbildning" }
+evidence = "#2102 same-label cluster 'Utvärderingsmetod' (5 variables): judged different meaning, high confidence; Five different evaluation methods (D2ba-be)."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-allmanna-it-kunskaper"
+fields = { "label" = "Kompetensområden: allmänna IT-kunskaper" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-andra-fardigheter"
+fields = { "label" = "Kompetensområden: andra färdigheter" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-foretagsadministration"
+fields = { "label" = "Kompetensområden: företagsadministration" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-kundhantering"
+fields = { "label" = "Kompetensområden: kundhantering" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-ledarkompetens"
+fields = { "label" = "Kompetensområden: ledarkompetens" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-muntlig-skriftlig-kommunikation"
+fields = { "label" = "Kompetensområden: muntlig och skriftlig kommunikation" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-problemlosning"
+fields = { "label" = "Kompetensområden: problemlösning" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-raknefardigheter-lasfardigheter"
+fields = { "label" = "Kompetensområden: räknefärdigheter och läsfärdigheter" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-sprak"
+fields = { "label" = "Kompetensområden: språk" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-teamwork"
+fields = { "label" = "Kompetensområden: teamwork" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-yrkesanpassad-teknisk-praktisk"
+fields = { "label" = "Kompetensområden: yrkesanpassad teknisk och praktisk kompetens" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:viktiga-kompetensomraden-yrkesfardigheter-it"
+fields = { "label" = "Kompetensområden: yrkesfärdigheter i IT" }
+evidence = "#2102 same-label cluster 'Kompetensområden' (14 variables): judged different meaning, high confidence; One flag per important skill area (A12a-o) plus an overall A12flag."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutbildning-undvika-inte-tillgodosedd-extern-rekrytering"
+fields = { "label" = "Grundläggande yrkesutbildning: undvika extern rekrytering som inte tillgodoses" }
+evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Five different reasons (F2a-e) for providing initial vocational training."

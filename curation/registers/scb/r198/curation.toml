@@ -721,3 +721,33 @@ kind = "set"
 subject = "set:upplatelseform"
 fields = { "label" = "Upplåtelseform" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp"
+fields = { "label" = "Ägarkategori (detaljerad indelning)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; bygghtyp2 is a coarse three-way owner category, bygghtyp a detailed owner classification (kommun, landsting, HSB, Riksbyggen and so on)."
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp2"
+fields = { "label" = "Ägarkategori (grov indelning)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; bygghtyp2 is a coarse three-way owner category, bygghtyp a detailed owner classification (kommun, landsting, HSB, Riksbyggen and so on)."
+
+[[statement]]
+kind = "set"
+subject = "var:nuts01"
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 1" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:nuts02"
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 2" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:nuts03"
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 3" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."

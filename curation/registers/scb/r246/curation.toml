@@ -353,3 +353,27 @@ kind = "set"
 subject = "var:timlon"
 fields = { "description" = "Timlön under referensmånaden. Timlönen beräknas som lön under referensmånaden dividerad med antal timmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437081:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "label" = "Uppräkningstal (företag)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-a51"
+fields = { "label" = "Uppräkningstal (företag)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b42"
+fields = { "label" = "Uppräkningstal (individer)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b52"
+fields = { "label" = "Uppräkningstal (individer)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."

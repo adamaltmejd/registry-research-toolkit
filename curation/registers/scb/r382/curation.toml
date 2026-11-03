@@ -2744,3 +2744,183 @@ kind = "set"
 subject = "set:variabelklass"
 fields = { "label" = "Variabelklass" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-branschgr"
+fields = { "label" = "Bransch (SNI 2007, kolumn branschgr)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren-2"
+fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-sni2007"
+fields = { "label" = "Bransch (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 01, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid01mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 01, moms" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 02, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 02, moms" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 03, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 03, moms" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid04bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 04, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid05bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 05, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid06bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 06, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid07bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 07, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid08bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 08, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid09bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 09, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid10bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 10, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid11bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 11, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid12bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 12, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 13, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 13, moms" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid22bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN): variabelklass 22, blankett" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, high confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the turnover clusters of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92 codes, sni2007 / AL2UndEjU / AktSni07 use SNI 2007 codes (AL2UndEjU sits between AktSni92 and AktSni07 in time), and CU_BranschText is a concurrent text column."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92 codes, sni2007 / AL2UndEjU / AktSni07 use SNI 2007 codes (AL2UndEjU sits between AktSni92 and AktSni07 in time), and CU_BranschText is a concurrent text column."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92 codes, sni2007 / AL2UndEjU / AktSni07 use SNI 2007 codes (AL2UndEjU sits between AktSni92 and AktSni07 in time), and CU_BranschText is a concurrent text column."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "label" = "Näringsgren (branschtext, CU_BranschText)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92 codes, sni2007 / AL2UndEjU / AktSni07 use SNI 2007 codes (AL2UndEjU sits between AktSni92 and AktSni07 in time), and CU_BranschText is a concurrent text column."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "label" = "Näringsgren (SNI 2007, tjänstesektorn)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 uses SNI 92 codes, sni2007 / AL2UndEjU / AktSni07 use SNI 2007 codes (AL2UndEjU sits between AktSni92 and AktSni07 in time), and CU_BranschText is a concurrent text column."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-classid13bl-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, blankett (PIN), imputerat" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, blankett (PIN)' (2 variables): judged different meaning, medium confidence; ClassId13BL is the collected turnover while ClassId13BL_Imputed is a separately named column in the tjänsteproduktionsindex table, the imputed counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, moms (PIN), imputerat" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, moms (PIN)' (2 variables): judged different meaning, medium confidence; ClassId13MR is the VAT-derived turnover while ClassId13MR_Imputed is a separately named column in the tjänsteproduktionsindex table, the imputed counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "label" = "Bransch (SNI 92)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."

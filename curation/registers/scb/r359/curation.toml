@@ -268,3 +268,99 @@ kind = "set"
 subject = "var:postort"
 fields = { "tags" = ["geography"] }
 evidence = "Postort beskriver ett geografiskt adressområde.\ncatalog:variable_text:43124:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antall"
+fields = { "label" = "Inmatningspunkter (30–1000 kW)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalm"
+fields = { "label" = "Inmatningspunkter (20–30 kW)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalmellan"
+fields = { "label" = "Inmatningspunkter (storleksklass mellan)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalmer"
+fields = { "label" = "Inmatningspunkter (storleksklass mer)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalmindre"
+fields = { "label" = "Inmatningspunkter (storleksklass mindre)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antals"
+fields = { "label" = "Inmatningspunkter (10–20 kW)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalxl"
+fields = { "label" = "Inmatningspunkter (större än 1000 kW)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antalxs"
+fields = { "label" = "Inmatningspunkter (mindre än 10 kW)" }
+evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL (2024-2025); thresholds for XS-XL taken from the parallel Effekt pids."
+
+[[statement]]
+kind = "set"
+subject = "var:effektmellan"
+fields = { "label" = "Installerad effekt (storleksklass mellan)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:effektmer"
+fields = { "label" = "Installerad effekt (storleksklass mer)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:effektmindre"
+fields = { "label" = "Installerad effekt (storleksklass mindre)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:installerad-effekt-solceller-mellan-20-och-30-kw"
+fields = { "label" = "Installerad effekt (20–30 kW)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:installerad-effekt-solceller-mer-an-10-mindre-an-20-kw"
+fields = { "label" = "Installerad effekt (10–20 kW)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:installerad-effekt-solceller-mer-an-30-mindre-an-1000-kw"
+fields = { "label" = "Installerad effekt (30–1000 kW)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:installerad-effekt-solceller-mindre-an-10-kw"
+fields = { "label" = "Installerad effekt (mindre än 10 kW)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."
+
+[[statement]]
+kind = "set"
+subject = "var:installerad-effekt-solceller-storre-an-1000-kw"
+fields = { "label" = "Installerad effekt (större än 1000 kW)" }
+evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes: Mindre/Mellan/Mer (2016-2024) and XS-XL with kW limits in their pid slugs (2024-2025)."

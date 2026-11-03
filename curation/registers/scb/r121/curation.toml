@@ -76782,3 +76782,2781 @@ kind = "set"
 subject = "forsakringsbolag: l11 @2017-01-01..2017-12-31 where key = 'v26224' and release = 'r13707'"
 fields = { "variable" = "orealiserade-forluster-l10" }
 evidence = "Audit correction 2026-11-02: FRIDA insurers: the new L2/v40681 first occurs in 2017; all 23 intact 2017 columns match the same-column 2018 key and label. L19/2017 is already assigned to unrealised losses under the accepted shifted layout. In release r13707, keep L18/v26212 as capital-return costs (old L17), keep L10/v26150 as capital-return costs (old L9), withhold the stale loss duplicates on L18/v26224 and L10/v26151, and place L11/v26224 with unrealised losses (old L10). 2018 L11/v26151 establishes that loss-series placement. Source Registerinformation.csv: rows 499180,499185,499181,499186,507840,841373; 2018 rows 318864,318865,318871."
+
+[[statement]]
+kind = "set"
+subject = "var:ai-fte-m"
+fields = { "label" = "Årsverken av understödjande personal inom AI, män" }
+evidence = "#2102 same-label cluster 'Årsverken av understödjande personal inom AI' (2 variables): judged different meaning, high confidence; AI_FTE_M is men and AI_FTE_F women."
+
+[[statement]]
+kind = "set"
+subject = "var:ai-ftexi-m"
+fields = { "label" = "Årsverken av extern understödjande personal inom AI, män" }
+evidence = "#2102 same-label cluster 'Årsverken av extern understödjande personal inom AI' (2 variables): judged different meaning, high confidence; AI_FTEXI_M is men and AI_FTEXI_F women."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-instrumenttyp-fyra-storsta-forsta-blocket"
+fields = { "label" = "Typ av instrument, största nr 2, första blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:andrade-redovisningsprinciper-avser-andrade-principer"
+fields = { "label" = "Ändrade redovisningsprinciper, avser ändrade principer" }
+evidence = "#2102 same-label cluster 'Ändrade redovisningsprinciper' (2 variables): judged different meaning, high confidence; V0872 flags changed principles and V0873 retained principles (slugs), two separate Nej/Ja questions."
+
+[[statement]]
+kind = "set"
+subject = "var:andrade-redovisningsprinciper-avser-bibehallna-principer"
+fields = { "label" = "Ändrade redovisningsprinciper, avser bibehållna principer" }
+evidence = "#2102 same-label cluster 'Ändrade redovisningsprinciper' (2 variables): judged different meaning, high confidence; V0872 flags changed principles and V0873 retained principles (slugs), two separate Nej/Ja questions."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aktier"
+fields = { "label" = "Antal aktier (bilaga K10)" }
+evidence = "#2102 same-label cluster 'Antal aktier' (3 variables): judged different meaning, medium confidence; BANTA (Bolagsverket), bantatot (Bolagsverket total) and V4531 (annex K10) hold share counts in different sources."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aktier-banta"
+fields = { "label" = "Antal aktier (Bolagsverket)" }
+evidence = "#2102 same-label cluster 'Antal aktier' (3 variables): judged different meaning, medium confidence; BANTA (Bolagsverket), bantatot (Bolagsverket total) and V4531 (annex K10) hold share counts in different sources."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aktier-bantatot"
+fields = { "label" = "Antal aktier, totalt (Bolagsverket)" }
+evidence = "#2102 same-label cluster 'Antal aktier' (3 variables): judged different meaning, medium confidence; BANTA (Bolagsverket), bantatot (Bolagsverket total) and V4531 (annex K10) hold share counts in different sources."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar"
+fields = { "label" = "Antal egna arbetstimmar (bilaga K10)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; The three columns come from different declaration forms: annex K10, the declaration table and annex N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar-v0141"
+fields = { "label" = "Antal egna arbetstimmar (deklarationsuppgifter)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; The three columns come from different declaration forms: annex K10, the declaration table and annex N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar-vc0141"
+fields = { "label" = "Antal egna arbetstimmar (bilaga N3A)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; The three columns come from different declaration forms: annex K10, the declaration table and annex N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-extern-understodjande-personal-fou-kvinnor"
+fields = { "label" = "Antal externa understödjande personal i FoU-verksamheten (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal externa understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTAPKVI), men (NEXTAPMAN) and a total (HCXI_OCCUP_TXRSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-extern-understodjande-personal-fou-man"
+fields = { "label" = "Antal externa understödjande personal i FoU-verksamheten (män)" }
+evidence = "#2102 same-label cluster 'Antal externa understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTAPKVI), men (NEXTAPMAN) and a total (HCXI_OCCUP_TXRSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-externa-forskare-produktutvecklare-fou-kvinnor"
+fields = { "label" = "Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTFKVI), men (NEXTFMAN) and a total (HCXI_OCCUP_RSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-externa-forskare-produktutvecklare-fou-man"
+fields = { "label" = "Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten (män)" }
+evidence = "#2102 same-label cluster 'Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTFKVI), men (NEXTFMAN) and a total (HCXI_OCCUP_RSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-blekinge-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Blekinge län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-dalarnas-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Dalarnas län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-gavleborgs-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Gävleborgs län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-gotlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Gotlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-hallands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Hallands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-jamtlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Jämtlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-jonkopings-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Jönköpings län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-kalmar-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Kalmar län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-kronobergs-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Kronobergs län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-norrrbottens-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Norrbottens län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-orebro-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Örebro län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-ostergotlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Östergötlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-skane-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Skåne län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-sodermanlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Södermanlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-stockholms-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Stockholms län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-uppsala-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Uppsala län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-varmlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Värmlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-vasterbottens-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Västerbottens län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-vasternorrlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Västernorrlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-vastmanlands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Västmanlands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-forskare-fou-vastra-gotalands-lan"
+fields = { "label" = "Antal forskare i FoU-verksamheten, Västra Götalands län" }
+evidence = "#2102 same-label cluster 'Antal forskare i FoU-verksamheten' (21 variables): judged different meaning, high confidence; One column per county, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-av-forskare-avser-narfose122"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Södermanlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-av-forskare-avser-narfose123"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Östergötlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-av-forskare-avser-narfose321"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Västernorrlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-av-forskare-avser-narfose331"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Västerbottens län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse110"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Stockholms län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse121"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Uppsala län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse122"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Södermanlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse123"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Östergötlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse124"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Örebro län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse125"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Västmanlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse211"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Jönköpings län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse212"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Kronobergs län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse213"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Kalmar län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse214"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Gotlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse221"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Blekinge län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse224"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Skåne län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse231"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Hallands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse232"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Västra Götalands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse311"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Värmlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse312"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Dalarnas län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse313"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Gävleborgs län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse321"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Västernorrlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse322"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Jämtlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse331"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Västerbottens län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narapse332"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av understödjande personal, Norrbottens län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av understödjande personal' (21 variables): judged different meaning, high confidence; NARAPSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose110"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Stockholms län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose121"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Uppsala län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose124"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Örebro län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose125"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Västmanlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose211"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Jönköpings län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose212"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Kronobergs län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose213"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Kalmar län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose214"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Gotlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose221"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Blekinge län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose224"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Skåne län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose231"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Hallands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose232"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Västra Götalands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose311"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Värmlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose312"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Dalarnas län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose313"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Gävleborgs län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose322"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Jämtlands län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fou-arsverken-i-fou-verksamheten-narfose332"
+fields = { "label" = "Antal FoU-årsverken i FoU-verksamheten av forskare, Norrbottens län" }
+evidence = "#2102 same-label cluster 'Antal FoU-årsverken i FoU-verksamheten av forskare' (21 variables): judged different meaning, high confidence; NARFOSE columns are per county; the three-digit suffixes match the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-fou-forskarexamen-kvinnor"
+fields = { "label" = "Antal personer i FoU-verksamheten med forskarexamen (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal personer i FoU-verksamheten med forskarexamen' (2 variables): judged different meaning, high confidence; NPFEKVI is women and NPFEMAN is men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-fou-forskarexamen-man"
+fields = { "label" = "Antal personer i FoU-verksamheten med forskarexamen (män)" }
+evidence = "#2102 same-label cluster 'Antal personer i FoU-verksamheten med forskarexamen' (2 variables): judged different meaning, high confidence; NPFEKVI is women and NPFEMAN is men."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-aktier-avser-foretag-1-v5125"
+fields = { "label" = "Antal sålda onoterade aktier (företag 1)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade aktier' (3 variables): judged different meaning, high confidence; V5125, V5135 and V5145 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-aktier-avser-foretag-2-v5135"
+fields = { "label" = "Antal sålda onoterade aktier (företag 2)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade aktier' (3 variables): judged different meaning, high confidence; V5125, V5135 and V5145 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-aktier-avser-foretag-3-v5145"
+fields = { "label" = "Antal sålda onoterade aktier (företag 3)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade aktier' (3 variables): judged different meaning, high confidence; V5125, V5135 and V5145 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-andelar-avser-foretag-1-v5165"
+fields = { "label" = "Antal sålda onoterade andelar (företag 1)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade andelar' (3 variables): judged different meaning, high confidence; V5165, V5175 and V5185 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-andelar-avser-foretag-2-v5175"
+fields = { "label" = "Antal sålda onoterade andelar (företag 2)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade andelar' (3 variables): judged different meaning, high confidence; V5165, V5175 and V5185 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-salda-onoterade-andelar-avser-foretag-3-v5185"
+fields = { "label" = "Antal sålda onoterade andelar (företag 3)" }
+evidence = "#2102 same-label cluster 'Antal sålda onoterade andelar' (3 variables): judged different meaning, high confidence; V5165, V5175 and V5185 are the same item for company 1, 2 and 3 in annex K12, named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-fou-kvinnor"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-fou-man"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten (män)" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-fou-stockholms-lan"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Stockholms län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse121"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Uppsala län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse122"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Södermanlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse123"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Östergötlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse124"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Örebro län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse125"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Västmanlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse211"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Jönköpings län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse212"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Kronobergs län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse213"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Kalmar län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse214"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Gotlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse221"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Blekinge län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse224"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Skåne län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse231"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Hallands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse232"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Västra Götalands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse311"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Värmlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse312"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Dalarnas län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse313"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Gävleborgs län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse321"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Västernorrlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse322"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Jämtlands län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse331"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Västerbottens län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-understodjande-personal-i-fou-verksamheten-napse332"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten, Norrbottens län" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-extern-understodjande-personal-ai-kvinnor"
+fields = { "label" = "Årsverken av extern understödjande personal inom AI, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av extern understödjande personal inom AI' (2 variables): judged different meaning, high confidence; AI_FTEXI_M is men and AI_FTEXI_F women."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-extern-understodjande-personal-fou-kvinnor"
+fields = { "label" = "Årsverken av extern understödjande personal i FoU-verksamheten, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av extern understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTAPKVI is women, NAREXTAPMAN men, and FTEXI_OCCUP_TXRSE_T the total (OECD-style _T code, 2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-extern-understodjande-personal-fou-man"
+fields = { "label" = "Årsverken av extern understödjande personal i FoU-verksamheten, män" }
+evidence = "#2102 same-label cluster 'Årsverken av extern understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTAPKVI is women, NAREXTAPMAN men, and FTEXI_OCCUP_TXRSE_T the total (OECD-style _T code, 2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-externa-forskare-produktutvecklare-fou-kvinnor"
+fields = { "label" = "Årsverken av externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av externa forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTFKVI is women, NAREXTFMAN men, and FTEXI_OCCUP_RSE_T the total (2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-externa-forskare-produktutvecklare-fou-man"
+fields = { "label" = "Årsverken av externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten, män" }
+evidence = "#2102 same-label cluster 'Årsverken av externa forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTFKVI is women, NAREXTFMAN men, and FTEXI_OCCUP_RSE_T the total (2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-forskare-produktutvecklare-fou-kvinnor"
+fields = { "label" = "Årsverken av forskare, produktutvecklare eller motsvarande i FoU-verksamheten, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARFKVI is women, NARFKMAN men and NARFTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-forskare-produktutvecklare-fou-man"
+fields = { "label" = "Årsverken av forskare, produktutvecklare eller motsvarande i FoU-verksamheten, män" }
+evidence = "#2102 same-label cluster 'Årsverken av forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARFKVI is women, NARFKMAN men and NARFTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-understodjande-personal-ai-kvinnor"
+fields = { "label" = "Årsverken av understödjande personal inom AI, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av understödjande personal inom AI' (2 variables): judged different meaning, high confidence; AI_FTE_M is men and AI_FTE_F women."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-understodjande-personal-fou-kvinnor"
+fields = { "label" = "Årsverken av understödjande personal i FoU-verksamheten, kvinnor" }
+evidence = "#2102 same-label cluster 'Årsverken av understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARAPKVI is women, NARAPMAN men and NARAPTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-understodjande-personal-fou-man"
+fields = { "label" = "Årsverken av understödjande personal i FoU-verksamheten, män" }
+evidence = "#2102 same-label cluster 'Årsverken av understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARAPKVI is women, NARAPMAN men and NARAPTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-fran-periodiseringsfond-sru-v8238"
+fields = { "label" = "Återföring från periodiseringsfond (SRU), bilaga N9" }
+evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond (SRU)' (3 variables): judged different meaning, medium confidence; V0589 (2000-2007) and V7420 (2007-2024) are the same aktiebolag field across a form change; V8238 is a separate field on bilaga N9 (2019-2024)."
+
+[[statement]]
+kind = "set"
+subject = "var:aterfort-uppskov-av-kapitalvinst-enligt-blankett-n4-v6506"
+fields = { "label" = "Återfört uppskov av kapitalvinst enligt blankett N4, bilaga N3A" }
+evidence = "#2102 same-label cluster 'Återfört uppskov av kapitalvinst enligt blankett N4  (836)' (3 variables): judged different meaning, medium confidence; V0836 (2000-2012) appears on both N3A and N3B, then splits into V7804 (bilaga N3B, from 2007) and V6506 (bilaga N3A, from 2012)."
+
+[[statement]]
+kind = "set"
+subject = "var:aterfort-uppskov-av-kapitalvinst-enligt-blankett-n4-v7804"
+fields = { "label" = "Återfört uppskov av kapitalvinst enligt blankett N4, bilaga N3B" }
+evidence = "#2102 same-label cluster 'Återfört uppskov av kapitalvinst enligt blankett N4  (836)' (3 variables): judged different meaning, medium confidence; V0836 (2000-2012) appears on both N3A and N3B, then splits into V7804 (bilaga N3B, from 2007) and V6506 (bilaga N3A, from 2012)."
+
+[[statement]]
+kind = "set"
+subject = "var:aterfort-uppskov-kapitalvinst-n4-836"
+fields = { "label" = "Återfört uppskov av kapitalvinst enligt blankett N4 (836)" }
+evidence = "#2102 same-label cluster 'Återfört uppskov av kapitalvinst enligt blankett N4  (836)' (3 variables): judged different meaning, medium confidence; V0836 (2000-2012) appears on both N3A and N3B, then splits into V7804 (bilaga N3B, from 2007) and V6506 (bilaga N3A, from 2012)."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-blankett-n9-avdrag-for-arets-negativa-rantenetto"
+fields = { "label" = "Avdrag Blankett N9: årets negativa räntenetto" }
+evidence = "#2102 same-label cluster 'Avdrag Blankett N9' (2 variables): judged different meaning, high confidence; V8243 is the deduction for the year's negative net interest and V8244 for remaining negative net interest from earlier years, per the pids and description."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-blankett-n9-avdrag-for-kvarstaende-negativt-rantenetto-fran-tidigare-ar"
+fields = { "label" = "Avdrag Blankett N9: kvarstående negativt räntenetto från tidigare år" }
+evidence = "#2102 same-label cluster 'Avdrag Blankett N9' (2 variables): judged different meaning, high confidence; V8243 is the deduction for the year's negative net interest and V8244 for remaining negative net interest from earlier years, per the pids and description."
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-elenergi-datorhallar"
+fields = { "label" = "Avgår elenergi, datorhallar" }
+evidence = "#2102 same-label cluster 'Avgår elenergi' (3 variables): judged different meaning, medium confidence; ELAVGMNG is for data halls per its slug; ELAVGUTHALV1MNG and ELAVGUTHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-kapitalforsakring"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag, handelsbolag)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): judged different meaning, medium confidence; SAVUKAP (individual tables) differs in unit from the company-table columns; SAVUKAP27, SAVUKAP2 and SAVKASTUK follow one another in the company tables."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (individ)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): judged different meaning, medium confidence; SAVUKAP (individual tables) differs in unit from the company-table columns; SAVUKAP27, SAVUKAP2 and SAVKASTUK follow one another in the company tables."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag, handelsbolag)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): judged different meaning, medium confidence; SAVUKAP (individual tables) differs in unit from the company-table columns; SAVUKAP27, SAVUKAP2 and SAVKASTUK follow one another in the company tables."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap27"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag, handelsbolag)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): judged different meaning, medium confidence; SAVUKAP (individual tables) differs in unit from the company-table columns; SAVUKAP27, SAVUKAP2 and SAVKASTUK follow one another in the company tables."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattning-expansionsmedel-2-ar-gamla"
+fields = { "label" = "Avsättning till expansionsmedel, 2 år gamla" }
+evidence = "#2102 same-label cluster 'Avsättning till expansionsmedel' (3 variables): judged different meaning, high confidence; The pids of NSKEXPU and NSKEXPX say 2 and 3 years old, so they are different vintages of the provision than NSKEXP."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattning-expansionsmedel-3-ar-gamla"
+fields = { "label" = "Avsättning till expansionsmedel, 3 år gamla" }
+evidence = "#2102 same-label cluster 'Avsättning till expansionsmedel' (3 variables): judged different meaning, high confidence; The pids of NSKEXPU and NSKEXPX say 2 and 3 years old, so they are different vintages of the provision than NSKEXP."
+
+[[statement]]
+kind = "set"
+subject = "var:bandfpt"
+fields = { "label" = "Folkpension, andel av full folkpension" }
+evidence = "#2102 same-label cluster 'Folkpension' (2 variables): judged different meaning, high confidence; BANDFPT is a share of full folkpension; BALDFP is a yes/no code."
+
+[[statement]]
+kind = "set"
+subject = "var:barntillagg"
+fields = { "label" = "Barntillägg (kod)" }
+evidence = "#2102 same-label cluster 'Barntillägg' (3 variables): judged different meaning, medium confidence; BBTKOD is a coded status, BHALVBT a yes/no flag for halved supplement, PBT the amount in kronor (per its slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:barntillagg-overgangsbestammelser-kronor"
+fields = { "label" = "Barntillägg (kronor)" }
+evidence = "#2102 same-label cluster 'Barntillägg' (3 variables): judged different meaning, medium confidence; BBTKOD is a coded status, BHALVBT a yes/no flag for halved supplement, PBT the amount in kronor (per its slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-n9-andra-aret-innan-beskattningsaret"
+fields = { "label" = "Belopp Blankett N9, andra året innan beskattningsåret" }
+evidence = "#2102 same-label cluster 'Belopp Blankett N9' (5 variables): judged different meaning, high confidence; Five columns for amounts in successive years before the tax year; the slugs name the year offset."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-n9-aret-innan-beskattningsaret"
+fields = { "label" = "Belopp Blankett N9, året innan beskattningsåret" }
+evidence = "#2102 same-label cluster 'Belopp Blankett N9' (5 variables): judged different meaning, high confidence; Five columns for amounts in successive years before the tax year; the slugs name the year offset."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-n9-femte-aret-innan-beskattningsaret"
+fields = { "label" = "Belopp Blankett N9, femte året innan beskattningsåret" }
+evidence = "#2102 same-label cluster 'Belopp Blankett N9' (5 variables): judged different meaning, high confidence; Five columns for amounts in successive years before the tax year; the slugs name the year offset."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-n9-fjarde-aret-innan-beskattningsaret"
+fields = { "label" = "Belopp Blankett N9, fjärde året innan beskattningsåret" }
+evidence = "#2102 same-label cluster 'Belopp Blankett N9' (5 variables): judged different meaning, high confidence; Five columns for amounts in successive years before the tax year; the slugs name the year offset."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-n9-tredje-aret-innan-beskattningsaret"
+fields = { "label" = "Belopp Blankett N9, tredje året innan beskattningsåret" }
+evidence = "#2102 same-label cluster 'Belopp Blankett N9' (5 variables): judged different meaning, high confidence; Five columns for amounts in successive years before the tax year; the slugs name the year offset."
+
+[[statement]]
+kind = "set"
+subject = "var:betalning-avyttrade-nettade-terminskontrakt"
+fields = { "label" = "Erlagd betalning för avyttrade terminskontrakt (nettade)" }
+evidence = "#2102 same-label cluster 'Erlagd betalning för avyttrade terminskontrakt' (2 variables): judged different meaning, medium confidence; Slugs name a netted-terminer column (KKUELT) and a plain avyttrade-terminskontrakt column (KKUELO)."
+
+[[statement]]
+kind = "set"
+subject = "var:bfp"
+fields = { "label" = "Folkpensionskod (ja/nej)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:bfpmark"
+fields = { "label" = "Folkpensionskod (BFPMARK)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:bhalvbt"
+fields = { "label" = "Barntillägg, halvt (ja/nej)" }
+evidence = "#2102 same-label cluster 'Barntillägg' (3 variables): judged different meaning, medium confidence; BBTKOD is a coded status, BHALVBT a yes/no flag for halved supplement, PBT the amount in kronor (per its slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:bhelhalv"
+fields = { "label" = "Folkpensionskod, hel/halv (BHELHALV)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:bidnr"
+fields = { "label" = "Företagets id-nummer, finansbolag (BIDNR)" }
+evidence = "#2102 same-label cluster 'Företagets id-nummer' (4 variables): judged different meaning, medium confidence; Four different id columns: bidnr_ftg (företag), bidnr_agbol (N3B), bidnr_pers (person) and BIDNR (finansbolag)."
+
+[[statement]]
+kind = "set"
+subject = "var:bidnr-agbol"
+fields = { "label" = "Företagets id-nummer, bilaga N3B (bidnr_agbol)" }
+evidence = "#2102 same-label cluster 'Företagets id-nummer' (4 variables): judged different meaning, medium confidence; Four different id columns: bidnr_ftg (företag), bidnr_agbol (N3B), bidnr_pers (person) and BIDNR (finansbolag)."
+
+[[statement]]
+kind = "set"
+subject = "var:bilutgifter-inkl-billeasing"
+fields = { "label" = "Bilutgifter (inkl. billeasing), deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Bilutgifter (inkl. billeasing)' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0172) versus handelsbolag (V0672)."
+
+[[statement]]
+kind = "set"
+subject = "var:bilutgifter-inkl-billeasing-v0672"
+fields = { "label" = "Bilutgifter (inkl. billeasing), handelsbolag" }
+evidence = "#2102 same-label cluster 'Bilutgifter (inkl. billeasing)' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0172) versus handelsbolag (V0672)."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-fastighetens-alder-vardear-baldeg2"
+fields = { "label" = "Boende - Fastighetens ålder, värdeår (eget hem 2)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (5 variables): judged different meaning, high confidence; Five property-age columns, one per property type (slugs name eget hem 1/2, jordbruk, fritidsfastighet, småhus)."
+
+[[statement]]
+kind = "set"
+subject = "var:bsgakod"
+fields = { "label" = "Folkpensionskod (SGA, ensamstående/gift)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:bsni200"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (4 variables): judged different meaning, high confidence; Four columns holding different SNI versions (92, 2002, 2007) and a punktskatt variant."
+
+[[statement]]
+kind = "set"
+subject = "var:bstperv"
+fields = { "label" = "Studier, inskriven under referensveckan" }
+evidence = "#2102 same-label cluster 'Studier' (3 variables): judged different meaning, medium confidence; BSHPER is the number of months and BSMPER the number of weeks in studies (slugs); BSTPERV is the yes/no question about being enrolled in the reference week (the shared definition)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-nyteckning-av-teckningsoptioner-boptfrom"
+fields = { "label" = "Datum för nyteckning av teckningsoptioner, fr.o.m." }
+evidence = "#2102 same-label cluster 'Datum för nyteckning av teckningsoptioner' (2 variables): judged different meaning, high confidence; Columns for the from and to dates of the same interval (boptfrom, bopttom)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-nyteckning-av-teckningsoptioner-bopttom"
+fields = { "label" = "Datum för nyteckning av teckningsoptioner, t.o.m." }
+evidence = "#2102 same-label cluster 'Datum för nyteckning av teckningsoptioner' (2 variables): judged different meaning, high confidence; Columns for the from and to dates of the same interval (boptfrom, bopttom)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-teckning-av-teckningsoptioner-btoptfrom"
+fields = { "label" = "Datum för teckning av teckningsoptioner, fr.o.m." }
+evidence = "#2102 same-label cluster 'Datum för teckning av teckningsoptioner' (2 variables): judged different meaning, high confidence; Columns for the from and to dates (btoptfrom, btopttom)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-teckning-av-teckningsoptioner-btopttom"
+fields = { "label" = "Datum för teckning av teckningsoptioner, t.o.m." }
+evidence = "#2102 same-label cluster 'Datum för teckning av teckningsoptioner' (2 variables): judged different meaning, high confidence; Columns for the from and to dates (btoptfrom, btopttom)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-utbyte-av-konvertibler-skuldebrev-datum-avseende-till-och-med-datum-for-utbyte-av-konvertibler"
+fields = { "label" = "Datum för utbyte av konvertibler/skuldebrev, t.o.m." }
+evidence = "#2102 same-label cluster 'Datum för utbyte av konvertibler/skuldebrev' (2 variables): judged different meaning, high confidence; Slugs name a från-och-med and a till-och-med date column (bkonvform, bkonvtom)."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-utbyte-konvertibler-skuldebrev-fran-och-med"
+fields = { "label" = "Datum för utbyte av konvertibler/skuldebrev, fr.o.m." }
+evidence = "#2102 same-label cluster 'Datum för utbyte av konvertibler/skuldebrev' (2 variables): judged different meaning, high confidence; Slugs name a från-och-med and a till-och-med date column (bkonvform, bkonvtom)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-1-neginvpg1"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 1" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-10-neginvpg10"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 10" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-11-neginvpg11"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 11" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-12-neginvpg12"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 12" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-13-neginvpg13"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 13" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-14-neginvpg14"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 14" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-15-neginvpg15"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 15" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-16-neginvpg16"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 16" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-17-neginvpg17"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 17" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-18-neginvpg18"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 18" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-2-neginvpg2"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 2" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-3-neginvpg3"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 3" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-4-neginvpg4"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 4" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-5-neginvpg5"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 5" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-6-neginvpg6"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 6" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-7-neginvpg7"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 7" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-8-neginvpg8"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 8" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-investeringar-avser-produktgrupp-9-neginvpg9"
+fields = { "label" = "Egen FoU - Investeringar, produktgrupp 9" }
+evidence = "#2102 same-label cluster 'Egen FoU - Investeringar' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-1-negpgs1"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 1" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-10-negpgs10"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 10" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-11-negpgs11"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 11" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-12-negpgs12"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 12" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-13-negpgs13"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 13" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-14-negpgs14"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 14" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-15-negpgs15"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 15" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-16-negpgs16"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 16" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-17-negpgs17"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 17" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-18-negpgs18"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 18" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-2-negpgs2"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 2" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-3-negpgs3"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 3" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-4-negpgs4"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 4" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-5-negpgs5"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 5" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-6-negpgs6"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 6" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-7-negpgs7"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 7" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-8-negpgs8"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 8" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-produktgrupp-spin-9-negpgs9"
+fields = { "label" = "Egen FoU - Produktgrupp (SPIN), nummer 9" }
+evidence = "#2102 same-label cluster 'Egen FoU - Produktgrupp' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp SPIN 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-1-negrkpg1"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 1" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-10-negrkpg10"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 10" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-11-negrkpg11"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 11" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-12-negrkpg12"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 12" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-13-negrkpg13"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 13" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-14-negrkpg14"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 14" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-15-negrkpg15"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 15" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-16-negrkpg16"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 16" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-17-negrkpg17"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 17" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-18-negrkpg18"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 18" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-2-negrkpg2"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 2" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-3-negrkpg3"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 3" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-4-negrkpg4"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 4" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-5-negrkpg5"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 5" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-6-negrkpg6"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 6" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-7-negrkpg7"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 7" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-8-negrkpg8"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 8" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-fou-rorelsekostnader-produktgrupp-9-negrkpg9"
+fields = { "label" = "Egen FoU - Rörelsekostnader, produktgrupp 9" }
+evidence = "#2102 same-label cluster 'Egen FoU - Rörelsekostnader' (18 variables): judged different meaning, high confidence; Eighteen columns, one per product group (slugs: produktgrupp 1-18)."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-markanlaggningar"
+fields = { "label" = "Ej återförda värdeminskningsavdrag, markanläggningar, aktiebolag" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag, markanläggningar' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: aktiebolag (V8021) and deklarationsuppgifter (V8007)."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskning-byggnader"
+fields = { "label" = "Ej återförda värdeminskningsavdrag byggnader, aktiebolag" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag byggnader' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: aktiebolag (V8020) and deklarationsuppgifter (V8006)."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-byggnader-v8006"
+fields = { "label" = "Ej återförda värdeminskningsavdrag byggnader, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag byggnader' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: aktiebolag (V8020) and deklarationsuppgifter (V8006)."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-markanlaggningar-v8007"
+fields = { "label" = "Ej återförda värdeminskningsavdrag, markanläggningar, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag, markanläggningar' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: aktiebolag (V8021) and deklarationsuppgifter (V8007)."
+
+[[statement]]
+kind = "set"
+subject = "var:elavgannhalv1mng"
+fields = { "label" = "Avgår för annan förbrukning, första halvåret" }
+evidence = "#2102 same-label cluster 'Avgår för annan förbrukning' (3 variables): judged different meaning, medium confidence; AVGANN is a full-year column; ELAVGANNHALV1MNG and ELAVGANNHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:elavgannhalv2mng"
+fields = { "label" = "Avgår för annan förbrukning, andra halvåret" }
+evidence = "#2102 same-label cluster 'Avgår för annan förbrukning' (3 variables): judged different meaning, medium confidence; AVGANN is a full-year column; ELAVGANNHALV1MNG and ELAVGANNHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:elavghushalv1mng"
+fields = { "label" = "Avgår för hushållsel, första halvåret" }
+evidence = "#2102 same-label cluster 'Avgår för hushållsel' (3 variables): judged different meaning, medium confidence; AVGHEL is a full-year column; ELAVGHUSHALV1MNG and ELAVGHUSHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:elavghushalv2mng"
+fields = { "label" = "Avgår för hushållsel, andra halvåret" }
+evidence = "#2102 same-label cluster 'Avgår för hushållsel' (3 variables): judged different meaning, medium confidence; AVGHEL is a full-year column; ELAVGHUSHALV1MNG and ELAVGHUSHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:elavguthalv1mng"
+fields = { "label" = "Avgår elenergi, första halvåret (ELAVGUTHALV1MNG)" }
+evidence = "#2102 same-label cluster 'Avgår elenergi' (3 variables): judged different meaning, medium confidence; ELAVGMNG is for data halls per its slug; ELAVGUTHALV1MNG and ELAVGUTHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:elavguthalv2mng"
+fields = { "label" = "Avgår elenergi, andra halvåret (ELAVGUTHALV2MNG)" }
+evidence = "#2102 same-label cluster 'Avgår elenergi' (3 variables): judged different meaning, medium confidence; ELAVGMNG is for data halls per its slug; ELAVGUTHALV1MNG and ELAVGUTHALV2MNG are the first and second half-year columns."
+
+[[statement]]
+kind = "set"
+subject = "var:exportland-utanfor-eu"
+fields = { "label" = "Land, export utanför EU" }
+evidence = "#2102 same-label cluster 'Land' (4 variables): judged different meaning, high confidence; Four country columns: export and import, within and outside the EU."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsalder-vardear-eget-hem-1"
+fields = { "label" = "Boende - Fastighetens ålder, värdeår (eget hem 1)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (5 variables): judged different meaning, high confidence; Five property-age columns, one per property type (slugs name eget hem 1/2, jordbruk, fritidsfastighet, småhus)."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsalder-vardear-eget-hem-jordbruk"
+fields = { "label" = "Boende - Fastighetens ålder, värdeår (eget hem, jordbruk)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (5 variables): judged different meaning, high confidence; Five property-age columns, one per property type (slugs name eget hem 1/2, jordbruk, fritidsfastighet, småhus)."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsalder-vardear-fritidsfastighet-1"
+fields = { "label" = "Boende - Fastighetens ålder, värdeår (fritidsfastighet)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (5 variables): judged different meaning, high confidence; Five property-age columns, one per property type (slugs name eget hem 1/2, jordbruk, fritidsfastighet, småhus)."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsalder-vardear-smahus"
+fields = { "label" = "Boende - Fastighetens ålder, värdeår (småhus)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (5 variables): judged different meaning, high confidence; Five property-age columns, one per property type (slugs name eget hem 1/2, jordbruk, fritidsfastighet, småhus)."
+
+[[statement]]
+kind = "set"
+subject = "var:folkpension-kod"
+fields = { "label" = "Folkpension, kod (ja/nej)" }
+evidence = "#2102 same-label cluster 'Folkpension' (2 variables): judged different meaning, high confidence; BANDFPT is a share of full folkpension; BALDFP is a yes/no code."
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionskod"
+fields = { "label" = "Folkpensionskod (omfattning)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionskod-partiell"
+fields = { "label" = "Folkpensionskod, partiell (BHALVAAF)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionskod-partiell-2001"
+fields = { "label" = "Folkpensionskod, partiell 2001 (BHALVAT)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-ersattningsdagar-med-garantiniva-maka-bfsjm1"
+fields = { "label" = "Föräldrapenning ersättningsdagar med garantinivå maka, barn 1" }
+evidence = "#2102 same-label cluster 'Föräldrapenning ersättningsdagar med garantinivå maka' (3 variables): judged different meaning, medium confidence; Three columns by child number."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-ersattningsdagar-med-garantiniva-maka-bfsjm2"
+fields = { "label" = "Föräldrapenning ersättningsdagar med garantinivå maka, barn 2" }
+evidence = "#2102 same-label cluster 'Föräldrapenning ersättningsdagar med garantinivå maka' (3 variables): judged different meaning, medium confidence; Three columns by child number."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-ersattningsdagar-med-garantiniva-maka-bfsjm3"
+fields = { "label" = "Föräldrapenning ersättningsdagar med garantinivå maka, barn 3" }
+evidence = "#2102 same-label cluster 'Föräldrapenning ersättningsdagar med garantinivå maka' (3 variables): judged different meaning, medium confidence; Three columns by child number."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-faders-sarskilda-dagar-faderns-sarskilda-dagar-barn-1-btf101"
+fields = { "label" = "Föräldrapenning faders särskilda dagar, barn 1" }
+evidence = "#2102 same-label cluster 'Föräldrapenning faders särskilda dagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-faders-sarskilda-dagar-faderns-sarskilda-dagar-barn-2-btf102"
+fields = { "label" = "Föräldrapenning faders särskilda dagar, barn 2" }
+evidence = "#2102 same-label cluster 'Föräldrapenning faders särskilda dagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-faders-sarskilda-dagar-faderns-sarskilda-dagar-barn-3-btf103"
+fields = { "label" = "Föräldrapenning faders särskilda dagar, barn 3" }
+evidence = "#2102 same-label cluster 'Föräldrapenning faders särskilda dagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-garantidagar-ersattning-garantidagar-barn-1-bfgar1"
+fields = { "label" = "Föräldrapenning garantidagar, barn 1" }
+evidence = "#2102 same-label cluster 'Föräldrapenning garantidagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-garantidagar-ersattning-garantidagar-barn-2-bfgar2"
+fields = { "label" = "Föräldrapenning garantidagar, barn 2" }
+evidence = "#2102 same-label cluster 'Föräldrapenning garantidagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-garantidagar-ersattning-garantidagar-barn-3-bfgar3"
+fields = { "label" = "Föräldrapenning garantidagar, barn 3" }
+evidence = "#2102 same-label cluster 'Föräldrapenning garantidagar' (3 variables): judged different meaning, high confidence; Three columns for barn 1, 2 and 3 per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-id-pers"
+fields = { "label" = "Företagets id-nummer, person (bidnr_pers)" }
+evidence = "#2102 same-label cluster 'Företagets id-nummer' (4 variables): judged different meaning, medium confidence; Four different id columns: bidnr_ftg (företag), bidnr_agbol (N3B), bidnr_pers (person) and BIDNR (finansbolag)."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-aktier-foretag-1"
+fields = { "label" = "Förlust vid försäljning av onoterade aktier, företag 1" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-aktier-foretag-2"
+fields = { "label" = "Förlust vid försäljning av onoterade aktier, företag 2" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-aktier-foretag-3"
+fields = { "label" = "Förlust vid försäljning av onoterade aktier, företag 3" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-andelar-foretag-1"
+fields = { "label" = "Förlust vid försäljning av onoterade andelar, företag 1" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-andelar-foretag-2"
+fields = { "label" = "Förlust vid försäljning av onoterade andelar, företag 2" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-forsaljning-onoterade-andelar-foretag-3"
+fields = { "label" = "Förlust vid försäljning av onoterade andelar, företag 3" }
+evidence = "#2102 same-label cluster 'Förlust vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-gruvindustri-annan-dieselolja"
+fields = { "label" = "Försäljning återbetalningar/punktskatter, gruvindustri, annan dieselolja" }
+evidence = "#2102 same-label cluster 'Försäljning återbetalningar/punktskatter' (4 variables): judged different meaning, high confidence; Four columns for mine-industry diesel sales by blend; slugs name the blend."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-gruvindustri-diesel-mk1-0-procent-rme-hvo"
+fields = { "label" = "Försäljning återbetalningar/punktskatter, gruvindustri, diesel MK1 0 % RME/HVO" }
+evidence = "#2102 same-label cluster 'Försäljning återbetalningar/punktskatter' (4 variables): judged different meaning, high confidence; Four columns for mine-industry diesel sales by blend; slugs name the blend."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-gruvindustri-diesel-mk1-5-procent-rme-hvo"
+fields = { "label" = "Försäljning återbetalningar/punktskatter, gruvindustri, diesel MK1 5 % RME/HVO" }
+evidence = "#2102 same-label cluster 'Försäljning återbetalningar/punktskatter' (4 variables): judged different meaning, high confidence; Four columns for mine-industry diesel sales by blend; slugs name the blend."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-gruvindustri-diesel-mk1-over-5-procent-rme-hvo"
+fields = { "label" = "Försäljning återbetalningar/punktskatter, gruvindustri, diesel MK1 över 5 % RME/HVO" }
+evidence = "#2102 same-label cluster 'Försäljning återbetalningar/punktskatter' (4 variables): judged different meaning, high confidence; Four columns for mine-industry diesel sales by blend; slugs name the blend."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsdatum"
+fields = { "label" = "Försäljningsdatum, K10" }
+evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; K10 and K10A are different forms; each has an old and a new column, and Forsdat spans both forms from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsdatum-forsdat"
+fields = { "label" = "Försäljningsdatum, K10 och K10A" }
+evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; K10 and K10A are different forms; each has an old and a new column, and Forsdat spans both forms from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsdatum-v0464"
+fields = { "label" = "Försäljningsdatum, K10A" }
+evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; K10 and K10A are different forms; each has an old and a new column, and Forsdat spans both forms from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsdatum-v4544"
+fields = { "label" = "Försäljningsdatum, K10" }
+evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; K10 and K10A are different forms; each has an old and a new column, and Forsdat spans both forms from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsdatum-v4837"
+fields = { "label" = "Försäljningsdatum, K10A" }
+evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; K10 and K10A are different forms; each has an old and a new column, and Forsdat spans both forms from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-aktier-avser-foretag-1-v5126"
+fields = { "label" = "Försäljningspris onoterade aktier, företag 1" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-aktier-avser-foretag-2-v5136"
+fields = { "label" = "Försäljningspris onoterade aktier, företag 2" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-aktier-avser-foretag-3-v5146"
+fields = { "label" = "Försäljningspris onoterade aktier, företag 3" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-andelar-avser-foretag-1-v5166"
+fields = { "label" = "Försäljningspris onoterade andelar, företag 1" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-andelar-avser-foretag-2-v5176"
+fields = { "label" = "Försäljningspris onoterade andelar, företag 2" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-onoterade-andelar-avser-foretag-3-v5186"
+fields = { "label" = "Försäljningspris onoterade andelar, företag 3" }
+evidence = "#2102 same-label cluster 'Försäljningspris onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-instrumenttyp-fyra-storsta-forsta-blocket"
+fields = { "label" = "Typ av instrument, största nr 1, första blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-1-taxeringsvarde-agd-andel-2006"
+fields = { "label" = "Fritidshus 1, taxeringsvärde, ägd andel 2006" }
+evidence = "#2102 same-label cluster 'Fritidshus taxeringsvärde' (4 variables): judged different meaning, medium confidence; FFSTFRT is a summed value; FTAXFR16 and FTAXFR26 are fritidshus 1 and 2 for 2006 per slug, FFSTFRT6 the 2006 sum."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-marknadsvarde-agd-andel-hogsta-varde-1-2003"
+fields = { "label" = "Fritidshus, marknadsvärde, fritidshus 1, 2003" }
+evidence = "#2102 same-label cluster 'Fritidshus, marknadsvärde' (3 variables): judged different meaning, medium confidence; FTAXFR13 and FTAXFR23 are fritidshus 1 and 2 for 2003; FFSTFRM is the 2004-2005 column."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-marknadsvarde-ftaxfr23"
+fields = { "label" = "Fritidshus, marknadsvärde, fritidshus 2, 2003" }
+evidence = "#2102 same-label cluster 'Fritidshus, marknadsvärde' (3 variables): judged different meaning, medium confidence; FTAXFR13 and FTAXFR23 are fritidshus 1 and 2 for 2003; FFSTFRM is the 2004-2005 column."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-taxeringsvarde-ffstfrt6"
+fields = { "label" = "Fritidshus taxeringsvärde, 2006 (FFSTFRT6)" }
+evidence = "#2102 same-label cluster 'Fritidshus taxeringsvärde' (4 variables): judged different meaning, medium confidence; FFSTFRT is a summed value; FTAXFR16 and FTAXFR26 are fritidshus 1 and 2 for 2006 per slug, FFSTFRT6 the 2006 sum."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-taxeringsvarde-ftaxfr26"
+fields = { "label" = "Fritidshus 2, taxeringsvärde, ägd andel 2006" }
+evidence = "#2102 same-label cluster 'Fritidshus taxeringsvärde' (4 variables): judged different meaning, medium confidence; FFSTFRT is a summed value; FTAXFR16 and FTAXFR26 are fritidshus 1 and 2 for 2006 per slug, FFSTFRT6 the 2006 sum."
+
+[[statement]]
+kind = "set"
+subject = "var:ftexi-occup-rse-t"
+fields = { "label" = "Årsverken av externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten, totalt" }
+evidence = "#2102 same-label cluster 'Årsverken av externa forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTFKVI is women, NAREXTFMAN men, and FTEXI_OCCUP_RSE_T the total (2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:ftexi-occup-txrse-t"
+fields = { "label" = "Årsverken av extern understödjande personal i FoU-verksamheten, totalt" }
+evidence = "#2102 same-label cluster 'Årsverken av extern understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; NAREXTAPKVI is women, NAREXTAPMAN men, and FTEXI_OCCUP_TXRSE_T the total (OECD-style _T code, 2021-2022)."
+
+[[statement]]
+kind = "set"
+subject = "var:hcxi-occup-rse-t"
+fields = { "label" = "Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten (totalt)" }
+evidence = "#2102 same-label cluster 'Antal externa forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTFKVI), men (NEXTFMAN) and a total (HCXI_OCCUP_RSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:hcxi-occup-txrse-t"
+fields = { "label" = "Antal externa understödjande personal i FoU-verksamheten (totalt)" }
+evidence = "#2102 same-label cluster 'Antal externa understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, medium confidence; Separate counts for women (NEXTAPKVI), men (NEXTAPMAN) and a total (HCXI_OCCUP_TXRSE_T, by analogy with NFORTOT)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-naringsgren-punktskatt-olja-gasol"
+fields = { "label" = "Näringsgren, huvudsaklig (punktskatt olja/gasol)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (4 variables): judged different meaning, high confidence; Four columns holding different SNI versions (92, 2002, 2007) and a punktskatt variant."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-naringsgren-sni-92"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (4 variables): judged different meaning, high confidence; Four columns holding different SNI versions (92, 2002, 2007) and a punktskatt variant."
+
+[[statement]]
+kind = "set"
+subject = "var:immateriella-anlaggningstillgangar"
+fields = { "label" = "Immateriella anläggningstillgångar, aktiebolag" }
+evidence = "#2102 same-label cluster 'Immateriella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; V0234 continues as V7201 in aktiebolag; VA10 is the finansbolag column."
+
+[[statement]]
+kind = "set"
+subject = "var:immateriella-anlaggningstillgangar-v7201"
+fields = { "label" = "Immateriella anläggningstillgångar, aktiebolag" }
+evidence = "#2102 same-label cluster 'Immateriella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; V0234 continues as V7201 in aktiebolag; VA10 is the finansbolag column."
+
+[[statement]]
+kind = "set"
+subject = "var:immateriella-anlaggningstillgangar-va10"
+fields = { "label" = "Immateriella anläggningstillgångar, finansbolag" }
+evidence = "#2102 same-label cluster 'Immateriella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; V0234 continues as V7201 in aktiebolag; VA10 is the finansbolag column."
+
+[[statement]]
+kind = "set"
+subject = "var:importland-utanfor-eu"
+fields = { "label" = "Land, import utanför EU" }
+evidence = "#2102 same-label cluster 'Land' (4 variables): judged different meaning, high confidence; Four country columns: export and import, within and outside the EU."
+
+[[statement]]
+kind = "set"
+subject = "var:ingaende-upplupna-kostnader"
+fields = { "label" = "Ingående upplupna kostnader och förutbetalda intäkter, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Ingående upplupna kostnader och förutbetalda intäkter' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0183) and handelsbolag (V0685)."
+
+[[statement]]
+kind = "set"
+subject = "var:ingaende-upplupna-kostnader-och-forutbetalda-intakter-v0685"
+fields = { "label" = "Ingående upplupna kostnader och förutbetalda intäkter, handelsbolag" }
+evidence = "#2102 same-label cluster 'Ingående upplupna kostnader och förutbetalda intäkter' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0183) and handelsbolag (V0685)."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-andra-beloppsmassigt-vasentlig"
+fields = { "label" = "Specifikation av instrument, andra väsentliga typen" }
+evidence = "#2102 same-label cluster 'Specifikation av instrument' (4 variables): judged different meaning, high confidence; Four concurrent items, one per instrument type ranked first to fourth by amount (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-andra-fyra-storsta-andra-blocket"
+fields = { "label" = "Typ av instrument, största nr 2, andra blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-fjarde-beloppsmassigt-vasentlig"
+fields = { "label" = "Specifikation av instrument, fjärde väsentliga typen" }
+evidence = "#2102 same-label cluster 'Specifikation av instrument' (4 variables): judged different meaning, high confidence; Four concurrent items, one per instrument type ranked first to fourth by amount (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-fjarde-fyra-storsta-andra-blocket"
+fields = { "label" = "Typ av instrument, största nr 4, andra blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-fjarde-fyra-storsta-forsta-blocket"
+fields = { "label" = "Typ av instrument, största nr 4, första blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-forsta-beloppsmassigt-vasentlig"
+fields = { "label" = "Specifikation av instrument, första väsentliga typen" }
+evidence = "#2102 same-label cluster 'Specifikation av instrument' (4 variables): judged different meaning, high confidence; Four concurrent items, one per instrument type ranked first to fourth by amount (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-forsta-fyra-storsta-andra-blocket"
+fields = { "label" = "Typ av instrument, största nr 1, andra blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-tredje-beloppsmassigt-vasentlig"
+fields = { "label" = "Specifikation av instrument, tredje väsentliga typen" }
+evidence = "#2102 same-label cluster 'Specifikation av instrument' (4 variables): judged different meaning, high confidence; Four concurrent items, one per instrument type ranked first to fourth by amount (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-tredje-fyra-storsta-andra-blocket"
+fields = { "label" = "Typ av instrument, största nr 3, andra blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:instrumenttyp-tredje-fyra-storsta-forsta-blocket"
+fields = { "label" = "Typ av instrument, största nr 3, första blocket" }
+evidence = "#2102 same-label cluster 'Typ av instrument' (8 variables): judged different meaning, high confidence; Eight columns for the first to fourth largest instrument in two blocks (VA40-VA43 and VA46-VA49); the pids give rank and block."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalbehov-andra-av-fem-storsta-riskerna"
+fields = { "label" = "Kapitalbehov, andra av fem största riskerna" }
+evidence = "#2102 same-label cluster 'Kapitalbehov' (5 variables): judged different meaning, high confidence; Five columns for the first to fifth largest risks."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalbehov-femte-av-fem-storsta-riskerna"
+fields = { "label" = "Kapitalbehov, femte av fem största riskerna" }
+evidence = "#2102 same-label cluster 'Kapitalbehov' (5 variables): judged different meaning, high confidence; Five columns for the first to fifth largest risks."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalbehov-fjarde-av-fem-storsta-riskerna"
+fields = { "label" = "Kapitalbehov, fjärde av fem största riskerna" }
+evidence = "#2102 same-label cluster 'Kapitalbehov' (5 variables): judged different meaning, high confidence; Five columns for the first to fifth largest risks."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalbehov-forsta-av-fem-storsta-riskerna"
+fields = { "label" = "Kapitalbehov, första av fem största riskerna" }
+evidence = "#2102 same-label cluster 'Kapitalbehov' (5 variables): judged different meaning, high confidence; Five columns for the first to fifth largest risks."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalbehov-tredje-av-fem-storsta-riskerna"
+fields = { "label" = "Kapitalbehov, tredje av fem största riskerna" }
+evidence = "#2102 same-label cluster 'Kapitalbehov' (5 variables): judged different meaning, high confidence; Five columns for the first to fifth largest risks."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-3-ar-gamla"
+fields = { "label" = "Kapitalvinster, 3 år gamla (KVX)" }
+evidence = "#2102 same-label cluster 'Kapitalvinster' (4 variables): judged different meaning, medium confidence; Four gain columns: 3-year-old amounts, K4 bilaga avsnitt A, restpost and real gross gains per slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-k4-bilaga-avsnitt-a"
+fields = { "label" = "Kapitalvinster, K4 bilaga avsnitt A" }
+evidence = "#2102 same-label cluster 'Kapitalvinster' (4 variables): judged different meaning, medium confidence; Four gain columns: 3-year-old amounts, K4 bilaga avsnitt A, restpost and real gross gains per slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-restpost"
+fields = { "label" = "Kapitalvinster, restpost" }
+evidence = "#2102 same-label cluster 'Kapitalvinster' (4 variables): judged different meaning, medium confidence; Four gain columns: 3-year-old amounts, K4 bilaga avsnitt A, restpost and real gross gains per slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-atp-efterlevandeforman-1"
+fields = { "label" = "Kod för ATP, efterlevandeförmån 1" }
+evidence = "#2102 same-label cluster 'Kod för ATP' (4 variables): judged different meaning, high confidence; BATPE is the own benefit; BATPF1 to BATPF3 are survivor benefits 1 to 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-atp-egen-forman"
+fields = { "label" = "Kod för ATP, egen förmån" }
+evidence = "#2102 same-label cluster 'Kod för ATP' (4 variables): judged different meaning, high confidence; BATPE is the own benefit; BATPF1 to BATPF3 are survivor benefits 1 to 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-atp-batpf2"
+fields = { "label" = "Kod för ATP, efterlevandeförmån 2" }
+evidence = "#2102 same-label cluster 'Kod för ATP' (4 variables): judged different meaning, high confidence; BATPE is the own benefit; BATPF1 to BATPF3 are survivor benefits 1 to 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-atp-batpf3"
+fields = { "label" = "Kod för ATP, efterlevandeförmån 3" }
+evidence = "#2102 same-label cluster 'Kod för ATP' (4 variables): judged different meaning, high confidence; BATPE is the own benefit; BATPF1 to BATPF3 are survivor benefits 1 to 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-agda-under-hela-aret"
+fields = { "label" = "Kontant ersättning till arbetstagare i dotterföretag, punkt 6.2, andelar ägda under hela året" }
+evidence = "#2102 same-label cluster 'Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2' (2 variables): judged different meaning, high confidence; Slugs separate shares owned the whole year (V4571) from shares acquired during the year (V4577)."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-anskaffade-under-aret"
+fields = { "label" = "Kontant ersättning till arbetstagare i dotterföretag, punkt 6.2, andelar anskaffade under året" }
+evidence = "#2102 same-label cluster 'Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2' (2 variables): judged different meaning, high confidence; Slugs separate shares owned the whole year (V4571) from shares acquired during the year (V4577)."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-uttag-hb-kb"
+fields = { "label" = "Kontanta uttag hb/kb, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Kontanta uttag hb/kb' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0364) and handelsbolag (V0362)."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-uttag-hb-kb-v0362"
+fields = { "label" = "Kontanta uttag hb/kb, handelsbolag" }
+evidence = "#2102 same-label cluster 'Kontanta uttag hb/kb' (2 variables): judged different meaning, medium confidence; Different columns in different tables: deklarationsuppgifter (V0364) and handelsbolag (V0362)."
+
+[[statement]]
+kind = "set"
+subject = "var:kuthyrx"
+fields = { "label" = "Uthyrning av privatbostad, 2 år gamla" }
+evidence = "#2102 same-label cluster 'Uthyrning av privatbostad' (2 variables): judged different meaning, high confidence; KUTHYRX is the 2-years-old variant of KUTHYRU (the shared definition), concurrent 2006-2007."
+
+[[statement]]
+kind = "set"
+subject = "var:land-export-inom-eu"
+fields = { "label" = "Land, export inom EU" }
+evidence = "#2102 same-label cluster 'Land' (4 variables): judged different meaning, high confidence; Four country columns: export and import, within and outside the EU."
+
+[[statement]]
+kind = "set"
+subject = "var:land-import-inom-eu"
+fields = { "label" = "Land, import inom EU" }
+evidence = "#2102 same-label cluster 'Land' (4 variables): judged different meaning, high confidence; Four country columns: export and import, within and outside the EU."
+
+[[statement]]
+kind = "set"
+subject = "var:naptot"
+fields = { "label" = "Antal understödjande personal i FoU-verksamheten (totalt)" }
+evidence = "#2102 same-label cluster 'Antal understödjande personal i FoU-verksamheten' (24 variables): judged different meaning, high confidence; NAPKVI, NAPMAN and NAPTOT are women, men and total; NAPSE### are per county, with the suffixes matching the county-named NFOSE columns of the sibling cluster 'Antal forskare i FoU-verksamheten'."
+
+[[statement]]
+kind = "set"
+subject = "var:naraptot"
+fields = { "label" = "Årsverken av understödjande personal i FoU-verksamheten, totalt" }
+evidence = "#2102 same-label cluster 'Årsverken av understödjande personal i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARAPKVI is women, NARAPMAN men and NARAPTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:narftot"
+fields = { "label" = "Årsverken av forskare, produktutvecklare eller motsvarande i FoU-verksamheten, totalt" }
+evidence = "#2102 same-label cluster 'Årsverken av forskare, produktutvecklare eller motsvarande \\xa0i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NARFKVI is women, NARFKMAN men and NARFTOT the total."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvudsaklig-bsni2007"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (4 variables): judged different meaning, high confidence; Four columns holding different SNI versions (92, 2002, 2007) and a punktskatt variant."
+
+[[statement]]
+kind = "set"
+subject = "var:nforkvi"
+fields = { "label" = "Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NFORKVI, NFORMAN and NFORTOT are women, men and total."
+
+[[statement]]
+kind = "set"
+subject = "var:nforman"
+fields = { "label" = "Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten (män)" }
+evidence = "#2102 same-label cluster 'Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NFORKVI, NFORMAN and NFORTOT are women, men and total."
+
+[[statement]]
+kind = "set"
+subject = "var:nfortot"
+fields = { "label" = "Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten (totalt)" }
+evidence = "#2102 same-label cluster 'Antal forskare, produktutvecklare eller motsvarande i FoU-verksamheten' (3 variables): judged different meaning, high confidence; NFORKVI, NFORMAN and NFORTOT are women, men and total."
+
+[[statement]]
+kind = "set"
+subject = "var:ntypgrund"
+fields = { "label" = "Typ av egen FoU, grundforskning" }
+evidence = "#2102 same-label cluster 'Typ av egen FoU' (3 variables): judged different meaning, high confidence; NTYPGRUND, NTYPTILLP and NTYPUTV are the three FoU types: grundforskning, tillämpad forskning and utvecklingsarbete."
+
+[[statement]]
+kind = "set"
+subject = "var:ntyptillp"
+fields = { "label" = "Typ av egen FoU, tillämpad forskning" }
+evidence = "#2102 same-label cluster 'Typ av egen FoU' (3 variables): judged different meaning, high confidence; NTYPGRUND, NTYPTILLP and NTYPUTV are the three FoU types: grundforskning, tillämpad forskning and utvecklingsarbete."
+
+[[statement]]
+kind = "set"
+subject = "var:ntyputv"
+fields = { "label" = "Typ av egen FoU, utvecklingsarbete" }
+evidence = "#2102 same-label cluster 'Typ av egen FoU' (3 variables): judged different meaning, high confidence; NTYPGRUND, NTYPTILLP and NTYPUTV are the three FoU types: grundforskning, tillämpad forskning and utvecklingsarbete."
+
+[[statement]]
+kind = "set"
+subject = "var:obeskattade-reserver"
+fields = { "label" = "Obeskattade reserver, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Obeskattade reserver' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: deklarationsuppgifter (V7320) and finansbolag (VA25)."
+
+[[statement]]
+kind = "set"
+subject = "var:obeskattade-reserver-va25"
+fields = { "label" = "Obeskattade reserver, finansbolag" }
+evidence = "#2102 same-label cluster 'Obeskattade reserver' (2 variables): judged different meaning, medium confidence; Same item in two tables with different columns: deklarationsuppgifter (V7320) and finansbolag (VA25)."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-aktier-avser-foretag-1-v5127"
+fields = { "label" = "Omkostnadsbelopp onoterade aktier, företag 1" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-aktier-avser-foretag-2-v5137"
+fields = { "label" = "Omkostnadsbelopp onoterade aktier, företag 2" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-aktier-avser-foretag-3-v5147"
+fields = { "label" = "Omkostnadsbelopp onoterade aktier, företag 3" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade aktier' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-andelar-avser-foretag-1-v5167"
+fields = { "label" = "Omkostnadsbelopp onoterade andelar, företag 1" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-andelar-avser-foretag-2-v5177"
+fields = { "label" = "Omkostnadsbelopp onoterade andelar, företag 2" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-onoterade-andelar-avser-foretag-3-v5187"
+fields = { "label" = "Omkostnadsbelopp onoterade andelar, företag 3" }
+evidence = "#2102 same-label cluster 'Omkostnadsbelopp onoterade andelar' (3 variables): judged different meaning, high confidence; Three columns for företag 1, 2 and 3 in bilaga K12."
+
+[[statement]]
+kind = "set"
+subject = "var:optioner-innehav"
+fields = { "label" = "Optioner, innehav" }
+evidence = "#2102 same-label cluster 'Optioner (I281)' (3 variables): judged different meaning, medium confidence; Slugs name optioner innehav (FOPMV) and utfärdade optionskontrakt (FKUSKOP); I281 is the investmentbolag column."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg1"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 1" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg10"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 10" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg11"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 11" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg12"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 12" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg13"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 13" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg14"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 14" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg15"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 15" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg16"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 16" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg17"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 17" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg18"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 18" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg19"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 19" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg2"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 2" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg20"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 20" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg21"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 21" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg22"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 22" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg23"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 23" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg24"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 24" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg25"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 25" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg26"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 26" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg27"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 27" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg28"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 28" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg29"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 29" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg3"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 3" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg30"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 30" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg31"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 31" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg32"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 32" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg33"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 33" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg34"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 34" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg35"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 35" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg36"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 36" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg4"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 4" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg5"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 5" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg6"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 6" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg7"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 7" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg8"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 8" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-for-samverkande-foretag-ftg9"
+fields = { "label" = "Organisationsnummer för samverkande företag, företag 9" }
+evidence = "#2102 same-label cluster 'Organisationsnummer för samverkande företag' (36 variables): judged different meaning, high confidence; 36 columns for samverkande företag 1 to 36 in bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-naringsverksamhet-taxerat-resultat"
+fields = { "label" = "Överskott av näringsverksamhet, taxerat resultat" }
+evidence = "#2102 same-label cluster 'Överskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V0777 (2000-2007) and V7670 (2007-2024) are the same aktiebolag field across a form change; V58 is a taxed-result field (slug) present 2000-2024 in aktiebolag and handelsbolag."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avdragsgilla-utgifter-v0675"
+fields = { "label" = "Övriga avdragsgilla utgifter, handelsbolag" }
+evidence = "#2102 same-label cluster 'Övriga avdragsgilla utgifter' (2 variables): judged different meaning, medium confidence; V0175 (deklarationsuppgifter) and V0675 (handelsbolag) are parallel fields for different taxpayer forms in the same period."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-tillgangar-924-expansionsmedel"
+fields = { "label" = "Övriga tillgångar, expansionsmedel" }
+evidence = "#2102 same-label cluster 'Övriga tillgångar   (924)' (2 variables): judged different meaning, high confidence; Slugs name different items: V0939 relates to expansionsmedel and V0924 to räntefördelning, concurrent in deklarationsuppgifter."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-tillgangar-924-rantefordelning"
+fields = { "label" = "Övriga tillgångar, räntefördelning" }
+evidence = "#2102 same-label cluster 'Övriga tillgångar   (924)' (2 variables): judged different meaning, high confidence; Slugs name different items: V0939 relates to expansionsmedel and V0924 to räntefördelning, concurrent in deklarationsuppgifter."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utgifter-ovriga-utgifter-for-kredit-och-utgifter-jamforbara-med-ranta"
+fields = { "label" = "Övriga utgifter, för kredit och utgifter jämförbara med ränta" }
+evidence = "#2102 same-label cluster 'Övriga utgifter' (2 variables): judged different meaning, high confidence; Slugs: V8207 is other expenses for credit and expenses comparable to interest; V8205 is interest expenses not to be included in net interest."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsforsakringspremie-3-ar-gamla"
+fields = { "label" = "Pensionsförsäkringspremie, 3 år gamla" }
+evidence = "#2102 same-label cluster 'Pensionsförsäkringspremie' (2 variables): judged different meaning, medium confidence; NSKPENSX is the 3-year-old variant per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfonder-ingang"
+fields = { "label" = "Summa periodiseringsfonder vid beskattningsårets ingång (927), räntefördelning" }
+evidence = "#2102 same-label cluster 'Summa periodiseringsfonder vid beskattningsårets ingång   (927)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter; by the numbering pattern of the sibling slugs (V0922/V0929 räntefördelning, V0937/V0948 expansionsmedel) V0927 belongs to the räntefördelning calculation and V0942 to expansionsmedel."
+
+[[statement]]
+kind = "set"
+subject = "var:positiv-rantefordelning-kapital-3-ar-gamla"
+fields = { "label" = "Positiv räntefördelning, kapital, 3 år gamla" }
+evidence = "#2102 same-label cluster 'Positiv räntefördelning, kapital' (2 variables): judged different meaning, medium confidence; KIRFORX is the 3-year-old variant per slug."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteutgifter-som-inte-ska-inga-i-rantenettot"
+fields = { "label" = "Övriga utgifter, ränteutgifter som inte ska ingå i räntenettot" }
+evidence = "#2102 same-label cluster 'Övriga utgifter' (2 variables): judged different meaning, high confidence; Slugs: V8207 is other expenses for credit and expenses comparable to interest; V8205 is interest expenses not to be included in net interest."
+
+[[statement]]
+kind = "set"
+subject = "var:reala-kapitalvinster-brutto"
+fields = { "label" = "Kapitalvinster, reala, brutto" }
+evidence = "#2102 same-label cluster 'Kapitalvinster' (4 variables): judged different meaning, medium confidence; Four gain columns: 3-year-old amounts, K4 bilaga avsnitt A, restpost and real gross gains per slugs."
+
+[[statement]]
+kind = "set"
+subject = "var:reparation-och-underhall-av-markanlaggningar-och-v0673"
+fields = { "label" = "Reparation och underhåll av markanläggningar och byggnader, handelsbolag" }
+evidence = "#2102 same-label cluster 'Reparation och underhåll av markanläggningar och byggnader' (2 variables): judged different meaning, medium confidence; Different columns in different tables: handelsbolag (V0673) and deklarationsuppgifter (V0173)."
+
+[[statement]]
+kind = "set"
+subject = "var:reparation-underhall-mark-byggnader"
+fields = { "label" = "Reparation och underhåll av markanläggningar och byggnader, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Reparation och underhåll av markanläggningar och byggnader' (2 variables): judged different meaning, medium confidence; Different columns in different tables: handelsbolag (V0673) and deklarationsuppgifter (V0173)."
+
+[[statement]]
+kind = "set"
+subject = "var:sadana-andelar-dar-vinsten-vid-forsaljning-beskattas-v0921"
+fields = { "label" = "Sådana andelar där vinsten vid försäljning beskattas i inkomstslaget näringsverksamhet (921), räntefördelning" }
+evidence = "#2102 same-label cluster 'Sådana andelar där vinsten vid försäljning beskattas i inkomstslaget näringsverksamhet  (921)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter, V0921 for räntefördelning and V0936 for expansionsmedel by the same numbering pattern as the siblings."
+
+[[statement]]
+kind = "set"
+subject = "var:sadana-andelar-dar-vinsten-vid-forsaljning-beskattas-v0936"
+fields = { "label" = "Sådana andelar där vinsten vid försäljning beskattas i inkomstslaget näringsverksamhet (921), expansionsmedel" }
+evidence = "#2102 same-label cluster 'Sådana andelar där vinsten vid försäljning beskattas i inkomstslaget näringsverksamhet  (921)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter, V0921 for räntefördelning and V0936 for expansionsmedel by the same numbering pattern as the siblings."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-post-929-expansionsmedel"
+fields = { "label" = "Särskild post (929), expansionsmedel" }
+evidence = "#2102 same-label cluster 'Särskild post    (929)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter: V0929 for the räntefördelning calculation and V0948 for expansionsmedel (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-post-929-rantefordelning"
+fields = { "label" = "Särskild post (929), räntefördelning" }
+evidence = "#2102 same-label cluster 'Särskild post    (929)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter: V0929 for the räntefördelning calculation and V0948 for expansionsmedel (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:skatter"
+fields = { "label" = "Skatt, total, energiskatt" }
+evidence = "#2102 same-label cluster 'Skatt, total' (2 variables): judged different meaning, medium confidence; TOTENSK is total energiskatt and TOTSKCO2 total koldioxidskatt by column name."
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp-extra-tillagg"
+fields = { "label" = "Studiehjälp, extra tillägg, antal månader" }
+evidence = "#2102 same-label cluster 'Studiehjälp, extra tillägg' (2 variables): judged different meaning, high confidence; ISHBEX is the amount; BISHBEX is the number of months with extra supplement (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-bidrag-3-ar-gamla"
+fields = { "label" = "Studiemedel, bidrag, 3 år gamla" }
+evidence = "#2102 same-label cluster 'Studiemedel, bidrag' (2 variables): judged different meaning, medium confidence; ISMBIDX is the 3-years-old variant (slug) of the bidrag amount IBID, concurrent 2006-2007."
+
+[[statement]]
+kind = "set"
+subject = "var:studieperioder-antal-manader"
+fields = { "label" = "Studier, antal månader" }
+evidence = "#2102 same-label cluster 'Studier' (3 variables): judged different meaning, medium confidence; BSHPER is the number of months and BSMPER the number of weeks in studies (slugs); BSTPERV is the yes/no question about being enrolled in the reference week (the shared definition)."
+
+[[statement]]
+kind = "set"
+subject = "var:studieperioder-antal-veckor"
+fields = { "label" = "Studier, antal veckor" }
+evidence = "#2102 same-label cluster 'Studier' (3 variables): judged different meaning, medium confidence; BSHPER is the number of months and BSMPER the number of weeks in studies (slugs); BSTPERV is the yes/no question about being enrolled in the reference week (the shared definition)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-periodiseringsfonder-vid-beskattningsarets-v0942"
+fields = { "label" = "Summa periodiseringsfonder vid beskattningsårets ingång (927), expansionsmedel" }
+evidence = "#2102 same-label cluster 'Summa periodiseringsfonder vid beskattningsårets ingång   (927)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter; by the numbering pattern of the sibling slugs (V0922/V0929 räntefördelning, V0937/V0948 expansionsmedel) V0927 belongs to the räntefördelning calculation and V0942 to expansionsmedel."
+
+[[statement]]
+kind = "set"
+subject = "var:summerad-vinst-avser-onoterade-aktier"
+fields = { "label" = "Summerad vinst, onoterade aktier" }
+evidence = "#2102 same-label cluster 'Summerad vinst' (2 variables): judged different meaning, medium confidence; In bilaga K12, V5150 sums the profit on unlisted shares (V5128/5138/5148) and V5190 the profit on unlisted units (V5168/5178/5188)."
+
+[[statement]]
+kind = "set"
+subject = "var:summerad-vinst-v5190"
+fields = { "label" = "Summerad vinst, onoterade andelar" }
+evidence = "#2102 same-label cluster 'Summerad vinst' (2 variables): judged different meaning, medium confidence; In bilaga K12, V5150 sums the profit on unlisted shares (V5128/5138/5148) and V5190 the profit on unlisted units (V5168/5178/5188)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-1-4-ersattning-dagar-avser-barn-1-btfdkv1"
+fields = { "label" = "Tillfällig föräldrapenning 1/4 ersättning dagar, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 1/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDKV1-3 are parallel columns, one per child (slugs avser barn 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-1-4-ersattning-dagar-avser-barn-2-btfdkv2"
+fields = { "label" = "Tillfällig föräldrapenning 1/4 ersättning dagar, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 1/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDKV1-3 are parallel columns, one per child (slugs avser barn 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-1-4-ersattning-dagar-avser-barn-3-btfdkv3"
+fields = { "label" = "Tillfällig föräldrapenning 1/4 ersättning dagar, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 1/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDKV1-3 are parallel columns, one per child (slugs avser barn 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-1-4-ersattning-perioder-avser-barn-2-btfpkv2"
+fields = { "label" = "Tillfällig föräldrapenning 1/4 ersättning perioder, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 1/4 ersättning perioder' (2 variables): judged different meaning, high confidence; BTFPKV2 and BTFPKV3 are parallel columns for child 2 and child 3 (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-1-4-ersattning-perioder-avser-barn-3-btfpkv3"
+fields = { "label" = "Tillfällig föräldrapenning 1/4 ersättning perioder, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 1/4 ersättning perioder' (2 variables): judged different meaning, high confidence; BTFPKV2 and BTFPKV3 are parallel columns for child 2 and child 3 (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-3-4-ersattning-dagar-avser-barn-1-btfdtr1"
+fields = { "label" = "Tillfällig föräldrapenning 3/4 ersättning dagar, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 3/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDTR1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-3-4-ersattning-dagar-avser-barn-2-btfdtr2"
+fields = { "label" = "Tillfällig föräldrapenning 3/4 ersättning dagar, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 3/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDTR1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-3-4-ersattning-dagar-avser-barn-3-btfdtr3"
+fields = { "label" = "Tillfällig föräldrapenning 3/4 ersättning dagar, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning 3/4 ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDTR1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-dagar-avser-barn-1-btfdha1"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning dagar, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-dagar-avser-barn-2-btfdha2"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning dagar, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-dagar-avser-barn-3-btfdha3"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning dagar, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-perioder-avser-barn-1-btfpha1"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning perioder, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-perioder-avser-barn-2-btfpha2"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning perioder, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-halv-ersattning-perioder-avser-barn-3-btfpha3"
+fields = { "label" = "Tillfällig föräldrapenning halv ersättning perioder, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning halv ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHA1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-avser-barn-1-btf1"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning' (3 variables): judged different meaning, high confidence; BTF1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-avser-barn-2-btf2"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning' (3 variables): judged different meaning, high confidence; BTF1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-avser-barn-3-btf3"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning' (3 variables): judged different meaning, high confidence; BTF1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-dagar-avser-barn-1-btfdhe1"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning dagar, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-dagar-avser-barn-2-btfdhe2"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning dagar, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-dagar-avser-barn-3-btfdhe3"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning dagar, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning dagar' (3 variables): judged different meaning, high confidence; BTFDHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-perioder-avser-barn-1-btfphe1"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning perioder, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-perioder-avser-barn-2-btfphe2"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning perioder, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-hel-ersattning-perioder-avser-barn-3-btfphe3"
+fields = { "label" = "Tillfällig föräldrapenning hel ersättning perioder, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning hel ersättning perioder' (3 variables): judged different meaning, high confidence; BTFPHE1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-maka-ersattningsdagar-avser-barn-1-btfm1"
+fields = { "label" = "Tillfällig föräldrapenning maka ersättningsdagar, barn 1" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning maka ersättningsdagar' (3 variables): judged different meaning, high confidence; BTFM1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-maka-ersattningsdagar-avser-barn-2-btfm2"
+fields = { "label" = "Tillfällig föräldrapenning maka ersättningsdagar, barn 2" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning maka ersättningsdagar' (3 variables): judged different meaning, high confidence; BTFM1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfallig-foraldrapenning-maka-ersattningsdagar-avser-barn-3-btfm3"
+fields = { "label" = "Tillfällig föräldrapenning maka ersättningsdagar, barn 3" }
+evidence = "#2102 same-label cluster 'Tillfällig föräldrapenning maka ersättningsdagar' (3 variables): judged different meaning, high confidence; BTFM1-3 are parallel columns, one per child (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-statliga-bolag-statens-pensionsverk"
+fields = { "label" = "Tjänstepension från statliga bolag, Statens pensionsverk" }
+evidence = "#2102 same-label cluster 'Tjänstepension från statliga bolag' (2 variables): judged different meaning, medium confidence; PBTJP is the general item and PKUTJPS the Statens pensionsverk kontrolluppgift variant (slugs), concurrent 2004-2017."
+
+[[statement]]
+kind = "set"
+subject = "var:totskco2"
+fields = { "label" = "Skatt, total, koldioxidskatt" }
+evidence = "#2102 same-label cluster 'Skatt, total' (2 variables): judged different meaning, medium confidence; TOTENSK is total energiskatt and TOTSKCO2 total koldioxidskatt by column name."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-folkpension"
+fields = { "label" = "Folkpensionskod (typ av pension)" }
+evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, medium confidence; Eight differently coded folkpension columns (yes/no, hel/halv, SGA code, degree, partial, type)."
+
+[[statement]]
+kind = "set"
+subject = "var:typjordbruk"
+fields = { "label" = "Typ av verksamhet, jordbruk" }
+evidence = "#2102 same-label cluster 'Typ av verksamhet' (3 variables): judged different meaning, high confidence; TYPJORDBRUK, TYPSKOGSBRUK and TYPVXHUS are the three activity types: jordbruk, skogsbruk and växthus."
+
+[[statement]]
+kind = "set"
+subject = "var:typskogsbruk"
+fields = { "label" = "Typ av verksamhet, skogsbruk" }
+evidence = "#2102 same-label cluster 'Typ av verksamhet' (3 variables): judged different meaning, high confidence; TYPJORDBRUK, TYPSKOGSBRUK and TYPVXHUS are the three activity types: jordbruk, skogsbruk and växthus."
+
+[[statement]]
+kind = "set"
+subject = "var:typvxhus"
+fields = { "label" = "Typ av verksamhet, växthus" }
+evidence = "#2102 same-label cluster 'Typ av verksamhet' (3 variables): judged different meaning, high confidence; TYPJORDBRUK, TYPSKOGSBRUK and TYPVXHUS are the three activity types: jordbruk, skogsbruk and växthus."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavgift-hyreshus"
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus, hel avgift" }
+evidence = "#2102 same-label cluster 'Underlag för fastighetsavgift avseende hyreshus' (2 variables): judged different meaning, medium confidence; AFAHHALV is the half fee (0.15 percent, slug) and AFAHHEL the full fee, concurrent in individtabeller 2016-2017."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavgift-hyreshus-0-15-procent"
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus, halv avgift (0,15 procent)" }
+evidence = "#2102 same-label cluster 'Underlag för fastighetsavgift avseende hyreshus' (2 variables): judged different meaning, medium confidence; AFAHHALV is the half fee (0.15 percent, slug) and AFAHHEL the full fee, concurrent in individtabeller 2016-2017."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-sarskild-loneskatt-forvarvsinkomst-16-16-procent"
+fields = { "label" = "Underlag för beräkning av särskild löneskatt på förvärvsinkomsten, 16,16 procent" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild löneskatt på förvärvsinkomsten' (2 variables): judged different meaning, medium confidence; ASLSFP is the base at the 16.16 percent rate (slug) while ASLSF is the general base, concurrent 2000-2007."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-naringsverksamhet"
+fields = { "label" = "Underskott av näringsverksamhet efter skattemässiga justeringar" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V0778 continues as V7770 in aktiebolag (the adjusted deficit per the definition), while V70 is the deficit in the assessed result (slug taxerat-resultat), concurrent in aktiebolag."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-naringsverksamhet-7770"
+fields = { "label" = "Underskott av näringsverksamhet efter skattemässiga justeringar" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V0778 continues as V7770 in aktiebolag (the adjusted deficit per the definition), while V70 is the deficit in the assessed result (slug taxerat-resultat), concurrent in aktiebolag."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-naringsverksamhet-taxerat-resultat"
+fields = { "label" = "Underskott av näringsverksamhet, taxerat resultat" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V0778 continues as V7770 in aktiebolag (the adjusted deficit per the definition), while V70 is the deficit in the assessed result (slug taxerat-resultat), concurrent in aktiebolag."
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-underskott-tidigare-ar-3-ar-gamla"
+fields = { "label" = "Utdelning underskott från tidigare år, 3 år gamla" }
+evidence = "#2102 same-label cluster 'Utdelning underskott från tidigare år' (2 variables): judged different meaning, high confidence; NOUTNYTX is the 3-years-old variant of NOUTNYTU (slug), concurrent 2006-2007."
+
+[[statement]]
+kind = "set"
+subject = "var:utfardade-optionskontrakt"
+fields = { "label" = "Optioner, utfärdade optionskontrakt" }
+evidence = "#2102 same-label cluster 'Optioner (I281)' (3 variables): judged different meaning, medium confidence; Slugs name optioner innehav (FOPMV) and utfärdade optionskontrakt (FKUSKOP); I281 is the investmentbolag column."
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-lager"
+fields = { "label" = "Utgående lager, övrigt bränsle" }
+evidence = "#2102 same-label cluster 'Utgående lager' (2 variables): judged different meaning, medium confidence; OVRUTG is the closing stock of other fuel and RATUTG of råtallolja (slug ratall), concurrent 2008-2009."
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-lager-ratall"
+fields = { "label" = "Utgående lager, råtallolja" }
+evidence = "#2102 same-label cluster 'Utgående lager' (2 variables): judged different meaning, medium confidence; OVRUTG is the closing stock of other fuel and RATUTG of råtallolja (slug ratall), concurrent 2008-2009."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-egen-fou-ostergotlands-lan"
+fields = { "label" = "Utgifter för egen FoU, Östergötlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-egen-fou-sodermanlands-lan"
+fields = { "label" = "Utgifter för egen FoU, Södermanlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-egen-fou-vasterbottens-lan"
+fields = { "label" = "Utgifter för egen FoU, Västerbottens län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-egen-fou-vasternorrlands-lan"
+fields = { "label" = "Utgifter för egen FoU, Västernorrlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-egen-fou-vastra-gotalands-lan"
+fields = { "label" = "Utgifter för egen FoU, Västra Götalands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-blekinge-lan-se221-nutfse221"
+fields = { "label" = "Utgifter för egen FoU, Blekinge län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-dalarnas-lan-se312-nutfse312"
+fields = { "label" = "Utgifter för egen FoU, Dalarnas län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-gavleborgs-lan-se313-nutfse313"
+fields = { "label" = "Utgifter för egen FoU, Gävleborgs län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-gotlands-lan-se214-nutfse214"
+fields = { "label" = "Utgifter för egen FoU, Gotlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-hallands-lan-se231-nutfse231"
+fields = { "label" = "Utgifter för egen FoU, Hallands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-jamtlands-lan-se322-nutfse322"
+fields = { "label" = "Utgifter för egen FoU, Jämtlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-jonkopings-lan-se211-nutfse211"
+fields = { "label" = "Utgifter för egen FoU, Jönköpings län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-kalmar-lan-se213-nutfse213"
+fields = { "label" = "Utgifter för egen FoU, Kalmar län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-kronobergs-lan-se212-nutfse212"
+fields = { "label" = "Utgifter för egen FoU, Kronobergs län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-norrbottens-lan-se332-nutfse332"
+fields = { "label" = "Utgifter för egen FoU, Norrbottens län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-orebro-lan-se124-nutfse124"
+fields = { "label" = "Utgifter för egen FoU, Örebro län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-skane-lan-se224-nutfse224"
+fields = { "label" = "Utgifter för egen FoU, Skåne län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-stockholms-lan-se110-nutfse110"
+fields = { "label" = "Utgifter för egen FoU, Stockholms län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-uppsala-lan-se121-nutfse121"
+fields = { "label" = "Utgifter för egen FoU, Uppsala län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-varmlands-lan-se311-nutfse311"
+fields = { "label" = "Utgifter för egen FoU, Värmlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-avser-vastmanlands-lan-se125-nutfse125"
+fields = { "label" = "Utgifter för egen FoU, Västmanlands län" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (21 variables): judged different meaning, high confidence; 21 parallel columns NUTFSE<NUTS3 code>, one per län where the R&D was carried out (slugs name the län)."
+
+[[statement]]
+kind = "set"
+subject = "var:v0552"
+fields = { "label" = "Vinst vid avyttring av värdepapper, resultaträkning" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av värdepapper' (3 variables): judged different meaning, medium confidence; V0552 (deklarationsuppgifter) and V0550 (aktiebolag, handelsbolag) are the income-statement line (codes swap with the anläggningstillgångar cluster); V0638 is the separate tax-adjustment line in handelsbolag (slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:varde-av-fastighet-922-expansionsmedel"
+fields = { "label" = "Värde av fastighet (922), expansionsmedel" }
+evidence = "#2102 same-label cluster 'Värde av fastighet    (922)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter: V0922 for räntefördelning and V0937 for expansionsmedel (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:varde-av-fastighet-922-rantefordelning"
+fields = { "label" = "Värde av fastighet (922), räntefördelning" }
+evidence = "#2102 same-label cluster 'Värde av fastighet    (922)' (2 variables): judged different meaning, medium confidence; Two concurrent items in deklarationsuppgifter: V0922 for räntefördelning and V0937 for expansionsmedel (slugs)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-avyttring-vardepapper-resultatrakning"
+fields = { "label" = "Vinst vid avyttring av värdepapper, resultaträkning" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av värdepapper' (3 variables): judged different meaning, medium confidence; V0552 (deklarationsuppgifter) and V0550 (aktiebolag, handelsbolag) are the income-statement line (codes swap with the anläggningstillgångar cluster); V0638 is the separate tax-adjustment line in handelsbolag (slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-avyttring-vardepapper-skattemassiga-justeringar"
+fields = { "label" = "Vinst vid avyttring av värdepapper, skattemässiga justeringar" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av värdepapper' (3 variables): judged different meaning, medium confidence; V0552 (deklarationsuppgifter) and V0550 (aktiebolag, handelsbolag) are the income-statement line (codes swap with the anläggningstillgångar cluster); V0638 is the separate tax-adjustment line in handelsbolag (slug)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-aktier-foretag-1"
+fields = { "label" = "Vinst vid försäljning av onoterade aktier, företag 1" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; V5128, V5138 and V5148 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-aktier-foretag-2"
+fields = { "label" = "Vinst vid försäljning av onoterade aktier, företag 2" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; V5128, V5138 and V5148 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-aktier-foretag-3"
+fields = { "label" = "Vinst vid försäljning av onoterade aktier, företag 3" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade aktier' (3 variables): judged different meaning, high confidence; V5128, V5138 and V5148 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-andelar-foretag-1"
+fields = { "label" = "Vinst vid försäljning av onoterade andelar, företag 1" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; V5168, V5178 and V5188 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-andelar-foretag-2"
+fields = { "label" = "Vinst vid försäljning av onoterade andelar, företag 2" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; V5168, V5178 and V5188 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-forsaljning-onoterade-andelar-foretag-3"
+fields = { "label" = "Vinst vid försäljning av onoterade andelar, företag 3" }
+evidence = "#2102 same-label cluster 'Vinst vid försäljning av onoterade andelar' (3 variables): judged different meaning, high confidence; V5168, V5178 and V5188 are the three company slots in bilaga K12 (slugs företag 1, 2, 3)."

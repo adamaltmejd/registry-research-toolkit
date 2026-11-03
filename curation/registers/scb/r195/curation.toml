@@ -1710,3 +1710,45 @@ kind = "set"
 subject = "set:urvalsstratum"
 fields = { "label" = "Urvalsstratum" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-delantdagar"
+fields = { "label" = "Antal sjukdagar (deldagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-helantdagar"
+fields = { "label" = "Antal sjukdagar (heldagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:fallangd"
+fields = { "label" = "Antal sjukdagar (fallängd)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdag"
+fields = { "label" = "Antal sjukdagar (glappdagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdagar"
+fields = { "label" = "Antal sjukdagar (glappdagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-fallgrupp"
+fields = { "label" = "Antal sjukdagar (fallängdsgrupp)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-kalender"
+fields = { "label" = "Antal sjukdagar (kalenderdagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): judged different meaning, medium confidence; Concurrent columns: fall length, fall group, calendar days, deldagar, heldagar and glappdagar (the two glapp columns are consecutive renames)."

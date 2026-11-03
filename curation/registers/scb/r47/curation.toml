@@ -3823,3 +3823,273 @@ kind = "set"
 subject = "set:utlandsstudiernas-niva"
 fields = { "label" = "Utlandsstudiernas nivå" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori-1995"
+fields = { "label" = "Anställningskategori, version 1995" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Different classification versions (1995, 2001, 2008, 2012) with different category sets, partly concurrent in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori-2001"
+fields = { "label" = "Anställningskategori, version 2001" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Different classification versions (1995, 2001, 2008, 2012) with different category sets, partly concurrent in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori-2008"
+fields = { "label" = "Anställningskategori, version 2008" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Different classification versions (1995, 2001, 2008, 2012) with different category sets, partly concurrent in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori-2012"
+fields = { "label" = "Anställningskategori, version 2012" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Different classification versions (1995, 2001, 2008, 2012) with different category sets, partly concurrent in the same tables."
+
+[[statement]]
+kind = "set"
+subject = "var:anstformimp"
+fields = { "label" = "Imputerat: anställningsform" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstformtbimp"
+fields = { "label" = "Imputerat: anställningsform (tidsbegränsad)" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:antagande-larosate-forskarniva"
+fields = { "label" = "Universitet/högskola, antagande på forskarnivå, kod" }
+evidence = "#2102 same-label cluster 'Universitet/högskola' (4 variables): judged different meaning, high confidence; Numeric institution code (HsKod), alphabetic external code (LHsk), the code of the institution at admission to doctoral level (Ant_HsKod) and a name column (HsNamn); different codings and roles."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-tillgodoraknande"
+fields = { "label" = "År (tillgodoräknande)" }
+evidence = "#2102 same-label cluster 'År' (2 variables): judged different meaning, medium confidence; Ar is the reference year of the 1995-2000 personnel table; KAr is the year of a credit-transfer decision in another table."
+
+[[statement]]
+kind = "set"
+subject = "var:examenstyp-klartext"
+fields = { "label" = "Examenstyp (klartext)" }
+evidence = "#2102 same-label cluster 'Examenstyp' (2 variables): judged different meaning, medium confidence; ExTyp holds a letter code list; ExTypGrpText is a text column without a code list, in another table."
+
+[[statement]]
+kind = "set"
+subject = "var:examenstyp-kod"
+fields = { "label" = "Examenstyp (kod)" }
+evidence = "#2102 same-label cluster 'Examenstyp' (2 variables): judged different meaning, medium confidence; ExTyp holds a letter code list; ExTypGrpText is a text column without a code list, in another table."
+
+[[statement]]
+kind = "set"
+subject = "var:forskamnegrimp"
+fields = { "label" = "Imputerat: forskningsämnesgrupp" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskamneomrimp"
+fields = { "label" = "Imputerat: forskningsämnesområde" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskarexamen-benamning"
+fields = { "label" = "Forskarexamen, benämning" }
+evidence = "#2102 same-label cluster 'Forskarexamen' (2 variables): judged different meaning, high confidence; LExText is the name of the degree and LEx the högskola's code; same concept in different representations in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:forskarexamen-kod"
+fields = { "label" = "Forskarexamen, kod" }
+evidence = "#2102 same-label cluster 'Forskarexamen' (2 variables): judged different meaning, high confidence; LExText is the name of the degree and LEx the högskola's code; same concept in different representations in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne-1"
+fields = { "label" = "Forskningsämne (1-siffernivå)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (3 variables): judged different meaning, high confidence; FoS1Siff, FoS3Siff and FoS5Siff are the 1-, 3- and 5-digit levels of the research subject standard."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne-3"
+fields = { "label" = "Forskningsämne (3-siffernivå)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (3 variables): judged different meaning, high confidence; FoS1Siff, FoS3Siff and FoS5Siff are the 1-, 3- and 5-digit levels of the research subject standard."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne-5"
+fields = { "label" = "Forskningsämne (5-siffernivå)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (3 variables): judged different meaning, high confidence; FoS1Siff, FoS3Siff and FoS5Siff are the 1-, 3- and 5-digit levels of the research subject standard."
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolekod"
+fields = { "label" = "Universitet/högskola, kod" }
+evidence = "#2102 same-label cluster 'Universitet/högskola' (4 variables): judged different meaning, high confidence; Numeric institution code (HsKod), alphabetic external code (LHsk), the code of the institution at admission to doctoral level (Ant_HsKod) and a name column (HsNamn); different codings and roles."
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolenamn"
+fields = { "label" = "Universitet/högskola, namn" }
+evidence = "#2102 same-label cluster 'Universitet/högskola' (4 variables): judged different meaning, high confidence; Numeric institution code (HsKod), alphabetic external code (LHsk), the code of the institution at admission to doctoral level (Ant_HsKod) and a name column (HsNamn); different codings and roles."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "label" = "Imputerat: högskolekod" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (bokstavskod)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Kon uses K/M letters and Kon2 uses 1/2 digits for the same attribute, concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-kon2"
+fields = { "label" = "Kön (sifferkod)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Kon uses K/M letters and Kon2 uses 1/2 digits for the same attribute, concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:lamne"
+fields = { "label" = "Forskarutbildningsämne (kod)" }
+evidence = "#2102 same-label cluster 'Forskarutbildningsämne' (4 variables): judged different meaning, medium confidence; Code columns (LAmne, LAmneEx) vs text columns (LAmneText, LAmneExText); the Ex pair sits in the examination table."
+
+[[statement]]
+kind = "set"
+subject = "var:lamneex"
+fields = { "label" = "Forskarutbildningsämne vid examen (kod)" }
+evidence = "#2102 same-label cluster 'Forskarutbildningsämne' (4 variables): judged different meaning, medium confidence; Code columns (LAmne, LAmneEx) vs text columns (LAmneText, LAmneExText); the Ex pair sits in the examination table."
+
+[[statement]]
+kind = "set"
+subject = "var:lamneextext"
+fields = { "label" = "Forskarutbildningsämne vid examen (klartext)" }
+evidence = "#2102 same-label cluster 'Forskarutbildningsämne' (4 variables): judged different meaning, medium confidence; Code columns (LAmne, LAmneEx) vs text columns (LAmneText, LAmneExText); the Ex pair sits in the examination table."
+
+[[statement]]
+kind = "set"
+subject = "var:lamnetext"
+fields = { "label" = "Forskarutbildningsämne (klartext)" }
+evidence = "#2102 same-label cluster 'Forskarutbildningsämne' (4 variables): judged different meaning, medium confidence; Code columns (LAmne, LAmneEx) vs text columns (LAmneText, LAmneExText); the Ex pair sits in the examination table."
+
+[[statement]]
+kind = "set"
+subject = "var:larosate-externkod"
+fields = { "label" = "Universitet/högskola, externkod" }
+evidence = "#2102 same-label cluster 'Universitet/högskola' (4 variables): judged different meaning, high confidence; Numeric institution code (HsKod), alphabetic external code (LHsk), the code of the institution at admission to doctoral level (Ant_HsKod) and a name column (HsNamn); different codings and roles."
+
+[[statement]]
+kind = "set"
+subject = "var:nat2siff"
+fields = { "label" = "Nationellt forskningsämne (2-siffernivå)" }
+evidence = "#2102 same-label cluster 'Nationellt forskningsämne' (4 variables): judged different meaning, high confidence; Nat2Siff, Nat3Siff and Nat4Siff are three levels of one standard; NatAmne carries the 4-digit codes in the personnel table."
+
+[[statement]]
+kind = "set"
+subject = "var:nat3siff"
+fields = { "label" = "Nationellt forskningsämne (3-siffernivå)" }
+evidence = "#2102 same-label cluster 'Nationellt forskningsämne' (4 variables): judged different meaning, high confidence; Nat2Siff, Nat3Siff and Nat4Siff are three levels of one standard; NatAmne carries the 4-digit codes in the personnel table."
+
+[[statement]]
+kind = "set"
+subject = "var:nat4siff"
+fields = { "label" = "Nationellt forskningsämne (4-siffernivå)" }
+evidence = "#2102 same-label cluster 'Nationellt forskningsämne' (4 variables): judged different meaning, high confidence; Nat2Siff, Nat3Siff and Nat4Siff are three levels of one standard; NatAmne carries the 4-digit codes in the personnel table."
+
+[[statement]]
+kind = "set"
+subject = "var:nationellt-forskningsamne"
+fields = { "label" = "Nationellt forskningsämne (4-siffernivå)" }
+evidence = "#2102 same-label cluster 'Nationellt forskningsämne' (4 variables): judged different meaning, high confidence; Nat2Siff, Nat3Siff and Nat4Siff are three levels of one standard; NatAmne carries the 4-digit codes in the personnel table."
+
+[[statement]]
+kind = "set"
+subject = "var:niva-pa-utlandsstudier-csn"
+fields = { "label" = "Nivå på utlandsstudier (CSN:s indelning)" }
+evidence = "#2102 same-label cluster 'Nivå på utlandsstudier' (2 variables): judged different meaning, high confidence; Niva (CSN) and Nivå (SCB) are concurrent columns in one table with different code lists (EG/FO/HÖ vs F/G)."
+
+[[statement]]
+kind = "set"
+subject = "var:niva-pa-utlandsstudier-scb"
+fields = { "label" = "Nivå på utlandsstudier (SCB:s indelning)" }
+evidence = "#2102 same-label cluster 'Nivå på utlandsstudier' (2 variables): judged different meaning, high confidence; Niva (CSN) and Nivå (SCB) are concurrent columns in one table with different code lists (EG/FO/HÖ vs F/G)."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-1"
+fields = { "label" = "Utbildningsinriktning (SUN, 1 siffra)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUNInr1-SUNInr4 are 1-, 2-, 3- and 4-character levels of SUN with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-2"
+fields = { "label" = "Utbildningsinriktning (SUN, 2 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUNInr1-SUNInr4 are 1-, 2-, 3- and 4-character levels of SUN with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-3"
+fields = { "label" = "Utbildningsinriktning (SUN, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUNInr1-SUNInr4 are 1-, 2-, 3- and 4-character levels of SUN with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-4"
+fields = { "label" = "Utbildningsinriktning (SUN, 4 tecken)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUNInr1-SUNInr4 are 1-, 2-, 3- and 4-character levels of SUN with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "label" = "Utbildningsnivå (3 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUNNiva1, SUNNiva2 and SUNNiva/SunNiva3 are 1-, 2- and 3-position levels of SUN; SunNiva3 is the 3-position code in other tables."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgodoraknandebeslutid"
+fields = { "label" = "Identitet (tillgodoräknandebeslut)" }
+evidence = "#2102 same-label cluster 'Identitet' (2 variables): judged different meaning, medium confidence; TillgodoRaknandeBeslutID and TillgodoRaknasSomID are two different identity keys in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgodoraknassomid"
+fields = { "label" = "Identitet (tillgodoräknas som)" }
+evidence = "#2102 same-label cluster 'Identitet' (2 variables): judged different meaning, medium confidence; TillgodoRaknandeBeslutID and TillgodoRaknasSomID are two different identity keys in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:tjbkodimp"
+fields = { "label" = "Imputerat: tjänstebenämningskod" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjomfimp"
+fields = { "label" = "Imputerat: tjänstens omfattning" }
+evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different meaning, medium confidence; Each flag marks imputation of a different source variable (named in the column)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (3 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUNNiva1, SUNNiva2 and SUNNiva/SunNiva3 are 1-, 2- and 3-position levels of SUN; SunNiva3 is the 3-position code in other tables."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-en-position"
+fields = { "label" = "Utbildningsnivå (1 position)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUNNiva1, SUNNiva2 and SUNNiva/SunNiva3 are 1-, 2- and 3-position levels of SUN; SunNiva3 is the 3-position code in other tables."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-tva-positioner"
+fields = { "label" = "Utbildningsnivå (2 positioner)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUNNiva1, SUNNiva2 and SUNNiva/SunNiva3 are 1-, 2- and 3-position levels of SUN; SunNiva3 is the 3-position code in other tables."

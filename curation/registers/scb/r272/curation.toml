@@ -256,3 +256,45 @@ kind = "set"
 subject = "elavtal-omforhandling-byten: f07c @2013-01-01..2013-12-31 where key = 'v16775'"
 fields = { "variable" = "f07b" }
 evidence = "Both define 'Reason for switching electricity supplier' and use selector v16775 in the same register and table. Their periods [14975,15706) and [15706,16071) are adjacent without overlap. Codes 1–3 mean lower price, environmental reasons, and another reason. Both use the identical complete code list 3401 immediately across the column change from F07b to F07c."
+
+[[statement]]
+kind = "set"
+subject = "var:f05-txt"
+fields = { "label" = "Typ av elavtal (textvariant)" }
+evidence = "#2102 same-label cluster 'Typ av elavtal' (3 variables): judged different meaning, medium confidence; F5 (to 2011) and F05 (from 2011) have the same coding over adjacent periods and are one variable; F05_txt is a concurrent column in the same table, presumably a text version."
+
+[[statement]]
+kind = "set"
+subject = "var:f07b"
+fields = { "label" = "Anledning till byte av elleverantör, med miljöskäl" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): judged different meaning, medium confidence; F7b has two answers; F07b adds Miljöskäl and recodes; F07b_txt is a concurrent column with the same codes, presumably a text version."
+
+[[statement]]
+kind = "set"
+subject = "var:f07b-txt"
+fields = { "label" = "Anledning till byte av elleverantör, med miljöskäl (textvariant)" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): judged different meaning, medium confidence; F7b has two answers; F07b adds Miljöskäl and recodes; F07b_txt is a concurrent column with the same codes, presumably a text version."
+
+[[statement]]
+kind = "set"
+subject = "var:f09a"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (fråga 9a)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, medium confidence; F9a and F9b are concurrent yes/no items in 2009-2011; F09a (2011-2014) continues F9a under a new spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:f7b"
+fields = { "label" = "Anledning till byte av elleverantör, utan miljöskäl" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): judged different meaning, medium confidence; F7b has two answers; F07b adds Miljöskäl and recodes; F07b_txt is a concurrent column with the same codes, presumably a text version."
+
+[[statement]]
+kind = "set"
+subject = "var:f9a"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (fråga 9a)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, medium confidence; F9a and F9b are concurrent yes/no items in 2009-2011; F09a (2011-2014) continues F9a under a new spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:f9b"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (fråga 9b)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, medium confidence; F9a and F9b are concurrent yes/no items in 2009-2011; F09a (2011-2014) continues F9a under a new spelling."

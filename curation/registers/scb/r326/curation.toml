@@ -768,3 +768,99 @@ kind = "set"
 subject = "set:utbildningsstart"
 fields = { "label" = "Utbildningsstart" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod"
+fields = { "label" = "Inriktning för pågående utbildning (kategorikod)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (detailed category codes), KategoriKod_Kodad and UtbKat (shared grouped list, consecutive in time), KategoriNamn (name) and SunInr_KU (SUN codes) are different representations."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod-kodad"
+fields = { "label" = "Inriktning för pågående utbildning (kategori, grupperad)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (detailed category codes), KategoriKod_Kodad and UtbKat (shared grouped list, consecutive in time), KategoriNamn (name) and SunInr_KU (SUN codes) are different representations."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorinamn"
+fields = { "label" = "Inriktning för pågående utbildning (kategorinamn)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (detailed category codes), KategoriKod_Kodad and UtbKat (shared grouped list, consecutive in time), KategoriNamn (name) and SunInr_KU (SUN codes) are different representations."
+
+[[statement]]
+kind = "set"
+subject = "var:skola"
+fields = { "label" = "Skola, namn" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; SkolKod is the school code with name labels in its value set; Namn is a concurrent column holding the school name."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "label" = "Skola, kod" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; SkolKod is the school code with name labels in its value set; Namn is a concurrent column holding the school name."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag"
+fields = { "label" = "Studieväg (kod)" }
+evidence = "#2102 same-label cluster 'Studieväg' (2 variables): judged different meaning, high confidence; StvKod holds the studieväg code, StvNamn the name."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-namn"
+fields = { "label" = "Studieväg (namn)" }
+evidence = "#2102 same-label cluster 'Studieväg' (2 variables): judged different meaning, high confidence; StvKod holds the studieväg code, StvNamn the name."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-1-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 1-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level, with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-3-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level, with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 1-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level; Sun2000Niva in the 2012-2015 table has the three-digit list and continues _3."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-1-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 1-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level, with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-3"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 3-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level; Sun2000Niva in the 2012-2015 table has the three-digit list and continues _3."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-3-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level, with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-ku"
+fields = { "label" = "Inriktning för pågående utbildning (SUN-inriktning)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (detailed category codes), KategoriKod_Kodad and UtbKat (shared grouped list, consecutive in time), KategoriNamn (name) and SunInr_KU (SUN codes) are different representations."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 3-siffrig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; One-digit (_1) vs three-digit (_3) SUN 2000 level; Sun2000Niva in the 2012-2015 table has the three-digit list and continues _3."
+
+[[statement]]
+kind = "set"
+subject = "var:utbkat"
+fields = { "label" = "Inriktning för pågående utbildning (kategori, grupperad)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (detailed category codes), KategoriKod_Kodad and UtbKat (shared grouped list, consecutive in time), KategoriNamn (name) and SunInr_KU (SUN codes) are different representations."

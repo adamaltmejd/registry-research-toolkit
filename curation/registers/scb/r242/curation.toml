@@ -1908,3 +1908,303 @@ kind = "set"
 subject = "set:valdistrikt"
 fields = { "label" = "Valdistrikt" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp-arsslut-2010"
+fields = { "label" = "Gruppering av ålder 31/12 (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Gruppering av ålder 31/12' (2 variables): judged different meaning, medium confidence; aldg11 is the 2011 re-election (omval) variant of aldg."
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut"
+fields = { "label" = "Ålder 31/12 (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; alderslut11 is the 2011 re-election variant of alderslut."
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut11"
+fields = { "label" = "Ålder 31/12 (omval 2011)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; alderslut11 is the 2011 re-election variant of alderslut."
+
+[[statement]]
+kind = "set"
+subject = "var:aldg11"
+fields = { "label" = "Gruppering av ålder 31/12 (omval 2011)" }
+evidence = "#2102 same-label cluster 'Gruppering av ålder 31/12' (2 variables): judged different meaning, medium confidence; aldg11 is the 2011 re-election (omval) variant of aldg."
+
+[[statement]]
+kind = "set"
+subject = "var:fortidsrostat-allmanna-val-2010"
+fields = { "label" = "Förtidsröstat (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Förtidsröstat' (2 variables): judged different meaning, medium confidence; postrost11 is the 2011 re-election (omval) variant of postrost, a separate concurrent column."
+
+[[statement]]
+kind = "set"
+subject = "var:individuellt-lopnummer-urval-2010"
+fields = { "label" = "UENR (ordinarie val)" }
+evidence = "#2102 same-label cluster 'UENR' (2 variables): judged different meaning, medium confidence; uenr11 is the 2011 re-election variant of uenr, a separate concurrent id column."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-aku-svarande-kommunval-omval-2011"
+fields = { "label" = "Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval (omval 2011)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval' (2 variables): judged different meaning, medium confidence; kvikt_ko_aku11 is the 2011 re-election (omval) weight alongside kvikt_ko_aku."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-aku-svarande-landstingsval-omval-2011"
+fields = { "label" = "Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval, omval 2011" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval' (2 variables): judged different meaning, medium confidence; Overlapping periods in one table; the pid of kvikt_lt_aku11 names the 2011 omval, so it is a separate weight from the ordinary-election weight."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-2010"
+fields = { "label" = "Kalibrerad vikt _landstingsfullmäktigval (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt _landstingsfullmäktigval' (2 variables): judged different meaning, medium confidence; kvikt_lt11 is the 2011 re-election (omval) weight alongside the ordinary-election weight kvikt_lt."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-omval-2011"
+fields = { "label" = "Kalibrerad vikt _landstingsfullmäktigval (omval 2011)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt _landstingsfullmäktigval' (2 variables): judged different meaning, medium confidence; kvikt_lt11 is the 2011 re-election (omval) weight alongside the ordinary-election weight kvikt_lt."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrering-rostande-ej-rostande-kommunval-orebro-uppdelat"
+fields = { "label" = "Röstande i kommunfullmäktigval - kalibrering (Örebro uppdelat)" }
+evidence = "#2102 same-label cluster 'Röstande i kommunfullmäktigval - kalibrering' (2 variables): judged different meaning, medium confidence; xrost splits the calibration groups differently (Örebro divided, Skåne merged) from krost; they are concurrent in 2011-2012."
+
+[[statement]]
+kind = "set"
+subject = "var:kgruppnamn2011"
+fields = { "label" = "Kommungruppsindelning (2011, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kgruppnr2011"
+fields = { "label" = "Kommungruppsindelning (2011, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun11"
+fields = { "label" = "Kommun (omval 2011)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; kommun11 is the 2011 re-election variant (concurrent column); kommun and llkk are the same municipality code in successive periods."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2017-kod"
+fields = { "label" = "Kommungruppsindelning (2017, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-2017-namn"
+fields = { "label" = "Kommungruppsindelning (2017, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "label" = "Kommungruppsindelning (tidigare indelning, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-namn"
+fields = { "label" = "Kommungruppsindelning (tidigare indelning, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Three classification versions (older, 2011, 2017), each as code and name columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-alder-medborgarskap-kommunval-2010"
+fields = { "label" = "Gruppering av kön och ålder_kommunval (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_kommunval' (2 variables): judged different meaning, medium confidence; aldgkon6_11 is the 2011 re-election (omval) variant of aldgkon6."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-alder-medborgarskap-kommunval-omval-2011"
+fields = { "label" = "Gruppering av kön och ålder_kommunval (omval 2011)" }
+evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_kommunval' (2 variables): judged different meaning, medium confidence; aldgkon6_11 is the 2011 re-election (omval) variant of aldgkon6."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-alder-medborgarskap-landstingsval-2010"
+fields = { "label" = "Gruppering av kön och ålder_landstingsval (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_landstingsval' (2 variables): judged different meaning, medium confidence; aldgkon3_11 is the 2011 re-election (omval) variant of aldgkon3."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-alder-medborgarskap-landstingsval-omval-2011"
+fields = { "label" = "Gruppering av kön och ålder_landstingsval (omval 2011)" }
+evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_landstingsval' (2 variables): judged different meaning, medium confidence; aldgkon3_11 is the 2011 re-election (omval) variant of aldgkon3."
+
+[[statement]]
+kind = "set"
+subject = "var:kvikt-ko"
+fields = { "label" = "Kalibrerad vikt _kommunfullmäktigval (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt _kommunfullmäktigval' (3 variables): judged different meaning, medium confidence; kvikt_ko (ordinary election), kvikt_ko10_rev (revised 2010 weight) and kvikt_ko11 (2011 re-election) are distinct concurrent weights."
+
+[[statement]]
+kind = "set"
+subject = "var:kvikt-ko-aku-25362"
+fields = { "label" = "Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval' (2 variables): judged different meaning, medium confidence; kvikt_ko_aku11 is the 2011 re-election (omval) weight alongside kvikt_ko_aku."
+
+[[statement]]
+kind = "set"
+subject = "var:kvikt-ko10-rev"
+fields = { "label" = "Kalibrerad vikt _kommunfullmäktigval (val 2010, reviderad)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt _kommunfullmäktigval' (3 variables): judged different meaning, medium confidence; kvikt_ko (ordinary election), kvikt_ko10_rev (revised 2010 weight) and kvikt_ko11 (2011 re-election) are distinct concurrent weights."
+
+[[statement]]
+kind = "set"
+subject = "var:kvikt-ko11"
+fields = { "label" = "Kalibrerad vikt _kommunfullmäktigval (omval 2011)" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt _kommunfullmäktigval' (3 variables): judged different meaning, medium confidence; kvikt_ko (ordinary election), kvikt_ko10_rev (revised 2010 weight) and kvikt_ko11 (2011 re-election) are distinct concurrent weights."
+
+[[statement]]
+kind = "set"
+subject = "var:kvikt-lt-aku-25361"
+fields = { "label" = "Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval, ordinarie val" }
+evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval' (2 variables): judged different meaning, medium confidence; Overlapping periods in one table; the pid of kvikt_lt_aku11 names the 2011 omval, so it is a separate weight from the ordinary-election weight."
+
+[[statement]]
+kind = "set"
+subject = "var:lan11"
+fields = { "label" = "Län (omval 2011)" }
+evidence = "#2102 same-label cluster 'Län' (3 variables): judged different meaning, medium confidence; lan11 is the 2011 re-election variant (concurrent column); lan and ll are the same county code in successive periods."
+
+[[statement]]
+kind = "set"
+subject = "var:postrost11"
+fields = { "label" = "Förtidsröstat (omval 2011)" }
+evidence = "#2102 same-label cluster 'Förtidsröstat' (2 variables): judged different meaning, medium confidence; postrost11 is the 2011 re-election (omval) variant of postrost, a separate concurrent column."
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt11"
+fields = { "label" = "Rösträttskod (omval 2011)" }
+evidence = "#2102 same-label cluster 'Rösträttskod' (2 variables): judged different meaning, medium confidence; rostratt11 is the 2011 re-election variant of Rostratt."
+
+[[statement]]
+kind = "set"
+subject = "var:rostrattskod-2010"
+fields = { "label" = "Rösträttskod (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Rösträttskod' (2 variables): judged different meaning, medium confidence; rostratt11 is the 2011 re-election variant of Rostratt."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inrtext"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext"
+fields = { "label" = "Utbildningsnivå (SUN 2000, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inrtext"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020, kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020nivatext"
+fields = { "label" = "Utbildningsnivå (SUN 2020, text)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each as code and text column."
+
+[[statement]]
+kind = "set"
+subject = "var:svensk-utlandsk-medborgare-2010"
+fields = { "label" = "Svensk/utländsk medborgare (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Svensk/utländsk medborgare' (2 variables): judged different meaning, high confidence; svmedb11 is the 2011 re-election variant and uses a different coding (1/2 vs 0/1)."
+
+[[statement]]
+kind = "set"
+subject = "var:svmedb11"
+fields = { "label" = "Svensk/utländsk medborgare (omval 2011)" }
+evidence = "#2102 same-label cluster 'Svensk/utländsk medborgare' (2 variables): judged different meaning, high confidence; svmedb11 is the 2011 re-election variant and uses a different coding (1/2 vs 0/1)."
+
+[[statement]]
+kind = "set"
+subject = "var:uenr11"
+fields = { "label" = "UENR (omval 2011)" }
+evidence = "#2102 same-label cluster 'UENR' (2 variables): judged different meaning, medium confidence; uenr11 is the 2011 re-election variant of uenr, a separate concurrent id column."
+
+[[statement]]
+kind = "set"
+subject = "var:undnr11"
+fields = { "label" = "Undersökningsid (omval 2011)" }
+evidence = "#2102 same-label cluster 'Undersökningsid' (2 variables): judged different meaning, medium confidence; undnr11 is the 2011 re-election variant of undnr."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsdel-id-2010"
+fields = { "label" = "Undersökningsid (ordinarie val)" }
+evidence = "#2102 same-label cluster 'Undersökningsid' (2 variables): judged different meaning, medium confidence; undnr11 is the 2011 re-election variant of undnr."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (kod)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; Code column versus text column."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgtext"
+fields = { "label" = "Utländsk/svensk bakgrund (text)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; Code column versus text column."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "label" = "Valdistrikt (kod)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, medium confidence; valdistrikt11 is the 2011 re-election variant; valdistnamn (2018-2019) is a name column beside the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt-kod-ordinarie-val-2010"
+fields = { "label" = "Valdistrikt (kod)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, medium confidence; valdistrikt11 is the 2011 re-election variant; valdistnamn (2018-2019) is a name column beside the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt11"
+fields = { "label" = "Valdistrikt (omval 2011)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, medium confidence; valdistrikt11 is the 2011 re-election variant; valdistnamn (2018-2019) is a name column beside the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktsnamn"
+fields = { "label" = "Valdistrikt (namn)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, medium confidence; valdistrikt11 is the 2011 re-election variant; valdistnamn (2018-2019) is a name column beside the code column."

@@ -368,3 +368,99 @@ kind = "set"
 subject = "var:total-prod-gwh"
 fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gotaland"
+fields = { "label" = "Råvarukvantitet, Götaland" }
+evidence = "#2102 same-label cluster 'Råvarukvantitet' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per origin region named in the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-gwh"
+fields = { "label" = "Omvandlingsfaktor, MWh per GWh" }
+evidence = "#2102 same-label cluster 'Omvandlingsfaktor' (5 variables): judged different meaning, high confidence; Five different conversion factors named in the definition: MWh per GWh, m3 fast, m3 stjälpt, ton rå and ton torr."
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3f"
+fields = { "label" = "Omvandlingsfaktor, MWh per m3 fast mått" }
+evidence = "#2102 same-label cluster 'Omvandlingsfaktor' (5 variables): judged different meaning, high confidence; Five different conversion factors named in the definition: MWh per GWh, m3 fast, m3 stjälpt, ton rå and ton torr."
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3s"
+fields = { "label" = "Omvandlingsfaktor, MWh per m3 stjälpt mått" }
+evidence = "#2102 same-label cluster 'Omvandlingsfaktor' (5 variables): judged different meaning, high confidence; Five different conversion factors named in the definition: MWh per GWh, m3 fast, m3 stjälpt, ton rå and ton torr."
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tonra"
+fields = { "label" = "Omvandlingsfaktor, MWh per ton rå" }
+evidence = "#2102 same-label cluster 'Omvandlingsfaktor' (5 variables): judged different meaning, high confidence; Five different conversion factors named in the definition: MWh per GWh, m3 fast, m3 stjälpt, ton rå and ton torr."
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tontorr"
+fields = { "label" = "Omvandlingsfaktor, MWh per ton torr" }
+evidence = "#2102 same-label cluster 'Omvandlingsfaktor' (5 variables): judged different meaning, high confidence; Five different conversion factors named in the definition: MWh per GWh, m3 fast, m3 stjälpt, ton rå and ton torr."
+
+[[statement]]
+kind = "set"
+subject = "var:nnorrland"
+fields = { "label" = "Råvarukvantitet, Norra Norrland" }
+evidence = "#2102 same-label cluster 'Råvarukvantitet' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per origin region named in the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:okand"
+fields = { "label" = "Råvarukvantitet, okänd landsdel" }
+evidence = "#2102 same-label cluster 'Råvarukvantitet' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per origin region named in the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:prod-1"
+fields = { "label" = "Svarsalternativ (fråga 1)" }
+evidence = "#2102 same-label cluster 'Svarsalternativ' (2 variables): judged different meaning, medium confidence; Prod_1 and Prod_2 are concurrent numbered survey items with the same answer options."
+
+[[statement]]
+kind = "set"
+subject = "var:prod-2"
+fields = { "label" = "Svarsalternativ (fråga 2)" }
+evidence = "#2102 same-label cluster 'Svarsalternativ' (2 variables): judged different meaning, medium confidence; Prod_1 and Prod_2 are concurrent numbered survey items with the same answer options."
+
+[[statement]]
+kind = "set"
+subject = "var:ravarakat"
+fields = { "label" = "Bränsleslag (råvarukategori)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (2 variables): judged different meaning, medium confidence; Bid is the coded fuel type with a detailed code list; Ravarakat (no code list, from 2016) is the raw-material category."
+
+[[statement]]
+kind = "set"
+subject = "var:snorrland"
+fields = { "label" = "Råvarukvantitet, Södra Norrland" }
+evidence = "#2102 same-label cluster 'Råvarukvantitet' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per origin region named in the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:svealand"
+fields = { "label" = "Råvarukvantitet, Svealand" }
+evidence = "#2102 same-label cluster 'Råvarukvantitet' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per origin region named in the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:total-exp-gwh"
+fields = { "label" = "Bränsleförbrukning, total export (GWh)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (3 variables): judged different meaning, high confidence; Descriptions give total exported, imported and produced quantity in GWh."
+
+[[statement]]
+kind = "set"
+subject = "var:total-imp-gwh"
+fields = { "label" = "Bränsleförbrukning, total import (GWh)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (3 variables): judged different meaning, high confidence; Descriptions give total exported, imported and produced quantity in GWh."
+
+[[statement]]
+kind = "set"
+subject = "var:total-prod-gwh"
+fields = { "label" = "Bränsleförbrukning, total produktion (GWh)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (3 variables): judged different meaning, high confidence; Descriptions give total exported, imported and produced quantity in GWh."

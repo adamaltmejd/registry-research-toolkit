@@ -6652,3 +6652,51 @@ kind = "set"
 subject = "set:utrikes-fodelse"
 fields = { "label" = "Utrikes födelse" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-1"
+fields = { "label" = "Ålder sökande, sökande 1" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Three concurrent age columns: sökande 1, the oldest and the youngest applicant or co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-aldst"
+fields = { "label" = "Ålder sökande, äldste" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Three concurrent age columns: sökande 1, the oldest and the youngest applicant or co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-yngst"
+fields = { "label" = "Ålder sökande, yngste" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Three concurrent age columns: sökande 1, the oldest and the youngest applicant or co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar"
+fields = { "label" = "Antal barn 16-17 år, månadsuppgift" }
+evidence = "#2102 same-label cluster 'Antal barn 16-17 år' (2 variables): judged different meaning, medium confidence; Same name and period but different tables: the monthly table defines the count as applicants 3-7 aged 16-17; the annual table gives no definition, so it is an annual figure of unknown construction."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar-2"
+fields = { "label" = "Antal barn 16-17 år, årsuppgift" }
+evidence = "#2102 same-label cluster 'Antal barn 16-17 år' (2 variables): judged different meaning, medium confidence; Same name and period but different tables: the monthly table defines the count as applicants 3-7 aged 16-17; the annual table gives no definition, so it is an annual figure of unknown construction."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-ar-exkl-introduktionsersattning"
+fields = { "label" = "Totalt belopp under året, exkl. introduktionsersättning" }
+evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): judged different meaning, high confidence; The definitions differ: EKBTOTALBELOPP excludes and TOTALBELOPP includes introduktionsersättning."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "label" = "Födelsedatum (numeriskt)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samma datum i olika format; FODDATN är den numeriska varianten."
+
+[[statement]]
+kind = "set"
+subject = "var:totalbelopp"
+fields = { "label" = "Totalt belopp under året, inkl. introduktionsersättning" }
+evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): judged different meaning, high confidence; The definitions differ: EKBTOTALBELOPP excludes and TOTALBELOPP includes introduktionsersättning."

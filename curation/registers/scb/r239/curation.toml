@@ -734,3 +734,81 @@ kind = "set"
 subject = "set:vald-kandidat"
 fields = { "label" = "Vald kandidat" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-nominering-kommunfullmaktige"
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; County name versus county code (with code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "label" = "Landstingsvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Constituency code versus constituency name."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "label" = "Landstingsvalkrets (namn)" }
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Constituency code versus constituency name."
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod-nominering-kommunfullmaktige"
+fields = { "label" = "Län (kod)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; County name versus county code (with code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:parti-kort"
+fields = { "label" = "Parti (kortnamn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "label" = "Parti (kod)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "label" = "Parti (namn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "label" = "Riksdagsvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-namn"
+fields = { "label" = "Riksdagsvalkrets (namn)" }
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-riksdagsvalkrets"
+fields = { "label" = "Riksdagsvalkrets (kod, 1998-1999)" }
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+
+[[statement]]
+kind = "set"
+subject = "var:ripartikod"
+fields = { "label" = "Parti (riksdagspartikod)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."

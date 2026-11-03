@@ -1177,3 +1177,297 @@ kind = "set"
 subject = "set:skal-till-studieavbrott"
 fields = { "label" = "Skäl till studieavbrott" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:annat-motiv-mal-komvux"
+fields = { "label" = "Motiv kommunal vuxenutbildning (annat motiv)" }
+evidence = "#2102 same-label cluster 'Motiv kommunal vuxenutbildning' (5 variables): judged different meaning, high confidence; Five distinct motive items (f4a-f4e) named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-a-kassa-hosten-2000"
+fields = { "label" = "Finansieringskällor (A-kassa)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-annat-hosten-2000"
+fields = { "label" = "Finansieringskällor (annat)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-bidrag-foraldrar-hosten-2000"
+fields = { "label" = "Finansieringskällor (bidrag från föräldrar)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-deltidsarbete-hosten-2000"
+fields = { "label" = "Finansieringskällor (deltidsarbete)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-heltidsarbete-hosten-2000"
+fields = { "label" = "Finansieringskällor (heltidsarbete)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-makas-makes-sambos-inkomster-hosten-2000"
+fields = { "label" = "Finansieringskällor (makas/makes/sambos inkomster)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-sarskilt-utbildningsbidrag-hosten-2000"
+fields = { "label" = "Finansieringskällor (särskilt utbildningsbidrag)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-arbetslosa-hosten-2000"
+fields = { "label" = "Finansieringskällor (särskilt vuxenstudiestöd för arbetslösa)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-hosten-2000"
+fields = { "label" = "Finansieringskällor (särskilt vuxenstudiestöd)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-studiemedel-enbart-bidrag-hosten-2000"
+fields = { "label" = "Finansieringskällor (studiemedel, enbart bidrag)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiering-studiemedel-lan-bidrag-hosten-2000"
+fields = { "label" = "Finansieringskällor (studiemedel, lån och bidrag)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-finansiering-komvuxstudier"
+fields = { "label" = "Finansieringskällor (huvudsaklig finansiering)" }
+evidence = "#2102 same-label cluster 'Finansieringskällor' (12 variables): judged different meaning, high confidence; One checkbox per source of funding (f9a-f9k, named in code lists and pids) plus f10, the single main source."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-7-13-april-2003"
+fields = { "label" = "Huvudsaklig sysselsättning (7-13 april 2003)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-hosten-2000"
+fields = { "label" = "Huvudsaklig sysselsättning (hösten 2000)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-hosten-2001"
+fields = { "label" = "Huvudsaklig sysselsättning (hösten 2001)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-hosten-2002"
+fields = { "label" = "Huvudsaklig sysselsättning (hösten 2002)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-varen-2000"
+fields = { "label" = "Huvudsaklig sysselsättning (våren 2000)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-varen-2001"
+fields = { "label" = "Huvudsaklig sysselsättning (våren 2001)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-varen-2002"
+fields = { "label" = "Huvudsaklig sysselsättning (våren 2002)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (7 variables): judged different meaning, high confidence; One column per reference period (spring and autumn 2000-2002) and f17 for 7-13 April 2003 with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsakligt-skal-studieavbrott"
+fields = { "label" = "Skäl till studieavbrott (huvudsakligt skäl)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-engelska-hosten-2000"
+fields = { "label" = "Kurs i komvux (engelska, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-engelska-varen-2001"
+fields = { "label" = "Kurs i komvux (engelska, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-estetiska-amnen-hosten-2000"
+fields = { "label" = "Kurs i komvux (estetiska ämnen, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-estetiska-amnen-varen-2001"
+fields = { "label" = "Kurs i komvux (estetiska ämnen, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-matematik-hosten-2000"
+fields = { "label" = "Kurs i komvux (matematik, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-matematik-varen-2001"
+fields = { "label" = "Kurs i komvux (matematik, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-ovriga-amnen-hosten-2000"
+fields = { "label" = "Kurs i komvux (övriga ämnen, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-ovriga-amnen-varen-2001"
+fields = { "label" = "Kurs i komvux (övriga ämnen, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-samhallskunskap-hosten-2000"
+fields = { "label" = "Kurs i komvux (samhällskunskap, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-samhallskunskap-varen-2001"
+fields = { "label" = "Kurs i komvux (samhällskunskap, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-svenska-hosten-2000"
+fields = { "label" = "Kurs i komvux (svenska, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-svenska-varen-2001"
+fields = { "label" = "Kurs i komvux (svenska, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-hosten-2000"
+fields = { "label" = "Kurs i komvux (yrkesinriktade ämnen, hösten 2000)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-varen-2001"
+fields = { "label" = "Kurs i komvux (yrkesinriktade ämnen, våren 2001)" }
+evidence = "#2102 same-label cluster 'Kurs i komvux' (14 variables): judged different meaning, high confidence; One checkbox per subject (svenska, engelska, matematik, samhällskunskap, yrkesinriktade, estetiska, övriga ämnen) and term (hösten 2000, våren 2001)."
+
+[[statement]]
+kind = "set"
+subject = "var:motiv-komvux-fullstandigt-slutbetyg-trearig-gymnasieskola"
+fields = { "label" = "Motiv kommunal vuxenutbildning (fullständigt slutbetyg från treårig gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Motiv kommunal vuxenutbildning' (5 variables): judged different meaning, high confidence; Five distinct motive items (f4a-f4e) named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:motiv-komvux-hoja-gymnasiebetyg-godkand-val-godkand"
+fields = { "label" = "Motiv kommunal vuxenutbildning (höja gymnasiebetyg från godkänd till väl godkänd)" }
+evidence = "#2102 same-label cluster 'Motiv kommunal vuxenutbildning' (5 variables): judged different meaning, high confidence; Five distinct motive items (f4a-f4e) named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:motiv-komvux-komplettera-ej-godkanda-gymnasiebetyg"
+fields = { "label" = "Motiv kommunal vuxenutbildning (komplettera ej godkända gymnasiebetyg)" }
+evidence = "#2102 same-label cluster 'Motiv kommunal vuxenutbildning' (5 variables): judged different meaning, high confidence; Five distinct motive items (f4a-f4e) named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:motiv-komvux-komplettera-gymnasieutbildning-kurser"
+fields = { "label" = "Motiv kommunal vuxenutbildning (komplettera gymnasieutbildning med kurser)" }
+evidence = "#2102 same-label cluster 'Motiv kommunal vuxenutbildning' (5 variables): judged different meaning, high confidence; Five distinct motive items (f4a-f4e) named in the pids."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-annat-skal"
+fields = { "label" = "Skäl till studieavbrott (annat skäl)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-borjade-annan-kurs-komvux"
+fields = { "label" = "Skäl till studieavbrott (började annan kurs i komvux)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-borjade-annan-utbildning"
+fields = { "label" = "Skäl till studieavbrott (började annan utbildning)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-for-hog-studietakt"
+fields = { "label" = "Skäl till studieavbrott (för hög studietakt)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-halsoskal"
+fields = { "label" = "Skäl till studieavbrott (hälsoskäl)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-innehall-motsvarade-inte-forvantningar"
+fields = { "label" = "Skäl till studieavbrott (innehållet motsvarade inte förväntningarna)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-inte-fa-efterstravat-betyg"
+fields = { "label" = "Skäl till studieavbrott (kunde inte få eftersträvat betyg)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-studietrott"
+fields = { "label" = "Skäl till studieavbrott (studietrött)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-svart-kombinera-studier-arbete"
+fields = { "label" = "Skäl till studieavbrott (svårt kombinera studier och arbete)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."
+
+[[statement]]
+kind = "set"
+subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
+fields = { "label" = "Skäl till studieavbrott (svårt kombinera studier och familjeliv)" }
+evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in the descriptions."

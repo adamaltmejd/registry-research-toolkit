@@ -5660,3 +5660,1053 @@ kind = "set"
 subject = "set:yrkesamne"
 fields = { "label" = "Yrkesämne" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:amnbilaga4"
+fields = { "label" = "Undervisning i övriga bilaga 4-ämnen (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i övriga bilaga 4-ämnen' (5 variables): judged different meaning, high confidence; School years vs share of tjänst, plus the subject itself in three numbered columns Bilaga4amn1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:amnbild"
+fields = { "label" = "Undervisning i bild (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i bild' (2 variables): judged different meaning, high confidence; AmnBild holds the school years taught; OmfBild the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnbiologi"
+fields = { "label" = "Undervisning i biologi (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i biologi' (2 variables): judged different meaning, high confidence; AmnBiologi holds the school years taught; OmfBiologi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnegr"
+fields = { "label" = "Undervisningsämne (grundskola)" }
+evidence = "#2102 same-label cluster 'Undervisningsämne' (2 variables): judged different meaning, high confidence; AmneGr (Gr = grundskola) and AmneGy (Gy = gymnasieskola) are concurrent with different subject lists."
+
+[[statement]]
+kind = "set"
+subject = "var:amnegy"
+fields = { "label" = "Undervisningsämne (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Undervisningsämne' (2 variables): judged different meaning, high confidence; AmneGr (Gr = grundskola) and AmneGy (Gy = gymnasieskola) are concurrent with different subject lists."
+
+[[statement]]
+kind = "set"
+subject = "var:amnengelska"
+fields = { "label" = "Undervisning i engelska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnengelskahsk"
+fields = { "label" = "Undervisning i engelska (årskurser, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnengelskahsku"
+fields = { "label" = "Undervisning i engelska (årskurser, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnestetisk"
+fields = { "label" = "Undervisning i estetik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i estetik' (2 variables): judged different meaning, high confidence; AmnEstetisk holds the school years taught; OmfEstetisk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnfilosofi"
+fields = { "label" = "Undervisning i filosofi (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i filosofi' (2 variables): judged different meaning, high confidence; AmnFilosofi holds the school years taught; OmfFilosofi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnfranska"
+fields = { "label" = "Undervisning i franska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i franska' (2 variables): judged different meaning, high confidence; AmnFranska holds the school years taught; OmfFranska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnfysik"
+fields = { "label" = "Undervisning i fysik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i fysik' (2 variables): judged different meaning, high confidence; AmnFysik holds the school years taught; OmfFysik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amngeografi"
+fields = { "label" = "Undervisning i geografi (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i geografi' (2 variables): judged different meaning, high confidence; AmnGeografi holds the school years taught; OmfGeografi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnhemkonsum"
+fields = { "label" = "Undervisning i hem-/konsumentkunskap (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i hem-/konsumentkunskap' (2 variables): judged different meaning, high confidence; AmnHemKonsum holds the school years taught; OmfHemKonsum the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnhistoria"
+fields = { "label" = "Undervisning i historia, årskurser" }
+evidence = "#2102 same-label cluster 'Undervisning i historia' (2 variables): judged different meaning, high confidence; AmnHistoria holds grade-level codes (Årskurs 7-9 etc.); OmfHistoria is the share of the position spent on history in percent, per its description."
+
+[[statement]]
+kind = "set"
+subject = "var:amnidrott"
+fields = { "label" = "Undervisning i idrott (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i idrott' (2 variables): judged different meaning, high confidence; AmnIdrott holds the school years taught; OmfIdrott the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnindivid"
+fields = { "label" = "Undervisning i individ och samhälle (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i individ och samhälle' (2 variables): judged different meaning, high confidence; Amnindivid holds the school years taught; Omfindivid the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnkemi"
+fields = { "label" = "Undervisning i kemi (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i kemi' (2 variables): judged different meaning, high confidence; AmnKemi holds the school years taught; OmfKemi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnkommunikation"
+fields = { "label" = "Undervisning i kommunikation (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i kommunikation' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, for the general area and for hörselskadade personer med utvecklingsstörning (HskU, descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnkommunikationhsku"
+fields = { "label" = "Undervisning i kommunikation (årskurser, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i kommunikation' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, for the general area and for hörselskadade personer med utvecklingsstörning (HskU, descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmatematik"
+fields = { "label" = "Undervisning i matematik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i matematik' (2 variables): judged different meaning, high confidence; AmnMatematik holds the school years taught; OmfMatematik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmmal"
+fields = { "label" = "Undervisning i modersmål (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmodsprak"
+fields = { "label" = "Undervisning i moderna språk (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a Hsk (hörselskadade) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmodsprakhsk"
+fields = { "label" = "Undervisning i moderna språk (årskurser, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a Hsk (hörselskadade) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmotorik"
+fields = { "label" = "Undervisning i motorik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i motorik' (2 variables): judged different meaning, high confidence; AmnMotorik holds the school years taught; OmfMotorik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnmusik"
+fields = { "label" = "Undervisning i musik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i musik' (2 variables): judged different meaning, high confidence; AmnMusik holds the school years taught; OmfMusik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnnaturkunsk"
+fields = { "label" = "Undervisning i naturkunskap (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i naturkunskap' (2 variables): judged different meaning, high confidence; AmnNaturkunsk holds the school years taught; OmfNaturkunsk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnnaturo"
+fields = { "label" = "Undervisning i natur och miljö (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i natur och miljö' (2 variables): judged different meaning, high confidence; Amnnaturo holds the school years taught; Omfnaturo the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnno"
+fields = { "label" = "Undervisning i naturorienterande ämnen (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i naturorienterande ämnen' (2 variables): judged different meaning, high confidence; AmnNO holds the school years taught; OmfNO the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnovrigtsprak"
+fields = { "label" = "Undervisning i moderna språk, övriga (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk, övriga' (2 variables): judged different meaning, high confidence; AmnOvrigtSprak holds the school years taught; OmfOvrigtSprak the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnpsykologi"
+fields = { "label" = "Undervisning i psykologi (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i psykologi' (3 variables): judged different meaning, high confidence; AmnPsykologi holds the school years taught; OmfPsykolodi (a misspelling, to 2014) and OmfPsykologi are the same share-of-tjänst column renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:amnreligion"
+fields = { "label" = "Undervisning i religion (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i religion' (2 variables): judged different meaning, high confidence; AmnReligion holds the school years taught; OmfReligion the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnrorelsedrama"
+fields = { "label" = "Undervisning i rörelse och drama (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i rörelse och drama' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a U (personer med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnrorelsedramau"
+fields = { "label" = "Undervisning i rörelse och drama (årskurser, personer med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i rörelse och drama' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a U (personer med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsamhall"
+fields = { "label" = "Undervisning i samhällskunskap (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i samhällskunskap' (2 variables): judged different meaning, high confidence; AmnSamhall holds the school years taught; OmfSamhall the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsamiska"
+fields = { "label" = "Undervisning i samiska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i samiska' (2 variables): judged different meaning, high confidence; AmnSamiska holds the school years taught; OmfSamiska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnslojd"
+fields = { "label" = "Undervisning i slöjd (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i slöjd' (2 variables): judged different meaning, high confidence; AmnSlojd holds the school years taught; OmfSlojd the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnso"
+fields = { "label" = "Undervisning i samhällsorienterande ämnen (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i samhällsorienterande ämnen' (2 variables): judged different meaning, high confidence; AmnSO holds the school years taught; OmfSO the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnspanska"
+fields = { "label" = "Undervisning i spanska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i spanska' (2 variables): judged different meaning, high confidence; AmnSpanska holds the school years taught; OmfSpanska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsprakochk"
+fields = { "label" = "Undervisning i språk och kommunikation (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i språk och kommunikation' (2 variables): judged different meaning, high confidence; Amnsprakochk holds the school years taught; Omfsprakochk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsva"
+fields = { "label" = "Undervisning i svenska som andraspråk (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska som andraspråk' (2 variables): judged different meaning, high confidence; AmnSVA holds the school years taught; OmfSVA the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsvenska"
+fields = { "label" = "Undervisning i svenska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsvhsk"
+fields = { "label" = "Undervisning i svenska (årskurser, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnsvhsku"
+fields = { "label" = "Undervisning i svenska (årskurser, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnteckensprak"
+fields = { "label" = "Undervisning i teckenspråk (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnteckensprakh"
+fields = { "label" = "Undervisning i teckenspråk (årskurser, hörande)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnteckensprakhsk"
+fields = { "label" = "Undervisning i teckenspråk (årskurser, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnteckensprakhsku"
+fields = { "label" = "Undervisning i teckenspråk (årskurser, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnteknik"
+fields = { "label" = "Undervisning i teknik (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i teknik' (2 variables): judged different meaning, high confidence; AmnTeknik holds the school years taught; OmfTeknik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amntyska"
+fields = { "label" = "Undervisning i tyska (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i tyska' (2 variables): judged different meaning, high confidence; AmnTyska holds the school years taught; OmfTyska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnvardagsaktiviteter"
+fields = { "label" = "Undervisning i vardagsaktiviteter (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i vardagsaktiviteter' (2 variables): judged different meaning, high confidence; AmnVardagsaktiviteter holds the school years taught; OmfVardagsaktiviteter the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnverklighetsuppfattning"
+fields = { "label" = "Undervisning i verklighetsuppfattning (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i verklighetsuppfattning' (2 variables): judged different meaning, high confidence; AmnVerklighetsuppfattning holds the school years taught; OmfVerklighetsuppfattning the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnvissa"
+fields = { "label" = "Undervisning i vissa ämnen (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i vissa ämnen' (3 variables): judged different meaning, high confidence; AmnVissa holds school years, OmfVissa the share of the tjänst, Vissaamn1 the subject chosen within Vissa ämnen (value set)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnyrkes"
+fields = { "label" = "Undervisning i yrkesämne (årskurser)" }
+evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a gymnasiesärskolan variant (description of OmfYrkesgsar)."
+
+[[statement]]
+kind = "set"
+subject = "var:amnyrkesgsar"
+fields = { "label" = "Undervisning i yrkesämne (årskurser, gymnasiesärskolan)" }
+evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a gymnasiesärskolan variant (description of OmfYrkesgsar)."
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-pedagogisk"
+fields = { "label" = "Befattningskod pedagogisk personal, 4-siffrig kod" }
+evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Code lists change between eras: Tjb and Tjben share a 3-digit list (to 1991), Bef and BefKod a 4-digit list (1991-2013); PrBefKod runs concurrently with BefKod in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-pedagogisk-personal-bef"
+fields = { "label" = "Befattningskod pedagogisk personal, 4-siffrig kod" }
+evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Code lists change between eras: Tjb and Tjben share a 3-digit list (to 1991), Bef and BefKod a 4-digit list (1991-2013); PrBefKod runs concurrently with BefKod in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-pedagogisk-personal-prbefkod"
+fields = { "label" = "Befattningskod pedagogisk personal, 4-siffrig kod, personregistrets variant" }
+evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Code lists change between eras: Tjb and Tjben share a 3-digit list (to 1991), Bef and BefKod a 4-digit list (1991-2013); PrBefKod runs concurrently with BefKod in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-pedagogisk-personal-tjb"
+fields = { "label" = "Befattningskod pedagogisk personal, 3-siffrig kod (till 1991)" }
+evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Code lists change between eras: Tjb and Tjben share a 3-digit list (to 1991), Bef and BefKod a 4-digit list (1991-2013); PrBefKod runs concurrently with BefKod in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-pedagogisk-personal-tjben"
+fields = { "label" = "Befattningskod pedagogisk personal, 3-siffrig kod (till 1991)" }
+evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Code lists change between eras: Tjb and Tjben share a 3-digit list (to 1991), Bef and BefKod a 4-digit list (1991-2013); PrBefKod runs concurrently with BefKod in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:bilaga4amn"
+fields = { "label" = "Undervisning i övriga bilaga 4-ämnen (ämne 1)" }
+evidence = "#2102 same-label cluster 'Undervisning i övriga bilaga 4-ämnen' (5 variables): judged different meaning, high confidence; School years vs share of tjänst, plus the subject itself in three numbered columns Bilaga4amn1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettforvaring-ordningsnummer"
+fields = { "label" = "Plats för blankettförvaring (ordningsnummer)" }
+evidence = "#2102 same-label cluster 'Plats för blankettförvaring' (2 variables): judged different meaning, medium confidence; Box and Libox are concurrent columns; the pid of Libox names the ordningsnummer."
+
+[[statement]]
+kind = "set"
+subject = "var:box"
+fields = { "label" = "Plats för blankettförvaring (box)" }
+evidence = "#2102 same-label cluster 'Plats för blankettförvaring' (2 variables): judged different meaning, medium confidence; Box and Libox are concurrent columns; the pid of Libox names the ordningsnummer."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtim"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, första tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudyrkesamn"
+fields = { "label" = "Yrkesämne, äldre indelning (2013-2014)" }
+evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged different meaning, medium confidence; HuvudYrkesAmn (2013-14) has an older category set; HuvudYrkesgsarAmn1-3 are three concurrent columns with the gymnasiesärskola programme categories from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudyrkesgsaramn"
+fields = { "label" = "Yrkesämne, gymnasiesärskola, nr 1" }
+evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged different meaning, medium confidence; HuvudYrkesAmn (2013-14) has an older category set; HuvudYrkesgsarAmn1-3 are three concurrent columns with the gymnasiesärskola programme categories from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:jurform"
+fields = { "label" = "Juridisk form (kod)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): judged different meaning, high confidence; Descriptions: Jurform is the code, JuridiskForm the text."
+
+[[statement]]
+kind = "set"
+subject = "var:juridiskform"
+fields = { "label" = "Juridisk form (klartext)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): judged different meaning, high confidence; Descriptions: Jurform is the code, JuridiskForm the text."
+
+[[statement]]
+kind = "set"
+subject = "var:mmal"
+fields = { "label" = "Undervisning i modersmål (avser modersmål helt eller delvis)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:mmalkod"
+fields = { "label" = "Undervisning i modersmål (språk)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:omfbilaga4"
+fields = { "label" = "Undervisning i övriga bilaga 4-ämnen (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i övriga bilaga 4-ämnen' (5 variables): judged different meaning, high confidence; School years vs share of tjänst, plus the subject itself in three numbered columns Bilaga4amn1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:omfbild"
+fields = { "label" = "Undervisning i bild (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i bild' (2 variables): judged different meaning, high confidence; AmnBild holds the school years taught; OmfBild the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfbiologi"
+fields = { "label" = "Undervisning i biologi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i biologi' (2 variables): judged different meaning, high confidence; AmnBiologi holds the school years taught; OmfBiologi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfengelska"
+fields = { "label" = "Undervisning i engelska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfengelskahsk"
+fields = { "label" = "Undervisning i engelska (andel, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfengelskahsku"
+fields = { "label" = "Undervisning i engelska (andel, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i engelska' (6 variables): judged different meaning, high confidence; School years taught vs share of tjänst, each in a general, a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfestetisk"
+fields = { "label" = "Undervisning i estetik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i estetik' (2 variables): judged different meaning, high confidence; AmnEstetisk holds the school years taught; OmfEstetisk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omffilosofi"
+fields = { "label" = "Undervisning i filosofi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i filosofi' (2 variables): judged different meaning, high confidence; AmnFilosofi holds the school years taught; OmfFilosofi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omffranska"
+fields = { "label" = "Undervisning i franska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i franska' (2 variables): judged different meaning, high confidence; AmnFranska holds the school years taught; OmfFranska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omffysik"
+fields = { "label" = "Undervisning i fysik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i fysik' (2 variables): judged different meaning, high confidence; AmnFysik holds the school years taught; OmfFysik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfgeografi"
+fields = { "label" = "Undervisning i geografi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i geografi' (2 variables): judged different meaning, high confidence; AmnGeografi holds the school years taught; OmfGeografi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfhemkonsum"
+fields = { "label" = "Undervisning i hem-/konsumentkunskap (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i hem-/konsumentkunskap' (2 variables): judged different meaning, high confidence; AmnHemKonsum holds the school years taught; OmfHemKonsum the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfhistoria"
+fields = { "label" = "Undervisning i historia, omfattning" }
+evidence = "#2102 same-label cluster 'Undervisning i historia' (2 variables): judged different meaning, high confidence; AmnHistoria holds grade-level codes (Årskurs 7-9 etc.); OmfHistoria is the share of the position spent on history in percent, per its description."
+
+[[statement]]
+kind = "set"
+subject = "var:omfidrott"
+fields = { "label" = "Undervisning i idrott (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i idrott' (2 variables): judged different meaning, high confidence; AmnIdrott holds the school years taught; OmfIdrott the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfindivid"
+fields = { "label" = "Undervisning i individ och samhälle (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i individ och samhälle' (2 variables): judged different meaning, high confidence; Amnindivid holds the school years taught; Omfindivid the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfkemi"
+fields = { "label" = "Undervisning i kemi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i kemi' (2 variables): judged different meaning, high confidence; AmnKemi holds the school years taught; OmfKemi the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfkommunikation"
+fields = { "label" = "Undervisning i kommunikation (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i kommunikation' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, for the general area and for hörselskadade personer med utvecklingsstörning (HskU, descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfkommunikationhsku"
+fields = { "label" = "Undervisning i kommunikation (andel, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i kommunikation' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, for the general area and for hörselskadade personer med utvecklingsstörning (HskU, descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmatematik"
+fields = { "label" = "Undervisning i matematik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i matematik' (2 variables): judged different meaning, high confidence; AmnMatematik holds the school years taught; OmfMatematik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmmal"
+fields = { "label" = "Undervisning i modersmål (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmodsprak"
+fields = { "label" = "Undervisning i moderna språk (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a Hsk (hörselskadade) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmodsprakhsk"
+fields = { "label" = "Undervisning i moderna språk (andel, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a Hsk (hörselskadade) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmotorik"
+fields = { "label" = "Undervisning i motorik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i motorik' (2 variables): judged different meaning, high confidence; AmnMotorik holds the school years taught; OmfMotorik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfmusik"
+fields = { "label" = "Undervisning i musik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i musik' (2 variables): judged different meaning, high confidence; AmnMusik holds the school years taught; OmfMusik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfnaturkunsk"
+fields = { "label" = "Undervisning i naturkunskap (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i naturkunskap' (2 variables): judged different meaning, high confidence; AmnNaturkunsk holds the school years taught; OmfNaturkunsk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfnaturo"
+fields = { "label" = "Undervisning i natur och miljö (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i natur och miljö' (2 variables): judged different meaning, high confidence; Amnnaturo holds the school years taught; Omfnaturo the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfno"
+fields = { "label" = "Undervisning i naturorienterande ämnen (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i naturorienterande ämnen' (2 variables): judged different meaning, high confidence; AmnNO holds the school years taught; OmfNO the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfovrigtsprak"
+fields = { "label" = "Undervisning i moderna språk, övriga (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i moderna språk, övriga' (2 variables): judged different meaning, high confidence; AmnOvrigtSprak holds the school years taught; OmfOvrigtSprak the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfpsykolodi"
+fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i psykologi' (3 variables): judged different meaning, high confidence; AmnPsykologi holds the school years taught; OmfPsykolodi (a misspelling, to 2014) and OmfPsykologi are the same share-of-tjänst column renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:omfpsykologi"
+fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i psykologi' (3 variables): judged different meaning, high confidence; AmnPsykologi holds the school years taught; OmfPsykolodi (a misspelling, to 2014) and OmfPsykologi are the same share-of-tjänst column renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:omfreligion"
+fields = { "label" = "Undervisning i religion (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i religion' (2 variables): judged different meaning, high confidence; AmnReligion holds the school years taught; OmfReligion the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfrorelsedrama"
+fields = { "label" = "Undervisning i rörelse och drama (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i rörelse och drama' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a U (personer med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfrorelsedramau"
+fields = { "label" = "Undervisning i rörelse och drama (andel, personer med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i rörelse och drama' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a U (personer med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsamhall"
+fields = { "label" = "Undervisning i samhällskunskap (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i samhällskunskap' (2 variables): judged different meaning, high confidence; AmnSamhall holds the school years taught; OmfSamhall the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsamiska"
+fields = { "label" = "Undervisning i samiska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i samiska' (2 variables): judged different meaning, high confidence; AmnSamiska holds the school years taught; OmfSamiska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfslojd"
+fields = { "label" = "Undervisning i slöjd (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i slöjd' (2 variables): judged different meaning, high confidence; AmnSlojd holds the school years taught; OmfSlojd the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfso"
+fields = { "label" = "Undervisning i samhällsorienterande ämnen (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i samhällsorienterande ämnen' (2 variables): judged different meaning, high confidence; AmnSO holds the school years taught; OmfSO the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfspanska"
+fields = { "label" = "Undervisning i spanska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i spanska' (2 variables): judged different meaning, high confidence; AmnSpanska holds the school years taught; OmfSpanska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsprakochk"
+fields = { "label" = "Undervisning i språk och kommunikation (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i språk och kommunikation' (2 variables): judged different meaning, high confidence; Amnsprakochk holds the school years taught; Omfsprakochk the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsva"
+fields = { "label" = "Undervisning i svenska som andraspråk (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska som andraspråk' (2 variables): judged different meaning, high confidence; AmnSVA holds the school years taught; OmfSVA the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsvenska"
+fields = { "label" = "Undervisning i svenska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsvhsk"
+fields = { "label" = "Undervisning i svenska (andel, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfsvhsku"
+fields = { "label" = "Undervisning i svenska (andel, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i svenska' (6 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an SVHsk (hörselskadade) and an SVHskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfteckensprak"
+fields = { "label" = "Undervisning i teckenspråk (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfteckensprakh"
+fields = { "label" = "Undervisning i teckenspråk (andel, hörande)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfteckensprakhsk"
+fields = { "label" = "Undervisning i teckenspråk (andel, hörselskadade)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfteckensprakhsku"
+fields = { "label" = "Undervisning i teckenspråk (andel, hörselskadade med utvecklingsstörning)" }
+evidence = "#2102 same-label cluster 'Undervisning i teckenspråk' (8 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general, an H (hörande), a Hsk (hörselskadade) and a HskU (hörselskadade med utvecklingsstörning) variant (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfteknik"
+fields = { "label" = "Undervisning i teknik (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i teknik' (2 variables): judged different meaning, high confidence; AmnTeknik holds the school years taught; OmfTeknik the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omftyska"
+fields = { "label" = "Undervisning i tyska (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i tyska' (2 variables): judged different meaning, high confidence; AmnTyska holds the school years taught; OmfTyska the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfvardagsaktiviteter"
+fields = { "label" = "Undervisning i vardagsaktiviteter (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i vardagsaktiviteter' (2 variables): judged different meaning, high confidence; AmnVardagsaktiviteter holds the school years taught; OmfVardagsaktiviteter the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfverklighetsuppfattning"
+fields = { "label" = "Undervisning i verklighetsuppfattning (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i verklighetsuppfattning' (2 variables): judged different meaning, high confidence; AmnVerklighetsuppfattning holds the school years taught; OmfVerklighetsuppfattning the share of the tjänst (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfvissa"
+fields = { "label" = "Undervisning i vissa ämnen (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i vissa ämnen' (3 variables): judged different meaning, high confidence; AmnVissa holds school years, OmfVissa the share of the tjänst, Vissaamn1 the subject chosen within Vissa ämnen (value set)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfyrkes"
+fields = { "label" = "Undervisning i yrkesämne (andel av tjänsteomfattning)" }
+evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a gymnasiesärskolan variant (description of OmfYrkesgsar)."
+
+[[statement]]
+kind = "set"
+subject = "var:omfyrkesgsar"
+fields = { "label" = "Undervisning i yrkesämne (andel av tjänsteomfattning, gymnasiesärskolan)" }
+evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): judged different meaning, high confidence; School years vs share of tjänst, each in a general and a gymnasiesärskolan variant (description of OmfYrkesgsar)."
+
+[[statement]]
+kind = "set"
+subject = "var:pedagogisk-hogskoleexamen-lararutbildning-prbehkod"
+fields = { "label" = "Pedagogisk högskoleexamen - lärarutbildning (primär tjänst)" }
+evidence = "#2102 same-label cluster 'Pedagogisk högskoleexamen - lärarutbildning' (3 variables): judged different meaning, medium confidence; Beh (to 1995) and BehKod (from 1995) are the same variable renamed; PrBehKod runs concurrently in personregistret (Pr read as primär tjänst)."
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr-anordnare"
+fields = { "label" = "Person-/organisationsnummer (anordnare)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): judged different meaning, medium confidence; PeOrgNr_Anord is a concurrent column for the anordnare (column name)."
+
+[[statement]]
+kind = "set"
+subject = "var:prnivakod"
+fields = { "label" = "Tjänstgöringsnivå (primär tjänst)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsnivå' (4 variables): judged different meaning, medium confidence; Stad1, NivaKod1 and NivaKod are successive codings of the same variable over time; PrNivaKod is the personregistret version (Pr read as primär tjänst)."
+
+[[statement]]
+kind = "set"
+subject = "var:prutbanord"
+fields = { "label" = "Typ av utbildningsanordnare (komvux, primär tjänst)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Descriptions: SFITyp is the provider type in SFI, UtbAnord the type in Komvux; PrUtbAnord has the Komvux list in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:sfityp"
+fields = { "label" = "Typ av utbildningsanordnare (SFI)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Descriptions: SFITyp is the provider type in SFI, UtbAnord the type in Komvux; PrUtbAnord has the Komvux list in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:skolform-prskolform"
+fields = { "label" = "Skolform, personregistrets variant" }
+evidence = "#2102 same-label cluster 'Skolform' (3 variables): judged different meaning, medium confidence; Sform (to 1994, codes 0-4) differs from SkolForm (from 1995, codes 11+); SkolForm and PrSkolForm run concurrently, the latter only in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:skolform-sform"
+fields = { "label" = "Skolform, äldre kodning (till 1995)" }
+evidence = "#2102 same-label cluster 'Skolform' (3 variables): judged different meaning, medium confidence; Sform (to 1994, codes 0-4) differs from SkolForm (from 1995, codes 11+); SkolForm and PrSkolForm run concurrently, the latter only in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:studieveckor-ht"
+fields = { "label" = "Studieveckor (hösttermin)" }
+evidence = "#2102 same-label cluster 'Studieveckor' (2 variables): judged different meaning, medium confidence; StvrHt is for the autumn term (Ht) and StvrLa for the school year (La), concurrent in 1997-1998."
+
+[[statement]]
+kind = "set"
+subject = "var:studieveckor-la"
+fields = { "label" = "Studieveckor (läsår)" }
+evidence = "#2102 same-label cluster 'Studieveckor' (2 variables): judged different meaning, medium confidence; StvrHt is for the autumn term (Ht) and StvrLa for the school year (La), concurrent in 1997-1998."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 versions of the same classification, concurrent from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 versions of the same classification, concurrent from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 versions of the same classification, concurrent from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 versions of the same classification, concurrent from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim1"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (första tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim2"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (andra tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim3"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (tredje tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim4"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (fjärde tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim5"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (femte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim6"
+fields = { "label" = "Tjänstgöring på tillfälliga timmar (sjätte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-hosttermin"
+fields = { "label" = "Tjänstledig (hösttermin)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim2"
+fields = { "label" = "Tjänstledig (timmar, andra tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim3"
+fields = { "label" = "Tjänstledig (timmar, tredje tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim4"
+fields = { "label" = "Tjänstledig (timmar, fjärde tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim5"
+fields = { "label" = "Tjänstledig (timmar, femte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim6"
+fields = { "label" = "Tjänstledig (timmar, sjätte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjltim"
+fields = { "label" = "Tjänstledig (timmar, första tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "label" = "Typ av anställning, personregistrets variant" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): judged different meaning, medium confidence; Anst (to 1995) and AnstSlag (from 1995) have the same coding over adjacent periods apart from an unknown code, so one variable; PrAnstSlag is a concurrent column with the same coding in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad1"
+fields = { "label" = "Typ av hemspråksundervisning (rad 1)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad2"
+fields = { "label" = "Typ av hemspråksundervisning (rad 2)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad3"
+fields = { "label" = "Typ av hemspråksundervisning (rad 3)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad4"
+fields = { "label" = "Typ av hemspråksundervisning (rad 4)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad5"
+fields = { "label" = "Typ av hemspråksundervisning (rad 5)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad6"
+fields = { "label" = "Typ av hemspråksundervisning (rad 6)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad7"
+fields = { "label" = "Typ av hemspråksundervisning (rad 7)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hemspraksundervisning-hemrad8"
+fields = { "label" = "Typ av hemspråksundervisning (rad 8)" }
+evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variables): judged different meaning, medium confidence; Hemrad1-8 are eight concurrent numbered columns with the same code list; the numbered suffix is the only difference."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal"
+fields = { "label" = "Undervisning i modersmål (språk)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim2"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, andra tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim3"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, tredje tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim4"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, fjärde tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim5"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, femte tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim6"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, sjätte tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim7"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, sjunde tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-modersmal-hemtim8"
+fields = { "label" = "Undervisning i modersmål (hemspråkstimmar, åttonde tjänsten)" }
+evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn2"
+fields = { "label" = "Undervisning i övriga bilaga 4-ämnen (ämne 2)" }
+evidence = "#2102 same-label cluster 'Undervisning i övriga bilaga 4-ämnen' (5 variables): judged different meaning, high confidence; School years vs share of tjänst, plus the subject itself in three numbered columns Bilaga4amn1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn3"
+fields = { "label" = "Undervisning i övriga bilaga 4-ämnen (ämne 3)" }
+evidence = "#2102 same-label cluster 'Undervisning i övriga bilaga 4-ämnen' (5 variables): judged different meaning, high confidence; School years vs share of tjänst, plus the subject itself in three numbered columns Bilaga4amn1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "label" = "Typ av utbildningsanordnare (komvux)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Descriptions: SFITyp is the provider type in SFI, UtbAnord the type in Komvux; PrUtbAnord has the Komvux list in personregistret."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetstyp"
+fields = { "label" = "Verksamhetstyp, tjänsteregistret" }
+evidence = "#2102 same-label cluster 'Verksamhetstyp' (2 variables): judged different meaning, medium confidence; Different tables (tjänsteregistret and personregistret), the Pr prefix, and slightly different value lists."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetstyp-prverksamhetstyp"
+fields = { "label" = "Verksamhetstyp, personregistret" }
+evidence = "#2102 same-label cluster 'Verksamhetstyp' (2 variables): judged different meaning, medium confidence; Different tables (tjänsteregistret and personregistret), the Pr prefix, and slightly different value lists."
+
+[[statement]]
+kind = "set"
+subject = "var:vissaamn"
+fields = { "label" = "Undervisning i vissa ämnen (vilket ämne)" }
+evidence = "#2102 same-label cluster 'Undervisning i vissa ämnen' (3 variables): judged different meaning, high confidence; AmnVissa holds school years, OmfVissa the share of the tjänst, Vissaamn1 the subject chosen within Vissa ämnen (value set)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesamne-huvudyrkesgsaramn2"
+fields = { "label" = "Yrkesämne, gymnasiesärskola, nr 2" }
+evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged different meaning, medium confidence; HuvudYrkesAmn (2013-14) has an older category set; HuvudYrkesgsarAmn1-3 are three concurrent columns with the gymnasiesärskola programme categories from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesamne-huvudyrkesgsaramn3"
+fields = { "label" = "Yrkesämne, gymnasiesärskola, nr 3" }
+evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged different meaning, medium confidence; HuvudYrkesAmn (2013-14) has an older category set; HuvudYrkesgsarAmn1-3 are three concurrent columns with the gymnasiesärskola programme categories from 2014."

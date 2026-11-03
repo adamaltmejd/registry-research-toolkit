@@ -646,3 +646,57 @@ kind = "set"
 subject = "set:syfte-for-skyddat-omrade"
 fields = { "label" = "Syfte för skyddat område" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-databas"
+fields = { "label" = "Registeransvarig (ansvarig databas)" }
+evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; ANSVARIG_DATABAS (responsible database) vs REGISTRERANDE_MYNDIGHET (registering authority), overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-skotsel"
+fields = { "label" = "Förvaltare (ansvarig för skötsel)" }
+evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; ANSVARIG_SKOTSEL (responsible for management) and FORVALTARE__NAMN (manager name) are separate columns that coexist in 2020-2021."
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields = { "label" = "Förvaltare (namn)" }
+evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; ANSVARIG_SKOTSEL (responsible for management) and FORVALTARE__NAMN (manager name) are separate columns that coexist in 2020-2021."
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "label" = "Gällandedatum för skyddad natur (SCI)" }
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "label" = "Gällandedatum för skyddad natur (SPA)" }
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-myndighet"
+fields = { "label" = "Registeransvarig (registrerande myndighet)" }
+evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; ANSVARIG_DATABAS (responsible database) vs REGISTRERANDE_MYNDIGHET (registering authority), overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:sitecode-1"
+fields = { "label" = "SITECODE (nr 1)" }
+evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, medium confidence; SITECODE plus numbered variants SITECODE_1 and SITECODE_12."
+
+[[statement]]
+kind = "set"
+subject = "var:sitecode-12"
+fields = { "label" = "SITECODE (nr 12)" }
+evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, medium confidence; SITECODE plus numbered variants SITECODE_1 and SITECODE_12."
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-gallandedatum"
+fields = { "label" = "Gällandedatum för skyddad natur (ursprungligt)" }
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."

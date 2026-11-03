@@ -2648,3 +2648,27 @@ kind = "set"
 subject = "set:utlandsfastigheternas-varde"
 fields = { "label" = "Utlandsfastigheternas värde" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (hushåll)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALDZ is in the household table and BALD in the individual table; the unit differs."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "label" = "Ålder 31/12 (individ)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALDZ is in the household table and BALD in the individual table; the unit differs."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (hushåll)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, medium confidence; BKONZ is in the household table and BKON in the individual table, with different missing-value codes; the unit differs."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "label" = "Kön (individ)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, medium confidence; BKONZ is in the household table and BKON in the individual table, with different missing-value codes; the unit differs."

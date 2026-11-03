@@ -1090,3 +1090,99 @@ kind = "set"
 subject = "set:registreringstidpunkt"
 fields = { "label" = "Registreringstidpunkt" }
 evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-far"
+fields = { "label" = "Arbetsmarknadsstatus, far" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS_Far and BAS_Mor are the father's and the mother's labour-market status with the same coding."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-mor"
+fields = { "label" = "Arbetsmarknadsstatus, mor" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS_Far and BAS_Mor are the father's and the mother's labour-market status with the same coding."
+
+[[statement]]
+kind = "set"
+subject = "var:datumatgslut"
+fields = { "label" = "Slutdatum (åtgärdens slut)" }
+evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, medium confidence; DatumAtgSlut is the end of the åtgärd, DatumAvreg the date of avregistrering."
+
+[[statement]]
+kind = "set"
+subject = "var:datumavreg"
+fields = { "label" = "Slutdatum (avregistrering)" }
+evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, medium confidence; DatumAtgSlut is the end of the åtgärd, DatumAvreg the date of avregistrering."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-far"
+fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (faderns)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-mor"
+fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (moderns)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-far"
+fields = { "label" = "Europeisk socioekonomisk gruppering (biologisk far)" }
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Biological father (Far) vs biological mother (Mor)."
+
+[[statement]]
+kind = "set"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-mor"
+fields = { "label" = "Europeisk socioekonomisk gruppering (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Biological father (Far) vs biological mother (Mor)."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-far"
+fields = { "label" = "Sektorkod (faderns)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-mor"
+fields = { "label" = "Sektorkod (moderns)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-far"
+fields = { "label" = "Sysselsättningsstatus, november (faderns)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-mor"
+fields = { "label" = "Sysselsättningsstatus, november (moderns)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:utbild-byte"
+fields = { "label" = "Gymnasieutbildning (bytt program)" }
+evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, medium confidence; Utbild_Byte flags a change of program (description); Utbild_Sen holds the program code (Sen taken as senaste)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbild-sen"
+fields = { "label" = "Gymnasieutbildning (senaste program)" }
+evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, medium confidence; Utbild_Byte flags a change of program (description); Utbild_Sen holds the program code (Sen taken as senaste)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg-far"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (faderns)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg-mor"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (moderns)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."

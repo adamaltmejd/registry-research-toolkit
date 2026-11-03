@@ -5718,3 +5718,795 @@ kind = "set"
 subject = "set:vinst-vid-avyttring-av-anlaggningstillgangar"
 fields = { "label" = "Vinst vid avyttring av anläggningstillgångar" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "label" = "Antal anställda (företag)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; Same item at three levels given by the tables and prefixes: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-lgr6102"
+fields = { "label" = "Antal anställda (lokal)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; Same item at three levels given by the tables and prefixes: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-vgr6102"
+fields = { "label" = "Antal anställda (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (3 variables): judged different meaning, high confidence; Same item at three levels given by the tables and prefixes: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta"
+fields = { "label" = "Antal sysselsatta (företag)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-lgr6103"
+fields = { "label" = "Antal sysselsatta (lokal)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-vgr6103"
+fields = { "label" = "Antal sysselsatta (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten"
+fields = { "label" = "Bidrag för verksamheten, företagsenhet" }
+evidence = "#2102 same-label cluster 'Bidrag för verksamheten' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-lgr0445"
+fields = { "label" = "Bidrag för verksamheten, lokal" }
+evidence = "#2102 same-label cluster 'Bidrag för verksamheten' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-vgr0445"
+fields = { "label" = "Bidrag för verksamheten, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Bidrag för verksamheten' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinv-ny-ombygg-byggnader-mark"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företag, verksamhetsenhet, lokal); within a level the 2003-2007 code (121) and the 2007-2024 code (141) are the same item renumbered."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-lga142"
+fields = { "label" = "Bruttoinvesteringar av köpta byggnader, markanläggningar och mark (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar av köpta byggnader, markanläggningar och mark' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-och-vga122"
+fields = { "label" = "Bruttoinvesteringar av köpta byggnader och markanläggningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar av köpta byggnader och markanläggningar' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vga) and företag (fga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-vga142"
+fields = { "label" = "Bruttoinvesteringar av köpta byggnader, markanläggningar och mark (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar av köpta byggnader, markanläggningar och mark' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader"
+fields = { "label" = "Bruttoinvesteringar bostäder (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar bostäder' (2 variables): judged different meaning, high confidence; Same item at two levels: företag (fga) and verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader-vga1211"
+fields = { "label" = "Bruttoinvesteringar bostäder (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar bostäder' (2 variables): judged different meaning, high confidence; Same item at two levels: företag (fga) and verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader"
+fields = { "label" = "Bruttoinvesteringar byggnader (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader' (2 variables): judged different meaning, high confidence; Same item at two levels: företag (fga) and kommun (kga, investeringar per kommun)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-kga12"
+fields = { "label" = "Bruttoinvesteringar byggnader (kommun)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader' (2 variables): judged different meaning, high confidence; Same item at two levels: företag (fga) and kommun (kga, investeringar per kommun)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-mark"
+fields = { "label" = "Bruttoinvesteringar byggnader, markanläggningar och mark (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-kga14"
+fields = { "label" = "Bruttoinvesteringar byggnader, markanläggningar och mark (kommun)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-lga14"
+fields = { "label" = "Bruttoinvesteringar byggnader, markanläggningar och mark (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-vga14"
+fields = { "label" = "Bruttoinvesteringar byggnader, markanläggningar och mark (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg"
+fields = { "label" = "Bruttoinvesteringar fartyg, företagsenhet" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar fartyg' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-lga1102"
+fields = { "label" = "Bruttoinvesteringar fartyg, lokal" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar fartyg' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-vga1102"
+fields = { "label" = "Bruttoinvesteringar fartyg, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar fartyg' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: företagsenhet (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan"
+fields = { "label" = "Bruttoinvesteringar, flygplan (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar, flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-lga1101"
+fields = { "label" = "Bruttoinvesteringar, flygplan (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar, flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-vga1101"
+fields = { "label" = "Bruttoinvesteringar, flygplan (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar, flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader"
+fields = { "label" = "Bruttoinvesteringar av köpta byggnader och markanläggningar (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar av köpta byggnader och markanläggningar' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vga) and företag (fga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader-mark"
+fields = { "label" = "Bruttoinvesteringar av köpta byggnader, markanläggningar och mark (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar av köpta byggnader, markanläggningar och mark' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark"
+fields = { "label" = "Bruttoinvesteringar mark (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-kga13"
+fields = { "label" = "Bruttoinvesteringar mark (kommun)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-vga13"
+fields = { "label" = "Bruttoinvesteringar mark (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-inventarier"
+fields = { "label" = "Bruttoinvesteringar maskiner och inventarier (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-kga11"
+fields = { "label" = "Bruttoinvesteringar maskiner och inventarier (kommun)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-lga11"
+fields = { "label" = "Bruttoinvesteringar maskiner och inventarier (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-vga11"
+fields = { "label" = "Bruttoinvesteringar maskiner och inventarier (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-fga141"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företag, verksamhetsenhet, lokal); within a level the 2003-2007 code (121) and the 2007-2024 code (141) are the same item renumbered."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga141"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företag, verksamhetsenhet, lokal); within a level the 2003-2007 code (121) and the 2007-2024 code (141) are the same item renumbered."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga1411"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga121"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företag, verksamhetsenhet, lokal); within a level the 2003-2007 code (121) and the 2007-2024 code (141) are the same item renumbered."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga141"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företag, verksamhetsenhet, lokal); within a level the 2003-2007 code (121) and the 2007-2024 code (141) are the same item renumbered."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga1411"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon"
+fields = { "label" = "Bruttoinvesteringar rälsfordon (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-lga1103"
+fields = { "label" = "Bruttoinvesteringar rälsfordon (lokal)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-vga1103"
+fields = { "label" = "Bruttoinvesteringar rälsfordon (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:fga1411"
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder (företag)" }
+evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vga), företag (fga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-avyttring-anlaggningstillgangar"
+fields = { "label" = "Förlust vid avyttring av anläggningstillgångar, ej finansiella (företag)" }
+evidence = "#2102 same-label cluster 'Förlust vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-kgr556"
+fields = { "label" = "Förlust vid avyttring av anläggningstillgångar, ej finansiella (kommun)" }
+evidence = "#2102 same-label cluster 'Förlust vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-vgr556"
+fields = { "label" = "Förlust vid avyttring av anläggningstillgångar, ej finansiella (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Förlust vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-annan"
+fields = { "label" = "Intäkter från färdiga varor som levererats från annan verksamhet inom företaget (lokal)" }
+evidence = "#2102 same-label cluster 'Intäkter från färdiga varor som levererats från annan verksamhet inom företaget' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-som-levererats-fran-vgr1023"
+fields = { "label" = "Intäkter från färdiga varor som levererats från annan verksamhet inom företaget (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Intäkter från färdiga varor som levererats från annan verksamhet inom företaget' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-lgr432"
+fields = { "label" = "Intäkter från kommissionärsverksamhet (lokal)" }
+evidence = "#2102 same-label cluster 'Intäkter från kommissionärsverksamhet' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-vgr432"
+fields = { "label" = "Intäkter från kommissionärsverksamhet (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Intäkter från kommissionärsverksamhet' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-lgr431"
+fields = { "label" = "Intäkter från koncernintern hjälpverksamhet, holdingbolag (lokal)" }
+evidence = "#2102 same-label cluster 'Intäkter från koncernintern hjälpverksamhet, holdingbolag' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-vgr431"
+fields = { "label" = "Intäkter från koncernintern hjälpverksamhet, holdingbolag (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Intäkter från koncernintern hjälpverksamhet, holdingbolag' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision"
+fields = { "label" = "Intäkter från provision (lokal)" }
+evidence = "#2102 same-label cluster 'Intäkter från provision' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision-vgr425"
+fields = { "label" = "Intäkter från provision (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Intäkter från provision' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-hjalpverksamhet-holdingbolag"
+fields = { "label" = "Intäkter från koncernintern hjälpverksamhet, holdingbolag (företag)" }
+evidence = "#2102 same-label cluster 'Intäkter från koncernintern hjälpverksamhet, holdingbolag' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-kommissionarsverksamhet"
+fields = { "label" = "Intäkter från kommissionärsverksamhet (företag)" }
+evidence = "#2102 same-label cluster 'Intäkter från kommissionärsverksamhet' (3 variables): judged different meaning, high confidence; Same item at three levels: verksamhetsenhet (vgr), företag (fgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-egenproducerade-varor-vgr0872"
+fields = { "label" = "Interna köp av egenproducerade varor (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Interna köp av egenproducerade varor' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-handelsvaror-vgr0873"
+fields = { "label" = "Interna köp av handelsvaror (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Interna köp av handelsvaror' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror"
+fields = { "label" = "Interna köp av råvaror, lokal" }
+evidence = "#2102 same-label cluster 'Interna köp av råvaror' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels with overlapping periods: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror-vgr0871"
+fields = { "label" = "Interna köp av råvaror, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Interna köp av råvaror' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels with overlapping periods: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster"
+fields = { "label" = "Interna köp av tjänster, lokal" }
+evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): judged different meaning, medium confidence; vgrk0873 (to 2013) and vgr0874 (from 2013) are one verksamhetsenhet variable renamed over adjacent periods; lgr0874 is the lokal level."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgr0874"
+fields = { "label" = "Interna köp av tjänster, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): judged different meaning, medium confidence; vgrk0873 (to 2013) and vgr0874 (from 2013) are one verksamhetsenhet variable renamed over adjacent periods; lgr0874 is the lokal level."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgrk0873"
+fields = { "label" = "Interna köp av tjänster, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): judged different meaning, medium confidence; vgrk0873 (to 2013) and vgr0874 (from 2013) are one verksamhetsenhet variable renamed over adjacent periods; lgr0874 is the lokal level."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-egenproducerade-varor"
+fields = { "label" = "Interna köp av egenproducerade varor (lokal)" }
+evidence = "#2102 same-label cluster 'Interna köp av egenproducerade varor' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-handelsvaror"
+fields = { "label" = "Interna köp av handelsvaror (lokal)" }
+evidence = "#2102 same-label cluster 'Interna köp av handelsvaror' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-egenproducerade-fardiga-varor-vgr0472"
+fields = { "label" = "Internleveranser av egenproducerade färdiga varor (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Internleveranser av egenproducerade färdiga varor' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-handelsvaror-och-tjanster-vgr0473"
+fields = { "label" = "Internleveranser av handelsvaror och tjänster, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Internleveranser av handelsvaror och tjänster' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels in different tables: verksamhetsenhet (vgr) and lokal (lgr), overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-ravaror-och-halvfabrikat-for-vgr0471"
+fields = { "label" = "Internleveranser av råvaror och halvfabrikat för vidareförädling (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Internleveranser av råvaror och halvfabrikat för vidareförädling' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-egenproducerade-varor"
+fields = { "label" = "Internleveranser av egenproducerade färdiga varor (lokal)" }
+evidence = "#2102 same-label cluster 'Internleveranser av egenproducerade färdiga varor' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-handelsvaror-tjanster"
+fields = { "label" = "Internleveranser av handelsvaror och tjänster, lokal" }
+evidence = "#2102 same-label cluster 'Internleveranser av handelsvaror och tjänster' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels in different tables: verksamhetsenhet (vgr) and lokal (lgr), overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-ravaror-halvfabrikat"
+fields = { "label" = "Internleveranser av råvaror och halvfabrikat för vidareförädling (lokal)" }
+evidence = "#2102 same-label cluster 'Internleveranser av råvaror och halvfabrikat för vidareförädling' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-justerat-for-vhar502-jmf"
+fields = { "label" = "Kostnader för handelsvaror (justerat för merchanting) (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Kostnader för handelsvaror (justerat för merchanting)' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vhar) and lokal (lhar)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-lgr502"
+fields = { "label" = "Kostnader för handelsvaror, lokal" }
+evidence = "#2102 same-label cluster 'Kostnader för handelsvaror' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: verksamhetsenhet (vgr), företagsenhet (fgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-vgr502"
+fields = { "label" = "Kostnader för handelsvaror, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Kostnader för handelsvaror' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: verksamhetsenhet (vgr), företagsenhet (fgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
+fields = { "label" = "Kostnader för övriga sociala avgifter (kommun)" }
+evidence = "#2102 same-label cluster 'Kostnader för övriga sociala avgifter' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-vgr520"
+fields = { "label" = "Kostnader för övriga sociala avgifter (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Kostnader för övriga sociala avgifter' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror"
+fields = { "label" = "Kostnader för råvaror (företag)" }
+evidence = "#2102 same-label cluster 'Kostnader för råvaror' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-lgr503"
+fields = { "label" = "Kostnader för råvaror (lokal)" }
+evidence = "#2102 same-label cluster 'Kostnader för råvaror' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-vgr503"
+fields = { "label" = "Kostnader för råvaror (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Kostnader för råvaror' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror"
+fields = { "label" = "Kostnader för handelsvaror, företagsenhet" }
+evidence = "#2102 same-label cluster 'Kostnader för handelsvaror' (3 variables): judged different meaning, medium confidence; Same item at three statistical unit levels, shown by the tables: verksamhetsenhet (vgr), företagsenhet (fgr) and lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror-merchanting"
+fields = { "label" = "Kostnader för handelsvaror (justerat för merchanting) (lokal)" }
+evidence = "#2102 same-label cluster 'Kostnader för handelsvaror (justerat för merchanting)' (2 variables): judged different meaning, high confidence; Same item at two levels: verksamhetsenhet (vhar) and lokal (lhar)."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-ovriga-sociala-avgifter"
+fields = { "label" = "Kostnader för övriga sociala avgifter (företag)" }
+evidence = "#2102 same-label cluster 'Kostnader för övriga sociala avgifter' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-kgr501"
+fields = { "label" = "Legoarbeten och underentreprenörer (kommun)" }
+evidence = "#2102 same-label cluster 'Legoarbeten och underentreprenörer' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-vgr501"
+fields = { "label" = "Legoarbeten och underentreprenörer (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Legoarbeten och underentreprenörer' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-underentreprenorer"
+fields = { "label" = "Legoarbeten och underentreprenörer (företag)" }
+evidence = "#2102 same-label cluster 'Legoarbeten och underentreprenörer' (3 variables): judged different meaning, high confidence; Same item at three levels: kommun (kgr), verksamhetsenhet (vgr), företag (fgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2"
+fields = { "label" = "Näringsgren (NgS_ej_aktuell, investeringar per kommun)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Six industry columns: the main Ng, the not-current Ng_ej_aktuell, the local-unit Nglve, a municipality-file NgS_ej_aktuell, and two SNI 2002 columns (administrative and statistical unit) per their pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-3"
+fields = { "label" = "Näringsgren (lokal)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Six industry columns: the main Ng, the not-current Ng_ej_aktuell, the local-unit Nglve, a municipality-file NgS_ej_aktuell, and two SNI 2002 columns (administrative and statistical unit) per their pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2002-administrativ-enhet"
+fields = { "label" = "Näringsgren (SNI 2002, administrativ enhet)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Six industry columns: the main Ng, the not-current Ng_ej_aktuell, the local-unit Nglve, a municipality-file NgS_ej_aktuell, and two SNI 2002 columns (administrative and statistical unit) per their pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2002-statistisk-enhet"
+fields = { "label" = "Näringsgren (SNI 2002, statistisk enhet)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Six industry columns: the main Ng, the not-current Ng_ej_aktuell, the local-unit Nglve, a municipality-file NgS_ej_aktuell, and two SNI 2002 columns (administrative and statistical unit) per their pids."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-statistiken"
+fields = { "label" = "Näringsgren för statistiken (ej aktuell)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken' (2 variables): judged different meaning, medium confidence; NgS is the current column; NgS_ej_aktuell (2006-2009) is a concurrent not-current version with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-mark"
+fields = { "label" = "Nettoinvesteringar byggnader, markanläggningar och mark, företagsenhet" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, medium confidence; Same item at four levels, shown by the tables: företagsenhet (fga), kommun (kga, investeringar per kommun), verksamhetsenhet (vga) and lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanl"
+fields = { "label" = "Nettoinvesteringar byggnader och markanläggningar (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader och markanläggningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-kga24"
+fields = { "label" = "Nettoinvesteringar byggnader, markanläggningar och mark, kommun" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, medium confidence; Same item at four levels, shown by the tables: företagsenhet (fga), kommun (kga, investeringar per kommun), verksamhetsenhet (vga) and lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-lga24"
+fields = { "label" = "Nettoinvesteringar byggnader, markanläggningar och mark, lokal" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, medium confidence; Same item at four levels, shown by the tables: företagsenhet (fga), kommun (kga, investeringar per kommun), verksamhetsenhet (vga) and lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-vga24"
+fields = { "label" = "Nettoinvesteringar byggnader, markanläggningar och mark, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader, markanläggningar och mark' (4 variables): judged different meaning, medium confidence; Same item at four levels, shown by the tables: företagsenhet (fga), kommun (kga, investeringar per kommun), verksamhetsenhet (vga) and lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-kga22"
+fields = { "label" = "Nettoinvesteringar byggnader och markanläggningar (kommun)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader och markanläggningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-vga22"
+fields = { "label" = "Nettoinvesteringar byggnader och markanläggningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar byggnader och markanläggningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg"
+fields = { "label" = "Nettoinvesteringar fartyg (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar fartyg' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-lga2102"
+fields = { "label" = "Nettoinvesteringar fartyg (lokal)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar fartyg' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-vga2102"
+fields = { "label" = "Nettoinvesteringar fartyg (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar fartyg' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan"
+fields = { "label" = "Nettoinvesteringar flygplan (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-lga2101"
+fields = { "label" = "Nettoinvesteringar flygplan (lokal)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-vga2101"
+fields = { "label" = "Nettoinvesteringar flygplan (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar flygplan' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark"
+fields = { "label" = "Nettoinvesteringar mark (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-kga23"
+fields = { "label" = "Nettoinvesteringar mark (kommun)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-vga23"
+fields = { "label" = "Nettoinvesteringar mark (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar mark' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), kommun (kga), verksamhetsenhet (vga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-inventarier"
+fields = { "label" = "Nettoinvesteringar, maskiner och inventarier (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar, maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-kga21"
+fields = { "label" = "Nettoinvesteringar, maskiner och inventarier (kommun)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar, maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-lga21"
+fields = { "label" = "Nettoinvesteringar, maskiner och inventarier (lokal)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar, maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-vga21"
+fields = { "label" = "Nettoinvesteringar, maskiner och inventarier (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar, maskiner och inventarier' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fga), kommun (kga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon"
+fields = { "label" = "Nettoinvesteringar rälsfordon (företag)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-lga2103"
+fields = { "label" = "Nettoinvesteringar rälsfordon (lokal)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-vga2103"
+fields = { "label" = "Nettoinvesteringar rälsfordon (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Nettoinvesteringar rälsfordon' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fga), verksamhetsenhet (vga), lokal (lga)."
+
+[[statement]]
+kind = "set"
+subject = "var:ng-ej-aktuell"
+fields = { "label" = "Näringsgren (ej aktuell)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Six industry columns: the main Ng, the not-current Ng_ej_aktuell, the local-unit Nglve, a municipality-file NgS_ej_aktuell, and two SNI 2002 columns (administrative and statistical unit) per their pids."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader"
+fields = { "label" = "Pensionskostnader (företag)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fgr), kommun (kgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-kgr524"
+fields = { "label" = "Pensionskostnader (kommun)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fgr), kommun (kgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-lgr524"
+fields = { "label" = "Pensionskostnader (lokal)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fgr), kommun (kgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-vgr524"
+fields = { "label" = "Pensionskostnader (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, high confidence; Same item at four levels: företag (fgr), kommun (kgr), lokal (lgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader"
+fields = { "label" = "Personalkostnader, lokal" }
+evidence = "#2102 same-label cluster 'Personalkostnader' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels with identical periods: lokal (lgr) and verksamhetsenhet (vgr), in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader-vgr0128"
+fields = { "label" = "Personalkostnader, verksamhetsenhet" }
+evidence = "#2102 same-label cluster 'Personalkostnader' (2 variables): judged different meaning, medium confidence; Same item at two statistical unit levels with identical periods: lokal (lgr) and verksamhetsenhet (vgr), in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar"
+fields = { "label" = "Rörelseresultat före avskrivningar (företag)" }
+evidence = "#2102 same-label cluster 'Rörelseresultat före avskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-lgr0130"
+fields = { "label" = "Rörelseresultat före avskrivningar (lokal)" }
+evidence = "#2102 same-label cluster 'Rörelseresultat före avskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-vgr0130"
+fields = { "label" = "Rörelseresultat före avskrivningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Rörelseresultat före avskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar"
+fields = { "label" = "Summa av- och nedskrivningar (företag)" }
+evidence = "#2102 same-label cluster 'Summa av- och nedskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-lgr558"
+fields = { "label" = "Summa av- och nedskrivningar (lokal)" }
+evidence = "#2102 same-label cluster 'Summa av- och nedskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-vgr558"
+fields = { "label" = "Summa av- och nedskrivningar (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Summa av- och nedskrivningar' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), verksamhetsenhet (vgr), lokal (lgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-avyttring-anlaggningstillgangar"
+fields = { "label" = "Vinst vid avyttring av anläggningstillgångar, ej finansiella (företag)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-kgr552"
+fields = { "label" = "Vinst vid avyttring av anläggningstillgångar, ej finansiella (kommun)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-vgr552"
+fields = { "label" = "Vinst vid avyttring av anläggningstillgångar, ej finansiella (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av anläggningstillgångar, ej finansiella' (3 variables): judged different meaning, high confidence; Same item at three levels: företag (fgr), kommun (kgr), verksamhetsenhet (vgr)."

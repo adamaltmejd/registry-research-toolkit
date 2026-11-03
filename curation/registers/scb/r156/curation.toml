@@ -1324,3 +1324,303 @@ kind = "set"
 subject = "set:lopande-miljoskyddskostnader"
 fields = { "label" = "Löpande miljöskyddskostnader" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv101-28427"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 1)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv102"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 2)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv103"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 3)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv104"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 4)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv105"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 5)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv106"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 6)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv107"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 7)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv108"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 8)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv109"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 9)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv110"
+fields = { "label" = "Beskrivning av större miljöskyddsinvestering (investering 10)" }
+evidence = "#2102 same-label cluster 'Beskrivning av större miljöskyddsinvestering' (10 variables): judged different meaning, high confidence; BeskrivInv101-BeskrivInv110 are description columns for numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-gatuadress"
+fields = { "label" = "Företagets adress (gatunummer)" }
+evidence = "#2102 same-label cluster 'Företagets adress' (3 variables): judged different meaning, medium confidence; Adress (2006-2016) is the full street part; Gata and GatuNr (2016-2019) are concurrent split columns (street name and street number)."
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "label" = "Företagets adress (gatunamn)" }
+evidence = "#2102 same-label cluster 'Företagets adress' (3 variables): judged different meaning, medium confidence; Adress (2006-2016) is the full street part; Gata and GatuNr (2016-2019) are concurrent split columns (street name and street number)."
+
+[[statement]]
+kind = "set"
+subject = "var:husbeskr"
+fields = { "label" = "Hushållsinvestering (beskrivning)" }
+evidence = "#2102 same-label cluster 'Hushållsinvestering' (5 variables): judged different meaning, medium confidence; Distinct columns: description (HusBeskr), amount (Hus113B), energy saving (Hus113E), heat recovery (Hus113V), total check (Hus113B_Kontroll)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-energibesparing"
+fields = { "label" = "Hushållsinvestering (energibesparing)" }
+evidence = "#2102 same-label cluster 'Hushållsinvestering' (5 variables): judged different meaning, medium confidence; Distinct columns: description (HusBeskr), amount (Hus113B), energy saving (Hus113E), heat recovery (Hus113V), total check (Hus113B_Kontroll)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-totalt"
+fields = { "label" = "Hushållsinvestering (totalt)" }
+evidence = "#2102 same-label cluster 'Hushållsinvestering' (5 variables): judged different meaning, medium confidence; Distinct columns: description (HusBeskr), amount (Hus113B), energy saving (Hus113E), heat recovery (Hus113V), total check (Hus113B_Kontroll)."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-varmeatervinning"
+fields = { "label" = "Hushållsinvestering (värmeåtervinning)" }
+evidence = "#2102 same-label cluster 'Hushållsinvestering' (5 variables): judged different meaning, medium confidence; Distinct columns: description (HusBeskr), amount (Hus113B), energy saving (Hus113E), heat recovery (Hus113V), total check (Hus113B_Kontroll)."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp101"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 1" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp102"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 2" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp103"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 3" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp104"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 4" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp105"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 5" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp106"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 6" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp107"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 7" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp108"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 8" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp109"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 9" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp110"
+fields = { "label" = "Miljöskyddsinvestering (allt), belopp, investering 10" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp"
+fields = { "label" = "Miljöskyddsinvestering (allt), investeringstyp" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp101-6253"
+fields = { "label" = "Investeringstyp (investering 1)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp102"
+fields = { "label" = "Investeringstyp (investering 2)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp103"
+fields = { "label" = "Investeringstyp (investering 3)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp104"
+fields = { "label" = "Investeringstyp (investering 4)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp105"
+fields = { "label" = "Investeringstyp (investering 5)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp106"
+fields = { "label" = "Investeringstyp (investering 6)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp107"
+fields = { "label" = "Investeringstyp (investering 7)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp108"
+fields = { "label" = "Investeringstyp (investering 8)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp109"
+fields = { "label" = "Investeringstyp (investering 9)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp110"
+fields = { "label" = "Investeringstyp (investering 10)" }
+evidence = "#2102 same-label cluster 'Investeringstyp' (10 variables): judged different meaning, high confidence; InvTyp101-InvTyp110 are the type of numbered investments 1-10."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra"
+fields = { "label" = "Miljöskyddsinvestering (allt), miljöområde 1" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra102"
+fields = { "label" = "Miljöområde för investering 2" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra103"
+fields = { "label" = "Miljöområde för investering 3" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra104"
+fields = { "label" = "Miljöområde för investering 4" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra105"
+fields = { "label" = "Miljöområde för investering 5" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra106"
+fields = { "label" = "Miljöområde för investering 6" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra107"
+fields = { "label" = "Miljöområde för investering 7" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra108"
+fields = { "label" = "Miljöområde för investering 8" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra109"
+fields = { "label" = "Miljöområde för investering 9" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra110"
+fields = { "label" = "Miljöområde för investering 10" }
+evidence = "#2102 same-label cluster 'Miljöområde för investering 1' (10 variables): judged different meaning, high confidence; MiljoOmrA101-MiljoOmrA110 are the environmental area of numbered investments 1-10; the current label wrongly fixes the number at 1."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomrb"
+fields = { "label" = "Miljöskyddsinvestering (allt), miljöområde 2" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:radnr"
+fields = { "label" = "Miljöskyddsinvestering (allt), radnummer" }
+evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 columns (amount, type, two environmental areas, row number) and numbered amounts for investments 1-10 from 2011."
