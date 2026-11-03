@@ -852,6 +852,7 @@
           "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back.",
           "oneOf": [
             {
+              "description": "In steward mode, the steward's own providers too.",
               "properties": {
                 "kind": {
                   "enum": [
@@ -864,15 +865,6 @@
                     "$ref": "#/$defs/ShowProviderRef"
                   },
                   "type": "array"
-                },
-                "steward_providers": {
-                  "items": {
-                    "$ref": "#/$defs/ShowProviderRef"
-                  },
-                  "type": [
-                    "array",
-                    "null"
-                  ]
                 }
               },
               "required": [
@@ -896,19 +888,11 @@
                   "type": "string"
                 },
                 "registers": {
+                  "description": "In steward mode, the steward's own registers too.",
                   "items": {
                     "$ref": "#/$defs/ShowRegisterRef"
                   },
                   "type": "array"
-                },
-                "steward_registers": {
-                  "items": {
-                    "$ref": "#/$defs/ShowRegisterRef"
-                  },
-                  "type": [
-                    "array",
-                    "null"
-                  ]
                 }
               },
               "required": [
@@ -1196,6 +1180,10 @@
             "fqid": {
               "type": "string"
             },
+            "held": {
+              "description": "In steward mode, whether the steward holds any of its registers.",
+              "type": "boolean"
+            },
             "name": {
               "type": "string"
             }
@@ -1210,6 +1198,10 @@
           "properties": {
             "fqid": {
               "type": "string"
+            },
+            "held": {
+              "description": "In steward mode, whether the steward holds any of its tables.",
+              "type": "boolean"
             },
             "name": {
               "type": "string"
