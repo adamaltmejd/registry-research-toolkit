@@ -247,8 +247,10 @@ target/release/reg-build holdings --base "$evidence/catalog/reg_meta.db" --stewa
 staged file and renames it into place only on success; it refuses when either scratch
 file already exists. Its stderr ends with one summary line
 (`holdings: tables=… columns=… mapped=… unmatched=… storage_extras=…`); the release
-notes record that line, the steward pin and the comparison counts (8g). The report and
-log are private evidence: do not paste their contents anywhere public.
+notes record that line, the steward pin and the comparison counts (8g). The report's
+`steward` object (repo, commit, config and every input pin) is the build's input
+provenance; the published DB carries only the steward pin and one input-manifest digest.
+The report and log are private evidence: do not paste their contents anywhere public.
 
 #### 8e. Verify the pair
 
@@ -299,15 +301,16 @@ Until milestone F, compare against 0.64.0, the last release with a SWECOV asset.
 Download its `reg_meta_swecov.db.zst` to a separate directory (`$old`), verify its
 compressed SHA-256 against GitHub's asset digest and decompress it. The old census
 digest is `census_sha256` in the pinned old `scope.toml` (locate that input revision
-through `.local/release-0.64.0/ev/holdings-pins.txt`); the new path is the census key in
-the holdings DB's `meta.input_pins`, from `inputs.census` in `steward.toml` at the pin.
-Reports go to `.local/` or the evidence directory only; stdout carries aggregate counts.
+through `.local/release-0.64.0/ev/holdings-pins.txt`); the new digest is the census pin
+in `$evidence/holdings-report.json` (`steward.input_pins`, keyed by `inputs.census` in
+`steward.toml` at the pin). Reports go to `.local/` or the evidence directory only;
+stdout carries aggregate counts.
 
 ```sh
 uv run --no-project scripts/rebuild_compare.py holdings --old-db "$old/reg_meta_swecov.db" \
   --new-base "$evidence/catalog/reg_meta.db" --new-holdings "$evidence/catalog/reg_meta_swecov.db" \
   --out "$evidence/holdings-compare" --old-census-sha256 <census_sha256> \
-  --new-census-path <key of meta.input_pins> > "$evidence/holdings-compare.txt"
+  --new-census-sha256 <census pin from the holdings report> > "$evidence/holdings-compare.txt"
 ```
 
 The maintainer reads that summary for go/no-go; its counts go in the release notes.
@@ -319,11 +322,12 @@ The release must carry only what the catalog serves, never background data: stew
 repository notes, raw census or storage exports, inventory working files.
 `holdings_scope_check.py` fails when the holdings DB's schema differs from the schema
 the builder declares (every table, FTS shadow tables included, and every column must
-match, none extra or missing), when a meta key is not on the script's allowlist, when a
-text or blob value exceeds its size bound, or when a `text` body names a steward working
-file (`*.json`, `*.jsonl`, `*.toml`) or a census row (`census:row=`); the last needs a
-steward-repo fix and re-pin, not a script change. Run it against this release checkout
-and record its one-line result in the release notes:
+match, none extra or missing), when a meta key is not on the script's allowlist, when
+`occurrence_locator` has rows, when a text or blob value exceeds its size bound, or when
+a `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`) or a census
+row (`census:row=`); the last needs a steward-repo fix and re-pin, not a script change.
+Run it against this release checkout and record its one-line result in the release
+notes:
 
 ```sh
 uv run --no-project scripts/holdings_scope_check.py "$evidence/catalog/reg_meta_swecov.db" \

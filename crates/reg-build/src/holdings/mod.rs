@@ -174,6 +174,21 @@ fn write(
         Some((&pin.repo, &pin.commit)),
         Some(&context),
     )?;
+    // Input provenance is review evidence, not catalog content: it goes to the report.
+    if let Some(path) = report {
+        let mut doc: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?,
+        )
+        .map_err(|e| e.to_string())?;
+        doc["steward"] = serde_json::json!({
+            "repo": pin.repo,
+            "commit": pin.commit,
+            "config": pin.config,
+            "input_pins": config.pins,
+        });
+        let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
+        std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
+    }
     let semantic = open(scratch)?;
     let base_db = open(base)?;
     let semantic_generation = meta(&semantic, "generation_id")?;
@@ -182,7 +197,7 @@ fn write(
     drop(semantic);
     let semantic = Connection::open(scratch).map_err(|e| e.to_string())?;
     references::write(&semantic, &declarations)?;
-    verify::distinct(&semantic, &base_db)?;
+    verify::distinct(&semantic, &base_db, &declarations)?;
     let base_generation = meta(&base_db, "generation_id")?;
     let (base_sha, _) = crate::sha256_file(base)?;
     drop(semantic);
@@ -257,8 +272,8 @@ fn write(
         ("steward_config", pin.config.clone()),
         ("compiler_digest", compiler_digest()),
         (
-            "input_pins",
-            serde_json::to_string(&config.pins).map_err(|e| e.to_string())?,
+            "input_manifest_sha256",
+            input::manifest_digest(&config.pins),
         ),
         ("steward", config_json(&config.presentation.steward, true)?),
         ("scope", config_json(&config.scope, false)?),

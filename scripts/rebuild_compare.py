@@ -6,7 +6,7 @@
         --old-db OLD_DB --new-db NEW_DB --out DIR [--seed 0] [--n 20] [--provider P ...]
     uv run --no-project scripts/rebuild_compare.py holdings --old-db OLD_SWECOV.db \
         --new-base reg_meta.db --new-holdings reg_meta_swecov.db --out DIR \
-        --old-census-sha256 SHA256 --new-census-path INPUT_PINS_KEY
+        --old-census-sha256 SHA256 --new-census-sha256 SHA256
 
 Temporary (REBUILD.md, milestone A; deleted at F). `<old db>` is a released
 `reg_meta.db`, `<new db>` a `reg-build` catalog and `<report.json>` its build report.
@@ -18,6 +18,8 @@ mode writes private census/difference reports and prints aggregate counts only.
 Its required old census digest is census_sha256 in the pinned old scope.toml;
 use .local/release-0.64.0/ev/holdings-pins.txt to locate that input revision.
 The release pins file identifies the input manifest, not the raw census digest.
+The new census digest is the census pin in the holdings build report's
+`steward.input_pins`; the published holdings DB carries no per-file pins or locators.
 
 Registers are matched by pid: a new register's public name comes from its id ledger,
 which took it from the old slug. A register whose old catalog has only the implicit table and whose new
@@ -1874,10 +1876,9 @@ def holdings_union(spans):
     return merged
 
 
-def holdings_side(disposition, locator, **fields):
+def holdings_side(disposition, **fields):
     return {
         "disposition": disposition,
-        "locator": locator,
         "mappings": [],
         "keys": [],
         "key_mappings": [],
@@ -1896,7 +1897,7 @@ def old_holdings(db):
     for tid, name, scope, locator in db.execute(
         "SELECT table_id, physical_id, scope, source_ref FROM holding_table"
     ):
-        tables[tid] = {"name": name, **holdings_side(scopes[scope], locator)}
+        tables[tid] = {"name": name, **holdings_side(scopes[scope], locator=locator)}
     periods = defaultdict(list)
     for tid, lo, hi in db.execute("SELECT table_id, lo, hi FROM holding_period"):
         periods[tid].append(holdings_span(lo, hi))
@@ -1908,7 +1909,9 @@ def old_holdings(db):
         "SELECT column_id, table_id, name, unmapped_reason FROM holding_column"
     ):
         table = tables[tid]
-        side = holdings_side(table["disposition"], table["locator"], reason=reason)
+        side = holdings_side(
+            table["disposition"], locator=table["locator"], reason=reason
+        )
         side["state"] = "old withheld" if reason else "unmapped"
         columns[table["name"], name] = ids[cid] = side
     target = (
@@ -1953,23 +1956,22 @@ def old_holdings(db):
 
 def new_holdings(db):
     tables, columns, ids = {}, {}, {}
-    for tid, name, disposition, locator in db.execute(
-        "SELECT id, physical_name, disposition, locator FROM holding_table"
+    for tid, name, disposition in db.execute(
+        "SELECT id, physical_name, disposition FROM holding_table"
     ):
         tables[tid] = {
             "name": name,
             "routes": [],
-            **holdings_side(disposition, locator),
+            **holdings_side(disposition),
         }
     for tid, pid in db.execute("SELECT holding_id, table_pid FROM holding_route"):
         tables[tid]["routes"].append(pid)
-    for cid, tid, name, disposition, reason, follow_up, locator in db.execute(
-        "SELECT id, holding_id, name, disposition, reason, follow_up, locator FROM holding_column"
+    for cid, tid, name, disposition, reason, follow_up in db.execute(
+        "SELECT id, holding_id, name, disposition, reason, follow_up FROM holding_column"
     ):
         table = tables[tid]
         side = holdings_side(
             table["disposition"],
-            locator,
             state=disposition,
             reason=reason,
             follow_up=follow_up,
@@ -1977,8 +1979,8 @@ def new_holdings(db):
             column_disposition=disposition,
         )
         columns[table["name"], name] = ids[cid] = side
-    for cid, pid, logical, lo, hi, role, carried, locator in db.execute(
-        "SELECT column_id, variable_pid, table_pid, start, end, role, carried, locator FROM holding_mapping"
+    for cid, pid, logical, lo, hi, role, carried in db.execute(
+        "SELECT column_id, variable_pid, table_pid, start, end, role, carried FROM holding_mapping"
     ):
         side = ids[cid]
         if role == "row_key" or carried:
@@ -1986,13 +1988,11 @@ def new_holdings(db):
             side["key_mappings"].append((pid, logical, lo, hi))
         else:
             side["mappings"].append((pid, logical, lo, hi))
-        side.setdefault("mapping_locators", []).append(locator)
     table_notices = defaultdict(list)
     for (
         tid,
         cid,
         code,
-        locator,
         message,
         lo,
         hi,
@@ -2000,12 +2000,11 @@ def new_holdings(db):
         documented,
         admitted,
     ) in db.execute(
-        "SELECT holding_id, column_id, code, locator, message, start, end, requested, documented, admitted FROM holding_notice ORDER BY id"
+        "SELECT holding_id, column_id, code, message, start, end, requested, documented, admitted FROM holding_notice ORDER BY id"
     ):
         notice = {
             "code": code,
             "column_scoped": cid is not None,
-            "locator": locator,
             "message": message,
             "period": holdings_iso_span(lo, hi) if lo is not None else None,
             **{
@@ -2156,13 +2155,11 @@ def holdings_clip_loss(new):
 
 
 def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
-    def result(cls, reason, action="none", codes=()):
-        locators = [s["locator"] for s in (old, new) if s]
-        if old:
-            locators += [old_tables[record["table"]]["locator"]]
-        if new:
-            locators += [n["locator"] for n in new["notices"] if n["code"] in codes]
-            locators += new.get("mapping_locators", [])
+    def result(cls, reason, action="none"):
+        # Only the old artifact carries locators; the new one names table and column.
+        locators = (
+            [old["locator"], old_tables[record["table"]]["locator"]] if old else []
+        )
         return record | {
             "class": cls,
             "owner": HOLDINGS_CLASSES[cls],
@@ -2172,7 +2169,7 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
         }
 
     work = "Add a worklist row in the private steward repo (#2072)."
-    defect = "File against reg-build holdings with the retained locators."
+    defect = "File against reg-build holdings with the table, column and old locators."
     codes = {n["code"] for n in new["notices"]} if new else set()
     if old is None or new is None:
         only_table = (
@@ -2211,15 +2208,12 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
         "ambiguous_delivered_owners",
         "ambiguous_catalog_segment",
     }:
-        return result(
-            "owner ambiguity", "New ownership has blocked slices.", work, codes
-        )
+        return result("owner ambiguity", "New ownership has blocked slices.", work)
     if new["column_disposition"] == "hold" or codes & {"mapping_held", "row_key_held"}:
         return result(
             "withheld carried over" if old["state"] == "old withheld" else "held",
             "New hold retains reason and follow-up, including partially held mappings.",
             work,
-            codes,
         )
     if old["mappings"] and new["mappings"]:
         removed = []
@@ -2238,7 +2232,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
                     "intended clipping",
                     "Column clipping notices explain every removed target/day slice."
                     + (" Other slices extend coverage." if added else ""),
-                    codes={"period_clipped"},
                 )
             return result(
                 "defect",
@@ -2283,13 +2276,11 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
                 "defect",
                 "Missing mapping despite an old target with overlapping routed base coverage.",
                 defect,
-                {"mapping_missing"},
             )
         return result(
             "missing target",
             "Old target is absent or has no overlapping routed base segment.",
             work,
-            {"mapping_missing"},
         )
     if old["mappings"] and new["column_disposition"] == "unmap":
         return result(
@@ -2304,7 +2295,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
             "withheld carried over",
             "Old hold/unmap were indistinguishable; withholding remains unresolved.",
             work,
-            codes,
         )
     if old["keys"] or new["keys"]:
         if not old["mappings"] and not new["mappings"] and holdings_key_equal(old, new):
@@ -2337,7 +2327,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
             "missing target",
             "New column has no accepted target.",
             work,
-            {"mapping_missing"},
         )
     if not old["mappings"] and not new["mappings"]:
         if new["column_disposition"] == "unmap":
@@ -2379,13 +2368,9 @@ def holdings(args) -> int:
             raise ValueError(
                 "holdings meta.catalog_sha256 does not match --new-base sha256"
             )
-        pins = json.loads(new_meta["input_pins"])
-        if args.new_census_path not in pins:
-            raise ValueError("--new-census-path must name an existing input_pins key")
-        new_pin = pins[args.new_census_path]
-        old_pin = args.old_census_sha256
-        if not re.fullmatch("[0-9a-f]{64}", old_pin):
-            raise ValueError("old census sha256 must be 64 lowercase hex digits")
+        new_pin, old_pin = args.new_census_sha256, args.old_census_sha256
+        if not all(re.fullmatch("[0-9a-f]{64}", pin) for pin in (old_pin, new_pin)):
+            raise ValueError("census sha256 values must be 64 lowercase hex digits")
         pins_equal = old_pin == new_pin
         old_tables, old_columns = old_holdings(old_db)
         new_tables, new_columns = new_holdings(new_db)
@@ -2619,9 +2604,9 @@ def main() -> int:
         help="raw census digest from the pinned old scope (0.64.0 stores only the input-manifest digest)",
     )
     holding.add_argument(
-        "--new-census-path",
+        "--new-census-sha256",
         required=True,
-        help="exact census path key in holdings meta.input_pins",
+        help="census pin from the holdings build report's steward.input_pins",
     )
     holding.set_defaults(run=holdings)
     args = parser.parse_args()

@@ -14,6 +14,9 @@ mechanically against the builder's own DDL, which the checkout supplies:
   extra or missing table or column fails. holding_relation is optional: the builder
   emits it only when the steward declares external relations.
 - Meta: every key must be in META_KEYS below.
+- Rows: tables the steward build must leave empty (EMPTY_TABLES) have no rows. The
+  semantic part keeps the catalog schema, but its source locators point into steward
+  working files.
 - Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a raw
   payload in an allowed column is caught.
 - Text: no `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`) or a
@@ -58,7 +61,7 @@ META_KEYS = {
     "steward_commit",  # holdings: provenance, steward commit
     "steward_config",  # holdings: provenance, steward config path
     "compiler_digest",  # holdings: provenance, compiler build
-    "input_pins",  # holdings: revision and digest of every pinned input
+    "input_manifest_sha256",  # holdings: provenance, digest of the pinned input list
     "steward",  # holdings: steward presentation, shown in the SPA
     "scope",  # holdings: the steward's public scope document
     "logo",  # holdings: steward logo, shown in the SPA
@@ -85,10 +88,11 @@ WORKING_REFERENCE = re.compile(r"[\w./-]+\.(?:jsonl?|toml)\b|census:row=")
 
 META_BOUND = 4096  # preview max 1 755 (`logo`)
 META_BOUNDS = {
-    # one entry per pinned input file (preview 291 474); #2113 will tighten this.
-    "input_pins": 400_000,
     "scope": 120_000,  # the steward's public scope document (preview 81 974)
 }
+
+# Catalog-schema tables a steward build emits empty: rows would name working files.
+EMPTY_TABLES = ("occurrence_locator",)
 
 
 def schema_of(
@@ -165,6 +169,13 @@ def main() -> int:
         if n > bound:
             too_big.append(f"meta.{k} ({n} > {bound} bytes)")
 
+    filled = [
+        t
+        for t in EMPTY_TABLES
+        if t in have
+        and con.execute(f'SELECT EXISTS(SELECT 1 FROM "{t}")').fetchone()[0]
+    ]
+
     # Reported by text id and the reference's file extension, never the body.
     leaked = (
         sorted(
@@ -183,6 +194,7 @@ def main() -> int:
         ("missing column", missing_c),
         ("unknown meta key", bad_m),
         ("oversize value", too_big),
+        ("non-empty table", filled),
         ("working-file reference", leaked),
     ]
     failing = sum(len(v) for _, v in items)

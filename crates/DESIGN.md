@@ -1581,10 +1581,10 @@ export. Every census table and exact physical column must be present, with no ex
 coordinates; offered columns must match the source schema, table type, storage type,
 length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
 Physical mappings must equal the complete admitted explicit mappings or automatic
-spelling matches: interval unions grouped by table, variable, role, carried flag,
-caveat, authored window and evidence locator. Verification derives these expectations
-from the admitted sources independently of compiler candidates and placements, including
-shared projection keys. Missing coverage or changed attributes refuse with located
+spelling matches: interval unions grouped by table, variable, role, carried flag, caveat
+and authored window. Verification derives these expectations from the admitted sources
+independently of compiler candidates and placements, including shared projection keys.
+Missing coverage or changed attributes refuse with located
 `holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
 artifact table/column ids without printing private physical identifiers.
 
@@ -1708,23 +1708,37 @@ catalog items, never steward working files or census row references (maintainer
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
 schema. `meta` records owner kind/id, holdings generation, catalog generation and file
-digest, plus input/curation/compiler pins. Admission checks both schemas exactly and the
-pairing pins; it does not accept another generation because the public ids happen to
-resolve.
+digest, the steward pin, the input-manifest digest and the compiler digest. Admission
+checks both schemas exactly and the pairing pins; it does not accept another generation
+because the public ids happen to resolve.
 
 Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
 recompiled. Family declarations and their evidence remain steward input facts, with no
 register or physical-table naming rules in the compiler.
 
+Holdings schema 5 adds `holding_notice_candidate` (#2123) and drops background data from
+the published pair (#2113): the `locator` columns of `holding_table`, `holding_column`,
+`holding_mapping` and `holding_notice`,
+`holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. The steward
+still authors a locator on every decision and evidence on every reference occurrence;
+they locate compiler and verifier refusals and stay in the steward repo. The
+supplemental semantic part keeps the catalog schema but emits no `occurrence_locator`
+rows, since its source rows are steward working files. `meta.input_manifest_sha256` (one
+digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
+`steward_commit` and `steward_config` stay because `reg-build verify --steward-repo`
+needs them to admit the pinned checkout and recompute that digest. Build provenance for
+review lives in the `--report` JSON under `steward`: repo, commit, config and every
+input pin. That report is private release evidence.
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
-  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-  | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
-  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                          |
-  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                   |
+  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                   |
+  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
 reviewed from received-row evidence. The pinned physical `[[table.key]]` declarations
@@ -1785,9 +1799,8 @@ household amounts are child-only data, not claims that the parent holds them.
 
 Index mappings by logical table, variable and start/end and columns by holding/name.
 Coverage is computed from indexed facts, not stored guesses about future UI summaries.
-Include source digests and the accepted census accounting in `meta`/`input`; publish no
-raw private locators that expose confidential document paths. Published locators use
-input-role ids and safe relative metadata locations.
+Include the input-manifest digest and the accepted census accounting in `meta`; publish
+no steward locators or per-file pins (schema 5).
 
 `reg-build verify` is the sole publication validator. It checks exact census accounting
 (one disposition per table; every physical column represented), stored disposition and
