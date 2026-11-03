@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
-import type { Context } from "./api";
+import { type Context, stewardConfig } from "./api";
 import {
   browseFilter,
   useBrowseFilter,
@@ -51,7 +51,11 @@ export function TopBar({
   context: Context | null;
   validation: ProjectValidation;
 }) {
-  const brand = "Registry Research Toolkit";
+  const config = stewardConfig(context);
+  const brand =
+    config?.presentation.long_name ??
+    config?.presentation.name ??
+    "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -157,6 +161,13 @@ export function TopBar({
       <div className={styles.inner} data-search-open={searchOpen || undefined}>
         <a href="/" className={styles.brand}>
           <span className={styles.brandName}>{brand}</span>
+          {config && (
+            <img
+              className={styles.brandLogo}
+              alt={brand}
+              src={`data:image/svg+xml,${encodeURIComponent(config.logo)}`}
+            />
+          )}
         </a>
         {/* Text here filters both browse columns in place, never the open
           page. Enter opens the palette under it, the way to codes,

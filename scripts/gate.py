@@ -185,6 +185,10 @@ def flows() -> None:
     out = Path(tempfile.mkdtemp(prefix="gate-flows-"))
     dev = ROOT / "reg_webapp/dev/dev.sh"
     run(["bash", dev, "--fixture-db", "flows", out], stdin=subprocess.DEVNULL)
+    run(
+        ["bash", dev, "--paired-fixture", "flows", out, "steward-held"],
+        stdin=subprocess.DEVNULL,
+    )
     # Kept on failure: the screenshots are the evidence.
     shutil.rmtree(out)
 

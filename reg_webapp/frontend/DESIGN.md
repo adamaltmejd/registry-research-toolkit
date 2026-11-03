@@ -347,8 +347,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   while empty, focus returning to the button (maintainer ruling 2026-10-24). Below the
   breakpoint every text field is set at 1rem: iOS Safari zooms the page into a focused
   field under 16px and leaves it zoomed, cut off at the left.
-- **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
-  then the selected register's or group's variables, then the detail pane capped at
+- **Browse columns (`ColumnList`):** in paired mode, the Registers header places a
+  Select beside Collapse all, with accessible labels for the register list and scope,
+  limiting variable search matches to held or all reference variables; browsing without
+  search text stays unscoped. Registers grouped under sticky provider headers, then the
+  selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
   to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
   and centred, so a wide screen gets wider lists, not a stranded pane. The variables
@@ -426,7 +429,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   kind mark and a member-of line naming its register, with constant facets shown once in
   the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
   order: a lane is titled by its varying facets in curated axis order, with the member's
-  name on the line under it, and by the name alone when no axis varies.
+  name on the line under it, and by the name alone when no axis varies. Paired variable
+  and table pages show a Held panel grouped by physical table, with delivered column
+  chips, periods and plain-word placement details, or an EmptyState when nothing is
+  held. Steward documentation appears in its own panel when supplied by coverage;
+  neither panel appears while its data is loading.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

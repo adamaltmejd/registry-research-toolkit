@@ -1,7 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   type RegisterFacet,
+  type RegisterFacets,
   SEARCH_MIN_QUERY_LENGTH,
+  type StewardConfig,
   searchFacets,
 } from "./api";
 import { useAsyncResource } from "./use_async_resource";
@@ -29,6 +31,33 @@ export const browseFilter = {
 };
 
 const read = () => value;
+
+export type BrowseScope = "steward" | "reference";
+let scope: BrowseScope = "steward";
+
+/** Paired variable searches start with held matches; global requests omit scope. */
+export const browseScope = {
+  set(next: string): void {
+    if ((next !== "steward" && next !== "reference") || next === scope) return;
+    scope = next;
+    for (const notify of listeners) notify();
+  },
+};
+
+const readScope = () => scope;
+
+export function useBrowseScope(
+  config: StewardConfig | null,
+): BrowseScope | undefined {
+  const selected = useSyncExternalStore(browseFilter.subscribe, readScope);
+  return config === null ? undefined : selected;
+}
+
+export function allRegisterFacets(
+  data: RegisterFacets | null,
+): RegisterFacet[] {
+  return [...(data?.registers ?? []), ...(data?.steward?.registers ?? [])];
+}
 
 /** How many registers the browse tree keeps for the filter, published by the
  * tree (the one place that ranks them) so the search field can say so. Null
@@ -90,17 +119,21 @@ export function useSettledFilter(): string | null {
  * names it holds. */
 export function useRegisterMatches(
   registerFqid: string,
+  config: StewardConfig | null,
 ): ReadonlySet<string> | null {
   const query = useSettledFilter();
+  const scope = useBrowseScope(config);
   const matches = useAsyncResource(
-    query === null ? null : `${registerFqid}\u0000${query}`,
-    (signal) => searchFacets(query ?? "", { signal, register: registerFqid }),
+    query === null ? null : `${scope ?? ""}\u0000${registerFqid}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", { signal, register: registerFqid, scope }),
   );
   if (query === null || matches.data === null) return null;
   return new Set(
-    (
-      matches.data.find((facet) => facet.fqid === registerFqid)?.variables ?? []
-    ).map((variable) => variable.fqid),
+    allRegisterFacets(matches.data)
+      .filter((facet) => facet.fqid === registerFqid)
+      .flatMap((facet) => facet.variables ?? [])
+      .map((variable) => variable.fqid),
   );
 }
 
@@ -132,34 +165,56 @@ const OTHER_REGISTER_LIMIT = 5;
  * register's list never waits on it. */
 export function useOtherRegisterMatches(
   registerFqid: string,
-): readonly RegisterFacet[] | null {
+  config: StewardConfig | null,
+): { reference: RegisterFacet[]; steward: RegisterFacet[] } | null {
   const needle = useBrowseFilter().trim();
   const query = useSettledFilter();
+  const scope = useBrowseScope(config);
   const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
-  const matches = useAsyncResource(query, (signal) =>
-    searchFacets(query ?? "", { signal, limit: OTHER_REGISTER_LIMIT + 1 }),
+  const matches = useAsyncResource(
+    query === null ? null : `${scope ?? ""}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", {
+        signal,
+        limit: OTHER_REGISTER_LIMIT + 1,
+        scope,
+      }),
   );
   // The last answer stands while the next query settles and loads, so the
   // sections do not drop out and come back on every keystroke.
-  const [last, setLast] = useState<RegisterFacet[] | null>(null);
-  if (matches.data !== null && matches.data !== last) setLast(matches.data);
-  if (needle.length < SEARCH_MIN_QUERY_LENGTH) return [];
+  const [last, setLast] = useState<{
+    scope: BrowseScope | undefined;
+    data: RegisterFacets;
+  } | null>(null);
+  if (matches.data !== null && matches.data !== last?.data)
+    setLast({ scope, data: matches.data });
+  const empty = { reference: [], steward: [] };
+  if (needle.length < SEARCH_MIN_QUERY_LENGTH) return empty;
   const pending = query === null || matches.loading;
-  const data = pending ? last : matches.data;
-  if (data === null) return pending ? null : [];
+  const data = pending
+    ? last !== null && last.scope === scope
+      ? last.data
+      : null
+    : matches.data;
+  if (data === null) return pending ? null : empty;
   const place = (facet: RegisterFacet) => {
     const at = treeOrder.indexOf(facet.fqid ?? "");
     return at === -1 ? treeOrder.length : at;
   };
-  return data
-    .filter((facet) => facet.fqid !== registerFqid)
-    .map((facet) =>
-      facet.variable_matches > OTHER_REGISTER_LIMIT + 1
-        ? {
-            ...facet,
-            variables: facet.variables?.slice(0, OTHER_REGISTER_LIMIT),
-          }
-        : facet,
-    )
-    .sort((a, b) => place(a) - place(b));
+  const ordered = (facets: RegisterFacet[]) =>
+    facets
+      .filter((facet) => facet.fqid !== registerFqid)
+      .map((facet) =>
+        facet.variable_matches > OTHER_REGISTER_LIMIT + 1
+          ? {
+              ...facet,
+              variables: facet.variables?.slice(0, OTHER_REGISTER_LIMIT),
+            }
+          : facet,
+      )
+      .sort((a, b) => place(a) - place(b));
+  return {
+    reference: ordered(data.registers),
+    steward: ordered(data.steward?.registers ?? []),
+  };
 }

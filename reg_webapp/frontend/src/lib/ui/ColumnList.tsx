@@ -43,6 +43,8 @@ export interface ColumnItem {
 export interface ColumnSection {
   id: string;
   label: string | null;
+  /** A heading before the first register in a distinct catalog group. */
+  groupLabel?: string;
   items: readonly ColumnItem[];
 }
 
@@ -258,6 +260,11 @@ export function ColumnList({
                           className={styles.register}
                           title={section.label}
                         >
+                          {section.groupLabel && (
+                            <span className={`micro-label ${styles.group}`}>
+                              {section.groupLabel}
+                            </span>
+                          )}
                           {section.label}
                         </Header>
                         <Collection

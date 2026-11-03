@@ -41,6 +41,21 @@
   box-shadow: var(--focus-ring);
 }
 
+.brandLogo {
+  display: none;
+  max-width: 100%;
+  max-height: var(--space-6);
+}
+
+@media (max-width: 60rem) {
+  .brand:has(.brandLogo) .brandName {
+    display: none;
+  }
+  .brandLogo {
+    display: block;
+  }
+}
+
 /* The project banner (its box or its section, the row's last child) sits at
    the right edge. */
 .inner > :last-child {

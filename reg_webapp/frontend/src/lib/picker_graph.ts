@@ -27,6 +27,7 @@ export function variableSpans({
   catalogBounds,
   selected,
   idPrefix = "",
+  readOnly = false,
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -37,6 +38,7 @@ export function variableSpans({
   catalogBounds: [number, number];
   selected: ReadonlySet<string>;
   idPrefix?: string;
+  readOnly?: boolean;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
   return columns.flatMap((column) => {
@@ -93,24 +95,27 @@ export function variableSpans({
     const changeYears = coverageMarks({ from: first, to: last }, changes)
       .delivered.map(yearWindowLabel)
       .join(", ");
+    const span: LaneSpanModel = {
+      id: `${idPrefix}${column.id}`,
+      lane: `${idPrefix}${column.table}`,
+      name: column.spelling,
+      from: first,
+      to: last,
+      segments: eras.map((era) => ({ name: null, ...era })),
+      years,
+      state: source ? "in" : inside ? "default" : "out",
+      selectable: !!project && !source && inside,
+      isSelected: inside && selected.has(column.id),
+      staged: inside && selected.has(column.id) && !source ? "add" : null,
+      blocked: relation === "disjoint",
+      note,
+      changes,
+      accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+    };
     return [
-      {
-        id: `${idPrefix}${column.id}`,
-        lane: `${idPrefix}${column.table}`,
-        name: column.spelling,
-        from: first,
-        to: last,
-        segments: eras.map((era) => ({ name: null, ...era })),
-        years,
-        state: source ? "in" : inside ? "default" : "out",
-        selectable: !!project && !source && inside,
-        isSelected: inside && selected.has(column.id),
-        staged: inside && selected.has(column.id) && !source ? "add" : null,
-        blocked: relation === "disjoint",
-        note,
-        changes,
-        accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
-      },
+      readOnly
+        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
+        : span,
     ];
   });
 }
