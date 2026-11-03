@@ -15,17 +15,15 @@ use reg_resolve::{Finding, Resolved, Subject};
 /// decimal's integer codes do not prove an uncoded amount is integral (D's 2026-10-28
 /// ruling keeps integer/decimal switches to evidenced curation), and letters on a
 /// numeric column are as often unflagged missing markers (`.`, `blank`) as codes.
-fn proposal<'a>(
-    family: &str,
-    codes: impl Iterator<Item = &'a str> + Clone,
-) -> Option<&'static str> {
-    if codes.clone().next().is_none() {
+fn proposal(family: &str, codes: &[&str]) -> Option<&'static str> {
+    if codes.is_empty() {
         return None;
     }
     match family {
-        "text" if codes.clone().all(integer) => Some("integer"),
+        "text" if codes.iter().all(|c| integer(c)) => Some("integer"),
         "integer"
-            if codes.clone().all(|c| integer(c) || fraction(c)) && codes.clone().any(fraction) =>
+            if codes.iter().all(|c| integer(c) || fraction(c))
+                && codes.iter().any(|c| fraction(c)) =>
         {
             Some("decimal")
         }
@@ -60,8 +58,7 @@ pub(super) fn generate(
     for register in registers {
         for (index, occurrence) in register.occurrences.iter().enumerate() {
             let row = &occurrence.occurrence;
-            // A classification binding governs its codes, and its sentinels bind after
-            // the acknowledgement stage, so N1 leaves bound occurrences alone.
+            // A classification binding governs its codes.
             if occurrence.status != "used"
                 || row.coded == Some(false)
                 || row.classification.is_some()
@@ -82,8 +79,9 @@ pub(super) fn generate(
                 .items
                 .iter()
                 .map(|item| item.code.as_str())
-                .filter(|code| !flagged.is_some_and(|s| s.contains(*code)));
-            let Some(proposed) = proposal(family, codes.clone()) else {
+                .filter(|code| !flagged.is_some_and(|s| s.contains(*code)))
+                .collect::<Vec<_>>();
+            let Some(proposed) = proposal(family, &codes) else {
                 continue;
             };
             let Some(subject) = super::occurrence_address(register, occurrence) else {
@@ -91,7 +89,7 @@ pub(super) fn generate(
             };
             let evidence = format!(
                 "N1: normalized type {dtype}; {} documented non-sentinel codes support {proposed}",
-                codes.count()
+                codes.len()
             );
             let statement = Statement::Set {
                 subject,
@@ -142,11 +140,7 @@ mod tests {
             ("temporal", &["1"], None),
         ];
         for (family, codes, expected) in cases {
-            assert_eq!(
-                proposal(family, codes.iter().copied()),
-                *expected,
-                "{family} {codes:?}"
-            );
+            assert_eq!(proposal(family, codes), *expected, "{family} {codes:?}");
         }
     }
 }

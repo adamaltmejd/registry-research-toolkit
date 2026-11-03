@@ -798,7 +798,9 @@ pub(super) struct Applied {
 }
 
 /// Every curated sentinel code by value-set hash.
-pub(super) fn sentinel_codes(declarations: &[Sentinels]) -> BTreeMap<String, BTreeSet<String>> {
+pub(super) fn sentinel_codes<'a>(
+    declarations: impl IntoIterator<Item = &'a Sentinels>,
+) -> BTreeMap<String, BTreeSet<String>> {
     let mut sets = BTreeMap::<_, BTreeSet<_>>::new();
     for declaration in declarations {
         sets.entry(declaration.hash.clone())
@@ -1898,7 +1900,10 @@ pub(super) fn complete_findings(
         &mut resolved,
         &applied.classifications,
         &sets,
-        &sentinel_codes(&applied.sentinels),
+        // Classification sentinels bind after the acknowledgement stage (`bound_sentinels`)
+        // and are keyed by a hash unbound occurrences may share: N1 reads only the
+        // statement-declared ones, which both stages see.
+        &sentinel_codes(applied.sentinels.iter().filter(|s| s.inventory.is_none())),
         &linked,
     )?;
     Ok(resolved)

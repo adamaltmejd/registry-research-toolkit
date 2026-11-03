@@ -2143,24 +2143,25 @@ documented non-integral numeric literals may propose decimal. Unsupported/ambigu
 domains propose nothing. This is review output, not permission to reinterpret an amount
 from an incomplete code list.
 
-The implemented table reads a used occurrence's documented non-sentinel codes and emits
-`N1:logical-type` (review, on the occurrence) with a `set type` proposal in two cases
-only: text whose codes are all integers with no leading zero proposes `integer`, and an
-integer whose numeric codes include a non-integral `.` literal proposes `decimal`. It
-proposes nothing for a decimal's integer codes (the list does not prove an uncoded
-amount integral, and D's ruling keeps integer/decimal switches to evidenced curation),
-for letters or punctuation on a numeric column (unflagged missing markers such as `.`
-and `blank` are as common as real codes there), for a comma (`1,5` may list two codes),
-or for a classification-bound occurrence (its binding governs the codes). A curator
-adopts a proposal with the `set type` it carries, or acknowledges the review. A
-read-only query of the 0.73.0 catalog estimates about 25,900 reviews on 3,850 variables,
-all from the text rule (V1 publishes about 155,000). Documented date/number-format
-extensions require an evidenced later rule change, not an open maintainer question for E.
-Curated > rule > source is fixed (clean-room §2.4). N1 reviews propose and never apply a
-correction: consumers use adopted normalized types until curation changes them (§4.5;
-D's TYPE FAMILIES and NUMERIC SWITCHERS rulings). Integer and decimal remain different
-families; unresolved types stay unresolved. No unreviewed inference may change mocks,
-output types or catalog generation as if adopted.
+The implemented table reads a used occurrence's documented codes less its
+statement-declared sentinels and emits `N1:logical-type` (review, on the occurrence)
+with a `set type` proposal in two cases only: text whose codes are all integers with no
+leading zero proposes `integer`, and an integer whose numeric codes include a
+non-integral `.` literal proposes `decimal`. It proposes nothing for a decimal's integer
+codes (the list does not prove an uncoded amount integral, and D's ruling keeps
+integer/decimal switches to evidenced curation), for letters or punctuation on a numeric
+column (unflagged missing markers such as `.` and `blank` are as common as real codes
+there), for a comma (`1,5` may list two codes), or for a classification-bound occurrence
+(its binding governs the codes). A curator adopts a proposal with the `set type` it
+carries, or acknowledges the review. A read-only query of the 0.73.0 catalog estimates
+about 25,900 reviews on 3,850 variables, all from the text rule (V1 publishes about
+155,000). Documented date/number-format extensions require an evidenced later rule
+change, not an open maintainer question for E. Curated > rule > source is fixed
+(clean-room §2.4). N1 reviews propose and never apply a correction: consumers use
+adopted normalized types until curation changes them (§4.5; D's TYPE FAMILIES and
+NUMERIC SWITCHERS rulings). Integer and decimal remain different families; unresolved
+types stay unresolved. No unreviewed inference may change mocks, output types or catalog
+generation as if adopted.
 
 For example, `curation/readers/scb.toml` maps `numeric` to `decimal`, and `char` to
 `char`. An integer-looking coded column can still require text: leading-zero codes must
