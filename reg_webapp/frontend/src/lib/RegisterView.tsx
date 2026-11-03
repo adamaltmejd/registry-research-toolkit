@@ -5,7 +5,7 @@ import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
-import { dataAxis } from "./period";
+import { dataAxis, yearWindowLabel } from "./period";
 import rowStyles from "./RegisterView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { rowWindow } from "./register_add";
@@ -19,6 +19,7 @@ import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { VariableRow, VariableRowList } from "./ui/VariableRow";
+import variableRowStyles from "./ui/VariableRow.module.css";
 import { useRegisterAdd } from "./useRegisterAdd";
 
 export function RegisterView({
@@ -40,6 +41,9 @@ export function RegisterView({
     bounds,
   );
   const names = registerSubjectNames(node);
+  const nameCounts = new Map<string, number>();
+  for (const variable of node.variables)
+    nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
   return (
     <article className={styles.page}>
       <Definitions
@@ -89,17 +93,54 @@ export function RegisterView({
         )}
       </Panel>
       <Panel
+        flush={node.variables.length > 0}
         title={
           <span ref={heading} tabIndex={-1} className={rowStyles.heading}>
             Variables
           </span>
         }
       >
-        {!add.draft && (
+        <div
+          className={node.variables.length > 0 ? rowStyles.notices : undefined}
+        >
           <p className={rowStyles.hint}>
-            Create or open a project to select columns.
+            {!add.draft
+              ? "Create or open a project to select columns."
+              : add.study
+                ? `Variables not delivered in the study window (${yearWindowLabel(add.study)}) can't be added.`
+                : "Variables already in the project can't be added again."}
           </p>
-        )}
+          <StatusRow
+            className={add.error || add.added ? rowStyles.status : undefined}
+            tone={
+              add.error
+                ? "error"
+                : add.classificationWarning
+                  ? "info"
+                  : add.added
+                    ? "ok"
+                    : null
+            }
+            live="status"
+          >
+            {add.error ??
+              (add.added ? (
+                <>
+                  Added columns to project.
+                  {add.classificationWarning && (
+                    <>
+                      {" "}
+                      Choose the classification on the{" "}
+                      <a className="link" href="/project">
+                        project page
+                      </a>
+                      .
+                    </>
+                  )}
+                </>
+              ) : null)}
+          </StatusRow>
+        </div>
         {node.variables.length === 0 ? (
           <EmptyState title="This register lists no variables." />
         ) : (
@@ -131,8 +172,8 @@ export function RegisterView({
                       !inProject &&
                       window && (
                         <Checkbox
-                          className={rowStyles.checkbox}
-                          aria-label={`Add ${variable.name}`}
+                          className={variableRowStyles.checkbox}
+                          aria-label={`Add ${variable.name}${(nameCounts.get(variable.name) ?? 0) > 1 ? ` (${coverage.map(yearWindowLabel).join(", ")})` : ""}`}
                           isSelected={add.selected.has(variable.fqid)}
                           aria-busy={
                             (add.selected.has(variable.fqid) && !columns) ||
@@ -140,7 +181,10 @@ export function RegisterView({
                           }
                           onChange={(checked) => add.toggle(variable, checked)}
                         >
-                          <span className={rowStyles.tick} aria-hidden="true">
+                          <span
+                            className={variableRowStyles.tick}
+                            aria-hidden="true"
+                          >
                             ✓
                           </span>
                         </Checkbox>
@@ -149,7 +193,7 @@ export function RegisterView({
                   >
                     {!window ? (
                       <span className="visually-hidden">
-                        outside the study window
+                        {" Outside the study window."}
                       </span>
                     ) : columns?.length ? (
                       columns.map((column) => (
@@ -176,38 +220,11 @@ export function RegisterView({
       )}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} filterable />
-      <StatusRow
-        tone={
-          add.error
-            ? "error"
-            : add.classificationWarning
-              ? "info"
-              : add.added
-                ? "ok"
-                : null
-        }
-        live="status"
-      >
-        {add.error ??
-          (add.added ? (
-            <>
-              Added columns to project.
-              {add.classificationWarning && (
-                <>
-                  {" "}
-                  Choose the classification on the{" "}
-                  <a className="link" href="/project">
-                    project page
-                  </a>
-                  .
-                </>
-              )}
-            </>
-          ) : null)}
-      </StatusRow>
+
       {add.selected.size > 0 && (
         <AddBar
           count={add.count}
+          isBusy={add.loading}
           onAdd={() => {
             if (add.add()) heading.current?.focus();
           }}

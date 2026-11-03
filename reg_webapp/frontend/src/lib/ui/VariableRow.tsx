@@ -83,7 +83,7 @@ export function VariableRow({
             ) : null;
           })}
         </span>
-        <span className="visually-hidden">Delivered {years}</span>
+        <span className="visually-hidden">Delivered {years}.</span>
       </span>
       {control && <div className={styles.control}>{control}</div>}
       {children && <div className={styles.columns}>{children}</div>}

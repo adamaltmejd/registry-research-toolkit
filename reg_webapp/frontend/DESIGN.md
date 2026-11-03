@@ -531,22 +531,28 @@ Time is the axis every relation is drawn on.
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
-  face, the bar, and one real checkbox named "Add <variable name>". The tick stands for
-  every delivery column with a delivery in the study window that is not already in the
-  project. With no study window it uses the variable's whole availability within the
-  catalog bounds. The register page has no add window; per-column choice stays on the
-  variable page. Segments are read only on tick; once loaded, the selected columns
-  appear under the name as `ColumnChip`s without ticks. A variable bound in any source
-  shows the dot and no checkbox; topping up a partially bound variable is deferred. A
-  hull outside the window has no checkbox and says "outside the study window" to
-  assistive technology. With no project there are no ticks, and a paragraph under the
-  panel title says "Create or open a project to select columns." Below
-  `breakpoint-narrow` the row stacks into one column: the bar on top, then the name,
-  then the chips (#1826). While anything is ticked, the shared `AddBar` reads "Add N
-  columns to project" as the pane's one `primary` button; N counts loaded columns and
-  the button is disabled while a tick's columns load. With nothing ticked there is no
-  bar. Adding uses one source per table and one binding per variable; it clears ticks,
-  shows the variable page's status copy and focuses the panel heading.
+  face, the bar, and one real checkbox named "Add <variable name>" (with its period when
+  the name repeats). The tick stands for every delivery column with a delivery in the
+  study window that is not already in the project. With no study window it uses the
+  variable's whole availability within the catalog bounds. The register page has no add
+  window; per-column choice stays on the variable page. Segments are read only on tick;
+  once loaded, the selected columns appear under the name as `ColumnChip`s without
+  ticks. A variable bound in any source shows the dot and no checkbox; topping up a
+  partially bound variable is deferred. A hull outside the window has no checkbox and
+  says "Outside the study window." to assistive technology after the delivered years.
+  While a project is open, a paragraph under the panel title explains that variables not
+  delivered in the study window (naming its years) cannot be added; without a study
+  window it explains that variables already in the project cannot be added again. With
+  no project there are no ticks, and the paragraph says "Create or open a project to
+  select columns." Status rows sit directly under this hint, inside the flush panel;
+  only these lines are padded. Below `breakpoint-narrow` the row stacks: the bar on top,
+  then the name with the checkbox to its right, then the chips under the name (#1826).
+  While anything is ticked, the shared `AddBar` reads "Add N columns to project" as the
+  pane's one `primary` button; N counts loaded columns and the button is disabled and
+  busy while a tick's columns load. Before any columns have loaded, it reads "Reading
+  columns…". With nothing ticked there is no bar. Adding uses one source per table and
+  one binding per variable; it clears ticks, shows the variable page's status copy and
+  focuses the panel heading.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A succession arrow between overlapping spans drops at the edge's effective
