@@ -226,16 +226,38 @@ export function getContext(): Promise<Context> {
   return rustGet<Context>("/context");
 }
 
+/** SWECOV steward registers that are compile scaffolding, not data: columns
+ * the steward compile could not place on a global variable. Left out of
+ * provider listings (and so the browse tree); links and search still reach them. */
+// simplify: hard-coded here because nothing in the artifact marks them and the
+// Rust crates stay provider-neutral; delete when the steward places these columns
+// on their source registers (#2134 step 2, 0.73.0).
+const STEWARD_SCAFFOLD = new Set([
+  "swecov/received-row-keys",
+  "swecov/scb-agi-delivery",
+  "swecov/scb-agi-slots",
+  "swecov/scb-geography-delivery",
+  "swecov/scb-innovation-foretag-current-coding",
+  "swecov/sos-bu-current-coding",
+  "swecov/sos-par-slots",
+]);
+
 /** `show` for `ref` (a FQID or group ref); no ref is the catalog root. */
-export function getShow(
+export async function getShow(
   ref?: string,
   options?: { signal?: AbortSignal },
 ): Promise<ShowNode> {
-  return rustGet<ShowNode>(
+  const node = await rustGet<ShowNode>(
     ref ? `/catalog/${encodeFqid(ref)}` : "/catalog",
     undefined,
     options,
   );
+  return node.kind === "provider"
+    ? {
+        ...node,
+        registers: node.registers.filter((r) => !STEWARD_SCAFFOLD.has(r.fqid)),
+      }
+    : node;
 }
 
 // ── Project surface (the Rust server) ──────────────────────────────────────────
