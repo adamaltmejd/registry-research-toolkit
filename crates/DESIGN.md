@@ -2126,22 +2126,22 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 
 N1 runs after source normalization and occurrence curation, with the other review-only
 proposals (`reg-build/src/proposals/types.rs`, beside V1), not in a SWECOV reader or the
-runner. Keep source dtype/length evidence distinct from the
-inferred logical type. A disagreement with the reader's `[types]` map emits a located
-`N1` review with both types, evidence and a proposed ordinary `set type` where
-representable. It does not automatically rewrite a segment, clear ambiguity or silence
-F1. This follows D's 2026-10-28 ruling in REBUILD.md: curate only evidenced affected
-occurrences; unresolved integer/decimal switches remain visible. The input basis is
-settled: N1 infers from the type string and value pattern and emits review on
-disagreement (clean-room design §4.5). Value patterns mean documented code
-literals/pattern metadata, never MONA row samples. Column roles and identifier kinds
-remain separate attributes (§2.2); a row-key role is not a dtype disagreement. The
-implementer uses a conservative closed pattern table: complete documented code literals
-and normalized type strings only, no sampling threshold or name-only inference. An
-all-integer code domain with no significant leading zero may propose integer;
-alphanumeric or zero-padded codes preserve text, and documented non-integral numeric
-literals may propose decimal. Unsupported/ambiguous domains propose nothing. This is
-review output, not permission to reinterpret an amount from an incomplete code list.
+runner. Keep source dtype/length evidence distinct from the inferred logical type. A
+disagreement with the reader's `[types]` map emits a located `N1` review with both
+types, evidence and a proposed ordinary `set type` where representable. It does not
+automatically rewrite a segment, clear ambiguity or silence F1. This follows D's
+2026-10-28 ruling in REBUILD.md: curate only evidenced affected occurrences; unresolved
+integer/decimal switches remain visible. The input basis is settled: N1 infers from the
+type string and value pattern and emits review on disagreement (clean-room design §4.5).
+Value patterns mean documented code literals/pattern metadata, never MONA row samples.
+Column roles and identifier kinds remain separate attributes (§2.2); a row-key role is
+not a dtype disagreement. The implementer uses a conservative closed pattern table:
+complete documented code literals and normalized type strings only, no sampling
+threshold or name-only inference. An all-integer code domain with no significant leading
+zero may propose integer; alphanumeric or zero-padded codes preserve text, and
+documented non-integral numeric literals may propose decimal. Unsupported/ambiguous
+domains propose nothing. This is review output, not permission to reinterpret an amount
+from an incomplete code list.
 
 The implemented table reads a used occurrence's documented non-sentinel codes and emits
 `N1:logical-type` (review, on the occurrence) with a `set type` proposal in two cases
@@ -2152,15 +2152,15 @@ amount integral, and D's ruling keeps integer/decimal switches to evidenced cura
 for letters or punctuation on a numeric column (unflagged missing markers such as `.`
 and `blank` are as common as real codes there), for a comma (`1,5` may list two codes),
 or for a classification-bound occurrence (its binding governs the codes). A curator
-adopts a proposal with the `set type` it carries, or acknowledges the review. A read-only
-query of the 0.73.0 catalog estimates about 25,900 reviews on 3,850 variables, all from
-the text rule (V1 publishes about 155,000).
-Documented date/number-format extensions require an evidenced later rule change, not an
-open maintainer question for E. Curated > rule > source is fixed (clean-room §2.4). N1
-reviews propose and never apply a correction: consumers use adopted normalized types
-until curation changes them (§4.5; D's TYPE FAMILIES and NUMERIC SWITCHERS rulings).
-Integer and decimal remain different families; unresolved types stay unresolved. No
-unreviewed inference may change mocks, output types or catalog generation as if adopted.
+adopts a proposal with the `set type` it carries, or acknowledges the review. A
+read-only query of the 0.73.0 catalog estimates about 25,900 reviews on 3,850 variables,
+all from the text rule (V1 publishes about 155,000). Documented date/number-format
+extensions require an evidenced later rule change, not an open maintainer question for E.
+Curated > rule > source is fixed (clean-room §2.4). N1 reviews propose and never apply a
+correction: consumers use adopted normalized types until curation changes them (§4.5;
+D's TYPE FAMILIES and NUMERIC SWITCHERS rulings). Integer and decimal remain different
+families; unresolved types stay unresolved. No unreviewed inference may change mocks,
+output types or catalog generation as if adopted.
 
 For example, `curation/readers/scb.toml` maps `numeric` to `decimal`, and `char` to
 `char`. An integer-looking coded column can still require text: leading-zero codes must
