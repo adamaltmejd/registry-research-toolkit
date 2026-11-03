@@ -2042,6 +2042,55 @@ stay on MONA. Only aggregates passing the separate fixed disclosure policy and h
 review can leave ([export-gate design](../reg_export_gate/DESIGN.md), "Trust boundaries"
 and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 
+**Materialization rules (e-order, 2026-11-03).** `reg_core::manifest` holds the types,
+`safe_file_name` and `stata_name`; `Issue` and the result `Period` moved to
+`reg_core::issue` so the manifest owns its findings type. The cases are
+`conformance/cases/materialize/`.
+
+- `version` is the integer `4`; the runner refuses v3. Absent `extract_format` resolves
+  to `dta` in the manifest only; the project and its hash are untouched. `stata_name` is
+  the v3 rule byte for byte, emitted only on a `dta` order.
+- Provenance: `catalog.generation` is the served pair (`meta.generation`),
+  `base_generation` the reference catalog's `generation_id`, `holdings.generation` the
+  holdings file's.
+- Precedence: `holdings_unavailable` (no holdings served; usage, HTTP 400) before
+  `project_invalid`, then `project_unnamed` (usage, 422; `order` still accepts the
+  draft), then the logical `order_blocked`, then the physical one. A physical
+  `order_blocked` carries the logical non-blocking findings too.
+- Gaps are judged per binding over all its entries. A requested day no accepted
+  placement holds is a `coverage_gap` warning plus a clip when the binding holds some
+  day, and `mapping_missing` (error) when it holds none. A day a routing table delivers
+  but only a column `window` leaves out is `column_window_unavailable` under the same
+  partial-vs-whole rule. A day of a column carrying an `ambiguous_delivered_owners`
+  notice that places the variable is `mapping_missing` even when the rest is held. A
+  clip is the binding's own: its requested days are the logical clip recorded under the
+  project binding's variable, so a `follow_successor` binding whose entries name only
+  successors still reports the days lost between hops.
+- A partition member is selected when it places a requested entry; a sibling without
+  that column is no gap. A projection serves a (table, variable) only over the requested
+  days its parent does not place it; a request the parent covers selects no projection
+  file.
+- Keys are the holding's `key_requirements` (entity, then time, in declaration order)
+  over the days the file extracts (the requested days widened to the encoding's grain,
+  or the whole delivery when unfiltered), scoped by a requirement's `period`; each
+  source sharing the file gets key references over those days. A key column a binding
+  orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
+  `binding: null` references. A source whose binding orders the key column keeps only
+  that binding's reference; every other source sharing the file still gets its
+  `binding: null` key references. An active requirement with `period_key = "column"`
+  adds the physical period column once as a `row_key` with no references. A requirement
+  on hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
+  both block the order.
+- A stored `file_name` failing `safe_file_name` or colliding with another file's when
+  case is ignored is `file_name_unsafe`; a NULL `schema_name` is
+  `physical_schema_missing`. Both block, located at the file's first binding.
+- Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
+  than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
+  `row_filter_union` (a source whose days are narrower than its shared file's union).
+  Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
+  warning located at the binding over the selected days (the Operator's 2026-10-19
+  warn-not-hold call); an automatically added key's caveat is located at its source.
+
 ### Logical types (N1) and metadata for local mocks
 
 N1 belongs in `reg-resolve`, after source normalization and occurrence curation, not in

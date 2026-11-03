@@ -1,0 +1,24 @@
+{
+  "note": "Fails if a cell whose physical column two owners claim is treated as an ordinary partial gap (a warning and a clip) or resolved to one owner at runtime: the 2018 half blocks as mapping_missing even though 2017 is held.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Contested owner",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/owners",
+        "period": {
+          "from": 2017,
+          "to": 2018
+        },
+        "bindings": [
+          {
+            "variable": "demo/owners/first",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

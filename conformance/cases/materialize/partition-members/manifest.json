@@ -1,0 +1,207 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Partitions"
+    }
+  },
+  "files": [
+    {
+      "name": "part_a",
+      "schema": "dbo",
+      "table": "Part A",
+      "delivery": "2021",
+      "partition": "a",
+      "columns": [
+        {
+          "name": "New",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "v",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "New"
+            }
+          ]
+        },
+        {
+          "name": "Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "v",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "part_b",
+      "schema": "dbo",
+      "table": "Part B",
+      "delivery": "2021",
+      "partition": "b",
+      "columns": [
+        {
+          "name": "New",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "v",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "New"
+            }
+          ]
+        },
+        {
+          "name": "Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "v",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "from": "2020-01-01"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "New",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "v",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "New"
+            }
+          ]
+        },
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "v",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        },
+        {
+          "name": "Year",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": []
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": []
+}

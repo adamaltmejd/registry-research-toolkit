@@ -1,0 +1,38 @@
+{
+  "note": "Fails if sources that jointly request a shared table's whole delivery get one unfiltered file but lose their union findings, though each column is extracted over all four years.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Shared whole delivery",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/held",
+        "period": [
+          2017,
+          2018
+        ],
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "type": "numeric"
+          }
+        ]
+      },
+      {
+        "name": "b",
+        "table": "demo/held",
+        "period": [
+          2019,
+          2020
+        ],
+        "bindings": [
+          {
+            "variable": "demo/held/late",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

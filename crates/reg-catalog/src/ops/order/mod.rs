@@ -17,6 +17,7 @@
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
 //! succession and the panel for a panel finding.
 
+mod materialize;
 mod rows;
 mod successor;
 mod window;
@@ -24,7 +25,7 @@ mod window;
 use std::collections::BTreeSet;
 
 use reg_core::project::{ProjectData, Source, StudyWindow};
-use reg_core::{Interval, IssueLevel, ValidationIssue, merge, overlap};
+use reg_core::{Interval, IssueLevel, merge, overlap};
 use rusqlite::Connection;
 use serde::Serialize;
 use utoipa::ToSchema;
@@ -59,6 +60,19 @@ pub const OPERATIONS: &[Operation] = &[
         run: order,
         result: component::<LogicalOrder>,
     },
+    Operation {
+        name: "materialize_order",
+        paths: &["/api/project/materialize"],
+        tool: Some("order"),
+        description: "The MONA order file of a project_data.json document on this steward's \
+            holdings: per physical table and delivery one file, with its exact columns, \
+            held row keys and row filter, the clips and the non-blocking findings; or \
+            `order_blocked` with every logical and physical finding.",
+        params: &[Param::required("project", Type::Project)],
+        cache: Cache::Revalidate,
+        run: materialize::materialize,
+        result: component::<reg_core::manifest::Manifest>,
+    },
 ];
 
 /// `validate`'s result: `ok` exactly when no issue is an `error`.
@@ -92,7 +106,16 @@ fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
 /// The logical order, `project_invalid` with the structural issues, or `order_blocked`
 /// with every finding.
 fn order(server: &Server, params: &Params) -> Result<Value, Error> {
-    let project = reg_core::project::check(&project(params)?).map_err(|result| {
+    let project = structural(&project(params)?)?;
+    match check(server, &project)? {
+        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
+        Err(findings) => Err(blocked(findings)),
+    }
+}
+
+/// The structurally valid project, or `project_invalid` with its issues.
+fn structural(value: &Value) -> Result<ProjectData, Error> {
+    reg_core::project::check(value).map_err(|result| {
         let issues: Vec<Issue> = result.issues.into_iter().map(Issue::from).collect();
         Error::new(
             Code::ProjectInvalid,
@@ -102,73 +125,19 @@ fn order(server: &Server, params: &Params) -> Result<Value, Error> {
             ),
             vec![serde_json::to_value(issues).expect("issues serialize")],
         )
-    })?;
-    match check(server, &project)? {
-        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
-        Err(findings) => Err(Error::new(
-            Code::OrderBlocked,
-            format!("The order is blocked by {} findings.", findings.len()),
-            vec![serde_json::to_value(findings).expect("findings serialize")],
-        )),
-    }
+    })
 }
 
-/// `shape.Issue`: a project issue or an order finding, located in the project.
-#[derive(Clone, Serialize, ToSchema)]
-pub struct Issue {
-    level: IssueLevel,
-    code: String,
-    /// An RFC 6901 pointer into the project; empty for the whole document.
-    path: String,
-    message: String,
-    /// The project source's name.
-    #[schema(required = true)]
-    source: Option<String>,
-    #[schema(required = true)]
-    variable: Option<String>,
-    #[schema(required = true)]
-    table: Option<String>,
-    #[schema(required = true)]
-    period: Option<Period>,
-    /// The successor a `variable_replaced` finding names, or the successor table of an
-    /// undated succession (`table_succession_undated`).
-    #[schema(required = true)]
-    successor_fqid: Option<String>,
+/// `order_blocked` with every finding.
+fn blocked(findings: Vec<Issue>) -> Error {
+    Error::new(
+        Code::OrderBlocked,
+        format!("The order is blocked by {} findings.", findings.len()),
+        vec![serde_json::to_value(findings).expect("findings serialize")],
+    )
 }
 
-impl Issue {
-    /// Whether the issue blocks: an `error`.
-    #[must_use]
-    pub fn blocks(&self) -> bool {
-        self.level == IssueLevel::Error
-    }
-
-    /// The ordering within one anchor (a source, a binding, a panel): code, then period
-    /// start.
-    fn key(&self) -> (String, Option<String>) {
-        (
-            self.code.clone(),
-            self.period.as_ref().and_then(|p| p.start.clone()),
-        )
-    }
-}
-
-/// A structural issue, whose located fields are `null`.
-impl From<ValidationIssue> for Issue {
-    fn from(issue: ValidationIssue) -> Self {
-        Self {
-            level: issue.level,
-            code: issue.code.to_owned(),
-            path: issue.path,
-            message: issue.message,
-            source: None,
-            variable: None,
-            table: None,
-            period: None,
-            successor_fqid: issue.successor_fqid,
-        }
-    }
-}
+pub use reg_core::issue::Issue;
 
 /// `shape.LogicalOrder` (crates/DESIGN.md, "The logical order").
 #[derive(Serialize, ToSchema)]

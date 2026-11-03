@@ -1,0 +1,150 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Disjoint periods"
+    }
+  },
+  "files": [
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          },
+          {
+            "from": "2019-01-01",
+            "to": "2019-12-31"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Old",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "v",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Old"
+            }
+          ]
+        },
+        {
+          "name": "New",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "v",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "New"
+            }
+          ]
+        },
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "v",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            },
+            {
+              "source": "v",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        },
+        {
+          "name": "Year",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": []
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "form_change",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/held/value changes form at 2019-01-01 (Old -> New)",
+      "source": "v",
+      "variable": "demo/held/value",
+      "table": "demo/held",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2020-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}
