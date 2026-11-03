@@ -28,8 +28,7 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
     output = tmp_path / "reg_meta_fixture.db"
     built = run([*command, "--out", output])
     assert built.returncode == 0, built.stderr
-    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
-    try:
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
         client = pool.client(artifact_env(output))
         context = client.get("/api/context")
         assert context.status_code == 200
@@ -117,8 +116,6 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
         assert reference.json()["data"]["total"] == 1
         assert held.json()["data"]["total"] == 0
         assert held.json()["data"]["items"] == []
-    finally:
-        pool.close()
     # A matching advertised generation cannot bypass the byte pin or allow malformed
     # compiled presentation data to panic during server startup. Restore the valid
     # manifest before each independently invalid mutation. The positional-array
@@ -230,8 +227,7 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     # declared physical key is satisfied from an unrelated logical route.
     verify_refusals(tmp_path, output, base, root, "reference")
     (tmp_path / "reg_meta.db").symlink_to(base)
-    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
-    try:
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
         # Fails if a register filter skips an earlier supplemental spelling or
         # uses the reference register's local id in the supplemental origin.
         # Id also pins canonical deduplication across the two source fixtures.
@@ -322,8 +318,6 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         ] == [
             ("variable_replaced", "demo/projected/steward-slot", "demo/projected/cells")
         ]
-    finally:
-        pool.close()
     # Fails if located occurrence declarations can omit all supplemental segments
     # on their claimed table. Keep endpoints and the variable's other membership.
     references = root / "reference-occurrences.toml"

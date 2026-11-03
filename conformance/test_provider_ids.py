@@ -5,9 +5,8 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
-from pathlib import Path
 
-from reader_artifacts import REG_BUILD, REPO
+from reader_artifacts import CASES, REG_BUILD, REPO
 
 
 def test_reserved_provider_prefixes_refuse_at_lock(tmp_path):
@@ -15,9 +14,8 @@ def test_reserved_provider_prefixes_refuse_at_lock(tmp_path):
     # provider, making all emitted public ids unreachable. Existing ref grammar
     # cases never read builder inputs. The base fixture is the allowed twin;
     # expected.json names every reserved prefix and its authored source location.
-    cases = Path(__file__).parent / "cases"
-    fixture = cases / "fixtures/base"
-    expected = json.loads((cases / "lock/reserved-provider/expected.json").read_text())
+    fixture = CASES / "fixtures/base"
+    expected = json.loads((CASES / "lock/reserved-provider/expected.json").read_text())
     curation = tmp_path / "curation"
     inputs = tmp_path / "inputs"
     shutil.copytree(fixture / "curation", curation)

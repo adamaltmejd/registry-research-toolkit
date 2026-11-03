@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import json
+import shutil
+from contextlib import closing
 from pathlib import Path
 
 import pytest
 from http_cases import ServerPool
-from reader_artifacts import cached_reader_artifact
+from reader_artifacts import CASES, cached_reader_artifact
 
 
 def pytest_addoption(parser):
@@ -80,21 +83,13 @@ def http_servers(server_cmd, tmp_path_factory):
     """Server processes for `--server-cmd`, one per artifact.
 
     Every server is stopped at session end, whether or not the cases passed."""
-    pool = ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))
-    try:
+    with closing(ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))) as pool:
         yield pool
-    finally:
-        pool.close()
 
 
 @pytest.fixture
 def membership_case(tmp_path):
     """Membership overlays share the existing published-id source and ledgers."""
-    import json
-    import shutil
-
-    from reader_artifacts import CASES
-
     fixture = CASES / "release-ids"
     overlay = CASES / "lock/memberships"
     curation = tmp_path / "curation"

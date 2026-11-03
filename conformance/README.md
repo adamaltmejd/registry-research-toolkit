@@ -24,8 +24,6 @@ the equals form for `--artifact-dir`: pytest discovers roots before loading cust
 options, and a space-separated external directory can select that directory's checkout
 configuration.
 
-Holdings and steward cases return in milestone E, written over the new builder.
-
 ## Case contract
 
 Each case directory has `request.json` and, except for an order case that orders,
