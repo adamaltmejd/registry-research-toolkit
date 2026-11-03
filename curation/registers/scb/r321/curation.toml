@@ -9670,3 +9670,141 @@ kind = "set"
 subject = "var:webbmedbhant"
 fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen)" }
 evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:socmedier"
+fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, SOCMEDIER)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:socmedierannat"
+fields = { "label" = "Användande av sociala medier (annat syfte, SOCMEDIERANNAT)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:socmedierinfo"
+fields = { "label" = "Användande av sociala medier (informera medborgare, SOCMEDIERINFO)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:socmedierkont"
+fields = { "label" = "Användande av sociala medier (kontakt med medborgare, SOCMEDIERKONT)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:socmedierpaverk"
+fields = { "label" = "Användande av sociala medier (påverka politiska beslut, SOCMEDIERPAVERK)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sociala-medier-annat-syfte"
+fields = { "label" = "Användande av sociala medier (annat syfte, Fr33_4)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sociala-medier-informera-medborgare"
+fields = { "label" = "Användande av sociala medier (informera medborgare, Fr33_2)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sociala-medier-medborgarkontakt"
+fields = { "label" = "Användande av sociala medier (kontakt med medborgare, Fr33_1)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sociala-medier-medborgarkontakter-nej"
+fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, Fr33_5)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sociala-medier-paverka-politiska-beslut"
+fields = { "label" = "Användande av sociala medier (påverka politiska beslut, Fr33_3)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:region-sociala-medier-annat-syfte"
+fields = { "label" = "Användande av sociala medier (annat syfte, Fr31_4)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:region-sociala-medier-informera-medborgare"
+fields = { "label" = "Användande av sociala medier (informera medborgare, Fr31_2)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:region-sociala-medier-medborgarkontakt"
+fields = { "label" = "Användande av sociala medier (kontakt med medborgare, Fr31_1)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:region-sociala-medier-medborgarkontakter-nej"
+fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, Fr31_5)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:region-sociala-medier-paverka-politiska-beslut"
+fields = { "label" = "Användande av sociala medier (påverka politiska beslut, Fr31_3)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:anvandande-av-sociala-medier-fr45-5"
+fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, Fr45_5)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45"
+fields = { "label" = "Användande av sociala medier (kontakt med medborgare, Fr45_1)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-2"
+fields = { "label" = "Användande av sociala medier (informera medborgare, Fr45_2)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-3"
+fields = { "label" = "Användande av sociala medier (påverka politiska beslut, Fr45_3)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-4"
+fields = { "label" = "Användande av sociala medier (annat syfte, Fr45_4)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr46"
+fields = { "label" = "Användande av sociala medier (kontakt med medborgare, Fr46_1)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr46-3"
+fields = { "label" = "Användande av sociala medier (påverka politiska beslut, Fr46_3)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."
+
+[[statement]]
+kind = "set"
+subject = "var:fr46-5"
+fields = { "label" = "Användande av sociala medier (inga kontakter med medborgare, Fr46_5)" }
+evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef names one survey item, but the same five items recur per wave (2012, 2016, 2020) and per respondent group (kommuner, regioner) as separate columns with different populations/spellings, so the column code is added to keep them distinct."

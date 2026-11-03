@@ -3820,3 +3820,117 @@ kind = "set"
 subject = "var:topkod"
 fields = { "label" = "Fordonsmodell (personbilar)" }
 evidence = "#2102 same-label cluster 'Fordonsmodell' (2 variables): judged different meaning, medium confidence; STATKOD (bussar, lastbilar, motorcyklar, övriga fordonsslag) and TOPKOD (personbilar) are different model code lists for different vehicle types."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "label" = "Drivmedel (Drivm, Drivm1)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-drivm2"
+fields = { "label" = "Drivmedel (Drivm2)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-literal-drivm3"
+fields = { "label" = "Drivmedel (Drivm3)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
+fields = { "label" = "Drivmedel (officiell statistik, terrängskotrar)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning-avrors"
+fields = { "label" = "Fordonets benämning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets benämning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-handelsbeteckning-avrors"
+fields = { "label" = "Fordonets handelsbeteckning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets handelsbeteckning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh-2"
+fields = { "label" = "Effektnorm (EffektEnh1)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh2"
+fields = { "label" = "Effektnorm (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh3"
+fields = { "label" = "Effektnorm (EffektEnh3)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effekt3"
+fields = { "label" = "Effektnorm (drivmedel 1, Effekt3)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh"
+fields = { "label" = "Effektnorm (drivmedel 1, EffektEnh)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde2"
+fields = { "label" = "Partikelvärde (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partvarde"
+fields = { "label" = "Partikelvärde (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde3"
+fields = { "label" = "Partikelvärde (PartVarde3)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm3"
+fields = { "label" = "Partikelvärde (PartVardeEnhDrivm3)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:part4drivm"
+fields = { "label" = "Partikelvärde (Part4drivm1)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-part4drivm2"
+fields = { "label" = "Partikelvärde (Part4drivm2)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppl1"
+fields = { "label" = "Koppling (KOPPL1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppling1"
+fields = { "label" = "Koppling (Koppling1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."

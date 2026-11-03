@@ -790,3 +790,21 @@ kind = "set"
 subject = "var:utbildningsinriktning-kod"
 fields = { "label" = "Inriktning för utbildningen (utbildningsinriktning)" }
 evidence = "#2102 same-label cluster 'Inriktning för utbildningen' (2 variables): judged different meaning, medium confidence; SUNinriktning_kod and Utbildningsinriktning_kod are concurrent columns with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-gruppering-kkv"
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "label" = "Födelseland, världsdel/landgrupp (FodelseLand_Varldsdel)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel-flergen"
+fields = { "label" = "Födelseland, världsdel/landgrupp (FodelseLand_Varldsdel_Flergen)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."

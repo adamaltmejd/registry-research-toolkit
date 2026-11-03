@@ -1013,3 +1013,15 @@ kind = "set"
 subject = "var:verksamhetskommun"
 fields = { "label" = "Kommun (verksamhetskommun, kod)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: SKL municipality group 2017 versus municipality code of the activity."
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-inskr"
+fields = { "label" = "Startdatum (InskrDat)" }
+evidence = "#2102 same-label cluster 'Startdatum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; InskrDat and StartDat are concurrent in barn-individ; InskrDat's opdef varies by year (2014 enrolment in any pedagogisk verksamhet, later current unit plus comparison with earlier years) so 'jämförelse' is not true of every occurrence; no single documented difference holds, so the column code is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum"
+fields = { "label" = "Startdatum (StartDat)" }
+evidence = "#2102 same-label cluster 'Startdatum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; InskrDat and StartDat are concurrent in barn-individ; InskrDat's opdef varies by year (2014 enrolment in any pedagogisk verksamhet, later current unit plus comparison with earlier years) so 'jämförelse' is not true of every occurrence; no single documented difference holds, so the column code is the qualifier."

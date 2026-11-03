@@ -814,3 +814,21 @@ kind = "set"
 subject = "var:tshalt-franandra"
 fields = { "label" = "Torrsubstanshalt, gräs från andra arealer än slåttervall" }
 evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "label" = "Produktionsområde (8 områden, OrdPo8)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden, Po8)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."

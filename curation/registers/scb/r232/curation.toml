@@ -135,29 +135,29 @@ caveat = "SCB documents no column ANNANPED on Lärarregistret, Tjänsteregistret
 [[statement]]
 kind = "assert"
 subject = "tjansteregistret: Jurform @2013-07-01..2014-06-30 where key = 'v34' and release = 'r5593'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2185\n\nSWECOV holds Jurform in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/jurform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form (Jurform)", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2185\n\nSWECOV holds Jurform in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/jurform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7).\n\n#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
 caveat = "SCB documents no column Jurform on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions. The code list shown is the documented edition's; every delivered value is in it."
 
 [[statement]]
 kind = "assert"
 subject = "tjansteregistret: Jurform @2014-07-01..2015-06-30 where key = 'v34' and release = 'r5638'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2185\n\nSWECOV holds Jurform in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/jurform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form (Jurform)", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2185\n\nSWECOV holds Jurform in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/jurform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7).\n\n#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
 caveat = "SCB documents no column Jurform on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions. The code list shown is the documented edition's; every delivered value is in it."
 
 [[statement]]
 kind = "assert"
 subject = "tjansteregistret: JuridiskForm @2013-07-01..2014-06-30 where key = 'v34' and release = 'r5593'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 5000, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2196\n\nSWECOV holds JuridiskForm in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/juridiskform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form (JuridiskForm)", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 5000, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2196\n\nSWECOV holds JuridiskForm in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/juridiskform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried.\n\n#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
 caveat = "SCB documents no column JuridiskForm on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions."
 
 [[statement]]
 kind = "assert"
 subject = "tjansteregistret: JuridiskForm @2014-07-01..2015-06-30 where key = 'v34' and release = 'r5638'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 5000, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2196\n\nSWECOV holds JuridiskForm in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/juridiskform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form (JuridiskForm)", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 5000, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lararreg.toml:2196\n\nSWECOV holds JuridiskForm in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/juridiskform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried.\n\n#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
 caveat = "SCB documents no column JuridiskForm on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions."
 
 [[statement]]
@@ -6890,3 +6890,87 @@ kind = "set"
 subject = "var:yrkesamne-huvudyrkesgsaramn3"
 fields = { "label" = "Yrkesämne (tredje yrkesämnet, gymnasiesärskolan)" }
 evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged different meaning, high confidence; Opdefs: HuvudYrkesAmn (2013-14) is the huvudsakliga yrkesämne with an older category set; HuvudYrkesgsarAmn1-3 are the first, second and third huvudsakliga yrkesämne på gymnasiesärskola."
+
+[[statement]]
+kind = "set"
+subject = "tjansteregistret: Jurform @2015-07-01..2025-06-30"
+fields = { "label" = "Juridisk form (Jurform)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
+
+[[statement]]
+kind = "set"
+subject = "tjansteregistret: JuridiskForm @2015-07-01..2025-06-30"
+fields = { "label" = "Juridisk form (JuridiskForm)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition; Jurform has a 35-code list in 10 of 12 occurrences and JuridiskForm none, but no text says code versus clear text and the code list is missing for 2013-2015, so spellings are used."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim2"
+fields = { "label" = "Tjänstledig (antal timmar från andra tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim3"
+fields = { "label" = "Tjänstledig (antal timmar från tredje tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim4"
+fields = { "label" = "Tjänstledig (antal timmar från fjärde tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim5"
+fields = { "label" = "Tjänstledig (antal timmar från femte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-tjltim6"
+fields = { "label" = "Tjänstledig (antal timmar från sjätte tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjltim"
+fields = { "label" = "Tjänstledig (antal timmar från första tjänsten)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjl"
+fields = { "label" = "Tjänstledig (ja/nej, Tjl)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig-hosttermin"
+fields = { "label" = "Tjänstledig (hel tjänstledighet under höstterminen)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:tjledig"
+fields = { "label" = "Tjänstledig (helt tjänstledig, TjLedig)" }
+evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning-anst"
+fields = { "label" = "Typ av anställning (Anst)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning-anstslag"
+fields = { "label" = "Typ av anställning (AnstSlag)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "label" = "Typ av anställning (PrAnstSlag)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."

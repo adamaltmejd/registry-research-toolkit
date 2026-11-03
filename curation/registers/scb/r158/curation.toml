@@ -832,3 +832,39 @@ kind = "set"
 subject = "var:urspr-gallandedatum"
 fields = { "label" = "Gällandedatum för skyddad natur (ursprungligt)" }
 evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:total-areal"
+fields = { "label" = "Areal (enligt registret, TOTAL_AREAL)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "label" = "Areal (enligt registret, AREA_HA)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:areaha-scb"
+fields = { "label" = "Areal (beräknad av SCB, AreaHa_SCB)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:areaprod"
+fields = { "label" = "Areal (enligt registret, AreaProd)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:areatot"
+fields = { "label" = "Areal (enligt registret, AreaTot)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:totarea-scb"
+fields = { "label" = "Areal (beräknad av SCB, TotArea_SCB)" }
+evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."

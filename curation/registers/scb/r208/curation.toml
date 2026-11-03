@@ -8728,3 +8728,33 @@ kind = "set"
 subject = "var:troskad-areal-varrybs"
 fields = { "label" = "Tröskad areal vårrybs (varav ekologisk)" }
 evidence = "#2102 same-label cluster 'Tröskad areal vårrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef (KarnfroTroskadAreal_Dar_23)."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-22"
+fields = { "label" = "Tröskad areal höstrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_22 has opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroHektarskord_Dar_22 (2021-2022) has the same opdef under a yield-named column, so its code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:troskad-areal-hostrybs"
+fields = { "label" = "Tröskad areal höstrybs (varav ekologisk, KarnfroHektarskord_Dar_22)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_22 has opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroHektarskord_Dar_22 (2021-2022) has the same opdef under a yield-named column, so its code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-9"
+fields = { "label" = "Tröskad areal majs (KarnfroTroskadAreal_9)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-9"
+fields = { "label" = "Tröskad areal majs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:troskad-areal-majs"
+fields = { "label" = "Tröskad areal majs (varav ekologisk, KarnfroObargadAreal_Dar_9)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."

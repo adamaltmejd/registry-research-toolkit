@@ -1636,3 +1636,21 @@ kind = "set"
 subject = "var:senaste-invandring-1"
 fields = { "label" = "Senaste invandring (SENINV1)" }
 evidence = "#2102 same-label cluster 'Senaste invandring' (2 variables): judged different meaning, low confidence; SENINV och SENINV1 löper samtidigt 2015-2016 i par-sv; definitionen nämner två datumformat men inte vilken kolumn som har vilket, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-datum"
+fields = { "label" = "Åtgärdsdatum (ATGARD_DATUM)" }
+evidence = "#2102 same-label cluster 'Åtgärdsdatum' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATGDATUM definition says 'i SAS-datum, i at-fil' in both occurrences; ATGARD_DATUM and OP_DATUM have identical definitions in par-tv with nothing separating them."
+
+[[statement]]
+kind = "set"
+subject = "var:op-datum"
+fields = { "label" = "Åtgärdsdatum (OP_DATUM)" }
+evidence = "#2102 same-label cluster 'Åtgärdsdatum' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATGDATUM definition says 'i SAS-datum, i at-fil' in both occurrences; ATGARD_DATUM and OP_DATUM have identical definitions in par-tv with nothing separating them."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum"
+fields = { "label" = "Åtgärdsdatum (SAS-datum)" }
+evidence = "#2102 same-label cluster 'Åtgärdsdatum' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATGDATUM definition says 'i SAS-datum, i at-fil' in both occurrences; ATGARD_DATUM and OP_DATUM have identical definitions in par-tv with nothing separating them."

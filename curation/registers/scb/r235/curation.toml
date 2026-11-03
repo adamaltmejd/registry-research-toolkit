@@ -2352,3 +2352,15 @@ kind = "set"
 subject = "var:produktionsomrade-8-omraden"
 fields = { "label" = "Produktionsområde (8 områden)" }
 evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, high confidence; Po8 delar in Sverige i 8 och Po18 i 18 produktionsområden enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-id"
+fields = { "label" = "Växtskyddsmedel (id)" }
+evidence = "#2102 same-label cluster 'Växtskyddsmedel' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef for VaxtskyddsmedelId: id number in Lantbrukssystemet for all preparations; VaxtskyddsmedelNamn carries the name."
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-namn"
+fields = { "label" = "Växtskyddsmedel (namn)" }
+evidence = "#2102 same-label cluster 'Växtskyddsmedel' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef for VaxtskyddsmedelId: id number in Lantbrukssystemet for all preparations; VaxtskyddsmedelNamn carries the name."

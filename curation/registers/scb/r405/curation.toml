@@ -6872,3 +6872,27 @@ kind = "set"
 subject = "var:work3b"
 fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga B: hur ofta, work3b)" }
 evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-rasterna"
+fields = { "label" = "Trygghet: rasterna (ja/nej)" }
+evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_brea has ja/nej (0/1) codes up to 2016, sec_brea2 the graded 1-3 scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-rasterna-grad"
+fields = { "label" = "Trygghet: rasterna (graderad)" }
+evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_brea has ja/nej (0/1) codes up to 2016, sec_brea2 the graded 1-3 scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-i-bostadsomradet-dagtid"
+fields = { "label" = "Trygghet:i bostadsområdet dagtid (ja/nej)" }
+evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_day has ja/nej (0/1) codes up to 2016, sec_day2 the graded scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-i-bostadsomradet-dagtid-grad"
+fields = { "label" = "Trygghet:i bostadsområdet dagtid (graderad)" }
+evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_day has ja/nej (0/1) codes up to 2016, sec_day2 the graded scale from 2016, with different question wording per the definition."

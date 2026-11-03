@@ -1912,3 +1912,39 @@ kind = "set"
 subject = "var:vardegrundande-yta-i-smahus-ytavardesma"
 fields = { "label" = "Värdegrundande yta i småhus (småhusenheter)" }
 evidence = "#2102 same-label cluster 'Värdegrundande yta i småhus' (2 variables): judged different meaning, medium confidence; Concurrent columns YtaVarde and YtaVardeSma; suffix Sma marks the småhus property group."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-mark-for-antvesmamarkllant"
+fields = { "label" = "Antal värderingsenheter med mark för småhus på lantbruk (AntVeSmamarkLLant)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med mark för småhus på lantbruk' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and unit in both; 'lantbruksfastigheter' is not in any text (the definition already says 'på lantbruk'), so the Lant column is labelled by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-smahusbyggnad-antvesmabyggllant"
+fields = { "label" = "Antal värderingsenheter med småhusbyggnad på lantbruk (AntVeSmabyggLLant)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med småhusbyggnad på lantbruk' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and unit in both; 'lantbruksfastigheter' is not in any text, so the Lant column is labelled by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:nordkoordinat"
+fields = { "label" = "Koordinat i vertikal riktning för fastigheten (Nordkoordinat)" }
+evidence = "#2102 same-label cluster 'Koordinat i vertikal riktning för fastigheten' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the definition 'Koordinat i vertikal riktning' and no distinguishing opdef (Nordkoordinat only adds 'SWEREF 99 TM' from 2018); the pid koordinat-nord holds only the spelling Ostkoordinat, so the spellings are used."
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-nord"
+fields = { "label" = "Koordinat i vertikal riktning för fastigheten (Ostkoordinat)" }
+evidence = "#2102 same-label cluster 'Koordinat i vertikal riktning för fastigheten' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the definition 'Koordinat i vertikal riktning' and no distinguishing opdef (Nordkoordinat only adds 'SWEREF 99 TM' from 2018); the pid koordinat-nord holds only the spelling Ostkoordinat, so the spellings are used."
+
+[[statement]]
+kind = "set"
+subject = "var:bruksar-eller-vardear"
+fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (ArVarde)" }
+evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the same definition and unit; 'Värdeår för småhus' appears only in the 2020- opdefs (of both columns), not in the earlier ArVarde occurrences, so 'småhus' does not hold for every occurrence and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
+fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (ArVardeSma)" }
+evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the same definition and unit; 'Värdeår för småhus' appears only in the 2020- opdefs (of both columns), not in the earlier ArVarde occurrences, so 'småhus' does not hold for every occurrence and the codes are used."

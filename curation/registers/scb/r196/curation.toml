@@ -784,3 +784,33 @@ kind = "set"
 subject = "var:signal4-2"
 fields = { "label" = "Fartygets identitetssnummer (fartyg 4)" }
 evidence = "#2102 same-label cluster 'Fartygets identitetssnummer' (5 variables): judged different meaning, high confidence; Opdefs: identity number of vessel 1 to 5 (Signal1-5)."
+
+[[statement]]
+kind = "set"
+subject = "var:langd1"
+fields = { "label" = "Fartygets längd (fartyg 1)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:langd2"
+fields = { "label" = "Fartygets längd (fartyg 2)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:langd3"
+fields = { "label" = "Fartygets längd (fartyg 3)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:langd4"
+fields = { "label" = "Fartygets längd (fartyg 4)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:langd5"
+fields = { "label" = "Fartygets längd (fartyg 5)" }
+evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."

@@ -1534,3 +1534,21 @@ kind = "set"
 subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
 fields = { "label" = "Utbildningskod, person (SUN 96, tresiffernivå)" }
 evidence = "#2102 same-label cluster 'Utbildningskod, person' (3 variables): judged different meaning, medium confidence; Five-digit older SUN, five-digit SUN 96, and the three-digit level created from the SUN 96 five-digit code (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "label" = "Överenskommen sysselsättningsgrad (osys)" }
+evidence = "#2102 same-label cluster 'Överenskommen sysselsättningsgrad' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; osys opdef changes: none (-2013), includes timavlönade (2013-2018), faktisk grad with Tjänstledighetsomfattning (2018-), so 'faktisk' holds only for later occurrences; osysly opdef 'utan hänsyn till tjänstledighet' is absent before 2018. AnForm has three codes (heltid, deltid, övriga) in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "label" = "Överenskommen sysselsättningsgrad (anställningsform: heltid, deltid, övriga)" }
+evidence = "#2102 same-label cluster 'Överenskommen sysselsättningsgrad' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; osys opdef changes: none (-2013), includes timavlönade (2013-2018), faktisk grad with Tjänstledighetsomfattning (2018-), so 'faktisk' holds only for later occurrences; osysly opdef 'utan hänsyn till tjänstledighet' is absent before 2018. AnForm has three codes (heltid, deltid, övriga) in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "label" = "Överenskommen sysselsättningsgrad (osysly)" }
+evidence = "#2102 same-label cluster 'Överenskommen sysselsättningsgrad' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; osys opdef changes: none (-2013), includes timavlönade (2013-2018), faktisk grad with Tjänstledighetsomfattning (2018-), so 'faktisk' holds only for later occurrences; osysly opdef 'utan hänsyn till tjänstledighet' is absent before 2018. AnForm has three codes (heltid, deltid, övriga) in all occurrences."

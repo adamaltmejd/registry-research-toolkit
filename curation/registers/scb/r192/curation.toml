@@ -638,3 +638,27 @@ kind = "set"
 subject = "var:undkomp"
 fields = { "label" = "Undervisningsvolym (kompletterande svenskundervisning)" }
 evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rektorer"
+fields = { "label" = "Antal rektorer (män)" }
+evidence = "#2102 same-label cluster 'Antal rektorer' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: RektMan counts male principals ('som är män'), RektKv female ('som är kvinnor'); RektMan's 2004-2008 occurrences are labelled 'män'. The 2004-2008 RektKv occurrences carry no opdef, so 'kvinnor' rests on the other years and the male counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:rektkv"
+fields = { "label" = "Antal rektorer (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal rektorer' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: RektMan counts male principals ('som är män'), RektKv female ('som är kvinnor'); RektMan's 2004-2008 occurrences are labelled 'män'. The 2004-2008 RektKv occurrences carry no opdef, so 'kvinnor' rests on the other years and the male counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-skolledare"
+fields = { "label" = "Antal övriga skolledare (män)" }
+evidence = "#2102 same-label cluster 'Antal övriga skolledare' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SkollMan counts male other school leaders, SkollKv female; the 2004-2008 SkollKv occurrences carry no opdef, so 'kvinnor' rests on the other years and the male counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:skollkv"
+fields = { "label" = "Antal övriga skolledare (kvinnor)" }
+evidence = "#2102 same-label cluster 'Antal övriga skolledare' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SkollMan counts male other school leaders, SkollKv female; the 2004-2008 SkollKv occurrences carry no opdef, so 'kvinnor' rests on the other years and the male counterpart."

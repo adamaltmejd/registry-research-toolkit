@@ -1737,3 +1737,75 @@ kind = "set"
 subject = "var:sysselsattningsstatus-november"
 fields = { "label" = "Sysselsättningsstatus, november (SyssStat)" }
 evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (3 variables): judged different meaning, medium confidence; r_syssSt01 (2-code, 2001 definition) and r_syssSt97 (1997 definition, more categories) are concurrent with SyssStat (codes 1, 4, 5); SyssStat has no further source text."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk3-huvud"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 96)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; ssyk3 has the older code list (Militärer=011, 113-114 codes); ssyk3_2012 and ssyk3_2012_egf share the 149-code list (Officerare=011) over disjoint periods; nothing explains _egf, so it is kept in the label."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, ssyk3_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; ssyk3 has the older code list (Militärer=011, 113-114 codes); ssyk3_2012 and ssyk3_2012_egf share the 149-code list (Officerare=011) over disjoint periods; nothing explains _egf, so it is kept in the label."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012-egf"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, ssyk3_2012_egf)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; ssyk3 has the older code list (Militärer=011, 113-114 codes); ssyk3_2012 and ssyk3_2012_egf share the 149-code list (Officerare=011) over disjoint periods; nothing explains _egf, so it is kept in the label."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK4)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SSYK4 (356 codes, 0110=Militärer) and ssyk4_2012/ssyk4_2012_egf (430 codes, 0110=Officerare) have different code lists; the two 2012 columns share the list and definition, so the egf one carries its spelling. No opdef names the classification version for the older column, so it gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SSYK4 (356 codes, 0110=Militärer) and ssyk4_2012/ssyk4_2012_egf (430 codes, 0110=Officerare) have different code lists; the two 2012 columns share the list and definition, so the egf one carries its spelling. No opdef names the classification version for the older column, so it gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012-egf"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, ssyk4_2012_egf)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SSYK4 (356 codes, 0110=Militärer) and ssyk4_2012/ssyk4_2012_egf (430 codes, 0110=Officerare) have different code lists; the two 2012 columns share the list and definition, so the egf one carries its spelling. No opdef names the classification version for the older column, so it gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arblos"
+fields = { "label" = "Förekomst av ersättning från arbetslöshetskassa (arblos01)" }
+evidence = "#2102 same-label cluster 'Förekomst av ersättning från arbetslöshetskassa' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The suffixes 01/97/05 appear in no text, so years are not used. arblos01/arblos97 use 0=Nej/1=Ja, ARBSTOD05/ARBSTOD97 use 0=Ej förekomst/1=Förekomst, all in the same tables; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:arblos97"
+fields = { "label" = "Förekomst av ersättning från arbetslöshetskassa (arblos97)" }
+evidence = "#2102 same-label cluster 'Förekomst av ersättning från arbetslöshetskassa' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The suffixes 01/97/05 appear in no text, so years are not used. arblos01/arblos97 use 0=Nej/1=Ja, ARBSTOD05/ARBSTOD97 use 0=Ej förekomst/1=Förekomst, all in the same tables; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbstod"
+fields = { "label" = "Förekomst av ersättning från arbetslöshetskassa (ARBSTOD05)" }
+evidence = "#2102 same-label cluster 'Förekomst av ersättning från arbetslöshetskassa' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The suffixes 01/97/05 appear in no text, so years are not used. arblos01/arblos97 use 0=Nej/1=Ja, ARBSTOD05/ARBSTOD97 use 0=Ej förekomst/1=Förekomst, all in the same tables; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbstod97"
+fields = { "label" = "Förekomst av ersättning från arbetslöshetskassa (ARBSTOD97)" }
+evidence = "#2102 same-label cluster 'Förekomst av ersättning från arbetslöshetskassa' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The suffixes 01/97/05 appear in no text, so years are not used. arblos01/arblos97 use 0=Nej/1=Ja, ARBSTOD05/ARBSTOD97 use 0=Ej förekomst/1=Förekomst, all in the same tables; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-kronor"
+fields = { "label" = "Sammanräknad förvärvsinkomst (CSFVI)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; CSFVI and cfviki both have unit Kronor and no opdef, so '(kronor)' does not separate them; cfviki (2019-2020) is concurrent with csfvi in 2019-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "label" = "Sammanräknad förvärvsinkomst (cfviki)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; CSFVI and cfviki both have unit Kronor and no opdef, so '(kronor)' does not separate them; cfviki (2019-2020) is concurrent with csfvi in 2019-2020."

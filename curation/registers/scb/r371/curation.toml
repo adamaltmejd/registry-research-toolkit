@@ -31734,3 +31734,51 @@ kind = "set"
 subject = "var:yrkesstallning-byrkst"
 fields = { "label" = "Yrkesställning (individ)" }
 evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, high confidence; BYRKSTH is in familjehushallsregister (H suffix), BYRKST in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:etableringstillagg"
+fields = { "label" = "Etableringstillägg, utbetalt belopp (individ)" }
+evidence = "#2102 same-label cluster 'Etableringstillägg, utbetalt belopp' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; IETABTU's opdef (all 10 occurrences) says it is split by RTB family and all family members get the same amount; IETABT/IETABE are 'avser individen' from 2014 and no occurrence says otherwise (2011-2014 occurrences have no opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:ietabtu"
+fields = { "label" = "Etableringstillägg, utbetalt belopp (uppdelat enligt RTB-familj)" }
+evidence = "#2102 same-label cluster 'Etableringstillägg, utbetalt belopp' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; IETABTU's opdef (all 10 occurrences) says it is split by RTB family and all family members get the same amount; IETABT/IETABE are 'avser individen' from 2014 and no occurrence says otherwise (2011-2014 occurrences have no opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:zsparina"
+fields = { "label" = "Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10 (ZSPARINA)" }
+evidence = "#2102 same-label cluster 'Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All three are K10A fields with no opdef; ZSPARINA and Z4923 are concurrent 2012-2017, so only the column code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-utdelningsutrymme-overlatna"
+fields = { "label" = "Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10 (Z4923)" }
+evidence = "#2102 same-label cluster 'Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All three are K10A fields with no opdef; ZSPARINA and Z4923 are concurrent 2012-2017, so only the column code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-utdelningsutrymme-overlatna-2"
+fields = { "label" = "Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10 (ZSPARDEL)" }
+evidence = "#2102 same-label cluster 'Vid delavyttring eller gåva efter tidpunkten för ränta m.m.: sparat utdelningsutrymme som är hänförligt till de överlåtna delägarrätterna enligt p. 2.7a punkt 1.10' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All three are K10A fields with no opdef; ZSPARINA and Z4923 are concurrent 2012-2017, so only the column code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:tkuvard"
+fields = { "label" = "Vårdbidrag (TKUVARD)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD and TVARD swap deklarationsuppgift/kontrolluppgift opdefs in 2018, so neither opdef holds for all occurrences and the code is used; TVARDA's opdef is kontrolluppgift in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:tvard"
+fields = { "label" = "Vårdbidrag (TVARD)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD and TVARD swap deklarationsuppgift/kontrolluppgift opdefs in 2018, so neither opdef holds for all occurrences and the code is used; TVARDA's opdef is kontrolluppgift in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:tvarda"
+fields = { "label" = "Vårdbidrag (enligt kontrolluppgift, TVARDA)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD and TVARD swap deklarationsuppgift/kontrolluppgift opdefs in 2018, so neither opdef holds for all occurrences and the code is used; TVARDA's opdef is kontrolluppgift in every occurrence."

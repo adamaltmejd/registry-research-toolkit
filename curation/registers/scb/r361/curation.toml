@@ -250,3 +250,15 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "tags" = ["demographics"] }
 evidence = "Bakgrunden klassificeras efter personens och föräldrarnas födelseland.\ncatalog:valueset:8386\ncatalog:variable_text:39483:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön relationsperson (kon)" }
+evidence = "#2102 same-label cluster 'Kön relationsperson' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The \"härlett från personnummer\" opdef appears only on 2023- occurrences of kon, so it is dropped; both share the 1=Man/2=Kvinna code list and are told apart by column."
+
+[[statement]]
+kind = "set"
+subject = "var:rkon"
+fields = { "label" = "Kön relationsperson (RKon)" }
+evidence = "#2102 same-label cluster 'Kön relationsperson' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The \"härlett från personnummer\" opdef appears only on 2023- occurrences of kon, so it is dropped; both share the 1=Man/2=Kvinna code list and are told apart by column."

@@ -1846,3 +1846,45 @@ kind = "set"
 subject = "var:radnr"
 fields = { "label" = "Miljöskyddsinvestering (allt), radnummer" }
 evidence = "#2102 same-label cluster 'Miljöskyddsinvestering (allt)' (15 variables): judged different meaning, medium confidence; 2006-2011 row-format columns (amount, type, two environmental areas, row number) versus numbered amount columns for investments 1-10 from 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:kost301t"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost301T)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kost302a-6334"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302A)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kost302l"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302L)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kost302o"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302O)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kost302q"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302Q)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kost302v"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302V)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
+fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost303T)" }
+evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."

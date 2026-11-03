@@ -1662,3 +1662,45 @@ kind = "set"
 subject = "var:turbat"
 fields = { "label" = "Fiskat från båt (turbåt)" }
 evidence = "#2102 same-label cluster 'Fiskat från båt' (3 variables): judged different meaning, high confidence; Opdefs: inte fiskat från båt, privat båt, turbåt."
+
+[[statement]]
+kind = "set"
+subject = "var:f2b"
+fields = { "label" = "Antal fiskedagar (F2b)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f2d"
+fields = { "label" = "Antal fiskedagar (f2d)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f2f"
+fields = { "label" = "Antal fiskedagar (F2f)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-april-augusti-december"
+fields = { "label" = "Antal fiskedagar (F03b_04, april i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-februari-juni-oktober"
+fields = { "label" = "Antal fiskedagar (F03b_02, februari i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-mars-juli-november"
+fields = { "label" = "Antal fiskedagar (F03b_03, mars i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f03b-0"
+fields = { "label" = "Antal fiskedagar (F03b_01, januari i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."

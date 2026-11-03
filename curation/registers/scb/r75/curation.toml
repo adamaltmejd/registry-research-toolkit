@@ -916,3 +916,27 @@ kind = "set"
 subject = "var:varmtot"
 fields = { "label" = "Total energianvändning (VarmTot)" }
 evidence = "#2102 same-label cluster 'Total energianvändning' (2 variables): judged different meaning, low confidence; VarmKall and VarmTot coexist in one table with no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:varmvattenforbrukning-energiid"
+fields = { "label" = "Varmvattenförbrukning (Energiid)" }
+evidence = "#2102 same-label cluster 'Varmvattenförbrukning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Energiid, Kvant and Uppvid share definition, unit (Megawattimmar) and period; VarmvM3 has the unit M3, which supports (m³)."
+
+[[statement]]
+kind = "set"
+subject = "var:varmvattenforbrukning-kvant"
+fields = { "label" = "Varmvattenförbrukning (Kvant)" }
+evidence = "#2102 same-label cluster 'Varmvattenförbrukning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Energiid, Kvant and Uppvid share definition, unit (Megawattimmar) and period; VarmvM3 has the unit M3, which supports (m³)."
+
+[[statement]]
+kind = "set"
+subject = "var:varmvattenforbrukning-uppvid"
+fields = { "label" = "Varmvattenförbrukning (Uppvid)" }
+evidence = "#2102 same-label cluster 'Varmvattenförbrukning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Energiid, Kvant and Uppvid share definition, unit (Megawattimmar) and period; VarmvM3 has the unit M3, which supports (m³)."
+
+[[statement]]
+kind = "set"
+subject = "var:varmvm3"
+fields = { "label" = "Varmvattenförbrukning (m³)" }
+evidence = "#2102 same-label cluster 'Varmvattenförbrukning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Energiid, Kvant and Uppvid share definition, unit (Megawattimmar) and period; VarmvM3 has the unit M3, which supports (m³)."

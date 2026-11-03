@@ -19868,3 +19868,141 @@ kind = "set"
 subject = "var:vbbel"
 fields = { "label" = "Vårdbidrag (VBBEL)" }
 evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:civ"
+fields = { "label" = "Civilstånd (CIV/CIVR)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-rtb"
+fields = { "label" = "Civilstånd (RTB)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bciv"
+fields = { "label" = "Civilstånd (detaljerad indelning, beskattningsåret)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivakt"
+fields = { "label" = "Civilstånd (senast kända)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (befolkningsregistret först, taxeringsregistret i andra hand)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bkungr-4027"
+fields = { "label" = "Näringsgren (BKUNGR)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BKUNGR opdefs name SNI 92 (1993-2004), SNI2002 (2005-07) and SNI2007 (2008-); BKUNGR07 (2007-08) has no opdef, so both are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-produktionsenhet-sni-2007"
+fields = { "label" = "Näringsgren (BKUNGR07)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BKUNGR opdefs name SNI 92 (1993-2004), SNI2002 (2005-07) and SNI2007 (2008-); BKUNGR07 (2007-08) has no opdef, so both are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:penmark"
+fields = { "label" = "Pensionsmarkering (PENMARK)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bfpmark"
+fields = { "label" = "Pensionsmarkering (BFPMARK, FPMARK)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bpens"
+fields = { "label" = "Pensionsmarkering (BPENS)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ca"
+fields = { "label" = "Civilståndsdatum (CA)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:civandr"
+fields = { "label" = "Civilståndsdatum (CIVANDR)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivdatr"
+fields = { "label" = "Civilståndsdatum (BCIVDATR)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivand"
+fields = { "label" = "Civilståndsdatum (BCIVAND, relevant för taxeringen)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-rantebidrag-smahus"
+fields = { "label" = "Räntebidrag (lån till småhus)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdef of KKURBO says loans on småhus; KKURBID says loans in general (\"bostad, lån\"), concurrent 2001-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag"
+fields = { "label" = "Räntebidrag (bostadslån)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdef of KKURBO says loans on småhus; KKURBID says loans in general (\"bostad, lån\"), concurrent 2001-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-for-panelurvalet-burvkodp"
+fields = { "label" = "Urvalskod för panelurvalet (BURVKODP)" }
+evidence = "#2102 same-label cluster 'Urvalskod för panelurvalet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition, opdef and code list (0/1/2) are identical; BURVKODP occurs only in taxeringshushåll tables, BURVKODF in befolkningen and utrikesfödda tables, so the column codes separate them (a \"befolkningen\" qualifier would be wrong for the utrikesfödda tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-panelurvalet"
+fields = { "label" = "Urvalskod för panelurvalet (BURVKODF)" }
+evidence = "#2102 same-label cluster 'Urvalskod för panelurvalet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition, opdef and code list (0/1/2) are identical; BURVKODP occurs only in taxeringshushåll tables, BURVKODF in befolkningen and utrikesfödda tables, so the column codes separate them (a \"befolkningen\" qualifier would be wrong for the utrikesfödda tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:akbf"
+fields = { "label" = "Aktuell folkbokföringsort (län, kommun, församling och fastighet, AKBF)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:blkff"
+fields = { "label" = "Aktuell folkbokföringsort (RTB per 31/12, BLKFF)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:blkfa"
+fields = { "label" = "Aktuell folkbokföringsort (BLKFA)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pensionsforsakring"
+fields = { "label" = "Avkastningsskatt på utländska pensionsförsäkringar (SAVUKAP)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska pensionsförsäkringar' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SAVUKAP and SAVUP are concurrent in panelurval-befolkningen 2008-2016 with identical definition and unit and no opdef; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pensionsforsakring-2"
+fields = { "label" = "Avkastningsskatt på utländska pensionsförsäkringar (SAVUP)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska pensionsförsäkringar' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SAVUKAP and SAVUP are concurrent in panelurval-befolkningen 2008-2016 with identical definition and unit and no opdef; nothing separates them, so each keeps its spelling."

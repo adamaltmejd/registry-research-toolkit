@@ -223,3 +223,9 @@ kind = "set"
 subject = "var:uuid"
 fields = { "label" = "Objekt-ID (UUID)" }
 evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, medium confidence; OBJECTID (running number) and UUID are concurrent identifier columns with different periods; opdef is shared."
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "label" = "Tätort (tätortskod)" }
+evidence = "#2102 same-label cluster 'Tätort' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TATORTSKOD has a code list of tätortskoder (e.g. 0115TB101=Brottby) while TATORT has none; opdefs are otherwise identical (Registret Tätorter YYYY), so 'tätortskod' holds for every TATORTSKOD occurrence."
