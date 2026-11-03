@@ -860,13 +860,17 @@ async function stewardHeldCase(page, shoot) {
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
   await settled(page);
   await shoot("steward-order");
-  // A project must not make supplemental-only metadata selectable before the
-  // order server supports the composed catalog. Reference variables stay usable.
+  // Supplemental-only variables order through the composed steward view (#2068),
+  // so a project can select them like reference variables.
   await open(page, "/catalog/steward/slots/slot2");
+  const slotColumn = page.getByRole("main").getByRole("checkbox").first();
+  await slotColumn.waitFor();
+  await slotColumn.focus();
+  await slotColumn.press("Space");
+  check(await slotColumn.isChecked(), "supplemental variable offers no project selection");
+  await page.getByRole("main").getByRole("button", { name: /^Add \d+ columns? to project$/ }).waitFor();
   await settled(page);
-  check(await page.getByRole("main").getByRole("checkbox").count() === 0, "supplemental variable offers project selection");
-  check(await page.getByRole("button", { name: /^Add .* to project/ }).count() === 0, "supplemental variable offers an add bar");
-  await shoot("steward-readonly");
+  await shoot("steward-selectable");
   await open(page, "/catalog/demo/held/late");
   await page.getByRole("main").getByRole("checkbox").first().waitFor();
 }
