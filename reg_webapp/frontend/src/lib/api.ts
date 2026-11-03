@@ -165,35 +165,6 @@ export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
-/** The concept-group ref, `group/<provider>/<register>/<key>`. */
-export function conceptGroupRef(
-  provider: string,
-  register: string,
-  key: string,
-): string {
-  return `group/${provider}/${register}/${key}`;
-}
-
-/** The classification-group (or family) ref, `group/class/<key>`. */
-export function classificationGroupRef(key: string): string {
-  return `group/class/${key}`;
-}
-
-/** The concept-group subject route, shared by SPA links and API fetches. */
-export function conceptGroupPath(
-  provider: string,
-  register: string,
-  key: string,
-): string {
-  return `/catalog/${encodeFqid(conceptGroupRef(provider, register, key))}`;
-}
-
-/** The classification-group subject route (#756), shared by SPA links and API
- * fetches — the classification sibling of `conceptGroupPath`. */
-export function classificationGroupPath(key: string): string {
-  return `/catalog/${encodeFqid(classificationGroupRef(key))}`;
-}
-
 /** GET a Rust-server read and return its `data`. */
 async function rustGet<T>(
   path: string,
@@ -399,6 +370,7 @@ export type RootChild = RootShow["providers"][number];
 export type RegisterChild = ProviderShow["registers"][number];
 
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
+export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogSegment = RustSchemas["Segment"];

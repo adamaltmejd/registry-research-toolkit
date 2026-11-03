@@ -165,8 +165,15 @@ export function VariableView({ node }: { node: VariableShow }) {
           ...(node.sets.length
             ? [
                 {
-                  term: "Sets",
-                  value: node.sets.map((set) => set.name).join(", "),
+                  term: "Groups",
+                  value: node.sets.map((set, index) => (
+                    <span key={set.fqid}>
+                      {index > 0 && ", "}
+                      <a className="link" href={catalogHref(set.fqid)}>
+                        {set.name}
+                      </a>
+                    </span>
+                  )),
                 },
               ]
             : []),

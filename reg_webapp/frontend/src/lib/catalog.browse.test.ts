@@ -101,31 +101,6 @@ describe("routeBreadcrumbs", () => {
     expect(trail[2].href).toBe("/catalog/scb/lisa");
   });
 
-  it("group → browser root + split provider/register hops + the un-linked key", () => {
-    const trail = routeBreadcrumbs({
-      name: "group",
-      provider: "scb",
-      register: "lisa",
-      key: "ink",
-    });
-    expect(trail).toHaveLength(4);
-    expect(trail[0]).toEqual(browserRoot);
-    expect(trail[1]).toEqual({ label: "scb", href: catalogHref("scb") });
-    expect(trail[2]).toEqual({
-      label: "lisa",
-      href: catalogHref("scb/lisa"),
-    });
-    expect(trail[3]).toEqual({ label: "ink" });
-  });
-
-  it("class-group → browser root + a linked class hop + the un-linked key", () => {
-    const trail = routeBreadcrumbs({ name: "class-group", key: "sun" });
-    expect(trail).toHaveLength(3);
-    expect(trail[0]).toEqual(browserRoot);
-    expect(trail[1]).toEqual({ label: "class", href: catalogHref("class") });
-    expect(trail[2]).toEqual({ label: "sun" });
-  });
-
   it("not-found → just the browser root", () => {
     expect(routeBreadcrumbs({ name: "not-found", path: "/x" })).toEqual([
       browserRoot,
@@ -143,8 +118,6 @@ describe("routeBreadcrumbs", () => {
       { name: "root" },
       { name: "catalog-node", fqidPath: "scb/lisa/kon" },
       { name: "catalog-node", fqidPath: "scb" },
-      { name: "group", provider: "scb", register: "lisa", key: "ink" },
-      { name: "class-group", key: "sun" },
       { name: "project" },
       { name: "doc", identifier: "x" },
     ];

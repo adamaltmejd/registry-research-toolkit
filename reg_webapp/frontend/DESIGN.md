@@ -421,7 +421,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns. Padding `spacing.5`.
+  columns. Padding `spacing.5`. A variable group page carries the Group kind mark and a
+  member-of line naming its register, with constant facets shown once in the facets row.
+  Members appear as a member × axis table in curated order until `LaneGraph` lanes land;
+  only varying axes are columns, and groups without varying axes use a plain list.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

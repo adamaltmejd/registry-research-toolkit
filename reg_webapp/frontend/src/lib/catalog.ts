@@ -4,7 +4,7 @@
  * (the SPA routes mirror the API path; see reg_webapp/DESIGN.md → Catalog router
  * structure).
  */
-import { classificationGroupPath, conceptGroupPath, encodeFqid } from "./api";
+import { encodeFqid } from "./api";
 import { foldSearch } from "./reg_core";
 import type { Route } from "./router";
 import type { BreadcrumbItem } from "./ui/types";
@@ -21,30 +21,6 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
 /** Swedish labels sort with å, ä and ö after z, case- and accent-blind
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
-
-/** The stable `{#each}` key for a group member (#819). An FQID is NO LONGER
- * unique within a group: a multi-axis family can carry two members on ONE
- * variable (two delivery columns), so keying `{#each ... (m.fqid)}` would throw a
- * duplicate-key error / drop the second representation. The composite
- * `(fqid, delivery_column)` is unique — `delivery_column` is null for a
- * whole-variable member and the SCB column for a representation member, so the
- * pair distinguishes the two columns of one variable. The `::` separator can't
- * collide: an FQID is slash-separated and a delivery column is a bare SQL
- * identifier, neither contains `::`. */
-export function memberKey(m: {
-  fqid: string;
-  delivery_column?: string | null;
-}): string {
-  return `${m.fqid}::${m.delivery_column ?? ""}`;
-}
-
-// ── Group facets ─────────────────────────────────────────────────────────────
-
-/** Join a faceted member's facet labels into one display string (comma-
- * separated): the one home for the separator, read by a group lane's title. */
-export function facetLabelJoin(facets: { label: string }[]): string {
-  return facets.map((f) => f.label).join(", ");
-}
 
 /** A node's display label — its `name` when present, else its FQID. Groups are
  * labelled off their own `label` by their views. */
@@ -129,34 +105,20 @@ export function catalogHref(fqidPath: string): string {
   return fqidPath ? `/catalog/${encodeFqid(fqidPath)}` : "/catalog";
 }
 
-/** The href for a concept-group SUBJECT page (#617): the fixed
- * `/catalog/group/<provider>/<register>/<key>` route, NOT the `/catalog/<fqid>`
- * browse path. `registerFqid` is the 2-seg `provider/register` of the browsing
- * register; `key` is the group's derivation key. Each segment is percent-encoded
- * the same way `catalogHref` encodes (per-segment `encodeURIComponent`), so a
- * reserved/non-ASCII char in a key can't produce a malformed URL — a no-op for
- * today's ASCII slugs/keys. The route is REGISTER-only (the backend validates
- * provider/register as a register FQID), so only the register-arm browse links
- * to it; classification-umbrella groups have no group page (#673). */
-export function groupHref(registerFqid: string, key: string): string {
-  const [provider, register] = fqidSegments(registerFqid);
-  return conceptGroupPath(provider ?? "", register ?? "", key);
-}
-
-/** The href for a classification-umbrella SUBJECT page (#756): the fixed
- * `/catalog/group/class/<key>` route — the classification sibling of `groupHref`.
- * A classification umbrella is catalog-global (no provider/register), so it takes
- * only the group's derivation `key`. The classification-root browse arm links to
- * it so the umbrella group gets a first-class subject page like the register
- * groups do (#673 left it inline; #756 gives it the route). */
-export function classGroupHref(key: string): string {
-  return classificationGroupPath(key);
-}
-
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).
  * Empty string → `[]` (the root). */
 export function fqidSegments(fqidPath: string): string[] {
   return fqidPath ? fqidPath.split("/") : [];
+}
+
+/** The owning register for a catalog path, including namespaced groups. */
+export function registerOfPath(fqidPath: string): string | null {
+  const segments = fqidSegments(fqidPath);
+  if (segments[0] === "class") return null;
+  const offset = segments[0] === "set" ? 1 : 0;
+  return segments.length >= offset + 2
+    ? segments.slice(offset, offset + 2).join("/")
+    : null;
 }
 
 /** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
@@ -183,31 +145,12 @@ export function breadcrumbs(
   }));
 }
 
-/** The shared trail for a route that hangs off a register but is NOT an FQID
- * node: browser root → provider → register (each individually linked, the same
- * per-segment idiom as `catalog-node`) → the route's own un-linked tail. Used by
- * the concept-group route. */
-function registerTrail(
-  browserRoot: BreadcrumbItem,
-  provider: string,
-  register: string,
-  tail: BreadcrumbItem,
-): BreadcrumbItem[] {
-  return [
-    browserRoot,
-    { label: provider, href: catalogHref(provider) },
-    { label: register, href: catalogHref(`${provider}/${register}`) },
-    tail,
-  ];
-}
-
 /** The detail pane's breadcrumb trail for a route (#803), as `Breadcrumbs`
  * items (the last item is the current page — no `href`). STRUCTURAL only: labels
  * are the raw slug segments (the routed page owns its rich, display-name header)
  * and the data-browser root leads every trail, catalog or not, because below the
- * narrow breakpoint it is the way back to the register list. A `catalog-node` splits its FQID path into cumulative `/catalog/...`
- * crumbs; the group routes prepend the browser root + a "Groups" hop so the trail
- * still descends from the data browser. */
+ * narrow breakpoint it is the way back to the register list. Catalog-node
+ * ancestors link to their pages; the set namespace has no breadcrumb. */
 export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   const browserRoot: BreadcrumbItem = {
     label: BROWSE_REGISTERS_LABEL,
@@ -225,7 +168,12 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       // Each ancestor segment is a link to its cumulative `/catalog/...` path;
       // the leaf segment is the current page (no href). Classification families
       // and their root have no pages, so their ancestors stay plain text.
-      const trail = breadcrumbs(route.fqidPath);
+      const register = registerOfPath(route.fqidPath);
+      const path =
+        register && route.fqidPath.startsWith("set/")
+          ? route.fqidPath.slice("set/".length)
+          : route.fqidPath;
+      const trail = breadcrumbs(path);
       const classification =
         route.fqidPath === "class" || route.fqidPath.startsWith("class/");
       return [
@@ -239,14 +187,6 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         })),
       ];
     }
-    case "group":
-      // Provider and register are separate, individually-linked crumbs (#887);
-      // the group key is the current page (no href).
-      return registerTrail(browserRoot, route.provider, route.register, {
-        label: route.key,
-      });
-    case "class-group":
-      return [browserRoot, { label: "class" }, { label: route.key }];
     case "project":
       return [browserRoot, { label: "Project", word: true }];
     case "doc":

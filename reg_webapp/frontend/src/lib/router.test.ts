@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { catalogHref, classGroupHref, groupHref } from "./catalog";
+import { catalogHref } from "./catalog";
 import { onNavClick, parseRoute, type Route, router } from "./router";
 
 describe("parseRoute", () => {
@@ -30,57 +30,11 @@ describe("parseRoute", () => {
       path: "/catalog/scb//lisa",
     });
   });
-
-  it("parses the concept-group SUBJECT route (#617)", () => {
-    // `/catalog/group/<provider>/<register>/<key...>` (`group` prefix) is the
-    // group subject — NOT an FQID path. Distinct route name + parsed triple.
-    expect(parseRoute("/catalog/group/scb/rams/ink")).toEqual({
-      name: "group",
-      provider: "scb",
-      register: "rams",
-      key: "ink",
-    });
-  });
-
-  it("parses slash-bearing concept-group keys as the group route", () => {
-    expect(parseRoute("/catalog/group/scb/rams/a%2Fb")).toEqual({
-      name: "group",
-      provider: "scb",
-      register: "rams",
-      key: "a/b",
-    });
-    expect(parseRoute("/catalog/group/scb/rams/a/b")).toEqual({
-      name: "group",
-      provider: "scb",
-      register: "rams",
-      key: "a/b",
-    });
-  });
-
-  it("does NOT treat a keyless group path as the group route (#617)", () => {
-    // A bare `group/<p>/<r>` (3 segs) is NOT the group route — it falls
-    // through to `catalog-node` (a bogus FQID that 404s server-side), mirroring
-    // the backend route's required key tail.
-    expect(parseRoute("/catalog/group/scb/rams")).toEqual({
-      name: "catalog-node",
-      fqidPath: "group/scb/rams",
-    });
-  });
-
-  it("parses the classification-group SUBJECT route (#756)", () => {
-    // `/catalog/group/class/<key...>` is the classification-umbrella subject —
-    // the literal `class` segment routes here (NOT a register group with
-    // provider=`class`), and it carries only the key (no provider/register).
-    expect(parseRoute("/catalog/group/class/sun")).toEqual({
-      name: "class-group",
-      key: "sun",
-    });
-  });
 });
 
 describe("catalog href builders ↔ parseRoute", () => {
   it("parses every built href back to the route it names", () => {
-    // Non-ASCII, `%` and a slash-bearing key must survive the encode → decode
+    // Non-ASCII and `%` must survive the encode → decode
     // round trip as the same route. An unencoded `%` would decode to not-found.
     const cases: [href: string, route: Route][] = [
       [catalogHref(""), { name: "root" }],
@@ -88,11 +42,6 @@ describe("catalog href builders ↔ parseRoute", () => {
         catalogHref("scb/lisa/kön%"),
         { name: "catalog-node", fqidPath: "scb/lisa/kön%" },
       ],
-      [
-        groupHref("scb/lsön", "a/b%"),
-        { name: "group", provider: "scb", register: "lsön", key: "a/b%" },
-      ],
-      [classGroupHref("a/b%"), { name: "class-group", key: "a/b%" }],
     ];
     for (const [href, route] of cases) {
       expect(parseRoute(href), href).toEqual(route);

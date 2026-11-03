@@ -23,7 +23,7 @@ import {
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
-import { catalogHref, leafSlug, rankFilter } from "./catalog";
+import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
@@ -101,17 +101,10 @@ interface CurrentRow {
 function currentRow(route: Route): CurrentRow | null {
   switch (route.name) {
     case "catalog-node": {
-      const [first, second] = route.fqidPath.split("/");
       const key =
-        first === "class" || second === undefined
-          ? first
-          : `${first}/${second}`;
+        registerOfPath(route.fqidPath) ?? route.fqidPath.split("/")[0];
       return { key, exact: key === route.fqidPath };
     }
-    case "group":
-      return { key: `${route.provider}/${route.register}`, exact: false };
-    case "class-group":
-      return { key: "class", exact: false };
     default:
       return null;
   }

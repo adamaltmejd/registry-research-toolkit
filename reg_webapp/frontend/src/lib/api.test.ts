@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ApiError,
   apiGet,
-  classificationGroupPath,
   getContext,
   getDoc,
   getDocsForVariable,
@@ -228,16 +227,6 @@ it("refuses a period list with an empty member before reading", async () => {
     });
   }
   expect(seen).toEqual([]);
-});
-
-describe("classificationGroupPath (#756)", () => {
-  it("builds the fixed `class` route with the key encoded", () => {
-    // The path is `/api`-less (like conceptGroupPath) — `apiGet` prepends `/api`.
-    expect(classificationGroupPath("sun")).toBe("/catalog/group/class/sun");
-    expect(classificationGroupPath("kön")).toBe(
-      "/catalog/group/class/k%C3%B6n",
-    );
-  });
 });
 
 describe("validateProject", () => {

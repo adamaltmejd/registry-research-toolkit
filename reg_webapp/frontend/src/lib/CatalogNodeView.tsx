@@ -2,6 +2,7 @@ import styles from "./CatalogNodeView.module.css";
 import { sharedShow } from "./catalog_names";
 import { ProviderView } from "./ProviderView";
 import { RegisterView } from "./RegisterView";
+import { SetView } from "./SetView";
 import { TableView } from "./TableView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
@@ -57,6 +58,8 @@ export function CatalogNodeView({ fqidPath }: { fqidPath: string }) {
       return <TableView node={node} />;
     case "variable":
       return <VariableView key={node.fqid} node={node} />;
+    case "set":
+      return <SetView node={node} />;
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>
