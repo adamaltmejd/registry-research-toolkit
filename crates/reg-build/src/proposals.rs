@@ -11,15 +11,18 @@ use reg_resolve::{Finding, Resolved, ResolvedOccurrence, Subject};
 use crate::link::{Entity, Linked};
 
 mod classification;
+mod types;
 
 pub fn generate(
     registers: &mut [Resolved],
     classes: &[Classification],
     sets: &BTreeMap<&str, &ValueSet>,
+    sentinels: &BTreeMap<String, BTreeSet<String>>,
     linked: &Linked,
 ) -> Result<(), String> {
     continuations(registers, linked)?;
-    classification::generate(registers, classes, sets)
+    classification::generate(registers, classes, sets)?;
+    types::generate(registers, sets, sentinels)
 }
 
 fn statement_toml(statement: &Statement) -> Result<String, String> {
