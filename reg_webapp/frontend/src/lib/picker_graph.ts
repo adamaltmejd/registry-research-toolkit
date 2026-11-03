@@ -4,7 +4,7 @@ import {
   columnWindowPeriod,
   type VariableColumn,
 } from "./add_columns";
-import type { Graph, VariableShow } from "./api";
+import type { Graph, SetShow, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
 import {
@@ -115,6 +115,68 @@ export function variableSpans({
   });
 }
 
+/** A span that shows its "in project" state but cannot be ticked. */
+function readOnlySpan(
+  span: LaneSpanModel,
+  inProject: boolean,
+  variableName: string,
+  tableName = "Table name unavailable",
+): LaneSpanModel {
+  return {
+    ...span,
+    state: inProject ? "in" : "default",
+    selectable: false,
+    isSelected: undefined,
+    staged: null,
+    blocked: false,
+    note: null,
+    accessibleName: `${span.name}, ${variableName}, ${tableName}, ${span.years}, ${inProject ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
+  };
+}
+
+/** A group member's columns as read-only spans on the member's lane. */
+export function memberSpans({
+  member,
+  names,
+  project,
+  axis,
+  catalogBounds,
+}: {
+  member: SetShow["members"][number];
+  names: ReadonlyMap<string, string>;
+  project: ProjectData | null;
+  axis: [number, number];
+  catalogBounds: [number, number];
+}): LaneSpanModel[] {
+  return member.columns.flatMap((column) => {
+    const eras = columnYearRuns(
+      column.periods.map((period) => ({ period })),
+      catalogBounds,
+      axis[0],
+    );
+    if (!eras.length) return [];
+    return [
+      readOnlySpan(
+        {
+          id: `${member.fqid}|${JSON.stringify([column.table, column.spelling])}`,
+          lane: member.fqid,
+          name: column.spelling,
+          from: eras[0].from,
+          to: eras[eras.length - 1].to,
+          segments: eras.map((era) => ({ name: null, ...era })),
+          years: eras.map(yearWindowLabel).join(", "),
+          state: "default",
+          selectable: false,
+          accessibleName: "",
+        },
+        columnInProject(project, member.fqid, column.table),
+        member.name,
+        names.get(column.table),
+      ),
+    ];
+  });
+}
+
 /** One-hop succession on the coverage drawing; API subjects are the newer end. */
 export function successionLanes({
   focusSpans,
@@ -182,16 +244,12 @@ export function successionLanes({
         fqid,
         span.lane.slice(fqid.length + 1),
       );
-      return {
-        ...span,
-        state: inside ? "in" : "default",
-        selectable: false,
-        isSelected: undefined,
-        staged: null,
-        blocked: false,
-        note: null,
-        accessibleName: `${span.name}, ${node.name}, ${tableNames.get(span.lane.slice(fqid.length + 1))}, ${span.years}, ${inside ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
-      };
+      return readOnlySpan(
+        span,
+        inside,
+        node.name,
+        tableNames.get(span.lane.slice(fqid.length + 1)),
+      );
     });
     byVariable.set(fqid, projected);
     spans.push(...projected);

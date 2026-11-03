@@ -424,9 +424,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   columns, findings, then source documents. On a variable page, source and provenance
   follows the documents. Padding `spacing.5`. A variable group page carries the Group
   kind mark and a member-of line naming its register, with constant facets shown once in
-  the facets row. Members appear as a member × axis table until `LaneGraph` lanes land,
-  with axes in curated order and members in API order; only varying axes are columns,
-  and groups without varying axes use a plain list.
+  the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
+  order: a lane is titled by its varying facets in curated axis order, with the member's
+  name on the line under it, and by the name alone when no axis varies.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

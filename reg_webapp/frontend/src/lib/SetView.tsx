@@ -1,29 +1,28 @@
-import { useMemo } from "react";
-import type { SetShow } from "./api";
+import type { Context, SetShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
-import { registerRead } from "./catalog_names";
-import groupStyles from "./SetView.module.css";
-import { DataTable } from "./ui/DataTable";
+import { registerRead, registerSubjectNames } from "./catalog_names";
+import { LaneGraph } from "./LaneGraph";
+import { dataAxis } from "./period";
+import { memberSpans } from "./picker_graph";
+import { columnYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
-import { InProjectDot } from "./ui/VariableRow";
 import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
+import { windowBounds } from "./window_bounds";
 
-export function SetView({ node }: { node: SetShow }) {
+export function SetView({
+  node,
+  context,
+}: {
+  node: SetShow;
+  context: Context | null;
+}) {
   const { draft } = useProject();
-  const bound = useMemo(
-    () =>
-      new Set(
-        draft?.sources.flatMap((source) =>
-          source.bindings.map((binding) => binding.variable),
-        ) ?? [],
-      ),
-    [draft],
-  );
   const register = useCatalogRead(registerRead, node.register).value;
+  const names = registerSubjectNames(register);
   const axes = node.axes.flatMap((axis) => {
     const facets = node.members.map((member) =>
       member.facets.find((facet) => facet.axis === axis.id),
@@ -38,19 +37,21 @@ export function SetView({ node }: { node: SetShow }) {
     ];
   });
   const varying = axes.filter((axis) => axis.varying);
-  // Keep axis ids separate from the variable column key, even for an axis named "member".
-  const rows: {
-    member: SetShow["members"][number];
-    [key: `axis:${string}`]: string | undefined;
-  }[] = node.members.map((member) => ({
-    member,
-    ...Object.fromEntries(
-      varying.map((axis) => [
-        `axis:${axis.id}`,
-        member.facets.find((facet) => facet.axis === axis.id)?.label,
-      ]),
+  const study = studyWindow(draft);
+  const catalogBounds = windowBounds(context);
+  const bounds: [number, number] = [catalogBounds.min, catalogBounds.max];
+  const axis = dataAxis(
+    node.members.flatMap((member) =>
+      member.columns.flatMap((column) =>
+        columnYearRuns(
+          column.periods.map((period) => ({ period })),
+          bounds,
+        ).flatMap((run) => [run.from, run.to]),
+      ),
     ),
-  }));
+    study,
+    bounds,
+  );
   return (
     <article className={styles.page}>
       <Definitions
@@ -91,68 +92,42 @@ export function SetView({ node }: { node: SetShow }) {
             : []),
         ]}
       />
-      <Panel
-        title="Members"
-        flush={node.members.length > 0 && varying.length > 0}
-      >
+      <Panel title="Members">
         {node.members.length === 0 ? (
           <EmptyState title="No variables recorded for this group." />
-        ) : varying.length === 0 ? (
-          <ul className={styles.plainList}>
-            {node.members.map((member) => (
-              <li key={member.fqid}>
-                <MemberLink
-                  member={member}
-                  inProject={bound.has(member.fqid)}
-                />
-              </li>
-            ))}
-          </ul>
         ) : (
-          <DataTable
-            rowNavigation
-            columns={[
-              { key: "member", label: "Variable" },
-              ...varying.map((axis) => ({
-                key: `axis:${axis.id}` as const,
-                label: axis.label,
-              })),
-            ]}
-            rows={rows}
-            getRowId={(row) => row.member.fqid}
-            renderCell={(row, column) =>
-              column.key === "member" ? (
-                <MemberLink
-                  member={row.member}
-                  inProject={bound.has(row.member.fqid)}
-                />
-              ) : row[column.key] === undefined ? (
-                <span className="visually-hidden">Not stated</span>
-              ) : (
-                <span className={groupStyles.facet}>{row[column.key]}</span>
-              )
-            }
+          <LaneGraph
+            label="Group members"
+            lanes={node.members.map((member) => {
+              // A lane's title is its varying facets; its name tells it apart otherwise.
+              const facets = varying.flatMap((axis) => {
+                const label = member.facets.find(
+                  (facet) => facet.axis === axis.id,
+                )?.label;
+                return label ? [label] : [];
+              });
+              return {
+                id: member.fqid,
+                name: facets.length ? facets.join(", ") : member.name,
+                sub: facets.length ? { text: member.name } : null,
+                href: catalogHref(member.fqid),
+              };
+            })}
+            spans={node.members.flatMap((member) =>
+              memberSpans({
+                member,
+                names,
+                project: draft,
+                axis,
+                catalogBounds: bounds,
+              }),
+            )}
+            edges={[]}
+            axis={axis}
+            window={study ? [study.from, study.to] : null}
           />
         )}
       </Panel>
     </article>
-  );
-}
-
-function MemberLink({
-  member,
-  inProject,
-}: {
-  member: SetShow["members"][number];
-  inProject: boolean;
-}) {
-  return (
-    <span className={groupStyles.member}>
-      <InProjectDot inProject={inProject} />
-      <a className="link" href={catalogHref(member.fqid)}>
-        {member.name}
-      </a>
-      {inProject && <span className="visually-hidden">, in the project</span>}
-    </span>
   );
 }
