@@ -817,7 +817,7 @@ async function stewardHeldCase(page, shoot) {
   check(await page.locator('link[rel="icon"]').getAttribute("href")?.then((href) => href.startsWith("data:image/svg+xml,")), "paired favicon is missing");
   const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
   if (narrow) await page.getByRole("link", { name: "Browse registers", exact: true }).click();
-  const scope = page.getByRole("button", { name: /Variable search scope/ });
+  const scope = page.getByRole("button", { name: /Browse scope/ });
   await scope.waitFor();
   check((await scope.innerText()).includes("Held matches"), "paired scope did not default to steward");
   const search = page.getByRole("searchbox", { name: /^Search registers/ });
