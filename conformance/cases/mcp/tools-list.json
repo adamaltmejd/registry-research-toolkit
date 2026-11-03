@@ -1259,6 +1259,31 @@
           ],
           "type": "object"
         },
+        "ShowSetColumn": {
+          "description": "One (table, spelling) a set member has segments in.",
+          "properties": {
+            "periods": {
+              "description": "The column's segment periods, in time order.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            },
+            "spelling": {
+              "type": "string"
+            },
+            "table": {
+              "description": "The table's fqid.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "table",
+            "spelling",
+            "periods"
+          ],
+          "type": "object"
+        },
         "ShowSetFacet": {
           "properties": {
             "axis": {
@@ -1280,6 +1305,13 @@
         },
         "ShowSetMember": {
           "properties": {
+            "columns": {
+              "description": "The member's columns, ordered by table then spelling.",
+              "items": {
+                "$ref": "#/$defs/ShowSetColumn"
+              },
+              "type": "array"
+            },
             "facets": {
               "description": "The member's coordinates in the set's axis order.",
               "items": {
@@ -1297,6 +1329,7 @@
           "required": [
             "fqid",
             "name",
+            "columns",
             "facets"
           ],
           "type": "object"
