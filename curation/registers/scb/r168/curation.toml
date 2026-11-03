@@ -5310,3 +5310,411 @@ kind = "set"
 subject = "var:imp-527"
 fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
 evidence = "r51 and r62 document an imputed SEK amount for other personnel costs, within the social and other personnel cost scope of r106.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:95381\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10664\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "set:aktieagartillskott"
+fields = { "label" = "Aktieägartillskott" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:aktier-och-andelar"
+fields = { "label" = "Aktier och andelar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arbetsstallen"
+fields = { "label" = "Antal arbetsställen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "label" = "Antal sysselsatta" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:av-och-nedskrivningar"
+fields = { "label" = "Av- och nedskrivningar" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:avsattningar"
+fields = { "label" = "Avsättningar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bidrag-for-verksamheten"
+fields = { "label" = "Bidrag för verksamheten" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bokslutsdispositioner"
+fields = { "label" = "Bokslutsdispositioner" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-byggnader-markanlaggningar-och-mark"
+fields = { "label" = "Bruttoinvesteringar byggnader, markanläggningar och mark" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-byggnader-och-markanlaggningar"
+fields = { "label" = "Bruttoinvesteringar byggnader och markanläggningar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-mark"
+fields = { "label" = "Bruttoinvesteringar mark" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-maskiner-och-inventarier"
+fields = { "label" = "Bruttoinvesteringar maskiner och inventarier" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnader-mark-och-markanlaggningar"
+fields = { "label" = "Byggnader, mark och markanläggningar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:eget-kapital"
+fields = { "label" = "Eget kapital" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:finansiella-anlaggningstillgangar"
+fields = { "label" = "Finansiella anläggningstillgångar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forandringar-av-eget-kapital"
+fields = { "label" = "Förändringar av eget kapital" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordringar-pa-koncern-och-intresseforetag"
+fields = { "label" = "Fordringar på koncern- och intresseföretag" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forlust-vid-avyttring-av-anlaggningstillgangar"
+fields = { "label" = "Förlust vid avyttring av anläggningstillgångar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-internt-levererade-fardiga-varor"
+fields = { "label" = "Intäkter från internt levererade färdiga varor" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-kommissionarsverksamhet"
+fields = { "label" = "Intäkter från kommissionärsverksamhet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-koncernintern-hjalpverksamhet"
+fields = { "label" = "Intäkter från koncernintern hjälpverksamhet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-egenproducerade-varor"
+fields = { "label" = "Interna köp av egenproducerade varor" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-handelsvaror"
+fields = { "label" = "Interna köp av handelsvaror" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-ravaror"
+fields = { "label" = "Interna köp av råvaror" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-tjanster"
+fields = { "label" = "Interna köp av tjänster" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-egenproducerade-varor"
+fields = { "label" = "Internleveranser av egenproducerade varor" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-handelsvaror-och-tjanster"
+fields = { "label" = "Internleveranser av handelsvaror och tjänster" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-ravaror-och-halvfabrikat"
+fields = { "label" = "Internleveranser av råvaror och halvfabrikat" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "label" = "Kommuntillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncernbidrag"
+fields = { "label" = "Koncernbidrag" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kortfristiga-fordringar"
+fields = { "label" = "Kortfristiga fordringar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kortfristiga-placeringar"
+fields = { "label" = "Kortfristiga placeringar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kortfristiga-skulder"
+fields = { "label" = "Kortfristiga skulder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-handelsvaror"
+fields = { "label" = "Kostnader för handelsvaror" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-ravaror"
+fields = { "label" = "Kostnader för råvaror" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-ravaror-och-handelsvaror"
+fields = { "label" = "Kostnader för råvaror och handelsvaror" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:langfristiga-skulder"
+fields = { "label" = "Långfristiga skulder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:legoarbeten-och-underentreprenorer"
+fields = { "label" = "Legoarbeten och underentreprenörer" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:loner-och-andra-ersattningar"
+fields = { "label" = "Löner och andra ersättningar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:materiella-anlaggningstillgangar"
+fields = { "label" = "Materiella anläggningstillgångar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nedskrivningar-av-finansiella-tillgangar"
+fields = { "label" = "Nedskrivningar av finansiella tillgångar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-byggnader-markanlaggningar-och-mark"
+fields = { "label" = "Nettoinvesteringar byggnader, markanläggningar och mark" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-byggnader-och-markanlaggningar"
+fields = { "label" = "Nettoinvesteringar byggnader och markanläggningar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-mark"
+fields = { "label" = "Nettoinvesteringar mark" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-maskiner-och-inventarier"
+fields = { "label" = "Nettoinvesteringar, maskiner och inventarier" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nettoomsattning"
+fields = { "label" = "Nettoomsättning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:obeskattade-reserver"
+fields = { "label" = "Obeskattade reserver" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overavskrivningar"
+fields = { "label" = "Överavskrivningar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelseintakter"
+fields = { "label" = "Övriga rörelseintäkter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelsekostnader"
+fields = { "label" = "Övriga rörelsekostnader" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:pagaende-nyanlaggningar-och-forskott"
+fields = { "label" = "Pågående nyanläggningar och förskott" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:pensionskostnader"
+fields = { "label" = "Pensionskostnader" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:periodiseringsfond"
+fields = { "label" = "Periodiseringsfond" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:personalkostnader"
+fields = { "label" = "Personalkostnader" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provisionsintakter"
+fields = { "label" = "Provisionsintäkter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ranteintakter"
+fields = { "label" = "Ränteintäkter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rantekostnader"
+fields = { "label" = "Räntekostnader" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:redovisat-slutresultat"
+fields = { "label" = "Redovisat slutresultat" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-fran-agarandelar"
+fields = { "label" = "Resultat från ägarandelar" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rorelseresultat"
+fields = { "label" = "Rörelseresultat" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sammanlagda-investeringar"
+fields = { "label" = "Sammanlagda investeringar" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sociala-och-andra-personalkostnader"
+fields = { "label" = "Sociala och andra personalkostnader" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsstratum"
+fields = { "label" = "Urvalsstratum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utdelningsintakter"
+fields = { "label" = "Utdelningsintäkter" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:valutakursresultat"
+fields = { "label" = "Valutakursresultat" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vinst-vid-avyttring-av-anlaggningstillgangar"
+fields = { "label" = "Vinst vid avyttring av anläggningstillgångar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

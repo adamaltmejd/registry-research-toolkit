@@ -570,3 +570,69 @@ kind = "set"
 subject = "var:utbetald-lonesumma-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34135:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arsarbetare"
+fields = { "label" = "Antal årsarbetare" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-deltidsanstallda"
+fields = { "label" = "Antal deltidsanställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-heltidsanstallda"
+fields = { "label" = "Antal heltidsanställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-timanstallda"
+fields = { "label" = "Antal timanställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetade-timmar"
+fields = { "label" = "Arbetade timmar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avtalad-veckoarbetstid"
+fields = { "label" = "Avtalad veckoarbetstid" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:landsting-region"
+fields = { "label" = "Landsting/region" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (slash)."
+
+[[statement]]
+kind = "set"
+subject = "set:lonesumma"
+fields = { "label" = "Lönesumma" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:manad"
+fields = { "label" = "Månad" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rorliga-lonetillagg"
+fields = { "label" = "Rörliga lönetillägg" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sjuklon"
+fields = { "label" = "Sjuklön" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

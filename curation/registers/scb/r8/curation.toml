@@ -3082,3 +3082,195 @@ kind = "set"
 subject = "var:datutl"
 fields = { "description" = "Datum för registrering av uppgiften. För fordon som var i bruk före registreringen i Vägtrafikregistret anges datum då fordonet först togs i bruk." }
 evidence = "Definition-pass audit follow-up 2026-11-02: The own definition and operational exception jointly settle the description. The group question remains open.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:113734\nrel070-base/reg_meta.db:occurrence:113810\nrel070-base/reg_meta.db:occurrence:113890\nrel070-base/reg_meta.db:occurrence:113971\nrel070-base/reg_meta.db:occurrence:114056\nrel070-base/reg_meta.db:occurrence:114147\nrel070-base/reg_meta.db:occurrence:114246\nrel070-base/reg_meta.db:occurrence:114346\nrel070-base/reg_meta.db:occurrence:114461\nrel070-base/reg_meta.db:occurrence:114596\nrel070-base/reg_meta.db:occurrence:114742\nrel070-base/reg_meta.db:occurrence:114889\nrel070-base/reg_meta.db:occurrence:115037\nrel070-base/reg_meta.db:occurrence:115185\nrel070-base/reg_meta.db:occurrence:115333\nrel070-base/reg_meta.db:occurrence:115481\nrel070-base/reg_meta.db:occurrence:115629\nrel070-base/reg_meta.db:occurrence:115778"
+
+[[statement]]
+kind = "set"
+subject = "set:agarbytesdatum"
+fields = { "label" = "Ägarbytesdatum" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:agarens-naringsgren"
+fields = { "label" = "Ägarens näringsgren" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "label" = "Ägarkategori" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arsmodell-imputerad"
+fields = { "label" = "Årsmodell imputerad" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:axelavstand"
+fields = { "label" = "Axelavstånd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleforbrukning"
+fields = { "label" = "Bränsleförbrukning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bullerniva"
+fields = { "label" = "Bullernivå" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:drivmedel"
+fields = { "label" = "Drivmedel" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:effektnorm"
+fields = { "label" = "Effektnorm" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elenergiforbrukning"
+fields = { "label" = "Elenergiförbrukning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsbenamning"
+fields = { "label" = "Fordonsbenämning" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsfabrikat"
+fields = { "label" = "Fordonsfabrikat" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonskategori"
+fields = { "label" = "Fordonskategori" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsmodell"
+fields = { "label" = "Fordonsmodell" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsslag"
+fields = { "label" = "Fordonsslag" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-juridisk-agare"
+fields = { "label" = "Fysisk/juridisk ägare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:handelsbeteckning"
+fields = { "label" = "Handelsbeteckning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:institutionell-kod"
+fields = { "label" = "Institutionell kod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:karosserikod"
+fields = { "label" = "Karosserikod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koldioxidutslapp"
+fields = { "label" = "Koldioxidutsläpp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kopplingsanordning"
+fields = { "label" = "Kopplingsanordning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvaveoxid-och-kolvateutslapp"
+fields = { "label" = "Kväveoxid- och kolväteutsläpp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvaveoxidutslapp"
+fields = { "label" = "Kväveoxidutsläpp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lastvikt"
+fields = { "label" = "Lastvikt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:miljobilsklassning"
+fields = { "label" = "Miljöbilsklassning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:motoreffekt"
+fields = { "label" = "Motoreffekt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partikelutslapp"
+fields = { "label" = "Partikelutsläpp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:passagerarkapacitet"
+fields = { "label" = "Passagerarkapacitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rackvidd-wltp"
+fields = { "label" = "Räckvidd WLTP" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tankvolym"
+fields = { "label" = "Tankvolym" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utslappsklass"
+fields = { "label" = "Utsläppsklass" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesmassig-trafik"
+fields = { "label" = "Yrkesmässig trafik" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

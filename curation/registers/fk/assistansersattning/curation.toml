@@ -826,3 +826,45 @@ kind = "set"
 subject = "var:vistelse-skolan"
 fields = { "tags" = ["social-care"] }
 evidence = "Variabeln gäller skolans betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:98:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:assistanstid"
+fields = { "label" = "Assistanstid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:beslutsutfall"
+fields = { "label" = "Beslutsutfall" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dubbel-assistans"
+fields = { "label" = "Dubbel assistans" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (diacritics/casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldraavdrag"
+fields = { "label" = "Föräldraavdrag" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:geografisk-tillhorighet"
+fields = { "label" = "Geografisk tillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvalificerade-insatser"
+fields = { "label" = "Kvalificerade insatser" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:timbelopp"
+fields = { "label" = "Timbelopp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

@@ -1217,3 +1217,93 @@ kind = "set"
 subject = "var:trygghetslarm-verkstallighet-avslut"
 fields = { "tags" = ["social-care"] }
 evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!35; sos/sol/sol-2007-2012: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!75; sos/sol/sol-incr: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!113 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "set:avlosning-av-anhorig"
+fields = { "label" = "Avlösning av anhörig" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avslutsdatum"
+fields = { "label" = "Avslutsdatum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bistandsbeslutsdatum"
+fields = { "label" = "Biståndsbeslutsdatum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:boendeform"
+fields = { "label" = "Boendeform" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:boendestod"
+fields = { "label" = "Boendestöd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsetid"
+fields = { "label" = "Födelsetid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hemtjanst"
+fields = { "label" = "Hemtjänst" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kontaktfamilj-eller-kontaktperson"
+fields = { "label" = "Kontaktfamilj eller kontaktperson" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:korttidsvard-och-korttidsboende"
+fields = { "label" = "Korttidsvård och korttidsboende" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:ledsagning"
+fields = { "label" = "Ledsagning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:matdistribution"
+fields = { "label" = "Matdistribution" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:personlig-omvardnad-inom-hemtjanst"
+fields = { "label" = "Personlig omvårdnad inom hemtjänst" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:service-inom-hemtjanst"
+fields = { "label" = "Service inom hemtjänst" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:verkstallighetsdatum"
+fields = { "label" = "Verkställighetsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

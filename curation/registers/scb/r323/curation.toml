@@ -412,3 +412,45 @@ kind = "set"
 subject = "var:yieldtomaturity"
 fields = { "tags" = ["finance"] }
 evidence = "Avkastning till förfall hör till finansmarknaden.\ncatalog:variable_text:44844:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:emissionsvolym"
+fields = { "label" = "Emissionsvolym" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forfallobelopp"
+fields = { "label" = "Förfallobelopp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kupongranta"
+fields = { "label" = "Kupongränta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:loptid"
+fields = { "label" = "Löptid" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplupen-ranta"
+fields = { "label" = "Upplupen ränta" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vardepapperspris"
+fields = { "label" = "Värdepapperspris" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:vardepappersvaluta"
+fields = { "label" = "Värdepappersvaluta" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

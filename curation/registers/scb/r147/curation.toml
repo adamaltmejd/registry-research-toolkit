@@ -701,3 +701,75 @@ kind = "set"
 subject = "var:djurid"
 fields = { "description" = "Identitetsnummer för djurslag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:akerareal"
+fields = { "label" = "Åkerareal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:betesperiod"
+fields = { "label" = "Betesperiod" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:blankettstatus"
+fields = { "label" = "Blankettstatus" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:djur-med-godselhanteringssatt"
+fields = { "label" = "Djur med gödselhanteringssätt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:djurbestandets-storlek"
+fields = { "label" = "Djurbeståndets storlek" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:djurkategori"
+fields = { "label" = "Djurkategori" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fosforgiva"
+fields = { "label" = "Fosforgiva" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:grodgrupp"
+fields = { "label" = "Grödgrupp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kalibreringsvikt"
+fields = { "label" = "Kalibreringsvikt" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kaliumgiva"
+fields = { "label" = "Kaliumgiva" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvavegiva"
+fields = { "label" = "Kvävegiva" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

@@ -6310,3 +6310,87 @@ kind = "set"
 subject = "var:karnfroobargadareal-dar-23"
 fields = { "description" = "Ekologisk obärgad areal vårrybs för tröskning, i hektar. Arealen är en delmängd av den totala obärgade arealen för tröskning." }
 evidence = "Definition pass 2026-11-02: The 2019 green-fodder phrase conflicts with this column and the same variable in 2016, 2018 and 2021; it is a copied source phrase, not a measurement change.\nrel070-base/reg_meta.db:occurrence:438855\nrel070-base/reg_meta.db:occurrence:439863\nrel070-base/reg_meta.db:occurrence:440373\nrel070-base/reg_meta.db:occurrence:441371"
+
+[[statement]]
+kind = "set"
+subject = "set:andrad-grodareal"
+fields = { "label" = "Ändrad grödareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:grodareal-enligt-sam"
+fields = { "label" = "Grödareal enligt SAM" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hektarskord-av-karna-och-fro"
+fields = { "label" = "Hektarskörd av kärna och frö" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:obargad-areal-for-karna-och-fro"
+fields = { "label" = "Obärgad areal för kärna och frö" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partiellt-bortfall-per-groda"
+fields = { "label" = "Partiellt bortfall per gröda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skordad-gronfoderareal"
+fields = { "label" = "Skördad grönfoderareal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomrade"
+fields = { "label" = "Skördeområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:torrsubstanshalt-i-gronfoderskord"
+fields = { "label" = "Torrsubstanshalt i grönfoderskörd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-gronfoderskord"
+fields = { "label" = "Total grönfoderskörd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-karn-och-froskord"
+fields = { "label" = "Total kärn- och fröskörd" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:troskad-areal"
+fields = { "label" = "Tröskad areal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vattenhalt-i-karn-och-froskord"
+fields = { "label" = "Vattenhalt i kärn- och fröskörd" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."

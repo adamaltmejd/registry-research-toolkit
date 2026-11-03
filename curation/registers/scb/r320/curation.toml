@@ -1516,3 +1516,111 @@ kind = "set"
 subject = "var:sv-delprov-c"
 fields = { "description" = "Resultat på delprov C i svenska" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "set:faderns-utbildningsniva"
+fields = { "label" = "Faderns utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "label" = "Föräldrarnas utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "label" = "Invandringsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kursplansval-i-svenska"
+fields = { "label" = "Kursplansval i svenska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:moderns-utbildningsniva"
+fields = { "label" = "Moderns utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provdeltagande-i-engelska"
+fields = { "label" = "Provdeltagande i engelska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provdeltagande-i-matematik"
+fields = { "label" = "Provdeltagande i matematik" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provdeltagande-i-no"
+fields = { "label" = "Provdeltagande i NO" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provdeltagande-i-so"
+fields = { "label" = "Provdeltagande i SO" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provdeltagande-i-svenska"
+fields = { "label" = "Provdeltagande i svenska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-engelska"
+fields = { "label" = "Provresultat i engelska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-matematik"
+fields = { "label" = "Provresultat i matematik" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-no"
+fields = { "label" = "Provresultat i NO" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-so"
+fields = { "label" = "Provresultat i SO" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-svenska"
+fields = { "label" = "Provresultat i svenska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-eller-utlandsk-bakgrund"
+fields = { "label" = "Svensk eller utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsgrupp"
+fields = { "label" = "Undervisningsgrupp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

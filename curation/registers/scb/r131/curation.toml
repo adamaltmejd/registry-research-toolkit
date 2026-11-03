@@ -738,3 +738,63 @@ kind = "set"
 subject = "var:faxnummer"
 fields = { "description" = "Faxnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavfelet i samma betydelse.\ncatalog:variable_text:32096:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:blankettyp"
+fields = { "label" = "Blankettyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foretagets-kommun"
+fields = { "label" = "Företagets kommun" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:lagervarde"
+fields = { "label" = "Lagervärde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:momsbelopp"
+fields = { "label" = "Momsbelopp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattning"
+fields = { "label" = "Omsättning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:storleksgrupp"
+fields = { "label" = "Storleksgrupp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tjansteproduktionsindex"
+fields = { "label" = "Tjänsteproduktionsindex" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsar"
+fields = { "label" = "Urvalsår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

@@ -994,3 +994,99 @@ kind = "set"
 subject = "var:utbild-byte"
 fields = { "description" = "Anger om personen har bytt program under sin studietid i gymnasieskolan. Uppgiften skapas genom sambearbetning av gymnasieskolans betygs- och elevregister." }
 evidence = "Definition pass 2026-11-02: The operative derivation identifies programme change, not the programme attended.\nrel070-base/reg_meta.db:occurrence:302040"
+
+[[statement]]
+kind = "set"
+subject = "set:ar-for-utbildningsavslut"
+fields = { "label" = "År för utbildningsavslut" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arskurs"
+fields = { "label" = "Årskurs" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardstyp"
+fields = { "label" = "Åtgärdstyp" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:delkomponent-till-disponibel-inkomst"
+fields = { "label" = "Delkomponent till disponibel inkomst" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-arbetsmarknadsstatus"
+fields = { "label" = "Föräldrars arbetsmarknadsstatus" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-sektortillhorighet"
+fields = { "label" = "Föräldrars sektortillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-socioekonomiska-gruppering"
+fields = { "label" = "Föräldrars socioekonomiska gruppering" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "label" = "Föräldrars utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasieutbildning"
+fields = { "label" = "Gymnasieutbildning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:individens-sysselsattning"
+fields = { "label" = "Individens sysselsättning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "label" = "Invandringsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lasar"
+fields = { "label" = "Läsår" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsak-till-upphort-aktivitetsansvar"
+fields = { "label" = "Orsak till upphört aktivitetsansvar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:registreringstidpunkt"
+fields = { "label" = "Registreringstidpunkt" }
+evidence = "#2100 group name: the slug read as words; kept on review."

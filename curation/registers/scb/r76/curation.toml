@@ -778,3 +778,39 @@ kind = "set"
 subject = "var:upplatelseform-upplatform2"
 fields = { "tags" = ["housing"] }
 evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6823:11323:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-lagenheter"
+fields = { "label" = "Antal lägenheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoarea"
+fields = { "label" = "Bruttoarea" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadstyp"
+fields = { "label" = "Byggnadstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnationens-paborjandetidpunkt"
+fields = { "label" = "Byggnationens påbörjandetidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fardigstallandetidpunkt"
+fields = { "label" = "Färdigställandetidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplatelseform"
+fields = { "label" = "Upplåtelseform" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

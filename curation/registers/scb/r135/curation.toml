@@ -804,3 +804,63 @@ kind = "set"
 subject = "var:total-kvantitet"
 fields = { "description" = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag. Kvantiteten anges i den enhet som gäller för varunumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ivp.toml:43\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:293334:opdef_text; rel070-base/reg_meta.db:occurrence:293720:opdef_text; rel070-base/reg_meta.db:occurrence:294175:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Keep the quantity-unit rule. The survey/model-estimation paragraph belongs only to 2002 and refers to the survey generally, not necessarily this quantity variable in all years. Evidence: rel070-base/reg_meta.db occurrences 293334, 293364, 293720, 294175."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:imputeringsmetod"
+fields = { "label" = "Imputeringsmetod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvantitetsbortfall"
+fields = { "label" = "Kvantitetsbortfall" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvantitetsenhet"
+fields = { "label" = "Kvantitetsenhet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:levererad-kvantitet"
+fields = { "label" = "Levererad kvantitet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partiellt-bortfall"
+fields = { "label" = "Partiellt bortfall" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-producerad-kvantitet"
+fields = { "label" = "Total producerad kvantitet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:typkod"
+fields = { "label" = "Typkod" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varuklassificering"
+fields = { "label" = "Varuklassificering" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

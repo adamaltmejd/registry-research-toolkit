@@ -1748,3 +1748,117 @@ kind = "set"
 subject = "var:lss-insatser-standardkostnad-pk-ix"
 fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS eller socialförsäkringsbalken, i tusentals kronor. Beräknas som grundläggande standardkostnad multiplicerad med kommunens framräknade personalkostnadsindex." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:301120:opdef_text; rel070-base/reg_meta.db:occurrence:301217:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The explicit formula is documented only from 2024; earlier opdefs are empty or only say calculated variable. Bound the formula to the documented period. Evidence: rel070-base/reg_meta.db occurrences 300990, 301078, 301120, 301217.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Remove the legal-renaming year, which does not change what is measured. Evidence: rel070-base/reg_meta.db occurrences 300990, 301120, 301217."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-aldre-efter-civilstand"
+fields = { "label" = "Antal äldre efter civilstånd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn-med-utlandsk-bakgrund"
+fields = { "label" = "Antal barn med utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn-och-ungdomar"
+fields = { "label" = "Antal barn och ungdomar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-personer-efter-vardtyngd"
+fields = { "label" = "Antal personer efter vårdtyngd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:beraknad-halso-och-sjukvardskostnad"
+fields = { "label" = "Beräknad hälso- och sjukvårdskostnad" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:folkmangd"
+fields = { "label" = "Folkmängd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasieprogram"
+fields = { "label" = "Gymnasieprogram" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkomstutjamning"
+fields = { "label" = "Inkomstutjämning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunalekonomiskt-utjamningsutfall"
+fields = { "label" = "Kommunalekonomiskt utjämningsutfall" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:lan-och-region"
+fields = { "label" = "Län och region" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:lss-utjamningsbidrag-och-avgift"
+fields = { "label" = "LSS-utjämningsbidrag och -avgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:regleringsbidrag-och-regleringsavgift"
+fields = { "label" = "Regleringsbidrag och regleringsavgift" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skatteunderlag"
+fields = { "label" = "Skatteunderlag" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sprakrelaterade-tillagg-och-avdrag"
+fields = { "label" = "Språkrelaterade tillägg och avdrag" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:standardkostnad-for-lss-insatser"
+fields = { "label" = "Standardkostnad för LSS-insatser" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tillagg-avdrag-for-institutionsboende-i-glesbygd"
+fields = { "label" = "Tillägg/avdrag för institutionsboende i glesbygd" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (slash)."
+
+[[statement]]
+kind = "set"
+subject = "set:tillagg-avdrag-for-ohalsa"
+fields = { "label" = "Tillägg/avdrag för ohälsa" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (slash)."
+
+[[statement]]
+kind = "set"
+subject = "set:utjamningsar"
+fields = { "label" = "Utjämningsår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

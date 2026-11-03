@@ -170,3 +170,21 @@ kind = "set"
 subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "label" = "Kommuntillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:smaortskod"
+fields = { "label" = "Småortskod" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

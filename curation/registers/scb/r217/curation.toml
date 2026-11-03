@@ -409,3 +409,39 @@ kind = "set"
 subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:exploaterad-strand"
+fields = { "label" = "Exploaterad strand" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lage-i-tatort"
+fields = { "label" = "Läge i tätort" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lage-inom-skyddad-natur"
+fields = { "label" = "Läge inom skyddad natur" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "label" = "Län" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:strandtyp"
+fields = { "label" = "Strandtyp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
