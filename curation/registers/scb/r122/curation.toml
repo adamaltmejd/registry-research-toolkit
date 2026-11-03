@@ -17980,3 +17980,9 @@ kind = "set"
 subject = "var:yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall"
 fields = { "label" = "Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren (UARBSOKTYRKSTALL)" }
 evidence = "#2102 same-label cluster 'Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren' (2 variables): judged different meaning, low confidence; UARBYRKSTALL and UARBSOKTYRKSTALL are concurrent in 2008-2009 with the same definition and value list; no source text says how they differ, so the raw column code qualifies."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-3"
+fields = { "label" = "Antal frånvarotimmar i huvudsysslan totalt för sysselsatta, inkl helg (HuFranTimTotAnst)" }
+evidence = "#2102 same-label cluster 'Antal frånvarotimmar i huvudsysslan totalt för sysselsatta, inkl helg' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HuFranTimTotAnst runs concurrently with HuFranTimTot in 2005-2009 with identical definition, and the 2017-2021 opdef gives the total as HuFranTimTotAnst + HuFranTimTotFO, so it is a component; nothing documents what 'Anst' means, so the column code is the qualifier."

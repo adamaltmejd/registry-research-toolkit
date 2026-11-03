@@ -1090,3 +1090,27 @@ kind = "set"
 subject = "var:stangdorsak-datumupph"
 fields = { "label" = "Stängdorsak (DatumUpph)" }
 evidence = "#2102 same-label cluster 'Stängdorsak' (2 variables): judged different meaning, low confidence; StangdOrsak and DatumUpph are concurrent in the camping table with the same D/S/T codes; no text explains DatumUpph."
+
+[[statement]]
+kind = "set"
+subject = "var:sgbd"
+fields = { "label" = "Storleksgrupp bäddar (Sgbd)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp bäddar' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Sgbd and SgMxBd are concurrent in one table with identical five groups; SgMxBd's opdef says maximum number of beds throughout, but Sgbd's opdef says the same from 2014, so Sgbd is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxbd"
+fields = { "label" = "Storleksgrupp bäddar (maximalt antal)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp bäddar' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Sgbd and SgMxBd are concurrent in one table with identical five groups; SgMxBd's opdef says maximum number of beds throughout, but Sgbd's opdef says the same from 2014, so Sgbd is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxrm"
+fields = { "label" = "Storleksgrupp rum (maximalt antal)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp rum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SgMxRm's opdef says maximum number of rooms throughout; SgRm's 2007-2013 opdef says number of rooms but Sgrm's 2014-2015 opdef says maximum, so SgRm is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sgrm"
+fields = { "label" = "Storleksgrupp rum (SgRm)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp rum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SgMxRm's opdef says maximum number of rooms throughout; SgRm's 2007-2013 opdef says number of rooms but Sgrm's 2014-2015 opdef says maximum, so SgRm is qualified by its code."

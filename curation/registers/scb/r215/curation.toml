@@ -5606,3 +5606,51 @@ kind = "set"
 subject = "vattenbruk: SRodp_salt @2019-01-01..2024-12-31"
 fields = { "label" = "Produktion av röding för utsättning, havet" }
 evidence = "#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SRodp_salt has the opdef 'havet' in every occurrence; SRodp has 'sötvatten' from 2016 but no water-type text in its 2015 occurrence, so it keeps only its code."
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringf"
+fields = { "label" = "Försäljning av öring (rom eller yngel) (RYOringf)" }
+evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-oring-rom-eller-yngel-havet-kronor"
+fields = { "label" = "Försäljning av öring (rom eller yngel), i havet (RYOringf_salt)" }
+evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-eller-yngel"
+fields = { "label" = "Försäljning av öring (rom eller yngel), sötvatten (RYOvrf)" }
+evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-yngel-salt"
+fields = { "label" = "Försäljning av öring (rom eller yngel), i havet (RYOvrf_salt)" }
+evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-regnbage-utsattning-hav-sotvatten-kg"
+fields = { "label" = "Produktion av regnbåge för utsättning (SRblp)" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-regnbage-utsattning-havet-kg"
+fields = { "label" = "Produktion av regnbåge för utsättning, i havet (SRblp_salt)" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-for-utsattning"
+fields = { "label" = "Produktion av regnbåge för utsättning, sötvatten (SRblf)" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-utsattning-salt"
+fields = { "label" = "Produktion av regnbåge för utsättning, i havet (SRblf_salt)" }
+evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."

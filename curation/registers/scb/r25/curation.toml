@@ -27429,3 +27429,297 @@ kind = "set"
 subject = "var:aterbetalt-studielan-hushall"
 fields = { "label" = "Återbetalt belopp, studielån (hushåll)" }
 evidence = "#2102 same-label cluster 'Återbetalt belopp, studielån' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:dinkpp"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINKPP)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-tidigare-definition"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1981"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (definition 1981)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:dinupp"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINUPP)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-ranta-utdelning"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP82, DINPP83)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1984"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP84)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1986"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP86)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp88k"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP88K)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp91"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (DINPP91)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:cdispp"
+fields = { "label" = "Disponibel inkomst per vuxen, familj (CDISPP)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst per vuxen, familj' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINPP81 states a definition year in its single opdef; 'tidigare definition' and the other years appear in only some occurrences or only in the column code, so the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "label" = "Disponibel inkomst, familj (CDISPH)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-6"
+fields = { "label" = "Disponibel inkomst, familj (DINKF)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2"
+fields = { "label" = "Disponibel inkomst, familj (DINF, DINF83, DINF84, DINF86)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-5"
+fields = { "label" = "Disponibel inkomst, familj (definition 1982)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-3"
+fields = { "label" = "Disponibel inkomst, familj (DINF88K)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-4"
+fields = { "label" = "Disponibel inkomst, familj (DINF91)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, familj' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only DINFU82 ('1982 års defintion', its sole occurrence) states a definition year; DINF's 'tidigare gällande defintion' covers one of six occurrences; the rest use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor-3"
+fields = { "label" = "Institutionell sektor (INKSEK)" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INKSEK has a six-sector list only in 1979 and 4-digit codes afterwards, so 'sex sektorer' is dropped for the code; INST/BINST opdefs say huvudsaklig sysselsättning; BKUINST and BINSTA carry ten-digit codes in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor-huvudsaklig-sysselsattning"
+fields = { "label" = "Institutionell sektor (huvudsaklig sysselsättning, INST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INKSEK has a six-sector list only in 1979 and 4-digit codes afterwards, so 'sex sektorer' is dropped for the code; INST/BINST opdefs say huvudsaklig sysselsättning; BKUINST and BINSTA carry ten-digit codes in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "label" = "Institutionell sektor (huvudsaklig sysselsättning, BINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INKSEK has a six-sector list only in 1979 and 4-digit codes afterwards, so 'sex sektorer' is dropped for the code; INST/BINST opdefs say huvudsaklig sysselsättning; BKUINST and BINSTA carry ten-digit codes in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor-2"
+fields = { "label" = "Institutionell sektor (tiosiffrig sektorkod, BKUINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INKSEK has a six-sector list only in 1979 and 4-digit codes afterwards, so 'sex sektorer' is dropped for the code; INST/BINST opdefs say huvudsaklig sysselsättning; BKUINST and BINSTA carry ten-digit codes in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor-foretag-huvudsaklig-sysselsattning"
+fields = { "label" = "Institutionell sektor (tiosiffrig sektorkod, BINSTA)" }
+evidence = "#2102 same-label cluster 'Institutionell sektor' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INKSEK has a six-sector list only in 1979 and 4-digit codes afterwards, so 'sex sektorer' is dropped for the code; INST/BINST opdefs say huvudsaklig sysselsättning; BKUINST and BINSTA carry ten-digit codes in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-institutionell-sektor-agarkategori-juridisk-form"
+fields = { "label" = "Institutionell sektorkod (sektor för merparten av inkomsten, KUINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KUINST opdef says sector of most income; BKUINST has that opdef in 1993-1999 but the main-occupation opdef and ten-digit codes in 2015-2016, so the merparten qualifier is not true of all its occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-2"
+fields = { "label" = "Institutionell sektorkod (BKUINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KUINST opdef says sector of most income; BKUINST has that opdef in 1993-1999 but the main-occupation opdef and ten-digit codes in 2015-2016, so the merparten qualifier is not true of all its occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "label" = "Institutionell sektorkod (huvudsaklig sysselsättning)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KUINST opdef says sector of most income; BKUINST has that opdef in 1993-1999 but the main-occupation opdef and ten-digit codes in 2015-2016, so the merparten qualifier is not true of all its occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-rantebidrag-lan-smahus"
+fields = { "label" = "Räntebidrag (statligt, lån för småhus)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag"
+fields = { "label" = "Räntebidrag (statligt, lån för bostad)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-taxeringspopulation"
+fields = { "label" = "Slutlig skatt (SSLUT)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SSLUT opdefs vary (A-/B-skatt sums, four taxes, SKSLUT plus sjömansskatt) and 'taxeringspopulationen' appears only in 1982-90; SKSLUT 'avgifter' appears only in 1990; SKTOT's opdefs exclude avdragsgilla skatter och avgifter in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt"
+fields = { "label" = "Slutlig skatt (SKSLUT)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SSLUT opdefs vary (A-/B-skatt sums, four taxes, SKSLUT plus sjömansskatt) and 'taxeringspopulationen' appears only in 1982-90; SKSLUT 'avgifter' appears only in 1990; SKTOT's opdefs exclude avdragsgilla skatter och avgifter in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:sktot"
+fields = { "label" = "Slutlig skatt (exklusive avgifter, SKTOT)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SSLUT opdefs vary (A-/B-skatt sums, four taxes, SKSLUT plus sjömansskatt) and 'taxeringspopulationen' appears only in 1982-90; SKSLUT 'avgifter' appears only in 1990; SKTOT's opdefs exclude avdragsgilla skatter och avgifter in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-familj-sktotf-2"
+fields = { "label" = "Slutlig skatt, familj (SKTOTF, kronor)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt, familj' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Unit separates the two SKTOTF members (Kronor 1983-1990, 100-tal kronor 1990-1998); all four SKSLUTF occurrences say the value is fetched directly from Skatteverket. Whether SKTOTF excludes avgifter is stated only for 1986-1990, so that qualifier is dropped."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-familj-skslutf"
+fields = { "label" = "Slutlig skatt, familj (SKSLUTF, direkt från Skatteverket)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt, familj' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Unit separates the two SKTOTF members (Kronor 1983-1990, 100-tal kronor 1990-1998); all four SKSLUTF occurrences say the value is fetched directly from Skatteverket. Whether SKTOTF excludes avgifter is stated only for 1986-1990, so that qualifier is dropped."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-familj-sktotf-3"
+fields = { "label" = "Slutlig skatt, familj (SKTOTF/STOTEXH, 100-tal kronor)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt, familj' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Unit separates the two SKTOTF members (Kronor 1983-1990, 100-tal kronor 1990-1998); all four SKSLUTF occurrences say the value is fetched directly from Skatteverket. Whether SKTOTF excludes avgifter is stated only for 1986-1990, so that qualifier is dropped."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-beskattningsbar-inkomst-4"
+fields = { "label" = "Statligt beskattningsbar inkomst (SBIN)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INSBESK opdef says current year's amount and SBESK previous year's (both 1978-1979); SBIN and INK_SBESK have no opdef, so the aktuellt-år claim on SBIN is unsupported and it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-beskattningsbar-inkomst-aktuellt-ar"
+fields = { "label" = "Statligt beskattningsbar inkomst (aktuellt år, INSBESK)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INSBESK opdef says current year's amount and SBESK previous year's (both 1978-1979); SBIN and INK_SBESK have no opdef, so the aktuellt-år claim on SBIN is unsupported and it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-beskattningsbar-inkomst-foregaende-ar"
+fields = { "label" = "Statligt beskattningsbar inkomst (föregående år)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INSBESK opdef says current year's amount and SBESK previous year's (both 1978-1979); SBIN and INK_SBESK have no opdef, so the aktuellt-år claim on SBIN is unsupported and it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-beskattningsbar-inkomst"
+fields = { "label" = "Statligt beskattningsbar inkomst (INK_SBESK)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; INSBESK opdef says current year's amount and SBESK previous year's (both 1978-1979); SBIN and INK_SBESK have no opdef, so the aktuellt-år claim on SBIN is unsupported and it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:psep"
+fields = { "label" = "Särskild efterlevandepension (individ, PSEP)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PSEP opdef (garantipension + särskild efterlevandepension) exists only from 2007, so 'inklusive garantipension' is not true of 2003-2007; PSEPHB has that opdef in all its occurrences. PIGRSEP only says fetched from Pensionsmyndigheten (and may be the PGIRSEP component of PSEP)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-efterlevandepension"
+fields = { "label" = "Särskild efterlevandepension (individ, PIGRSEP)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PSEP opdef (garantipension + särskild efterlevandepension) exists only from 2007, so 'inklusive garantipension' is not true of 2003-2007; PSEPHB has that opdef in all its occurrences. PIGRSEP only says fetched from Pensionsmyndigheten (and may be the PGIRSEP component of PSEP)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-efterlevandepension-bostadshushall"
+fields = { "label" = "Särskild efterlevandepension (hushåll, inklusive garantipension)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PSEP opdef (garantipension + särskild efterlevandepension) exists only from 2007, so 'inklusive garantipension' is not true of 2003-2007; PSEPHB has that opdef in all its occurrences. PIGRSEP only says fetched from Pensionsmyndigheten (and may be the PGIRSEP component of PSEP)."
+
+[[statement]]
+kind = "set"
+subject = "var:atpbel"
+fields = { "label" = "Tilläggspension (ATPBEL)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATPBEL opdef varies (from Försäkringskassan 1981-83, none 1983-87, 'ATP-belopp' 1987-90), so only its code is certain; TP/PATP/PTILLP are consecutive on the individ table and PTILLPHB is the hushåll twin with the same PTILP37+PTILP38 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:tp"
+fields = { "label" = "Tilläggspension (individ, TP)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATPBEL opdef varies (from Försäkringskassan 1981-83, none 1983-87, 'ATP-belopp' 1987-90), so only its code is certain; TP/PATP/PTILLP are consecutive on the individ table and PTILLPHB is the hushåll twin with the same PTILP37+PTILP38 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:patp"
+fields = { "label" = "Tilläggspension (individ, PATP)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATPBEL opdef varies (from Försäkringskassan 1981-83, none 1983-87, 'ATP-belopp' 1987-90), so only its code is certain; TP/PATP/PTILLP are consecutive on the individ table and PTILLPHB is the hushåll twin with the same PTILP37+PTILP38 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:ptillp"
+fields = { "label" = "Tilläggspension (individ, PTILLP)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATPBEL opdef varies (from Försäkringskassan 1981-83, none 1983-87, 'ATP-belopp' 1987-90), so only its code is certain; TP/PATP/PTILLP are consecutive on the individ table and PTILLPHB is the hushåll twin with the same PTILP37+PTILP38 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:tillaggspension-bostadshushall"
+fields = { "label" = "Tilläggspension (hushåll)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATPBEL opdef varies (from Försäkringskassan 1981-83, none 1983-87, 'ATP-belopp' 1987-90), so only its code is certain; TP/PATP/PTILLP are consecutive on the individ table and PTILLPHB is the hushåll twin with the same PTILP37+PTILP38 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:vardb"
+fields = { "label" = "Vårdbidrag (VARDB)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:vbbel"
+fields = { "label" = "Vårdbidrag (VBBEL)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:tkuvard"
+fields = { "label" = "Vårdbidrag (TKUVARD)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-deklarationsuppgift"
+fields = { "label" = "Vårdbidrag (TVARD)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
+fields = { "label" = "Vårdbidrag (kontrolluppgift, TVARDA)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."

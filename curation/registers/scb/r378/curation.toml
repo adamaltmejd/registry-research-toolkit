@@ -1069,3 +1069,15 @@ kind = "set"
 subject = "var:sun2020niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
 evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "label" = "Utländsk/svensk bakgrund (Utl_BakG)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Utl_BakG (2008) and UtlBakGr (2009-) have identical opdef and three-value code list; UtlBakGr2 runs concurrently with UtlBakGr, and UtlBakGr's own 2017- code list also has 'Uppgift saknas', so that code does not separate UtlBakGr2; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr2)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Utl_BakG (2008) and UtlBakGr (2009-) have identical opdef and three-value code list; UtlBakGr2 runs concurrently with UtlBakGr, and UtlBakGr's own 2017- code list also has 'Uppgift saknas', so that code does not separate UtlBakGr2; codes are used."

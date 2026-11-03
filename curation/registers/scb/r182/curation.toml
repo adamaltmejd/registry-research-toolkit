@@ -17365,3 +17365,15 @@ kind = "set"
 subject = "var:utgifter-for-egen-fou-obs-value"
 fields = { "label" = "Utgifter för egen FoU (PNP, UoH-ekonomi)" }
 evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (2 variables): judged different meaning, medium confidence; v201 is from the Swedish and international groups survey (opdef: land per Land variable); OBS_VALUE is the value column of the PNP and UoH economy tables (opdef: total expenses), i.e. different populations."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-12-siffror-orgnr-2003"
+fields = { "label" = "Organisationsnummer 12 siffror (OrgNr 2003)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 12 siffror' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNr/SCBID occurrences all share the CFAR definition, but only SCBID (svenska-internationella-koncerner) has an opdef (moderbolag), so 'moderbolag' is not true of every occurrence; spellings are the qualifier. OrgNr 2003 has the same definition and no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-12"
+fields = { "label" = "Organisationsnummer 12 siffror (PeOrgNr, SCBID)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 12 siffror' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNr/SCBID occurrences all share the CFAR definition, but only SCBID (svenska-internationella-koncerner) has an opdef (moderbolag), so 'moderbolag' is not true of every occurrence; spellings are the qualifier. OrgNr 2003 has the same definition and no opdef."

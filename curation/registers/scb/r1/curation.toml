@@ -1636,3 +1636,75 @@ kind = "set"
 subject = "set:verksamhetsstatus"
 fields = { "label" = "Verksamhetsstatus" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "label" = "Gatudelen av postadress (Gata)" }
+evidence = "#2102 same-label cluster 'Gatudelen av postadress' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Gata and PGata have the same definition, and both carry the same two opdef wordings across the tables (Skatteverket/arbetsställe wording or the registration/juridisk-enhet wording), so neither 'firmaregistrering' nor 'juridiska enhetens' holds for all occurrences of either; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:pgata"
+fields = { "label" = "Gatudelen av postadress (PGata)" }
+evidence = "#2102 same-label cluster 'Gatudelen av postadress' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Gata and PGata have the same definition, and both carry the same two opdef wordings across the tables (Skatteverket/arbetsställe wording or the registration/juridisk-enhet wording), so neither 'firmaregistrering' nor 'juridiska enhetens' holds for all occurrences of either; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatulittera"
+fields = { "label" = "Gatulittera till postadress. (angiven vid registrering av firma)" }
+evidence = "#2102 same-label cluster 'Gatulittera till postadress.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Gatulittera's opdef says 'angetts vid registrering av firma' in all 7 occurrences; PGatulittera's opdefs say either arbetsställets or den juridiska enhetens postadress, so the proposed qualifiers hold for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:pgatulittera"
+fields = { "label" = "Gatulittera till postadress. (arbetsställets eller den juridiska enhetens postadress)" }
+evidence = "#2102 same-label cluster 'Gatulittera till postadress.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Gatulittera's opdef says 'angetts vid registrering av firma' in all 7 occurrences; PGatulittera's opdefs say either arbetsställets or den juridiska enhetens postadress, so the proposed qualifiers hold for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "label" = "Gatunummer till postadress (GatuNr)" }
+evidence = "#2102 same-label cluster 'Gatunummer till postadress' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; GatuNr and PGatuNr share both opdef wordings (arbetsställets postadress; juridiska enhetens postadress) and GatuNr also has the registration wording in 2019-2026 only, so no text-based qualifier holds for every occurrence; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:pgatunr"
+fields = { "label" = "Gatunummer till postadress (PGatuNr)" }
+evidence = "#2102 same-label cluster 'Gatunummer till postadress' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; GatuNr and PGatuNr share both opdef wordings (arbetsställets postadress; juridiska enhetens postadress) and GatuNr also has the registration wording in 2019-2026 only, so no text-based qualifier holds for every occurrence; codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "label" = "Postnummer (PostNr)" }
+evidence = "#2102 same-label cluster 'Postnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PostNr and PPostNr share the arbetsställe and juridisk-enhet opdef wordings; the registration wording is on only some PostNr occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:ppostnr"
+fields = { "label" = "Postnummer (PPostNr)" }
+evidence = "#2102 same-label cluster 'Postnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PostNr and PPostNr share the arbetsställe and juridisk-enhet opdef wordings; the registration wording is on only some PostNr occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "label" = "Postort (PostOrt)" }
+evidence = "#2102 same-label cluster 'Postort' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PostOrt and PPostort share the arbetsställe and juridisk-enhet opdef wordings; the registration wording is on only some PostOrt occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:ppostort"
+fields = { "label" = "Postort (PPostOrt)" }
+evidence = "#2102 same-label cluster 'Postort' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PostOrt and PPostort share the arbetsställe and juridisk-enhet opdef wordings; the registration wording is on only some PostOrt occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:gaturest"
+fields = { "label" = "Ytterligare specificering av enhetens postadress gatudel (GatuRest)" }
+evidence = "#2102 same-label cluster 'Ytterligare specificering av enhetens postadress gatudel' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; GatuRest and PGaturest share both opdef wordings; the registration wording is on only some GatuRest occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:pgaturest"
+fields = { "label" = "Ytterligare specificering av enhetens postadress gatudel (PGaturest)" }
+evidence = "#2102 same-label cluster 'Ytterligare specificering av enhetens postadress gatudel' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; GatuRest and PGaturest share both opdef wordings; the registration wording is on only some GatuRest occurrences, so codes are used."

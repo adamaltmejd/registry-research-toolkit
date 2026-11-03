@@ -92760,3 +92760,813 @@ kind = "set"
 subject = "var:underlag-fastighetsskatt-tomt-hyreshus"
 fields = { "label" = "Underlag för fastighetsskatt för hyreshus, 0,4 % (tomt)" }
 evidence = "#2102 same-label cluster 'Underlag för fastighetsskatt för hyreshus, 0,4 %' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give AFA04 'fastighetsavgift', AFSK04 'fastighetsskatt', AFAHHELX 'föregående år' and AFSKHT 'tomt/tomtmark'; AHY04 and AFAHHEL have no text and were decoded from the code, so they now carry the code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "label" = "Antal barn (där ersättning erhålls)" }
+evidence = "#2102 same-label cluster 'Antal barn' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BANTBF opdef 'Avser antal där ersättning erhålles' holds for its one occurrence; BANTBRNH has no opdef, same definition, concurrent in individtabeller, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-2"
+fields = { "label" = "Antal barn (BANTBRNH)" }
+evidence = "#2102 same-label cluster 'Antal barn' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BANTBF opdef 'Avser antal där ersättning erhålles' holds for its one occurrence; BANTBRNH has no opdef, same definition, concurrent in individtabeller, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barntillagg"
+fields = { "label" = "Antal barntillägg (storlek på löpande barntillägg)" }
+evidence = "#2102 same-label cluster 'Antal barntillägg' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BANTVB opdef is storlek på löpande barntillägg in all occurrences (2000-06 reads 'Storlek pålöpande'); BANTBT opdef is only 'Antal' or absent, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:bantbt"
+fields = { "label" = "Antal barntillägg (BANTBT)" }
+evidence = "#2102 same-label cluster 'Antal barntillägg' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BANTVB opdef is storlek på löpande barntillägg in all occurrences (2000-06 reads 'Storlek pålöpande'); BANTBT opdef is only 'Antal' or absent, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ar-pensionspoang"
+fields = { "label" = "Antal år med pensionspoäng i Sverige baserat på arbetad tid (BPDEL30)" }
+evidence = "#2102 same-label cluster 'Antal år med pensionspoäng i Sverige baserat på arbetad tid' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BTPETG opdef is 'Beräknade år för garantiregeln' (unit Värde); BPDEL30 has no opdef and unit Antal år, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ar-pensionspoang-sverige-arbetad-tid-garantiregeln"
+fields = { "label" = "Antal år med pensionspoäng i Sverige baserat på arbetad tid (beräknade år för garantiregeln)" }
+evidence = "#2102 same-label cluster 'Antal år med pensionspoäng i Sverige baserat på arbetad tid' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BTPETG opdef is 'Beräknade år för garantiregeln' (unit Värde); BPDEL30 has no opdef and unit Antal år, so its code."
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-for-skatt-pa-el-som-forbrukats-i-datorhall-hos-v701-29"
+fields = { "label" = "Avdr. för skatt på el som förbrukats i datorhall, hos den skattskyldige (V701_29)" }
+evidence = "#2102 same-label cluster 'Avdr. för skatt på el som förbrukats i datorhall, hos den skattskyldige' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V701_28 and V701_29 share the opdef; unit varies by period for both (2016 'Bränsle i naturliga mått'), so 'kilowattimmar' is not true of every V701_28 occurrence; codes."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-energiskatt-datorhall-skattskyldige-kilowattimmar"
+fields = { "label" = "Avdr. för skatt på el som förbrukats i datorhall, hos den skattskyldige (V701_28)" }
+evidence = "#2102 same-label cluster 'Avdr. för skatt på el som förbrukats i datorhall, hos den skattskyldige' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V701_28 and V701_29 share the opdef; unit varies by period for both (2016 'Bränsle i naturliga mått'), so 'kilowattimmar' is not true of every V701_28 occurrence; codes."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-realisationsforlust-kapital-2001"
+fields = { "label" = "Avdrag för realisationsförlust, kapital (avser 2001, KF00)" }
+evidence = "#2102 same-label cluster 'Avdrag för realisationsförlust, kapital' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KF00/KF01 opdef 'Avser 2001', KF02 'Avser år 2002' (single occurrence each, consistent); KF is the unqualified multi-year column with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-for-realisationsforlust-kapital-kf01"
+fields = { "label" = "Avdrag för realisationsförlust, kapital (avser 2001, KF01)" }
+evidence = "#2102 same-label cluster 'Avdrag för realisationsförlust, kapital' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KF00/KF01 opdef 'Avser 2001', KF02 'Avser år 2002' (single occurrence each, consistent); KF is the unqualified multi-year column with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-for-realisationsforlust-kapital-kf02"
+fields = { "label" = "Avdrag för realisationsförlust, kapital (avser 2002)" }
+evidence = "#2102 same-label cluster 'Avdrag för realisationsförlust, kapital' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; KF00/KF01 opdef 'Avser 2001', KF02 'Avser år 2002' (single occurrence each, consistent); KF is the unqualified multi-year column with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap27"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP27)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP2)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (individer)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-kapitalforsakring"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVKASTUK)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattning-till-reservfond"
+fields = { "label" = "Avsättning till reservfond (BAVRESF, VG46)" }
+evidence = "#2102 same-label cluster 'Avsättning till reservfond' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The first pid mixes BAVRESF (Bolagsverket, code list of the allocation source) with VG46 in finansbolag 2017-24 (KSEK); the second is VG46 in finansbolag 2007-15 (SEK)."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattning-till-reservfond-2"
+fields = { "label" = "Avsättning till reservfond (finansbolag, VG46)" }
+evidence = "#2102 same-label cluster 'Avsättning till reservfond' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The first pid mixes BAVRESF (Bolagsverket, code list of the allocation source) with VG46 in finansbolag 2017-24 (KSEK); the second is VG46 in finansbolag 2007-15 (SEK)."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr00"
+fields = { "label" = "Begravningsavgift, skattesats (ABEGR00)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr01"
+fields = { "label" = "Begravningsavgift, skattesats (ABEGR01)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr03"
+fields = { "label" = "Begravningsavgift, skattesats (ABEGR03)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr04"
+fields = { "label" = "Begravningsavgift, skattesats (ABEGR04)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr05"
+fields = { "label" = "Begravningsavgift, skattesats (ABEGR05)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr06"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2006)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr07"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2007)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr08"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2008)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr09"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2009)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr10"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2010)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgift-skattesats-abegr11"
+fields = { "label" = "Begravningsavgift, skattesats (avser år 2011)" }
+evidence = "#2102 same-label cluster 'Begravningsavgift, skattesats' (12 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ABEGR03/04/05 opdefs change within the column (e.g. ABEGR03 'år 2003' then 'år 2009'), so they get codes; ABEGR06-11 opdefs are stable. ABEGR00/01 opdefs contradict their suffix, codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bilagebeteckning"
+fields = { "label" = "Bilagebeteckning (NRVERK)" }
+evidence = "#2102 same-label cluster 'Bilagebeteckning' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRVERK occurs in aktiebolag, handelsbolag and bilaga tables (opdef 'Variabelns värde är I2/I4', unit Löpnummer), so a table qualifier would be false; SRU is only in deklarationsuppgifter (unit Antal)."
+
+[[statement]]
+kind = "set"
+subject = "var:bilagebeteckning-sru"
+fields = { "label" = "Bilagebeteckning (deklarationsuppgifter)" }
+evidence = "#2102 same-label cluster 'Bilagebeteckning' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRVERK occurs in aktiebolag, handelsbolag and bilaga tables (opdef 'Variabelns värde är I2/I4', unit Löpnummer), so a table qualifier would be false; SRU is only in deklarationsuppgifter (unit Antal)."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-och-mark"
+fields = { "label" = "Byggnader och mark, aktiebolag" }
+evidence = "#2102 same-label cluster 'Byggnader och mark' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V7214 occurs only in aktiebolag and V7210 only in deklarationsuppgifter, 2007-2024, same definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-och-mark-v7210"
+fields = { "label" = "Byggnader och mark, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Byggnader och mark' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V7214 occurs only in aktiebolag and V7210 only in deklarationsuppgifter, 2007-2024, same definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:delagarens-tillskott"
+fields = { "label" = "Delägarens tillskott till bolaget under beskattningsåret, N3A och N3B" }
+evidence = "#2102 same-label cluster 'Delägarens tillskott till bolaget under beskattningsåret  (728)bolag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0728 sits in both bilaga-n3a and bilaga-n3b until 2012; V7808 only in bilaga-n3b (2007-), V6572 only in bilaga-n3a (2012-); same definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:delagarens-tillskott-till-bolaget-under-v7808"
+fields = { "label" = "Delägarens tillskott till bolaget under beskattningsåret, N3B" }
+evidence = "#2102 same-label cluster 'Delägarens tillskott till bolaget under beskattningsåret  (728)bolag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0728 sits in both bilaga-n3a and bilaga-n3b until 2012; V7808 only in bilaga-n3b (2007-), V6572 only in bilaga-n3a (2012-); same definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:delagarens-tillskott-till-bolaget-under-v6572"
+fields = { "label" = "Delägarens tillskott till bolaget under beskattningsåret, N3A" }
+evidence = "#2102 same-label cluster 'Delägarens tillskott till bolaget under beskattningsåret  (728)bolag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0728 sits in both bilaga-n3a and bilaga-n3b until 2012; V7808 only in bilaga-n3b (2007-), V6572 only in bilaga-n3a (2012-); same definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:v0468"
+fields = { "label" = "Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5 i blankett K10 (V0468)" }
+evidence = "#2102 same-label cluster 'Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5  i blankett K10' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdef separates the three K10 columns; V4577 (2012-13) and V4576 (2012-) overlap, V0468 ends 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:ditt-lonebaserade-utrymme-for-andelar-agda-under-hela-v4577"
+fields = { "label" = "Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5 i blankett K10 (V4577)" }
+evidence = "#2102 same-label cluster 'Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5  i blankett K10' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdef separates the three K10 columns; V4577 (2012-13) and V4576 (2012-) overlap, V0468 ends 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:lonebaserat-utrymme-2014"
+fields = { "label" = "Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5 i blankett K10 (V4576)" }
+evidence = "#2102 same-label cluster 'Ditt lönebaserade utrymme för andelar ägda under hela 2014 punkt 6.5  i blankett K10' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdef separates the three K10 columns; V4577 (2012-13) and V4576 (2012-) overlap, V0468 ends 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:egenavgifter"
+fields = { "label" = "Egenavgifter (deklarationsuppgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0597 occurs only in deklarationsuppgifter (2000), SEGEN only in individtabeller (2000-2017); identical definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:egenavgifter-segen"
+fields = { "label" = "Egenavgifter (individtabeller)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0597 occurs only in deklarationsuppgifter (2000), SEGEN only in individtabeller (2000-2017); identical definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-avyttrade-inventarier-fonder"
+fields = { "label" = "Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m., aktiebolag" }
+evidence = "#2102 same-label cluster 'Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0753 occurs only in aktiebolag and V0752 only in deklarationsuppgifter/handelsbolag, with identical definition; the tables are the only separator and each is exclusive to its member."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-avyttrade-forlorade-inventarier-som-v0752"
+fields = { "label" = "Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m., deklarationsuppgifter och handelsbolag" }
+evidence = "#2102 same-label cluster 'Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0753 occurs only in aktiebolag and V0752 only in deklarationsuppgifter/handelsbolag, with identical definition; the tables are the only separator and each is exclusive to its member."
+
+[[statement]]
+kind = "set"
+subject = "var:lbb1"
+fields = { "label" = "Eviga förlagslån (LBB1)" }
+evidence = "#2102 same-label cluster 'Eviga förlagslån (RCC1)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RCC1 and LBB1 are concurrent columns in forsakringsbolag; their opdefs swap between livförsäkringsbolag and skadeförsäkringsbolag over time (RCC1 life 2017-2022, non-life 2023; LBB1 the reverse), so neither can carry a life/non-life qualifier and the codes stay."
+
+[[statement]]
+kind = "set"
+subject = "var:frida-differens-debet-kredit"
+fields = { "label" = "FRIDA Differens i avstämning mellan debet och kredit (V0832)" }
+evidence = "#2102 same-label cluster 'FRIDA Differens i avstämning mellan debet och kredit' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0832 has no opdef; VX4P opdef (only on its 2003 handelsbolag occurrence) says 'Egen definierad granskningsvariabel', never contradicted by the others; V0832 gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:frida-differens-debet-kredit-vx4p"
+fields = { "label" = "FRIDA Differens i avstämning mellan debet och kredit (egen definierad granskningsvariabel)" }
+evidence = "#2102 same-label cluster 'FRIDA Differens i avstämning mellan debet och kredit' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0832 has no opdef; VX4P opdef (only on its 2003 handelsbolag occurrence) says 'Egen definierad granskningsvariabel', never contradicted by the others; V0832 gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:nffsa"
+fields = { "label" = "Finansiering av egen utförd FoU (NFFSA)" }
+evidence = "#2102 same-label cluster 'Finansiering av egen utförd FoU' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NFFUPP opdef is 'Uppdragsfinansierad'; NFFSA (2007-2018) and NFFBID (2019-2022) have no text and the same unit (KSEK), so they keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:nffbid"
+fields = { "label" = "Finansiering av egen utförd FoU (NFFBID)" }
+evidence = "#2102 same-label cluster 'Finansiering av egen utförd FoU' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NFFUPP opdef is 'Uppdragsfinansierad'; NFFSA (2007-2018) and NFFBID (2019-2022) have no text and the same unit (KSEK), so they keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:uppdragsfinansiering-egen-utford-fou"
+fields = { "label" = "Finansiering av egen utförd FoU (uppdragsfinansierad)" }
+evidence = "#2102 same-label cluster 'Finansiering av egen utförd FoU' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NFFUPP opdef is 'Uppdragsfinansierad'; NFFSA (2007-2018) and NFFBID (2019-2022) have no text and the same unit (KSEK), so they keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-upplupna-intakter"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (V0205)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0205 (shared tables, to 2011), V7263 (aktiebolag from 2007) and VG25 (finansbolag from 2022) have no opdef; VG25 is the only member in finansbolag, while V7263 shares aktiebolag with V0205, so a table qualifier would not separate them and V7263 gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-och-upplupna-intakter-v7263"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (V7263)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0205 (shared tables, to 2011), V7263 (aktiebolag from 2007) and VG25 (finansbolag from 2022) have no opdef; VG25 is the only member in finansbolag, while V7263 shares aktiebolag with V0205, so a table qualifier would not separate them and V7263 gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-och-upplupna-intakter-vg25"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (finansbolag)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0205 (shared tables, to 2011), V7263 (aktiebolag from 2007) and VG25 (finansbolag from 2022) have no opdef; VG25 is the only member in finansbolag, while V7263 shares aktiebolag with V0205, so a table qualifier would not separate them and V7263 gets its code."
+
+[[statement]]
+kind = "set"
+subject = "var:lagerforandring-minskning"
+fields = { "label" = "Förändring av lager och pågående arbete (minskning) (ej handelsvaror)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (minskning)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0510 opdef is 'Ej Handelsvaror' on every occurrence; V7510 has no opdef so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-av-lager-och-pagaende-arbete-minskning-v7510"
+fields = { "label" = "Förändring av lager och pågående arbete (minskning) (V7510)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (minskning)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0510 opdef is 'Ej Handelsvaror' on every occurrence; V7510 has no opdef so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:lagerforandring-okning"
+fields = { "label" = "Förändring av lager och pågående arbete (ökning) (ej handelsvaror)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (ökning)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0509 opdef is 'Ej Handelsvaror' on every occurrence; V7411 has no opdef so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-av-lager-och-pagaende-arbete-okning-v7411"
+fields = { "label" = "Förändring av lager och pågående arbete (ökning) (V7411)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (ökning)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0509 opdef is 'Ej Handelsvaror' on every occurrence; V7411 has no opdef so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:har-ni-under-beskattningsaret-forvarvat-tomtmark-el-v2361"
+fields = { "label" = "Har ni under beskattningsåret förvärvat tomtmark el dyl. (V2361)" }
+evidence = "#2102 same-label cluster 'Har ni under beskattningsåret förvärvat tomtmark el dyl. (V2360)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V2361 and V2360 are concurrent flag columns in bilaga N3A with identical definition and code list (1=Aktuell); only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:har-ni-nagon-er-narstaende-varit-verksam-i-foretaget-v2001"
+fields = { "label" = "Har ni/någon er närstående varit verksam i företaget? (V2001)" }
+evidence = "#2102 same-label cluster 'Har ni/någon er närstående varit verksam i företaget?' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V2000 and V2001 have an identical definition ending ': Ja' in bilaga K10, so the 'svar ja' qualifier did not separate them; both now carry their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ni-narstaende-verksam-foretaget-betydande-omfattning-ja"
+fields = { "label" = "Har ni/någon er närstående varit verksam i företaget? (V2000)" }
+evidence = "#2102 same-label cluster 'Har ni/någon er närstående varit verksam i företaget?' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V2000 and V2001 have an identical definition ending ': Ja' in bilaga K10, so the 'svar ja' qualifier did not separate them; both now carry their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:har-penninglan-lamnats-till-handelsbolaget-i-strid-med-v2364"
+fields = { "label" = "Har penninglån lämnats till handelsbolaget i strid med 21kap 1-7 §§ aktiebolagslagen etc. (V2364)" }
+evidence = "#2102 same-label cluster 'Har penninglån lämnats till handelsbolaget i strid med 21kap 1-7 §§ aktiebolagslagen etc. (V2363)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V2364 and V2363 are concurrent flag columns in bilaga N3A with no text on how they differ; only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-nrv00"
+fields = { "label" = "Inkomst av näringsverksamhet (avser 2000)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-nrv01"
+fields = { "label" = "Inkomst av näringsverksamhet (avser 2001)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-nrv02"
+fields = { "label" = "Inkomst av näringsverksamhet (avser 2002)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-nrv03"
+fields = { "label" = "Inkomst av näringsverksamhet (NRV03)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-nrv04"
+fields = { "label" = "Inkomst av näringsverksamhet (avser 2004)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet"
+fields = { "label" = "Inkomst av näringsverksamhet (2 år gamla)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-naringsverksamhet-3-ar-gamla"
+fields = { "label" = "Inkomst av näringsverksamhet (3 år gamla)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; NRV is the unsuffixed running column; NRV00/01/02/04 opdefs say 'Avser <year>', NRVU/NRVX 'N år gamla', NRV03 has no text so it keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst-ttj00"
+fields = { "label" = "Inkomst av tjänst (avser 2001, TTJ00)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst-ttj01"
+fields = { "label" = "Inkomst av tjänst (avser 2001, TTJ01)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst-ttj02"
+fields = { "label" = "Inkomst av tjänst (TTJ02)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst-ttj03"
+fields = { "label" = "Inkomst av tjänst (avser 2003)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst-ttj04"
+fields = { "label" = "Inkomst av tjänst (avser 2004)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-tjanst-beraknad-deklarerade-belopp-3-ar-gamla"
+fields = { "label" = "Inkomst av tjänst (3 år gamla)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TTJ is the running column; TTJ01, TTJ03, TTJ04 opdefs name the year (TTJ00 also says 'Avser 2001', so it keeps its code beside it), TTJX says '3 år gamla', TTJ02 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank"
+fields = { "label" = "Kassa och bank (V0200)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0200 spans aktiebolag, deklarationsuppgifter and handelsbolag to 2011; V7280 (deklarationsuppgifter) and V7281 (aktiebolag) have no opdef and only the table differs, with V0200 overlapping those tables until 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank-v7280"
+fields = { "label" = "Kassa och bank (V7280)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0200 spans aktiebolag, deklarationsuppgifter and handelsbolag to 2011; V7280 (deklarationsuppgifter) and V7281 (aktiebolag) have no opdef and only the table differs, with V0200 overlapping those tables until 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank-v7281"
+fields = { "label" = "Kassa och bank (V7281)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0200 spans aktiebolag, deklarationsuppgifter and handelsbolag to 2011; V7280 (deklarationsuppgifter) and V7281 (aktiebolag) have no opdef and only the table differs, with V0200 overlapping those tables until 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk00"
+fields = { "label" = "Kommunal- och landstingsskattesats (AKLSK00)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk01"
+fields = { "label" = "Kommunal- och landstingsskattesats (AKLSK01)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: AKLSK02 @2002-01-01..2002-12-31"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2002)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk03"
+fields = { "label" = "Kommunal- och landstingsskattesats (AKLSK03)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk04"
+fields = { "label" = "Kommunal- och landstingsskattesats (AKLSK04)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk05"
+fields = { "label" = "Kommunal- och landstingsskattesats (AKLSK05)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk06"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2006)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk07"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2007)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk08"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2008)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk09"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2009)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk10"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2010)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-och-landstingsskattesats-aklsk11"
+fields = { "label" = "Kommunal- och landstingsskattesats (avser år 2011)" }
+evidence = "#2102 same-label cluster 'Kommunal- och landstingsskattesats' (13 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKLSK is the running column; AKLSK06-11 opdefs say 'Avser år NN' consistently, AKLSK02 'Avser 2002'; AKLSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKLSK00/01/03/04 whose opdef years contradict the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-2009"
+fields = { "label" = "Kommunalskattesats (AKSK03)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk04"
+fields = { "label" = "Kommunalskattesats (AKSK04)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk05"
+fields = { "label" = "Kommunalskattesats (AKSK05)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk06"
+fields = { "label" = "Kommunalskattesats (avser år 2006)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk07"
+fields = { "label" = "Kommunalskattesats (avser år 2007)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk08"
+fields = { "label" = "Kommunalskattesats (avser år 2008)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk09"
+fields = { "label" = "Kommunalskattesats (avser år 2009)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk10"
+fields = { "label" = "Kommunalskattesats (avser år 2010)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalskattesats-aksk11"
+fields = { "label" = "Kommunalskattesats (avser år 2011)" }
+evidence = "#2102 same-label cluster 'Kommunalskattesats' (10 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AKOMSK is the running column; AKSK06-11 opdefs say 'Avser år NN' consistently; AKSK05 opdef says 2005 on two occurrences and 2011 on one, so it gets its code like AKSK03/04."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-agd-andel"
+fields = { "label" = "Kontant ersättning avseende ägd andel under 2014 till arbetstagare i dotterföretag punkt 6.7 (V0435)" }
+evidence = "#2102 same-label cluster 'Kontant ersättning avseende ägd andel  under 2014 till arbetstagare i dotterföretag punkt 6.7' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V4578 matches the label (punkt 6.7); V0435 and V4571 have no opdef in bilaga K10 and keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-agd-andel-2"
+fields = { "label" = "Kontant ersättning avseende ägd andel under 2014 till arbetstagare i dotterföretag punkt 6.7 (V4571)" }
+evidence = "#2102 same-label cluster 'Kontant ersättning avseende ägd andel  under 2014 till arbetstagare i dotterföretag punkt 6.7' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V4578 matches the label (punkt 6.7); V0435 and V4571 have no opdef in bilaga K10 and keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-avseende-agd-andel-under-2014-till-v4578"
+fields = { "label" = "Kontant ersättning avseende ägd andel under 2014 till arbetstagare i dotterföretag punkt 6.7" }
+evidence = "#2102 same-label cluster 'Kontant ersättning avseende ägd andel  under 2014 till arbetstagare i dotterföretag punkt 6.7' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V4578 matches the label (punkt 6.7); V0435 and V4571 have no opdef in bilaga K10 and keep their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-tillskott-hb-kb"
+fields = { "label" = "Kontanta tillskott hb/kb, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Kontanta tillskott hb/kb' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0366 is only in deklarationsuppgifter and V0363 only in handelsbolag, with no opdef; the tables separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-tillskott-hb-kb-v0363"
+fields = { "label" = "Kontanta tillskott hb/kb, handelsbolag" }
+evidence = "#2102 same-label cluster 'Kontanta tillskott hb/kb' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0366 is only in deklarationsuppgifter and V0363 only in handelsbolag, with no opdef; the tables separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-uttag-hb-kb"
+fields = { "label" = "Kontanta uttag hb/kb, deklarationsuppgifter" }
+evidence = "#2102 same-label cluster 'Kontanta uttag hb/kb' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0364 is only in deklarationsuppgifter and V0362 only in handelsbolag, with no opdef; the tables separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:kontanta-uttag-hb-kb-v0362"
+fields = { "label" = "Kontanta uttag hb/kb, handelsbolag" }
+evidence = "#2102 same-label cluster 'Kontanta uttag hb/kb' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0364 is only in deklarationsuppgifter and V0362 only in handelsbolag, with no opdef; the tables separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-avskrivning-byggnader"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-), V0747" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-).' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0747 and V7765 have no opdef and overlap in aktiebolag around 2008; nothing says they differ, so the codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-av-bokfort-resultat-for-avskrivningar-pa-v7765"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-), V7765" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-).' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0747 and V7765 have no opdef and overlap in aktiebolag around 2008; nothing says they differ, so the codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-av-bokfort-till-skattemassigt-resultat-vid-v0625"
+fields = { "label" = "Korrigering av bokfört till skattemässigt resultat vid försäljning av näringsfastighet och bostadsrätt, V0625" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört till skattemässigt resultat vid försäljning av näringsfastighet och bostadsrätt.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0625 and V0623 are concurrent aktiebolag columns with no text on how they differ; the codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:v0623"
+fields = { "label" = "Korrigering av bokfört till skattemässigt resultat vid försäljning av näringsfastighet och bostadsrätt, V0623" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört till skattemässigt resultat vid försäljning av näringsfastighet och bostadsrätt.' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0625 and V0623 are concurrent aktiebolag columns with no text on how they differ; the codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier-v7212"
+fields = { "label" = "Maskiner och inventarier (deklarationsuppgifter)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0236 spans aktiebolag, deklarationsuppgifter and handelsbolag to 2011; V7212 occurs only in deklarationsuppgifter and V7215 only in aktiebolag, so the table qualifiers hold for every occurrence. V0236 and V7215 share an opdef (fgb236 + fgb0102 + fgb239)."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier-v7215"
+fields = { "label" = "Maskiner och inventarier (aktiebolag)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0236 spans aktiebolag, deklarationsuppgifter and handelsbolag to 2011; V7212 occurs only in deklarationsuppgifter and V7215 only in aktiebolag, so the table qualifiers hold for every occurrence. V0236 and V7215 share an opdef (fgb236 + fgb0102 + fgb239)."
+
+[[statement]]
+kind = "set"
+subject = "var:obeskattade-reserver-lbb-rbb5"
+fields = { "label" = "Obeskattade reserver (RBB5)" }
+evidence = "#2102 same-label cluster 'Obeskattade reserver (LBB)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lab2"
+fields = { "label" = "Periodiseringsfond (LAB2)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond (RBB2)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-borjan-alt"
+fields = { "label" = "Räkenskapsårets början (V7016, bilaga N3B)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets början' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-slut-v7015"
+fields = { "label" = "Räkenskapsårets slut (V7015, bilaga N3B)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets slut' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:fskuld"
+fields = { "label" = "Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet (skulden)" }
+evidence = "#2102 same-label cluster 'Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoformogenhet"
+fields = { "label" = "Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet (summa tillgångar)" }
+evidence = "#2102 same-label cluster 'Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lab1"
+fields = { "label" = "Säkerhetsreserv (LAB1)" }
+evidence = "#2102 same-label cluster 'Säkerhetsreserv (RBB1)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bopsepd"
+fields = { "label" = "Särskild efterlevandepension (nivåkod)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BOPSEPD is a coded level (Nej, ½ SEP, 2/3 SEP, Hel sep); PSEP and PIGRSEP are kronor amounts, PSEP's opdef giving the sum PGARSEP + PGIRSEP and PIGRSEP's only the summation text."
+
+[[statement]]
+kind = "set"
+subject = "var:psep"
+fields = { "label" = "Särskild efterlevandepension (summa PGARSEP + PGIRSEP)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; BOPSEPD is a coded level (Nej, ½ SEP, 2/3 SEP, Hel sep); PSEP and PIGRSEP are kronor amounts, PSEP's opdef giving the sum PGARSEP + PGIRSEP and PIGRSEP's only the summation text."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsmarknadsavgift-3-3-procent"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (3,3 procent)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:aamavgr"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (AAMAVGR)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:aapavgx"
+fields = { "label" = "Underlag för beräkning av ålderspensionsavgift (AAPAVGX)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av ålderspensionsavgift' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-alderspensionsavgift"
+fields = { "label" = "Underlag för beräkning av ålderspensionsavgift (10,21 %)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av ålderspensionsavgift' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lab3"
+fields = { "label" = "Utjämningsfond (LAB3)" }
+evidence = "#2102 same-label cluster 'Utjämningsfond (RBB3)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:v0830"
+fields = { "label" = "Verksamhet bedrivs i utlandet (V0830)" }
+evidence = "#2102 same-label cluster 'Verksamhet bedrivs i utlandet' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only VC0145 has an opdef (Bakgrundsvariabel) and a distinct Ja/Finns; Okänt code list; V0830, V0846 and V0145 carry Aktuell or Nej/Ja codes with no separating text, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:vc0145"
+fields = { "label" = "Verksamhet bedrivs i utlandet (bakgrundsvariabel)" }
+evidence = "#2102 same-label cluster 'Verksamhet bedrivs i utlandet' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only VC0145 has an opdef (Bakgrundsvariabel) and a distinct Ja/Finns; Okänt code list; V0830, V0846 and V0145 carry Aktuell or Nej/Ja codes with no separating text, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet-bedrivs-i-utlandet"
+fields = { "label" = "Verksamhet bedrivs i utlandet (V0145)" }
+evidence = "#2102 same-label cluster 'Verksamhet bedrivs i utlandet' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only VC0145 has an opdef (Bakgrundsvariabel) and a distinct Ja/Finns; Okänt code list; V0830, V0846 and V0145 carry Aktuell or Nej/Ja codes with no separating text, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet-bedrivs-i-utlandet-v0846"
+fields = { "label" = "Verksamhet bedrivs i utlandet (V0846)" }
+evidence = "#2102 same-label cluster 'Verksamhet bedrivs i utlandet' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Only VC0145 has an opdef (Bakgrundsvariabel) and a distinct Ja/Finns; Okänt code list; V0830, V0846 and V0145 carry Aktuell or Nej/Ja codes with no separating text, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforsakring-andel-av-forsakringstekniska-re"
+fields = { "label" = "Återförsäkring. andel av försäkringstekniska avsättningar (RE)" }
+evidence = "#2102 same-label cluster 'Återförsäkring. andel av försäkringstekniska avsättningarFörsäkringstekniska avsättningar' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:le"
+fields = { "label" = "Återförsäkring. andel av försäkringstekniska avsättningar (LE)" }
+evidence = "#2102 same-label cluster 'Återförsäkring. andel av försäkringstekniska avsättningarFörsäkringstekniska avsättningar' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:overkursfond-raa2-rab3"
+fields = { "label" = "Överkursfond (RAB3)" }
+evidence = "#2102 same-label cluster 'Överkursfond (RAA2)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lbb3"
+fields = { "label" = "Övriga efterställda skulder (LBB3)" }
+evidence = "#2102 same-label cluster 'Övriga efterställda skulder (RCC3)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-lokal-och-fastighetsutgifter"
+fields = { "label" = "Övriga lokal- och fastighetsutgifter (V0528)" }
+evidence = "#2102 same-label cluster 'Övriga lokal- och fastighetsutgifter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0528's 'Avser resultaträkningen' appears only in some handelsbolag occurrences, and V0194/V0694 have no text, so the code is the qualifier for all three."
+
+[[statement]]
+kind = "set"
+subject = "var:v0194"
+fields = { "label" = "Övriga lokal- och fastighetsutgifter (V0194)" }
+evidence = "#2102 same-label cluster 'Övriga lokal- och fastighetsutgifter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0528's 'Avser resultaträkningen' appears only in some handelsbolag occurrences, and V0194/V0694 have no text, so the code is the qualifier for all three."
+
+[[statement]]
+kind = "set"
+subject = "var:v0694"
+fields = { "label" = "Övriga lokal- och fastighetsutgifter (V0694)" }
+evidence = "#2102 same-label cluster 'Övriga lokal- och fastighetsutgifter' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0528's 'Avser resultaträkningen' appears only in some handelsbolag occurrences, and V0194/V0694 have no text, so the code is the qualifier for all three."
+
+[[statement]]
+kind = "set"
+subject = "var:lab4"
+fields = { "label" = "Övriga obeskattade reserver (LAB4)" }
+evidence = "#2102 same-label cluster 'Övriga obeskattade reserver (RBB4)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."

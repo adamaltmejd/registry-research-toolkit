@@ -3938,3 +3938,27 @@ kind = "set"
 subject = "var:skolkommun-ht"
 fields = { "label" = "Kommun (skolkommun, där eleven är registrerad, SkolKommun_HT)" }
 evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "label" = "Juridisk form (antagna, Jurform_HT)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same value set and 'Huvudmannens juridiska form' opdef; only the table (antagna vs sökande) and column spelling separate them. The 'höstterminen' reading of HT is not in any text."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form-jurform"
+fields = { "label" = "Juridisk form (sökande, Jurform)" }
+evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same value set and 'Huvudmannens juridiska form' opdef; only the table (antagna vs sökande) and column spelling separate them. The 'höstterminen' reading of HT is not in any text."
+
+[[statement]]
+kind = "set"
+subject = "var:person-organisationsnummer-peorgnr"
+fields = { "label" = "Person-/organisationsnummer (sökande, PeOrgNr)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both are 'Huvudmannens organisationsnummer'; only the table (antagna vs sökande) and spelling separate them, and the 'höstterminen' reading of HT is not in any text."
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "label" = "Person-/organisationsnummer (antagna, PeOrgNr_HT)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both are 'Huvudmannens organisationsnummer'; only the table (antagna vs sökande) and spelling separate them, and the 'höstterminen' reading of HT is not in any text."

@@ -9360,3 +9360,9 @@ kind = "set"
 subject = "var:syssms"
 fields = { "label" = "Sysselsättning/aktivitet (urvalspersonens partner)" }
 evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SYSSUP/syss 'Urvalspersonen', SYSSMS/syssms 'Urvalspersonens partners sysselsättning'."
+
+[[statement]]
+kind = "set"
+subject = "var:lonperper"
+fields = { "label" = "Månadslön (lonperper)" }
+evidence = "#2102 same-label cluster 'Månadslön' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; lonman and lonperper share the definition; lonperper's opdef is the survey question 'nuvarande lön före skatt ...' and nothing in the evidence mentions a time unit ('per angiven tidsenhet' is not in any opdef), so lonperper is labelled by its code."

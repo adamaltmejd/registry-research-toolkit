@@ -5374,3 +5374,69 @@ kind = "set"
 subject = "var:sun2020niva-old"
 fields = { "label" = "Utbildningsnivå (Sun2020Niva_old, grov indelning)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Sun2000Niva_old and Sun2020Niva_old share the same seven-level code list and opdef text (both name SUN2000Niva_Old), so 'SUN 2020' is not supported for Sun2020Niva_old; Sun2020Niva's 2019-2022 opdef says 'SUN2000-nivåkoden', so 'SUN 2020' is not supported there either. Both Sun2000Niva and Sun2020Niva carry 51 three-digit codes. Codes are used for the 2020-named members."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadbiofar"
+fields = { "label" = "Födelseland far (FodelseLandNamnAdBioFar)" }
+evidence = "#2102 same-label cluster 'Födelseland far' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FodelseLandNamnAdBioFar (2022-2023) has the same definition, opdef and code list as FodelseLandNamnFar in 2022-2023; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadbiomor"
+fields = { "label" = "Födelseland mor (FodelseLandNamnAdBioMor)" }
+evidence = "#2102 same-label cluster 'Födelseland mor' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FodelseLandNamnAdBioMor (2022-2023) has the same definition, opdef and code list as FodelseLandNamnMor in 2022-2023; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:afdagararadbiofar"
+fields = { "label" = "Inskriven vid Arbetsförmedlingen dagar under året, fader (AFDagarArAdBioFar)" }
+evidence = "#2102 same-label cluster 'Inskriven vid Arbetsförmedlingen dagar under året, fader' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AFDagarArAdBioFar (2022-2023) has the same definition, opdef (Arbetsförmedlingen + Registret över totalbefolkningen) and unit as AFDagarArFar 2022-2024; no text explains AdBio, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:afdagararadbiomor"
+fields = { "label" = "Inskriven vid Arbetsförmedlingen dagar under året, moder (AFDagarArAdBioMor)" }
+evidence = "#2102 same-label cluster 'Inskriven vid Arbetsförmedlingen dagar under året, moder' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AFDagarArAdBioMor (2022-2023) has the same definition, opdef and unit as AFDagarArMor 2022-2024; no text explains AdBio, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:seninvaradbiofar"
+fields = { "label" = "Senaste invandringsår fader (SenInvArAdBioFar)" }
+evidence = "#2102 same-label cluster 'Senaste invandringsår fader' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SenInvArAdBioFar (2022-2023) has the same definition and RTB-derived opdef as SenInvArFar in 2022-2023; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:seninvaradbiomor"
+fields = { "label" = "Senaste invandringsår moder (SenInvArAdBioMor)" }
+evidence = "#2102 same-label cluster 'Senaste invandringsår moder' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SenInvArAdBioMor (2022-2023) has the same definition and RTB-derived opdef as SenInvArMor in 2022-2023; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sumovrink"
+fields = { "label" = "Summa övrig inkomst (till och med 2004)" }
+evidence = "#2102 same-label cluster 'Summa övrig inkomst' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SumOvrInk opdef says 'Till och med 2004'; SumOvrInk04 and OvrInk have the same component list (LISA from 2016), OvrInk adding Merkostnadsersättning from 2019. 'från 2004' was true of the definition, not of OvrInk's occurrences (2018-), so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sumovrink04"
+fields = { "label" = "Summa övrig inkomst (SumOvrInk04)" }
+evidence = "#2102 same-label cluster 'Summa övrig inkomst' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SumOvrInk opdef says 'Till och med 2004'; SumOvrInk04 and OvrInk have the same component list (LISA from 2016), OvrInk adding Merkostnadsersättning from 2019. 'från 2004' was true of the definition, not of OvrInk's occurrences (2018-), so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrink"
+fields = { "label" = "Summa övrig inkomst (OvrInk)" }
+evidence = "#2102 same-label cluster 'Summa övrig inkomst' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SumOvrInk opdef says 'Till och med 2004'; SumOvrInk04 and OvrInk have the same component list (LISA from 2016), OvrInk adding Merkostnadsersättning from 2019. 'från 2004' was true of the definition, not of OvrInk's occurrences (2018-), so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldadbiofar"
+fields = { "label" = "Utbildningsnivå, far (SUN2020Niva_oldAdBioFar)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå, far' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SUN2020Niva_oldAdBioFar (2022-2023) has the same definition, opdef (Ureg och RTB) and levels as SUN2020Niva_oldFar; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldadbiomor"
+fields = { "label" = "Utbildningsnivå, mor (SUN2020Niva_oldAdBioMor)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå, mor' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SUN2020Niva_oldAdBioMor (2022-2023) has the same definition and opdef as SUN2020Niva_oldMor; nothing says what AdBio adds, so the label uses the column code."

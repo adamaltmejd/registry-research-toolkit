@@ -2878,3 +2878,15 @@ kind = "set"
 subject = "var:utb-spec-kod"
 fields = { "label" = "Utbildnings eller specialitetskod (kod för aktuell leg eller beivs)" }
 evidence = "#2102 same-label cluster 'Utbildnings eller specialitetskod' (2 variables): judged different meaning, medium confidence; Olika tabeller och definitioner: utbildnings- eller specialitetskod respektive kod för aktuell legitimation (leg) eller beivs."
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat"
+fields = { "label" = "Arbetsmarknadsstatus, skapad av SoS (ARB_MARK_STAT)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus, skapad av SoS' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and code lists in the same table; nothing documents what the LISA suffix means, so the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat-lisa"
+fields = { "label" = "Arbetsmarknadsstatus, skapad av SoS (ARB_MARK_STAT_LISA)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus, skapad av SoS' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and code lists in the same table; nothing documents what the LISA suffix means, so the codes are used."

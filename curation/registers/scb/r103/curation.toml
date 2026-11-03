@@ -2932,3 +2932,27 @@ kind = "set"
 subject = "var:vuxenstudiestod"
 fields = { "label" = "Vuxenstudiestöd (särskilt vuxenstudiestöd)" }
 evidence = "#2102 same-label cluster 'Vuxenstudiestöd' (2 variables): judged different meaning, medium confidence; Opdefs differ: SVUXA is särskilt vuxenstudiestöd for unemployed, Svux is särskilt vuxenstudiestöd; concurrent flags in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan"
+fields = { "label" = "Studiemedel, lån (utbetalt per kalenderhalvår, STMLAN)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; STMLAN/StmLan and STMLANHT/StmLanHT share opdef 'lånedel utbetald under respektive kalenderhalvår'; STMLHT opdef is 'Studielån under höstterminen'; Lan is 'Lånebelopp ... som beviljats' in studiemedel-erhallet."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-stmlht"
+fields = { "label" = "Studiemedel, lån (höstterminen)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; STMLAN/StmLan and STMLANHT/StmLanHT share opdef 'lånedel utbetald under respektive kalenderhalvår'; STMLHT opdef is 'Studielån under höstterminen'; Lan is 'Lånebelopp ... som beviljats' in studiemedel-erhallet."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-lan"
+fields = { "label" = "Studiemedel, lån (beviljat lånebelopp)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; STMLAN/StmLan and STMLANHT/StmLanHT share opdef 'lånedel utbetald under respektive kalenderhalvår'; STMLHT opdef is 'Studielån under höstterminen'; Lan is 'Lånebelopp ... som beviljats' in studiemedel-erhallet."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-stmlanht"
+fields = { "label" = "Studiemedel, lån (utbetalt per kalenderhalvår, STMLANHT)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; STMLAN/StmLan and STMLANHT/StmLanHT share opdef 'lånedel utbetald under respektive kalenderhalvår'; STMLHT opdef is 'Studielån under höstterminen'; Lan is 'Lånebelopp ... som beviljats' in studiemedel-erhallet."

@@ -20081,3 +20081,21 @@ kind = "set"
 subject = "var:c2h"
 fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (C2h)" }
 evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad"
+fields = { "label" = "Sysselsättningstyp skapad (Sy, Sy2, H8, H8X2txt)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad-h8x1"
+fields = { "label" = "Sysselsättningstyp skapad (H8X1)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad-h9txt"
+fields = { "label" = "Sysselsättningstyp skapad (H9txt)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."

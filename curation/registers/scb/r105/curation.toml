@@ -3211,3 +3211,15 @@ kind = "set"
 subject = "var:uppdragutbkurs-15hp"
 fields = { "label" = "Genomförd kurs Folkhögskolan (15 högskolepoäng, antal genomförda poäng)" }
 evidence = "#2102 same-label cluster 'Genomförd kurs Folkhögskolan' (2 variables): judged different meaning, high confidence; Opdefs: UppdragUtbKurs is a yes/no flag for the 7,5 hp courses, UppdragUtbKurs_15hp the number of credits in the 15 hp course."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-alderslut"
+fields = { "label" = "Ålder 31/12 (pedagogisk personal)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same concept in different tables: AlderSlut only in pedagogisk-personal (derived from personnummer), Alder only in deltagare-i-sfi (2018-2019), so the population qualifiers hold."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (deltagare i SFI)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same concept in different tables: AlderSlut only in pedagogisk-personal (derived from personnummer), Alder only in deltagare-i-sfi (2018-2019), so the population qualifiers hold."

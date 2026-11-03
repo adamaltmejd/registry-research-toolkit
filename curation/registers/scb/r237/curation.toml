@@ -111679,3 +111679,99 @@ kind = "set"
 subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-2012-4-siffrig"
 fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012)" }
 evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Every occurrence's opdef states 'Enligt yrkeskod (SSYK) 1996' for SSYKUP_1 and 'SSYK 2012' for SSYK12UP; different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resor-fardtjanst-p-manad-ha1355"
+fields = { "label" = "Antal resor färdtjänst p månad (HA1355)" }
+evidence = "#2102 same-label cluster 'Antal resor färdtjänst p månad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA1355 and HA0355 have identical definition and five-class code list in the same table and period; HA0356 (1994) has six trip classes plus 7=Ingen resa, so 'sex klasser' mis-stated its seven codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardtjanst-resor-manad"
+fields = { "label" = "Antal resor färdtjänst p månad (HA0355)" }
+evidence = "#2102 same-label cluster 'Antal resor färdtjänst p månad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA1355 and HA0355 have identical definition and five-class code list in the same table and period; HA0356 (1994) has six trip classes plus 7=Ingen resa, so 'sex klasser' mis-stated its seven codes."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resor-fardtjanst-p-manad-ha0356"
+fields = { "label" = "Antal resor färdtjänst p månad (HA0356, inkl. ingen resa)" }
+evidence = "#2102 same-label cluster 'Antal resor färdtjänst p månad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA1355 and HA0355 have identical definition and five-class code list in the same table and period; HA0356 (1994) has six trip classes plus 7=Ingen resa, so 'sex klasser' mis-stated its seven codes."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (gift man och kvinna särskiljs)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Code lists separate them: BA0019/BA0021 split gift man/kvinna (BA0021 with nine classes incl. barn, avliden), BA0170 has five coarse classes, PB190 has the 2021 categories. 'från RTB' was true of only the 1984-1990 BA0021 occurrences, so it is dropped for a code and class count."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-ba0170"
+fields = { "label" = "Civilstånd (grov indelning)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Code lists separate them: BA0019/BA0021 split gift man/kvinna (BA0021 with nine classes incl. barn, avliden), BA0170 has five coarse classes, PB190 has the 2021 categories. 'från RTB' was true of only the 1984-1990 BA0021 occurrences, so it is dropped for a code and class count."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-ba0021"
+fields = { "label" = "Civilstånd (BA0021, nio klasser)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Code lists separate them: BA0019/BA0021 split gift man/kvinna (BA0021 with nine classes incl. barn, avliden), BA0170 has five coarse classes, PB190 has the 2021 categories. 'från RTB' was true of only the 1984-1990 BA0021 occurrences, so it is dropped for a code and class count."
+
+[[statement]]
+kind = "set"
+subject = "var:pb190"
+fields = { "label" = "Civilstånd (aldrig gift, gift, separerat, änka/änkling, skild)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Code lists separate them: BA0019/BA0021 split gift man/kvinna (BA0021 with nine classes incl. barn, avliden), BA0170 has five coarse classes, PB190 has the 2021 categories. 'från RTB' was true of only the 1984-1990 BA0021 occurrences, so it is dropped for a code and class count."
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes-fraga"
+fields = { "label" = "Diabetes fråga (HA0757)" }
+evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three have the same definition ('Jämför HA0503'), unit and seven-code list. 'Härledd' appears in only HA0757's 1980 opdef, not all its occurrences, so the code is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes-fraga-ha0503"
+fields = { "label" = "Diabetes fråga (HA0503)" }
+evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three have the same definition ('Jämför HA0503'), unit and seven-code list. 'Härledd' appears in only HA0757's 1980 opdef, not all its occurrences, so the code is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes-fraga-ha9017"
+fields = { "label" = "Diabetes fråga (HA9017)" }
+evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three have the same definition ('Jämför HA0503'), unit and seven-code list. 'Härledd' appears in only HA0757's 1980 opdef, not all its occurrences, so the code is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-harlett-fran-personnummer"
+fields = { "label" = "Kön (BA0010)" }
+evidence = "#2102 same-label cluster 'Kön' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RB090 opdef says it is derived and covers age 0 and older in the R-file. The personnummer derivation text appears only in some BA0010 occurrences (1980-1990), so BA0010 falls back to its code; PB150 has no distinguishing text."
+
+[[statement]]
+kind = "set"
+subject = "var:pb150"
+fields = { "label" = "Kön (PB150)" }
+evidence = "#2102 same-label cluster 'Kön' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RB090 opdef says it is derived and covers age 0 and older in the R-file. The personnummer derivation text appears only in some BA0010 occurrences (1980-1990), so BA0010 falls back to its code; PB150 has no distinguishing text."
+
+[[statement]]
+kind = "set"
+subject = "var:rb090"
+fields = { "label" = "Kön (RB090, 0 år och äldre)" }
+evidence = "#2102 same-label cluster 'Kön' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RB090 opdef says it is derived and covers age 0 and older in the R-file. The personnummer derivation text appears only in some BA0010 occurrences (1980-1990), so BA0010 falls back to its code; PB150 has no distinguishing text."
+
+[[statement]]
+kind = "set"
+subject = "var:legat-pa-sjukhus-sjukhem"
+fields = { "label" = "Legat på sjukhus eller sjukhem (HA0020)" }
+evidence = "#2102 same-label cluster 'Legat på sjukhus eller sjukhem' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA0020 has 0/1 codes and is marked 'Härledd' only in some occurrences, so it falls back to its code. HA0449 has the codes Ja/Nej/På sjukhus nu in every occurrence; HA0024 has no codes or opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:legat-pa-sjukhus-eller-sjukhem-ha0449"
+fields = { "label" = "Legat på sjukhus eller sjukhem (med svaret på sjukhus nu)" }
+evidence = "#2102 same-label cluster 'Legat på sjukhus eller sjukhem' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA0020 has 0/1 codes and is marked 'Härledd' only in some occurrences, so it falls back to its code. HA0449 has the codes Ja/Nej/På sjukhus nu in every occurrence; HA0024 has no codes or opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:legat-pa-sjukhus-eller-sjukhem-ha0024"
+fields = { "label" = "Legat på sjukhus eller sjukhem (HA0024)" }
+evidence = "#2102 same-label cluster 'Legat på sjukhus eller sjukhem' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA0020 has 0/1 codes and is marked 'Härledd' only in some occurrences, so it falls back to its code. HA0449 has the codes Ja/Nej/På sjukhus nu in every occurrence; HA0024 has no codes or opdef."

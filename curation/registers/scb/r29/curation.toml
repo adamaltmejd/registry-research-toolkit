@@ -19928,3 +19928,51 @@ kind = "set"
 subject = "var:bpens"
 fields = { "label" = "Pensionsmarkering (BPENS)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ca"
+fields = { "label" = "Civilståndsdatum (CA)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:civandr"
+fields = { "label" = "Civilståndsdatum (CIVANDR)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivdatr"
+fields = { "label" = "Civilståndsdatum (BCIVDATR)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivand"
+fields = { "label" = "Civilståndsdatum (BCIVAND, relevant för taxeringen)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The proposed bare label was shared by CA, CIVANDR and BCIVDATR; only BCIVAND's opdef (change date, only what is relevant for taxation) and BCIVDATR's (from befolkningsregistret, 2005 on) say anything, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-rantebidrag-smahus"
+fields = { "label" = "Räntebidrag (lån till småhus)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdef of KKURBO says loans on småhus; KKURBID says loans in general (\"bostad, lån\"), concurrent 2001-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag"
+fields = { "label" = "Räntebidrag (bostadslån)" }
+evidence = "#2102 same-label cluster 'Räntebidrag' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdef of KKURBO says loans on småhus; KKURBID says loans in general (\"bostad, lån\"), concurrent 2001-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-for-panelurvalet-burvkodp"
+fields = { "label" = "Urvalskod för panelurvalet (BURVKODP)" }
+evidence = "#2102 same-label cluster 'Urvalskod för panelurvalet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition, opdef and code list (0/1/2) are identical; BURVKODP occurs only in taxeringshushåll tables, BURVKODF in befolkningen and utrikesfödda tables, so the column codes separate them (a \"befolkningen\" qualifier would be wrong for the utrikesfödda tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-panelurvalet"
+fields = { "label" = "Urvalskod för panelurvalet (BURVKODF)" }
+evidence = "#2102 same-label cluster 'Urvalskod för panelurvalet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition, opdef and code list (0/1/2) are identical; BURVKODP occurs only in taxeringshushåll tables, BURVKODF in befolkningen and utrikesfödda tables, so the column codes separate them (a \"befolkningen\" qualifier would be wrong for the utrikesfödda tables)."

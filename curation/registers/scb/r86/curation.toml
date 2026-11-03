@@ -13437,3 +13437,21 @@ kind = "set"
 subject = "var:vk2777"
 fields = { "label" = "Utgift för Övriga tjänster (VK2777)" }
 evidence = "#2102 same-label cluster 'Utgift för Övriga tjänster' (3 variables): judged different meaning, low confidence; Three concurrent columns; the opdef says the difference between same-named variables is unclear, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:wvikt"
+fields = { "label" = "Hushållsvikt (WVIKT99)" }
+evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:wvikt00"
+fields = { "label" = "Hushållsvikt (WVIKT00)" }
+evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."
+
+[[statement]]
+kind = "set"
+subject = "var:wvikt01"
+fields = { "label" = "Hushållsvikt (WVIKT01)" }
+evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."

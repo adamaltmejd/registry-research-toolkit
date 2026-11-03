@@ -1677,3 +1677,51 @@ kind = "set"
 subject = "var:stat-id"
 fields = { "label" = "Varukod enligt kombinerade nomenklaturen (8 siffror, kod)" }
 evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kod"
+fields = { "label" = "PPI marknad (Kod)" }
+evidence = "#2102 same-label cluster 'PPI marknad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and the same five market codes (01-06) in ppi 2013-2016; no text separates the columns, so column spellings are used (the earlier 'kod/kortnamn/identifierare' were decodings). MarknId continues to 2027 with codes 1,2,3,5,6,9."
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kortnamn"
+fields = { "label" = "PPI marknad (KortNamn)" }
+evidence = "#2102 same-label cluster 'PPI marknad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and the same five market codes (01-06) in ppi 2013-2016; no text separates the columns, so column spellings are used (the earlier 'kod/kortnamn/identifierare' were decodings). MarknId continues to 2027 with codes 1,2,3,5,6,9."
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-marknid"
+fields = { "label" = "PPI marknad (MarknId)" }
+evidence = "#2102 same-label cluster 'PPI marknad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and the same five market codes (01-06) in ppi 2013-2016; no text separates the columns, so column spellings are used (the earlier 'kod/kortnamn/identifierare' were decodings). MarknId continues to 2027 with codes 1,2,3,5,6,9."
+
+[[statement]]
+kind = "set"
+subject = "var:produkterbjudande-proderbjid"
+fields = { "label" = "Produkterbjudande (ProdErbjId)" }
+evidence = "#2102 same-label cluster 'Produkterbjudande' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; in tpi 2014-2015 Variant and Beskrivn both have opdef 'Beskriver den tjänst som prismäts', so the text does not separate them; column codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:produkterbjudande-variant"
+fields = { "label" = "Produkterbjudande (Variant)" }
+evidence = "#2102 same-label cluster 'Produkterbjudande' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; in tpi 2014-2015 Variant and Beskrivn both have opdef 'Beskriver den tjänst som prismäts', so the text does not separate them; column codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:produkterbjudande-beskrivn"
+fields = { "label" = "Produkterbjudande (Beskrivn)" }
+evidence = "#2102 same-label cluster 'Produkterbjudande' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; in tpi 2014-2015 Variant and Beskrivn both have opdef 'Beskriver den tjänst som prismäts', so the text does not separate them; column codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fv-ar"
+fields = { "label" = "År (Fv_ar)" }
+evidence = "#2102 same-label cluster 'År' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; UndersokningsAr has opdef 'Undersökningsår' in all its occurrences (tpi 2007-2012); Ar is the calendar year; Fv_ar (ppi 2001-2013) has only 'Uppdateras manuellt vid årsskifte'."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-undersokningsar"
+fields = { "label" = "År (undersökningsår)" }
+evidence = "#2102 same-label cluster 'År' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; UndersokningsAr has opdef 'Undersökningsår' in all its occurrences (tpi 2007-2012); Ar is the calendar year; Fv_ar (ppi 2001-2013) has only 'Uppdateras manuellt vid årsskifte'."

@@ -5294,3 +5294,63 @@ kind = "set"
 subject = "var:po18"
 fields = { "label" = "Produktionsområde (18 områden)" }
 evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: po/po8 'geografisk indelning i 8 områden' and po18 'i 18 områden', with 8-code and 18-code value sets in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "label" = "C/O-adress (Adr2)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adr1"
+fields = { "label" = "C/O-adress (Adr1)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress1"
+fields = { "label" = "C/O-adress (adress1)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress2"
+fields = { "label" = "C/O-adress (adress2)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress"
+fields = { "label" = "Gatuadress (adress)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "label" = "Gatuadress (Adr1)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adr2"
+fields = { "label" = "Gatuadress (Adr2)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress2"
+fields = { "label" = "Gatuadress (adress2)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress1"
+fields = { "label" = "Gatuadress (adress1)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:underkod"
+fields = { "label" = "Undergröda (kod)" }
+evidence = "#2102 same-label cluster 'Undergröda' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; underkod has an 80-code list in both occurrences; undergroda has no code list and no opdef, so it keeps the bare label."

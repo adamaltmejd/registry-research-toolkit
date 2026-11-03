@@ -23897,3 +23897,9 @@ kind = "set"
 subject = "var:yrkesstallning-byrkstalln"
 fields = { "label" = "Yrkesställning (med kombinationer av anställning och företagande)" }
 evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; YrkStalln has codes 0-5; BYrkstalln opdef/codes 200-series combine anställning and företagande, from 2022."
+
+[[statement]]
+kind = "set"
+subject = "var:person-organisationsnummer-huvudsaklig-sysselsattning"
+fields = { "label" = "Person-/organisationsnummer (huvudsaklig sysselsättning, PeOrgNrSreg)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNrSreg and PeOrgNr_LISA (individer) carry the same \"huvudsaklig sysselsättning\" opdef; PeOrgNr is in arbetsstallen and foretag tables. Qualifier of the proposal kept; the code separates the individual-table column."

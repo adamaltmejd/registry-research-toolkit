@@ -4941,3 +4941,33 @@ kind = "set"
 subject = "var:naringsgren-huvud-fad-sni2007"
 fields = { "label" = "Näringsgren, huvudsaklig (FAD, SNI 2007)" }
 evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-astnr2"
+fields = { "label" = "Arbetsställenummer (FAD, AstNr2)" }
+evidence = "#2102 same-label cluster 'Arbetsställenummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AstNr2 appears only in the FAD tables; from 2020 its opdef is identical to AstNr's, earlier it differs in wording only."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle-astkommun2"
+fields = { "label" = "Kommun för arbetsställe (FAD, AstKommun2)" }
+evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; 'Avser mätåret' appears in only one AstKommun2 occurrence (2022), so the earlier 'mätåret' qualifier is not true of all; the FAD tables and column code are."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgtyp"
+fields = { "label" = "Typ av företag (FtgTyp)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FtgTyp2 opdef says 'Avser registeråret' in all its FAD occurrences; Typ and FtgTyp share definition, opdef and codes and overlap in arbetsstallen 1985-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "label" = "Typ av företag (Typ)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FtgTyp2 opdef says 'Avser registeråret' in all its FAD occurrences; Typ and FtgTyp share definition, opdef and codes and overlap in arbetsstallen 1985-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgtyp2"
+fields = { "label" = "Typ av företag (FAD, registeråret)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FtgTyp2 opdef says 'Avser registeråret' in all its FAD occurrences; Typ and FtgTyp share definition, opdef and codes and overlap in arbetsstallen 1985-1997."

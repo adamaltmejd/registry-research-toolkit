@@ -6956,3 +6956,21 @@ kind = "set"
 subject = "var:tjledig"
 fields = { "label" = "Tjänstledig (helt tjänstledig, TjLedig)" }
 evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Tjltim1-6 each have an opdef giving hours of leave from the nth tjänst; the personregistret TjLedig/PrTjLedig opdef says hel tjänstledighet under hösttermin; Tjl has a 0/1 (later 0/1/2) ja/nej list, and the tjansteregistret TjLedig has only a J/N list 'Helt tjänstledig' (no text says 'aktuell tjänst')."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning-anst"
+fields = { "label" = "Typ av anställning (Anst)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning-anstslag"
+fields = { "label" = "Typ av anställning (AnstSlag)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "label" = "Typ av anställning (PrAnstSlag)" }
+evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."

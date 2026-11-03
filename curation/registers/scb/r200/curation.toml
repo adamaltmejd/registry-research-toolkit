@@ -10542,3 +10542,45 @@ kind = "set"
 subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
 fields = { "label" = "Vissa rörelsekostnader samt inköpt el (MWh)" }
 evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr costs in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:padr"
+fields = { "label" = "Postadress (padr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, AttAdr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-2"
+fields = { "label" = "Postadress (GatuAdr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:gadr"
+fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, gadr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-slutlig-forbrukare-naringsgren-sni-2007"
+fields = { "label" = "Överförd el till slutlig förbrukare (n2radn)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-till-slutlig-forbrukare-n2radtext"
+fields = { "label" = "Överförd el till slutlig förbrukare (n2radtext)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-till-slutlig-forbrukare-radn"
+fields = { "label" = "Överförd el till slutlig förbrukare (radn)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."

@@ -3026,3 +3026,33 @@ kind = "set"
 subject = "var:branschgrupp-bgrupp"
 fields = { "label" = "Branschgrupp (BGrupp)" }
 evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-classid13bl-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, blankett (PIN) (ClassId13BL_Imputed)" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, blankett (PIN)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition, opdef and unit (KSEK, 'direktinsamlad'); the only difference is the column spelling, and no text says what _Imputed means, so the code qualifies it."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, moms (PIN) (ClassId13MR_Imputed)" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, moms (PIN)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition, opdef (härledd från momsuppgifter) and unit; only the column spelling differs and no text explains _Imputed, so the code qualifies it."
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (InSubsetName)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-outsubsetname"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (OutSubsetName)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:variabeldelmangd-benamning-pin-subsetid"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (SubsetId)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
