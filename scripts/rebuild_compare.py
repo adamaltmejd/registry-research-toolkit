@@ -2586,8 +2586,10 @@ REBUILT_TEXT = {
     "register description": (
         "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text"
     ),
+    # Keyed by curation file and kind, not by hash: the hash covers the whole statement,
+    # so any non-text edit would read as a removed and an added text.
     "statement": (
-        "SELECT s.hash, json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
+        "SELECT s.file || ' ' || s.kind, json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
         " LEFT JOIN text e ON e.id = s.evidence_text LEFT JOIN text c ON c.id = s.caveat_text"
     ),
 }
@@ -2755,8 +2757,12 @@ def rebuilt(args) -> int:
                     for key in before.keys() & after.keys()
                     if before[key] != after[key]
                 },
-                "added": sorted(after.keys() - before.keys()),
-                "removed": sorted(before.keys() - after.keys()),
+                "added": {
+                    key: sorted(after[key]) for key in after.keys() - before.keys()
+                },
+                "removed": {
+                    key: sorted(before[key]) for key in before.keys() - after.keys()
+                },
             }
         findings = rebuilt_delta(rebuilt_findings(old_db), rebuilt_findings(new_db))
         notices = rebuilt_delta(rebuilt_notices(old_db), rebuilt_notices(new_db))
