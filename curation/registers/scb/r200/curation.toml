@@ -10551,20 +10551,8 @@ evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 a
 
 [[statement]]
 kind = "set"
-subject = "var:postadress"
-fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, AttAdr)" }
-evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
-
-[[statement]]
-kind = "set"
 subject = "var:postadress-2"
 fields = { "label" = "Postadress (GatuAdr)" }
-evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
-
-[[statement]]
-kind = "set"
-subject = "var:gadr"
-fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, gadr)" }
 evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
 
 [[statement]]
@@ -10614,3 +10602,15 @@ kind = "set"
 subject = "var:elprodbrutto"
 fields = { "label" = "Elproduktion brutto (elprodbrutto)" }
 evidence = "#2102 same-label cluster 'Elproduktion brutto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In elproducerande-industriforetag both columns exist concurrently with different opdefs: bruttoprod is split by plant type (hydro, wind) while elprodbrutto is gross production including plant own consumption."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: gadr @2018-01-01..2018-12-31 where key = 'v4049'"
+fields = { "variable" = "postadress" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into postadress: AttAdr (2009-17) and gadr (2018) in elproduktion-elhandel: same definition and opdef ('Gatuadress till uppgiftslämnaren'), no value set, adjacent at 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, AttAdr/gadr)" }
+evidence = "#2102 fold: the label names every folded column. AttAdr (2009-17) and gadr (2018) in elproduktion-elhandel: same definition and opdef ('Gatuadress till uppgiftslämnaren'), no value set, adjacent at 2018."

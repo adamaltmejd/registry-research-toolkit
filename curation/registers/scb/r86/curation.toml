@@ -10153,30 +10153,6 @@ evidence = "Källan anger att definitionen är okänd men att namnet tyder på e
 
 [[statement]]
 kind = "set"
-subject = "var:wvikt00"
-fields = { "sets" = [] }
-evidence = "Källan anger att definitionen är okänd men att namnet tyder på en vikt.\ncatalog:variable_text:27386:10957:11323"
-
-[[statement]]
-kind = "set"
-subject = "var:wvikt00"
-fields = { "tags" = ["methods"] }
-evidence = "Källan anger att definitionen är okänd men att namnet tyder på en vikt.\ncatalog:variable_text:27386:10957:11323"
-
-[[statement]]
-kind = "set"
-subject = "var:wvikt01"
-fields = { "sets" = [] }
-evidence = "W är en källkod och 01-familjen bedöms enhetligt; etiketten anger hushållsvikt.\ncatalog:variable_text:27387:11323:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:wvikt01"
-fields = { "tags" = ["methods"] }
-evidence = "W är en källkod och 01-familjen bedöms enhetligt; etiketten anger hushållsvikt.\ncatalog:variable_text:27387:11323:11688"
-
-[[statement]]
-kind = "set"
 subject = "var:bcdz"
 fields = { "sets" = ["inkomstgrupper"] }
 evidence = "r202 defines deciles of household disposable income; r200 and r196 confirm ten income bands.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26455\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7698\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26534"
@@ -13440,18 +13416,18 @@ evidence = "#2102 same-label cluster 'Utgift för Övriga tjänster' (3 variable
 
 [[statement]]
 kind = "set"
+subject = "hushall-1999-2001: wvikt00 @2000-01-01..2000-12-31 where key = 'v11193'"
+fields = { "variable" = "wvikt" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into wvikt: WVIKT99, WVIKT00, WVIKT01 in hushall-1999-2001, one per year: same definition and opdef, no value set, adjacent."
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: wvikt01 @2001-01-01..2001-12-31 where key = 'v11193'"
+fields = { "variable" = "wvikt" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into wvikt: WVIKT99, WVIKT00, WVIKT01 in hushall-1999-2001, one per year: same definition and opdef, no value set, adjacent."
+
+[[statement]]
+kind = "set"
 subject = "var:wvikt"
-fields = { "label" = "Hushållsvikt (WVIKT99)" }
-evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."
-
-[[statement]]
-kind = "set"
-subject = "var:wvikt00"
-fields = { "label" = "Hushållsvikt (WVIKT00)" }
-evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."
-
-[[statement]]
-kind = "set"
-subject = "var:wvikt01"
-fields = { "label" = "Hushållsvikt (WVIKT01)" }
-evidence = "#2102 same-label cluster 'Hushållsvikt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HVIKTES opdef: uppräkningsfaktor to national totals; the three WVIKT columns have opdef 'Okänd definition' and nothing else, so each keeps its code."
+fields = { "label" = "Hushållsvikt (WVIKT99/WVIKT00/WVIKT01)" }
+evidence = "#2102 fold: the label names every folded column. WVIKT99, WVIKT00, WVIKT01 in hushall-1999-2001, one per year: same definition and opdef, no value set, adjacent."
