@@ -172,11 +172,11 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         )
     with (root / "census.csv").open("a") as f:
         f.write(
-            "Synthetic,Attested,Attested,Old,Id,,,,,,,\nSynthetic,AttestedMember,AttestedMember,Id,,,,,,,,\n"
+            "Synthetic,Attested,Attested,Old,Id,,,,,,,\nSynthetic,AttestedSlot,AttestedSlot,ReceivedKey,Slot,,,,,,,\nSynthetic,AttestedMember,AttestedMember,Id,,,,,,,,\nSynthetic,AttestedGrid,AttestedGrid,GridId,Cells,,,,,,,\n"
         )
     with (root / "storage.csv").open("a") as f:
         f.write(
-            "dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\ndbo,AttestedMember,BASE TABLE,Id,int,,10,0,1\n"
+            "dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\ndbo,AttestedSlot,BASE TABLE,ReceivedKey,int,,10,0,1\ndbo,AttestedSlot,BASE TABLE,Slot,int,,10,0,2\ndbo,AttestedMember,BASE TABLE,Id,int,,10,0,1\ndbo,AttestedGrid,BASE TABLE,GridId,int,,10,0,1\ndbo,AttestedGrid,BASE TABLE,Cells,int,,10,0,2\n"
         )
     with (root / "holdings.toml").open("a") as f:
         f.write((case / "topology.toml").read_text())
@@ -254,6 +254,32 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert {
             key: data[key] for key in expected["attested_order"]["order"]
         } == expected["attested_order"]["order"]
+        # Fails if a reference register's summary omits the tables and variables the
+        # steward defines inside it (reg-catalog `show` reading only the base), or if
+        # steward-mode order refuses a steward-only variable on a reference table
+        # (`fqid_unresolved`: the composed view keyed segments by base ids only).
+        minted = expected["steward_minted"]
+        register = pool.client(artifact_env(output)).get("/api/catalog/demo/held")
+        assert register.status_code == 200, register.text
+        data = register.json()["data"]
+        assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
+        assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
+        files = pool.client(artifact_env(output)).post(
+            "/api/project/materialize", json=minted["project"]
+        )
+        assert files.status_code == 200, files.text
+        assert [
+            {
+                "table": f["table"],
+                "delivery": f["delivery"],
+                "columns": [
+                    {"name": c["name"], "role": c["role"], "variable": r["variable"]}
+                    for c in f["columns"]
+                    for r in c["refs"]
+                ],
+            }
+            for f in files.json()["data"]["files"]
+        ] == minted["files"]
     finally:
         pool.close()
     # Fails if located occurrence declarations can omit all supplemental segments

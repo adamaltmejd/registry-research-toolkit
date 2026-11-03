@@ -1,3 +1,10 @@
+[tables]
+grid = "grid"
+
 [variables]
 value = ["ReceivedOld"]
 id = ["Id"]
+steward-slot = ["Slot"]
+received-key = ["ReceivedKey"]
+grid-id = ["grid: GridId"]
+cells = ["grid: Cells"]

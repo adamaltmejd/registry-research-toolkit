@@ -71,8 +71,9 @@ struct Piece {
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
 /// with value sets and class versions by public identity so rows never cross origins.
-/// In the composed view a base table's held segments of a base variable (a reference
-/// occurrence, never overlapping the base ones) join through their public ids.
+/// In the composed view a base table's held segments join through public ids: a base
+/// variable's (a reference occurrence, never overlapping the base ones) by its base id,
+/// a variable only the holdings database defines by its negated held id (`held_id`).
 pub(super) fn segments(scope: &Scope) -> String {
     let part = |db: &str, ids: &str, joins: &str| {
         format!(
@@ -95,9 +96,10 @@ pub(super) fn segments(scope: &Scope) -> String {
     }
     let held = part(
         "held",
-        "bt.id, bv.id",
+        "bt.id, COALESCE(bv.id, -hv.id)",
         "JOIN held.tbl ht ON ht.id = x.table_id JOIN main.tbl bt ON bt.pid = ht.pid
-         JOIN held.variable hv ON hv.id = x.variable_id JOIN main.variable bv ON bv.pid = hv.pid",
+         JOIN held.variable hv ON hv.id = x.variable_id
+         LEFT JOIN main.variable bv ON bv.pid = hv.pid",
     );
     format!("{base} UNION ALL {held}")
 }
@@ -142,13 +144,21 @@ pub(super) fn refs(
             issue("variable", None, unresolved(&binding.variable, "variable"));
             None
         }
+        // The base wins when it knows the id; only a miss falls through.
         Err(err) => {
-            issue(
-                "variable",
-                None,
-                refused(conn, &binding.variable, "variable", &err)?,
-            );
-            None
+            let held = if composed && err.kind() == Code::NotFound {
+                held_id(conn, &binding.variable)?
+            } else {
+                None
+            };
+            if held.is_none() {
+                issue(
+                    "variable",
+                    None,
+                    refused(conn, &binding.variable, "variable", &err)?,
+                );
+            }
+            held.map(|id| (id, binding.variable.clone()))
         }
     };
     let pid = variable.as_ref().map(|(_, pid)| pid.as_str());
@@ -185,6 +195,18 @@ pub(super) fn refs(
         classification,
     });
     Ok((variable, findings))
+}
+
+/// A variable only the attached holdings database defines, by exact public id, keyed as
+/// `segments` keys it in the composed view: its negated held id, which no base id equals.
+fn held_id(conn: &Connection, pid: &str) -> Result<Option<i64>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT -id FROM held.variable WHERE pid = ?1",
+            [pid],
+            |row| row.get(0),
+        )
+        .optional()?)
 }
 
 /// A class version of the attached holdings database, by exact public id.
@@ -231,7 +253,9 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         ));
         return Ok(outcome);
     }
-    if binding.follow_successor == Some(true) {
+    // Succession is base metadata: a variable only the holdings database defines
+    // (negative id) has none to follow.
+    if binding.follow_successor == Some(true) && variable.id > 0 {
         return super::successor::binding(scope, b, binding);
     }
     materialize(scope, b, binding, &variable, outcome)
@@ -549,8 +573,8 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
             "held",
             "bt.id",
             "JOIN held.variable hv ON hv.id = o.variable_id \
-             JOIN main.variable bv ON bv.pid = hv.pid \
-             WHERE o.release_id = r.id AND bv.id = ?2",
+             LEFT JOIN main.variable bv ON bv.pid = hv.pid \
+             WHERE o.release_id = r.id AND COALESCE(bv.id, -hv.id) = ?2",
             "JOIN held.tbl ht ON ht.id = r.table_id JOIN main.tbl bt ON bt.pid = ht.pid",
         );
         format!("SELECT DISTINCT start, end FROM ({base} UNION ALL {held}) ORDER BY start, end")

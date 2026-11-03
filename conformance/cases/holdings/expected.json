@@ -320,5 +320,62 @@
       ],
       "clips": []
     }
+  },
+  "steward_minted": {
+    "note": "reference-extension mints, inside the reference register demo/held, the variables steward-slot and received-key (held.csv, 2014) and the table grid with grid-id and cells (tables.csv, held.csv, 2015..2016). topology.toml's AttestedSlot holds Slot on the reference table demo/held with ReceivedKey as its entity key; AttestedGrid holds the grid table. The reference register keeps its own rows and gains the steward's, sorted by public id.",
+    "register_tables": [
+      "demo/held",
+      "demo/held/grid"
+    ],
+    "register_variables": [
+      "demo/held/cells",
+      "demo/held/grid-id",
+      "demo/held/id",
+      "demo/held/late",
+      "demo/held/received-key",
+      "demo/held/relative-id",
+      "demo/held/steward-slot",
+      "demo/held/value",
+      "demo/held/year"
+    ],
+    "project": {
+      "schema_version": "5.2.0",
+      "reg_meta_version": "0.64.0",
+      "name": "Steward-minted slot",
+      "sources": [
+        {
+          "name": "s",
+          "table": "demo/held",
+          "period": {
+            "from": 2014,
+            "to": 2014
+          },
+          "bindings": [
+            {
+              "variable": "demo/held/steward-slot",
+              "type": "numeric"
+            }
+          ]
+        }
+      ]
+    },
+    "files": [
+      {
+        "table": "AttestedSlot",
+        "delivery": "2014",
+        "columns": [
+          {
+            "name": "Slot",
+            "role": "ordered",
+            "variable": "demo/held/steward-slot"
+          },
+          {
+            "name": "ReceivedKey",
+            "role": "row_key",
+            "variable": "demo/held/received-key"
+          }
+        ]
+      }
+    ]
   }
 }
