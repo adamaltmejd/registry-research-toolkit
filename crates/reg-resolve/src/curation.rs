@@ -279,16 +279,6 @@ struct Match {
     spans: Vec<Interval>,
 }
 
-fn guard_name(field: GuardField) -> &'static str {
-    match field {
-        GuardField::Label => "label",
-        GuardField::Type => "type",
-        GuardField::Unit => "unit",
-        GuardField::Key => "key",
-        GuardField::Release => "release",
-    }
-}
-
 /// Candidate rows from one immutable phase snapshot. The selector still checks
 /// guards and periods; indexes only remove rows that cannot match.
 struct SelectorIndex {
@@ -427,12 +417,12 @@ fn select_from(
                             })
                         })
                         && guards.iter().all(|g| {
-                            source.text(guard_name(g.field)).is_some_and(|value| {
-                                match g.comparison {
+                            source
+                                .text(g.field.name())
+                                .is_some_and(|value| match g.comparison {
                                     Comparison::Equal => value == g.value,
                                     Comparison::Prefix => value.starts_with(&g.value),
-                                }
-                            })
+                                })
                         })
                 }
                 Address::Set(slug) => {
@@ -689,7 +679,7 @@ impl PremiseSnapshots {
 
 fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
     if let Address::Occurrence { guards, .. } = address {
-        fields.extend(guards.iter().map(|g| guard_name(g.field).into()));
+        fields.extend(guards.iter().map(|g| g.field.name().into()));
     }
 }
 
@@ -773,10 +763,6 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
 
 fn moves_table(statement: &Statement) -> bool {
     matches!(statement, Statement::Set { fields, .. } if fields.table.is_some())
-}
-
-fn effects_overlap(a: &BTreeSet<String>, b: &BTreeSet<String>) -> bool {
-    !a.is_disjoint(b)
 }
 
 /// A field introduced by an accepted table move or assertion, in final source coordinates.
@@ -967,7 +953,7 @@ pub fn applied_conflicts(
         let field = BTreeSet::from([claim.field.to_owned()]);
         for &(index, row) in by_locator.get(claim.locator).into_iter().flatten() {
             let (effects, sources) = &evaluated[index];
-            if index == claim.statement || !effects_overlap(effects, &field) {
+            if index == claim.statement || effects.is_disjoint(&field) {
                 continue;
             }
             let (selected, spans) = &sources[row];
@@ -1895,7 +1881,7 @@ pub fn resolve(
         if [a, b].into_iter().all(|i| matches!(statements[i], Statement::Set { fields, .. } if fields.sentinels.is_some())) {
             continue;
         }
-        if !effects_overlap(&statement_effects[a], &statement_effects[b])
+        if statement_effects[a].is_disjoint(&statement_effects[b])
             || [a, b]
                 .into_iter()
                 .any(|i| out[i].as_ref().is_err_and(|error| error != "empty match"))
