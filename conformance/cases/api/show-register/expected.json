@@ -64,7 +64,9 @@
         "kind",
         "name",
         "period",
+        "sets",
         "tables",
+        "tags",
         "unplaced",
         "variables"
       ]

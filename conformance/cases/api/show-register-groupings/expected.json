@@ -1,0 +1,29 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/sets": [
+        {
+          "fqid": "set/demo/bas/inkomst",
+          "name": "Inkomstmått",
+          "members": [
+            "demo/bas/gross-household",
+            "demo/bas/gross-person",
+            "demo/bas/inkomst",
+            "demo/bas/net-household"
+          ]
+        }
+      ],
+      "/data/tags": [
+        {"fqid": "tag/income", "name": "Inkomst"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/sets": [],
+      "/data/tags": []
+    }
+  }
+]

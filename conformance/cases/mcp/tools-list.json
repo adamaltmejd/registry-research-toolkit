@@ -934,9 +934,23 @@
                 "period": {
                   "$ref": "#/$defs/Period"
                 },
+                "sets": {
+                  "description": "The register's curated sets (groups), in public-id order.",
+                  "items": {
+                    "$ref": "#/$defs/ShowRegisterSet"
+                  },
+                  "type": "array"
+                },
                 "tables": {
                   "items": {
                     "$ref": "#/$defs/ShowTable"
+                  },
+                  "type": "array"
+                },
+                "tags": {
+                  "description": "The union of its variables' tags, in public-id order.",
+                  "items": {
+                    "$ref": "#/$defs/ShowMembership"
                   },
                   "type": "array"
                 },
@@ -961,6 +975,8 @@
                 "period",
                 "tables",
                 "variables",
+                "sets",
+                "tags",
                 "unplaced",
                 "kind"
               ],
@@ -1222,6 +1238,30 @@
             "fqid",
             "name",
             "period"
+          ],
+          "type": "object"
+        },
+        "ShowRegisterSet": {
+          "description": "A register's set; `show` at its fqid has the axes and member facets.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "members": {
+              "description": "The members' variable fqids, in public-id order.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "members"
           ],
           "type": "object"
         },

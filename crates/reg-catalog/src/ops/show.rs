@@ -53,6 +53,10 @@ pub enum Show {
         period: Period,
         tables: Vec<ShowTable>,
         variables: Vec<ShowVariableRef>,
+        /// The register's curated sets (groups), in public-id order.
+        sets: Vec<ShowRegisterSet>,
+        /// The union of its variables' tags, in public-id order.
+        tags: Vec<ShowMembership>,
         /// The literal names of the releases the reader could not place in time.
         unplaced: Vec<String>,
     },
@@ -171,6 +175,15 @@ pub struct ShowRowKey {
 pub struct ShowMembership {
     fqid: String,
     name: String,
+}
+
+/// A register's set; `show` at its fqid has the axes and member facets.
+#[derive(Serialize, ToSchema)]
+pub struct ShowRegisterSet {
+    fqid: String,
+    name: String,
+    /// The members' variable fqids, in public-id order.
+    members: Vec<String>,
 }
 
 /// A set's distinguishing axis, in curated order.
@@ -367,6 +380,7 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
     )?;
     let (mut tables, mut variables) = contents(server, conn, &entity.pid)?;
+    let (mut sets, mut tags) = groupings(conn, &entity.pid)?;
     // Steward mode: tables and variables the steward defines inside a reference
     // register join it; a pid both origins define keeps the reference row.
     if let Some(extra) = server.catalog.connect_holdings()? {
@@ -381,6 +395,13 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 .filter(|v| !known.contains(&v.fqid)),
         );
         variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        let (held_sets, held_tags) = groupings(&extra, &entity.pid)?;
+        let known: BTreeSet<_> = sets.iter().map(|s| s.fqid.clone()).collect();
+        sets.extend(held_sets.into_iter().filter(|s| !known.contains(&s.fqid)));
+        sets.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        let known: BTreeSet<_> = tags.iter().map(|t| t.fqid.clone()).collect();
+        tags.extend(held_tags.into_iter().filter(|t| !known.contains(&t.fqid)));
+        tags.sort_by(|a, b| a.fqid.cmp(&b.fqid));
     }
     let unplaced = conn
         .prepare(
@@ -398,8 +419,59 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         period: server.period(start, end),
         tables,
         variables,
+        sets,
+        tags,
         unplaced,
     })
+}
+
+/// A register's sets and its variables' tags in one origin, by the register's public
+/// id. Register tags are derived, never curated: a register carries a tag iff one of
+/// its variables does.
+fn groupings(
+    conn: &Connection,
+    register: &str,
+) -> Result<(Vec<ShowRegisterSet>, Vec<ShowMembership>), Error> {
+    let mut sets: Vec<ShowRegisterSet> = vec![];
+    let mut rows = conn.prepare(
+        "SELECT s.pid, n.body, v.pid FROM var_set s
+         JOIN register r ON r.id = s.register_id JOIN text n ON n.id = s.name_text
+         JOIN var_set_member m ON m.set_id = s.id JOIN variable v ON v.id = m.variable_id
+         WHERE s.kind = 'set' AND r.pid = ? ORDER BY s.pid, v.pid",
+    )?;
+    for row in rows.query_map([register], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+        ))
+    })? {
+        let (fqid, name, member) = row?;
+        match sets.last_mut() {
+            Some(set) if set.fqid == fqid => set.members.push(member),
+            _ => sets.push(ShowRegisterSet {
+                fqid,
+                name,
+                members: vec![member],
+            }),
+        }
+    }
+    let tags = conn
+        .prepare(
+            "SELECT DISTINCT t.pid, n.body FROM variable v
+             JOIN register r ON r.id = v.register_id
+             JOIN var_set_member m ON m.variable_id = v.id
+             JOIN var_set t ON t.id = m.set_id AND t.kind = 'tag'
+             JOIN text n ON n.id = t.name_text WHERE r.pid = ? ORDER BY t.pid",
+        )?
+        .query_map([register], |row| {
+            Ok(ShowMembership {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok((sets, tags))
 }
 
 /// A register's tables and variables in one origin, by the register's public id.

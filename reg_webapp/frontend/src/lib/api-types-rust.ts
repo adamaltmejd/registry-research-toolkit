@@ -1137,7 +1137,11 @@ export interface components {
             kind: "register";
             name: string;
             period: components["schemas"]["Period"];
+            /** @description The register's curated sets (groups), in public-id order. */
+            sets: components["schemas"]["ShowRegisterSet"][];
             tables: components["schemas"]["ShowTable"][];
+            /** @description The union of its variables' tags, in public-id order. */
+            tags: components["schemas"]["ShowMembership"][];
             /** @description The literal names of the releases the reader could not place in time. */
             unplaced: string[];
             variables: components["schemas"]["ShowVariableRef"][];
@@ -1206,6 +1210,13 @@ export interface components {
             held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
+        };
+        /** @description A register's set; `show` at its fqid has the axes and member facets. */
+        ShowRegisterSet: {
+            fqid: string;
+            /** @description The members' variable fqids, in public-id order. */
+            members: string[];
+            name: string;
         };
         /** @description A segment of the table that holds its rows' key. */
         ShowRowKey: {
