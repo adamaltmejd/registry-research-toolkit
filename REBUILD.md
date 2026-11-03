@@ -716,8 +716,9 @@ release compares holdings rebuilt against rebuilt (#2143), and the weekly integr
 run checks the pair. e-order #2068 is done and e-runner #2069 is closed. Runner
 extraction is verified by hand on MONA, with no SQL Server suite (#2126). Open: the
 maintainer's real MONA order on the v4 order file (the exit) and the E audit; #2070's
-representative-plan comparison; e-types #2071; the held and unmatched columns #2072; the
-SPA follow-ups #2109 and #2110, which do not gate F. Retiring `build_catalog.py`, Python
+representative-plan comparison; e-types #2071; the SPA follow-ups #2109 and #2110, which
+do not gate F. The held and unmatched columns (#2072) are settled on swecov-steward main
+(01ef4379) and ship when 0.74.0 re-pins the steward. Retiring `build_catalog.py`, Python
 `extend-db` and `reg_webapp/stewards/swecov/` is F's work.
 
 - **Design first, for the maintainer's review.** The design covers:
