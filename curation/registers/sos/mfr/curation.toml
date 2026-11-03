@@ -3547,6 +3547,6 @@ evidence = "#2102 same-label cluster 'Graviditetslängd i dagar utöver veckor' 
 
 [[statement]]
 kind = "set"
-subject = "mfr: blangdf2 @1973-01-01..9999-12-31 where key = 'n:blangdf2'"
+subject = "mfr: blangdf2 where key = 'n:blangdf2'"
 fields = { "variable" = "barnets-fodelselangd" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BLANGD in mfr-fok; BLANGDF2 in mfr: same definition and code list, never concurrent under another spelling in one table; folded into barnets-fodelselangd."
