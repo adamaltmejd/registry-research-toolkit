@@ -140,7 +140,10 @@ impl Catalog {
         }
         if meta
             .get("steward")
-            .and_then(|value| serde_json::from_str::<StewardPresentation>(value).ok())
+            .and_then(|value| serde_json::from_str::<serde_json::Value>(value).ok())
+            // Serde also reads a struct from a positional array; the served JSON must be an object.
+            .filter(serde_json::Value::is_object)
+            .and_then(|value| serde_json::from_value::<StewardPresentation>(value).ok())
             .is_none()
         {
             return Err(refuse(
