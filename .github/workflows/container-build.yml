@@ -1,8 +1,18 @@
 # reg_webapp build + deploy: the Fly origin images and the Cloudflare edge workers
-# (topology in reg_webapp/DESIGN.md → "Deployment"): reg-webapp-global behind an
-# MCP-only worker on reg-meta.vqv.uk (`/mcp` only, no SPA and no `/api`). SWECOV has
-# no deploy path until milestone E recreates it (REBUILD.md); its running Fly app is
-# left untouched.
+# (topology in reg_webapp/DESIGN.md → "Deployment"). Two deployments, each an origin
+# app behind an edge worker:
+#   global  reg-webapp-global behind an MCP-only worker on reg-meta.vqv.uk: `/mcp`
+#           only, no SPA and no `/api`.
+#   swecov  reg-webapp-swecov behind a worker on data.swecov.se that serves the SPA
+#           as static assets and passes `/api`, `/openapi.json` and `/mcp` through.
+#
+# SWECOV defaults off: all four SWECOV jobs require repository variable
+# SWECOV_DEPLOY to equal exactly "on". After the paired release exists, the
+# maintainer first runs `gh variable set SWECOV_DEPLOY --body on`, then
+# `gh workflow run container-build.yml` (dispatch); never wait for the next push.
+# SWECOV origin and edge always deploy together, including frontend-only pushes.
+# Unset or any other value skips those jobs; turning it off again stops SWECOV
+# redeploys on later pushes without affecting global.
 #
 # PRs: build-only. `build-image` proves the multi-stage Dockerfile still builds,
 # including the digest-verified DB bake, the `reg-meta` Rust build and the #224
@@ -10,12 +20,14 @@
 # reg_meta.provenance.db* is present). Nothing deploys.
 #
 # Pushes to main: the `changes` filter, diffed against the last deployed commit rather
-# than the push's `before` (#1481, see the job), scopes the deploy jobs. Image-affecting
-# paths build, push and `flyctl deploy` the origin (`deploy`). The edge job
-# (`edge-deploy`) runs when the worker's inputs change, and after every origin
-# deploy; its public MCP smoke checks the new origin through the edge. It `needs:`
-# the origin deploy, so the worker never ships ahead of its origin (deploy-skew
-# guard). Every deploy job also verifies it is still main's
+# than the push's `before` (#1481, see the job), scopes four deploy jobs. Image-affecting paths
+# build, push and `flyctl deploy` both origins (`deploy`, `deploy-swecov`). Each edge
+# job (`edge-deploy` for global, `edge-deploy-swecov`, which also builds the SPA)
+# runs when its own worker's inputs change, and after every origin deploy of its
+# deployment: the swecov worker's fresh DEPLOY_VERSION orphans its pre-deploy /api/*
+# cache (#318), and each job's public MCP smoke checks the new origin through the
+# edge. Each edge job `needs:` its origin deploy, so a worker never ships ahead of
+# its origin (deploy-skew guard). Every deploy job also verifies it is still main's
 # HEAD before shipping: GHA concurrency serializes deploys but admits them in
 # BUILD-COMPLETION order, so without the guard an older commit's slow build could
 # overwrite a newer deploy. A commit the guard skips is not lost: the next push's
@@ -64,6 +76,7 @@ jobs:
     outputs:
       image: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.image }}
       edge_global: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_global }}
+      edge_swecov: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_swecov }}
     steps:
       # Full history for the PR base diff and the push ancestry check below.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -134,13 +147,13 @@ jobs:
           # prod machines (brief origin blip), so content-identical rebuilds
           # are worth avoiding.
           #
-          # The edge filter lists what the job's `wrangler deploy` ships: the worker
-          # code and its config. No assets binding, so the SPA never reaches it.
+          # Each edge filter lists its worker inputs. Only SWECOV ships SPA assets.
           filters: |
             image:
               - "reg_webapp/Dockerfile"
               - "reg_webapp/docker-entrypoint.sh"
               - "reg_webapp/fly.toml"
+              - "reg_webapp/fly.swecov.toml"
               - "crates/**"
               - "Cargo.toml"
               - "Cargo.lock"
@@ -149,6 +162,12 @@ jobs:
             edge_global:
               - "reg_webapp/edge/src/**"
               - "reg_webapp/edge/wrangler.jsonc"
+              - ".github/workflows/container-build.yml"
+            edge_swecov:
+              - "reg_webapp/edge/src/**"
+              - "reg_webapp/edge/wrangler.swecov.jsonc"
+              - "reg_webapp/frontend/**"
+              - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 
   # Schema guard — its OWN job so EVERY deploy path can consult it, including an
@@ -163,11 +182,13 @@ jobs:
     if: >-
       !cancelled() && (needs.changes.outputs.image == 'true' ||
       needs.changes.outputs.edge_global == 'true' ||
+      needs.changes.outputs.edge_swecov == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.regmeta.outputs.tag }}
       db_sha256: ${{ steps.regmeta.outputs.db_sha256 }}
+      swecov_db_sha256: ${{ steps.regmeta.outputs.swecov_db_sha256 }}
     steps:
       # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
       # the released asset's schema constant (the resolved reg_meta/v* tag).
@@ -182,11 +203,10 @@ jobs:
       # OLD cached layer and silently revert prod's DB. A concrete tag makes
       # the cache key change exactly when the release does.
       #
-      # The step also resolves the SHA-256 digest GitHub records for the DB
-      # asset (as integration.yml does), passed to the bake as bare hex. A
-      # missing or duplicated asset resolves to an empty digest, which fails
-      # the bake loudly (the #343 outage mode).
-      - name: Resolve reg_meta release tag and asset digest
+      # Resolve GitHub's SHA-256 digest for each paired asset as bare hex.
+      # Missing or duplicated assets resolve empty; only SWECOV requires holdings.
+      # The separate asset guard isolates a missing pair from the global deploy.
+      - name: Resolve reg_meta release tag and asset digests
         id: regmeta
         env:
           GH_TOKEN: ${{ github.token }}
@@ -200,12 +220,15 @@ jobs:
           [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "Baking reg_meta release: $tag"
-          digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
-            | jq -r '[.assets[] | select(.name == "reg_meta.db.zst") | .digest]
-                  | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]' \
-            | sed -n 's/^sha256:\([0-9a-f]\{64\}\)$/\1/p')
-          [ -n "$digest" ] || echo "::warning::release $tag has no single sha256-digested reg_meta.db.zst"
-          echo "db_sha256=$digest" >> "$GITHUB_OUTPUT"
+          assets=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets)
+          for pair in db_sha256=reg_meta.db.zst swecov_db_sha256=reg_meta_swecov.db.zst; do
+            digest=$(printf '%s' "$assets" \
+              | jq -r --arg name "${pair#*=}" '[.assets[] | select(.name == $name) | .digest]
+                    | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]' \
+              | sed -n 's/^sha256:\([0-9a-f]\{64\}\)$/\1/p')
+            [ -n "$digest" ] || echo "::warning::release $tag has no single sha256-digested ${pair#*=}"
+            echo "${pair%%=*}=$digest" >> "$GITHUB_OUTPUT"
+          done
       # The Rust server refuses to boot on an asset whose schema differs from its
       # `CATALOG_SCHEMA_VERSION` (crates/reg-core/src/lib.rs). The asset's schema is
       # read from the release tag's source (a data-only release keeps the tag-commit
@@ -226,6 +249,32 @@ jobs:
           fi
           echo "::error::schema-guard: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first; deploys blocked."
           exit 1
+
+  # A missing paired asset blocks only SWECOV. Keep the run eligible for the
+  # success-only deployed-commit resolver above, or every push would rebuild global
+  # until a paired release exists. The error remains visible; no ok output is set.
+  swecov-asset-guard:
+    needs: schema-guard
+    if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.schema-guard.result == 'success'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    outputs:
+      ok: ${{ steps.asset.outputs.ok }}
+    steps:
+      - name: Require the paired SWECOV asset
+        id: asset
+        env:
+          REG_META_TAG: ${{ needs.schema-guard.outputs.tag }}
+          HOLDINGS_SHA256: ${{ needs.schema-guard.outputs.swecov_db_sha256 }}
+        run: |
+          if [ -z "$HOLDINGS_SHA256" ]; then
+            echo "::error::release $REG_META_TAG has no single sha256-digested reg_meta_swecov.db.zst; SWECOV deploy blocked"
+            exit 1
+          fi
+          echo "ok=true" >> "$GITHUB_OUTPUT"
 
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
   # (lint + ty + pytest + Rust jobs). CI runs on every main push (no paths
@@ -302,6 +351,47 @@ jobs:
           cache-from: type=gha
           cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
+  build-swecov-image:
+    needs: [changes, schema-guard, swecov-asset-guard]
+    # PRs build only the public/global image: the SWECOV image needs the paired
+    # holdings release artifact, which is deployment state and not available to
+    # fork-safe PR builds. SWECOV metadata is non-confidential for the current
+    # testing steward, so the artifact lives on the public reg_meta/v* release
+    # beside the global DB. The bake fetches it from that same tag and fails
+    # loudly if the release has no reg_meta_swecov.db.zst (an empty digest),
+    # rather than shipping the steward without its holdings DB (#1091).
+    if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.schema-guard.result == 'success' &&
+      needs.swecov-asset-guard.outputs.ok == 'true' &&
+      (needs.changes.outputs.image == 'true' ||
+      needs.changes.outputs.edge_swecov == 'true' ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to registry.fly.io
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: reg_webapp/Dockerfile
+          push: true
+          tags: registry.fly.io/reg-webapp-swecov:${{ env.IMAGE_TAG }}
+          build-args: |
+            REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
+            REG_META_CATALOG=swecov
+            REG_META_DB_SHA256=${{ needs.schema-guard.outputs.db_sha256 }}
+            REG_META_HOLDINGS_SHA256=${{ needs.schema-guard.outputs.swecov_db_sha256 }}
+
   deploy:
     needs: [build-image, wait-ci, schema-guard]
     if: >-
@@ -371,7 +461,7 @@ jobs:
           # prod is actively running (review on #296).
           DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
           FLY_APP: reg-webapp-global
-        run: |
+        run: &prune-registry |
           set -euo pipefail
           REPO_URL="https://registry.fly.io/v2/$FLY_APP"
           ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
@@ -407,6 +497,52 @@ jobs:
                   || echo "::warning::failed to delete $tag"
               fi
             done
+
+  deploy-swecov:
+    needs: [build-swecov-image, wait-ci, schema-guard, swecov-asset-guard]
+    if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
+      !cancelled() && needs.build-swecov-image.result == 'success' &&
+      needs.swecov-asset-guard.outputs.ok == 'true' &&
+      needs.wait-ci.result == 'success' &&
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: fly-deploy-swecov
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping SWECOV deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
+        if: steps.head.outputs.skip != 'true'
+        with:
+          version: "0.5.0"
+      - if: steps.head.outputs.skip != 'true'
+        run: >-
+          flyctl deploy
+          --config reg_webapp/fly.swecov.toml
+          --image registry.fly.io/reg-webapp-swecov:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          --ha=false
+          --wait-timeout 10m0s
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+      - name: Prune old SWECOV registry tags
+        if: steps.head.outputs.skip != 'true'
+        continue-on-error: true
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          FLY_APP: reg-webapp-swecov
+        run: *prune-registry
 
   # Edge worker for the global catalog's hosted MCP on reg-meta.vqv.uk: `/mcp` only,
   # no SPA and no `/api` (reg_webapp/DESIGN.md → "Deployment"). Runs AFTER the global
@@ -473,7 +609,7 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: reg-meta.vqv.uk
-        run: |
+        run: &public-mcp-smoke |
           rpc() {
             curl -sfS "https://$EDGE_HOST/mcp" \
               -H 'accept: application/json, text/event-stream' \
@@ -486,3 +622,150 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
+
+  # Edge worker (SPA + /api and /mcp passthrough) for data.swecov.se. Runs AFTER the
+  # SWECOV origin deploy (deploy-skew guard): on a contract-changing push the SPA
+  # must not go live before the origin serves the new endpoints. Image-affecting
+  # changes also run this job even when nothing edge-side changed: the deploy ships a
+  # fresh DEPLOY_VERSION cache generation (#318), without which the edge would keep
+  # serving pre-deploy /api/* payloads for up to the 24h TTL.
+  edge-deploy-swecov:
+    needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard, swecov-asset-guard]
+    if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.wait-ci.result == 'success' &&
+      needs.schema-guard.result == 'success' &&
+      needs.swecov-asset-guard.outputs.ok == 'true' &&
+      needs.build-swecov-image.result == 'success' &&
+      needs.deploy-swecov.result == 'success' &&
+      (needs.changes.outputs.edge_swecov == 'true' ||
+      needs.changes.outputs.image == 'true' ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: edge-deploy-swecov
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping SWECOV edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.head.outputs.skip != 'true'
+        with:
+          node-version: "26.12.1"
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        if: steps.head.outputs.skip != 'true'
+        with:
+          bun-version: "1.4.4"
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        if: steps.head.outputs.skip != 'true'
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        if: steps.head.outputs.skip != 'true'
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
+        if: steps.head.outputs.skip != 'true'
+        with:
+          tool: wasm-bindgen@0.2.129
+      - run: bun install --frozen-lockfile
+        if: steps.head.outputs.skip != 'true'
+        working-directory: reg_webapp/frontend
+      - run: bun run gen:wasm && bun run gen:types && bun run build
+        if: steps.head.outputs.skip != 'true'
+        working-directory: reg_webapp/frontend
+      # The worker's route lives in zone swecov.se, which the token must list under its
+      # Zone Resources; wrangler's own refusal names neither the zone nor the fix.
+      - name: Check the Cloudflare token reaches zone swecov.se
+        if: steps.head.outputs.skip != 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          count=$(curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            'https://api.cloudflare.com/client/v4/zones?name=swecov.se' | jq '.result | length')
+          [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone swecov.se: add swecov.se to the token's Zone Resources" >&2; exit 1; }
+      - if: steps.head.outputs.skip != 'true'
+        run: >-
+          bunx wrangler@4.152.0 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
+          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
+      # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
+      # any other type).
+      # Both probes wait for the new worker version (#1491): `wrangler deploy`
+      # returns before every PoP serves it, so the first request can reach the
+      # previous version. The worker exposes no version header, so each probe
+      # retries on its own signal of the new version (the .wasm hashed for this
+      # build; a young cache entry under this DEPLOY_VERSION) for a bounded
+      # window, then fails naming what it expected and what it last saw.
+      - name: SWECOV edge .wasm probe
+        if: steps.head.outputs.skip != 'true'
+        working-directory: reg_webapp/frontend
+        env:
+          EDGE_HOST: data.swecov.se
+        run: |
+          window=180 interval=10
+          wasm=$(cd dist && ls assets/*.wasm)
+          deadline=$((SECONDS + window))
+          # Before the new assets reach a PoP, the hashed path answers the worker's
+          # no-store 404: retry anything but 200 application/wasm.
+          while :; do
+            read -r code type < <(curl -m 15 -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
+            echo "$wasm: $code $type"
+            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
+            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
+            sleep "$interval"
+          done
+      # Standing #220 regression probe: the /api/* Cache Rule and the ETag
+      # contract are zone-dashboard state (click-ops, no IaC) — assert after
+      # every edge deploy that a search read still caches (MISS/HIT family,
+      # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
+      # Rule deletion / zone drift that nothing else in CI would notice.
+      # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
+      # generation, so any reachable entry must have been populated after it —
+      # an old Age means DEPLOY_VERSION stopped reaching the cache key and the
+      # stale-24h window is back.
+      - name: SWECOV edge cache probe (#220 + #318)
+        if: steps.head.outputs.skip != 'true'
+        env:
+          EDGE_HOST: data.swecov.se
+          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+        run: |
+          window=180 interval=10
+          url="https://$EDGE_HOST/api/search?q=inkomst"
+          deadline=$((SECONDS + window))
+          # One request per attempt, so status and Age come from the same isolate.
+          # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
+          # still on the previous worker version) retries until the window ends.
+          while :; do
+            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            echo "$code cf-cache-status: $status, age: ${age:-0}s"
+            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
+              echo "FATAL: expected a young HIT under DEPLOY_VERSION $DEPLOY_VERSION within ${window}s, last saw a HIT ${age}s old — the new worker version is not served everywhere, or #318 DEPLOY_VERSION cache-key versioning is broken" >&2
+              exit 1
+            fi
+            sleep "$interval"
+          done
+          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          echo "If-None-Match -> $code"
+          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+      # The SWECOV catalog's hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"),
+      # the same smoke as the global one.
+      - name: SWECOV public MCP smoke
+        if: steps.head.outputs.skip != 'true'
+        env:
+          EDGE_HOST: data.swecov.se
+        run: *public-mcp-smoke
