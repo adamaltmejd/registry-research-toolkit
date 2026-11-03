@@ -1311,17 +1311,17 @@ commit pin before e-holdings. Its access controls must protect the private input
 public metadata definitions do not authorize publishing private source files.
 
 The toolkit contains only generic compilation/serving code and a steward pin registry,
-`curation/stewards.toml`: each steward id selects `repo`, exact `commit` and relative
-`config` path. The dedicated repo's `steward.toml` declares owner id, scope,
-presentation paths, reader/input roles, semantic curation root and series root. Use
-`scope.toml`, `branding/` (`steward.json`, logo), `series/`, `curation/registers/`
-(normal ledgers and statements, including slots), `curation/readers/`, and `inputs/`
-(census, storage export, provider source TOML/converted transcription CSV, inventory and
-legacy slug evidence). Pin selected delivery-document evidence there too, retaining
-originals privately. Reuse the catalog input-pin discipline: verify the supplied
-checkout against the exact commit and declared paths/hashes; no implicit latest branch
-or neighbouring inputs. The compiled holdings file carries presentation/config data
-needed at runtime; serving never checks out that repo or parses its TOML.
+`stewards.toml`: each steward id selects `repo`, exact `commit` and relative `config`
+path. The dedicated repo's `steward.toml` declares owner id, scope, presentation paths,
+reader/input roles, semantic curation root and series root. Use `scope.toml`,
+`branding/` (`steward.json`, logo), `series/`, `curation/registers/` (normal ledgers and
+statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+export, provider source TOML/converted transcription CSV, inventory and legacy slug
+evidence). Pin selected delivery-document evidence there too, retaining originals
+privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
+the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
+inputs. The compiled holdings file carries presentation/config data needed at runtime;
+serving never checks out that repo or parses its TOML.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,
@@ -1563,14 +1563,14 @@ disagreement auto-corrects provider types.
 ### Compiled facts and publication
 
 `reg-build holdings --base <published-db> --steward <id> --steward-repo <checkout> --out <file>`
-is the separate stage. The id selects the toolkit's `curation/stewards.toml` pin; the
-supplied checkout must match it, and its config supplies all input/curation paths. It
-verifies the catalog, reads it without modifying or copying it, and emits only the
-holdings layer (maintainer 2026-10-29). The base's entities, row ids, documents and
-search indexes stay in the catalog file. Holdings inputs and stored cross-file mappings
-use public ids; integer ids are local to each database and never joined across files
-without their database origin. Do not import schema-v3's obsolete programme id ranges or
-`UNION ALL` of unqualified row ids.
+is the separate stage. The id selects the toolkit's `stewards.toml` pin; the supplied
+checkout must match it, and its config supplies all input/curation paths. It verifies
+the catalog, reads it without modifying or copying it, and emits only the holdings layer
+(maintainer 2026-10-29). The base's entities, row ids, documents and search indexes stay
+in the catalog file. Holdings inputs and stored cross-file mappings use public ids;
+integer ids are local to each database and never joined across files without their
+database origin. Do not import schema-v3's obsolete programme id ranges or `UNION ALL`
+of unqualified row ids.
 `reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
 the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
 admits the clean steward checkout against the repository, commit, config and input pins

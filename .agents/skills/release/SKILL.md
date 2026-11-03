@@ -47,8 +47,8 @@ A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
      and release.
    - **Also compare the builder and inputs since the last `reg_meta/v*` tag**: catalog
      content or schema changes under `crates/reg-build/`, `crates/reg-resolve/`,
-     `crates/reg-readers/`, `crates/reg-frame/`, `curation/` (including the inputs pin
-     and `curation/stewards.toml`, the steward pin) need a `reg_meta` release to refresh
+     `crates/reg-readers/`, `crates/reg-frame/`, `curation/` (including the inputs pin)
+     and the root `stewards.toml` (the steward pin) need a `reg_meta` release to refresh
      the assets.
    - Nothing changed: say there is nothing to release.
 
@@ -225,19 +225,19 @@ the diff, confirms only intended changes, and puts its summary in the release no
 
 #### 8d. Compile the holdings
 
-The pin is `curation/stewards.toml`: the steward repository, an exact commit and the
-config path. The compiler refuses unless the checkout is exactly the pin: `origin` must
-equal the registry's URL byte for byte (SSH, so an HTTPS clone fails with
-`holdings_pin_invalid`), `HEAD` must be the commit, and the tree must be clean including
-untracked files. Never edit the steward checkout. Re-lock the pin in a reviewed PR
-before the bump, not during the release.
+The pin is `stewards.toml`: the steward repository, an exact commit and the config path.
+The compiler refuses unless the checkout is exactly the pin: `origin` must equal the
+registry's URL byte for byte (SSH, so an HTTPS clone fails with `holdings_pin_invalid`),
+`HEAD` must be the commit, and the tree must be clean including untracked files. Never
+edit the steward checkout. Re-lock the pin in a reviewed PR before the bump, not during
+the release.
 
 ```sh
-pin=$(uv run --no-project python -c 'import tomllib;print(tomllib.load(open("curation/stewards.toml","rb"))["swecov"]["commit"])')
+pin=$(uv run --no-project python -c 'import tomllib;print(tomllib.load(open("stewards.toml","rb"))["swecov"]["commit"])')
 git clone git@github.com:adamaltmejd/swecov-steward.git "$steward"
 git -C "$steward" checkout --detach "$pin"
 target/release/reg-build holdings --base "$evidence/catalog/reg_meta.db" --steward swecov \
-  --steward-repo "$steward" --registry curation/stewards.toml \
+  --steward-repo "$steward" --registry stewards.toml \
   --out "$evidence/catalog/reg_meta_swecov.db" --report "$evidence/holdings-report.json" \
   2> "$evidence/holdings.log"
 ```

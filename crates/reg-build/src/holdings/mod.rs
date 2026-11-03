@@ -42,7 +42,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
     let registry = PathBuf::from(
         flags
             .get("--registry")
-            .map_or("curation/stewards.toml", String::as_str),
+            .map_or("stewards.toml", String::as_str),
     );
     let pins: BTreeMap<String, input::Pin> =
         crate::toml_file(&registry).map_err(|_| "holdings_registry_invalid".to_owned())?;

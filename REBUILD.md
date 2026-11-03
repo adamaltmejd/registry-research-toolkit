@@ -749,8 +749,8 @@ served at 0.64.0 from the old stack until then.
      and protect private inputs. The toolkit keeps only generic code and pin/config
      selection. F deletes leftovers after the move is verified; *Status:* done. Private
      repository `adamaltmejd/swecov-steward` at `755ce7aa5`: byte-identical copies with
-     `MOVED.md` provenance, pinned in `curation/stewards.toml`. Nothing reads the pin
-     until e-holdings;
+     `MOVED.md` provenance, pinned in `stewards.toml`. Nothing reads the pin until
+     e-holdings;
   3. **e-holdings:** inputs and schema/reader/compiler together from the pinned steward
      repo: one-shot TOML → pinned transcription CSV; reconcile slugs, reviewed and
      auto-mapped targets, including the 27 supplemental providers; add steward slots,
