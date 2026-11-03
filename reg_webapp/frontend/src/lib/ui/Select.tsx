@@ -11,16 +11,24 @@ import styles from "./Select.module.css";
 
 interface Props {
   label: string;
+  "aria-label"?: string;
   value: string;
   options: { id: string; name: string }[];
   onChange: (value: string) => void;
 }
 
 /** One choice, named in plain words; long option sets scroll in the popover. */
-export function Select({ label, value, options, onChange }: Props) {
+export function Select({
+  label,
+  "aria-label": ariaLabel,
+  value,
+  options,
+  onChange,
+}: Props) {
   return (
     <AriaSelect
       className={styles.select}
+      aria-label={ariaLabel}
       selectedKey={value}
       onSelectionChange={(key) => {
         if (key !== null) onChange(String(key));

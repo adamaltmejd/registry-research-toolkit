@@ -89,13 +89,16 @@ export function SourceCard({
     ? { from: stored[0][0], to: stored[stored.length - 1][1] }
     : null;
   const covered = tableYears(table, bounds);
-  const selection = dragging ?? hull;
+  const timeless = table?.timeless === true;
+  const resting =
+    hull ?? (source.period === "_default" && !timeless ? covered : null);
+  const selection = dragging ?? resting;
   // A stored period outside table coverage is preserved, including both thumbs.
   const thumbBounds =
-    covered && hull
+    covered && resting
       ? {
-          from: Math.min(covered.from, hull.from),
-          to: Math.max(covered.to, hull.to),
+          from: Math.min(covered.from, resting.from),
+          to: Math.max(covered.to, resting.to),
         }
       : null;
   const unbounded = source.period === "_default" || table?.timeless;
@@ -113,7 +116,10 @@ export function SourceCard({
       const checked = checkProject(JSON.stringify(candidate));
       if (!checked.ok)
         throw new Error(checked.issues.map((issue) => issue.message).join(" "));
-      projectStore.updateField("sources", candidate.sources);
+      projectStore.updateField({
+        sources: candidate.sources,
+        panels: candidate.panels,
+      });
       setError(null);
       return true;
     } catch (cause) {
@@ -154,6 +160,12 @@ export function SourceCard({
             segment.classification ? [segment.classification] : [],
           ),
       ),
+    ];
+    const pinOptions = [
+      ...new Set([
+        ...candidates,
+        ...(binding.classification ? [binding.classification] : []),
+      ]),
     ];
     for (const column of columns) {
       const runs = columnYearRuns(column.segments, bounds, axis[0]);
@@ -201,7 +213,8 @@ export function SourceCard({
           )}
           <div className={styles.controls}>
             <Select
-              label={`Type for ${name} in ${source.name}`}
+              label="Type"
+              aria-label={`Type for ${name} in ${source.name}`}
               value={binding.type}
               options={TYPES}
               onChange={(type) =>
@@ -220,13 +233,14 @@ export function SourceCard({
                 (issue) => issue.code === "classification_version_ambiguous",
               )) && (
               <Select
-                label={`Classification for ${name} in ${source.name}`}
+                label="Classification"
+                aria-label={`Classification for ${name} in ${source.name}`}
                 value={binding.classification ?? ""}
                 options={[
                   { id: "", name: "Not pinned" },
-                  ...candidates.map((ref) => ({
+                  ...pinOptions.map((ref) => ({
                     id: ref,
-                    name: names.get(ref) ?? "Classification name unavailable",
+                    name: `${names.get(ref) ?? "Classification name unavailable"}${!candidates.includes(ref) ? " (not delivered in this period)" : ""}`,
                   })),
                 ]}
                 onChange={(ref) => {
@@ -252,7 +266,12 @@ export function SourceCard({
           )}
           <ul className={styles.plainList}>
             {findings.map((issue) => (
-              <LocatedIssue key={issueId(issue)} issue={issue} raw={raw} />
+              <LocatedIssue
+                key={issueId(issue)}
+                issue={issue}
+                raw={raw}
+                omitPlace={["source", "variable", "table"]}
+              />
             ))}
           </ul>
         </div>
@@ -263,6 +282,7 @@ export function SourceCard({
     removing?.binding === null || source.bindings.length === 1;
   return (
     <Panel
+      headingLevel={3}
       title={
         <span ref={heading} tabIndex={-1} className={styles.heading}>
           {source.name}
@@ -278,11 +298,18 @@ export function SourceCard({
         </Button>
       }
     >
-      <ul className={styles.plainList}>
-        {sourceIssues.map((issue) => (
-          <LocatedIssue key={issueId(issue)} issue={issue} raw={raw} />
-        ))}
-      </ul>
+      {sourceIssues.length > 0 && (
+        <ul className={`${styles.plainList} ${styles.sourceFindings}`}>
+          {sourceIssues.map((issue) => (
+            <LocatedIssue
+              key={issueId(issue)}
+              issue={issue}
+              raw={raw}
+              omitPlace={["source", "table"]}
+            />
+          ))}
+        </ul>
+      )}
       <p className={styles.meta}>
         <a className="link" href={catalogHref(source.table)}>
           {names.get(source.table) ?? "Table name unavailable"}
@@ -315,17 +342,17 @@ export function SourceCard({
           edges={[]}
           axis={axis}
           window={
-            selection && !unbounded ? [selection.from, selection.to] : null
+            selection && !timeless ? [selection.from, selection.to] : null
           }
           coverage={{
             covered,
             years: null,
             outside:
-              selection && !unbounded ? uncoveredYears(selection, covered) : [],
-            bandName: selection && !unbounded ? "Source period" : null,
+              selection && !timeless ? uncoveredYears(selection, covered) : [],
+            bandName: selection && !timeless ? "Source period" : null,
           }}
           overlay={
-            selection && thumbBounds && !unbounded ? (
+            selection && thumbBounds && !timeless ? (
               <PeriodThumbs
                 axis={axis}
                 selection={selection}
@@ -333,7 +360,7 @@ export function SourceCard({
                 label={`Period for ${source.name} (years)`}
                 onMove={setDragging}
                 onRest={(next) => {
-                  if (hull && !sameYearWindow(next, hull))
+                  if (!hull || !sameYearWindow(next, hull))
                     edit(setSourcePeriod(draft, sourceIndex, next));
                   setDragging(null);
                 }}
@@ -398,6 +425,9 @@ export function SourceCard({
             ? "This is the source's last column. Removing it also removes the source from this project."
             : "The source and its columns leave this project."
           : "The column leaves this source only."}
+        {removesSource &&
+          draft.panels?.some((panel) => panel.members.includes(source.name)) &&
+          " The source is removed from its panels. Any panel left without members is also removed."}
       </ConfirmDialog>
     </Panel>
   );

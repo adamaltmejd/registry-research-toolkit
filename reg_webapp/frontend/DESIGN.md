@@ -492,22 +492,28 @@ Time is the axis every relation is drawn on.
   outside coverage widens the thumbs' bounds to their union; it is never clamped or
   rewritten on load. A comma-list period rests the thumbs on its outer years and a line
   under the drawing says a move makes it one span; a term period is shown as text with
-  plain `LaneList` rows. A timeless or `_default` source says "Unbounded", with no
-  thumbs. Every source card shares the page's one axis. The lanes are the card's
-  columns: no list repeats them under the drawing (maintainer ruling 2026-10-23). Each
-  lane's name carries a quiet ghost "Remove", named "Remove <column> from <source>",
-  that asks first in a `Dialog` whose answer is the `danger` button and takes the column
-  out of that one source. Removing the last binding asks to remove the source. A ghost
-  "Remove source" in the card header also asks first. Focus returns to the card heading
-  after a column removal, or the Sources heading after a source removal.
+  plain `LaneList` rows. A timeless source says "Unbounded", with no thumbs. A dated
+  table with `_default` also says "Unbounded", but has thumbs seeded from table coverage
+  so its missing period can be repaired; it writes only when a thumb rests. Every source
+  card shares the page's one axis. The lanes are the card's columns: no list repeats
+  them under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a
+  quiet ghost "Remove", named "Remove <column> from <source>", that asks first in a
+  `Dialog` whose answer is the `danger` button and takes the column out of that one
+  source. Removing the last binding asks to remove the source. Source removal also
+  removes its panel memberships and any panels left without members; the dialog states
+  this when affected. A ghost "Remove source" in the card header also asks first. Focus
+  returns to the card heading after a column removal, or the Sources heading after a
+  source removal.
 
   Each lane's below slot holds a labelled type `Select`, an optional classification pin,
   and its findings. Types use plain words: Identifier, Categorical, Numeric, Date, Date
   and time, Opaque. A type change drops subtype and format fields owned by other types,
   and retains the classification. The pin appears for a binding with a classification or
   a catalog ambiguity finding, using named versions from segments on this table
-  overlapping the source period, plus "Not pinned" to clear it. Versions use a scrolling
-  listbox, never chips. These controls also appear in plain rows for term periods.
+  overlapping the source period, plus "Not pinned" to clear it. A stored pin outside
+  those candidates remains named and marked "not delivered in this period". Versions use
+  a scrolling listbox, never chips. These controls also appear in plain rows for term
+  periods.
 
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The

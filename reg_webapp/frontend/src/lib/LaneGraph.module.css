@@ -118,6 +118,7 @@
   left: 0;
   box-sizing: border-box;
   padding-bottom: var(--space-2);
+  background: var(--surface);
 }
 .listBelow {
   padding-bottom: var(--space-2);

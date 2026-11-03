@@ -1,4 +1,6 @@
 import {
+  type CatalogSegment,
+  getSegments,
   getShow,
   type RegisterShow,
   type RootChild,
@@ -175,6 +177,11 @@ export function catalogRootChildren(): Read<RootChild[]> {
 /** A register's display names, shared by table headers and located findings. */
 export function registerRead(ref: string): Read<RegisterShow> {
   return read(`register:${ref}`, () => loadRegister(ref));
+}
+
+/** Source edits reuse each variable's segments without reloading other cards. */
+export function segmentsRead(ref: string): Read<CatalogSegment[]> {
+  return read(`segments:${ref}`, () => getSegments(ref));
 }
 
 /** A page owns its pending/error state; only a successful cached read is reusable. */

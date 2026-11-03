@@ -81,9 +81,18 @@ export function removeSource(
   project: ProjectData,
   sourceIndex: number,
 ): ProjectData {
+  const sourceName = project.sources[sourceIndex]?.name;
   return {
     ...project,
     sources: project.sources.filter((_, index) => index !== sourceIndex),
+    ...(project.panels && {
+      panels: project.panels
+        .map((panel) => ({
+          ...panel,
+          members: panel.members.filter((member) => member !== sourceName),
+        }))
+        .filter((panel) => panel.members.length > 0),
+    }),
   };
 }
 

@@ -6,13 +6,8 @@ import {
   TextArea,
   TextField,
 } from "react-aria-components";
-import {
-  type CatalogSegment,
-  type Context,
-  errMessage,
-  getSegments,
-} from "./api";
-import { registerRead } from "./catalog_names";
+import { type Context, errMessage } from "./api";
+import { registerRead, segmentsRead } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
 import { OrderView } from "./OrderView";
 import styles from "./ProjectEditor.module.css";
@@ -28,7 +23,6 @@ import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
-import { useAsyncResource } from "./use_async_resource";
 import { useCatalogNames } from "./use_catalog_names";
 import { type ProjectValidation, useProject } from "./use_project";
 import { useQueryParam } from "./use_router";
@@ -281,6 +275,8 @@ export function ProjectEditor({
 
 const readRegisters = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((ref) => [ref, registerRead(ref)]));
+const readSegments = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((ref) => [ref, segmentsRead(ref)]));
 
 function Sources({
   draft,
@@ -307,24 +303,12 @@ function Sources({
       source.bindings.map((binding) => binding.variable),
     ),
   );
-  const resource = useAsyncResource(
-    variables.length ? JSON.stringify(variables) : null,
-    async (signal) => {
-      const results = await Promise.allSettled(
-        variables.map((variable) => getSegments(variable, { signal })),
-      );
-      const segments = new Map<string, CatalogSegment[]>();
-      const errors = new Map<string, string>();
-      results.forEach((result, index) => {
-        if (result.status === "fulfilled")
-          segments.set(variables[index], result.value);
-        else errors.set(variables[index], errMessage(result.reason));
-      });
-      return { segments, errors };
-    },
+  const segmentReads = useCatalogRead(readSegments, variables);
+  const segments = new Map(
+    Object.entries(segmentReads).flatMap(([ref, read]) =>
+      read.value ? [[ref, read.value] as const] : [],
+    ),
   );
-  const segments: ReadonlyMap<string, CatalogSegment[]> =
-    resource.data?.segments ?? new Map();
   const names = useCatalogNames([
     ...draft.sources.map((source) => source.table),
     ...variables,
@@ -387,12 +371,19 @@ function Sources({
               table={tables.find((table) => table.fqid === source.table)}
               axis={axis}
               bounds={bounds}
-              loading={!!register?.loading || resource.loading}
+              loading={
+                !!register?.loading ||
+                source.bindings.some(
+                  (binding) => segmentReads[binding.variable]?.loading,
+                )
+              }
               loadError={
-                resource.error ??
-                source.bindings
-                  .map((binding) => resource.data?.errors.get(binding.variable))
-                  .find(Boolean) ??
+                (source.bindings.some((binding) => {
+                  const read = segmentReads[binding.variable];
+                  return read && !read.loading && read.value === null;
+                })
+                  ? "Column coverage is unavailable"
+                  : null) ??
                 (register && !register.loading && !register.value
                   ? "Table availability is unavailable"
                   : null)
