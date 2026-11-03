@@ -16,7 +16,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
     description: "The summary of a provider, register, table or variable by public id or bare \
-                  name; without a ref, the catalog's providers. Variables show curated \
+                  name; a set only by set/<provider>/<register>/<slug>. Without a ref, \
+                  the catalog's providers. Variables show curated \
                   metadata by default, with marked provider text only as a fallback. \
                   Use evidence=true for provider text history, source keys/spellings, \
                   curation statement locators and linked documents.",
@@ -74,6 +75,19 @@ pub enum Show {
         spans: Vec<Period>,
         releases: Vec<Release>,
         row_keys: Vec<ShowRowKey>,
+    },
+    Set {
+        fqid: String,
+        name: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        description: Option<String>,
+        /// The register's fqid.
+        register: String,
+        axes: Vec<ShowSetAxis>,
+        members: Vec<ShowSetMember>,
+        /// The union of the members' tags, in public-id order.
+        tags: Vec<ShowMembership>,
     },
     Variable {
         fqid: String,
@@ -151,6 +165,28 @@ pub struct ShowMembership {
     name: String,
 }
 
+/// A set's distinguishing axis, in curated order.
+#[derive(Serialize, ToSchema)]
+pub struct ShowSetAxis {
+    id: String,
+    label: String,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ShowSetMember {
+    fqid: String,
+    name: String,
+    /// The member's coordinates in the set's axis order.
+    facets: Vec<ShowSetFacet>,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ShowSetFacet {
+    axis: String,
+    value: String,
+    label: String,
+}
+
 fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = match params.get("ref") {
         Some(value) => server.catalog.connect_for_ref(value)?,
@@ -177,7 +213,8 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "register" => register(server, &conn, &entity)?,
                 "table" => table(server, &conn, &entity)?,
                 "variable" => variable(server, &conn, &entity, evidence)?,
-                // simplify: classification and set summaries land in D with their data.
+                "set" => set(&conn, &entity)?,
+                // simplify: classification summaries land with their data.
                 kind => {
                     return Err(Error::new(
                         Code::InternalError,
@@ -468,4 +505,103 @@ fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowM
             })
         })?
         .collect::<rusqlite::Result<_>>()?)
+}
+
+fn set(conn: &Connection, entity: &Entity) -> Result<Show, Error> {
+    let (name, description, register): (String, Option<String>, String) = conn.query_row(
+        "SELECT n.body, d.body, r.pid FROM var_set s
+         JOIN text n ON n.id = s.name_text
+         LEFT JOIN text d ON d.id = s.description_text
+         JOIN register r ON r.id = s.register_id WHERE s.id = ?",
+        [entity.id],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
+    let axes: Vec<ShowSetAxis> = conn
+        .prepare(
+            "SELECT a.axis, l.body FROM var_set_axis a
+         JOIN text l ON l.id = a.label_text WHERE a.set_id = ? ORDER BY a.ord",
+        )?
+        .query_map([entity.id], |row| {
+            Ok(ShowSetAxis {
+                id: row.get(0)?,
+                label: row.get(1)?,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut members: Vec<(i64, ShowSetMember)> = conn
+        .prepare(
+            "SELECT v.id, v.pid, l.body FROM var_set_member m
+         JOIN variable v ON v.id = m.variable_id
+         JOIN text l ON l.id = v.label_text WHERE m.set_id = ? ORDER BY v.pid",
+        )?
+        .query_map([entity.id], |row| {
+            Ok((
+                row.get(0)?,
+                ShowSetMember {
+                    fqid: row.get(1)?,
+                    name: row.get(2)?,
+                    facets: vec![],
+                },
+            ))
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut facets = conn.prepare(
+        "SELECT f.axis, f.value, l.body FROM var_set_member_facet f
+         JOIN var_set_axis a ON a.set_id = f.set_id AND a.axis = f.axis
+         JOIN text l ON l.id = f.label_text
+         WHERE f.set_id = ? AND f.variable_id = ? ORDER BY a.ord",
+    )?;
+    for (id, member) in &mut members {
+        member.facets = facets
+            .query_map(rusqlite::params![entity.id, *id], |row| {
+                Ok(ShowSetFacet {
+                    axis: row.get(0)?,
+                    value: row.get(1)?,
+                    label: row.get(2)?,
+                })
+            })?
+            .collect::<rusqlite::Result<_>>()?;
+    }
+    members.sort_by(|(_, a), (_, b)| {
+        axes.iter()
+            .map(|axis| {
+                let a = a
+                    .facets
+                    .iter()
+                    .find(|f| f.axis == axis.id)
+                    .map(|f| &f.value);
+                let b = b
+                    .facets
+                    .iter()
+                    .find(|f| f.axis == axis.id)
+                    .map(|f| &f.value);
+                a.cmp(&b)
+            })
+            .find(|order| !order.is_eq())
+            .unwrap_or_else(|| a.name.cmp(&b.name))
+            .then_with(|| a.fqid.cmp(&b.fqid))
+    });
+    let tags = conn
+        .prepare(
+            "SELECT DISTINCT t.pid, n.body FROM var_set_member m
+         JOIN var_set_member tm ON tm.variable_id = m.variable_id
+         JOIN var_set t ON t.id = tm.set_id AND t.kind = 'tag'
+         JOIN text n ON n.id = t.name_text WHERE m.set_id = ? ORDER BY t.pid",
+        )?
+        .query_map([entity.id], |row| {
+            Ok(ShowMembership {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok(Show::Set {
+        fqid: entity.pid.clone(),
+        name,
+        description,
+        register,
+        axes,
+        members: members.into_iter().map(|(_, member)| member).collect(),
+        tags,
+    })
 }

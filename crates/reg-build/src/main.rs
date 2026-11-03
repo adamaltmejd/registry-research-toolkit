@@ -61,7 +61,7 @@ struct Manifest {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Provider {
-    pid: String,
+    pid: toml::Spanned<String>,
     name: String,
     url: Option<String>,
 }
@@ -181,13 +181,47 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
 }
 
 fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>, String> {
+    let check_provider = |provider: &str, input: &str, at: &str| {
+        if matches!(provider, "set" | "class" | "group") {
+            Err(format!(
+                "{input}:{at}: provider-reserved: provider {provider:?} is a reserved leading public-id segment"
+            ))
+        } else {
+            Ok(())
+        }
+    };
+    let path = args.curation.join("inputs.toml");
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    for provider in &manifest.provider {
+        let line = text[..provider.pid.span().start]
+            .bytes()
+            .filter(|&b| b == b'\n')
+            .count()
+            + 1;
+        check_provider(
+            provider.pid.get_ref(),
+            &path.to_string_lossy(),
+            &line.to_string(),
+        )?;
+    }
     let readers = args.curation.join("readers");
     manifest
         .input
         .iter()
         .map(|input| {
-            reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
-                .map_err(|e| e.to_string())
+            let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
+                .map_err(|e| e.to_string())?;
+            for record in &output.frame.records {
+                let (provider, at) = match record {
+                    Record::Register(r) => (&r.provider, &r.locator),
+                    Record::Table(r) => (&r.provider, &r.locator),
+                    Record::Release(r) => (&r.provider, &r.locator),
+                    Record::Occurrence(r) => (&r.provider, &r.locator),
+                    _ => continue,
+                };
+                check_provider(provider, &at.input, &at.at)?;
+            }
+            Ok(output)
         })
         .collect()
 }
@@ -543,7 +577,7 @@ fn build_with_provenance(
         .provider
         .into_iter()
         .map(|p| emit::ProviderRow {
-            pid: p.pid,
+            pid: p.pid.into_inner(),
             name: p.name,
             url: p.url,
         })
@@ -561,6 +595,7 @@ fn build_with_provenance(
         &applied.overrides,
     );
     let catalog = emit::Catalog {
+        set_presentation: applied.sets,
         retired,
         tags,
         meta,

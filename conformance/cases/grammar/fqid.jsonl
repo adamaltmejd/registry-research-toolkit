@@ -33,3 +33,10 @@
 {"in": "scb/li sa", "error": "invalid_ref"}
 {"in": "scb/lisa/kön", "error": "invalid_ref"}
 {"in": "scb/lisa/kon\n", "error": "invalid_ref"}
+{"in": "set/scb/lisa/kon", "out": {"kind": "set", "provider": "scb", "register": "lisa", "set": "kon"}, "note": "Leading set/ selects presentation even when scb/lisa/kon is a variable."}
+{"in": "scb/lisa/set", "out": {"kind": "variable", "provider": "scb", "register": "lisa", "variable": "set"}, "note": "Only a leading set/ selects set kind."}
+{"in": "set", "error": "invalid_ref"}
+{"in": "set/scb/lisa", "error": "invalid_ref"}
+{"in": "set/scb/lisa/", "error": "invalid_ref"}
+{"in": "set/scb/lisa/kon/extra", "error": "invalid_ref"}
+{"in": "set/scb/Lisa/kon", "error": "invalid_ref"}

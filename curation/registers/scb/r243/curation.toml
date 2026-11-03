@@ -1381,3 +1381,21 @@ kind = "set"
 subject = "var:lt-valkretsnamn"
 fields = { "sets" = ["landstingsvalkretsnamn"] }
 evidence = "Historical occurrences explicitly measure landsting constituency names for mandates (r6, r21), satisfying inclusion. The later explicitly regional occurrence (r22) is excluded from that support. Single-group shipping guard: retain the approved group and remove the other membership: regionvalkretsnamn\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20642\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21118\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21163"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunvalkretsnamn"
+fields = { "label" = "Kommunvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:19; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:landstingsvalkretsnamn"
+fields = { "label" = "Landstingsvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:26; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:regionvalkretsnamn"
+fields = { "label" = "Regionvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:33; existing set membership and current id ledger determine the targets."

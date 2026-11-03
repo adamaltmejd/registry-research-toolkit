@@ -12,6 +12,56 @@ import pytest
 from reader_artifacts import REG_BUILD, REPO
 
 
+@pytest.mark.parametrize("scenario", ["undeclared", "nonmember"])
+def test_set_facets_refuse_invalid_membership(scenario, tmp_path):
+    # Regression: publish facets on an undeclared axis or on a nonmember. The
+    # HTTP show-set case covers the allowed twin with two ordered axes. Existing
+    # membership cases have no facets; authored fixture TOML and refusal codes
+    # below supply the oracle. Lock must locate the offending variable statement.
+    fixture = Path(__file__).parent / "cases/fixtures/webapp-dev"
+    case = Path(__file__).parent / "cases/lock/set-facets"
+    expected = json.loads((case / "expected.json").read_text())[scenario]
+    curation = tmp_path / "curation"
+    shutil.copytree(fixture / "curation", curation)
+    statements = curation / "registers/demo/bas/curation.toml"
+    command = [
+        REG_BUILD,
+        "lock",
+        "--inputs",
+        fixture / "inputs",
+        "--curation",
+        curation,
+    ]
+    allowed = subprocess.run(
+        command, cwd=REPO, capture_output=True, text=True, check=False
+    )
+    assert allowed.returncode == 0, allowed.stderr
+    original = statements.read_text()
+    if scenario == "undeclared":
+        changed = original.replace(
+            "fields.facets = { measure =", "fields.facets = { undeclared =", 1
+        )
+    else:
+        changed = original.replace(
+            'fields.sets = ["inkomst"]',
+            'fields.label = "Inkomst före skatt"',
+            1,
+        )
+    statements.write_text(changed)
+    result = subprocess.run(
+        command,
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 1, result.stderr
+    assert (
+        f"registers/demo/bas/curation.toml:line={expected['line']}: {expected['code']}:"
+        in result.stderr
+    ), result.stderr
+
+
 def test_assignments_refuse_concurrent_folds_at_lock(tmp_path):
     # Regression: assignment resolution accepts concurrent different folds in one
     # table, leaving only artifact verify to reject the resulting segment. The
@@ -101,6 +151,8 @@ def test_membership_refusals(tmp_path, membership_case, change):
     # Multi-group regression: a variable selector and an occurrence selector put
     # the same final variable in different groups; generic override conflicts or
     # last-writer membership replacement must not hide either group's origin.
+    # Its faceted member also pins refusal before an unqualified facet map could
+    # choose the alphabetically first set; multiple memberships are never allowed.
     fixture, overlay, curation, expected = membership_case
 
     def run(command):

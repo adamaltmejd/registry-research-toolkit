@@ -17,7 +17,7 @@
       ],
       "/data/sets": [
         {
-          "fqid": "demo/descriptions/analysis",
+          "fqid": "set/demo/descriptions/analysis",
           "name": "analysis"
         }
       ],
@@ -61,7 +61,7 @@
       },
       "/data/sets": [
         {
-          "fqid": "demo/descriptions/analysis",
+          "fqid": "set/demo/descriptions/analysis",
           "name": "analysis"
         }
       ],

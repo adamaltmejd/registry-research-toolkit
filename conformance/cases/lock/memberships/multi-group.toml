@@ -9,3 +9,9 @@ kind = "set"
 subject = "t: X"
 fields = { sets = ["second"] }
 evidence = "This occurrence resolves to the same variable and assigns another group."
+
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { facets = { measure = { value = "total" } } }
+evidence = "Unqualified facets cannot choose between the variable's two picking groups."

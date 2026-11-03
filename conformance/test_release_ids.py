@@ -139,7 +139,7 @@ def test_removed_membership_id_requires_retirement(tmp_path, membership_case):
     current = tmp_path / "current.db"
     build(current)
     refused = run("verify", current, "--previous", previous)
-    pid = "demo/r/concept"
+    pid = "set/demo/r/concept"
     assert refused.returncode == 1, refused.stderr
     assert refused.stderr == f"reg-build: previous release: removed id {pid}\n"
     (curation / "retired.toml").write_text(

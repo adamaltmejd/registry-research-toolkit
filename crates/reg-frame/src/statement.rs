@@ -111,6 +111,26 @@ pub struct SetFields {
     pub unit_type: Option<String>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub axes: Option<Vec<SetAxis>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub facets: Option<std::collections::BTreeMap<String, MemberFacet>>,
+}
+
+/// Ordered presentation dimensions declared by a register-local set.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SetAxis {
+    pub id: String,
+    pub label: String,
+}
+
+/// One coordinate in a set's declared axis. The value is the lexical sort key.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MemberFacet {
+    pub value: String,
+    pub label: Option<String>,
 }
 
 /// Source-shaped facts for assertions, separate from field overrides.
@@ -141,6 +161,15 @@ impl Statement {
     /// # Errors
     /// Missing evidence, an empty operation or an invalid catalog reference.
     pub fn validate(&self) -> Result<(), String> {
+        let subject = match self {
+            Self::Assert { subject, .. }
+            | Self::Set { subject, .. }
+            | Self::Link { subject, .. }
+            | Self::Ack { subject, .. } => subject,
+        };
+        if matches!(subject, Address::Set(_)) && !matches!(self, Self::Set { .. }) {
+            return Err("set-subject: set: subjects support only set statements".into());
+        }
         let evidence = match self {
             Self::Assert { evidence, .. }
             | Self::Set { evidence, .. }
@@ -163,19 +192,7 @@ impl Statement {
             } => {
                 validate_fields(fields)?;
                 fields.validate_references()?;
-                if fields.description.is_some() && matches!(subject, Address::Occurrence { .. }) {
-                    return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
-                }
-                if matches!(subject, Address::Variable(_))
-                    && fields
-                        .description
-                        .as_ref()
-                        .is_some_and(|text| text.trim().is_empty())
-                {
-                    return Err(
-                        "description-empty: a variable description must not be blank".into(),
-                    );
-                }
+                fields.validate_subject(subject)?;
             }
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
@@ -207,6 +224,17 @@ impl Statement {
                 AssertFact::Release { .. } => {}
             },
             Self::Link { object, .. } => {
+                if matches!(object.parse::<Address>(), Ok(Address::Set(_)))
+                    || matches!(
+                        object.parse::<reg_core::Fqid>(),
+                        Ok(reg_core::Fqid::Set { .. })
+                    )
+                {
+                    return Err(
+                        "set-subject: sets are presentation only and cannot be relation endpoints"
+                            .into(),
+                    );
+                }
                 if let Err(error) = object.parse::<Address>()
                     && object.parse::<reg_core::Fqid>().is_err()
                 {
@@ -262,6 +290,44 @@ impl Statement {
 }
 
 impl SetFields {
+    fn validate_subject(&self, subject: &Address) -> Result<(), String> {
+        if matches!(subject, Address::Set(_)) {
+            let stated = serde_json::to_value(self).map_err(|e| e.to_string())?;
+            if stated
+                .as_object()
+                .into_iter()
+                .flatten()
+                .any(|(key, value)| {
+                    !value.is_null() && !matches!(key.as_str(), "label" | "description" | "axes")
+                })
+            {
+                return Err(
+                    "set-fields: a set: subject accepts only label, description and axes".into(),
+                );
+            }
+            if self.label.as_ref().is_none_or(|v| v.trim().is_empty()) {
+                return Err("set-label: a set: subject requires a nonblank label".into());
+            }
+        } else if self.axes.is_some() {
+            return Err("set-axes-subject: axes require a set: subject".into());
+        }
+        if self.facets.is_some() && !matches!(subject, Address::Variable(_)) {
+            return Err("set-facet-subject: facets require a var: subject".into());
+        }
+        if self.description.is_some() && matches!(subject, Address::Occurrence { .. }) {
+            return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
+        }
+        if matches!(subject, Address::Variable(_))
+            && self
+                .description
+                .as_ref()
+                .is_some_and(|text| text.trim().is_empty())
+        {
+            return Err("description-empty: a variable description must not be blank".into());
+        }
+        Ok(())
+    }
+
     fn validate_references(&self) -> Result<(), String> {
         if let Some(table) = &self.table {
             slug(table)?;
@@ -282,6 +348,21 @@ impl SetFields {
                         "classification must be a class/<family>/<version> reference".into(),
                     );
                 }
+            }
+        }
+        let mut axes = std::collections::BTreeSet::new();
+        for axis in self.axes.iter().flatten() {
+            slug(&axis.id)?;
+            if axis.label.trim().is_empty() || !axes.insert(&axis.id) {
+                return Err("set-axis-invalid: axes require unique ids and nonblank labels".into());
+            }
+        }
+        for (axis, facet) in self.facets.iter().flatten() {
+            slug(axis)?;
+            if facet.value.trim().is_empty()
+                || facet.label.as_ref().is_some_and(|v| v.trim().is_empty())
+            {
+                return Err("set-facet-invalid: facet values and labels must not be blank".into());
             }
         }
         value_set_reference(self.value_set.as_deref())

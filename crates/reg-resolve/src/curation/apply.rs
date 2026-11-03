@@ -123,8 +123,15 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
 pub enum MetadataValue {
     Sets(BTreeSet<String>),
     Tags(BTreeSet<String>),
+    Facets {
+        facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
+        at: Locator,
+    },
     Synonyms(BTreeSet<String>),
-    Description { text: String, at: Locator },
+    Description {
+        text: String,
+        at: Locator,
+    },
     Notice(String),
 }
 
@@ -134,8 +141,21 @@ pub struct Metadata {
     pub value: MetadataValue,
 }
 
+/// Presentation attached to an ordinary locked set statement.
+#[derive(Debug, Clone)]
+pub struct SetPresentation {
+    pub provider: String,
+    pub register: String,
+    pub slug: String,
+    pub label: String,
+    pub description: Option<String>,
+    pub axes: Vec<reg_frame::statement::SetAxis>,
+    pub at: Locator,
+}
+
 #[derive(Debug, Default)]
 pub struct Applied {
+    pub sets: Vec<SetPresentation>,
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
@@ -491,6 +511,7 @@ pub fn apply(
     }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
+        sets: Vec::new(),
         records: records.to_vec(),
         changes: Vec::new(),
         classifications: Vec::new(),
@@ -499,6 +520,55 @@ pub fn apply(
         sentinels: BTreeMap::new(),
     };
     match statement {
+        Statement::Set {
+            subject: Address::Set(slug),
+            fields,
+            ..
+        } => {
+            let source = premise
+                .subjects
+                .first()
+                .ok_or("set: statement requires an existing register")?;
+            let provider = source
+                .fields
+                .get("provider")
+                .and_then(Value::as_str)
+                .ok_or("set provider missing")?
+                .to_owned();
+            let register = source
+                .fields
+                .get("register")
+                .and_then(Value::as_str)
+                .ok_or("set register missing")?
+                .to_owned();
+            out.sets.push(SetPresentation {
+                provider: provider.clone(),
+                register: register.clone(),
+                slug: slug.clone(),
+                label: fields
+                    .label
+                    .clone()
+                    .ok_or("set-label: set requires label")?,
+                description: fields.description.clone(),
+                axes: fields.axes.clone().unwrap_or_default(),
+                at: at.clone(),
+            });
+            for (field, value) in stated_fields(fields) {
+                out.changes.push(Change {
+                    kind: "set".into(),
+                    locator: source.locator.clone(),
+                    identity: None,
+                    provider: Some(provider.clone()),
+                    register: Some(register.clone()),
+                    table: Some(slug.clone()),
+                    release: None,
+                    period: None,
+                    field,
+                    value: rendered(&value),
+                    source_value: None,
+                });
+            }
+        }
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
             if stated_fields(fields)
                 .keys()
@@ -639,7 +709,7 @@ pub fn apply(
                     table_handle(records, ledger, table)?,
                     p.as_ref().map(periods),
                 ),
-                Address::Variable(_) => {
+                Address::Variable(_) | Address::Set(_) => {
                     return Err(
                         "assert requires a source table, release or occurrence address".into(),
                     );
@@ -1038,6 +1108,7 @@ fn apply_fields(
                         | "period"
                         | "sets"
                         | "tags"
+                        | "facets"
                         | "synonyms"
                         | "sentinels"
                         | "role"
@@ -1121,7 +1192,7 @@ fn apply_fields(
                         out.sentinels.insert(hash.clone(), codes.clone());
                     }
                 }
-                "synonyms" | "notice" => {}
+                "facets" | "synonyms" | "notice" => {}
                 "description" if kind == "occurrence" => {}
                 "period" | "coverage" => {
                     let period = winning
@@ -1249,6 +1320,15 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Sets(sets.iter().cloned().collect()),
+                });
+            }
+            if let Some(facets) = &metadata_fields.facets {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Facets {
+                        facets: facets.clone(),
+                        at: at.clone(),
+                    },
                 });
             }
             if let Some(tags) = &metadata_fields.tags {

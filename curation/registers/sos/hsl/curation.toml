@@ -361,3 +361,39 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer; om det saknas anges samordningsnummer, och om båda saknas anges n/a." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/hsl.toml:123\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/hsl/personnr"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesbeteckning"
+fields = { "label" = "Kod för yrkesbeteckning", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."

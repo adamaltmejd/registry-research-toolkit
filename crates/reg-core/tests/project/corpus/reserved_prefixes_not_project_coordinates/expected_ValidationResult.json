@@ -1,0 +1,28 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/0/table",
+      "message": "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got 'class/lisa/individer-15plus'"
+    },
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/1/table",
+      "message": "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got 'set/demo/bas'"
+    },
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/2/bindings/0/variable",
+      "message": "binding 'variable' must be a 3-segment binding FQID <provider>/<register>/<slug>; got 'set/demo/bas'"
+    },
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/2/bindings/1/variable",
+      "message": "binding 'variable' must be a 3-segment binding FQID <provider>/<register>/<slug>; got 'set/demo/bas/inkomst'"
+    }
+  ]
+}

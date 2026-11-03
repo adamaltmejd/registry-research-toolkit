@@ -1602,3 +1602,27 @@ kind = "set"
 subject = "var:stratam"
 fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra. Totalundersökta objekt har fyra siffror i stratumbeteckningen, medan urvalsdelen har en femte siffra som anger månad inom kvartalet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317933:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren", "axes" = [{ "id" = "nivo", "label" = "Detaljnivå" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2siffer"
+fields = { "facets" = { "nivo" = { "value" = "2-siffer", "label" = "2-siffrig SNI" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-grupperad-2009"
+fields = { "facets" = { "nivo" = { "value" = "grupperad", "label" = "Grupperad SNI (2009)" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-rams"
+fields = { "facets" = { "nivo" = { "value" = "5-siffer", "label" = "5-siffrig SNI (RAMS)" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."

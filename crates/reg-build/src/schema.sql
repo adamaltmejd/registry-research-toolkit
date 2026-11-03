@@ -369,7 +369,7 @@ CREATE TABLE occurrence_locator (
 
 -- Non-source winners. subject_kind names the table subject_id points into.
 CREATE TABLE override (
-  subject_kind TEXT NOT NULL CHECK (subject_kind IN ('occurrence','table','release','variable','register','valueset','class_version')),
+  subject_kind TEXT NOT NULL CHECK (subject_kind IN ('occurrence','table','release','variable','register','valueset','class_version','set')),
   subject_id   INTEGER NOT NULL,
   field        TEXT NOT NULL,             -- the closed field schema of `set`
   prov         TEXT NOT NULL CHECK (prov IN ('curated','rule')),
@@ -420,7 +420,7 @@ CREATE INDEX relation_object  ON relation(object_kind, object_id, kind);
 CREATE TABLE var_set (
   id               INTEGER PRIMARY KEY,
   kind             TEXT NOT NULL CHECK (kind IN ('set','tag')),
-  pid              TEXT NOT NULL UNIQUE,  -- 'demo/hush/<set>' or 'tag/<slug>'
+  pid              TEXT NOT NULL UNIQUE,  -- 'set/<provider>/<register>/<slug>' or 'tag/<slug>'
   register_id      INTEGER REFERENCES register(id),
   name_text        INTEGER NOT NULL REFERENCES text(id),
   description_text INTEGER REFERENCES text(id),
@@ -435,6 +435,27 @@ CREATE TABLE var_set_member (
   PRIMARY KEY (set_id, variable_id)
 ) STRICT, WITHOUT ROWID;
 CREATE INDEX var_set_member_variable ON var_set_member(variable_id);
+
+-- Axis order belongs to the set; facet values are lexical presentation sort keys.
+CREATE TABLE var_set_axis (
+  set_id INTEGER NOT NULL REFERENCES var_set(id),
+  axis TEXT NOT NULL,
+  ord INTEGER NOT NULL,
+  label_text INTEGER NOT NULL REFERENCES text(id),
+  PRIMARY KEY (set_id, axis),
+  UNIQUE (set_id, ord)
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE var_set_member_facet (
+  set_id INTEGER NOT NULL,
+  variable_id INTEGER NOT NULL,
+  axis TEXT NOT NULL,
+  value TEXT NOT NULL,
+  label_text INTEGER NOT NULL REFERENCES text(id),
+  PRIMARY KEY (set_id, variable_id, axis),
+  FOREIGN KEY (set_id, variable_id) REFERENCES var_set_member(set_id, variable_id),
+  FOREIGN KEY (set_id, axis) REFERENCES var_set_axis(set_id, axis)
+) STRICT, WITHOUT ROWID;
 
 -- Findings shown to readers: open review items and notices (including acked caveats).
 -- code is a rule code plus its sub-kind: 'F1:type-change',

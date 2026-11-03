@@ -51,6 +51,7 @@ pub fn variable_level_setter(statement: &Statement) -> Option<&str> {
                 field.as_str(),
                 "sets"
                     | "tags"
+                    | "facets"
                     | "label"
                     | "description"
                     | "definition"
@@ -372,6 +373,7 @@ impl SelectorIndex {
                     add("occurrence", table, spelling);
                 }
             }
+            Address::Set(slug) => add("set", slug, ""),
             Address::Table(table) => add("table", table, ""),
             Address::Release { table, handle } => add("release", table, handle),
             Address::Variable(id) => {
@@ -432,6 +434,9 @@ fn select_from(
                                 }
                             })
                         })
+                }
+                Address::Set(slug) => {
+                    source.text("kind") == Some("set") && source.text("table_slug") == Some(slug)
                 }
                 Address::Table(table) => {
                     source.text("kind") == Some("table") && source.text("table_slug") == Some(table)
@@ -1339,7 +1344,7 @@ fn application_dependencies(
                     Address::Occurrence { table, .. }
                     | Address::Release { table, .. }
                     | Address::Table(table) => Some(apply::table_handle(records, ledger, table)?),
-                    Address::Variable(_) => None,
+                    Address::Variable(_) | Address::Set(_) => None,
                 };
                 let release = match subject {
                     Address::Release { handle, .. } => Some(handle.clone()),
@@ -1504,6 +1509,12 @@ fn conflict_candidates(
                     .or_default()
                     .insert(index);
             }
+            Address::Set(slug) => {
+                assertions
+                    .entry((4, slug.as_str(), ""))
+                    .or_default()
+                    .insert(index);
+            }
             Address::Variable(variable) => {
                 assertions
                     .entry((3, variable.as_str(), ""))
@@ -1554,6 +1565,32 @@ pub fn resolve(
     }
     let mut view = sources(records, ledger);
     view.extend(shared.sources.iter().cloned());
+    // Sets are curated register-local entities. Their premise is the source register,
+    // with the set slug distinguishing subjects for ordinary overlap checks.
+    let set_names = statements
+        .iter()
+        .filter_map(|s| match subject(s) {
+            Address::Set(slug) => Some(slug),
+            _ => None,
+        })
+        .collect::<BTreeSet<_>>();
+    let register_source = view
+        .iter()
+        .find(|s| s.text("kind") == Some("register"))
+        .cloned();
+    if let Some(register) = register_source {
+        for slug in set_names {
+            let mut source = register.clone();
+            let fields = Arc::make_mut(&mut source.fields);
+            for field in ["label", "name", "description"] {
+                fields.remove(field);
+            }
+            fields.insert("kind".into(), Value::String("set".into()));
+            fields.insert("table_slug".into(), Value::String(slug.clone()));
+            fields.insert("table".into(), Value::String(slug.clone()));
+            view.push(source);
+        }
+    }
     let needs_variables = statements.iter().any(|statement| {
         variable_membership_field(statement).is_some() || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
@@ -1940,6 +1977,19 @@ pub fn apply_metadata(
                             resolved.variables[variable].sets.clone_from(sets);
                         }
                     }
+                    apply::MetadataValue::Facets { facets, at } => {
+                        if let Some(variable) = occurrence.variable {
+                            let target = &mut resolved.variables[variable];
+                            if !target.facets.is_empty() && target.facets != *facets {
+                                return Err(format!(
+                                    "{}:{}: set-facet-conflict: different facets reach variable {:?}",
+                                    at.input, at.at, target.slug
+                                ));
+                            }
+                            target.facets.clone_from(facets);
+                            target.facets_at = Some(at.clone());
+                        }
+                    }
                     apply::MetadataValue::Tags(tags) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].tags.clone_from(tags);
@@ -1983,4 +2033,88 @@ pub fn apply_metadata(
         }
     }
     Ok(())
+}
+
+/// A presentation statement that cannot apply to the final variable memberships.
+pub struct PresentationRefusal {
+    pub at: Locator,
+    pub message: String,
+}
+
+/// Check every presentation statement after all memberships and identities resolve.
+/// The build boundary removes refused statements and reevaluates the remaining curation.
+#[must_use]
+pub fn validate_set_presentation(
+    registers: &[crate::Resolved],
+    sets: &[apply::SetPresentation],
+) -> Vec<PresentationRefusal> {
+    let mut refusals = Vec::new();
+    for set in sets {
+        let exists = registers.iter().any(|r| {
+            r.register.provider == set.provider
+                && r.register.register == set.register
+                && r.variables.iter().any(|v| v.sets.contains(&set.slug))
+        });
+        if !exists {
+            refusals.push(PresentationRefusal {
+                at: set.at.clone(),
+                message: format!(
+                    "set-member-missing: set {:?} has no final members",
+                    set.slug
+                ),
+            });
+        }
+    }
+    for register in registers {
+        for variable in &register.variables {
+            let Some(at) = &variable.facets_at else {
+                continue;
+            };
+            let mut memberships = variable.sets.iter();
+            let name = match (memberships.next(), memberships.next()) {
+                (Some(name), None) => name,
+                (None, _) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-nonmember: variable {:?} is not a set member",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+                (_, Some(_)) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-multiple-sets: facets require one set for variable {:?}",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+            };
+            let axes = sets
+                .iter()
+                .filter(|s| {
+                    s.provider == register.register.provider
+                        && s.register == register.register.register
+                        && s.slug == *name
+                })
+                .flat_map(|s| &s.axes)
+                .map(|a| a.id.as_str())
+                .collect::<BTreeSet<_>>();
+            if let Some(axis) = variable
+                .facets
+                .keys()
+                .find(|axis| !axes.contains(axis.as_str()))
+            {
+                refusals.push(PresentationRefusal {
+                    at: at.clone(),
+                    message: format!("set-axis-undeclared: set {:?} does not declare axis {:?} for variable {:?}", name, axis, variable.slug),
+                });
+            }
+        }
+    }
+    refusals
 }

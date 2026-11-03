@@ -781,6 +781,7 @@ fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, S
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
+    pub sets: Vec<reg_resolve::curation::apply::SetPresentation>,
     pub records: Vec<Record>,
     pub findings: Vec<String>,
     pub refusals: Vec<Refusal>,
@@ -1442,6 +1443,7 @@ fn run_selected(
                     return Ok(rerun);
                 }
             };
+            result.sets.extend(applied.sets);
             result.variables.extend(applied.assignments);
             result.metadata.extend(applied.metadata);
             result.sentinels.extend(
@@ -1731,6 +1733,55 @@ fn run_selected(
         return Ok(rerun);
     }
 
+    if !result.sets.is_empty()
+        || result.metadata.iter().any(|m| {
+            matches!(
+                m.value,
+                reg_resolve::curation::apply::MetadataValue::Facets { .. }
+            )
+        })
+    {
+        let resolved = resolve_catalog(
+            root,
+            retired,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )?;
+        let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        if !invalid.is_empty() {
+            let by_location = evaluated
+                .iter()
+                .map(|(statement, _)| statement_locator(root, statement).map(|at| (at, *statement)))
+                .collect::<Result<BTreeMap<_, _>, _>>()?;
+            let mut refused = BTreeSet::new();
+            for error in invalid {
+                let statement = by_location.get(&error.at).ok_or_else(|| {
+                    format!(
+                        "{}:{}: presentation refusal has no originating statement",
+                        error.at.input, error.at.at
+                    )
+                })?;
+                refused.insert(publication_identity(statement));
+                refusals.push(Refusal::scoped(
+                    statement,
+                    format!("{}:{}: {}", error.at.input, error.at.at, error.message),
+                ));
+            }
+            let skipped = refusal_findings(&refusals, record)?;
+            let retained = statements
+                .iter()
+                .copied()
+                .filter(|s| !refused.contains(&publication_identity(s)))
+                .collect::<Vec<_>>();
+            let mut rerun =
+                run_selected(root, retired, &retained, outputs, record, registers, base)?;
+            rerun.findings.extend(skipped);
+            rerun.refusals.extend(refusals);
+            return Ok(rerun);
+        }
+    }
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()
             && !registers

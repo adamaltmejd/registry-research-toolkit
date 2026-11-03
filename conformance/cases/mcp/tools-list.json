@@ -1,7 +1,7 @@
 [
   {
     "name": "search",
-    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance.",
+    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use tag to keep variables belonging to that thematic tag. Use show with evidence=true to check a variable's provenance.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -29,6 +29,9 @@
           "type": "string"
         },
         "steward_cursor": {
+          "type": "string"
+        },
+        "tag": {
           "type": "string"
         },
         "type": {
@@ -476,7 +479,7 @@
   },
   {
     "name": "show",
-    "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
+    "description": "The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -1052,6 +1055,58 @@
             },
             {
               "properties": {
+                "axes": {
+                  "items": {
+                    "$ref": "#/$defs/ShowSetAxis"
+                  },
+                  "type": "array"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "set"
+                  ],
+                  "type": "string"
+                },
+                "members": {
+                  "items": {
+                    "$ref": "#/$defs/ShowSetMember"
+                  },
+                  "type": "array"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "register": {
+                  "description": "The register's fqid.",
+                  "type": "string"
+                },
+                "tags": {
+                  "description": "The union of the members' tags, in public-id order.",
+                  "items": {
+                    "$ref": "#/$defs/ShowMembership"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "register",
+                "axes",
+                "members",
+                "tags",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
                 "description": {
                   "description": "The one curated description, separate from source text runs.",
                   "type": "string"
@@ -1185,6 +1240,64 @@
             "fqid",
             "spelling",
             "period"
+          ],
+          "type": "object"
+        },
+        "ShowSetAxis": {
+          "description": "A set's distinguishing axis, in curated order.",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "label"
+          ],
+          "type": "object"
+        },
+        "ShowSetFacet": {
+          "properties": {
+            "axis": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "axis",
+            "value",
+            "label"
+          ],
+          "type": "object"
+        },
+        "ShowSetMember": {
+          "properties": {
+            "facets": {
+              "description": "The member's coordinates in the set's axis order.",
+              "items": {
+                "$ref": "#/$defs/ShowSetFacet"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "facets"
           ],
           "type": "object"
         },

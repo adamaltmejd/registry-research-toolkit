@@ -55,6 +55,7 @@ impl StatementRow {
 
 /// Everything the file holds, linked.
 pub struct Catalog {
+    pub set_presentation: Vec<reg_resolve::curation::apply::SetPresentation>,
     pub external_relations: Vec<crate::external::Relation>,
     pub retired: Vec<crate::retired::Retired>,
     pub tags: BTreeMap<String, crate::sets::Tag>,
@@ -180,6 +181,7 @@ fn write_provenance(
 ) -> Result<(), String> {
     let kind = match subject {
         ProvenanceSubject::Register(_) => "register",
+        ProvenanceSubject::Set(..) => "set",
         ProvenanceSubject::Table(..) => "table",
         ProvenanceSubject::Release(..) => "release",
         ProvenanceSubject::Occurrence(..) => "occurrence",
@@ -860,11 +862,17 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 let reg_pid = pid_of_register(&catalog.registers[ri]);
                 (
                     "set",
-                    format!("{reg_pid}/{name}"),
+                    format!("set/{reg_pid}/{name}"),
                     Cell::Int(register_id[&reg_pid]),
                 )
             },
         );
+        let presentation = scope.and_then(|ri| {
+            catalog.set_presentation.iter().find(|set| {
+                let r = &catalog.registers[ri].register;
+                set.provider == r.provider && set.register == r.register && set.slug == name
+            })
+        });
         let (label, description) = if scope.is_none() {
             let tag = catalog
                 .tags
@@ -872,7 +880,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 .expect("tag vocabulary checked at load");
             (tag.label.clone(), Cell::Text(tag.definition.clone()))
         } else {
-            (name, Cell::Null)
+            (
+                presentation.map_or_else(|| name.clone(), |s| s.label.clone()),
+                presentation
+                    .and_then(|s| s.description.as_ref())
+                    .map_or(Cell::Null, |s| Cell::Text(s.clone())),
+            )
         };
         let set_id = id(i);
         rows.push(
@@ -880,12 +893,44 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             vec![
                 Cell::Int(set_id),
                 Cell::Str(kind.into()),
-                Cell::Str(pid),
-                register,
+                Cell::Str(pid.clone()),
+                register.clone(),
                 Cell::Text(label),
                 description,
             ],
         );
+        if let Some(ri) = scope {
+            rows.push(
+                "ident",
+                vec![
+                    Cell::Str(pid),
+                    Cell::Str("set".into()),
+                    Cell::Int(set_id),
+                    register,
+                    Cell::Str(reg_core::fold_identity(&name)),
+                ],
+            );
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Set(ri, name.clone()),
+                set_id,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
+        }
+        if let Some(presentation) = presentation {
+            for (ord, axis) in presentation.axes.iter().enumerate() {
+                rows.push(
+                    "var_set_axis",
+                    vec![
+                        Cell::Int(set_id),
+                        Cell::Str(axis.id.clone()),
+                        Cell::Int(count(ord)),
+                        Cell::Text(axis.label.clone()),
+                    ],
+                );
+            }
+        }
         for (ord, (ri, v)) in members.into_iter().enumerate() {
             rows.push(
                 "var_set_member",
@@ -895,6 +940,20 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(i64::try_from(ord).expect("set member ordinal fits i64")),
                 ],
             );
+            if scope.is_some() {
+                for (axis, facet) in &catalog.registers[ri].variables[v].facets {
+                    rows.push(
+                        "var_set_member_facet",
+                        vec![
+                            Cell::Int(set_id),
+                            Cell::Int(variable_id[&(ri, v)]),
+                            Cell::Str(axis.clone()),
+                            Cell::Str(facet.value.clone()),
+                            Cell::Text(facet.label.as_ref().unwrap_or(&facet.value).clone()),
+                        ],
+                    );
+                }
+            }
         }
     }
     for notice in &catalog.notices {

@@ -24,8 +24,9 @@ fn entity(row: &Row) -> rusqlite::Result<Entity> {
     })
 }
 
-/// Resolve `value`: an exact `ident.pid` first; then, for a ref without a `/`, the
-/// `ident` rows whose `name_fold` is its `fold_identity`, where several are
+/// Resolve `value`: validate slash-separated public ids before their exact lookup,
+/// with `set/` identifying only sets; then, for a ref without a `/`, the
+/// non-set `ident` rows whose `name_fold` is its `fold_identity`, where several are
 /// `ambiguous_ref`. So an exact pid never turns ambiguous. Otherwise a retired pid is
 /// `retired_ref`, a malformed ref with a `/` `invalid_ref` and anything else
 /// `not_found`.
@@ -34,6 +35,7 @@ fn entity(row: &Row) -> rusqlite::Result<Entity> {
 ///
 /// `ambiguous_ref`, `retired_ref`, `invalid_ref` or `not_found`.
 pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
+    let set_ref = is_set_ref(value)?;
     if let Some(hit) = conn
         .query_row(
             "SELECT kind, entity_id, pid FROM ident WHERE pid = ?",
@@ -42,11 +44,17 @@ pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
         )
         .optional()?
     {
+        if (hit.kind == "set") != set_ref {
+            return Err(invalid_ref(value));
+        }
         return Ok(hit);
     }
     if !value.contains('/') {
         let mut found: Vec<Entity> = conn
-            .prepare("SELECT kind, entity_id, pid FROM ident WHERE name_fold = ? ORDER BY pid")?
+            .prepare(
+                "SELECT kind, entity_id, pid FROM ident
+                      WHERE name_fold = ? AND kind <> 'set' ORDER BY pid",
+            )?
             .query_map([reg_core::fold_identity(value)], entity)?
             .collect::<rusqlite::Result<_>>()?;
         match found.len() {
@@ -83,13 +91,6 @@ pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
             Code::RetiredRef,
             format!("{value:?} was retired in catalog {retired_in} ({reason})."),
             vec![value.into(), kind.into(), retired_in.into(), reason.into()],
-        ));
-    }
-    if value.contains('/') && !well_formed(value) {
-        return Err(Error::new(
-            Code::InvalidRef,
-            format!("{value:?} is not a public id."),
-            vec![value.into()],
         ));
     }
     Err(Error::new(
@@ -132,11 +133,12 @@ fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Valu
 ///
 /// [`resolve`]'s; `table_is_register`; `invalid_ref` for a ref of another kind.
 pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
+    let set_ref = is_set_ref(value)?;
     let by_pid = |pid: &str| {
         conn.query_row("SELECT id FROM tbl WHERE pid = ?", [pid], |row| row.get(0))
             .optional()
     };
-    if let Some(id) = by_pid(value)? {
+    if !set_ref && let Some(id) = by_pid(value)? {
         return Ok(id);
     }
     let hit = resolve(conn, value)?;
@@ -164,7 +166,20 @@ pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
     }
 }
 
-/// Whether `value` is in the public-id grammar (`reg_core::Fqid`).
-fn well_formed(value: &str) -> bool {
-    value.parse::<Fqid>().is_ok()
+/// A namespaced set id can only address a set. Bare names resolve non-set entities;
+/// malformed public ids cannot bypass the grammar via `ident`.
+fn is_set_ref(value: &str) -> Result<bool, Error> {
+    match value.parse::<Fqid>() {
+        Ok(Fqid::Set { .. }) => Ok(true),
+        Err(_) if value.contains('/') => Err(invalid_ref(value)),
+        _ => Ok(false),
+    }
+}
+
+fn invalid_ref(value: &str) -> Error {
+    Error::new(
+        Code::InvalidRef,
+        format!("{value:?} is not a public id."),
+        vec![value.into()],
+    )
 }

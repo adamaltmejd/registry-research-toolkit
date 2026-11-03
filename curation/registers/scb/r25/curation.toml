@@ -22935,3 +22935,279 @@ kind = "set"
 subject = "var:folkfort"
 fields = { "sets" = ["folkpensionsbelopp"] }
 evidence = "Audit correction 2026-11-02: The operational definition derives the amount from the folkpension own-benefit flag (code 2) and the folkpension amount. The eight other folkpension amounts establish a fitting non-singleton group; use this candidate when fortidspension is dissolved. Catalog variable 30859."
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "label" = "Disponibel inkomst", "axes" = [{ "id" = "enhet", "label" = "Enhet" }, { "id" = "hushallsbegrepp", "label" = "Hushållsbegrepp" }, { "id" = "kapitalvinst", "label" = "Kapitalvinst" }, { "id" = "definition", "label" = "Definition" }, { "id" = "nordisk-lon", "label" = "Lön från annat nordiskt land" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-till-disponibel-inkomst-2004-ars-cdisp04-inklgp"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "inkl", "label" = "Inkl. nordisk lön" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-for-familj-2004-ars-definition-inklusive"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "inkl", "label" = "Inkl. nordisk lön" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-2004-per-konsumtionsenhet-bostadshushall"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:individbaserad-ekvivalerad-disponibel-inkomst-definition"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "vaxelvist", "label" = "Växelvist boende" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp504kevx"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "vaxelvist", "label" = "Växelvist boende" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp5kevx"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "vaxelvist", "label" = "Växelvist boende" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-konsumtionsenhet-for-familj-2004-ars"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "inkl", "label" = "Inkl. nordisk lön" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-1991-per-konsumtionsenhet-bostadshushall"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:cdispkevx"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "vaxelvist", "label" = "Växelvist boende" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:cdispp"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "exkl", "label" = "Exkl. nordisk lön före 2020" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-exkl-kapitalvinst"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:din8"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:din88k"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:din91"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-tidigare-definition"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dinkd"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dinkpp"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-tidigare-definition"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp88k"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp91"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-definition-1982"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:dinupp"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-bostadshushall-definition-1991"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-hushall"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "hushallsbegrepp" = { "value" = "na", "label" = "—" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004-hushall"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "exkl", "label" = "Exkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "exkl", "label" = "Exkl. nordisk lön före 2020" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-3"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-4"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-5"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-6"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "facets" = { "enhet" = { "value" = "hushall", "label" = "Hushåll" }, "hushallsbegrepp" = { "value" = "hushall", "label" = "Hushåll" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "1991", "label" = "1991 års definition" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004"
+fields = { "facets" = { "enhet" = { "value" = "per-ke", "label" = "Per konsumtionsenhet" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "2004", "label" = "2004 års definition" }, "nordisk-lon" = { "value" = "exkl", "label" = "Exkl. nordisk lön före 2020" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1981"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1984"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1986"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-ranta-utdelning"
+fields = { "facets" = { "enhet" = { "value" = "per-vuxen", "label" = "Per vuxen" }, "hushallsbegrepp" = { "value" = "familj", "label" = "Familj" }, "kapitalvinst" = { "value" = "inkl", "label" = "Inkl. kapitalvinst" }, "definition" = { "value" = "fore-1991", "label" = "Före 1991" }, "nordisk-lon" = { "value" = "na", "label" = "—" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/iot.toml:28; existing set membership and current id ledger determine the targets."

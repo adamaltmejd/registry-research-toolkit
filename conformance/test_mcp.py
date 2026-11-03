@@ -46,6 +46,7 @@ EQUIVALENCE = {
         "show-refs",
         "show-variable",
         "show-variable-evidence",
+        "show-set",
         "provider-text-dedup",
     ),
     "resolve": ("resolve-columns",),
@@ -62,6 +63,7 @@ EQUIVALENCE = {
     "search": (
         "occurrence-descriptions",
         "search-register",
+        "search-tag",
         "search-period",
         "invalid-parameters",
         "cursor-stale",

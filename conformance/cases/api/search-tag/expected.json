@@ -1,0 +1,33 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/bas/inkomst"
+      ],
+      "/data/items/*/type": [
+        "variable"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/bas/inkomst"
+      ],
+      "/data/items/*/type": [
+        "variable"
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields": {
+        "ref": "absent"
+      }
+    }
+  }
+]

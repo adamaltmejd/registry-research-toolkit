@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
+        /** @description The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
+        /** @description The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -299,7 +299,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use show with evidence=true to check a variable's provenance. */
+        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use tag to keep variables belonging to that thematic tag. Use show with evidence=true to check a variable's provenance. */
         get: operations["search"];
         put?: never;
         post?: never;
@@ -1016,6 +1016,18 @@ export interface components {
             timeless: boolean;
             unit_type: string | null;
         } | {
+            axes: components["schemas"]["ShowSetAxis"][];
+            description?: string;
+            fqid: string;
+            /** @enum {string} */
+            kind: "set";
+            members: components["schemas"]["ShowSetMember"][];
+            name: string;
+            /** @description The register's fqid. */
+            register: string;
+            /** @description The union of the members' tags, in public-id order. */
+            tags: components["schemas"]["ShowMembership"][];
+        } | {
             /** @description The one curated description, separate from source text runs. */
             description?: string;
             /** @description Provenance is present only when requested with `evidence=true`. */
@@ -1054,6 +1066,22 @@ export interface components {
             fqid: string;
             period: components["schemas"]["Period"];
             spelling: string;
+        };
+        /** @description A set's distinguishing axis, in curated order. */
+        ShowSetAxis: {
+            id: string;
+            label: string;
+        };
+        ShowSetFacet: {
+            axis: string;
+            label: string;
+            value: string;
+        };
+        ShowSetMember: {
+            /** @description The member's coordinates in the set's axis order. */
+            facets: components["schemas"]["ShowSetFacet"][];
+            fqid: string;
+            name: string;
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {
@@ -1764,6 +1792,7 @@ export interface operations {
                 type?: "register" | "table" | "variable" | "classification" | "code" | "document";
                 register?: string;
                 period?: string;
+                tag?: string;
                 limit?: number;
                 cursor?: string;
                 steward_cursor?: string;

@@ -2482,3 +2482,243 @@ kind = "set"
 subject = "var:utbland"
 fields = { "description" = "Ubildningsland för underliggande examen för legitamationen/beviset" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:531\n\nLOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "label" = "Invandringsdatum (per invandringstillfälle)", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-6"
+fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-7"
+fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-8"
+fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-9"
+fields = { "facets" = { "ordinal" = { "value" = "9", "label" = "9:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:20; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsland"
+fields = { "label" = "Invandringsland (per invandringstillfälle)", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-6"
+fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-7"
+fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-8"
+fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-9"
+fields = { "facets" = { "ordinal" = { "value" = "9", "label" = "9:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:27; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:utvandringsdatum"
+fields = { "label" = "Utvandringsdatum (per utvandringstillfälle)", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-6"
+fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-7"
+fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-8"
+fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-9"
+fields = { "facets" = { "ordinal" = { "value" = "9", "label" = "9:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:34; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:utvandringsland"
+fields = { "label" = "Utvandringsland (per utvandringstillfälle)", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2:a" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-5"
+fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-6"
+fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-7"
+fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-8"
+fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-9"
+fields = { "facets" = { "ordinal" = { "value" = "9", "label" = "9:e" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."

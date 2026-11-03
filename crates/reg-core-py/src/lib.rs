@@ -29,7 +29,7 @@ mod reg_core_py {
     }
 
     /// A parsed FQID: `kind` is `provider`, `register`, `variable`, `classification` or
-    /// `class_version`; `str()` gives back the one spelling.
+    /// `class_version` or `set`; `str()` gives back the one spelling.
     #[pyclass(frozen, eq, module = "reg_core_py")]
     #[derive(PartialEq)]
     struct Fqid(reg_core::Fqid);
@@ -42,6 +42,7 @@ mod reg_core_py {
                 reg_core::Fqid::Provider { .. } => "provider",
                 reg_core::Fqid::Register { .. } => "register",
                 reg_core::Fqid::Variable { .. } => "variable",
+                reg_core::Fqid::Set { .. } => "set",
                 reg_core::Fqid::Classification { .. } => "classification",
                 reg_core::Fqid::ClassVersion { .. } => "class_version",
             }
@@ -52,7 +53,8 @@ mod reg_core_py {
             match &self.0 {
                 reg_core::Fqid::Provider { provider }
                 | reg_core::Fqid::Register { provider, .. }
-                | reg_core::Fqid::Variable { provider, .. } => Some(provider),
+                | reg_core::Fqid::Variable { provider, .. }
+                | reg_core::Fqid::Set { provider, .. } => Some(provider),
                 reg_core::Fqid::Classification { .. } | reg_core::Fqid::ClassVersion { .. } => None,
             }
         }
@@ -61,7 +63,8 @@ mod reg_core_py {
         fn register(&self) -> Option<&str> {
             match &self.0 {
                 reg_core::Fqid::Register { register, .. }
-                | reg_core::Fqid::Variable { register, .. } => Some(register),
+                | reg_core::Fqid::Variable { register, .. }
+                | reg_core::Fqid::Set { register, .. } => Some(register),
                 _ => None,
             }
         }
