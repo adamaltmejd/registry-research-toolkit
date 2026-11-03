@@ -1,9 +1,12 @@
 import {
+  type CatalogSegment,
+  getSegments,
   getShow,
   type RegisterShow,
   type RootChild,
   type ShowNode,
 } from "./api";
+import { humanizeClassificationSlug } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -176,6 +179,11 @@ export function registerRead(ref: string): Read<RegisterShow> {
   return read(`register:${ref}`, () => loadRegister(ref));
 }
 
+/** Source edits reuse each variable's segments without reloading other cards. */
+export function segmentsRead(ref: string): Read<CatalogSegment[]> {
+  return read(`segments:${ref}`, () => getSegments(ref));
+}
+
 /** A page owns its pending/error state; only a successful cached read is reusable. */
 export async function loadRegister(
   ref: string,
@@ -225,8 +233,8 @@ export function catalogNames(
   const registers = new Set<string>();
   for (const ref of refs) {
     if (ref.startsWith("class/")) {
-      const node = showRead(ref).value;
-      if (node && "name" in node) names.set(ref, node.name);
+      const name = classificationNameRead(ref).value;
+      if (name) names.set(ref, name);
       continue;
     }
     registers.add(ref.split("/").slice(0, 2).join("/"));
@@ -245,15 +253,19 @@ export function catalogNames(
 export function catalogNameRead(ref: string | null): Read<string> {
   if (ref === null) return UNASKED;
   if (ref.startsWith("class/")) {
-    const node = showRead(ref);
-    return {
-      value: node.value && "name" in node.value ? node.value.name : null,
-      loading: node.loading,
-    };
+    return classificationNameRead(ref);
   }
   const state = registerRead(ref.split("/").slice(0, 2).join("/"));
   return {
     value: registerSubjectNames(state.value).get(ref) ?? null,
     loading: state.loading,
+  };
+}
+
+/** Use the classification page's version title, not content-shared value-set aliases. */
+function classificationNameRead(ref: string): Read<string> {
+  return {
+    value: humanizeClassificationSlug(ref.split("/").at(-1) ?? ""),
+    loading: false,
   };
 }

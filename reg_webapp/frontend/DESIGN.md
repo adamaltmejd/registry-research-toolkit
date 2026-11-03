@@ -458,6 +458,7 @@ Time is the axis every relation is drawn on.
   both faces stay on the row, so a one-year window keeps both visible and grabbable,
   while the window's years and its band stay where they are (maintainer ruling
   2026-10-23).
+
 - The **add window** is a variable page's band: the years the columns ticked there are
   added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
   on the coverage row bounded by the variable's availability. The thumbs move live while
@@ -481,30 +482,49 @@ Time is the axis every relation is drawn on.
   window says so in its tooltip and accessible name, not in a line under the graph
   (#1833); one outside the window is still named there at `err`. A register or group
   pane draws the `Timeline` read-only.
+
 - A **source period** is set on `/project`, on the source's card, where the source is
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
-  the source's variant family, its period as the window band with the same thumbs,
-  bounded by that family's coverage, and one lane per column, each column a span of the
-  years the family delivers it. A column available for part of the period is a shorter
-  span, not a finding. The header states the period's years; which member delivers which
-  years ("16 år och äldre until 2009, 15 år och äldre from 2010") is that header's
-  tooltip, never a lane, so variants stay out of sight. A comma-list period rests the
-  thumbs on its outer years and a line under the drawing says a move makes it one span;
-  a term period is shown as text. Every source card shares the page's one axis. The
-  lanes are the card's columns: no list repeats them under the drawing (maintainer
-  ruling 2026-10-23). Each lane's name carries a quiet ghost "Remove", named "Remove
-  <column> from <source>", that asks first in a `Dialog` whose answer is the `danger`
-  button and takes the column out of that one source. A term period draws no lanes, so
-  its card lists the columns as plain ruled rows (`LaneList`): the lane's name and the
-  same Remove, nothing else.
+  the source's table, its period as the window band with the same thumbs, bounded by
+  that table's coverage, and one lane per binding. Each delivered column is a span of
+  the years that table delivers it. A column available for part of the period is a
+  shorter span, not a finding. The header states the period's years. A stored period
+  outside coverage widens the thumbs' bounds to their union; it is never clamped or
+  rewritten on load. A comma-list period rests the thumbs on its outer years and a line
+  under the drawing says a move makes it one span; a term period is shown as text with
+  plain `LaneList` rows. A timeless source says "Unbounded", with no thumbs. A dated
+  table with `_default` also says "Unbounded", but has thumbs seeded from table coverage
+  so its missing period can be repaired; it writes only when a thumb rests. Every source
+  card shares the page's one axis. The lanes are the card's columns: no list repeats
+  them under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a
+  quiet ghost "Remove", named "Remove <column> from <source>", that asks first in a
+  `Dialog` whose answer is the `danger` button and takes the column out of that one
+  source. Removing the last binding asks to remove the source. Source removal also
+  removes its panel memberships and any panels left without members; the dialog states
+  this when affected. A ghost "Remove source" in the card header also asks first. Focus
+  returns to the card heading after a column removal, or the Sources heading after a
+  source removal.
+
+  Each lane's below slot holds a labelled type `Select`, an optional classification pin,
+  and its findings. Types use plain words: Identifier, Categorical, Numeric, Date, Date
+  and time, Opaque. A type change drops subtype and format fields owned by other types,
+  and retains the classification. The pin appears for a binding with a classification or
+  a catalog ambiguity finding, using named versions from segments on this table
+  overlapping the source period, plus "Not pinned" to clear it. A stored pin outside
+  those candidates remains named and marked "not delivered in this period". Versions use
+  a scrolling listbox, never chips. These controls also appear in plain rows for term
+  periods.
+
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those
   years to a screen reader only (#1833).
+
 - A **year without a delivery** is plain empty space on the `Timeline`, the `LaneGraph`
   and the `VariableRow`, for every register (#1832, maintainer ruling 2026-10-23): no
   hatch, no gap mark and no legend entry. Elections, censuses and other periodic
   deliveries read as delivered years with space between, which is all the catalog knows.
+
 - The **axis** spans the data a page draws, not the catalog: from the first to the last
   year of that data, joined with the study window when one is set, rounded out to
   multiples of 5 (#1831). A register page's data is its variants' deliveries, a concept
@@ -516,6 +536,7 @@ Time is the axis every relation is drawn on.
   widens by one step of 5, backward where forward would pass the catalog's last year. A
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
   `Timeline`, and a page with several sources draws them on one axis.
+
 - A **`Timeline`** is drawn on the page's axis, under a `label` header, "Coverage", that
   states the covered years (years only: no edition count); where the coverage row
   carries its own "Coverage" caption (a variable or group page) the header's label is
@@ -528,6 +549,7 @@ Time is the axis every relation is drawn on.
   coding change as a `warn` mark; the variables a succession reaches are further lanes
   in time order, with their arrows. A line under the drawing says plainly that clicking
   a column ticks it, and there is no second graph on the page.
+
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
@@ -553,6 +575,7 @@ Time is the axis every relation is drawn on.
   columns…". With nothing ticked there is no bar. Adding uses one source per table and
   one binding per variable; it clears ticks, shows the variable page's status copy and
   focuses the panel heading.
+
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A succession arrow between overlapping spans drops at the edge's effective
@@ -569,6 +592,7 @@ Time is the axis every relation is drawn on.
   register's, shows only while a change is staged. On a variable page the `LaneGraph` is
   the `Timeline` (above). Don't draw free-form node graphs; the time axis is the
   information.
+
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 
@@ -640,6 +664,10 @@ not grow new visual language meanwhile.
   (`body-sm`, weight 500, `spacing.2` / `spacing.3` padding). A disabled button takes
   `--opacity-disabled`. There is no success variant. A button says what happens: "Add
   column to project", never "Submit".
+- **Select:** a labelled RAC `Select` with `Popover` and scrolling `ListBox`, on
+  `surface` with a `border-strong` hairline and `sm` radius. Text uses `body-sm`; focus
+  uses the shared ring. Options use plain names, and the overlay uses `--z-popover`.
+  Type and classification controls compose this shared primitive.
 - **AddBar:** the shared sticky bottom bar for staged columns on register and variable
   pages. Its one `primary` button reads "Add N columns to project" and can be disabled
   while selected columns load. The caller omits it when nothing is selected.

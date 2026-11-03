@@ -60,6 +60,23 @@ function replace(raw: string | null, persist: boolean): void {
   });
 }
 
+function updateField<K extends keyof ProjectData>(
+  key: K,
+  value: ProjectData[K],
+): void;
+function updateField(fields: Partial<ProjectData>): void;
+function updateField(
+  key: keyof ProjectData | Partial<ProjectData>,
+  value?: ProjectData[keyof ProjectData],
+): void {
+  if (snapshot.draft === null) return;
+  const fields = typeof key === "string" ? { [key]: value } : key;
+  replace(
+    `${JSON.stringify({ ...snapshot.draft, ...fields }, null, 2)}\n`,
+    true,
+  );
+}
+
 export const projectStore = {
   subscribe(listener: () => void): () => void {
     listeners.add(listener);
@@ -86,16 +103,7 @@ export const projectStore = {
     lastDownloaded = null;
     replace(null, true);
   },
-  updateField<K extends keyof ProjectData>(
-    key: K,
-    value: ProjectData[K],
-  ): void {
-    if (snapshot.draft === null) return;
-    replace(
-      `${JSON.stringify({ ...snapshot.draft, [key]: value }, null, 2)}\n`,
-      true,
-    );
-  },
+  updateField,
   setOrderBlocked(draft: ProjectData, blocked: boolean): void {
     if (snapshot.draft === draft && snapshot.orderBlocked !== blocked)
       publish({ ...snapshot, orderBlocked: blocked });

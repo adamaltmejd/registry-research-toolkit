@@ -33,17 +33,20 @@ exact table and spelling pair; selection and its availability-bounded add window
 local to the page. Adding creates or widens one source per table and appends one binding
 per variable, using the segments' default type and agreed classification. WASM checks
 the candidate before the existing project store writes its sources. Already-bound
-columns show their in-project state without a checkbox. Succession lanes and source-card
-authoring remain deferred. Register-page row ticks lazily read and add all eligible
-delivery columns in the study window through the same checked candidate and one sources
-write, without topping up variables already bound in any source.
+columns show their in-project state without a checkbox. Source cards author binding
+type, classification pin, removal and source period through checked candidates and the
+same sources write path. Each table supplies a coverage row over its binding lanes on
+one shared data axis. Stored periods are never narrowed on load. Succession lanes remain
+deferred. Register-page row ticks lazily read and add all eligible delivery columns in
+the study window through the same checked candidate and one sources write, without
+topping up variables already bound in any source.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
 pane. Register-name reads are shared with catalog browsing; value-set names are read by
 their content identity without displaying hashes. Row keys, period clips and
-non-blocking findings remain separate. Source authoring, catalog picking and panels
-return in W5b; manifests, resolve and steward workflows remain deferred.
+non-blocking findings remain separate. Panels return in W5b; manifests, resolve and
+steward workflows remain deferred.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared

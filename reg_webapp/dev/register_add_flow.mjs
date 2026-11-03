@@ -20,6 +20,8 @@ export async function addRegisterVariablesCase(page, shoot, { open, settled, che
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(fixture)),
   });
+  // Source-card metadata belongs to project setup, before measuring register reads.
+  await settled(page);
 
   const segmentRequests = [];
   page.on("request", (request) => {

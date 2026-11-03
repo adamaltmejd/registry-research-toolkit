@@ -98,7 +98,7 @@ interface Props {
   /** Laid over the coverage row's track (the period slider), on `axis`. */
   overlay?: ReactNode;
   isDisabled?: boolean;
-  onToggle: (spanId: string) => void;
+  onToggle?: (spanId: string) => void;
 }
 
 /**
@@ -633,7 +633,7 @@ function Span({
   span: LaneSpanModel;
   at: PlacedSpan;
   isDisabled: boolean;
-  onToggle: (id: string) => void;
+  onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
 }) {
   const showYears =
@@ -712,7 +712,7 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
-  if (!span.selectable) {
+  if (!span.selectable || !onToggle) {
     return (
       <span className={styles.span} {...attributes}>
         {body}

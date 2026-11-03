@@ -1,4 +1,4 @@
-import type { CatalogSegment } from "./api";
+import type { CatalogSegment, RegisterShow } from "./api";
 import { catalogLastDate } from "./catalog_period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 
@@ -36,4 +36,19 @@ export function columnYearRuns(
     else runs.push({ ...era });
   }
   return runs;
+}
+
+/** Table coverage, with open ends projected to catalog bounds only for drawing. */
+export function tableYears(
+  table: RegisterShow["tables"][number] | undefined,
+  bounds: [number, number],
+): ProjectStudyWindow | null {
+  if (!table || table.timeless) return null;
+  const last = catalogLastDate(table.period);
+  return {
+    from: table.period.start
+      ? Number(table.period.start.slice(0, 4))
+      : bounds[0],
+    to: last ? Number(last.slice(0, 4)) : bounds[1],
+  };
 }

@@ -398,14 +398,17 @@ export function labelSuffix(label: string, stem: string): string {
   return label.slice(stem.length).replace(/^[\s,;:.\-–—/]+/, "");
 }
 
-/** Humanize a classification slug for the value-set label (#668): the clean
- * vintage form `<letters><4-digit-year>` (e.g. `lkf2007`) becomes
- * `"<LETTERS-UPPER> <year>"` (`"LKF 2007"`); anything else (suffixed/hyphenated
- * slugs like `sun2000-niva`, `icd-10-se`, or a non-vintage slug) falls back to
- * the raw slug verbatim — a stable identifier beats a mangled guess. */
+const classificationSuffixes: Record<string, string> = {
+  niva: "nivå",
+  inr: "inriktning",
+};
+
+/** Vintage classification names share the same spelling in lists and pins. */
 export function humanizeClassificationSlug(slug: string): string {
-  const m = /^([a-z]+)(\d{4})$/.exec(slug);
-  return m ? `${m[1].toUpperCase()} ${m[2]}` : slug;
+  const m = /^([a-z]+)(\d{4})(?:-(.+))?$/.exec(slug);
+  if (!m) return slug;
+  const suffix = m[3];
+  return `${m[1].toUpperCase()} ${m[2]}${suffix ? ` (${classificationSuffixes[suffix] ?? suffix.replaceAll("-", " ")})` : ""}`;
 }
 
 // ── State-window display (#309 + #321) ──────────────────────────────────────
