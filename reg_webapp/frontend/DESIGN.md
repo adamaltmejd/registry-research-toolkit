@@ -742,7 +742,9 @@ not grow new visual language meanwhile.
   empty; the next step is the description and the button, never packed into the title.
   `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
   crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
-  respects reduced motion. A loading region carries no "Loading…" line beside it.
+  respects reduced motion. A loading region carries no "Loading…" line beside it. A
+  region that would otherwise show only its legend (a source card's timelines) shows one
+  info `StatusRow`, "Loading coverage…", in place of the legend and graph.
 
 ## Do's and Don'ts
 
