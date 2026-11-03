@@ -1,0 +1,24 @@
+{
+  "note": "Fails if a column every rival claims over its whole interval is read as an ordinary partial gap (a warning and a clip) because no placement links it to the variable: the 2018..2019 of a binding held in 2017 blocks as mapping_missing.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Contested column",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/owners",
+        "period": {
+          "from": 2017,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/owners/third",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

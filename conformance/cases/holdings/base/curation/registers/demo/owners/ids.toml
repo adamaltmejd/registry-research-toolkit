@@ -5,5 +5,6 @@ received = "received"
 [variables]
 first = ["Alpha @ 2017-01-01"]
 second = ["Beta @ 2019-01-01"]
+third = ["Gamma"]
 id = ["Id"]
 other = ["received: Other"]

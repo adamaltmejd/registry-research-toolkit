@@ -95,5 +95,10 @@
     "sql": "UPDATE holding_mapping SET caveat=NULL WHERE variable_pid='steward/slots/code'",
     "code": "holdings_mapping_source_mismatch",
     "location": "census:row=3:column=7"
+  },
+  {
+    "sql": "DELETE FROM holding_notice_candidate WHERE variable_pid='demo/owners/second'",
+    "code": "holdings_contested_source_mismatch",
+    "location": "census:row=2:column=1"
   }
 ]

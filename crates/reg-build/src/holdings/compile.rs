@@ -171,13 +171,13 @@ fn notice(
     detail: (&[Span], &[Span], &[Span]),
     message: &str,
     locator: &str,
-) -> Result<(), String> {
+) -> Result<i64, String> {
     db.execute("INSERT INTO holding_notice(holding_id,column_id,code,start,end,requested,documented,admitted,message,locator)
       VALUES(?,?,?,?,?,?,?,?,?,?)",params![holding,column,code,spans.map(|s|s.0),spans.map(|s|s.1),
       serde_json::to_string(detail.0).map_err(|e|e.to_string())?,serde_json::to_string(detail.1).map_err(|e|e.to_string())?,
       serde_json::to_string(detail.2).map_err(|e|e.to_string())?,message,locator])
       .map_err(|e|e.to_string())?;
-    Ok(())
+    Ok(db.last_insert_rowid())
 }
 
 #[derive(Clone)]
@@ -293,7 +293,13 @@ pub(super) fn candidates(
 
 pub(super) enum Placement<'a> {
     Accepted(Span, &'a Candidate),
-    Blocked(Span, &'static str, &'static str),
+    /// The rivals left unplaced, as distinct (table, variable) pairs.
+    Blocked(
+        Span,
+        &'static str,
+        &'static str,
+        BTreeSet<(&'a str, &'a str)>,
+    ),
 }
 
 /// Apply interval-local ownership for emission.
@@ -322,10 +328,13 @@ pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, Strin
             if active.is_empty() {
                 continue;
             }
-            let owners: BTreeSet<_> = active.iter().map(|c| &c.segment.variable).collect();
-            if owners.len() > 1 {
+            let rivals: BTreeSet<_> = active
+                .iter()
+                .map(|c| (c.segment.table.as_str(), c.segment.variable.as_str()))
+                .collect();
+            if rivals.len() > 1 {
                 placements.push(Placement::Blocked(span, "ambiguous_delivered_owners",
-                    "Distinct documented owners claim this physical column over the contested interval"));
+                    "Distinct documented owners claim this physical column over the contested interval", rivals));
                 continue;
             }
             if active.iter().any(|c| c.segment.state == "ambiguous") {
@@ -333,6 +342,7 @@ pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, Strin
                     span,
                     "ambiguous_catalog_segment",
                     "Catalog ambiguity cannot be cleared by a physical owner choice",
+                    rivals,
                 ));
                 continue;
             }
@@ -388,9 +398,9 @@ fn placements(
     for placement in plan(candidates)? {
         let (span, c) = match placement {
             Placement::Accepted(span, c) => (span, c),
-            Placement::Blocked(span, code, message) => {
+            Placement::Blocked(span, code, message, rivals) => {
                 documented.push(span);
-                notice(
+                let id = notice(
                     db,
                     holding,
                     Some(column),
@@ -400,6 +410,13 @@ fn placements(
                     message,
                     locator,
                 )?;
+                for (table, variable) in rivals {
+                    db.execute(
+                        "INSERT INTO holding_notice_candidate VALUES(?,?,?)",
+                        params![id, table, variable],
+                    )
+                    .map_err(|e| e.to_string())?;
+                }
                 continue;
             }
         };
@@ -591,6 +608,7 @@ pub(super) fn write(
     let mut mapped = 0usize;
     let mut unmatched = 0usize;
     let mut next_column = 1i64;
+    let mut file_names = BTreeMap::<String, String>::new();
     // Parents and row-period columns reference rows filled later in this transaction.
     tx.execute_batch("PRAGMA defer_foreign_keys=ON;")
         .map_err(|e| e.to_string())?;
@@ -638,8 +656,20 @@ pub(super) fn write(
                 .or_else(|| (schema.len() == 1).then(|| *schema.first().expect("one schema")));
             let table_type = (kinds.len() == 1).then(|| *kinds.first().expect("one kind"));
             let file_name = reg_resolve::slugify(&table.name).replace('-', "_");
-            if file_name.is_empty() {
-                return Err("holdings_filename_invalid: empty slug".into());
+            // The runner's rules (reg_core::manifest), applied at publication so a
+            // name it would refuse never reaches an order. Slugs are lowercase, so a
+            // case-insensitive collision is an exact one here.
+            reg_core::manifest::safe_file_name(&file_name).map_err(|reason| {
+                format!(
+                    "holdings_filename_invalid: locator={}: file name {file_name:?} is {reason}",
+                    authored.locator
+                )
+            })?;
+            if let Some(other) = file_names.insert(file_name.clone(), table.name.clone()) {
+                return Err(format!(
+                    "holdings_filename_invalid: locator={}: file name {file_name:?} is also physical table {other:?}'s",
+                    authored.locator
+                ));
             }
             tx.execute("INSERT INTO holding_table(id,physical_name,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
           projection_token,period_encoding,reason,locator) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,schema_name,table_type,
