@@ -146,8 +146,8 @@ docs asset and no copying an asset from an older release.
   notes. Its consequence: with `SWECOV_DEPLOY=on`, `swecov-asset-guard` fails, SWECOV is
   not rebuilt and stays on the previous pair, and the commit still counts as deployed
   (step 10).
-- Disclosure review (8h) is a maintainer gate: the holdings asset is public metadata
-  derived from a private steward repository.
+- The scope check (8h) is an automated gate: the holdings asset is public and carries
+  only what the catalog serves.
 
 Variables used below (absolute paths, as in 8a):
 
@@ -312,87 +312,30 @@ uv run --no-project scripts/rebuild_compare.py holdings --old-db "$old/reg_meta_
 
 The maintainer reads that summary for go/no-go; its counts go in the release notes.
 
-#### 8h. Disclosure review (maintainer gate)
+#### 8h. Scope check
 
-The disclosure review lists what the paired asset publishes. It reads metadata only
-(counts, notices, public free text, locator prefixes); no census, storage or inventory
-row. Write it beside the evidence and show it to the maintainer:
+The SWECOV catalog is public (maintainer 2026-11-03), so there is no disclosure review.
+The release must carry only what the catalog serves, never background data: steward
+repository notes, raw census or storage exports, inventory working files.
+`holdings_scope_check.py` fails when the holdings DB's schema differs from the schema
+the builder declares (every table, FTS shadow tables included, and every column must
+match, none extra or missing), when a meta key is not on the script's allowlist, or when
+a text or blob value exceeds its size bound. Run it against this release checkout and
+record its one-line result in the release notes:
 
 ```sh
-sqlite3 -readonly -markdown "$evidence/catalog/reg_meta_swecov.db" > "$evidence/disclosure-review.md" <<'SQL'
-.print '# Disclosure review'
-.print
-.print '## 1. Counts'
-.print
-SELECT 'holding_table' AS item, count(*) AS n FROM holding_table
-UNION ALL SELECT 'holding_route', count(*) FROM holding_route
-UNION ALL SELECT 'holding_period', count(*) FROM holding_period
-UNION ALL SELECT 'holding_column', count(*) FROM holding_column
-UNION ALL SELECT 'holding_mapping', count(*) FROM holding_mapping
-UNION ALL SELECT 'holding_notice', count(*) FROM holding_notice
-UNION ALL SELECT 'doc', count(*) FROM doc
-UNION ALL SELECT 'doc_section', count(*) FROM doc_section
-UNION ALL SELECT 'doc_link', count(*) FROM doc_link
-UNION ALL SELECT 'search_item:' || kind, count(*) FROM search_item GROUP BY kind
-UNION ALL SELECT 'register', count(*) FROM register
-UNION ALL SELECT 'tbl', count(*) FROM tbl
-UNION ALL SELECT 'variable', count(*) FROM variable;
-.print
-.print '## 2. Notices'
-.print
-SELECT code, message, count(*) AS n FROM holding_notice GROUP BY 1, 2 ORDER BY 1, 3 DESC;
-.print
-.print '## 3. Supplemental documents'
-.print
-SELECT t.body AS title, d.kind, d.licence, d.url, d.bytes,
-       (SELECT count(*) FROM doc_section s WHERE s.doc_id = d.id) AS sections,
-       (SELECT count(*) FROM doc_link l WHERE l.doc_id = d.id) AS links
-FROM doc d JOIN text t ON t.id = d.title_text ORDER BY d.id;
-.print
-SELECT subject_kind, prov, count(*) AS n FROM doc_link GROUP BY 1, 2 ORDER BY 1, 2;
-.print
-SELECT count(*) AS doc_fts_rows FROM doc_fts;
-.print
-.print '## 4. Presentation'
-.print
-SELECT key, value FROM meta WHERE key IN ('owner_id', 'steward_repo', 'steward_commit', 'steward_config');
-.print
-SELECT json(value) AS steward FROM meta WHERE key = 'steward';
-.print
-SELECT j.key AS scope_key FROM meta m, json_each(m.value) j WHERE m.key = 'scope' ORDER BY 1;
-.print
-SELECT length(value) AS logo_bytes FROM meta WHERE key = 'logo';
-.print
-.print '## 5. Locator prefixes'
-.print
-.print 'Rule: the text before the first colon of the locator (the whole locator when it has none); for input.path, its first path segment.'
-.print
-SELECT 'holding_table' AS source, substr(locator, 1, instr(locator || ':', ':') - 1) AS prefix, count(*) AS n FROM holding_table GROUP BY 2
-UNION ALL SELECT 'holding_column', substr(locator, 1, instr(locator || ':', ':') - 1), count(*) FROM holding_column GROUP BY 2
-UNION ALL SELECT 'holding_mapping', substr(locator, 1, instr(locator || ':', ':') - 1), count(*) FROM holding_mapping GROUP BY 2
-UNION ALL SELECT 'holding_notice', substr(locator, 1, instr(locator || ':', ':') - 1), count(*) FROM holding_notice GROUP BY 2
-UNION ALL SELECT 'input.path', substr(path, 1, instr(path || '/', '/') - 1), count(*) FROM input GROUP BY 2
-ORDER BY 1, 2;
-.print
-.print '## 6. Free text that ships publicly'
-.print
-SELECT 'holding_column.reason' AS field, reason AS value, count(*) AS n FROM holding_column WHERE reason IS NOT NULL GROUP BY 2
-UNION ALL SELECT 'holding_column.follow_up', follow_up, count(*) FROM holding_column WHERE follow_up IS NOT NULL GROUP BY 2
-UNION ALL SELECT 'holding_table.reason', reason, count(*) FROM holding_table WHERE reason IS NOT NULL GROUP BY 2
-UNION ALL SELECT 'holding_mapping.caveat', caveat, count(*) FROM holding_mapping WHERE caveat IS NOT NULL GROUP BY 2
-ORDER BY 1, 3 DESC, 2;
-SQL
+uv run --no-project scripts/holdings_scope_check.py "$evidence/catalog/reg_meta_swecov.db" \
+  "$PWD" | tee "$evidence/scope-check.txt"
 ```
 
-The maintainer reads `disclosure-review.md` for anything that should not be public: a
-free-text value naming a person, a path into MONA, a count small enough to identify, a
-locator prefix outside the expected input names. **Stop until the maintainer clears
-disclosure.** Then re-check `$base_sha` against the local base file (it must be
-unchanged since 8a) and proceed.
+A failure stops the release. Fix the build or, when the item belongs in the paired
+catalog, add its meta key or size bound to the script in a reviewed PR; then rebuild
+from 8d. Then re-check `$base_sha` against the local base file (it must be unchanged
+since 8a) and proceed.
 
 #### 8i. Compress, checksum and upload both assets to the draft
 
-After verification, diff review, conformance and disclosure clearance:
+After verification, diff review, conformance and the scope check:
 
 ```sh
 [ "$(shasum -a 256 "$evidence/catalog/reg_meta.db" | cut -d' ' -f1)" = "$base_sha" ]
