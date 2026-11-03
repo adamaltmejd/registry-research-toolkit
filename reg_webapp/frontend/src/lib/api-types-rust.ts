@@ -498,6 +498,8 @@ export interface components {
             /** Format: int64 */
             bytes: number;
             doc: string;
+            /** @description The published document this text is taken from; `null` when unknown. */
+            document_title: string | null;
             excerpt: string;
             kind: string;
             licence: string;
@@ -508,6 +510,8 @@ export interface components {
         /** @description `shape.DocHit`. */
         DocHit: {
             doc: string;
+            /** @description The published document this text is taken from; `null` when unknown. */
+            document_title: string | null;
             heading: string | null;
             kind: string;
             /** Format: int64 */
@@ -939,6 +943,8 @@ export interface components {
             /** Format: int64 */
             bytes: number;
             doc: string;
+            /** @description The published document this text is taken from; `null` when unknown. */
+            document_title: string | null;
             kind: string;
             licence: string;
             /**
@@ -1364,7 +1370,10 @@ export interface components {
         };
         /** @description `shape.ValueSetRef`: a value set by its hash, with the names sources gave it. */
         ValueSetRef: {
-            /** @description The curated classification version's ref; `null` until a version is curated. */
+            /**
+             * @description The classification version whose content this set is, or whose codes contain it
+             *     for every segment curated to it; `null` when no single version is curated.
+             */
             classification: string | null;
             hash: string;
             hierarchical: boolean;

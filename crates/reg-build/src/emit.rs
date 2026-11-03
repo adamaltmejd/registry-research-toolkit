@@ -1049,8 +1049,63 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         );
     }
 
+    // A value set's classification comes from curation only (D29): the version whose
+    // content it is, or the one version its classified segments are curated to when its
+    // codes, sentinels aside, are that version's. Containment checks a link, never makes
+    // one; anything ambiguous stays unlinked and the segments keep their own versions.
+    let mut bound: BTreeMap<&str, BTreeSet<i64>> = BTreeMap::new();
+    for segment in catalog
+        .registers
+        .iter()
+        .flat_map(|r| &r.variables)
+        .flat_map(|v| &v.segments)
+    {
+        if let (Some(hash), Some(class)) = (&segment.valueset, &segment.classification) {
+            bound
+                .entry(hash.as_str())
+                .or_default()
+                .insert(classification_id(class));
+        }
+    }
+    let mut content: BTreeMap<&str, Vec<i64>> = BTreeMap::new();
+    let mut codes: BTreeMap<i64, BTreeSet<&str>> = BTreeMap::new();
+    for class in &catalog.classifications {
+        let cid = class_id[&(class.family.as_str(), class.version.as_str())];
+        content
+            .entry(class.valueset.as_str())
+            .or_default()
+            .push(cid);
+        if let Some((set, _)) = catalog.valuesets.get(&class.valueset) {
+            codes.insert(cid, set.items.iter().map(|i| i.code.as_str()).collect());
+        }
+    }
+    let class_link = |hash: &str, set: &ValueSet| -> Option<(i64, &'static str)> {
+        let own = content.get(hash).map_or(&[][..], Vec::as_slice);
+        match bound
+            .get(hash)
+            .map(|b| b.iter().copied().collect::<Vec<_>>())
+            .as_deref()
+        {
+            Some(&[cid]) if own.contains(&cid) => Some((cid, "equal")),
+            Some(&[cid]) => {
+                let sentinels = catalog.sentinels.get(hash);
+                set.items
+                    .iter()
+                    .filter(|i| !sentinels.is_some_and(|s| s.contains(&i.code)))
+                    .all(|i| codes.get(&cid).is_some_and(|c| c.contains(i.code.as_str())))
+                    .then_some((cid, "subset"))
+            }
+            None => match own {
+                &[cid] => Some((cid, "equal")),
+                _ => None,
+            },
+            Some(_) => None,
+        }
+    };
+
     for (hash, (set, names)) in &catalog.valuesets {
         let vid = valueset_id[hash.as_str()];
+        let link = class_link(hash, set);
         write_provenance(
             &mut rows,
             &ProvenanceSubject::ValueSet(hash.clone()),
@@ -1089,8 +1144,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str(hash.clone()),
                 Cell::Int(count(set.items.len())),
                 Cell::Int(i64::from(hierarchical)),
-                Cell::Null,
-                Cell::Null,
+                opt_int(link.map(|l| l.0)),
+                link.map_or(Cell::Null, |l| Cell::Str(l.1.into())),
             ],
         );
         for (i, item) in set.items.iter().enumerate() {
@@ -1238,6 +1293,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str(doc.hash.clone()),
                 Cell::Str(doc.kind.clone()),
                 Cell::Text(doc.title.clone()),
+                opt_text(doc.document_title.as_ref()),
                 Cell::Str(doc.licence.clone()),
                 Cell::Int(i64::try_from(doc.bytes).map_err(|e| e.to_string())?),
                 opt_str(doc.url.as_ref()),
@@ -1432,7 +1488,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             ],
         );
     }
-    // Tables fill in schema order, which declares each table after those it references.
+    // Tables fill in schema order, which declares each table after those it references
+    // (except `valueset.class_version_id`, deferred to the one commit).
     // Row order within a table does not reach the file: `VACUUM INTO` rewrites every
     // table in key order.
     let order: Vec<&str> = others
@@ -1449,6 +1506,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     if let Some(table) = rows.tables.keys().find(|t| !order.contains(t)) {
         return Err(format!("{table}: not a table of schema.sql"));
     }
+    let tx = db.transaction().map_err(sql)?;
     for table in order {
         let Some(table_rows) = rows.tables.get(table) else {
             continue;
@@ -1470,20 +1528,17 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             })
             .collect();
         let width = values[0].len();
-        let tx = db.transaction().map_err(sql)?;
-        {
-            let placeholders = vec!["?"; width].join(",");
-            let mut insert = tx
-                .prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))
-                .map_err(sql)?;
-            for row in &values {
-                insert
-                    .execute(rusqlite::params_from_iter(row))
-                    .map_err(|e| format!("{table}: {e}"))?;
-            }
+        let placeholders = vec!["?"; width].join(",");
+        let mut insert = tx
+            .prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))
+            .map_err(sql)?;
+        for row in &values {
+            insert
+                .execute(rusqlite::params_from_iter(row))
+                .map_err(|e| format!("{table}: {e}"))?;
         }
-        tx.commit().map_err(sql)?;
     }
+    tx.commit().map_err(sql)?;
     for statement in indexes {
         db.execute_batch(statement).map_err(sql)?;
     }

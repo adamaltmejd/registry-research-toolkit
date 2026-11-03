@@ -66,6 +66,15 @@ SELECT v.id FROM valueset v JOIN (SELECT valueset_id, COUNT(*) n FROM vs_item GR
   ON c.valueset_id = v.id WHERE c.n <> v.n_items;
 SELECT i.valueset_id, i.ord FROM vs_item i WHERE i.parent_ord IS NOT NULL AND NOT EXISTS (
   SELECT 1 FROM vs_item p WHERE p.valueset_id = i.valueset_id AND p.ord = i.parent_ord);
+-- a value set's classification link: equal is the version's content; subset has no
+-- code outside the version but its sentinels
+SELECT v.id FROM valueset v JOIN class_version c ON c.id = v.class_version_id
+WHERE v.class_match = 'equal' AND c.valueset_id <> v.id;
+SELECT DISTINCT v.id FROM valueset v
+  JOIN class_version c ON c.id = v.class_version_id
+  JOIN vs_item i ON i.valueset_id = v.id
+WHERE v.class_match = 'subset' AND i.sentinel = 0 AND NOT EXISTS (
+  SELECT 1 FROM vs_item k WHERE k.valueset_id = c.valueset_id AND k.code_text = i.code_text);
 
 -- Class-version periods describe book existence. Same-family overlaps are allowed;
 -- applicability belongs to exact-version occurrence bindings.

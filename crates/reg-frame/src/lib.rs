@@ -338,6 +338,10 @@ pub struct Doc {
     #[serde(rename = "doc_kind")]
     pub kind: String,
     pub title: String,
+    /// The title of the published document this text is taken from; a pdf's is its
+    /// `title`. `None` when the source is unknown.
+    #[serde(default)]
+    pub document_title: Option<String>,
     pub licence: String,
     /// The original file's size.
     pub bytes: u64,

@@ -6,6 +6,7 @@
       "/data/0": {
         "doc": "ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9",
         "title": "Bilaga",
+        "document_title": "Bilaga",
         "kind": "pdf",
         "licence": "CC BY 4.0",
         "url": null,
@@ -13,6 +14,7 @@
         "page": 3
       },
       "/data/*/title": ["Bilaga", "Registerbeskrivning", "Registerbeskrivning"],
+      "/data/*/document_title": ["Bilaga", "Beskrivning av Dokumentregistret", "Beskrivning av Dokumentregistret"],
       "/data/*/page": [3, 0, 2]
     }
   },

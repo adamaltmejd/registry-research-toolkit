@@ -299,6 +299,7 @@
         {
           "doc": "4b569dc568152cfbde4665f5e5394ff3c81ca1bb79d822dcb80013766f9eebca",
           "title": "Measure source notes",
+          "document_title": null,
           "kind": "parsed",
           "licence": "CC0",
           "url": "https://example.org/measure",

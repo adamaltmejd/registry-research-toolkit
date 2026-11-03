@@ -16,7 +16,8 @@ pub struct ValueSetRef {
     n_items: i64,
     hierarchical: bool,
     names: Vec<String>,
-    /// The curated classification version's ref; `null` until a version is curated.
+    /// The classification version whose content this set is, or whose codes contain it
+    /// for every segment curated to it; `null` when no single version is curated.
     #[schema(required = true)]
     classification: Option<String>,
 }

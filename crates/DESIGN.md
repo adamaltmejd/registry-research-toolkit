@@ -410,21 +410,26 @@ Accepting one requires reviewed curation and a premise lock.
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
-  version follows occurrences into segments and orders. Variable `tags` applies as
-  normalized membership, independently of identity, binding, ordering and peers. Table
-  and occurrence `role` values use one validated vocabulary for each entity kind.
-  `unit_type` populates the table's unit-type reference; variables do not inherit it.
-  Table setters require a source-stated or asserted table, not a synthesized implicit
-  table. Table and release `name` changes preserve their public ids; variable names use
-  `label`. Variable `synonyms` enrich search labels without adding delivery aliases.
-  `set sentinels` at an occurrence or variable address applies after value-set overrides
-  to the published hashes, including population alternatives. Sentinel codes are
-  set-wide: `vs_item.sentinel` changes for every reference to that shared set. Missing
-  codes in an explicit setter and disagreeing local declarations for the same hash
-  refuse at their authoring locations. Classification inventory `sentinel_codes` names
-  known non-canonical codes in columns bound to that exact version, not codes in its
-  canonical book. It marks the listed codes present in each bound occurrence's value
-  sets, including population alternatives; declarations absent from all bound sets are
+  version follows occurrences into segments and orders. A value set links to one version
+  only from curation (clean-room D29; #2082): `equal` when it is that version's content,
+  or `subset` when every segment curated to a version names the same one and the set's
+  codes, sentinels aside, are that version's. Several versions, a binding its codes do
+  not support, or content shared by several unbound versions leave the link unset;
+  containment never makes one. Variable `tags` applies as normalized membership,
+  independently of identity, binding, ordering and peers. Table and occurrence `role`
+  values use one validated vocabulary for each entity kind. `unit_type` populates the
+  table's unit-type reference; variables do not inherit it. Table setters require a
+  source-stated or asserted table, not a synthesized implicit table. Table and release
+  `name` changes preserve their public ids; variable names use `label`. Variable
+  `synonyms` enrich search labels without adding delivery aliases. `set sentinels` at an
+  occurrence or variable address applies after value-set overrides to the published
+  hashes, including population alternatives. Sentinel codes are set-wide:
+  `vs_item.sentinel` changes for every reference to that shared set. Missing codes in an
+  explicit setter and disagreeing local declarations for the same hash refuse at their
+  authoring locations. Classification inventory `sentinel_codes` names known
+  non-canonical codes in columns bound to that exact version, not codes in its canonical
+  book. It marks the listed codes present in each bound occurrence's value sets,
+  including population alternatives; declarations absent from all bound sets are
   counted, not refused. Classification lists sharing a bound set are additive. A listed
   code that is canonical in any version bound to that set, including the declaring
   version, refuses at the binding and inventory locations. The bits remain set-wide, and
@@ -890,7 +895,10 @@ overlapping curated overrides are refused at both locations.
   inputs repository, pinned like any input. The reader states each subject in source
   coordinates (a register handle or name); the link stage resolves it against the
   published ids. An unresolved subject is a `link:` warning counted as
-  `doc_subject_unresolved` in the build report, and the document stays searchable.
+  `doc_subject_unresolved` in the build report, and the document stays searchable. A
+  parsed markdown text is titled by its frontmatter (often a section heading) and names
+  the published document it comes from in `document_title`, the sources file's title
+  (#2081); a pdf's `document_title` is its own title.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,
