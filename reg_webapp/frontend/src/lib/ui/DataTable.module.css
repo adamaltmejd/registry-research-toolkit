@@ -120,6 +120,7 @@
   .table td:not(.first)::before {
     content: attr(data-label);
     display: block;
+    font-family: var(--font-ui);
     color: var(--text-muted);
     font-size: var(--micro-label-size);
     font-weight: var(--micro-label-weight);

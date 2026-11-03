@@ -35,7 +35,7 @@ const read = () => value;
 export type BrowseScope = "steward" | "reference";
 let scope: BrowseScope = "steward";
 
-/** The paired browser starts with held metadata; global requests omit scope. */
+/** Paired variable searches start with held matches; global requests omit scope. */
 export const browseScope = {
   set(next: string): void {
     if ((next !== "steward" && next !== "reference") || next === scope) return;

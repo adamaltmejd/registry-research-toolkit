@@ -149,9 +149,9 @@ spacing:
   6: 2rem
   content-max: 80rem
   breakpoint-narrow: 48rem
-  col-browse: 260px
+  col-browse: 220px
   col-browse-max: 340px
-  col-list: 230px
+  col-list: 200px
   col-list-max: 300px
   shell-max: 120rem
   lane-height: 58px
@@ -427,13 +427,13 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   columns, findings, then source documents. On a variable page, source and provenance
   follows the documents. Padding `spacing.5`. A variable group page carries the Group
   kind mark and a member-of line naming its register, with constant facets shown once in
-  the facets row. Members appear as a member × axis table until `LaneGraph` lanes land,
-  with axes in curated order and members in API order; only varying axes are columns,
-  and groups without varying axes use a plain list. Paired variable and table pages show
-  a Held panel grouped by physical table, with delivered column chips, periods and
-  plain-word placement details, or an EmptyState when nothing is held. Steward
-  documentation appears in its own panel when supplied by coverage; neither panel
-  appears while its data is loading.
+  the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
+  order: a lane is titled by its varying facets in curated axis order, with the member's
+  name on the line under it, and by the name alone when no axis varies. Paired variable
+  and table pages show a Held panel grouped by physical table, with delivered column
+  chips, periods and plain-word placement details, or an EmptyState when nothing is
+  held. Steward documentation appears in its own panel when supplied by coverage;
+  neither panel appears while its data is loading.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -572,21 +572,23 @@ Time is the axis every relation is drawn on.
   dot (#1826). Adding starts from the variable page, where the coverage `LaneGraph`, add
   window and add bar show which tables and years are added.
 
-- A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
-  facet), columns as spans, and relations as arrows: solid for succession, dashed for
-  rename. A succession arrow between overlapping spans drops at the edge's effective
-  year. A lane's title joins its facet values with a comma, and its name opens the
-  variable; its line under the name is plain words, never a slug: the register when it
-  differs from the page's, or what tells two lanes of one name apart. A read-only
-  neighbour lane still shows its columns' "in project" state. A span is a checkbox for
-  the add bar, and hovering it highlights its edges. On `/project` a column's findings
-  sit across its lane, under its spans. It shares the page's axis with the `Timeline`.
-  It draws the study window's band and, over it, an add window that differs, as on the
-  variable page, with the axis years on the add window's bounds when one is drawn. Its
-  legend keys only the marks drawn: the plain chip is "Click to select" and the filled
-  one "In project"; a chip outside the window needs no key. Its add bar shows only while
-  a change is staged. On a variable page the `LaneGraph` is the `Timeline` (above).
-  Don't draw free-form node graphs; the time axis is the information.
+- A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
+  member order), columns as spans, and relations as arrows: solid for succession, dashed
+  for rename. A succession arrow between overlapping spans drops at the edge's effective
+  year. A group lane's title joins its varying facet values with a comma, falling back
+  to the variable's name, and its name opens the variable; its line under the name is
+  plain words, never a slug: the register when it differs from the page's, the
+  variable's name under a facet title, or what tells two lanes of one name apart (their
+  column names); it also describes the link. A read-only neighbour lane still shows its
+  columns' "in project" state. A span is a checkbox for the add bar, and hovering it
+  highlights its edges. On `/project` a column's findings sit across its lane, under its
+  spans. It shares the page's axis with the `Timeline`. It draws the study window's band
+  and, over it, an add window that differs, as on the variable page, with the axis years
+  on the add window's bounds when one is drawn. Its legend keys only the marks drawn:
+  the plain chip is "Click to select" and the filled one "In project"; a chip outside
+  the window needs no key. Its add bar shows only while a change is staged. On a
+  variable page the `LaneGraph` is the `Timeline` (above). Don't draw free-form node
+  graphs; the time axis is the information.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
@@ -671,19 +673,20 @@ not grow new visual language meanwhile.
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
   verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
   "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph. Its slot is as wide as the widest verdict, so the banner
-  keeps one size while validation runs. A verdict with findings (Warnings, Errors, Order
-  blocked) is a link, in its status hue with the link's `accent` rule, to /project,
-  where the first non-empty findings group scrolls into view and takes focus; Valid and
-  Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
-  never a status hue. The study window is the period picker: an inline two-thumb RAC
-  `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn as
-  the Timeline's study-window band (see Time: `accent-bg` between `accent` bounds, the
-  thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
-  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
-  With no project open it is the same box, empty and untinted with a `border` leading
-  bar, holding a `default` "Create a project" Button, which starts a project and opens
-  it, and nothing in the catalog is tinted.
+  "Checking" with no glyph; a draft with no sources yet is the same plain "Empty", never
+  an error, since nothing has gone wrong. Its slot is as wide as the widest verdict, so
+  the banner keeps one size while validation runs. A verdict with findings (Warnings,
+  Errors, Order blocked) is a link, in its status hue with the link's `accent` rule, to
+  /project, where the first non-empty findings group scrolls into view and takes focus;
+  Valid and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
+  "unsaved", never a status hue. The study window is the period picker: an inline
+  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
+  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
+  `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
+  Clear keep one line. With no project open it is the same box, empty and untinted with
+  a `border` leading bar, holding a `default` "Create a project" Button, which starts a
+  project and opens it, and nothing in the catalog is tinted.
 - **Findings** are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
@@ -748,7 +751,9 @@ not grow new visual language meanwhile.
   empty; the next step is the description and the button, never packed into the title.
   `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
   crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
-  respects reduced motion. A loading region carries no "Loading…" line beside it.
+  respects reduced motion. A loading region carries no "Loading…" line beside it. A
+  region that would otherwise show only its legend (a source card's timelines) shows one
+  info `StatusRow`, "Loading coverage…", in place of the legend and graph.
 
 ## Do's and Don'ts
 

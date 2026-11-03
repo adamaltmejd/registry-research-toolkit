@@ -353,7 +353,7 @@ cadence, period}], variables [{fqid, name, period}], unplaced [release names]), 
 optional description or provider-marked source_definition {period, text}, register, period, tables [fqid], sets/tags [{fqid, name}], \
 optional evidence {texts, source_only, spellings, statements, documents}), \
 set (name, optional description, register, ordered axes [{id, label}], \
-members [{fqid, name, facets [{axis, value, label}]}] sorted by axis values then name, \
+members [{fqid, name, columns [{table, spelling, periods [Period]}], facets [{axis, value, label}]}] sorted by axis values then name, \
 tags [{fqid, name}] unioned across members), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \

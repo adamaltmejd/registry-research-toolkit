@@ -205,54 +205,34 @@ export function TableView({
         {releases.length === 0 ? (
           <EmptyState title="No releases recorded for this table." />
         ) : (
-          <Disclosure className={styles.disclosure}>
-            {({ isExpanded }) => (
-              <>
-                <Heading level={3} className={styles.disclosureHeading}>
-                  <Button slot="trigger" className={styles.disclosureButton}>
-                    <TreeChevron />
-                    <span>Releases</span>
-                  </Button>
-                </Heading>
-                <DisclosurePanel
-                  className={`motion-disclose ${isExpanded ? "open" : ""}`}
-                >
-                  <div>
-                    {isExpanded && (
-                      <DataTable
-                        columns={[
-                          { key: "edition", label: "Edition" },
-                          { key: "name", label: "Release" },
-                          { key: "period", label: "Period", mono: true },
-                          { key: "primary", label: "Primary" },
-                          { key: "qualifier", label: "Qualifier" },
-                          { key: "parse_state", label: "Parse state" },
-                        ]}
-                        rows={releases}
-                        getRowId={(row) => row.name}
-                        renderCell={(row, column) => {
-                          switch (column.key) {
-                            case "period":
-                              return row.period
-                                ? catalogPeriodLabel(row.period)
-                                : "Not stated";
-                            case "primary":
-                              return row.primary === null
-                                ? "Not stated"
-                                : row.primary
-                                  ? "Yes"
-                                  : "No";
-                            default:
-                              return String(row[column.key] || "Not stated");
-                          }
-                        }}
-                      />
-                    )}
-                  </div>
-                </DisclosurePanel>
-              </>
-            )}
-          </Disclosure>
+          <DataTable
+            columns={[
+              { key: "edition", label: "Edition" },
+              { key: "name", label: "Release" },
+              { key: "period", label: "Period", mono: true },
+              { key: "primary", label: "Primary" },
+              { key: "qualifier", label: "Qualifier" },
+              { key: "parse_state", label: "Parse state" },
+            ]}
+            rows={releases}
+            getRowId={(row) => row.name}
+            renderCell={(row, column) => {
+              switch (column.key) {
+                case "period":
+                  return row.period
+                    ? catalogPeriodLabel(row.period)
+                    : "Not stated";
+                case "primary":
+                  return row.primary === null
+                    ? "Not stated"
+                    : row.primary
+                      ? "Yes"
+                      : "No";
+                default:
+                  return String(row[column.key] || "Not stated");
+              }
+            }}
+          />
         )}
       </Panel>
       <ScopedDataWarnings fqid={node.fqid} names={names} />

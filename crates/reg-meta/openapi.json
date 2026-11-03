@@ -4274,6 +4274,31 @@
           }
         }
       },
+      "ShowSetColumn": {
+        "type": "object",
+        "description": "One (table, spelling) a set member has segments in.",
+        "required": [
+          "table",
+          "spelling",
+          "periods"
+        ],
+        "properties": {
+          "periods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            },
+            "description": "The column's segment periods, in time order."
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string",
+            "description": "The table's fqid."
+          }
+        }
+      },
       "ShowSetFacet": {
         "type": "object",
         "required": [
@@ -4298,9 +4323,17 @@
         "required": [
           "fqid",
           "name",
+          "columns",
           "facets"
         ],
         "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowSetColumn"
+            },
+            "description": "The member's columns, ordered by table then spelling."
+          },
           "facets": {
             "type": "array",
             "items": {

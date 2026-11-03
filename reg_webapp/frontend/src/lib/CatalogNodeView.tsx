@@ -75,7 +75,7 @@ export function CatalogNodeView({
         />
       );
     case "set":
-      return <SetView node={node} />;
+      return <SetView key={node.fqid} node={node} context={context} />;
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>

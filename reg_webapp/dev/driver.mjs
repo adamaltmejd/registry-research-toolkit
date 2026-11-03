@@ -272,13 +272,11 @@ async function browsePagesCase(page, shoot) {
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
   // Stacked cells include their CSS label prefix in the accessible name.
   // Match the value at the end while retaining the table-cell boundary.
-  const releases = main.getByRole("button", { name: "Releases", exact: true });
-  check((await releases.getAttribute("aria-expanded")) === "false", "releases must start collapsed");
-  check((await main.getByRole("cell", { name: /fam 2021$/ }).count()) === 0, "collapsed releases mounted their entries");
+  // One "Releases" heading: the panel's own, with the entries always shown.
+  check((await main.getByRole("heading", { name: "Releases", exact: true }).count()) === 1, "Releases heading is duplicated");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
   const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
-  await releases.click();
   await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
   await main.getByRole("cell", { name: /^(?:Primary )?Yes$/ }).first().waitFor();
   await code.click();
@@ -414,11 +412,14 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
-// Browser boundary: group links, curated axis/member order and member navigation.
-// Fails if groups lose their namespaced route, axes are sorted alphabetically,
-// facet labels become raw values, or the synthetic set ancestor becomes a link.
-// Expected names and order come from webapp-dev's authored set and member facets;
-// existing browse cases do not open a group.
+// Browser boundary: group links, member lanes and member navigation.
+// Fails if groups lose their namespaced route, members leave API (authored)
+// order, a lane title stops joining its varying facets in curated axis order
+// (unit, then measure), facet labels become raw values, the member name stops
+// telling lanes apart, or the synthetic set ancestor becomes a link.
+// Expected titles and order come from webapp-dev's authored set and member
+// facets (an unlabelled unit shows its value) in the member order the
+// show-set conformance case pins; existing browse cases do not open a group.
 async function browseGroupCase(page, shoot) {
   const main = page.getByRole("main");
   await main.getByRole("link", { name: "Inkomstmått", exact: true }).click();
@@ -426,14 +427,20 @@ async function browseGroupCase(page, shoot) {
   await settled(page);
   await main.getByRole("heading", { name: "Inkomstmått", level: 1, exact: true }).waitFor();
   await main.getByText("Inkomst före och efter skatt för personer och hushåll.", { exact: true }).waitFor();
-  const headers = await main.getByRole("columnheader").allTextContents();
-  check(JSON.stringify(headers) === JSON.stringify(["Variable", "Enhet", "Mått"]), "group axes lost their authored order");
-  await main.getByRole("row").nth(1).getByRole("link", { name: "Förvärvsinkomst, hushåll", exact: true }).waitFor();
-  await main.getByRole("cell", { name: /^(?:Mått )?Efter skatt$/ }).first().waitFor();
-  await main.locator('a[href="/catalog/demo/bas/net-household"]').waitFor();
+  const lanes = main.getByRole("list", { name: "Group members", exact: true });
+  await lanes.getByRole("link").first().waitFor();
+  const titles = await lanes.getByRole("link").allTextContents();
+  check(JSON.stringify(titles) === JSON.stringify([
+    "household, Före skatt",
+    "household, Efter skatt",
+    "person, Före skatt",
+    "person, Efter skatt",
+  ]),
+    `group lanes lost authored order or facet titles: ${JSON.stringify(titles)}`);
+  await lanes.getByText("Disponibel inkomst, hushåll", { exact: true }).waitFor();
   check(await main.locator('nav a[href="/catalog/set"]').count() === 0, "group breadcrumb links to a synthetic set ancestor");
   await shoot("browse-group");
-  await main.getByRole("link", { name: "Disponibel inkomst, hushåll", exact: true }).click();
+  await lanes.locator('a[href="/catalog/demo/bas/net-household"]').click();
   await page.waitForURL("**/catalog/demo/bas/net-household");
 }
 

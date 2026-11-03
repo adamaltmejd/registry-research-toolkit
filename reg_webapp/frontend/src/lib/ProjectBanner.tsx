@@ -26,6 +26,7 @@ import {
 
 const VERDICTS = {
   checking: { label: "Checking", glyph: "", findings: false },
+  empty: { label: "Empty", glyph: "", findings: false },
   ok: { label: "Valid", glyph: "✓", findings: false },
   warnings: { label: "Warnings", glyph: "▲", findings: true },
   errors: { label: "Errors", glyph: "✕", findings: true },
@@ -65,15 +66,17 @@ export function ProjectBanner({
     );
   const status = !draft
     ? "errors"
-    : orderBlocked
-      ? "blocked"
-      : validation.loading
-        ? "checking"
-        : validation.error || !validation.data?.ok
-          ? "errors"
-          : validation.data.issues.some((issue) => issue.level === "warning")
-            ? "warnings"
-            : "ok";
+    : draft.sources.length === 0
+      ? "empty"
+      : orderBlocked
+        ? "blocked"
+        : validation.loading
+          ? "checking"
+          : validation.error || !validation.data?.ok
+            ? "errors"
+            : validation.data.issues.some((issue) => issue.level === "warning")
+              ? "warnings"
+              : "ok";
   const verdict = VERDICTS[status];
   const sources = draft?.sources.length ?? 0;
   const columns =
