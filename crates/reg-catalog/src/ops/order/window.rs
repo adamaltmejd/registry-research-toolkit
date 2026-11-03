@@ -209,21 +209,6 @@ fn held_id(conn: &Connection, pid: &str) -> Result<Option<i64>, Error> {
         .optional()?)
 }
 
-/// The first `continues` successor the attached holdings database states for its
-/// variable `id`.
-fn held_successor(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
-    Ok(conn
-        .query_row(
-            "SELECT v.pid FROM held.relation r JOIN held.variable v ON v.id = r.subject_id
-             WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
-               AND r.object_kind = 'variable' AND r.object_id = ?1
-             ORDER BY v.pid LIMIT 1",
-            [id],
-            |row| row.get(0),
-        )
-        .optional()?)
-}
-
 /// A class version of the attached holdings database, by exact public id.
 fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Error> {
     Ok(conn
@@ -276,18 +261,11 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         // (negative id) on a reference table is refused, not followed; a source whose
         // table only the holdings database defines runs on that origin and does follow.
         // Make `successor.rs` origin-aware when a steward needs this.
-        if let Some(successor) = held_successor(scope.conn, -variable.id)? {
-            let mut issue = at.issue(
-                IssueLevel::Error,
-                "variable_replaced",
-                scope.table,
-                None,
-                format!(
-                    "{} is continued by {successor} in steward metadata; following it on a reference table is not supported, so order each variable on its own.",
-                    variable.pid
-                ),
+        if let Some(mut issue) = replaced(&at)?.into_iter().next() {
+            issue.level = IssueLevel::Error;
+            issue.message.push_str(
+                "; following it on a reference table is not supported, so order each variable on its own.",
             );
-            issue.successor_fqid = Some(successor);
             outcome.findings.push(issue);
             return Ok(outcome);
         }
@@ -659,21 +637,26 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
 fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let requested = hull(scope.requested);
+    // A variable only the holdings database defines states its succession there.
+    let (origin, id) = if at.variable.id < 0 {
+        ("held.", -at.variable.id)
+    } else {
+        ("", at.variable.id)
+    };
     let rows: Vec<(String, Option<i64>, Option<String>)> = scope
         .conn
-        .prepare(
+        .prepare(&format!(
             "SELECT v.pid, r.at_start, c.body
-             FROM relation r JOIN variable v ON v.id = r.subject_id
-               LEFT JOIN text c ON c.id = r.caveat_text
+             FROM {origin}relation r JOIN {origin}variable v ON v.id = r.subject_id
+               LEFT JOIN {origin}text c ON c.id = r.caveat_text
              WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
                AND r.object_kind = 'variable' AND r.object_id = ?1
                AND (r.at_start IS NULL OR r.at_start <= ?2)
-             ORDER BY r.at_start, v.pid",
-        )?
-        .query_map(
-            rusqlite::params![at.variable.id, day(&requested.1)],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-        )?
+             ORDER BY r.at_start, v.pid"
+        ))?
+        .query_map(rusqlite::params![id, day(&requested.1)], |row| {
+            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
+        })?
         .collect::<rusqlite::Result<_>>()?;
     Ok(rows
         .into_iter()

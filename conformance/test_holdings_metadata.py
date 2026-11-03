@@ -288,8 +288,10 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             for f in files.json()["data"]["files"]
         ] == minted["files"]
         # Fails if a steward-stated successor of a steward-only variable on a
-        # reference table is silently not followed (ordering clips instead).
+        # reference table is silently not followed (ordering clips instead): the
+        # 2015 successor falls inside the requested 2014..2016.
         follow = json.loads(json.dumps(minted["project"]))
+        follow["sources"][0]["period"]["to"] = 2016
         follow["sources"][0]["bindings"][0]["follow_successor"] = True
         order = pool.client(artifact_env(output)).post(
             "/api/project/order", json=follow
