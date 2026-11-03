@@ -2637,7 +2637,7 @@ def rebuilt_placements(db):
 def rebuilt_status(disposition, placement) -> str:
     if placement:
         return "placed"
-    return "held" if disposition in ("hold", "unmap") else "unmatched"
+    return "held" if disposition in ("hold", "unmap") else "unplaced"
 
 
 def rebuilt_text(db, sql):
@@ -2731,12 +2731,12 @@ def rebuilt(args) -> int:
         "",
         "## Census placement",
         "",
-        "Placed: at least one holding_mapping row. Held: hold/unmap disposition, no mapping. Unmatched: candidate, no mapping.",
+        "Placed: at least one holding_mapping row. Held: hold/unmap disposition, no mapping. Unplaced: candidate (no hold/unmap), no mapping; a superset of the meta key unmatched_columns, which counts only candidates whose authored mapping found no owner.",
         "",
-        "| side | columns | placed | held | unmatched |",
+        "| side | columns | placed | held | unplaced |",
         "|---|---:|---:|---:|---:|",
         *(
-            f"| {side} | {sum(c.values())} | {c['placed']} | {c['held']} | {c['unmatched']} |"
+            f"| {side} | {sum(c.values())} | {c['placed']} | {c['held']} | {c['unplaced']} |"
             for side, c in totals.items()
         ),
         "",

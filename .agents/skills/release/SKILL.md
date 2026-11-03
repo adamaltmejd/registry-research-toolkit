@@ -297,14 +297,17 @@ decides, and the finding is recorded in the notes.
 
 #### 8g. Compare the holdings census with the previous paired release
 
-From 0.72.0 on both sides are built by `reg-build holdings`. Compare against the previous
-paired release's `reg_meta_swecov.db`: download its `reg_meta_swecov.db.zst` to a separate
-directory (`$old`), verify its compressed SHA-256 against GitHub's asset digest and
-decompress it. The `rebuilt` mode refuses a holdings schema mismatch (`PRAGMA user_version`
-or the `schema_version` meta key) and names it. It reports census placement per column
-(placed, held, unmatched and the changed placements by old to new `table_pid`),
-reader-visible text changes by kind (bodies, not ids) and finding deltas by code. Details
-go to `.local/` or the evidence directory only; stdout carries aggregate counts.
+From 0.72.0 on both sides are built by `reg-build holdings`. The baseline (`$old`)
+depends on the holdings schema. When it moved since the previous release, the baseline
+is the previous release's steward pin recompiled with this release's binary against this
+release's base catalog, into a separate directory. Otherwise it is the previous paired
+release's `reg_meta_swecov.db`: download its `reg_meta_swecov.db.zst` to a separate
+directory, verify its compressed SHA-256 against GitHub's asset digest and decompress
+it. The `rebuilt` mode refuses a holdings schema mismatch (`PRAGMA user_version` or the
+`schema_version` meta key) and names it. It reports census placement per column (placed,
+held, unplaced and the changed placements by old to new `table_pid`), reader-visible
+text changes by kind (bodies, not ids) and finding deltas by code. Details go to
+`.local/` or the evidence directory only; stdout carries aggregate counts.
 
 ```sh
 uv run --no-project scripts/rebuild_compare.py rebuilt --old-db "$old/reg_meta_swecov.db" \
