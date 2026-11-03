@@ -253,21 +253,6 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     Ok(serde_json::to_value(shown).expect("Show serializes"))
 }
 
-/// SWECOV steward registers that are compile scaffolding, not data: columns the
-/// steward compile could not place on a global variable. Left out of provider
-/// listings (and so the browse tree); links and search still reach them.
-// simplify: hard-coded because nothing in the artifact marks them; delete when the
-// steward places these columns on their source registers (#2134 step 2, 0.73.0).
-const STEWARD_SCAFFOLD: [&str; 7] = [
-    "swecov/received-row-keys",
-    "swecov/scb-agi-delivery",
-    "swecov/scb-agi-slots",
-    "swecov/scb-geography-delivery",
-    "swecov/scb-innovation-foretag-current-coding",
-    "swecov/sos-bu-current-coding",
-    "swecov/sos-par-slots",
-];
-
 /// Steward mode: the registers and providers with an accepted placement. A
 /// placement names its table by public id, in either origin.
 struct Held {
@@ -360,7 +345,6 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 .filter(|r| !known.contains(&r.fqid)),
         );
         registers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        registers.retain(|r| !STEWARD_SCAFFOLD.contains(&r.fqid.as_str()));
         let held = Held::read(&base, &extra)?;
         for r in &mut registers {
             r.held = Some(held.registers.contains(&r.fqid));
