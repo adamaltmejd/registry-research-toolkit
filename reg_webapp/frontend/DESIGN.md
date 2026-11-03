@@ -548,7 +548,9 @@ Time is the axis every relation is drawn on.
   variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
   coding change as a `warn` mark; the variables a succession reaches are further lanes
   in time order, with their arrows. A line under the drawing says plainly that clicking
-  a column ticks it, and there is no second graph on the page.
+  a column ticks it, and there is no second graph on the page. Succession reaches one
+  hop of read-only lanes, with arrows from predecessor to successor and each neighbour's
+  name linking to its variable page.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable

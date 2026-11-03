@@ -597,6 +597,51 @@ async function browseVariableCase(page, shoot) {
   check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
 }
 
+// Browser boundary over webapp-dev's undated Antal succession and its caveat.
+// Fails if the graph filter is lost, succession lanes/legend disappear, or a
+// neighbour becomes selectable. Existing browse cases do not check succession.
+// The two focus columns and neighbour href come from webapp-dev.jsonl; the
+// project window keeps both focus columns available, and names come from the page.
+async function variableSuccessionCase(page, shoot) {
+  const main = page.getByRole("main");
+  await open(page, "/project");
+  await settled(page);
+  const fixture = JSON.parse(readFileSync(new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  ), "utf8"));
+  fixture.window = { from: 2021, to: 2022 };
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({
+    name: "succession-window.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await open(page, "/catalog/demo/hush");
+  await settled(page);
+  const graphRequests = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.startsWith("/api/graph/")) {
+      graphRequests.push(request.url());
+    }
+  });
+  await main.locator('a[href="/catalog/demo/hush/antal"]').click();
+  await page.waitForURL("**/catalog/demo/hush/antal");
+  await settled(page);
+  check(graphRequests.length === 1, "the variable must issue exactly one graph request");
+  check(new URL(graphRequests[0]).searchParams.get("kind") === "continues",
+    "the variable graph must request only succession relations");
+  const lanes = main.getByRole("list", { name: "Variable columns", exact: true });
+  const neighbour = lanes.locator('a[href="/catalog/demo/hush/antalgammal"]');
+  await neighbour.waitFor();
+  check((await neighbour.innerText()).trim().length > 0, "the neighbour lane lost its variable name");
+  await main.getByText("Succeeded by (definition change)", { exact: true }).waitFor();
+  check(await lanes.getByRole("checkbox").count() === 2,
+    "only the focus variable's two columns may be selectable");
+  await shoot("variable-succession");
+}
+
 // Browser boundary over webapp-dev's kon and bransch value sets. Fails if
 // variable disclosures lose their codes, q stops reaching the server, search
 // leaves unrelated codes visible, or hierarchy expansion/flat search loses its
@@ -715,6 +760,11 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 const scenarios = {
+  "variable-succession": {
+    shots: 1,
+    route: "/catalog/demo/hush",
+    run: variableSuccessionCase,
+  },
   "linked-documents": {
     shots: 2,
     route: "/catalog/demo/bas",

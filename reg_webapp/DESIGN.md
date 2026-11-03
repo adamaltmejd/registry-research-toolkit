@@ -36,10 +36,12 @@ the candidate before the existing project store writes its sources. Already-boun
 columns show their in-project state without a checkbox. Source cards author binding
 type, classification pin, removal and source period through checked candidates and the
 same sources write path. Each table supplies a coverage row over its binding lanes on
-one shared data axis. Stored periods are never narrowed on load. Succession lanes remain
-deferred. Register-page row ticks lazily read and add all eligible delivery columns in
-the study window through the same checked candidate and one sources write, without
-topping up variables already bound in any source.
+one shared data axis. Stored periods are never narrowed on load. Variable pages read one
+hop of succession relations into read-only neighbour lanes on the same timeline, with
+arrows from predecessor to successor and names linking to their variable pages.
+Register-page row ticks lazily read and add all eligible delivery columns in the study
+window through the same checked candidate and one sources write, without topping up
+variables already bound in any source.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
