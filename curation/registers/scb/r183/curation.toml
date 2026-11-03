@@ -2131,181 +2131,181 @@ evidence = "#2102 same-label cluster 'Verksamhetsenhetens identitetsnummer' (4 v
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v1350' and label = 'Aktuellt antal anställda, storleksklass enligt statistikens synsätt'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v1350'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v1454' and label = 'Verksamhetsenhetens identitetsnummer (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v1454'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v19052' and label = 'Näringsgren för statistiken'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v19052'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2297' and label = 'Undersökningsomgång'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2297'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2325' and label = 'Urval'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2325'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2463' and label = 'Undersökningsår'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2463'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2466' and label = 'Funktionell bransch'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2466'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2467' and label = 'Institutionell bransch'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2467'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2483' and label = 'Main Industrial Grouping'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2483'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2783' and label = 'Investeringar, verkställda, ny-, till- och ombyggnad'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2783'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2784' and label = 'Investeringar, verkställda, bostäder'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2784'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2785' and label = 'Investeringar, verkställda, övriga bygg- och anläggningar'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2785'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2786' and label = 'Investeringar, verkställda, maskiner, inventarier'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2786'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2788' and label = 'Investeringar, verkställda, transportmedel, bilar'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2788'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2789' and label = 'Investeringar, verkställda, transportmedel, bussar'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2789'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2790' and label = 'Investeringar, verkställda, transportmedel, rullande spårbunden materiel'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2790'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2791' and label = 'Investeringar, verkställda, transportmedel, flygplan'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2791'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2792' and label = 'Investeringar, verkställda, transportmedel, övrigt'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2792'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2823' and label = 'Investeringar, planerade, ny, till- och ombyggnad (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2823'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2824' and label = 'Investeringar, planerade, bostäder (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2824'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2825' and label = 'Investeringar, planerade, övriga anläggningar (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2825'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2826' and label = 'Investeringar, planerade, maskiner, inventarier (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2826'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2828' and label = 'Investeringar, planerade, transportmedel, bilar (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2828'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2829' and label = 'Investeringar, planerade, transportmedel, bussar (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2829'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2830' and label = 'Investeringar, planerade, transportmedel, rullande spårbunden materiel (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2830'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2831' and label = 'Investeringar, planerade, transportmedel, flygplan (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2831'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2832' and label = 'Investeringar, planerade, transportmedel, övrigt (BKbyggm)'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v2832'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v29' and label = 'Företagsenhetsnummer'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v29'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49' and label = 'Län'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkbyggm where key = 'v56' and label = 'Person-/organisationsnummer'"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v56'"
 fields = { "variable" = "bkbyggm" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. The SCB metadata maps the one BKbyggm column of investeringsenkaten-resultat to 21 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
@@ -2317,133 +2317,133 @@ evidence = "#2141 Q3 (maintainer 2026-11-03): the BKbyggm block repeats fold. Th
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v1350' and label = 'Aktuellt antal anställda, storleksklass enligt statistikens synsätt'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v1350'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v1454' and label = 'Verksamhetsenhetens identitetsnummer (BKelinst)'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v1454'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v19052' and label = 'Näringsgren för statistiken'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v19052'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2297' and label = 'Undersökningsomgång'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2297'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2325' and label = 'Urval'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2325'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2463' and label = 'Undersökningsår'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2463'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2466' and label = 'Funktionell bransch'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2466'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2467' and label = 'Institutionell bransch'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2467'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2483' and label = 'Main Industrial Grouping'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2483'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2793' and label = 'Investeringar, verkställda, övrigt (BKelinst)'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2793'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2794' and label = 'Investeringar, verkställda, programvaror'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2794'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2796' and label = 'Investeringar, värdet av nytecknad leasing, transportmedel'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2796'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2797' and label = 'Investeringar, värdet av nytecknad leasing, datorstryda maskiner'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2797'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2798' and label = 'Investeringar, värdet av nytecknad leasing, övrig datautrustning'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2798'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2799' and label = 'Investeringar, värdet av nytecknad leasing, övriga maskiner'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2799'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2858' and label = 'Investeringar, underhåll (BKelinst)'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2858'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2859' and label = 'Investeringar, underhåll, maskiner'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2859'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2861' and label = 'Investeringar, verkställda, inköp fastigheter (BKelinst)'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2861'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v2862' and label = 'Investeringar, inköp av mark (BKelinst)'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v2862'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v29' and label = 'Företagsenhetsnummer'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v29'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v49' and label = 'Län'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v49'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
 [[statement]]
 kind = "set"
-subject = "investeringsenkaten-resultat: bkelinst where key = 'v56' and label = 'Person-/organisationsnummer'"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v56'"
 fields = { "variable" = "bkelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
 
