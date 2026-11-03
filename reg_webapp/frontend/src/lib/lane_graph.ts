@@ -127,7 +127,8 @@ export const COVERAGE_HEIGHT = 40;
 const NAME_WIDTH = 230;
 const NAME_GAP = 16;
 const MIN_TRACK = 360;
-const STACKED_NAME_HEIGHT = 38;
+// Keep the two-line lane name and coding marks on separate rows.
+const STACKED_NAME_HEIGHT = 54;
 // IBM Plex Mono advances 0.6 em; the `column` type is 12 px. Set in mono, a
 // name's width follows from its length without measuring the DOM.
 const COLUMN_CHAR = 7.2;

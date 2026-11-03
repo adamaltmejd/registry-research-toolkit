@@ -249,9 +249,11 @@ a.nameText {
 }
 
 /* Will be added: the selection wash, pine as text. */
-.span[data-staged="add"] .face {
+.span[data-staged="add"] .face,
+.legend .selectedSample {
   border-color: var(--accent);
-  background: var(--accent-bg);
+  border-width: 2px;
+  background: var(--accent-band);
   color: var(--accent-ink);
 }
 
@@ -362,6 +364,11 @@ a.nameText {
 
 .keyChange {
   color: var(--warn);
+}
+
+.keyChip {
+  min-inline-size: 1rem;
+  min-block-size: 0.75rem;
 }
 
 .keyRename {

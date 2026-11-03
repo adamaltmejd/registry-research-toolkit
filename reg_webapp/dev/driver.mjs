@@ -416,10 +416,11 @@ async function projectPagesCase(page, shoot) {
 
 // Project + catalog → saved project boundary. Fails if a variable-page add
 // confuses identical spellings in different tables, loses the binding/type or
-// add-window years, or leaves an already-bound column selectable. The older
+// add-window years, retains a tick outside the moved window,
+// or leaves an already-bound column selectable. The older
 // project case opens complete files; none adds a column from the catalog.
 // Names, tables and numeric type are from webapp-dev.jsonl; the window is this
-// readable fixture project's explicit study window.
+// readable fixture project's explicit study window and the stated thumb move.
 async function addVariableColumnsCase(page, shoot) {
   const main = page.getByRole("main");
   const fixture = JSON.parse(readFileSync(new URL(
@@ -439,16 +440,25 @@ async function addVariableColumnsCase(page, shoot) {
   const familyColumn = main.getByRole("checkbox", { name: /Antal.*Familjer/ });
   const individualColumn = main.getByRole("checkbox", { name: /Antal.*Individer/ });
   const addWindow = main.getByRole("group", { name: "Add window (years)", exact: true });
-  await addWindow.getByRole("slider", { name: /^From year/ }).press("ArrowRight");
+  const fromYear = addWindow.getByRole("slider", { name: /^From year/ });
+  await individualColumn.focus();
+  await individualColumn.press("Space");
+  await fromYear.press("ArrowRight");
+  await individualColumn.waitFor({ state: "detached" });
+  check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
+    "moving the add window kept a column with no overlapping delivery staged");
+  await fromYear.press("ArrowLeft");
+  check(!(await individualColumn.isChecked()), "returning to a column's delivery years restored its dropped tick");
+  await fromYear.press("ArrowRight");
   await familyColumn.focus();
   await familyColumn.press("Space");
   check(await familyColumn.isChecked(), "the column did not tick from the keyboard");
-  check(!(await individualColumn.isChecked()), "selecting Familjer also selected the same spelling in Individer");
+  check((await individualColumn.count()) === 0, "the column outside the add window remained selectable");
   await shoot("add-variable-selected");
   await main.getByRole("button", { name: "Add 1 column to project", exact: true }).click();
   await familyColumn.waitFor({ state: "detached" });
   await main.getByText(/Antal.*Familjer.*in project/i).waitFor();
-  check((await individualColumn.count()) === 1, "adding Familjer also marked Individer as in project");
+  await main.getByText(/Antal.*Individer.*outside the add window/i).waitFor();
   check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
     "the add bar kept the committed selection staged");
 
@@ -469,6 +479,8 @@ async function addVariableColumnsCase(page, shoot) {
   check(saved.sources.length === fixture.sources.length + 1,
     "adding a column changed unrelated project sources");
   await shoot("add-variable-project");
+
+
 }
 
 // #2056, browser boundary over webapp-dev's Antal occurrences, provider text

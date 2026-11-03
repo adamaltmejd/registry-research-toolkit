@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
-import { type Context, getContext } from "./lib/api";
+import {
+  type Context,
+  getContext,
+  type ValidationResultModel,
+} from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
@@ -79,7 +83,11 @@ export function App() {
                     validation={validation}
                   />
                 ) : (
-                  <RoutedView route={route} context={context.data} />
+                  <RoutedView
+                    route={route}
+                    context={context.data}
+                    validation={validation.data}
+                  />
                 )}
               </div>
             </main>
@@ -94,9 +102,11 @@ export function App() {
 function RoutedView({
   route,
   context,
+  validation,
 }: {
   route: Route;
   context: Context | null;
+  validation: ValidationResultModel | null;
 }) {
   switch (route.name) {
     case "home":
@@ -123,6 +133,7 @@ function RoutedView({
           key={route.fqidPath}
           fqidPath={route.fqidPath}
           context={context}
+          validation={validation}
         />
       );
     case "group":

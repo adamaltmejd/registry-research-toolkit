@@ -1,4 +1,4 @@
-import type { Context } from "./api";
+import type { Context, ValidationResultModel } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { sharedShow } from "./catalog_names";
 import { ProviderView } from "./ProviderView";
@@ -22,9 +22,11 @@ export interface PeriodProps {
 export function CatalogNodeView({
   fqidPath,
   context,
+  validation,
 }: {
   fqidPath: string;
   context: Context | null;
+  validation: ValidationResultModel | null;
 }) {
   const resource = useAsyncResource(fqidPath, (signal) =>
     sharedShow(fqidPath, signal),
@@ -63,7 +65,14 @@ export function CatalogNodeView({
     case "table":
       return <TableView node={node} />;
     case "variable":
-      return <VariableView key={node.fqid} node={node} context={context} />;
+      return (
+        <VariableView
+          key={node.fqid}
+          node={node}
+          context={context}
+          validation={validation}
+        />
+      );
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>

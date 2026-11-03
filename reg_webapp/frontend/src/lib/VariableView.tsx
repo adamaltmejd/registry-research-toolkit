@@ -12,6 +12,7 @@ import {
   type Context,
   getSegments,
   getVariableEvidence,
+  type ValidationResultModel,
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
@@ -109,9 +110,11 @@ export function ValueSetLabel({
 export function VariableView({
   node,
   context,
+  validation,
 }: {
   node: VariableShow;
   context: Context | null;
+  validation: ValidationResultModel | null;
 }) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
@@ -129,6 +132,8 @@ export function VariableView({
     segments: segments.data ?? [],
     names,
     context,
+    tables: register?.tables ?? null,
+    validation,
   });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>

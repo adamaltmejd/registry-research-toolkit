@@ -1,12 +1,28 @@
-import type { CatalogSegment } from "./api";
+import type { CatalogSegment, RegisterShow } from "./api";
+import { catalogLastDate } from "./catalog_period";
 import { periodCoverageUnion } from "./period";
 import type {
   ProjectBinding,
   ProjectData,
   ProjectSource,
+  ProjectSourcePeriod,
   ProjectStudyWindow,
 } from "./project_data";
-import { checkProject, sourcePeriodIntervals } from "./reg_core";
+import {
+  checkProject,
+  type Interval,
+  mergeIntervals,
+  overlapIntervals,
+  renderIntervals,
+  sourcePeriodFromWire,
+  sourcePeriodIntervals,
+  studyWindowInterval,
+} from "./reg_core";
+
+export type TablePeriodMetadata = Pick<
+  RegisterShow["tables"][number],
+  "fqid" | "timeless"
+>;
 
 export interface VariableColumn {
   id: string;
@@ -51,6 +67,39 @@ export function columnInProject(
   );
 }
 
+function columnWindowOverlap(
+  column: VariableColumn,
+  window: ProjectStudyWindow,
+): { segments: CatalogSegment[]; intervals: Interval[] } {
+  const requested = studyWindowInterval(window);
+  const segments: CatalogSegment[] = [];
+  const intervals: Interval[] = [];
+  if (requested === null) return { segments, intervals };
+  for (const segment of column.segments) {
+    const start = segment.period.start ?? requested[0];
+    const end = catalogLastDate(segment.period) ?? requested[1];
+    if (start > end) continue;
+    const overlap = overlapIntervals([[start, end]], [requested]);
+    if (overlap.length > 0) {
+      segments.push(segment);
+      intervals.push(...overlap);
+    }
+  }
+  return { segments, intervals: mergeIntervals(intervals) };
+}
+
+/** Exact delivered days in the add window, retaining gaps between deliveries.
+ * Timeless tables are handled from their metadata, never inferred from open dates. */
+export function columnWindowPeriod(
+  column: VariableColumn,
+  window: ProjectStudyWindow,
+): ProjectSourcePeriod | null {
+  const { intervals } = columnWindowOverlap(column, window);
+  return intervals.length > 0
+    ? sourcePeriodFromWire(renderIntervals(intervals))
+    : null;
+}
+
 function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
   if (segment.identifier === true) return "id";
   if (segment.coded === "yes") return "categorical";
@@ -93,24 +142,50 @@ export function addColumns(
   variable: string,
   columns: readonly VariableColumn[],
   window: ProjectStudyWindow,
+  tables: readonly TablePeriodMetadata[],
 ): ProjectData {
   const sources = project.sources.map((source) => ({
     ...source,
     bindings: [...source.bindings],
   }));
-  const byTable = new Map<string, CatalogSegment[]>();
+  const byTable = new Map<
+    string,
+    { segments: CatalogSegment[]; intervals: Interval[]; timeless: boolean }
+  >();
   for (const column of columns) {
-    const spans = byTable.get(column.table) ?? [];
-    spans.push(...column.segments);
-    byTable.set(column.table, spans);
+    const table = tables.find((entry) => entry.fqid === column.table);
+    if (!table)
+      throw new Error(
+        "Table availability is not loaded. Reload the page and try again.",
+      );
+    const overlap = table.timeless
+      ? { segments: column.segments, intervals: [] }
+      : columnWindowOverlap(column, window);
+    if (!table.timeless && overlap.intervals.length === 0)
+      throw new Error(
+        `${column.spelling} has no delivery in the add window. Change the window or untick the column.`,
+      );
+    const requested = byTable.get(column.table) ?? {
+      segments: [],
+      intervals: [],
+      timeless: table.timeless,
+    };
+    requested.segments.push(...overlap.segments);
+    requested.intervals.push(...overlap.intervals);
+    byTable.set(column.table, requested);
   }
-  for (const [table, segments] of byTable) {
+  for (const [table, requested] of byTable) {
+    const period: ProjectSourcePeriod = requested.timeless
+      ? "_default"
+      : sourcePeriodFromWire(
+          renderIntervals(mergeIntervals(requested.intervals)),
+        );
     let source = sources.find((entry) => entry.table === table);
     if (!source) {
       source = {
         name: sourceName(sources, table),
         table,
-        period: { ...window },
+        period,
         bindings: [],
       };
       sources.push(source);
@@ -118,11 +193,12 @@ export function addColumns(
       const existing = sourcePeriodIntervals(source.period);
       if ("error" in existing) throw new Error(existing.message);
       // An unbounded source already covers every year. An add never narrows it.
-      if (existing.intervals !== null)
-        source.period = periodCoverageUnion(source.period, window);
+      if (requested.timeless) source.period = "_default";
+      else if (existing.intervals !== null)
+        source.period = periodCoverageUnion(source.period, period);
     }
     if (!source.bindings.some((binding) => binding.variable === variable))
-      source.bindings.push(defaultBinding(variable, segments));
+      source.bindings.push(defaultBinding(variable, requested.segments));
   }
   const candidate = { ...project, sources };
   const checked = checkProject(JSON.stringify(candidate));

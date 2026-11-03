@@ -300,6 +300,7 @@ export function LaneGraph({
         inProject={spans.some((s) => s.state === "in")}
         blocked={spans.some((s) => s.blocked)}
         changes={spans.some((s) => s.changes?.length)}
+        selected={spans.some((s) => s.staged === "add")}
       />
     </div>
   );
@@ -635,7 +636,6 @@ function Span({
   onToggle: (id: string) => void;
   onActive: (id: string | null) => void;
 }) {
-  const inputId = useId();
   const showYears =
     at.label === "inside" &&
     at.segments.length === 1 &&
@@ -677,7 +677,7 @@ function Span({
       ))}
       {span.staged && (
         <span className={styles.glyph} aria-hidden="true">
-          {span.staged === "add" ? "+" : "−"}
+          {span.staged === "add" ? "✓" : "−"}
         </span>
       )}
       {span.blocked && !span.staged && (
@@ -694,7 +694,6 @@ function Span({
         <span
           key={year}
           className={styles.change}
-          title={`Coding change in ${year}`}
           style={{
             left: Math.max(
               0,
@@ -715,7 +714,7 @@ function Span({
   };
   if (!span.selectable) {
     return (
-      <span className={styles.span} title={span.accessibleName} {...attributes}>
+      <span className={styles.span} {...attributes}>
         {body}
         <span className="visually-hidden">{span.accessibleName}</span>
       </span>
@@ -723,13 +722,9 @@ function Span({
   }
   return (
     <Checkbox
-      id={inputId}
       className={`${styles.span} ${styles.pick}`}
       style={{ height: SPAN_HEIGHT }}
       aria-label={span.accessibleName}
-      render={(props) => (
-        <label {...props} htmlFor={inputId} title={span.accessibleName} />
-      )}
       isSelected={span.isSelected ?? false}
       isDisabled={isDisabled}
       onChange={() => onToggle(span.id)}
@@ -753,6 +748,7 @@ function Legend({
   inProject,
   blocked,
   changes,
+  selected,
 }: {
   coverage: LaneCoverage | undefined;
   addWindow: boolean;
@@ -762,6 +758,7 @@ function Legend({
   inProject: boolean;
   blocked: boolean;
   changes: boolean;
+  selected: boolean;
 }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
@@ -797,12 +794,13 @@ function Legend({
       )}
       {selectable && (
         <li>
-          <ColumnChip name="COL" state="default" /> Click to select
+          <ColumnChip name="" className={styles.keyChip} /> Click to select
         </li>
       )}
       {inProject && (
         <li>
-          <ColumnChip name="COL" state="in" /> In project
+          <ColumnChip name="" state="in" className={styles.keyChip} /> In
+          project
         </li>
       )}
       {blocked && (
@@ -814,6 +812,15 @@ function Legend({
       {changes && (
         <li>
           <span className={styles.keyChange}>▲</span> Coding change
+        </li>
+      )}
+      {selected && (
+        <li>
+          <ColumnChip
+            name=""
+            className={`${styles.keyChip} ${styles.selectedSample}`}
+          />{" "}
+          Selected
         </li>
       )}
     </ul>

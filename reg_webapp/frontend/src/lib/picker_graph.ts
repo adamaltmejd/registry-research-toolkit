@@ -1,10 +1,15 @@
 /** Projection of 5.1 catalog segments onto the variable page's first lane. */
-import type { VariableColumn } from "./add_columns";
+import { columnWindowPeriod, type VariableColumn } from "./add_columns";
 import type { VariableShow } from "./api";
-import { sourcePeriodLabel } from "./catalog_period";
 import type { LaneSpanModel } from "./LaneGraph";
-import { periodWindowRelation, yearWindowLabel } from "./period";
+import {
+  coverageMarks,
+  periodLabel,
+  periodWindowRelation,
+  yearWindowLabel,
+} from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
+import { sourcePeriodYears } from "./reg_core";
 import { columnYearRuns, studyWindow } from "./study_window";
 
 export function variableSpans({
@@ -37,9 +42,7 @@ export function variableSpans({
         entry.table === column.table &&
         entry.bindings.some((binding) => binding.variable === variable.fqid),
     );
-    const inside = eras.some(
-      (era) => era.to >= selection.from && era.from <= selection.to,
-    );
+    const inside = columnWindowPeriod(column, selection) !== null;
     const relation = source
       ? periodWindowRelation(
           source.period,
@@ -47,13 +50,19 @@ export function variableSpans({
           eras.map((era) => [`${era.from}-01-01`, `${era.to}-12-31`]),
         )
       : null;
+    const sourceYears = sourcePeriodYears(source?.period);
+    const sourceLabel = sourceYears
+      ? sourceYears
+          .map(([from, to]) => yearWindowLabel({ from, to }))
+          .join(", ")
+      : periodLabel(source?.period);
     const note =
       relation && relation !== "same"
         ? {
             text:
               relation === "disjoint"
-                ? `In project, outside the study window (${sourcePeriodLabel(source?.period)}).`
-                : `In project for ${sourcePeriodLabel(source?.period)}, which differs from the study window.`,
+                ? `In project, outside the study window (${sourceLabel}).`
+                : `In project for ${sourceLabel}, which differs from the study window.`,
             tone:
               relation === "disjoint" ? ("error" as const) : ("info" as const),
           }
@@ -62,31 +71,38 @@ export function variableSpans({
     const coding = [...column.segments].sort((a, b) =>
       (a.period.start ?? "").localeCompare(b.period.start ?? ""),
     );
-    const changes = coding.flatMap((segment, index) =>
-      index > 0 &&
-      (segment.classification !== coding[index - 1].classification ||
-        segment.value_set?.hash !== coding[index - 1].value_set?.hash) &&
-      segment.period.start
-        ? [Number(segment.period.start.slice(0, 4))]
-        : [],
-    );
+    const changes = [
+      ...new Set(
+        coding.flatMap((segment, index) =>
+          index > 0 &&
+          (segment.classification !== coding[index - 1].classification ||
+            segment.value_set?.hash !== coding[index - 1].value_set?.hash) &&
+          segment.period.start
+            ? [Number(segment.period.start.slice(0, 4))]
+            : [],
+        ),
+      ),
+    ].sort((a, b) => a - b);
+    const changeYears = coverageMarks({ from: first, to: last }, changes)
+      .delivered.map(yearWindowLabel)
+      .join(", ");
     return [
       {
         id: column.id,
-        lane: variable.fqid,
+        lane: column.table,
         name: column.spelling,
         from: first,
         to: last,
         segments: eras.map((era) => ({ name: null, ...era })),
         years,
         state: source ? "in" : inside ? "default" : "out",
-        selectable: !!project && !source,
-        isSelected: selected.has(column.id),
-        staged: selected.has(column.id) && !source ? "add" : null,
+        selectable: !!project && !source && inside,
+        isSelected: inside && selected.has(column.id),
+        staged: inside && selected.has(column.id) && !source ? "add" : null,
         blocked: relation === "disjoint",
         note,
-        changes: [...new Set(changes)],
-        accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${[...new Set(changes)].join(", ")}.` : ""}`,
+        changes,
+        accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
       },
     ];
   });

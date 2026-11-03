@@ -1,9 +1,16 @@
 import { useRef, useState } from "react";
-import { addColumns, columnInProject, variableColumns } from "./add_columns";
+import {
+  addColumns,
+  columnInProject,
+  columnWindowPeriod,
+  type TablePeriodMetadata,
+  variableColumns,
+} from "./add_columns";
 import {
   type CatalogSegment,
   type Context,
   errMessage,
+  type ValidationResultModel,
   type VariableShow,
 } from "./api";
 import { LaneGraph } from "./LaneGraph";
@@ -33,11 +40,15 @@ export function useVariableCoverage({
   segments,
   names,
   context,
+  tables,
+  validation,
 }: {
   node: VariableShow;
   segments: readonly CatalogSegment[];
   names: ReadonlyMap<string, string>;
   context: Context | null;
+  tables: readonly TablePeriodMetadata[] | null;
+  validation: ValidationResultModel | null;
 }) {
   const { draft } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
@@ -72,6 +83,7 @@ export function useVariableCoverage({
   const picked = columns.filter(
     (column) =>
       selected.has(column.id) &&
+      columnWindowPeriod(column, active) !== null &&
       !columnInProject(draft, node.fqid, column.table),
   );
   const spans = variableSpans({
@@ -92,13 +104,39 @@ export function useVariableCoverage({
     ),
   ];
   const outside = study ? uncoveredYears(study, available) : [];
+  const setAddWindow = (next: ProjectStudyWindow | null) => {
+    setPeriod(next);
+    setSelected(
+      (previous) =>
+        new Set(
+          columns
+            .filter(
+              (column) =>
+                previous.has(column.id) &&
+                columnWindowPeriod(column, next ?? seed) !== null,
+            )
+            .map((column) => column.id),
+        ),
+    );
+  };
   const onRest = (next: ProjectStudyWindow) =>
-    setPeriod(sameYearWindow(next, seed) ? null : next);
+    setAddWindow(sameYearWindow(next, seed) ? null : next);
+  const classificationWarning =
+    added &&
+    validation?.issues.some(
+      (issue) =>
+        issue.code === "classification_version_ambiguous" &&
+        issue.variable === node.fqid,
+    );
   const add = () => {
     const current = projectStore.draft;
     if (!current || picked.length === 0) return;
     try {
-      const candidate = addColumns(current, node.fqid, picked, active);
+      if (!tables)
+        throw new Error(
+          "Table availability is not loaded. Reload the page and try again.",
+        );
+      const candidate = addColumns(current, node.fqid, picked, active, tables);
       projectStore.updateField("sources", candidate.sources);
       setSelected(new Set());
       setError(null);
@@ -122,7 +160,7 @@ export function useVariableCoverage({
               <Button
                 variant="ghost"
                 onPress={() => {
-                  setPeriod(null);
+                  setAddWindow(null);
                   heading.current?.focus();
                 }}
               >
@@ -140,7 +178,14 @@ export function useVariableCoverage({
         </span>
         <LaneGraph
           label="Variable columns"
-          lanes={[{ id: node.fqid, name: node.name, current: true }]}
+          lanes={[...new Set(columns.map((column) => column.table))].map(
+            (table) => ({
+              id: table,
+              name: node.name,
+              sub: { text: names.get(table) ?? "Table name unavailable" },
+              current: true,
+            }),
+          )}
           spans={spans}
           edges={[]}
           axis={axis}
@@ -159,11 +204,12 @@ export function useVariableCoverage({
                 selection={active}
                 bounds={available}
                 label="Add window (years)"
-                onMove={setPeriod}
+                onMove={setAddWindow}
                 onRest={onRest}
               />
             ) : undefined
           }
+          isDisabled={!tables}
           onToggle={(id) => {
             setSelected((previous) => {
               const next = new Set(previous);
@@ -184,8 +230,34 @@ export function useVariableCoverage({
     ),
     addBar: (
       <>
-        <StatusRow tone={error ? "error" : added ? "ok" : null} live="status">
-          {error ?? (added ? "Added columns to project." : null)}
+        <StatusRow
+          tone={
+            error
+              ? "error"
+              : classificationWarning
+                ? "info"
+                : added
+                  ? "ok"
+                  : null
+          }
+          live="status"
+        >
+          {error ??
+            (added ? (
+              <>
+                Added columns to project.
+                {classificationWarning && (
+                  <>
+                    {" "}
+                    Choose the classification on the{" "}
+                    <a className="link" href="/project">
+                      project page
+                    </a>
+                    .
+                  </>
+                )}
+              </>
+            ) : null)}
         </StatusRow>
         {picked.length > 0 && (
           <div className={styles.addBar}>
