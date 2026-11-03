@@ -1636,9 +1636,3 @@ kind = "set"
 subject = "var:senaste-invandring-1"
 fields = { "label" = "Senaste invandring (SENINV1)" }
 evidence = "#2102 same-label cluster 'Senaste invandring' (2 variables): judged different meaning, low confidence; SENINV och SENINV1 löper samtidigt 2015-2016 i par-sv; definitionen nämner två datumformat men inte vilken kolumn som har vilket, så rå kolumnkod används."
-
-[[statement]]
-kind = "set"
-subject = "var:typ"
-fields = { "label" = "Psykiatrisk vårdform (TYP)" }
-evidence = "#2102 same-label cluster 'Psykiatrisk vårdform' (2 variables): judged different meaning, low confidence; PSVARD och TYP löper samtidigt i par-tv 2011-2015; ingen källtext anger vad TYP innehåller, så rå kolumnkod används."
