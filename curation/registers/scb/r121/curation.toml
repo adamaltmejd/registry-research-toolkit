@@ -14005,6 +14005,18 @@ evidence = "Variabeln avser underlag för avkastningsskatt.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
+subject = "var:avkastningsskatt-kapitalforsakring"
+fields = { "sets" = [] }
+evidence = "Variabeln avser avkastningsskatt.\ncatalog:variable_text:15662:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-kapitalforsakring"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser avkastningsskatt.\ncatalog:variable_text:15662:17532:19723"
+
+[[statement]]
+kind = "set"
 subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter avkastningsskatt.\ncatalog:variable_text:15663:16801:17167"
@@ -92787,6 +92799,12 @@ evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalfö
 
 [[statement]]
 kind = "set"
+subject = "var:avkastningsskatt-kapitalforsakring"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVKASTUK)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
+
+[[statement]]
+kind = "set"
 subject = "var:avsattning-till-reservfond"
 fields = { "label" = "Avsättning till reservfond (BAVRESF, VG46)" }
 evidence = "#2102 same-label cluster 'Avsättning till reservfond' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The first pid mixes BAVRESF (Bolagsverket, code list of the allocation source) with VG46 in finansbolag 2017-24 (KSEK); the second is VG46 in finansbolag 2007-15 (SEK)."
@@ -93611,31 +93629,19 @@ evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudreg
 kind = "set"
 subject = "aktiebolag: savukap27 @2008-01-01..2011-12-31 where key = 'v21809'"
 fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
-evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11) and SAVUKAP2 (2012-17) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 in both tables; SAVKASTUK (2018-) stays separate because handelsbolag has no 2018 occurrence."
 
 [[statement]]
 kind = "set"
 subject = "handelsbolag: savukap27 @2008-01-01..2011-12-31 where key = 'v21809'"
 fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
-evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
-
-[[statement]]
-kind = "set"
-subject = "aktiebolag: savkastuk @2018-01-01..2023-12-31 where key = 'v21809'"
-fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
-evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
-
-[[statement]]
-kind = "set"
-subject = "handelsbolag: savkastuk @2019-01-01..2023-12-31 where key = 'v21809'"
-fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
-evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11) and SAVUKAP2 (2012-17) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 in both tables; SAVKASTUK (2018-) stays separate because handelsbolag has no 2018 occurrence."
 
 [[statement]]
 kind = "set"
 subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
-fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP27/SAVUKAP2/SAVKASTUK)" }
-evidence = "#2102 fold: the label names every folded column. SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP27/SAVUKAP2)" }
+evidence = "#2102 fold: the label names every folded column. SAVUKAP27 (2008-11) and SAVUKAP2 (2012-17) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 in both tables; SAVKASTUK (2018-) stays separate because handelsbolag has no 2018 occurrence."
 
 [[statement]]
 kind = "set"

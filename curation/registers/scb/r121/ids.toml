@@ -550,6 +550,7 @@ public = "frida"
 "avkastningsskatt-15-forsakring" = ["Handelsbolag: SAVKASTF"]
 "avkastningsskatt-30-forsakring" = ["Aktiebolag: SAVKASTF2"]
 "avkastningsskatt-innevarande-ar" = ["Individtabeller: AAVKAST"]
+"avkastningsskatt-kapitalforsakring" = ["Aktiebolag: SAVKASTUK"]
 "avkastningsskatt-pensionsforsakring" = ["Aktiebolag: SAVKASTUP"]
 "avsattning-expansionsmedel" = ["Individtabeller: NSKEXP"]
 "avsattning-periodiseringsfond-2-ar" = ["Individtabeller: NSKPERU @ 2016-01-01"]
