@@ -172,11 +172,23 @@ export function catalogRootChildren(): Read<RootChild[]> {
 
 /** A register's display names, shared by table headers and located findings. */
 export function registerRead(ref: string): Read<RegisterShow> {
-  return read(`register:${ref}`, async () => {
-    const node = await sharedShow(ref);
-    if (node.kind !== "register") throw new Error(`${ref} is not a register`);
-    return node;
-  });
+  return read(`register:${ref}`, () => loadRegister(ref));
+}
+
+/** A page owns its pending/error state; only a successful cached read is reusable. */
+export async function loadRegister(
+  ref: string,
+  signal?: AbortSignal,
+): Promise<RegisterShow> {
+  const key = `register:${ref}`;
+  const cached = reads[key] as Read<RegisterShow> | undefined;
+  if (cached?.value) return cached.value;
+  // Evict a settled failure on Retry or revisit, without notifying subscribers
+  // into an automatic retry loop. sharedShow only retains in-flight requests.
+  if (cached && !cached.loading) delete reads[key];
+  const node = await sharedShow(ref, signal);
+  if (node.kind !== "register") throw new Error(`${ref} is not a register`);
+  return node;
 }
 
 const subjectNames = new WeakMap<RegisterShow, ReadonlyMap<string, string>>();

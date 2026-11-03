@@ -417,7 +417,8 @@ async function projectPagesCase(page, shoot) {
 // Project + catalog → saved project boundary. Fails if a variable-page add
 // confuses identical spellings in different tables, loses the binding/type or
 // add-window years, retains a tick outside the moved window,
-// or leaves an already-bound column selectable. The older
+// leaves an already-bound column selectable, or strands a failed register read
+// without a working Retry. The older
 // project case opens complete files; none adds a column from the catalog.
 // Names, tables and numeric type are from webapp-dev.jsonl; the window is this
 // readable fixture project's explicit study window and the stated thumb move.
@@ -435,8 +436,25 @@ async function addVariableColumnsCase(page, shoot) {
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(fixture)),
   });
+  let failRegister = true;
+  let registerRequests = 0;
+  const registerRoute = "**/api/catalog/demo/hush";
+  const readRegister = async (route) => {
+    registerRequests += 1;
+    if (failRegister) await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({error:{message:"Register unavailable"}}) });
+    else await route.continue();
+  };
+  await page.route(registerRoute, readRegister);
   await open(page, "/catalog/demo/hush/antal");
+  const registerFailure = main.getByRole("alert").filter({hasText:"Could not load the register's tables."});
+  await registerFailure.waitFor();
+  check(await main.getByRole("checkbox").count() === 0, "the add path remained exposed without table metadata");
+  failRegister = false;
+  await registerFailure.getByRole("button", {name:"Retry", exact:true}).click();
   await settled(page);
+  await main.getByRole("group", {name:"Add window (years)",exact:true}).waitFor();
+  check(registerRequests >= 2, "Retry reused the failed register request");
+  await page.unroute(registerRoute, readRegister);
   const familyColumn = main.getByRole("checkbox", { name: /Antal.*Familjer/ });
   const individualColumn = main.getByRole("checkbox", { name: /Antal.*Individer/ });
   const addWindow = main.getByRole("group", { name: "Add window (years)", exact: true });
