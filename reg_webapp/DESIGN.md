@@ -34,7 +34,9 @@ local to the page. Adding creates or widens one source per table and appends one
 per variable, using the segments' default type and agreed classification. WASM checks
 the candidate before the existing project store writes its sources. Already-bound
 columns show their in-project state without a checkbox. Succession lanes and source-card
-authoring remain deferred.
+authoring remain deferred. Register-page row ticks lazily read and add all eligible
+delivery columns in the study window through the same checked candidate and one sources
+write, without topping up variables already bound in any source.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail

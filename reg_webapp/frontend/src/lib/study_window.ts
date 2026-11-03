@@ -11,7 +11,7 @@ export function studyWindow(
 
 /** Segments have half-open dates; the drawing uses inclusive year cells. */
 export function columnYearRuns(
-  segments: readonly CatalogSegment[],
+  segments: readonly Pick<CatalogSegment, "period">[],
   bounds: readonly [number, number],
   axisStart = bounds[0],
 ): ProjectStudyWindow[] {
