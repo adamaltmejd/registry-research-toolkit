@@ -4863,7 +4863,8 @@
         "required": [
           "fqid",
           "name",
-          "period"
+          "period",
+          "tables"
         ],
         "properties": {
           "fqid": {
@@ -4874,6 +4875,13 @@
           },
           "period": {
             "$ref": "#/components/schemas/Period"
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The fqids of the register's tables the variable has segments in."
           }
         }
       },

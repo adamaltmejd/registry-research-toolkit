@@ -1,7 +1,7 @@
 import { type Coverage, getCoverage } from "./api";
-import { catalogHref, svCollator } from "./catalog";
+import { catalogHref } from "./catalog";
 import { catalogWords } from "./catalog_labels";
-import { catalogPeriodLabel, catalogPeriodRuns } from "./catalog_period";
+import { catalogPeriodLabel } from "./catalog_period";
 import styles from "./HeldPanels.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -91,58 +91,6 @@ function HeldGroup({
   );
 }
 
-/** A register's holdings, one row per table: coverage lists every placement
- * of every table, too many to read as per-table groups (#2110). The table's
- * page has the placements. */
-function HeldSummary({
-  held,
-  names,
-}: {
-  held: Placement[];
-  names: ReadonlyMap<string, string>;
-}) {
-  const tables = new Map<string, Placement[]>();
-  for (const row of held) {
-    const placements = tables.get(row.table);
-    if (placements) placements.push(row);
-    else tables.set(row.table, [row]);
-  }
-  const rows = [...tables]
-    .map(([fqid, placements]) => ({
-      fqid,
-      name: names.get(fqid) ?? "Table name unavailable",
-      variables: new Set(placements.map((row) => row.variable)).size,
-      period: catalogPeriodRuns(placements.map((row) => row.period)),
-    }))
-    .sort((a, b) => svCollator.compare(a.name, b.name));
-  return (
-    <DataTable
-      rowNavigation
-      columns={[
-        { key: "name", label: "Table" },
-        { key: "variables", label: "Held variables", numeric: true },
-        { key: "period", label: "Period", mono: true },
-      ]}
-      rows={rows}
-      getRowId={(row) => row.fqid}
-      renderCell={(row, column) => {
-        switch (column.key) {
-          case "name":
-            return (
-              <a className="link" href={catalogHref(row.fqid)}>
-                {row.name}
-              </a>
-            );
-          case "variables":
-            return String(row.variables);
-          default:
-            return row.period;
-        }
-      }}
-    />
-  );
-}
-
 /** Coverage owns holdings; Show remains the reference metadata for the page. */
 export function HeldPanels({
   fqid,
@@ -150,7 +98,7 @@ export function HeldPanels({
   names,
 }: {
   fqid: string;
-  kind: "variable" | "table" | "register";
+  kind: "variable" | "table";
   names: ReadonlyMap<string, string>;
 }) {
   const resource = useAsyncResource(fqid, (signal) =>
@@ -175,11 +123,9 @@ export function HeldPanels({
   return (
     <>
       {held != null && (
-        <Panel title="Held" flush={kind === "register" && held.length > 0}>
+        <Panel title="Held">
           {held.length === 0 ? (
             <EmptyState title={`Nothing held for this ${kind}.`} />
-          ) : kind === "register" ? (
-            <HeldSummary held={held} names={names} />
           ) : (
             <div className={styles.groups}>
               {[...groups].map(([physicalTable, rows]) => (

@@ -1245,6 +1245,8 @@ export interface components {
             fqid: string;
             name: string;
             period: components["schemas"]["Period"];
+            /** @description The fqids of the register's tables the variable has segments in. */
+            tables: string[];
         };
         /** @description Every provider, register, table (implicit ones included) and variable. */
         Sizes: {

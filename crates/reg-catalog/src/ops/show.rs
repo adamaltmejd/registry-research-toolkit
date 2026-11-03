@@ -1,5 +1,7 @@
 //! `show`: the summary of any ref; no ref is the catalog root.
 
+use std::collections::BTreeMap;
+
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
@@ -133,6 +135,8 @@ pub struct ShowVariableRef {
     fqid: String,
     name: String,
     period: Period,
+    /// The fqids of the register's tables the variable has segments in.
+    tables: Vec<String>,
 }
 
 /// A register's table; the implicit one has the register's fqid.
@@ -347,6 +351,18 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
+    let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for row in conn
+        .prepare(
+            "SELECT DISTINCT v.pid, t.pid FROM segment s
+             JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id
+             WHERE v.register_id = ? ORDER BY v.pid, t.pid",
+        )?
+        .query_map([entity.id], |row| Ok((row.get(0)?, row.get(1)?)))?
+    {
+        let (variable, table) = row?;
+        members.entry(variable).or_default().push(table);
+    }
     let variables = conn
         .prepare(
             "SELECT v.pid, l.body, v.start, v.end
@@ -354,8 +370,10 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
              WHERE v.register_id = ? ORDER BY v.pid",
         )?
         .query_map([entity.id], |row| {
+            let fqid: String = row.get(0)?;
             Ok(ShowVariableRef {
-                fqid: row.get(0)?,
+                tables: members.remove(&fqid).unwrap_or_default(),
+                fqid,
                 name: row.get(1)?,
                 period: server.period(row.get(2)?, row.get(3)?),
             })

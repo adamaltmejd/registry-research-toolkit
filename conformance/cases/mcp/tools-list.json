@@ -1392,12 +1392,20 @@
             },
             "period": {
               "$ref": "#/$defs/Period"
+            },
+            "tables": {
+              "description": "The fqids of the register's tables the variable has segments in.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             }
           },
           "required": [
             "fqid",
             "name",
-            "period"
+            "period",
+            "tables"
           ],
           "type": "object"
         },

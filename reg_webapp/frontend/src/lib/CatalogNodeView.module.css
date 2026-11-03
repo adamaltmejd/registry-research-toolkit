@@ -94,3 +94,26 @@
   font-size: var(--text-micro);
   font-family: var(--font-mono);
 }
+/* The register's table chips: the facet label inline, then its chips, one
+   wrapping row over the variable list (DESIGN.md → FilterChip). */
+.tableFilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+}
+/* A floated legend is an ordinary flex item, not one drawn on the border. */
+.tableFilter > legend {
+  float: left;
+  padding: 0;
+  margin-right: var(--space-1);
+}
+.shown {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
