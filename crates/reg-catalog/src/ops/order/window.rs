@@ -253,8 +253,11 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         ));
         return Ok(outcome);
     }
-    // Succession is base metadata: a variable only the holdings database defines
-    // (negative id) has none to follow.
+    // simplify: a variable only the holdings database defines (negative id) on a
+    // reference table does not follow succession; steward inputs carry no variable
+    // `continues` links today (only the SCB-format reader emits them). Make
+    // `successor.rs` origin-aware once a steward input can state one. A source whose
+    // table only the holdings database defines runs on that origin and does follow.
     if binding.follow_successor == Some(true) && variable.id > 0 {
         return super::successor::binding(scope, b, binding);
     }
