@@ -1696,9 +1696,10 @@ plus overlays: a steward register under the same provider, or a table in the sam
 register with the same timelessness, may reuse the reference id to add steward-minted
 variables and tables to it (#2134). Readers keep the reference row and merge only the
 steward's distinct contents. Variable collisions without a declaration still refuse
-(`holdings_semantic_collision`). These declarations are occurrence bindings, not aliases,
-derivations or copied reference rows. The verifier compares them with the pinned input.
-Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+(`holdings_semantic_collision`). These declarations are occurrence bindings, not
+aliases, derivations or copied reference rows. The verifier compares them with the
+pinned input. Holdings schema 2 adds `holding_reference_occurrence`; older holdings are
+recompiled.
 
 Reference `coverage` spans retain their original meaning. In selected steward mode, the
 attested periods reach readers only as accepted physical `held` intervals; variable

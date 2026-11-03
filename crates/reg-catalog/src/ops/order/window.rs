@@ -209,6 +209,21 @@ fn held_id(conn: &Connection, pid: &str) -> Result<Option<i64>, Error> {
         .optional()?)
 }
 
+/// The first `continues` successor the attached holdings database states for its
+/// variable `id`.
+fn held_successor(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT v.pid FROM held.relation r JOIN held.variable v ON v.id = r.subject_id
+             WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
+               AND r.object_kind = 'variable' AND r.object_id = ?1
+             ORDER BY v.pid LIMIT 1",
+            [id],
+            |row| row.get(0),
+        )
+        .optional()?)
+}
+
 /// A class version of the attached holdings database, by exact public id.
 fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Error> {
     Ok(conn
@@ -253,13 +268,29 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         ));
         return Ok(outcome);
     }
-    // simplify: a variable only the holdings database defines (negative id) on a
-    // reference table does not follow succession; steward inputs carry no variable
-    // `continues` links today (only the SCB-format reader emits them). Make
-    // `successor.rs` origin-aware once a steward input can state one. A source whose
-    // table only the holdings database defines runs on that origin and does follow.
-    if binding.follow_successor == Some(true) && variable.id > 0 {
-        return super::successor::binding(scope, b, binding);
+    if binding.follow_successor == Some(true) {
+        if variable.id > 0 {
+            return super::successor::binding(scope, b, binding);
+        }
+        // simplify: succession of a variable only the holdings database defines
+        // (negative id) on a reference table is refused, not followed; a source whose
+        // table only the holdings database defines runs on that origin and does follow.
+        // Make `successor.rs` origin-aware when a steward needs this.
+        if let Some(successor) = held_successor(scope.conn, -variable.id)? {
+            let mut issue = at.issue(
+                IssueLevel::Error,
+                "variable_replaced",
+                scope.table,
+                None,
+                format!(
+                    "{} is continued by {successor} in steward metadata; following it on a reference table is not supported, so order each variable on its own.",
+                    variable.pid
+                ),
+            );
+            issue.successor_fqid = Some(successor);
+            outcome.findings.push(issue);
+            return Ok(outcome);
+        }
     }
     materialize(scope, b, binding, &variable, outcome)
 }

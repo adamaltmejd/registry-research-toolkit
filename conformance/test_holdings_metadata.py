@@ -158,6 +158,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     projected_ledger = ledger.parent.parent / "projected/ids.toml"
     projected_ledger.parent.mkdir()
     shutil.copyfile(case / "projected-ids.toml", projected_ledger)
+    shutil.copyfile(
+        case / "projected-curation.toml", projected_ledger.parent / "curation.toml"
+    )
     # A class version defined only here, bound to the attested earlier occurrence.
     (source / "codes").mkdir()
     shutil.copyfile(case / "kind.csv", source / "codes/kind.csv")
@@ -284,6 +287,21 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             }
             for f in files.json()["data"]["files"]
         ] == minted["files"]
+        # Fails if a steward-stated successor of a steward-only variable on a
+        # reference table is silently not followed (ordering clips instead).
+        follow = json.loads(json.dumps(minted["project"]))
+        follow["sources"][0]["bindings"][0]["follow_successor"] = True
+        order = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=follow
+        )
+        assert order.status_code == 422, order.text
+        assert [
+            (f["code"], f["variable"], f["successor_fqid"])
+            for f in order.json()["error"]["fields"]["findings"]
+            if f["level"] == "error"
+        ] == [
+            ("variable_replaced", "demo/projected/steward-slot", "demo/projected/cells")
+        ]
     finally:
         pool.close()
     # Fails if located occurrence declarations can omit all supplemental segments
