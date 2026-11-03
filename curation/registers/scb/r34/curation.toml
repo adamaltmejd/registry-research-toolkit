@@ -23780,7 +23780,7 @@ evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension
 
 [[statement]]
 kind = "set"
-subject = "var:alderspension-inkomst-premie-garanti"
+fields = { "label" = "Summa inkomst föranledd av ålderspension (SumAldP03)" }
 fields = { "label" = "Summa inkomst föranledd av ålderspension (inkomst-, premie- och garantipension)" }
 evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SumAld opdefs are generic until 2000 and name folkpension/ATP only from 2000-03, so only the code is safe; SumAldP03 opdef names inkomst-, tilläggs-, premie- and garantipension in every occurrence."
 
