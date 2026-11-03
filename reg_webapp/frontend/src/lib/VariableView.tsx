@@ -7,9 +7,11 @@ import {
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
+import { variableColumns } from "./add_columns";
 import {
   type CatalogSegment,
   type Context,
+  getGraph,
   getSegments,
   getVariableEvidence,
   type ValidationResultModel,
@@ -22,7 +24,12 @@ import {
   humanizeClassificationSlug,
 } from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
-import { loadRegister, registerSubjectNames } from "./catalog_names";
+import {
+  loadRegister,
+  registerRead,
+  registerSubjectNames,
+  segmentsRead,
+} from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
@@ -37,10 +44,16 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
 import { useVariableCoverage } from "./VariableCoverage";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
+
+const readNeighbourSegments = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, segmentsRead(fqid)]));
+const readNeighbourRegisters = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, registerRead(fqid)]));
 
 function segmentFacts(row: CatalogSegment) {
   return [
@@ -123,10 +136,56 @@ export function VariableView({
     (signal) => loadRegister(node.register, signal),
   );
   const register = registerResource.data;
-  const names = registerSubjectNames(register);
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
+  const graph = useAsyncResource(node.fqid, (signal) =>
+    getGraph(node.fqid, { kind: "continues", signal }),
+  );
+  const neighbours = useCatalogRead(
+    readNeighbourSegments,
+    useDistinct(
+      (graph.data?.nodes ?? [])
+        .filter(
+          (entry) => entry.kind === "variable" && entry.fqid !== node.fqid,
+        )
+        .map((entry) => entry.fqid),
+    ),
+  );
+  const neighbourRegisters = useCatalogRead(
+    readNeighbourRegisters,
+    useDistinct(
+      Object.keys(neighbours)
+        .map((fqid) => fqid.split("/").slice(0, 2).join("/"))
+        .filter((ref) => ref !== node.register),
+    ),
+  );
+  const names = new Map(registerSubjectNames(register));
+  for (const read of Object.values(neighbourRegisters)) {
+    for (const [fqid, name] of registerSubjectNames(read.value))
+      names.set(fqid, name);
+  }
+  const neighbourColumns = new Map(
+    Object.entries(neighbours).map(([fqid, read]) => [
+      fqid,
+      variableColumns(read.value ?? []),
+    ]),
+  );
+  const successionError = graph.error
+    ? "Succession relations did not load."
+    : Object.values(neighbours).some(
+          (read) => !read.loading && read.value === null,
+        )
+      ? "Neighbour columns did not load."
+      : Object.values(neighbourRegisters).some(
+            (read) => !read.loading && read.value === null,
+          )
+        ? "Neighbour register names did not load."
+        : null;
+  const successionLoading =
+    graph.loading ||
+    Object.values(neighbours).some((read) => read.loading) ||
+    Object.values(neighbourRegisters).some((read) => read.loading);
   // Keep the key after closing: the resource (including a failure) lasts for this page.
   const [evidenceRequested, setEvidenceRequested] = useState(false);
   const evidence = useAsyncResource(
@@ -140,6 +199,9 @@ export function VariableView({
     context,
     tables: register?.tables ?? null,
     validation,
+    succession: graph.data,
+    neighbourColumns,
+    successionError,
   });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
@@ -202,7 +264,7 @@ export function VariableView({
         ref={registerRegion}
         tabIndex={-1}
         className={variableStyles.registerRead}
-        aria-busy={registerResource.loading || undefined}
+        aria-busy={registerResource.loading || successionLoading || undefined}
       >
         {registerResource.loading ? (
           <Skeleton count={2} />

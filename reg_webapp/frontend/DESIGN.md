@@ -548,33 +548,18 @@ Time is the axis every relation is drawn on.
   variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
   coding change as a `warn` mark; the variables a succession reaches are further lanes
   in time order, with their arrows. A line under the drawing says plainly that clicking
-  a column ticks it, and there is no second graph on the page.
+  a column ticks it, and there is no second graph on the page. Succession reaches one
+  hop of read-only lanes, with arrows from predecessor to successor and each neighbour's
+  name linking to its variable page.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
-  cover the window is visible before it is added. It is one row of a register's variable
-  list, never a table with column headers: the in-project dot, the name in the text
-  face, the bar, and one real checkbox named "Add <variable name>" (with its period when
-  the name repeats). The tick stands for every delivery column with a delivery in the
-  study window that is not already in the project. With no study window it uses the
-  variable's whole availability within the catalog bounds. The register page has no add
-  window; per-column choice stays on the variable page. Segments are read only on tick;
-  once loaded, the selected columns appear under the name as `ColumnChip`s without
-  ticks. A variable bound in any source shows the dot and no checkbox; topping up a
-  partially bound variable is deferred. A hull outside the window has no checkbox and
-  says "Outside the study window." to assistive technology after the delivered years.
-  While a project is open, a paragraph under the panel title explains that variables not
-  delivered in the study window (naming its years) cannot be added; without a study
-  window it explains that variables already in the project cannot be added again. With
-  no project there are no ticks, and the paragraph says "Create or open a project to
-  select columns." Status rows sit directly under this hint, inside the flush panel;
-  only these lines are padded. Below `breakpoint-narrow` the row stacks: the bar on top,
-  then the name with the checkbox to its right, then the chips under the name (#1826).
-  While anything is ticked, the shared `AddBar` reads "Add N columns to project" as the
-  pane's one `primary` button; N counts loaded columns and the button is disabled and
-  busy while a tick's columns load. Before any columns have loaded, it reads "Reading
-  columns…". With nothing ticked there is no bar. Adding uses one source per table and
-  one binding per variable; it clears ticks, shows the variable page's status copy and
-  focuses the panel heading.
+  cover the window is visible before it is added. It is one read-only row of a
+  register's variable list, never a table with column headers: the in-project dot and
+  wash, the name in the text face as a link to the variable page, and the bar with the
+  study window block. Assistive technology reads "Delivered <years>" and, when bound, ",
+  in the project". Below `breakpoint-narrow` the bar sits on top, then the name with its
+  dot (#1826). Adding starts from the variable page, where the coverage `LaneGraph`, add
+  window and add bar show which tables and years are added.
 
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
@@ -588,10 +573,9 @@ Time is the axis every relation is drawn on.
   It draws the study window's band and, over it, an add window that differs, as on the
   variable page, with the axis years on the add window's bounds when one is drawn. Its
   legend keys only the marks drawn: the plain chip is "Click to select" and the filled
-  one "In project"; a chip outside the window needs no key. Its add bar, like the
-  register's, shows only while a change is staged. On a variable page the `LaneGraph` is
-  the `Timeline` (above). Don't draw free-form node graphs; the time axis is the
-  information.
+  one "In project"; a chip outside the window needs no key. Its add bar shows only while
+  a change is staged. On a variable page the `LaneGraph` is the `Timeline` (above).
+  Don't draw free-form node graphs; the time axis is the information.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
@@ -668,9 +652,9 @@ not grow new visual language meanwhile.
   `surface` with a `border-strong` hairline and `sm` radius. Text uses `body-sm`; focus
   uses the shared ring. Options use plain names, and the overlay uses `--z-popover`.
   Type and classification controls compose this shared primitive.
-- **AddBar:** the shared sticky bottom bar for staged columns on register and variable
-  pages. Its one `primary` button reads "Add N columns to project" and can be disabled
-  while selected columns load. The caller omits it when nothing is selected.
+- **AddBar:** the shared sticky bottom bar for staged columns on the variable page. Its
+  one `primary` button reads "Add N columns to project". The caller omits it when
+  nothing is selected.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The

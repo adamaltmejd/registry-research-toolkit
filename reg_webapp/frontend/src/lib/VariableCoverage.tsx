@@ -4,12 +4,14 @@ import {
   columnInProject,
   columnWindowPeriod,
   type TablePeriodMetadata,
+  type VariableColumn,
   variableColumns,
 } from "./add_columns";
 import {
   type CatalogSegment,
   type Context,
   errMessage,
+  type Graph,
   type ValidationResultModel,
   type VariableShow,
 } from "./api";
@@ -23,7 +25,7 @@ import {
   uncoveredYears,
   yearWindowLabel,
 } from "./period";
-import { variableSpans } from "./picker_graph";
+import { successionLanes, variableSpans } from "./picker_graph";
 import type { ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import { columnYearRuns, studyWindow } from "./study_window";
@@ -35,7 +37,7 @@ import { useProject } from "./use_project";
 import styles from "./VariableCoverage.module.css";
 import { windowBounds } from "./window_bounds";
 
-/** The variable's first lane. Succession lanes can join this same drawing. */
+/** The focus columns and their read-only succession neighbours on one axis. */
 export function useVariableCoverage({
   node,
   segments,
@@ -43,6 +45,9 @@ export function useVariableCoverage({
   context,
   tables,
   validation,
+  succession = null,
+  neighbourColumns = new Map(),
+  successionError = null,
 }: {
   node: VariableShow;
   segments: readonly CatalogSegment[];
@@ -50,6 +55,9 @@ export function useVariableCoverage({
   context: Context | null;
   tables: readonly TablePeriodMetadata[] | null;
   validation: ValidationResultModel | null;
+  succession?: Graph | null;
+  neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
+  successionError?: string | null;
 }) {
   const { draft } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
@@ -77,7 +85,18 @@ export function useVariableCoverage({
     : seed;
   const differs = !sameYearWindow(active, seed);
   const axis = dataAxis(
-    [...runs.flatMap((run) => [run.from, run.to]), active.from, active.to],
+    [
+      ...runs.flatMap((run) => [run.from, run.to]),
+      ...[...neighbourColumns.values()].flatMap((entries) =>
+        entries.flatMap((column) =>
+          columnYearRuns(column.segments, [bounds.min, bounds.max]).flatMap(
+            (run) => [run.from, run.to],
+          ),
+        ),
+      ),
+      active.from,
+      active.to,
+    ],
     study,
     [bounds.min, bounds.max],
   );
@@ -96,6 +115,15 @@ export function useVariableCoverage({
     axis,
     catalogBounds: [bounds.min, bounds.max],
     selected,
+  });
+  const neighbours = successionLanes({
+    focusSpans: spans,
+    graph: succession,
+    neighbourColumns,
+    names,
+    project: draft,
+    axis,
+    catalogBounds: [bounds.min, bounds.max],
   });
   const years = [
     ...new Set(
@@ -179,16 +207,20 @@ export function useVariableCoverage({
         </span>
         <LaneGraph
           label="Variable columns"
-          lanes={[...new Set(columns.map((column) => column.table))].map(
-            (table) => ({
-              id: table,
-              name: node.name,
-              sub: { text: names.get(table) ?? "Table name unavailable" },
-              current: true,
-            }),
-          )}
-          spans={spans}
-          edges={[]}
+          lanes={[
+            ...[...new Set(columns.map((column) => column.table))].map(
+              (table) => ({
+                id: table,
+                name: node.name,
+                sub: { text: names.get(table) ?? "Table name unavailable" },
+                current: true,
+                relations: neighbours.relations.get(table),
+              }),
+            ),
+            ...neighbours.lanes,
+          ]}
+          spans={[...spans, ...neighbours.spans]}
+          edges={neighbours.edges}
           axis={axis}
           window={study ? [study.from, study.to] : null}
           addWindow={differs || !study ? [active.from, active.to] : null}
@@ -222,6 +254,11 @@ export function useVariableCoverage({
             setError(null);
           }}
         />
+        {successionError && (
+          <StatusRow tone="error" live="alert">
+            {successionError} Reload the page to try again.
+          </StatusRow>
+        )}
         {!draft && (
           <p className={styles.hint}>
             Create or open a project to select columns.

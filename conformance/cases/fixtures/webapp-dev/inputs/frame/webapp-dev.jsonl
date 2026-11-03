@@ -22,6 +22,7 @@
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Inkomst","source_key":"inkomst","label":"Inkomst före skatt","dtype":"int","unit":"kr","definition":"Summan av förvärvsinkomster före skatt."}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2016","column":"AntalBas","source_key":"antalbas","label":"Antal personer, basregistret","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","valueset":"kon"}
 {"kind":"occurrence","provider":"demo","register":"bas","table":"","release":"b2017","column":"Sysselsattning","source_key":"syss","label":"Sysselsättning","dtype":"char","valueset":"syss15"}
@@ -87,6 +88,7 @@
 {"kind":"link","relation":"continues","subject":{"provider":"demo","kind":"table","register":"hush","table":"fam"},"object":{"provider":"demo","kind":"table","register":"hush","table":"famgammal"},"at":"2018-01-01"}
 {"kind":"link","relation":"continues","subject":{"kind":"table","provider":"demo2","register":"reg","table":"ny"},"object":{"kind":"table","provider":"demo2","register":"reg","table":"gammal"}}
 {"kind":"link","relation":"continues","subject":{"provider":"demo","kind":"variable","register":"hush","key":"antal"},"object":{"provider":"demo","kind":"variable","register":"hush","key":"antalgammal"},"note":"Antal ersätter AntalGammal från 2021."}
+{"kind":"link","relation":"continues","subject":{"provider":"demo","kind":"variable","register":"hush","key":"antal"},"object":{"provider":"demo","kind":"variable","register":"bas","key":"antalbas"},"at":"2021-01-01"}
 {"kind":"link","relation":"derived_from","subject":{"provider":"demo","kind":"variable","register":"bas","key":"kommun"},"object":{"provider":"demo","kind":"register","register_name":"Hushållsregistret"}}
 {"kind":"notice","subject":{"provider":"demo","kind":"variable","register":"bas","key":"inkomst"},"text":"Inkomst mäts efter skatt från 2019."}
 {"kind":"notice","subject":{"provider":"demo","kind":"release","register":"hush","table":"fam","key":"f2021"},"text":"Familjebegreppet ändrades 2021."}
