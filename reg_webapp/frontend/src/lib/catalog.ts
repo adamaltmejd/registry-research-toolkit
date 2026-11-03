@@ -599,8 +599,7 @@ export function deliveredYears(
 }
 
 /** The 4-digit year of an ISO `YYYY-MM-DD` bound as an int, or null when it
- * isn't a leading-4-digit string (a blank/edge bound on a stale payload). Shared
- * with `picker_graph.ts`'s `orderKey` (one home for the leading-year regex). */
+ * isn't a leading-4-digit string (a blank/edge bound on a stale payload). */
 export function yearOf(iso: string | null): number | null {
   const m = /^(\d{4})/.exec(iso ?? "");
   return m ? Number.parseInt(m[1], 10) : null;

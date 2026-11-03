@@ -1,4 +1,9 @@
 /* Five fixed tracks fit the detail pane; secondary facts live in Definitions. */
+.registerRead:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 .segments table {
   table-layout: fixed;
 }

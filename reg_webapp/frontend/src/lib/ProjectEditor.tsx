@@ -11,6 +11,7 @@ import { catalogHref } from "./catalog";
 import { sourcePeriodLabel } from "./catalog_period";
 import { OrderView } from "./OrderView";
 import styles from "./ProjectEditor.module.css";
+import { clampYearWindow } from "./period";
 import type { ProjectData } from "./project_data";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store";
@@ -24,6 +25,8 @@ import { type ProjectValidation, useProject } from "./use_project";
 import { useQueryParam } from "./use_router";
 import { LocatedIssue, ValidationPanel } from "./ValidationPanel";
 import { issueId, issuePlace, type ValidationIssue } from "./validation";
+import { windowStore } from "./window";
+import { defaultStudyWindow, windowBounds } from "./window_bounds";
 
 export function ProjectEditor({
   context,
@@ -56,11 +59,17 @@ export function ProjectEditor({
           isInert={!context}
           onPress={() => {
             if (context)
-              replace(() =>
+              replace(() => {
+                const bounds = windowBounds(context);
                 projectStore.newProject({
                   reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
-                }),
-              );
+                  window: clampYearWindow(
+                    windowStore.value ?? defaultStudyWindow(bounds),
+                    bounds.min,
+                    bounds.max,
+                  ),
+                });
+              });
           }}
         >
           Create a project

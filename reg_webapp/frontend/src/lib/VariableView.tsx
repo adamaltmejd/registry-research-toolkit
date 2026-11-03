@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Button,
   Disclosure,
@@ -9,8 +9,10 @@ import {
 } from "react-aria-components";
 import {
   type CatalogSegment,
+  type Context,
   getSegments,
   getVariableEvidence,
+  type ValidationResultModel,
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
@@ -20,11 +22,12 @@ import {
   humanizeClassificationSlug,
 } from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
-import { registerRead, registerSubjectNames } from "./catalog_names";
+import { loadRegister, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
+import { Button as ActionButton } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
@@ -34,8 +37,8 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
-import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
+import { useVariableCoverage } from "./VariableCoverage";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 
@@ -104,8 +107,22 @@ export function ValueSetLabel({
   );
 }
 
-export function VariableView({ node }: { node: VariableShow }) {
-  const register = useCatalogRead(registerRead, node.register).value;
+export function VariableView({
+  node,
+  context,
+  validation,
+}: {
+  node: VariableShow;
+  context: Context | null;
+  validation: ValidationResultModel | null;
+}) {
+  const [registerAttempt, setRegisterAttempt] = useState(0);
+  const registerRegion = useRef<HTMLDivElement>(null);
+  const registerResource = useAsyncResource(
+    `${node.register}:${registerAttempt}`,
+    (signal) => loadRegister(node.register, signal),
+  );
+  const register = registerResource.data;
   const names = registerSubjectNames(register);
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
@@ -116,6 +133,14 @@ export function VariableView({ node }: { node: VariableShow }) {
     evidenceRequested ? node.fqid : null,
     (signal) => getVariableEvidence(node.fqid, { signal }),
   );
+  const coverage = useVariableCoverage({
+    node,
+    segments: segments.data ?? [],
+    names,
+    context,
+    tables: register?.tables ?? null,
+    validation,
+  });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
     facts.every((row) => row[index].value === fact.value),
@@ -173,6 +198,36 @@ export function VariableView({ node }: { node: VariableShow }) {
             : []),
         ]}
       />
+      <div
+        ref={registerRegion}
+        tabIndex={-1}
+        className={variableStyles.registerRead}
+        aria-busy={registerResource.loading || undefined}
+      >
+        {registerResource.loading ? (
+          <Skeleton count={2} />
+        ) : registerResource.error ? (
+          <StatusRow
+            tone="error"
+            live="alert"
+            action={
+              <ActionButton
+                variant="ghost"
+                onPress={() => {
+                  setRegisterAttempt((attempt) => attempt + 1);
+                  registerRegion.current?.focus();
+                }}
+              >
+                Retry
+              </ActionButton>
+            }
+          >
+            Could not load the register's tables.
+          </StatusRow>
+        ) : (
+          coverage.graph
+        )}
+      </div>
       {node.description ? (
         <Panel title="Description">
           <p className={styles.prose}>{node.description}</p>
@@ -347,6 +402,7 @@ export function VariableView({ node }: { node: VariableShow }) {
           </>
         )}
       </Disclosure>
+      {coverage.addBar}
     </article>
   );
 }

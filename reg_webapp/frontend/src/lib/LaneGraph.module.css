@@ -100,7 +100,7 @@
 }
 
 /* LaneList: the lanes' rows in flow, ruled like the drawn lanes. */
-.laneList > li + li {
+.laneList > :where(li + li) {
   border-top: 1px solid var(--border);
 }
 
@@ -214,20 +214,8 @@ a.nameText {
   cursor: pointer;
 }
 
-/* The native checkbox, transparent over the whole span: the span is the
-   control a pointer hits, and focus and Space land on a real input. */
-.hit {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: inherit;
-  /* Functional, not a tone: the input is the hit target, the chip its face. */
-  opacity: 0;
-  /* Taller than the picker's sticky Apply footer, wrapped at 375 px, so a
-     focused span is scrolled clear of it (WCAG 2.4.11). */
+/* Keep a focused checkbox clear of the sticky add bar. */
+.pick {
   scroll-margin-bottom: 7rem;
 }
 
@@ -261,9 +249,11 @@ a.nameText {
 }
 
 /* Will be added: the selection wash, pine as text. */
-.span[data-staged="add"] .face {
+.span[data-staged="add"] .face,
+.legend .selectedSample {
   border-color: var(--accent);
-  background: var(--accent-bg);
+  border-width: 2px;
+  background: var(--accent-band);
   color: var(--accent-ink);
 }
 
@@ -287,7 +277,7 @@ a.nameText {
   background: var(--surface-hover);
 }
 
-.span:has(.hit:focus-visible) .face {
+.span[data-focus-visible] .face {
   box-shadow: var(--focus-ring);
 }
 
@@ -327,7 +317,7 @@ a.nameText {
 }
 
 .span[data-state="out"] .outside {
-  color: var(--text-faint);
+  color: var(--text-muted);
 }
 
 .change {
@@ -370,6 +360,15 @@ a.nameText {
   color: var(--err);
   font-family: var(--font-mono);
   font-weight: 600;
+}
+
+.keyChange {
+  color: var(--warn);
+}
+
+.keyChip {
+  min-inline-size: 1rem;
+  min-block-size: 0.75rem;
 }
 
 .keyRename {
