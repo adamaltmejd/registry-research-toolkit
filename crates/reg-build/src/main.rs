@@ -603,15 +603,7 @@ fn build_with_provenance(
         providers,
         registers: resolved,
         valuesets,
-        sentinels: applied
-            .sentinels
-            .into_iter()
-            .fold(BTreeMap::new(), |mut sets, declaration| {
-                sets.entry(declaration.hash)
-                    .or_insert_with(BTreeSet::new)
-                    .extend(declaration.codes);
-                sets
-            }),
+        sentinels: curation::sentinel_codes(&applied.sentinels),
         file_input,
         relations: linked.relations,
         notices: linked.notices,

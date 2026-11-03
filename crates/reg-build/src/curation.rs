@@ -797,6 +797,17 @@ pub(super) struct Applied {
         BTreeMap<(String, String), BTreeMap<usize, reg_resolve::curation::ack::Acknowledgement>>,
 }
 
+/// Every curated sentinel code by value-set hash.
+pub(super) fn sentinel_codes(declarations: &[Sentinels]) -> BTreeMap<String, BTreeSet<String>> {
+    let mut sets = BTreeMap::<_, BTreeSet<_>>::new();
+    for declaration in declarations {
+        sets.entry(declaration.hash.clone())
+            .or_default()
+            .extend(declaration.codes.iter().cloned());
+    }
+    sets
+}
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Phase {
     Parents,
@@ -1883,7 +1894,13 @@ pub(super) fn complete_findings(
         linked.relations =
             crate::link::curate(root, &resolved, records, &applied.links, base)?.relations;
     }
-    crate::proposals::generate(&mut resolved, &applied.classifications, &sets, &linked)?;
+    crate::proposals::generate(
+        &mut resolved,
+        &applied.classifications,
+        &sets,
+        &sentinel_codes(&applied.sentinels),
+        &linked,
+    )?;
     Ok(resolved)
 }
 

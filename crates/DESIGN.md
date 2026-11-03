@@ -2124,8 +2124,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 
 ### Logical types (N1) and metadata for local mocks
 
-N1 belongs in `reg-resolve`, after source normalization and occurrence curation, not in
-a SWECOV reader or the runner. Keep source dtype/length evidence distinct from the
+N1 runs after source normalization and occurrence curation, with the other review-only
+proposals (`reg-build/src/proposals/types.rs`, beside V1), not in a SWECOV reader or the
+runner. Keep source dtype/length evidence distinct from the
 inferred logical type. A disagreement with the reader's `[types]` map emits a located
 `N1` review with both types, evidence and a proposed ordinary `set type` where
 representable. It does not automatically rewrite a segment, clear ambiguity or silence
@@ -2141,6 +2142,19 @@ all-integer code domain with no significant leading zero may propose integer;
 alphanumeric or zero-padded codes preserve text, and documented non-integral numeric
 literals may propose decimal. Unsupported/ambiguous domains propose nothing. This is
 review output, not permission to reinterpret an amount from an incomplete code list.
+
+The implemented table reads a used occurrence's documented non-sentinel codes and emits
+`N1:logical-type` (review, on the occurrence) with a `set type` proposal in two cases
+only: text whose codes are all integers with no leading zero proposes `integer`, and an
+integer whose numeric codes include a non-integral `.` literal proposes `decimal`. It
+proposes nothing for a decimal's integer codes (the list does not prove an uncoded
+amount integral, and D's ruling keeps integer/decimal switches to evidenced curation),
+for letters or punctuation on a numeric column (unflagged missing markers such as `.`
+and `blank` are as common as real codes there), for a comma (`1,5` may list two codes),
+or for a classification-bound occurrence (its binding governs the codes). A curator
+adopts a proposal with the `set type` it carries, or acknowledges the review. A read-only
+query of the 0.73.0 catalog estimates about 25,900 reviews on 3,850 variables, all from
+the text rule (V1 publishes about 155,000).
 Documented date/number-format extensions require an evidenced later rule change, not an
 open maintainer question for E. Curated > rule > source is fixed (clean-room §2.4). N1
 reviews propose and never apply a correction: consumers use adopted normalized types
@@ -2193,6 +2207,14 @@ logical row-key entries have only variable/spelling; fetch key type/identifier k
 through those semantic operations rather than infer it from the header. Unknown remains
 unknown; N1 proposals become effective output types only after review/adoption. These
 metadata gaps belong to e-holdings/e-order/e-types, not a mock service.
+
+The e-types audit (#2071) found them filled: `coverage` returns `held` placements from
+the holdings file; `materialize_order` columns carry exact `refs` (source, binding,
+table, variable, period, spelling) that join the logical order's entries, which carry
+the adopted type, length, value set and classification; row-key types and identifier
+kinds come from `schema`/`segments`; `values` flags sentinels; open N1 reviews are read
+through `findings`. The manifest keeps storage types only, as the runner checks SQL
+storage; it gains no logical type.
 
 Mocks read no MONA rows or empirical distributions. Use adopted types, lengths, value
 sets and classification pins; refuse unknown/unsupported types needing a guess. Generate
