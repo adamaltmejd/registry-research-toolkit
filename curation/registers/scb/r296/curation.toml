@@ -1725,3 +1725,15 @@ kind = "set"
 subject = "var:ar-undersokningsar"
 fields = { "label" = "År (undersökningsår)" }
 evidence = "#2102 same-label cluster 'År' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; UndersokningsAr has opdef 'Undersökningsår' in all its occurrences (tpi 2007-2012); Ar is the calendar year; Fv_ar (ppi 2001-2013) has only 'Uppdateras manuellt vid årsskifte'."
+
+[[statement]]
+kind = "set"
+subject = "var:period-ppi-periodid"
+fields = { "label" = "Period PPI (PeriodId)" }
+evidence = "#2102 same-label cluster 'Period PPI' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; PeriodId (2013-2026) and Period (2017-2027) are concurrent in ppi over 2017-2026, and PeriodId gains a 14th code (13=Period 0 i PPI) from 2023 that Period lacks."
+
+[[statement]]
+kind = "set"
+subject = "var:period-ppi-period"
+fields = { "label" = "Period PPI (Period)" }
+evidence = "#2102 same-label cluster 'Period PPI' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; PeriodId (2013-2026) and Period (2017-2027) are concurrent in ppi over 2017-2026, and PeriodId gains a 14th code (13=Period 0 i PPI) from 2023 that Period lacks."

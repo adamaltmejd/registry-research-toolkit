@@ -10584,3 +10584,33 @@ kind = "set"
 subject = "var:overford-el-till-slutlig-forbrukare-radn"
 fields = { "label" = "Överförd el till slutlig förbrukare (radn)" }
 evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-maxnettoopt"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (optimalt bränsle)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-maxnetto"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (vid huvudbränsle)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-max-netto-knr"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (KNr)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoprod"
+fields = { "label" = "Elproduktion brutto (bruttoprod)" }
+evidence = "#2102 same-label cluster 'Elproduktion brutto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In elproducerande-industriforetag both columns exist concurrently with different opdefs: bruttoprod is split by plant type (hydro, wind) while elprodbrutto is gross production including plant own consumption."
+
+[[statement]]
+kind = "set"
+subject = "var:elprodbrutto"
+fields = { "label" = "Elproduktion brutto (elprodbrutto)" }
+evidence = "#2102 same-label cluster 'Elproduktion brutto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In elproducerande-industriforetag both columns exist concurrently with different opdefs: bruttoprod is split by plant type (hydro, wind) while elprodbrutto is gross production including plant own consumption."

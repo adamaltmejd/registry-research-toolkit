@@ -4687,3 +4687,21 @@ kind = "set"
 subject = "var:kommungrupp-text"
 fields = { "label" = "Kommungruppsindelning (klartext)" }
 evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Letter-digit codes (Kommungrupp, A1-C9) vs numeric codes (KomGrupp17/23) vs klartext (Kommungrupp_text, opdef 'i klartext'); same SKR nine-group definition."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-kursdeltagaren-lopnr"
+fields = { "label" = "Löpnummer för kursdeltagaren (LopNr)" }
+evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kursdeltid"
+fields = { "label" = "Löpnummer för kursdeltagaren (KursDeltID)" }
+evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-kursdeltagaren-kdeltid"
+fields = { "label" = "Löpnummer för kursdeltagaren (KDeltID)" }
+evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."

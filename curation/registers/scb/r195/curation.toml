@@ -1998,3 +1998,15 @@ kind = "set"
 subject = "var:stratam"
 fields = { "label" = "Stratumbeteckning objekt (stratam)" }
 evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition; only stratam's opdef (4 digits, optional 5th digit for month in the quarter) differs, and 'A-/B-strata' appears in no text I may use, so stratam takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanks"
+fields = { "label" = "Urvalsstorlek per stratum (lillanks)" }
+evidence = "#2102 same-label cluster 'Urvalsstorlek per stratum' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; lillanks and lillanrfv have no opdef and run concurrently in sjukfranvaro-sjukloneperioden; Lillan has opdef 'Antalet utvalda objekt i ett stratum'."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanrfv"
+fields = { "label" = "Urvalsstorlek per stratum (lillanrfv)" }
+evidence = "#2102 same-label cluster 'Urvalsstorlek per stratum' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; lillanks and lillanrfv have no opdef and run concurrently in sjukfranvaro-sjukloneperioden; Lillan has opdef 'Antalet utvalda objekt i ett stratum'."

@@ -93570,3 +93570,117 @@ kind = "set"
 subject = "var:lab4"
 fields = { "label" = "Övriga obeskattade reserver (LAB4)" }
 evidence = "#2102 same-label cluster 'Övriga obeskattade reserver (RBB4)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-skuld-foregaende-ar-fskuslt"
+fields = { "label" = "Utgående skuld 31 dec föregående år SL (FSKUSLT)" }
+evidence = "#2102 same-label cluster 'Utgående skuld 31 dec föregående år AL' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FSKUSLT's opdef says 'SL' but the plain 'SL' label is taken by another variable in the register, so the column code is added; FSKUALT keeps its existing 'AL' label."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-skogs-skogsskade-upphovsmannakonto-fran-n1"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0153)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V0153's opdef changes over time (Periodiseringar 2000, N1 2001-05, Från N1 2005-07), so '(från N1)' is not true of every occurrence; V0842 and V7606 have no text."
+
+[[statement]]
+kind = "set"
+subject = "var:v0842"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0842)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V0153's opdef changes over time (Periodiseringar 2000, N1 2001-05, Från N1 2005-07), so '(från N1)' is not true of every occurrence; V0842 and V7606 have no text."
+
+[[statement]]
+kind = "set"
+subject = "var:v7606"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V7606)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V0153's opdef changes over time (Periodiseringar 2000, N1 2001-05, Från N1 2005-07), so '(från N1)' is not true of every occurrence; V0842 and V7606 have no text."
+
+[[statement]]
+kind = "set"
+subject = "var:ankepension"
+fields = { "label" = "Änkepension (kod)" }
+evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:ankepension-tp-forekomst"
+fields = { "label" = "Änkepension (från TP)" }
+evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:baepmanb"
+fields = { "label" = "Änkepension (antal månader)" }
+evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:paeyltp"
+fields = { "label" = "Änkepension (yrkeslivsränteavdrag, TP)" }
+evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:paenkp"
+fields = { "label" = "Änkepension (PAENKP)" }
+evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-vardeminskning-forsaljning"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V0629)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; 'N2' and 'periodiseringar' appear in the opdef of only some V0629/V0783 occurrences (V0629 in aktiebolag and handelsbolag has none), so codes are used for all four."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-vardeminskning-forsaljning-2"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V0783)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; 'N2' and 'periodiseringar' appear in the opdef of only some V0629/V0783 occurrences (V0629 in aktiebolag and handelsbolag has none), so codes are used for all four."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-vardeminskning-forsaljning-3"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V7605)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; 'N2' and 'periodiseringar' appear in the opdef of only some V0629/V0783 occurrences (V0629 in aktiebolag and handelsbolag has none), so codes are used for all four."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-vardeminskning-forsaljning-4"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V7662)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; 'N2' and 'periodiseringar' appear in the opdef of only some V0629/V0783 occurrences (V0629 in aktiebolag and handelsbolag has none), so codes are used for all four."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiebidrag-2"
+fields = { "label" = "Studiemedel, studiebidrag (ISMBID)" }
+evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; IBID's opdef is the CSN grant part, while ISMBID sums studiebidrag lån and studiebidrag i utlandet lån; ISMBID00 repeats the ISMBID opdef with 'Avser 2000'."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiebidrag-ismbid00"
+fields = { "label" = "Studiemedel, studiebidrag (ISMBID00)" }
+evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; IBID's opdef is the CSN grant part, while ISMBID sums studiebidrag lån and studiebidrag i utlandet lån; ISMBID00 repeats the ISMBID opdef with 'Avser 2000'."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiebidrag"
+fields = { "label" = "Studiemedel, studiebidrag (bidragsdelen från CSN)" }
+evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; IBID's opdef is the CSN grant part, while ISMBID sums studiebidrag lån and studiebidrag i utlandet lån; ISMBID00 repeats the ISMBID opdef with 'Avser 2000'."
+
+[[statement]]
+kind = "set"
+subject = "var:v04"
+fields = { "label" = "Utdelning som beskattas i tjänst Huvudregeln punkt 2.7 (V0471)" }
+evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudregeln punkt 2.7' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V4525 and V4526 coexist in bilaga-k10 2012-2014 and V4526's 2014 opdef says the amount is after avdraget gränsbelopp; V0471 and V0469 coexist 2008-2011, so they read as separate K10 lines."
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525"
+fields = { "label" = "Utdelning som beskattas i tjänst Huvudregeln punkt 2.7 (V0469, V4525)" }
+evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudregeln punkt 2.7' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V4525 and V4526 coexist in bilaga-k10 2012-2014 and V4526's 2014 opdef says the amount is after avdraget gränsbelopp; V0471 and V0469 coexist 2008-2011, so they read as separate K10 lines."
+
+[[statement]]
+kind = "set"
+subject = "var:v452"
+fields = { "label" = "Utdelning som beskattas i tjänst Huvudregeln punkt 2.7 (V4526)" }
+evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudregeln punkt 2.7' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V4525 and V4526 coexist in bilaga-k10 2012-2014 and V4526's 2014 opdef says the amount is after avdraget gränsbelopp; V0471 and V0469 coexist 2008-2011, so they read as separate K10 lines."

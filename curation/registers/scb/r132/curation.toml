@@ -1404,3 +1404,15 @@ kind = "set"
 subject = "set:varde-av-el-och-transportbransleforbrukning"
 fields = { "label" = "Värde av el och transportbränsleförbrukning" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "label" = "Näringsgren för arbetsställe (Ng)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng2002's 2007 opdef says 'Äldre standard än Ng2002', indicating Ng and Ng2002 use different classification versions; Ng2002 has no code list to compare."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "label" = "Näringsgren för arbetsställe (Ng2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng2002's 2007 opdef says 'Äldre standard än Ng2002', indicating Ng and Ng2002 use different classification versions; Ng2002 has no code list to compare."

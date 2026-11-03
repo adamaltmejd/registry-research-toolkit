@@ -2176,3 +2176,27 @@ kind = "set"
 subject = "var:uppvarmningkomplementtext"
 fields = { "label" = "Kompletterande uppvärmning (i klartext)" }
 evidence = "#2102 same-label cluster 'Kompletterande uppvärmning' (2 variables): judged different meaning, high confidence; UppvarmningKomplement is a Nej/Ja flag; UppvarmningKomplementText holds the installation in clear text (opdef 'i klartext')."
+
+[[statement]]
+kind = "set"
+subject = "var:b-fstommetillverknings"
+fields = { "label" = "Förtillverkningsgrad av stomme (härledd variabel, B_FStommeTillverknings)" }
+evidence = "#2102 same-label cluster 'Förtillverkningsgrad av stomme' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same table and period and same codes, but the opdefs say B_FStommeTillverknings is a derived variable and StommeTillverknings the original one."
+
+[[statement]]
+kind = "set"
+subject = "var:stommetillverknings"
+fields = { "label" = "Förtillverkningsgrad av stomme (ursprunglig variabel, StommeTillverknings)" }
+evidence = "#2102 same-label cluster 'Förtillverkningsgrad av stomme' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same table and period and same codes, but the opdefs say B_FStommeTillverknings is a derived variable and StommeTillverknings the original one."
+
+[[statement]]
+kind = "set"
+subject = "var:husblanketttot"
+fields = { "label" = "Totalt antal husblanketter (HusBlankettTot)" }
+evidence = "#2102 same-label cluster 'Totalt antal husblanketter' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; HusBlankettTot and TotAntalHusblanketter are concurrent in one table with near-identical definition and opdefs (only the first names the form section); nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:totantalhusblanketter"
+fields = { "label" = "Totalt antal husblanketter (TotAntalHusblanketter)" }
+evidence = "#2102 same-label cluster 'Totalt antal husblanketter' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; HusBlankettTot and TotAntalHusblanketter are concurrent in one table with near-identical definition and opdefs (only the first names the form section); nothing separates them, so each keeps its spelling."

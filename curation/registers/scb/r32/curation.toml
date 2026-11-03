@@ -5856,3 +5856,21 @@ kind = "set"
 subject = "var:yrkeskod-fob"
 fields = { "label" = "Yrkeskod FoB (3-siffernivå, FoB70–80:s yrkesschema)" }
 evidence = "#2102 same-label cluster 'Yrkeskod FoB' (3 variables): judged different meaning, medium confidence; Opdefs: Yrke is 3-digit under the FoB70/75/80 schemas, Yrke80 3-digit under the FoB80 schema (1985-91), Yrke85 5-digit under the FoB85 schema."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rumsenheter"
+fields = { "label" = "Antal rumsenheter (bostadsrum och kök)" }
+evidence = "#2102 same-label cluster 'Antal rumsenheter' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; AntRumEnhBrK opdef counts 'bostadsrum + kök', AntRumEnhRoK 'rum + kök'; AntRumEnh (1980-91) has its own coding and an opdef that counts rum as well as kök."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rumsenheter-rok"
+fields = { "label" = "Antal rumsenheter (rum och kök)" }
+evidence = "#2102 same-label cluster 'Antal rumsenheter' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; AntRumEnhBrK opdef counts 'bostadsrum + kök', AntRumEnhRoK 'rum + kök'; AntRumEnh (1980-91) has its own coding and an opdef that counts rum as well as kök."
+
+[[statement]]
+kind = "set"
+subject = "var:antrumenh"
+fields = { "label" = "Antal rumsenheter (AntRumEnh)" }
+evidence = "#2102 same-label cluster 'Antal rumsenheter' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; AntRumEnhBrK opdef counts 'bostadsrum + kök', AntRumEnhRoK 'rum + kök'; AntRumEnh (1980-91) has its own coding and an opdef that counts rum as well as kök."

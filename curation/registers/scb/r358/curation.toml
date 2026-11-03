@@ -476,3 +476,15 @@ kind = "set"
 subject = "var:total-prod-gwh"
 fields = { "label" = "Bränsleförbrukning (totalt producerad kvantitet, GWh)" }
 evidence = "#2102 same-label cluster 'Bränsleförbrukning' (3 variables): judged different meaning, high confidence; Opdefs: total exported, imported and produced quantity in GWh."
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "label" = "Näringsgren (Ng1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng1 (2016-2018) and NG2007 (2017-2024) overlap in 2017-2018 in one table with identical definition and 821-code list; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:ng2007"
+fields = { "label" = "Näringsgren (NG2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng1 (2016-2018) and NG2007 (2017-2024) overlap in 2017-2018 in one table with identical definition and 821-code list; nothing separates them, so each keeps its spelling."

@@ -4971,3 +4971,15 @@ kind = "set"
 subject = "var:ftgtyp2"
 fields = { "label" = "Typ av företag (FAD, registeråret)" }
 evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; FtgTyp2 opdef says 'Avser registeråret' in all its FAD occurrences; Typ and FtgTyp share definition, opdef and codes and overlap in arbetsstallen 1985-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast"
+fields = { "label" = "Antal sysselsatta på arbetsstället (AntalSys)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på arbetsstället' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AntalSys sums employed from the employment register, AntalSysC sums them for fixed workplaces only; they come from different tables (arbetsstallen, individer) and overlap 2019-2022."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
+fields = { "label" = "Antal sysselsatta på arbetsstället (fasta arbetsställen, AntalSysC)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på arbetsstället' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AntalSys sums employed from the employment register, AntalSysC sums them for fixed workplaces only; they come from different tables (arbetsstallen, individer) and overlap 2019-2022."

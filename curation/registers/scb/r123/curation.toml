@@ -15312,3 +15312,15 @@ kind = "set"
 subject = "var:viktigt-eller-ej-arbetet-lon-ungdomar-16-29"
 fields = { "label" = "Vad som är viktigt eller ej i arbetet. Alternativ: lönen" }
 evidence = "#2102 same-label cluster 'Vad som är viktigt eller ej i arbetet.' (7 variables): judged different meaning, high confidence; Opdefs name seven different answer items (TU24 alternatives) asked of young workers."
+
+[[statement]]
+kind = "set"
+subject = "var:understallda-chef-intervall"
+fields = { "label" = "Antal underställda (UNDERSTL)" }
+evidence = "#2102 same-label cluster 'Antal underställda' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; chef carries a five-interval code list and, from 2011, an opdef computing it from understl counts; UNDERSTL/UnderStl has no code list and concurs with chef in 2005-2006 in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:chef"
+fields = { "label" = "Antal underställda (chef)" }
+evidence = "#2102 same-label cluster 'Antal underställda' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; chef carries a five-interval code list and, from 2011, an opdef computing it from understl counts; UNDERSTL/UnderStl has no code list and concurs with chef in 2005-2006 in the same table."

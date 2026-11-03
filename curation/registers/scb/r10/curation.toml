@@ -5354,3 +5354,171 @@ kind = "set"
 subject = "var:underkod"
 fields = { "label" = "Undergröda (kod)" }
 evidence = "#2102 same-label cluster 'Undergröda' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; underkod has an 80-code list in both occurrences; undergroda has no code list and no opdef, so it keeps the bare label."
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "label" = "Gröda (gröda 1)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda10"
+fields = { "label" = "Gröda (gröda 10)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda11"
+fields = { "label" = "Gröda (gröda 11)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda12"
+fields = { "label" = "Gröda (gröda 12)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda13"
+fields = { "label" = "Gröda (gröda 13)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda14"
+fields = { "label" = "Gröda (gröda 14)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda15"
+fields = { "label" = "Gröda (gröda 15)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda16"
+fields = { "label" = "Gröda (gröda 16)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda17"
+fields = { "label" = "Gröda (gröda 17)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda18"
+fields = { "label" = "Gröda (gröda 18)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda19"
+fields = { "label" = "Gröda (gröda 19)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda2"
+fields = { "label" = "Gröda (gröda 2)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda20"
+fields = { "label" = "Gröda (gröda 20)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda3"
+fields = { "label" = "Gröda (gröda 3)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda4"
+fields = { "label" = "Gröda (gröda 4)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda5"
+fields = { "label" = "Gröda (gröda 5)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda6"
+fields = { "label" = "Gröda (gröda 6)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda7"
+fields = { "label" = "Gröda (gröda 7)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda8"
+fields = { "label" = "Gröda (gröda 8)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda9"
+fields = { "label" = "Gröda (gröda 9)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:tfid"
+fields = { "label" = "Gröda (trädgårdsgröda, TFid)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:tradid"
+fields = { "label" = "Gröda (trädgårdsgröda, TRADID)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "label" = "Gröda (trädgårdsgröda, grodid)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:kundnr-2"
+fields = { "label" = "Kundnummer (kundnr1)" }
+evidence = "#2102 same-label cluster 'Kundnummer' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; kundnr1 has no opdef; kundnr2 and kundnr (iaks-brukare) share the opdef 'Kundnummer på företaget'; kundnr later says the customer number used when applying for Jordbruksverket support."
+
+[[statement]]
+kind = "set"
+subject = "var:kundnr2"
+fields = { "label" = "Kundnummer (kundnr2)" }
+evidence = "#2102 same-label cluster 'Kundnummer' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; kundnr1 has no opdef; kundnr2 and kundnr (iaks-brukare) share the opdef 'Kundnummer på företaget'; kundnr later says the customer number used when applying for Jordbruksverket support."
+
+[[statement]]
+kind = "set"
+subject = "var:sumfriland"
+fields = { "label" = "Totala frilandssareal i hektar (Sumfriland)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-frilandssareal"
+fields = { "label" = "Totala frilandssareal i hektar (tradgard)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:friland"
+fields = { "label" = "Totala frilandssareal i hektar (friland)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."

@@ -111775,3 +111775,51 @@ kind = "set"
 subject = "var:legat-pa-sjukhus-eller-sjukhem-ha0024"
 fields = { "label" = "Legat på sjukhus eller sjukhem (HA0024)" }
 evidence = "#2102 same-label cluster 'Legat på sjukhus eller sjukhem' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HA0020 has 0/1 codes and is marked 'Härledd' only in some occurrences, so it falls back to its code. HA0449 has the codes Ja/Nej/På sjukhus nu in every occurrence; HA0024 has no codes or opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:betalt-underhallsbidrag-netto"
+fields = { "label" = "Betalt underhållsbidrag, netto (HY130N)" }
+evidence = "#2102 same-label cluster 'Betalt underhållsbidrag, netto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs state HY130N=HY131N before 2022 but HY130N >= HY131N from 2022, so the two concurrent columns differ in the later data."
+
+[[statement]]
+kind = "set"
+subject = "var:hy131n"
+fields = { "label" = "Betalt underhållsbidrag, netto (HY131N)" }
+evidence = "#2102 same-label cluster 'Betalt underhållsbidrag, netto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs state HY130N=HY131N before 2022 but HY130N >= HY131N from 2022, so the two concurrent columns differ in the later data."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-5-barntillsyn-0-12-ar"
+fields = { "label" = "Födelseår barn 5 (GO0501)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 5' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; GO0501 and FU1799 both occur in individer-16-84-ar-ulf in 1993-1994 with identical definition and unit and no opdef for FU1799; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear-barn-5-barntillsyn"
+fields = { "label" = "Födelseår barn 5 (FU1799)" }
+evidence = "#2102 same-label cluster 'Födelseår barn 5' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; GO0501 and FU1799 both occur in individer-16-84-ar-ulf in 1993-1994 with identical definition and unit and no opdef for FU1799; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-6"
+fields = { "label" = "Fördel arbete i bostaden 6 (SY1036)" }
+evidence = "#2102 same-label cluster 'Fördel arbete i bostaden 6' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In 1986-1987 the SY1036 opdef covers employees only (self-employed: see SY1131), while the SY1136 opdef covers the respondent's work as self-employed; same table, same codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-6-sy1136"
+fields = { "label" = "Fördel arbete i bostaden 6 (företagare, SY1136)" }
+evidence = "#2102 same-label cluster 'Fördel arbete i bostaden 6' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In 1986-1987 the SY1036 opdef covers employees only (self-employed: see SY1131), while the SY1136 opdef covers the respondent's work as self-employed; same table, same codes."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-butiksbuss-e-dyl-tk0183"
+fields = { "label" = "Tillgång till butiksbuss e dyl (TK0183)" }
+evidence = "#2102 same-label cluster 'Tillgång till butiksbuss e dyl' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TK0083 is asked of those with 3 km or more to a food shop; TK0183 is the follow-up for those with shorter distance and mobility or sight problems (opdefs), in the same tables 1978-1984."
+
+[[statement]]
+kind = "set"
+subject = "var:tk0"
+fields = { "label" = "Tillgång till butiksbuss e dyl (TK0083)" }
+evidence = "#2102 same-label cluster 'Tillgång till butiksbuss e dyl' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TK0083 is asked of those with 3 km or more to a food shop; TK0183 is the follow-up for those with shorter distance and mobility or sight problems (opdefs), in the same tables 1978-1984."

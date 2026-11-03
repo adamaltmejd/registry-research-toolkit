@@ -30870,3 +30870,111 @@ kind = "set"
 subject = "var:sjukvard-avstatt-pga-kostnad-bsjuavs"
 fields = { "label" = "Sjukvård - Avstått pga kostnad (individ, BSJUAVS)" }
 evidence = "#2102 same-label cluster 'Sjukvård - Avstått pga kostnad' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and 6-value code list; BSJUAVT is in the kosthushall table, BSJUAVS in individregister, and nothing says what T and S stand for."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-andel-handelsbolag"
+fields = { "label" = "Anskaffningsutgift (andel i handelsbolag)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs name distinct items: share in handelsbolag (KHBKOP), återfört uppskov (KPTUBA), uppskov (KPUBA) and 'enligt K4C.B I' (KPTUBAC)."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-aterfort-uppskov-andelbyteslagen"
+fields = { "label" = "Anskaffningsutgift (återfört tidigare uppskov enligt andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs name distinct items: share in handelsbolag (KHBKOP), återfört uppskov (KPTUBA), uppskov (KPUBA) and 'enligt K4C.B I' (KPTUBAC)."
+
+[[statement]]
+kind = "set"
+subject = "var:anskaffningsutgift-uppskov-andelbyteslagen"
+fields = { "label" = "Anskaffningsutgift (uppskov enligt andelsbyteslagen)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs name distinct items: share in handelsbolag (KHBKOP), återfört uppskov (KPTUBA), uppskov (KPUBA) and 'enligt K4C.B I' (KPTUBAC)."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubac"
+fields = { "label" = "Anskaffningsutgift (enligt K4C.B I)" }
+evidence = "#2102 same-label cluster 'Anskaffningsutgift' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs name distinct items: share in handelsbolag (KHBKOP), återfört uppskov (KPTUBA), uppskov (KPUBA) and 'enligt K4C.B I' (KPTUBAC)."
+
+[[statement]]
+kind = "set"
+subject = "var:avgald-hyresfastighet-ifa3082"
+fields = { "label" = "Avgäld hyresfastighet (IFA3082)" }
+evidence = "#2102 same-label cluster 'Avgäld hyresfastighet' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Neither column has an opdef, definition beyond the label, or code list, so 'förekomst 1/2' is unsupported; the column codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa308"
+fields = { "label" = "Avgäld hyresfastighet (IFA3081)" }
+evidence = "#2102 same-label cluster 'Avgäld hyresfastighet' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Neither column has an opdef, definition beyond the label, or code list, so 'förekomst 1/2' is unsupported; the column codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:barnomsorgskostnad"
+fields = { "label" = "Barnomsorgskostnad (individ)" }
+evidence = "#2102 same-label cluster 'Barnomsorgskostnad' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; UOMSS and UOMSSZ share one opdef and are in individregister, so '(hushåll)' for UOMSSZ is unsupported; UBRNAR's opdef is 'summerad på hushåll med intervjusvar'."
+
+[[statement]]
+kind = "set"
+subject = "var:barnomsorgskostnad-ubrnar"
+fields = { "label" = "Barnomsorgskostnad (hushåll, intervjusvar)" }
+evidence = "#2102 same-label cluster 'Barnomsorgskostnad' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; UOMSS and UOMSSZ share one opdef and are in individregister, so '(hushåll)' for UOMSSZ is unsupported; UBRNAR's opdef is 'summerad på hushåll med intervjusvar'."
+
+[[statement]]
+kind = "set"
+subject = "var:barnomsorgskostnad-uomssz"
+fields = { "label" = "Barnomsorgskostnad (UOMSSZ)" }
+evidence = "#2102 same-label cluster 'Barnomsorgskostnad' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; UOMSS and UOMSSZ share one opdef and are in individregister, so '(hushåll)' for UOMSSZ is unsupported; UBRNAR's opdef is 'summerad på hushåll med intervjusvar'."
+
+[[statement]]
+kind = "set"
+subject = "var:bantoav"
+fields = { "label" = "Boende - Antal timmar oavlönat arbete (BANTOAV)" }
+evidence = "#2102 same-label cluster 'Boende - Antal timmar oavlönat arbete' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BTIMOM and BTIMUND opdefs name om-/tillbyggnad and underhåll/reparation in ägt småhus with class codes; BANTOAV, BTIMOMK and BTIMUNDK have only their own names as opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:btimom"
+fields = { "label" = "Boende - Antal timmar oavlönat arbete (om- eller tillbyggnad i ägt småhus, klassindelat)" }
+evidence = "#2102 same-label cluster 'Boende - Antal timmar oavlönat arbete' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BTIMOM and BTIMUND opdefs name om-/tillbyggnad and underhåll/reparation in ägt småhus with class codes; BANTOAV, BTIMOMK and BTIMUNDK have only their own names as opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:btimund"
+fields = { "label" = "Boende - Antal timmar oavlönat arbete (underhåll och reparation i ägt småhus, klassindelat)" }
+evidence = "#2102 same-label cluster 'Boende - Antal timmar oavlönat arbete' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BTIMOM and BTIMUND opdefs name om-/tillbyggnad and underhåll/reparation in ägt småhus with class codes; BANTOAV, BTIMOMK and BTIMUNDK have only their own names as opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:btimomk"
+fields = { "label" = "Boende - Antal timmar oavlönat arbete (BTIMOMK)" }
+evidence = "#2102 same-label cluster 'Boende - Antal timmar oavlönat arbete' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BTIMOM and BTIMUND opdefs name om-/tillbyggnad and underhåll/reparation in ägt småhus with class codes; BANTOAV, BTIMOMK and BTIMUNDK have only their own names as opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:btimundk"
+fields = { "label" = "Boende - Antal timmar oavlönat arbete (BTIMUNDK)" }
+evidence = "#2102 same-label cluster 'Boende - Antal timmar oavlönat arbete' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BTIMOM and BTIMUND opdefs name om-/tillbyggnad and underhåll/reparation in ägt småhus with class codes; BANTOAV, BTIMOMK and BTIMUNDK have only their own names as opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:bbyggar"
+fields = { "label" = "Boende - Fastighetens nybyggnadsår/färdigställandeår (BBYGGAR, klassindelat)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens nybyggnadsår/färdigställandeår' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BBYGGAR and BHYRAR have different class boundaries in the code lists; BNYBARZ and BNYARBOZ share one opdef and have no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bhyrar"
+fields = { "label" = "Boende - Fastighetens nybyggnadsår/färdigställandeår (BHYRAR, klassindelat)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens nybyggnadsår/färdigställandeår' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BBYGGAR and BHYRAR have different class boundaries in the code lists; BNYBARZ and BNYARBOZ share one opdef and have no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bnybarz"
+fields = { "label" = "Boende - Fastighetens nybyggnadsår/färdigställandeår (BNYBARZ)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens nybyggnadsår/färdigställandeår' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BBYGGAR and BHYRAR have different class boundaries in the code lists; BNYBARZ and BNYARBOZ share one opdef and have no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bnyarboz"
+fields = { "label" = "Boende - Fastighetens nybyggnadsår/färdigställandeår (BNYARBOZ)" }
+evidence = "#2102 same-label cluster 'Boende - Fastighetens nybyggnadsår/färdigställandeår' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BBYGGAR and BHYRAR have different class boundaries in the code lists; BNYBARZ and BNYARBOZ share one opdef and have no code list."

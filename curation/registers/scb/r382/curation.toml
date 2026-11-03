@@ -3056,3 +3056,27 @@ kind = "set"
 subject = "var:variabeldelmangd-benamning-pin-subsetid"
 fields = { "label" = "Variabeldelmängd, benämning (PIN) (SubsetId)" }
 evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson"
+fields = { "label" = "E-postadress kontaktperson (epost)" }
+evidence = "#2102 same-label cluster 'E-postadress kontaktperson' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; epost and epostuppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson-2"
+fields = { "label" = "E-postadress kontaktperson (epostuppg)" }
+evidence = "#2102 same-label cluster 'E-postadress kontaktperson' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; epost and epostuppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-mobilnr"
+fields = { "label" = "Kontaktpersonens mobiltelefonnummer (mobil)" }
+evidence = "#2102 same-label cluster 'Kontaktpersonens mobiltelefonnummer' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; mobil and mobiluppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:mobiluppg"
+fields = { "label" = "Kontaktpersonens mobiltelefonnummer (mobiluppg)" }
+evidence = "#2102 same-label cluster 'Kontaktpersonens mobiltelefonnummer' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; mobil and mobiluppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."

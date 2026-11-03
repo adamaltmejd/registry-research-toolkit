@@ -894,3 +894,15 @@ kind = "set"
 subject = "var:storleksgr"
 fields = { "label" = "Storleksgrupp (storleksgr)" }
 evidence = "#2102 same-label cluster 'Storleksgrupp' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The lagervärde opdef exists only in lagerstatistik (2015-2022); storleksgr in kvartalsomsattning-tjanstesektorn has none, so the qualifier is dropped and the code used."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nsvar"
+fields = { "label" = "LillaN (lagerstatistik)" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; nsvar (lagerstatistik) and Lillan (kvartalsomsättning-tjänstesektorn) are the sample-weight factor for different surveys, with opdefs per stratum and per size group respectively."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "label" = "LillaN (kvartalsomsättning, tjänstesektorn)" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; nsvar (lagerstatistik) and Lillan (kvartalsomsättning-tjänstesektorn) are the sample-weight factor for different surveys, with opdefs per stratum and per size group respectively."

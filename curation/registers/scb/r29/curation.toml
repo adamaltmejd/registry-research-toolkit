@@ -19976,3 +19976,33 @@ kind = "set"
 subject = "var:urvalskod-panelurvalet"
 fields = { "label" = "Urvalskod för panelurvalet (BURVKODF)" }
 evidence = "#2102 same-label cluster 'Urvalskod för panelurvalet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition, opdef and code list (0/1/2) are identical; BURVKODP occurs only in taxeringshushåll tables, BURVKODF in befolkningen and utrikesfödda tables, so the column codes separate them (a \"befolkningen\" qualifier would be wrong for the utrikesfödda tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:akbf"
+fields = { "label" = "Aktuell folkbokföringsort (län, kommun, församling och fastighet, AKBF)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:blkff"
+fields = { "label" = "Aktuell folkbokföringsort (RTB per 31/12, BLKFF)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:blkfa"
+fields = { "label" = "Aktuell folkbokföringsort (BLKFA)" }
+evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AKBF gives county, municipality, parish and property number, BLKFF is taken from RTB at 31/12, BLKFA comes from another source (latest change in the population register); BLKFF and BLKFA run concurrently 1994-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pensionsforsakring"
+fields = { "label" = "Avkastningsskatt på utländska pensionsförsäkringar (SAVUKAP)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska pensionsförsäkringar' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SAVUKAP and SAVUP are concurrent in panelurval-befolkningen 2008-2016 with identical definition and unit and no opdef; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pensionsforsakring-2"
+fields = { "label" = "Avkastningsskatt på utländska pensionsförsäkringar (SAVUP)" }
+evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska pensionsförsäkringar' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SAVUKAP and SAVUP are concurrent in panelurval-befolkningen 2008-2016 with identical definition and unit and no opdef; nothing separates them, so each keeps its spelling."

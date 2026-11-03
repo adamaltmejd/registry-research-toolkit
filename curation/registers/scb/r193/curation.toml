@@ -1528,3 +1528,21 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "label" = "Utländsk/svensk bakgrund (härledd variabel)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Utl_BakG and UtlBakGr share a code list and the opdef that a missing birth country is set to Sverige; UtlBakGr2 has an 'Uppgift saknas' code; UtlSvBakg is derived with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra"
+fields = { "label" = "Moderna språk inom ramen för språkval (språk som läses)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In 2008 M2_Spra ('det språk som läses') and M2_Spra_Alt ('alternativt språk') coexist with different opdefs; M2_Spr continues M2_Spra from 2009 with the same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra-alt"
+fields = { "label" = "Moderna språk inom ramen för språkval (alternativt språk)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In 2008 M2_Spra ('det språk som läses') and M2_Spra_Alt ('alternativt språk') coexist with different opdefs; M2_Spr continues M2_Spra from 2009 with the same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spr"
+fields = { "label" = "Moderna språk inom ramen för språkval (språk som läses)" }
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In 2008 M2_Spra ('det språk som läses') and M2_Spra_Alt ('alternativt språk') coexist with different opdefs; M2_Spr continues M2_Spra from 2009 with the same code list."

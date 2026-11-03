@@ -8630,3 +8630,27 @@ kind = "set"
 subject = "var:verkform-skolan"
 fields = { "label" = "Skolform (skolan)" }
 evidence = "#2102 same-label cluster 'Skolform' (2 variables): judged different meaning, medium confidence; Opdefs: VerkForm is the teaching conducted, VerkForm_skolan the school where it is conducted; same value set, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-i-karaktarsamne-1-karaktarny1betyg"
+fields = { "label" = "Betyg i Karaktärsämne 1 (uppdaterad version)" }
+evidence = "#2102 same-label cluster 'Betyg i Karaktärsämne 1' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; KaraktärNy1Betyg's opdef is 'Uppdaterad version' in every occurrence and runs concurrently with Karaktär1Betyg (1998-2002); KAmne1 has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kamne1"
+fields = { "label" = "Betyg i Karaktärsämne 1 (KAmne1)" }
+evidence = "#2102 same-label cluster 'Betyg i Karaktärsämne 1' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; KaraktärNy1Betyg's opdef is 'Uppdaterad version' in every occurrence and runs concurrently with Karaktär1Betyg (1998-2002); KAmne1 has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-i-karaktarsamne-2-karaktarny2betyg"
+fields = { "label" = "Betyg i Karaktärsämne 2 (uppdaterad version)" }
+evidence = "#2102 same-label cluster 'Betyg i Karaktärsämne 2' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; KaraktärNy2Betyg's opdef is 'Uppdaterad version' in every occurrence and runs concurrently with Karaktär2Betyg (1998-2002); KAmne2 has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kamne2"
+fields = { "label" = "Betyg i Karaktärsämne 2 (KAmne2)" }
+evidence = "#2102 same-label cluster 'Betyg i Karaktärsämne 2' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; KaraktärNy2Betyg's opdef is 'Uppdaterad version' in every occurrence and runs concurrently with Karaktär2Betyg (1998-2002); KAmne2 has no opdef."

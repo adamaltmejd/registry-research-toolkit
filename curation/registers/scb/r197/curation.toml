@@ -2396,3 +2396,27 @@ kind = "set"
 subject = "var:totalyta-y92"
 fields = { "label" = "Totalyta (Y92)" }
 evidence = "#2102 same-label cluster 'Totalyta' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; A91/Y91 and Y92 (privatägda) have the same 'bostadsyta plus lokalyta' opdef and run concurrently; TOYF is in the allmännyttiga table with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (KomId)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-komkod"
+fields = { "label" = "Kommun (KomKod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommkod"
+fields = { "label" = "Kommun (KommKod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommunnamn"
+fields = { "label" = "Kommun (Kommunnamn)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."

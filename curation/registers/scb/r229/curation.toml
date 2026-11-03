@@ -4805,3 +4805,27 @@ kind = "set"
 subject = "var:xplangd-5"
 fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar (härledd, första halvåret)" }
 evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 2, antal dagar' (4 variables): judged different meaning, medium confidence; t8b1 is the interview question (opdef), xplangd2 is derived from two half-year surveys for the first half-year (opdef); gxpld2 has the identical opdef but runs beside xplangd2 and is qualified by its column code; T9B1 (2006-10) has no text and continues t8b1."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-utbildning"
+fields = { "label" = "Antal timmar i utbildning (härledd från utbildningstidens längd, taljare)" }
+evidence = "#2102 same-label cluster 'Antal timmar i utbildning' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: Taljare is derived from the length of the education, tim from survey answers on study hours per day per course (2010: total study hours, a course day counted as 7 hours); both are present in 2010."
+
+[[statement]]
+kind = "set"
+subject = "var:tim"
+fields = { "label" = "Antal timmar i utbildning (från studietimmar per kurs, tim)" }
+evidence = "#2102 same-label cluster 'Antal timmar i utbildning' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: Taljare is derived from the length of the education, tim from survey answers on study hours per day per course (2010: total study hours, a course day counted as 7 hours); both are present in 2010."
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "label" = "Stora N per stratum (AKU-antal per urvalstillfälle, STORAN)" }
+evidence = "#2102 same-label cluster 'Stora N per stratum' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: STORAN is the AKU population count per stratum at a sampling occasion, storny is the recount after strata were merged; both occur in the same table in 2010."
+
+[[statement]]
+kind = "set"
+subject = "var:storny"
+fields = { "label" = "Stora N per stratum (omräknat efter sammanslagning av stratum, storny)" }
+evidence = "#2102 same-label cluster 'Stora N per stratum' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: STORAN is the AKU population count per stratum at a sampling occasion, storny is the recount after strata were merged; both occur in the same table in 2010."

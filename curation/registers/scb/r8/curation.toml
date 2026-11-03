@@ -3922,3 +3922,15 @@ kind = "set"
 subject = "var:partikelvarde-literal-part4drivm2"
 fields = { "label" = "Partikelvärde (Part4drivm2)" }
 evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppl1"
+fields = { "label" = "Koppling (KOPPL1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppling1"
+fields = { "label" = "Koppling (Koppling1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."

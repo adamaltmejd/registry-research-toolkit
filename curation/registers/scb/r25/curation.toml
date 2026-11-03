@@ -27723,3 +27723,57 @@ kind = "set"
 subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
 fields = { "label" = "Vårdbidrag (kontrolluppgift, TVARDA)" }
 evidence = "#2102 same-label cluster 'Vårdbidrag' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD opdef says deklarationsuppgift in 1993-2007 and kontrolluppgift from pensions- och försäkringsutbetalare from 2007, so 'kontrolluppgift' is not true of all its occurrences; TVARD has opdef only from 2009, so it takes its code. TVARDA says kontrolluppgift in every occurrence (same wording as TKUVARD 2007-2019)."
+
+[[statement]]
+kind = "set"
+subject = "var:bstodan"
+fields = { "label" = "Kod för stödområde A (näringsverksamhet inom transportsektorn)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BSTODAN's opdef is business activity in the transport sector within stödområde A, while BSTODA's is residence within stödområde A; both are 0/1 columns in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomrade-a-kod"
+fields = { "label" = "Kod för stödområde A (bosatt inom stödområde A)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BSTODAN's opdef is business activity in the transport sector within stödområde A, while BSTODA's is residence within stödområde A; both are 0/1 columns in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-inkomst-familj"
+fields = { "label" = "Sammanräknad inkomst, familj (inklusive sjöinkomst)" }
+evidence = "#2102 same-label cluster 'Sammanräknad inkomst, familj' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; CFVIKIH (incl. sjöinkomst, family from totalbefolkningen) and SINKT (summed for the family incl. children's income) are concurrent columns in individer-och-dodsbon 1983-1990 with different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-inkomst-familj-2"
+fields = { "label" = "Sammanräknad inkomst, familj (inklusive barnens inkomster)" }
+evidence = "#2102 same-label cluster 'Sammanräknad inkomst, familj' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; CFVIKIH (incl. sjöinkomst, family from totalbefolkningen) and SINKT (summed for the family incl. children's income) are concurrent columns in individer-och-dodsbon 1983-1990 with different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:belpens"
+fields = { "label" = "Summa folkpensionsbelopp (summa från erskod 991)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FOLKBEL's opdef sums FP1 and FP2, which hold the amounts for FPKOD1 and FPKOD2; BELPENS/FP sums erskod 991 from KUSOC; PFPTOT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:folkbel"
+fields = { "label" = "Summa folkpensionsbelopp (summa av FP1 och FP2)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FOLKBEL's opdef sums FP1 and FP2, which hold the amounts for FPKOD1 and FPKOD2; BELPENS/FP sums erskod 991 from KUSOC; PFPTOT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:fp1"
+fields = { "label" = "Summa folkpensionsbelopp (enligt FPKOD1)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FOLKBEL's opdef sums FP1 and FP2, which hold the amounts for FPKOD1 and FPKOD2; BELPENS/FP sums erskod 991 from KUSOC; PFPTOT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:fp2"
+fields = { "label" = "Summa folkpensionsbelopp (enligt FPKOD2)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FOLKBEL's opdef sums FP1 and FP2, which hold the amounts for FPKOD1 and FPKOD2; BELPENS/FP sums erskod 991 from KUSOC; PFPTOT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:pfptot"
+fields = { "label" = "Summa folkpensionsbelopp (PFPTOT)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; FOLKBEL's opdef sums FP1 and FP2, which hold the amounts for FPKOD1 and FPKOD2; BELPENS/FP sums erskod 991 from KUSOC; PFPTOT has no opdef."

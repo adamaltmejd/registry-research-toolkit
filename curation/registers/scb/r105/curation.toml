@@ -3223,3 +3223,63 @@ kind = "set"
 subject = "var:alder-31-12"
 fields = { "label" = "Ålder 31/12 (deltagare i SFI)" }
 evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same concept in different tables: AlderSlut only in pedagogisk-personal (derived from personnummer), Alder only in deltagare-i-sfi (2018-2019), so the population qualifiers hold."
+
+[[statement]]
+kind = "set"
+subject = "var:invandrade-folkhogskolan-invandrare"
+fields = { "label" = "Invandrade folkhögskolan (Invandrare)" }
+evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:invandrade-folkhogskolan"
+fields = { "label" = "Invandrade folkhögskolan (Inva)" }
+evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:invandrade-folkhogskolan-utrikesfodda"
+fields = { "label" = "Invandrade folkhögskolan (Utrikesfodda)" }
+evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "label" = "Kommun (folkbokföringskommun, pedagogisk personal)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-kod"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun-ht"
+fields = { "label" = "Kommun (Hemkommun_HT)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun-vt"
+fields = { "label" = "Kommun (Hemkommun_VT)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:hkommun"
+fields = { "label" = "Kommun (där personen bor, HKommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (Hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kurskommun"
+fields = { "label" = "Kommun (kurskommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."

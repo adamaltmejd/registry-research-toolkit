@@ -2812,3 +2812,15 @@ kind = "set"
 subject = "var:sun2020niva-old"
 fields = { "label" = "Utbildningsnivå (SUN 2020, 7 nivåer)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Code lists: Sun2000Niva_Old and SUN2020Niva_Old have 7 levels; Sun2000Niva and SUN2020Niva have ~50 three-digit SUN codes; versions follow the column names and the SUN2020 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1sektorkod"
+fields = { "label" = "Sektorkod (KU1SektorKod)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Both columns have the identical definition (huvudsaklig sysselsättning i november) and code list, in the same tables and periods, so 'största förvärvskälla' is unsupported and the colliding label is avoided with codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-1819"
+fields = { "label" = "Sektorkod (SektorKod)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Both columns have the identical definition (huvudsaklig sysselsättning i november) and code list, in the same tables and periods, so 'största förvärvskälla' is unsupported and the colliding label is avoided with codes."
