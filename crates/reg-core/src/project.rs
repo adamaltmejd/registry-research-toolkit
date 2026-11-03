@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "5.1.0";
+pub const SCHEMA_VERSION: &str = "5.2.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -145,6 +145,11 @@ str_enum!(
     NumericSubtype { Integer = "integer", Double = "double" }
 );
 
+str_enum!(
+    /// The file format of an order's extract files.
+    ExtractFormat { Dta = "dta", Parquet = "parquet", Csv = "csv" }
+);
+
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectData))]
@@ -160,6 +165,12 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
+    /// The extract file format. Absent means the order authoring default, `dta`, which
+    /// the order file resolves; it is never inserted here. An explicit `null` is
+    /// `invalid_field_type`.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub extract_format: Option<ExtractFormat>,
 }
 
 /// [`ProjectData`]'s fields as deserialized, so that `ProjectData` has no public
@@ -175,6 +186,8 @@ struct Fields {
     panels: Vec<Panel>,
     #[serde(default)]
     window: Option<StudyWindow>,
+    #[serde(default)]
+    extract_format: Option<ExtractFormat>,
 }
 
 impl ProjectData {
@@ -201,6 +214,7 @@ impl ProjectData {
             sources: f.sources,
             panels: f.panels,
             window: f.window,
+            extract_format: f.extract_format,
         })
     }
 }

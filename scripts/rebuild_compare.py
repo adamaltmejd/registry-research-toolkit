@@ -508,7 +508,7 @@ def new_project(db, register: str, version: str, adjustments: list, omissions: l
             }
         )
     return {
-        "schema_version": "5.1.0",
+        "schema_version": "5.2.0",
         "reg_meta_version": version,
         "name": "compare-" + register.replace("/", "-"),
         "sources": sources,

@@ -22,6 +22,11 @@ kind namespaces; malformed forms cannot resolve as another kind.
   binding names a three-segment binding FQID in `variable`. The optional top-level
   `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
   measures a source period against; absent means the full history.
+- **`extract_format`** is an optional top-level string in contract 5.2.0: `dta`,
+  `parquet` or `csv`. Absent means the order authoring default (`dta`), which the order
+  file resolves; the default is never written into the project. The structural layer
+  refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
+  outside the three (`invalid_enum_value`).
 - **`Binding.follow_successor`** is an optional boolean in contract 5.1.0. Absent or
   false orders only the named variable. True permits the catalog order layer to extend
   along `continues` successors after that variable ends; the precise chain and refusal
@@ -152,8 +157,8 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                          |
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                             |
   | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                  |
-  | `invalid_enum_value`                   | `type`, `id_subtype` or `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                               |
-  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `extract_format`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.1.0).                                                                                                                                |
+  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `extract_format` is outside its allowed set.                                                                                                                                                                                                                             |
+  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.2.0).                                                                                                                                                  |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `classification` is not `class/<family>/<version>`, or a `table` is not `<provider>/<register>[/<table>]`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                       |
   | `fqid_table_mismatch`                  | A binding's provider and register differ from its source's `table`. The table lives once, on the source.                                                                                                                                                                                                            |
   | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"`, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
@@ -168,7 +173,7 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `panel_member_unknown_source`          | A panel member's `source` names no source.                                                                                                                                                                                                                                                                          |
 
 **Codes other layers emit.** The order check adds the catalog rules of project document
-5.1.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
+5.2.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
 `unsupported_schema_version`. All belong to the same stable registry.
 
 ## One grammar

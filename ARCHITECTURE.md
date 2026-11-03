@@ -221,9 +221,11 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   (`crates/reg-core/tests/project/corpus/load_test_200col/`), but the load-test harness
   and CI perf gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
-  `schema_version`. Contract 5.1.0 adds optional boolean `follow_successor` on variable
-  bindings; absent or false keeps the bound variable's own history. `reg-core` accepts
-  exactly its `SCHEMA_VERSION` and refuses any other with an
+  `schema_version`. Contract 5.1.0 added optional boolean `follow_successor` on variable
+  bindings; absent or false keeps the bound variable's own history. Contract 5.2.0 adds
+  optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
+  authoring default `dta`, resolved by the order file and never inserted into the
+  project. `reg-core` accepts exactly its `SCHEMA_VERSION` and refuses any other with an
   `unsupported_schema_version` issue rather than migrating it
   ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no
   migration scripts, deprecation wrappers or compatibility shims: breaking changes are
