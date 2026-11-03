@@ -128,7 +128,6 @@ function RoutedView({
     case "group":
     case "class-group":
     case "project":
-    case "doc":
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>
       );

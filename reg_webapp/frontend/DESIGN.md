@@ -421,7 +421,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns. Padding `spacing.5`.
+  columns, findings, then source documents. On a variable page, source and provenance
+  follows the documents. Padding `spacing.5`.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -685,6 +686,19 @@ not grow new visual language meanwhile.
   is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in
   `text-muted`. Actions are right-aligned, Cancel first and the destructive one last as
   a `danger` Button. A click on the scrim does not answer it.
+- **Source documents:** omit the panel until rows arrive, or when documentation is
+  unavailable. Group only parsed sections by source URL; a shared group starts
+  collapsed, with its whole URL heading as the disclosure trigger, ellipsized with full
+  text on hover. Filtering holds matching groups open. Show kind and licence once per
+  group, without section sizes or counters. PDFs stay individual links to the inline
+  file endpoint, with their size. A source link reads "Source", sized to its text with
+  the URL on hover; a missing URL adds no link or placeholder. Parsed sections expand on
+  demand as safe text with emphasis and paragraphs; preserve non-Markdown backslashes
+  and keep pipe tables as text lines. Omit a first paragraph only when it exactly
+  repeats the section title after trimming. Subjects use catalog names, skip value sets
+  and the current page. Only register pages with parsed sections offer a title filter,
+  with a count only while filtering. Documents never have hash routes or invented
+  titles.
 - **Empty and loading states:** `EmptyState` is a centred, muted message: a title at the
   `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
   Button that names the next action ("Browse registers"). The title states what is

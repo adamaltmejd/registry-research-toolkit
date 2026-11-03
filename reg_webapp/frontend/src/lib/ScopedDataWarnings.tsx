@@ -1,5 +1,4 @@
-import { getFindings, type RegisterShow } from "./api";
-import { registerSubjectNames } from "./catalog_names";
+import { getFindings } from "./api";
 import { DataWarnings } from "./DataWarnings";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
@@ -7,10 +6,10 @@ import { useAsyncResource } from "./use_async_resource";
 
 export function ScopedDataWarnings({
   fqid,
-  register,
+  names,
 }: {
   fqid: string;
-  register?: RegisterShow;
+  names?: ReadonlyMap<string, string>;
 }) {
   const resource = useAsyncResource(fqid, (signal) =>
     getFindings(fqid, { signal }),
@@ -27,6 +26,5 @@ export function ScopedDataWarnings({
         Findings did not load ({resource.error}). Reload the page to try again.
       </StatusRow>
     );
-  const names = registerSubjectNames(register);
   return <DataWarnings findings={resource.data} names={names} />;
 }
