@@ -422,7 +422,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
   columns, findings, then source documents. On a variable page, source and provenance
-  follows the documents. Padding `spacing.5`.
+  follows the documents. Padding `spacing.5`. A variable group page carries the Group
+  kind mark and a member-of line naming its register, with constant facets shown once in
+  the facets row. Members appear as a member × axis table until `LaneGraph` lanes land,
+  with axes in curated order and members in API order; only varying axes are columns,
+  and groups without varying axes use a plain list.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -696,10 +700,11 @@ not grow new visual language meanwhile.
   signal). The same shape as a lane span, so the two read as one object.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
-  for a register, one filled column of it for a variable). The label is fixed per type
-  (Register, Variable, Code list, Classification, Group) and a caller passes only the
-  type. 0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row sets
-  the node's FQID in `mono` `text-muted` beside its name.
+  for a register, one filled column of it for a variable). A group page's kind mark has
+  no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
+  Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
+  px, `sm` radius. A palette row sets the node's FQID in `mono` `text-muted` beside its
+  name.
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's

@@ -165,35 +165,6 @@ export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
-/** The concept-group ref, `group/<provider>/<register>/<key>`. */
-export function conceptGroupRef(
-  provider: string,
-  register: string,
-  key: string,
-): string {
-  return `group/${provider}/${register}/${key}`;
-}
-
-/** The classification-group (or family) ref, `group/class/<key>`. */
-export function classificationGroupRef(key: string): string {
-  return `group/class/${key}`;
-}
-
-/** The concept-group subject route, shared by SPA links and API fetches. */
-export function conceptGroupPath(
-  provider: string,
-  register: string,
-  key: string,
-): string {
-  return `/catalog/${encodeFqid(conceptGroupRef(provider, register, key))}`;
-}
-
-/** The classification-group subject route (#756), shared by SPA links and API
- * fetches — the classification sibling of `conceptGroupPath`. */
-export function classificationGroupPath(key: string): string {
-  return `/catalog/${encodeFqid(classificationGroupRef(key))}`;
-}
-
 /** GET a Rust-server read and return its `data`. */
 async function rustGet<T>(
   path: string,
@@ -281,12 +252,8 @@ export async function validateProject(
 // ── Search surface (#379) ───────────────────────────────────────────────────
 // The Rust server's `search` (`GET /api/search?q=`): one ranked list
 // per call, `{items, next_cursor}` inside `{data, meta}`. With `type` the list is
-// one arm's hits (its pins first); without it, every arm's hits ranked together
-// (grouped variable members hidden). A concept-group hit (`type:"group"`) is not
-// an FQID, but it can be linked to its fixed group route when the scope is
-// derivable from members; its `members` carry the real leaf FQIDs for fallback
-// links. A `fqid` can be `null` on any leaf (a hit with no resolvable catalog
-// node).
+// one arm's hits; without it, every arm's hits ranked together. Groups are not
+// search hits.
 
 export type SearchPage = RustSchemas["SearchPage"];
 
@@ -399,6 +366,7 @@ export type RootChild = RootShow["providers"][number];
 export type RegisterChild = ProviderShow["registers"][number];
 
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
+export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogSegment = RustSchemas["Segment"];

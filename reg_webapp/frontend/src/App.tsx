@@ -10,7 +10,12 @@ import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationView } from "./lib/ClassificationView";
-import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
+import {
+  registerOfPath,
+  routeBreadcrumbs,
+  SHOW_MATCHING_REGISTERS_LABEL,
+  unqualifiedCatalogPath,
+} from "./lib/catalog";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
@@ -29,6 +34,8 @@ export function App() {
   const context = useAsyncResource("context", getContext);
   const route = useRoute();
   const validation = useProjectValidation();
+  const registerFqid =
+    route.name === "catalog-node" ? registerOfPath(route.fqidPath) : null;
   const searching = useBrowseFiltering();
   const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
     searching && isBackCrumb(crumb)
@@ -61,13 +68,14 @@ export function App() {
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
             <BrowseTree className={styles.browse} />
-            {route.name === "catalog-node" &&
-            route.fqidPath.split("/").length >= 2 &&
-            !route.fqidPath.startsWith("class/") ? (
+            {registerFqid && route.name === "catalog-node" ? (
               <VariableList
-                registerFqid={route.fqidPath.split("/").slice(0, 2).join("/")}
+                registerFqid={registerFqid}
                 selectedFqid={
-                  route.fqidPath.split("/").length > 2 ? route.fqidPath : null
+                  unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
+                  route.fqidPath.split("/").length > 2
+                    ? route.fqidPath
+                    : null
                 }
                 className={styles.list}
               />
@@ -136,8 +144,6 @@ function RoutedView({
           validation={validation}
         />
       );
-    case "group":
-    case "class-group":
     case "project":
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>

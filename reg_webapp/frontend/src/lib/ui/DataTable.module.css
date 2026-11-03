@@ -124,7 +124,8 @@
     font-size: var(--micro-label-size);
     font-weight: var(--micro-label-weight);
   }
-  .table td:empty::before {
+  .table td:empty::before,
+  .table td:has(> :global(.visually-hidden):only-child)::before {
     content: none;
   }
 

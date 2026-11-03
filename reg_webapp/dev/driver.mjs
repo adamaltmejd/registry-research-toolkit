@@ -414,6 +414,29 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
+// Browser boundary: group links, curated axis/member order and member navigation.
+// Fails if groups lose their namespaced route, axes are sorted alphabetically,
+// facet labels become raw values, or the synthetic set ancestor becomes a link.
+// Expected names and order come from webapp-dev's authored set and member facets;
+// existing browse cases do not open a group.
+async function browseGroupCase(page, shoot) {
+  const main = page.getByRole("main");
+  await main.getByRole("link", { name: "Inkomstmått", exact: true }).click();
+  await page.waitForURL("**/catalog/set/demo/bas/inkomst");
+  await settled(page);
+  await main.getByRole("heading", { name: "Inkomstmått", level: 1, exact: true }).waitFor();
+  await main.getByText("Inkomst före och efter skatt för personer och hushåll.", { exact: true }).waitFor();
+  const headers = await main.getByRole("columnheader").allTextContents();
+  check(JSON.stringify(headers) === JSON.stringify(["Variable", "Enhet", "Mått"]), "group axes lost their authored order");
+  await main.getByRole("row").nth(1).getByRole("link", { name: "Förvärvsinkomst, hushåll", exact: true }).waitFor();
+  await main.getByRole("cell", { name: /^(?:Mått )?Efter skatt$/ }).first().waitFor();
+  await main.locator('a[href="/catalog/demo/bas/net-household"]').waitFor();
+  check(await main.locator('nav a[href="/catalog/set"]').count() === 0, "group breadcrumb links to a synthetic set ancestor");
+  await shoot("browse-group");
+  await main.getByRole("link", { name: "Disponibel inkomst, hushåll", exact: true }).click();
+  await page.waitForURL("**/catalog/demo/bas/net-household");
+}
+
 // Project + catalog → saved project boundary. Fails if changing a binding's
 // type keeps its old subtype, a keyboard period edit is not saved, or removing
 // a lane loses focus or removes the wrong binding. Existing cases open files
@@ -765,6 +788,11 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 const scenarios = {
+  "browse-group": {
+    shots: 1,
+    route: "/catalog/demo/bas/inkomst",
+    run: browseGroupCase,
+  },
   "variable-succession": {
     shots: 1,
     route: "/catalog/demo/hush",

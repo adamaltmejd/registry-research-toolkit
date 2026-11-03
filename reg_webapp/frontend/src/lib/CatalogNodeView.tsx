@@ -3,6 +3,7 @@ import styles from "./CatalogNodeView.module.css";
 import { sharedShow } from "./catalog_names";
 import { ProviderView } from "./ProviderView";
 import { RegisterView } from "./RegisterView";
+import { SetView } from "./SetView";
 import { TableView } from "./TableView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
@@ -42,10 +43,10 @@ export function CatalogNodeView({
   if (resource.error || !resource.data) {
     return (
       <StatusRow tone="error" live="alert">
-        {resource.status === 404 ? (
+        {resource.status === 404 || resource.status === 422 ? (
           <>
-            Nothing in the catalog at <code>{fqidPath}</code>. Check the link,
-            or choose a register in the list.
+            Nothing in the catalog at this address. Check the link, or choose a
+            register in the list.
           </>
         ) : (
           <>
@@ -73,6 +74,8 @@ export function CatalogNodeView({
           validation={validation}
         />
       );
+    case "set":
+      return <SetView node={node} />;
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>
