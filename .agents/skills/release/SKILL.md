@@ -319,9 +319,11 @@ The release must carry only what the catalog serves, never background data: stew
 repository notes, raw census or storage exports, inventory working files.
 `holdings_scope_check.py` fails when the holdings DB's schema differs from the schema
 the builder declares (every table, FTS shadow tables included, and every column must
-match, none extra or missing), when a meta key is not on the script's allowlist, or when
-a text or blob value exceeds its size bound. Run it against this release checkout and
-record its one-line result in the release notes:
+match, none extra or missing), when a meta key is not on the script's allowlist, when a
+text or blob value exceeds its size bound, or when a `text` body names a steward working
+file (`*.json`, `*.jsonl`, `*.toml`) or a census row (`census:row=`); the last needs a
+steward-repo fix and re-pin, not a script change. Run it against this release checkout
+and record its one-line result in the release notes:
 
 ```sh
 uv run --no-project scripts/holdings_scope_check.py "$evidence/catalog/reg_meta_swecov.db" \

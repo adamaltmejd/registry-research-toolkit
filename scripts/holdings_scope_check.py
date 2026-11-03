@@ -16,6 +16,10 @@ mechanically against the builder's own DDL, which the checkout supplies:
 - Meta: every key must be in META_KEYS below.
 - Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a raw
   payload in an allowed column is caught.
+- Text: no `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`) or a
+  census row (`census:row=`). The reader serves these bodies as labels, definitions and
+  notes, so a provenance suffix in a transcription cell reaches the public site
+  (0.72.0: "Evidence: reference-occurrence-evidence.jsonl; census:row=489; ...").
 
 The DB is opened read-only. Output is one summary line and the failing items' names,
 never row contents. Exit 1 on any failure.
@@ -75,6 +79,9 @@ BOUNDS = {
     "search_description_data.block": 16_384,
 }
 PER_KEY = "meta.value"  # bounded per key, below
+
+# A steward working-file name or a census row locator inside published text.
+WORKING_REFERENCE = re.compile(r"[\w./-]+\.(?:jsonl?|toml)\b|census:row=")
 
 META_BOUND = 4096  # preview max 1 755 (`logo`)
 META_BOUNDS = {
@@ -158,6 +165,17 @@ def main() -> int:
         if n > bound:
             too_big.append(f"meta.{k} ({n} > {bound} bytes)")
 
+    # Reported by text id and the reference's file extension, never the body.
+    leaked = (
+        sorted(
+            f"text:{tid} ({m.group(0).rsplit('.', 1)[-1].rstrip('=')})"
+            for tid, body in con.execute("SELECT id, body FROM text")
+            if (m := WORKING_REFERENCE.search(body))
+        )
+        if "text" in have
+        else []
+    )
+
     items = [
         ("extra table", extra_t),
         ("missing table", missing_t),
@@ -165,6 +183,7 @@ def main() -> int:
         ("missing column", missing_c),
         ("unknown meta key", bad_m),
         ("oversize value", too_big),
+        ("working-file reference", leaked),
     ]
     failing = sum(len(v) for _, v in items)
     print(

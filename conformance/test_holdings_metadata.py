@@ -220,16 +220,6 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]
         assert data["period"] == {"start": "2017-01-01", "end": "2022-01-01"}
-        (occurrence,) = data["steward_occurrences"]
-        assert occurrence["table"] == "demo/held"
-        assert occurrence["variable"] == "demo/held/value"
-        assert occurrence["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
-        assert occurrence["sources"] == [
-            {
-                "input": "reference-extension",
-                "locator": "inputs/reference/held.csv:row=2",
-            }
-        ]
         assert any(
             x["physical_table"] == "Attested"
             and x["period"] == {"start": "2015-01-01", "end": "2017-01-01"}

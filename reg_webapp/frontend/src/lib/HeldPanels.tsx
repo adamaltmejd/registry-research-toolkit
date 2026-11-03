@@ -166,7 +166,6 @@ export function HeldPanels({
       </StatusRow>
     );
   const held = resource.data?.held;
-  const occurrences = resource.data?.steward_occurrences;
   const groups = new Map<string, Placement[]>();
   for (const row of held ?? []) {
     const group = groups.get(row.physical_table);
@@ -194,34 +193,6 @@ export function HeldPanels({
               ))}
             </div>
           )}
-        </Panel>
-      )}
-      {!!occurrences?.length && (
-        <Panel title="Steward documentation">
-          <div className={styles.groups}>
-            {occurrences.map((row) => (
-              <section className={styles.group} key={JSON.stringify(row)}>
-                <h3 className={`micro-label ${styles.heading}`}>
-                  <ColumnChip name={row.spelling} />
-                </h3>
-                <KeyValue
-                  rows={[
-                    { label: "Label", value: row.label ?? "Not stated" },
-                    {
-                      label: "Period",
-                      value: catalogPeriodLabel(row.period),
-                      mono: true,
-                    },
-                    { label: "Type", value: catalogWords(row.type) },
-                    {
-                      label: "Definition",
-                      value: row.definition ?? "Not stated",
-                    },
-                  ]}
-                />
-              </section>
-            ))}
-          </div>
         </Panel>
       )}
     </>
