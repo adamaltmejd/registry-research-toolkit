@@ -7429,18 +7429,6 @@ evidence = "Resultatet är ett företagsmått.\ncatalog:variable_text:15106:1351
 
 [[statement]]
 kind = "set"
-subject = "var:arets-resultat-l26"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder och olika enheter.\ncatalog:occurrence:163555\ncatalog:occurrence:163705"
-
-[[statement]]
-kind = "set"
-subject = "var:arets-resultat-l26"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder och olika enheter.\ncatalog:occurrence:163555\ncatalog:occurrence:163705"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-resultat-l26-l26"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har en efterföljande annan ägare.\ncatalog:occurrence:163704\ncatalog:occurrence:163840"
@@ -14017,18 +14005,6 @@ evidence = "Variabeln avser underlag för avkastningsskatt.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:avkastningsskatt-kapitalforsakring"
-fields = { "sets" = [] }
-evidence = "Variabeln avser avkastningsskatt.\ncatalog:variable_text:15662:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avkastningsskatt-kapitalforsakring"
-fields = { "tags" = ["taxation"] }
-evidence = "Variabeln avser avkastningsskatt.\ncatalog:variable_text:15662:17532:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter avkastningsskatt.\ncatalog:variable_text:15663:16801:17167"
@@ -14050,18 +14026,6 @@ kind = "set"
 subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
 fields = { "tags" = ["taxation"] }
 evidence = "Variabeln mäter avkastningsskatt.\ncatalog:variable_text:15664:15340:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap27"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter avkastningsskatt.\ncatalog:variable_text:15665:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap27"
-fields = { "tags" = ["taxation"] }
-evidence = "Variabeln mäter avkastningsskatt.\ncatalog:variable_text:15665:13879:15340"
 
 [[statement]]
 kind = "set"
@@ -61669,18 +61633,6 @@ evidence = "The source column code is opaque.\ncatalog:variable_text:19899:11323
 
 [[statement]]
 kind = "set"
-subject = "var:v0842"
-fields = { "sets" = [] }
-evidence = "The source column code is opaque.\ncatalog:variable_text:19900:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:v0842"
-fields = { "tags" = ["taxation"] }
-evidence = "The source column code is opaque.\ncatalog:variable_text:19900:10957:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:v0851"
 fields = { "sets" = [] }
 evidence = "The source column code is opaque.\ncatalog:variable_text:19901:12784:13514"
@@ -92829,26 +92781,8 @@ evidence = "#2102 same-label cluster 'Avdrag för realisationsförlust, kapital'
 
 [[statement]]
 kind = "set"
-subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap27"
-fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP27)" }
-evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
-
-[[statement]]
-kind = "set"
-subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
-fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP2)" }
-evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
-
-[[statement]]
-kind = "set"
 subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap"
 fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (individer)" }
-evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
-
-[[statement]]
-kind = "set"
-subject = "var:avkastningsskatt-kapitalforsakring"
-fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVKASTUK)" }
 evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska kapitalförsäkringar' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Tables separate individer (SAVUKAP, individtabeller) from company tables; in the company tables the three columns are consecutive and share definition and unit."
 
 [[statement]]
@@ -93585,18 +93519,6 @@ evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsma
 
 [[statement]]
 kind = "set"
-subject = "var:v0842"
-fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0842)" }
-evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V0153's opdef changes over time (Periodiseringar 2000, N1 2001-05, Från N1 2005-07), so '(från N1)' is not true of every occurrence; V0842 and V7606 have no text."
-
-[[statement]]
-kind = "set"
-subject = "var:v7606"
-fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V7606)" }
-evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V0153's opdef changes over time (Periodiseringar 2000, N1 2001-05, Från N1 2005-07), so '(från N1)' is not true of every occurrence; V0842 and V7606 have no text."
-
-[[statement]]
-kind = "set"
 subject = "var:ankepension"
 fields = { "label" = "Änkepension (kod)" }
 evidence = "#2102 same-label cluster 'Änkepension' (5 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate pension-type code (BAEPFP), from TP (BAEPTP), number of months (BAEPMANB) and yrkeslivsränteavdrag på änkepension TP (PAEYLTP); PAENKP has a kronor unit and no text, so its code is used."
@@ -93684,3 +93606,63 @@ kind = "set"
 subject = "var:v452"
 fields = { "label" = "Utdelning som beskattas i tjänst Huvudregeln punkt 2.7 (V4526)" }
 evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudregeln punkt 2.7' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V4525 and V4526 coexist in bilaga-k10 2012-2014 and V4526's 2014 opdef says the amount is after avdraget gränsbelopp; V0471 and V0469 coexist 2008-2011, so they read as separate K10 lines."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: savukap27 @2008-01-01..2011-12-31 where key = 'v21809'"
+fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: savukap27 @2008-01-01..2011-12-31 where key = 'v21809'"
+fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: savkastuk @2018-01-01..2023-12-31 where key = 'v21809'"
+fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: savkastuk @2019-01-01..2023-12-31 where key = 'v21809'"
+fields = { "variable" = "avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2: SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-pa-utlandska-kapitalforsakringar-savukap2"
+fields = { "label" = "Avkastningsskatt på utländska kapitalförsäkringar (aktiebolag och handelsbolag, SAVUKAP27/SAVUKAP2/SAVKASTUK)" }
+evidence = "#2102 fold: the label names every folded column. SAVUKAP27 (2008-11), SAVUKAP2 (2012-17), SAVKASTUK (2018-) in aktiebolag and handelsbolag: same definition, no value set, adjacent at 2012 and 2018."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: v0842 @2000-01-01..2006-12-31 where key = 'v16785'"
+fields = { "variable" = "v7606" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into v7606: V0842 (2000-06) and V7606 (2007-) in deklarationsuppgifter: same definition, no value set, adjacent at 2007; V0153 has another definition."
+
+[[statement]]
+kind = "set"
+subject = "var:v7606"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0842/V7606)" }
+evidence = "#2102 fold: the label names every folded column. V0842 (2000-06) and V7606 (2007-) in deklarationsuppgifter: same definition, no value set, adjacent at 2007; V0153 has another definition."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l27 @2016-01-01..2023-12-31 where key = 'v26268'"
+fields = { "variable" = "arets-resultat-l27" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into arets-resultat-l27: D1 ruling: column L27 in forsakringsbolag 2005-15 (key v29696) continues as L27 2016-24 (key v26268, whose definition names L26); same spelling, no value set, adjacent at 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-resultat-l27"
+fields = { "label" = "Årets resultat (L27)" }
+evidence = "#2102 fold: the label names every folded column. D1 ruling: column L27 in forsakringsbolag 2005-15 (key v29696) continues as L27 2016-24 (key v26268, whose definition names L26); same spelling, no value set, adjacent at 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-resultat-l26-laa"
+fields = { "label" = "Årets resultat (LAA11)" }
+evidence = "#2102 D1: after L27 2016-24 folds into arets-resultat-l27, LAA11 (2017, forsakringsbolag) and L26 still share the source label 'Årets resultat (L26)'; LAA11 takes its column code."

@@ -4690,18 +4690,18 @@ evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): held
 
 [[statement]]
 kind = "set"
-subject = "var:lopnummer-for-kursdeltagaren-lopnr"
-fields = { "label" = "Löpnummer för kursdeltagaren (LopNr)" }
+subject = "var:lopnummer-for-kursdeltagaren-kdeltid"
+fields = { "label" = "Löpnummer för kursdeltagaren (KDeltID)" }
 evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: lopnr @1996-07-01..1997-06-30 where key = 'v28311'"
+fields = { "variable" = "kursdeltid" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into kursdeltid: LopNr (1996/97) and KursDeltId (1997/98-) in kursdeltagare-vartermin: same definition (course participant serial; PersonNr is a separate column), adjacent at 1997-07-01."
 
 [[statement]]
 kind = "set"
 subject = "var:kursdeltid"
-fields = { "label" = "Löpnummer för kursdeltagaren (KursDeltID)" }
-evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."
-
-[[statement]]
-kind = "set"
-subject = "var:lopnummer-for-kursdeltagaren-kdeltid"
-fields = { "label" = "Löpnummer för kursdeltagaren (KDeltID)" }
-evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition for all; KursDeltID and KDeltID run concurrently from 2015 in kursdeltagare-vartermin with no text on how they differ, so codes are used."
+fields = { "label" = "Löpnummer för kursdeltagaren (LopNr/KursDeltID)" }
+evidence = "#2102 fold: the label names every folded column. LopNr (1996/97) and KursDeltId (1997/98-) in kursdeltagare-vartermin: same definition (course participant serial; PersonNr is a separate column), adjacent at 1997-07-01."

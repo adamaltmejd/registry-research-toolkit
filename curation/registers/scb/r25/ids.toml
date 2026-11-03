@@ -517,7 +517,6 @@ public = "iot"
 "dinkpp" = ["Individer och dödsbon: DINKPP"]
 "disponibel-inkomst-per-vuxen-familj-tidigare-definition" = ["Individer och dödsbon: DINPP"]
 "dinpp88k" = ["Individer och dödsbon: DINPP88K"]
-"dinpp91" = ["Individer och dödsbon: DINPP91"]
 "delkomponent-disponibel-inkomst-definition-1982" = ["Individer och dödsbon: DINU82"]
 "dinupp" = ["Individer och dödsbon: DINUPP"]
 "disponibel-inkomst" = ["Bostadshushåll: CDISP04HB @ 2012-01-01"]
@@ -784,7 +783,6 @@ public = "iot"
 "insror" = ["Individer och dödsbon: INSROR"]
 "instax" = ["Individer och dödsbon: INSTAX @ 1990-01-01"]
 "institutionell-sektor" = ["Individer och dödsbon: BINST @ 1993-01-01"]
-"institutionell-sektor-2" = ["Individer och dödsbon: BKUINST @ 2016-01-01"]
 "institutionell-sektor-3" = ["Individer och dödsbon: INKSEK"]
 "institutionell-sektor-huvudsaklig-sysselsattning" = ["Individer och dödsbon: INST"]
 "institutionell-sektorkod" = ["Individer och dödsbon: BINST @ 2015-01-01"]
@@ -837,7 +835,6 @@ public = "iot"
 "avdrag-negativ-rantefordelning-kapital" = ["Individer och dödsbon: KARFOR"]
 "kas" = ["Individer och dödsbon: KAS"]
 "betalning-fran-utlandet" = ["Kontrolluppgifter räntor och utdelningar (KURU): KBELOP"]
-"kbesk" = ["Individer och dödsbon: KBESK @ 1978-01-01"]
 "kbin" = ["Individer och dödsbon: KBIN"]
 "kf" = ["Individer och dödsbon: KF @ 1971-01-01"]
 "forlust-enligt-blankett-k5-och-k6" = ["Individer och dödsbon: KFBOT"]
@@ -1701,16 +1698,12 @@ public = "iot"
 
 
 
-"summa-allman-pension-tjanstepension-tjanst-pssp" = ["Individer och dödsbon: PSSP"]
 "summa-allman-pension-tjanstepension-tjanst-pssphb" = ["Bostadshushåll: PSSPHB"]
 
-"summa-lon-och-formaner-enligt-kontrolluppgifter-clonf" = ["Individer och dödsbon: CLONF"]
 
 "summa-lon-och-formaner-enligt-kontrolluppgifter-tlonfhb" = ["Bostadshushåll: TLONFHB"]
 
 
-"summa-pension-enligt-kontrolluppgift-papens" = ["Individer och dödsbon: PAPENS"]
-"summa-pension-enligt-kontrolluppgift-papenshb" = ["Bostadshushåll: PAPENSHB"]
 
 "summa-pension-enligt-kontrolluppgift-pkupenshb" = ["Bostadshushåll: PKUPENSHB"]
 
@@ -1721,7 +1714,6 @@ public = "iot"
 "summa-vissa-skattepliktiga-formaner-clonfhb" = ["Bostadshushåll: CLONFHB"]
 
 
-"summa-vissa-skattepliktiga-formaner-tlonf" = ["Individer och dödsbon: TLONF"]
 
 "familjetyp-bfamtyp" = ["Individer och dödsbon: BFAMTYP @ 1993-01-01"]
 "familjetyp-famtyp" = ["Individer och dödsbon: Famtyp @ 1998-01-01"]

@@ -1730,30 +1730,6 @@ evidence = "Kodning av eftergymnasial utbildning och intyg.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:invandrade-folkhogskolan"
-fields = { "sets" = ["invandrarstatus"] }
-evidence = "Antal deltagare med utländskt medborgarskap eller födda utomlands.\ncatalog:variable_text:11568:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:invandrade-folkhogskolan"
-fields = { "tags" = ["demographics"] }
-evidence = "Antal deltagare med utländskt medborgarskap eller födda utomlands.\ncatalog:variable_text:11568:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:invandrade-folkhogskolan-invandrare"
-fields = { "sets" = ["invandrarstatus"] }
-evidence = "Antal deltagare med utländskt medborgarskap eller födda utomlands.\ncatalog:variable_text:11569:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:invandrade-folkhogskolan-invandrare"
-fields = { "tags" = ["demographics"] }
-evidence = "Antal deltagare med utländskt medborgarskap eller födda utomlands.\ncatalog:variable_text:11569:14610:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:invandrade-folkhogskolan-utrikesfodda"
 fields = { "sets" = ["invandrarstatus"] }
 evidence = "Antal deltagare med utländskt medborgarskap eller födda utomlands.\ncatalog:variable_text:11570:16071:18262"
@@ -3226,24 +3202,6 @@ evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): held in #2127
 
 [[statement]]
 kind = "set"
-subject = "var:invandrade-folkhogskolan-invandrare"
-fields = { "label" = "Invandrade folkhögskolan (Invandrare)" }
-evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:invandrade-folkhogskolan"
-fields = { "label" = "Invandrade folkhögskolan (Inva)" }
-evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:invandrade-folkhogskolan-utrikesfodda"
-fields = { "label" = "Invandrade folkhögskolan (Utrikesfodda)" }
-evidence = "#2102 same-label cluster 'Invandrade folkhögskolan' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical opdef and definition in every occurrence; Invandrare/Inva/Utrikesfodda overlap in grupper-hostterminen and grupper-varterminen, so only the code separates them."
-
-[[statement]]
-kind = "set"
 subject = "var:hemkommun"
 fields = { "label" = "Kommun (folkbokföringskommun, pedagogisk personal)" }
 evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
@@ -3283,3 +3241,33 @@ kind = "set"
 subject = "var:kurskommun"
 fields = { "label" = "Kommun (kurskommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Hemkommun_HT/VT opdef says only 'folkbokförd' until 2020 and 'före terminens start' from 2021, and HemKommun/Hemkommun says 'där personen bor' in deltagare-i-sfi but 'folkbokförd 31 december referensåret' in deltagarregister, so those qualifiers do not hold for every occurrence and the code is used; Kommun, Skolkommun, HKommun and KursKommun have a single consistent opdef."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: inva @2007-01-01..2013-12-31 where key = 'v8615'"
+fields = { "variable" = "invandrade-folkhogskolan-utrikesfodda" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into invandrade-folkhogskolan-utrikesfodda: Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: inva @2010-01-01..2014-12-31 where key = 'v8615'"
+fields = { "variable" = "invandrade-folkhogskolan-utrikesfodda" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into invandrade-folkhogskolan-utrikesfodda: Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: invandrare @2005-01-01..2010-12-31 where key = 'v8615'"
+fields = { "variable" = "invandrade-folkhogskolan-utrikesfodda" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into invandrade-folkhogskolan-utrikesfodda: Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: invandrare @2005-01-01..2009-12-31 where key = 'v8615'"
+fields = { "variable" = "invandrade-folkhogskolan-utrikesfodda" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into invandrade-folkhogskolan-utrikesfodda: Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."
+
+[[statement]]
+kind = "set"
+subject = "var:invandrade-folkhogskolan-utrikesfodda"
+fields = { "label" = "Invandrade folkhögskolan" }
+evidence = "#2102 fold: the label names every folded column. Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."

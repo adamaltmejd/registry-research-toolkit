@@ -73,7 +73,6 @@ public = "arlig-energistatistik"
 "frikyla" = ["Elnätföretag (nät): maxnetto # v38851"]
 "frikyla-prod" = ["Elnätföretag (nät): prod # v38851"]
 "ftyp" = ["Elnätföretag (nät): Ftyp"]
-"gadr" = ["Elproduktion, elhandel, fjärrvärme (ovr): gadr"]
 "gatuadress" = ["Elproduktion, elhandel, fjärrvärme (ovr): GatuAdr # v1797"]
 "generatoreffekt-maxnetto" = ["Elnätföretag (nät): maxnetto # v45900"]
 "generatoreffekt-maxnetto-huvudbransle" = ["Elproducerande industriföretag (ind): maxnetto # v35297"]

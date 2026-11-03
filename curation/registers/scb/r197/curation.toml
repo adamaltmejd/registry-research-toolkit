@@ -865,18 +865,6 @@ evidence = "Källan anger övriga rörelseintäkter.\ncatalog:variable_text:2744
 
 [[statement]]
 kind = "set"
-subject = "var:intakter-ovriga-ovvint"
-fields = { "sets" = ["ovriga-rorelseintakter"] }
-evidence = "Samma kolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-ovriga-ovvint"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
-
-[[statement]]
-kind = "set"
 subject = "var:intakter-ovriga-v1040"
 fields = { "sets" = ["ovriga-rorelseintakter"] }
 evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
@@ -2345,20 +2333,8 @@ evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): hel
 
 [[statement]]
 kind = "set"
-subject = "var:intakter-ovriga"
-fields = { "label" = "Intäkter Övriga, allmännyttiga bostadsföretag (OVINT)" }
-evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
-
-[[statement]]
-kind = "set"
 subject = "var:intakter-ovriga-v1040"
 fields = { "label" = "Intäkter Övriga, bostadsrättsföreningar och privatägda flerbostadshus" }
-evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-ovriga-ovvint"
-fields = { "label" = "Intäkter Övriga, allmännyttiga bostadsföretag (OVVINT)" }
 evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
 
 [[statement]]
@@ -2420,3 +2396,15 @@ kind = "set"
 subject = "var:kommun-kommunnamn"
 fields = { "label" = "Kommun (Kommunnamn)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: ovvint @2008-01-01..2015-12-31 where key = 'v16592'"
+fields = { "variable" = "intakter-ovriga" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into intakter-ovriga: OVINT and OVVINT in allmannyttiga-bostadsforetag alternate by year (2007-16), never concurrent: same definition and opdefs, no value set."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga"
+fields = { "label" = "Intäkter Övriga, allmännyttiga bostadsföretag (OVINT/OVVINT)" }
+evidence = "#2102 fold: the label names every folded column. OVINT and OVVINT in allmannyttiga-bostadsforetag alternate by year (2007-16), never concurrent: same definition and opdefs, no value set."

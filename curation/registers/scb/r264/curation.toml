@@ -1766,18 +1766,6 @@ evidence = "Posten avser återföring från periodiseringsfond.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:aterforing-fran-periodiseringsfond-v8604"
-fields = { "sets" = ["aterforing-fran-periodiseringsfond"] }
-evidence = "Posten avser återföring från periodiseringsfond.\ncatalog:variable_text:43309:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:aterforing-fran-periodiseringsfond-v8604"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Posten avser återföring från periodiseringsfond.\ncatalog:variable_text:43309:13514:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:aterforing-vardeminskning-forsaljning"
 fields = { "sets" = ["aterforing-av-vardeminskningsavdrag-vid-fastighetsforsaljning"] }
 evidence = "Posten avser återföring vid fastighetsförsäljning eller avskattning.\ncatalog:variable_text:43310:12418:13514"
@@ -3746,12 +3734,6 @@ evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:4
 
 [[statement]]
 kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8702"
-fields = { "tags" = ["finance"] }
-evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43485:13514:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:kapitalforlust-m-m-907-v8716"
 fields = { "tags" = ["finance"] }
 evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43486:13879:14610"
@@ -4019,18 +4001,6 @@ kind = "set"
 subject = "var:kostnad-for-kapitalforvaltning-906-v8034"
 fields = { "tags" = ["finance"] }
 evidence = "Kapitalförvaltningskostnad.\ncatalog:variable_text:43510:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnad-for-kapitalforvaltning-906-v8701"
-fields = { "sets" = ["kapitalforvaltningskostnader"] }
-evidence = "Kapitalförvaltningskostnad.\ncatalog:variable_text:43511:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnad-for-kapitalforvaltning-906-v8701"
-fields = { "tags" = ["finance"] }
-evidence = "Kapitalförvaltningskostnad.\ncatalog:variable_text:43511:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -11126,12 +11096,6 @@ evidence = "r268 defines generally reported capital losses and related amounts, 
 
 [[statement]]
 kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8702"
-fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
-evidence = "r269 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43417\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43544"
-
-[[statement]]
-kind = "set"
 subject = "var:kapitalforlust-m-m-907-v8716"
 fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
 evidence = "r270 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43545"
@@ -13994,18 +13958,6 @@ evidence = "#2102 same-label cluster 'Ingående upplupna kostnader och förutbet
 
 [[statement]]
 kind = "set"
-subject = "var:kapitalforlust-m-m-907-v0907"
-fields = { "label" = "Kapitalförlust m.m. (907, V0907)" }
-evidence = "#2102 same-label cluster 'Kapitalförlust m.m.    (907)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0907 (-2007) and V8702 (2007-2010) succeed each other in the INK3 register table; V8716 and V8747 (2008-2010) are concurrent with V8702 with the same definition."
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8702"
-fields = { "label" = "Kapitalförlust m.m. (907, V8702)" }
-evidence = "#2102 same-label cluster 'Kapitalförlust m.m.    (907)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0907 (-2007) and V8702 (2007-2010) succeed each other in the INK3 register table; V8716 and V8747 (2008-2010) are concurrent with V8702 with the same definition."
-
-[[statement]]
-kind = "set"
 subject = "var:kapitalforlust-m-m-907-v8716"
 fields = { "label" = "Kapitalförlust m.m. (907) (V8716)" }
 evidence = "#2102 same-label cluster 'Kapitalförlust m.m.    (907)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0907 (-2007) and V8702 (2007-2010) succeed each other in the INK3 register table; V8716 and V8747 (2008-2010) are concurrent with V8702 with the same definition."
@@ -14051,18 +14003,6 @@ kind = "set"
 subject = "var:korrigeringsvarde-skatteredovisningen-sk1"
 fields = { "label" = "Korrigeringsvärde skatteredovisningen (SK1)" }
 evidence = "#2102 same-label cluster 'Korrigeringsvärde skatteredovisningen' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SR_Korr is in NE, NEA and INK2 (2007-2010); SK1 only in deklarationsblankett (2007-2010); same definition."
-
-[[statement]]
-kind = "set"
-subject = "var:kostnad-for-kapitalforvaltning-906-v0906"
-fields = { "label" = "Kostnad för kapitalförvaltning (906, V0906)" }
-evidence = "#2102 same-label cluster 'Kostnad för kapitalförvaltning    (906)' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0906 (-2007) and V8701 (2007-2010) succeed each other in the INK3 register table; V8034, V8715 and V8733 (2008-2010) are concurrent with V8701 with the same definition."
-
-[[statement]]
-kind = "set"
-subject = "var:kostnad-for-kapitalforvaltning-906-v8701"
-fields = { "label" = "Kostnad för kapitalförvaltning (906, V8701)" }
-evidence = "#2102 same-label cluster 'Kostnad för kapitalförvaltning    (906)' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0906 (-2007) and V8701 (2007-2010) succeed each other in the INK3 register table; V8034, V8715 and V8733 (2008-2010) are concurrent with V8701 with the same definition."
 
 [[statement]]
 kind = "set"
@@ -14348,20 +14288,8 @@ evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond' (4 
 
 [[statement]]
 kind = "set"
-subject = "var:aterforing-fran-periodiseringsfond-v0952"
-fields = { "label" = "Återföring från periodiseringsfond (INK3, V0952)" }
-evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and unit; members differ only in code and source form (N1/N2, INK3, NE); V0952 and V8604 are consecutive on INK3."
-
-[[statement]]
-kind = "set"
 subject = "var:aterforing-fran-periodiseringsfond-v7608"
 fields = { "label" = "Återföring från periodiseringsfond (v7608, NE)" }
-evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and unit; members differ only in code and source form (N1/N2, INK3, NE); V0952 and V8604 are consecutive on INK3."
-
-[[statement]]
-kind = "set"
-subject = "var:aterforing-fran-periodiseringsfond-v8604"
-fields = { "label" = "Återföring från periodiseringsfond (INK3, V8604)" }
 evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and unit; members differ only in code and source form (N1/N2, INK3, NE); V0952 and V8604 are consecutive on INK3."
 
 [[statement]]
@@ -14399,3 +14327,39 @@ kind = "set"
 subject = "var:ovriga-avdragsgilla-utgifter-v0675"
 fields = { "label" = "Övriga avdragsgilla utgifter (V0675, register)" }
 evidence = "#2102 same-label cluster 'Övriga avdragsgilla utgifter' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Same definition and unit; V0175 occurs only on N1 and V0675 only in the register table, so the form qualifiers hold for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "register-for-inkomstblanketter-ink3: v8702 @2007-01-01..2009-12-31 where key = 'v18191'"
+fields = { "variable" = "kapitalforlust-m-m-907-v0907" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into kapitalforlust-m-m-907-v0907: V0907 (2004-06) and V8702 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-m-m-907-v0907"
+fields = { "label" = "Kapitalförlust m.m. (907, V0907/V8702)" }
+evidence = "#2102 fold: the label names every folded column. V0907 (2004-06) and V8702 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "register-for-inkomstblanketter-ink3: v8701 @2007-01-01..2009-12-31 where key = 'v18190'"
+fields = { "variable" = "kostnad-for-kapitalforvaltning-906-v0906" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into kostnad-for-kapitalforvaltning-906-v0906: V0906 (2004-06) and V8701 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnad-for-kapitalforvaltning-906-v0906"
+fields = { "label" = "Kostnad för kapitalförvaltning (906, V0906/V8701)" }
+evidence = "#2102 fold: the label names every folded column. V0906 (2004-06) and V8701 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "register-for-inkomstblanketter-ink3: v8604 @2007-01-01..2009-12-31 where key = 'v16796'"
+fields = { "variable" = "aterforing-fran-periodiseringsfond-v0952" }
+evidence = "#2102 evidence rule (maintainer 2026-11-03), succession fold into aterforing-fran-periodiseringsfond-v0952: V0952 (2004-06) and V8604 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-fran-periodiseringsfond-v0952"
+fields = { "label" = "Återföring från periodiseringsfond (INK3, V0952/V8604)" }
+evidence = "#2102 fold: the label names every folded column. V0952 (2004-06) and V8604 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
