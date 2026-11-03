@@ -372,7 +372,8 @@ classification_family (name, kind, publisher, versions [{fqid, label, period}]) 
 classification_version (family, label, period, value_set ValueSetRef, levels). \
 Registers list their tables and variables unpaged. Paired roots and provider \
 summaries also list the steward's own providers and registers, each ref with \
-`held` (whether the steward holds any of its tables)."""
+`held` (whether the steward holds any of its tables); paired register summaries \
+mark each table and variable `held` (whether an accepted placement names it)."""
 
 [shape.Release]
 name = "string; the literal delivery name"

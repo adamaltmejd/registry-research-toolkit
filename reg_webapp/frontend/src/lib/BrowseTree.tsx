@@ -426,7 +426,7 @@ export function BrowseTree({
           {config && (
             <div className={styles.scope}>
               <Select
-                label={`Variable search scope for ${config.presentation.name}`}
+                label={`Browse scope for ${config.presentation.name}`}
                 labelHidden
                 value={scope ?? "steward"}
                 options={[

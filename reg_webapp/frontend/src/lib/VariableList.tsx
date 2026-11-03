@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import type { RegisterFacet, StewardConfig } from "./api";
 import {
   useBrowseFilter,
+  useBrowseScope,
   useOtherRegisterMatches,
   useRegisterMatches,
 } from "./browse_filter";
@@ -86,10 +87,14 @@ export function VariableList({
   const needle = useBrowseFilter();
   const matches = useRegisterMatches(registerFqid, config);
   const otherMatches = useOtherRegisterMatches(registerFqid, config);
+  const heldOnly = useBrowseScope(config) === "steward";
   const node = resource.data?.kind === "register" ? resource.data : null;
-  const variables = [...(node?.variables ?? [])].sort((a, b) =>
-    svCollator.compare(a.name, b.name),
+  // Held only: the variables a placement names, plus the open one, so a page
+  // opened by link keeps its row (as the tree keeps an unheld register's).
+  const listed = (node?.variables ?? []).filter(
+    (row) => !heldOnly || row.held !== false || row.fqid === selectedFqid,
   );
+  const variables = listed.sort((a, b) => svCollator.compare(a.name, b.name));
   const ranked = rankFilter(variables, needle, (row) => [
     row.name,
     leafSlug(row.fqid),
@@ -168,7 +173,9 @@ export function VariableList({
       empty={
         needle.trim()
           ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
-          : "This register lists no variables."
+          : heldOnly && node?.variables.length
+            ? `${config?.presentation.name} holds none of this register’s variables. Choose “All matches” to list them.`
+            : "This register lists no variables."
       }
       notice={
         ownEmpty

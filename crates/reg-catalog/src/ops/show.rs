@@ -145,6 +145,10 @@ pub struct ShowVariableRef {
     period: Period,
     /// The fqids of the register's tables the variable has segments in.
     tables: Vec<String>,
+    /// In steward mode, whether an accepted placement names the variable.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    held: Option<bool>,
 }
 
 /// A register's table; the implicit one has the register's fqid.
@@ -160,6 +164,10 @@ pub struct ShowTable {
     #[schema(required = true)]
     cadence: Option<String>,
     period: Period,
+    /// In steward mode, whether an accepted placement names the table.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    held: Option<bool>,
 }
 
 /// A segment of the table that holds its rows' key.
@@ -402,6 +410,21 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         let known: BTreeSet<_> = tags.iter().map(|t| t.fqid.clone()).collect();
         tags.extend(held_tags.into_iter().filter(|t| !known.contains(&t.fqid)));
         tags.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        // A placement names its table and variable by public id, so either origin's
+        // rows compare directly; any interval counts (the summary is undated).
+        let placed = |column: &str| -> Result<BTreeSet<String>, Error> {
+            Ok(extra
+                .prepare(&format!("SELECT DISTINCT {column} FROM holding_mapping"))?
+                .query_map([], |r| r.get(0))?
+                .collect::<rusqlite::Result<_>>()?)
+        };
+        let (held_tables, held_variables) = (placed("table_pid")?, placed("variable_pid")?);
+        for t in &mut tables {
+            t.held = Some(held_tables.contains(&t.fqid));
+        }
+        for v in &mut variables {
+            v.held = Some(held_variables.contains(&v.fqid));
+        }
     }
     let unplaced = conn
         .prepare(
@@ -499,6 +522,7 @@ fn contents(
                 unit_type: row.get(5)?,
                 cadence: row.get(6)?,
                 period: server.period(row.get(7)?, row.get(8)?),
+                held: None,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
@@ -529,6 +553,7 @@ fn contents(
                 fqid,
                 name: row.get(1)?,
                 period: server.period(row.get(2)?, row.get(3)?),
+                held: None,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
