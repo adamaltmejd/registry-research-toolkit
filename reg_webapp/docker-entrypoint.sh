@@ -13,16 +13,19 @@ set -eu
 
 PORT=8000
 BASE="http://127.0.0.1:${PORT}"
+# API probes carry the edge's cache-generation parameter, as proxied requests do.
+EDGE_V="__edge_v=smoke"
 READY_DEADLINE=60
 # Per request, so a stalled server cannot hang the gate past its deadline.
 MAX_TIME=10
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
-# (fly.toml does).
+# (fly.toml and fly.swecov.toml both do).
 # `--mmap-size 0`: on Fly's throttled rootfs, mmap read-around inflates cold reads.
 # Measured 2026-10-09 (0.44.0, 15-request cold mix): 592 MB / 34 s with the default
 # mmap vs 320 MB / 21 s without; warm latency is unchanged (#1296).
-set -- serve --db /opt/reg_meta --host 0.0.0.0 --port "$PORT" --mmap-size 0
+set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
+    --host 0.0.0.0 --port "$PORT" --mmap-size 0
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
 fi
@@ -49,20 +52,24 @@ fail() {
 # Readiness: admission runs before the bind, so a refused artifact exits the server
 # (its error document is on stderr) and the wait fails at once.
 waited=0
-until curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context" 2>/dev/null; do
+until curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context?$EDGE_V" 2>/dev/null; do
     kill -0 "$SERVER_PID" 2>/dev/null || fail "reg-meta exited"
     [ "$waited" -lt "$READY_DEADLINE" ] || fail "no answer within ${READY_DEADLINE}s"
     sleep 1
     waited=$((waited + 1))
 done
+if [ "$REG_META_CATALOG" != global ]; then
+    curl -fsS --max-time "$MAX_TIME" "$BASE/api/context?$EDGE_V" \
+        | grep -q '"steward_config":{' || fail "steward context"
+fi
 # The first search reads its pages cold from Fly's throttled rootfs (measured
 # 2026-10-09 on 0.44.0: 328 MB in 19 s at ~17 MB/s; warm 0.2 s), so it gets the
 # readiness deadline rather than the per-request one.
-curl -fsS --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst" \
+curl -fsS --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
     || fail "search"
 # The docs must be populated, not just admitted (#8): `lisa` is in every release, and
 # a hit carries `doc` (DocHit: doc, title, kind, heading, page, snippet).
-curl -fsS --max-time "$MAX_TIME" "$BASE/api/docs/search?q=lisa&limit=1" \
+curl -fsS --max-time "$MAX_TIME" "$BASE/api/docs/search?q=lisa&limit=1&$EDGE_V" \
     | grep -q '"doc":"' || fail "docs search"
 curl -fsS --max-time "$MAX_TIME" "$BASE/mcp" \
     -H 'accept: application/json, text/event-stream' \
@@ -74,7 +81,7 @@ curl -fsS --max-time "$MAX_TIME" "$BASE/mcp" \
 # Gate passed. Preload the DB into the page cache in the background, so later
 # requests never read cold pages from the throttled rootfs (~17 MB/s; the VM is sized
 # to hold it, fly.toml). Best effort.
-nice cat /opt/reg_meta/reg_meta.db >/dev/null 2>&1 &
+nice cat /opt/reg_meta/*.db >/dev/null 2>&1 &
 
 # Hand the foreground to the server: clear the EXIT-kill trap, forward
 # SIGINT/SIGTERM, and wait until it has exited so its exit code propagates (a trapped
