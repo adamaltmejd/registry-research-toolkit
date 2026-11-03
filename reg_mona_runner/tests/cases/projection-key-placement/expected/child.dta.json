@@ -1,0 +1,19 @@
+{
+  "types": {
+    "ChildId": "numeric %12.0g",
+    "Amount": "numeric %12.0g",
+    "Id": "numeric %12.0g"
+  },
+  "rows": [
+    [
+      "11",
+      "700",
+      "1"
+    ],
+    [
+      "12",
+      "800",
+      "1"
+    ]
+  ]
+}

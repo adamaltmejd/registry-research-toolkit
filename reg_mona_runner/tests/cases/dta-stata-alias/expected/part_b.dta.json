@@ -1,0 +1,19 @@
+{
+  "types": {
+    "Relative_identifier_as_re_827517": "numeric %12.0g",
+    "Id": "numeric %12.0g"
+  },
+  "labels": {
+    "Relative_identifier_as_re_827517": "Relative identifier as received in the delivery"
+  },
+  "rows": [
+    [
+      "903",
+      "3"
+    ],
+    [
+      "904",
+      "4"
+    ]
+  ]
+}

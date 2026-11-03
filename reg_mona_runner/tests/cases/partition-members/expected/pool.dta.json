@@ -1,0 +1,19 @@
+{
+  "types": {
+    "New": "numeric %12.0g",
+    "Received_Id": "numeric %12.0g",
+    "Year": "numeric %12.0g"
+  },
+  "rows": [
+    [
+      "25",
+      "5",
+      "2020"
+    ],
+    [
+      "26",
+      "6",
+      "2021"
+    ]
+  ]
+}

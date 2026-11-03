@@ -1,171 +1,242 @@
 {
-  "clips": [],
-  "entries": [
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "LopNr",
-        "variable": "scb/example/lopnr",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "LopNr",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Kod",
-        "variable": "scb/example/kod",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Kod",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Datum",
-        "variable": "scb/example/datum",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Datum",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Ref",
-        "variable": "scb/example/ref",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Ref",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Belopp",
-        "variable": "scb/example/belopp",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Belopp",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Antal",
-        "variable": "scb/example/antal",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Antal",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Stamp",
-        "variable": "scb/example/stamp",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Stamp",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Flag",
-        "variable": "scb/example/flag",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Flag",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Namn",
-        "variable": "scb/example/namn",
-        "variant": "typed"
-      },
-      "physical": {
-        "column": "Namn",
-        "edition": "2019",
-        "file": "example_typed_2019",
-        "table": "Typed"
-      },
-      "requested_period": "2019",
-      "source": "Typed"
-    }
-  ],
+  "version": 4,
   "extract_format": "csv",
   "provenance": {
-    "artifact_kind": "steward",
-    "catalog_generation_id": "0000000000000000000000000000000000000000000000000000000000000000",
-    "catalog_schema_version": "12.2.0",
     "mode": "steward_holdings",
-    "project_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-    "project_name": "Runner case",
-    "project_reg_meta_version": "reg_meta/v0.40.1",
-    "project_schema_version": "4.0.0",
-    "steward": "swecov"
+    "steward": "swecov",
+    "catalog": {
+      "release": "dev",
+      "schema": "6",
+      "generation": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "holdings": {
+      "owner": "swecov",
+      "generation": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "base_generation": "0000000000000000000000000000000000000000000000000000000000000000",
+    "project": {
+      "schema_version": "5.2.0",
+      "project_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "name": "Runner case"
+    }
   },
-  "version": 3
+  "files": [
+    {
+      "name": "example_typed_2019",
+      "schema": "dbo",
+      "table": "Typed",
+      "delivery": null,
+      "columns": [
+        {
+          "name": "LopNr",
+          "storage": {
+            "type": "bigint",
+            "length": null,
+            "precision": 19,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 0,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/lopnr",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "LopNr"
+            }
+          ]
+        },
+        {
+          "name": "Kod",
+          "storage": {
+            "type": "char",
+            "length": 4,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 1,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/kod",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Kod"
+            }
+          ]
+        },
+        {
+          "name": "Datum",
+          "storage": {
+            "type": "date",
+            "length": null,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 2,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/datum",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Datum"
+            }
+          ]
+        },
+        {
+          "name": "Ref",
+          "storage": {
+            "type": "decimal",
+            "length": null,
+            "precision": 18,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 3,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/ref",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Ref"
+            }
+          ]
+        },
+        {
+          "name": "Belopp",
+          "storage": {
+            "type": "decimal",
+            "length": null,
+            "precision": 9,
+            "scale": 2
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 4,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/belopp",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Belopp"
+            }
+          ]
+        },
+        {
+          "name": "Antal",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 5,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/antal",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Antal"
+            }
+          ]
+        },
+        {
+          "name": "Stamp",
+          "storage": {
+            "type": "datetime2",
+            "length": null,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 6,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/stamp",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Stamp"
+            }
+          ]
+        },
+        {
+          "name": "Flag",
+          "storage": {
+            "type": "bit",
+            "length": null,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 7,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/flag",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Flag"
+            }
+          ]
+        },
+        {
+          "name": "Namn",
+          "storage": {
+            "type": "nvarchar",
+            "length": 50,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "Typed",
+              "binding": 8,
+              "table": "scb/example-typed",
+              "variable": "scb/example-typed/namn",
+              "period": {
+                "start": "2019-01-01",
+                "end": "2020-01-01"
+              },
+              "spelling": "Namn"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": []
 }

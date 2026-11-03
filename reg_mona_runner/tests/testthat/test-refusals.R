@@ -12,18 +12,19 @@ test_that("an export root without orders/ is a setup failure (2)", {
 
 test_that("an order that is not JSON is refused (3)", {
   # Regression: a truncated upload reaches the shape checks or the database.
-  base <- export_root(text = list(`900` = "{\"version\": 2, \"entries\": ["))
+  base <- export_root(text = list(`900` = "{\"version\": 4, \"files\": ["))
   expect_identical(run_runner(base)$status, 3L)
   expect_refused(base, "900", 3L)
 })
 
-test_that("a manifest version other than 3 is refused (4)", {
-  # Regression: a retired v2 manifest, whose .dta columns carry no stata_name,
-  # is read with v3 semantics.
+test_that("a manifest version other than 4 is refused (4)", {
+  # Regression: a retired v3 order, whose entries this runner no longer reads,
+  # fails as malformed (6) instead of as stale, or a v4 shape is read under
+  # another version's semantics.
   base <- export_root(
     text = list(
-      `900` = order_text("row-filter", function(doc) {
-        doc$version <- 2L
+      `900` = order_text("pooled-disjoint-periods", function(doc) {
+        doc$version <- 3L
         doc
       })
     )
@@ -32,9 +33,13 @@ test_that("a manifest version other than 3 is refused (4)", {
   expect_refused(base, "900", 4L)
 })
 
-test_that("a global-fallback order is refused (5)", {
-  # Regression: blank physical tables reach SQL. The golden is used unchanged.
-  base <- export_root(list(`900` = case_order("open-ended")))
+test_that("another steward's order is refused (5)", {
+  # Regression: an order made against another steward's holdings reaches SQL and
+  # extracts whatever same-named tables this server holds. The golden keeps the
+  # steward the server wrote (the fixture's).
+  base <- export_root(
+    text = list(`900` = order_text("key-only", identity, steward = "fixture"))
+  )
   expect_identical(run_runner(base)$status, 5L)
   expect_refused(base, "900", 5L)
 })
@@ -44,8 +49,23 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
   # manifest shape this runner does not understand extracts the wrong rows.
   base <- export_root(
     text = list(
-      `900` = order_text("row-filter", function(doc) {
-        doc$entries[[1]]$filter$ranges[[1]]$step <- "month"
+      `900` = order_text("pooled-disjoint-periods", function(doc) {
+        doc$files[[1]]$row_filter$ranges[[2]]$step <- "month"
+        doc
+      })
+    )
+  )
+  expect_identical(run_runner(base)$status, 6L)
+  expect_refused(base, "900", 6L)
+})
+
+test_that("a column with a null storage type is refused (6)", {
+  # Regression: a null type passes as "any storage", so a drifted column is
+  # extracted without the check the order promises.
+  base <- export_root(
+    text = list(
+      `900` = order_text("key-only", function(doc) {
+        doc$files[[1]]$columns[[1]]$storage["type"] <- list(NULL)
         doc
       })
     )
@@ -55,14 +75,13 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
 })
 
 test_that("an output file named like the run log is refused (6)", {
-  # Regression: a csv file named run_log.csv is overwritten by the run log, so
-  # the order succeeds with its data gone.
+  # Regression: a file whose stem is the run log's, in any case and with any
+  # extension, is overwritten by run_log.csv or overwrites it, so the order
+  # succeeds with its data gone.
   base <- export_root(
     text = list(
-      `900` = order_text("row-filter", function(doc) {
-        for (i in seq_along(doc$entries)) {
-          doc$entries[[i]]$physical$file <- "Run_Log"
-        }
+      `900` = order_text("pooled-disjoint-periods", function(doc) {
+        doc$files[[1]]$name <- "Run_Log"
         doc
       })
     )
@@ -73,13 +92,12 @@ test_that("an output file named like the run log is refused (6)", {
 
 test_that("two columns written under one Stata name are refused (6)", {
   # Regression: a .dta file holds two variables of one name, which Stata cannot
-  # read, or haven keeps one column's data under the other's name.
+  # read, or haven keeps one column's data under the other's name. Here an alias
+  # takes the name another column is written under as its own.
   base <- export_root(
     text = list(
-      `900` = order_text("stata-names", function(doc) {
-        doc$entries[[2]]$physical$stata_name <- doc$entries[[
-          3
-        ]]$physical$stata_name
+      `900` = order_text("dta-stata-alias", function(doc) {
+        doc$files[[1]]$columns[[1]]$stata_name <- "Id"
         doc
       })
     )
