@@ -318,7 +318,11 @@ hosted MCP through its own origin and worker.
   from an old deployed base. All three SWECOV jobs require explicit `ok=true`; no global
   job depends on them. On 0.71.0 the guard fails by design and global deployment remains
   unaffected. There is no holdings schema guard in CI; pair admission and the entrypoint
-  smoke fail the SWECOV deploy if it is incompatible.
+  smoke fail the SWECOV deploy if it is incompatible. Frontend-only pushes also run the
+  schema guard and the tolerated failing asset guard until the paired 0.72.0 release. A
+  failing `deploy-swecov` (refused pair, OOM or failed probe) still makes the whole run
+  fail; the resolver then rebuilds and redeploys global on later pushes until SWECOV is
+  fixed, as in the previous deployment design.
 - **Edge workers** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
   `reg-webapp-global-edge` on `reg-meta.vqv.uk/*` without assets. It forwards `/mcp`
   alone with the edge token and returns a `no-store` 404 elsewhere.
@@ -345,6 +349,16 @@ hosted MCP through its own origin and worker.
   `/api/search` for HIT, young Age and 304, then hosted MCP. The global edge job probes
   MCP only. Cloudflare can weaken ETags during compression; GET revalidation permits
   weak comparison.
+
+Paired boot allows 300 seconds (`REG_META_READY_DEADLINE` and the SWECOV Fly check's
+`grace_period`) because pair admission hashes the base catalog before binding. Global
+keeps its 60-second default. The check's five-second request timeout applies after
+binding; it is not the startup allowance. Preload currently runs after the smoke gate.
+Moving it before server start could warm the hash's pages if they remain resident, but
+would still require the same cold disk read before binding.
+
+The first push after this restoration merges rebuilds and redeploys global: the
+`__edge_v` server restoration changes `crates/**`, the binary and its content digest.
 
 ### Rollback
 

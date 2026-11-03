@@ -49,6 +49,12 @@ const VERSION_PARAM = "__edge_v";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    if (env.ASSETS && !env.DEPLOY_VERSION) {
+      return new Response("Edge misconfigured: DEPLOY_VERSION is not set", {
+        status: 503,
+        headers: { "cache-control": "no-store" },
+      });
+    }
     const url = new URL(request.url);
     const mcp = env.ROUTE_MCP === "true" && MCP_PATH.test(url.pathname);
     const api = env.ASSETS && ORIGIN_PATHS.some((re) => re.test(url.pathname));
@@ -60,7 +66,7 @@ export default {
           headers: { "cache-control": "no-store" },
         });
       }
-      if (api) url.searchParams.set(VERSION_PARAM, env.DEPLOY_VERSION ?? "dev");
+      if (api) url.searchParams.set(VERSION_PARAM, env.DEPLOY_VERSION!);
       const forwarded = api ? new Request(url, request) : new Request(request);
       forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
       return fetch(forwarded);

@@ -15,7 +15,12 @@ PORT=8000
 BASE="http://127.0.0.1:${PORT}"
 # API probes carry the edge's cache-generation parameter, as proxied requests do.
 EDGE_V="__edge_v=smoke"
-READY_DEADLINE=60
+# Pair admission hashes the base catalog before binding.
+if [ "$REG_META_CATALOG" = global ]; then
+    READY_DEADLINE=${REG_META_READY_DEADLINE:-60}
+else
+    READY_DEADLINE=${REG_META_READY_DEADLINE:-300}
+fi
 # Per request, so a stalled server cannot hang the gate past its deadline.
 MAX_TIME=10
 
@@ -29,8 +34,8 @@ set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
 fi
-# The served files' digest, computed when the image was built (Dockerfile), so the
-# server does not hash ~640 MB on the throttled rootfs before it binds.
+# The served files' digest, computed when the image was built (Dockerfile),
+# avoids a separate validator hash on the throttled rootfs.
 REG_META_CONTENT_DIGEST=$(cat /opt/reg_webapp/content.sha256)
 export REG_META_CONTENT_DIGEST
 reg-meta "$@" &
