@@ -297,20 +297,22 @@ decides, and the finding is recorded in the notes.
 
 #### 8g. Compare the holdings census with the previous paired release
 
-Until milestone F, compare against 0.64.0, the last release with a SWECOV asset.
-Download its `reg_meta_swecov.db.zst` to a separate directory (`$old`), verify its
-compressed SHA-256 against GitHub's asset digest and decompress it. The old census
-digest is `census_sha256` in the pinned old `scope.toml` (locate that input revision
-through `.local/release-0.64.0/ev/holdings-pins.txt`); the new digest is the census pin
-in `$evidence/holdings-report.json` (`steward.input_pins`, keyed by `inputs.census` in
-`steward.toml` at the pin). Reports go to `.local/` or the evidence directory only;
-stdout carries aggregate counts.
+From 0.72.0 on both sides are built by `reg-build holdings`. The baseline (`$old`)
+depends on the holdings schema. When it moved since the previous release, the baseline
+is the previous release's steward pin recompiled with this release's binary against this
+release's base catalog, into a separate directory. Otherwise it is the previous paired
+release's `reg_meta_swecov.db`: download its `reg_meta_swecov.db.zst` to a separate
+directory, verify its compressed SHA-256 against GitHub's asset digest and decompress
+it. The `rebuilt` mode refuses a holdings schema mismatch (`PRAGMA user_version` or the
+`schema_version` meta key) and names it. It reports census placement per column (placed,
+held, unplaced and the changed placements by old to new `table_pid`), reader-visible
+text changes by kind (bodies, not ids) and finding deltas by code. Details go to
+`.local/` or the evidence directory only; stdout carries aggregate counts.
 
 ```sh
-uv run --no-project scripts/rebuild_compare.py holdings --old-db "$old/reg_meta_swecov.db" \
-  --new-base "$evidence/catalog/reg_meta.db" --new-holdings "$evidence/catalog/reg_meta_swecov.db" \
-  --out "$evidence/holdings-compare" --old-census-sha256 <census_sha256> \
-  --new-census-sha256 <census pin from the holdings report> > "$evidence/holdings-compare.txt"
+uv run --no-project scripts/rebuild_compare.py rebuilt --old-db "$old/reg_meta_swecov.db" \
+  --new-db "$evidence/catalog/reg_meta_swecov.db" \
+  --out "$evidence/holdings-compare" > "$evidence/holdings-compare.txt"
 ```
 
 The maintainer reads that summary for go/no-go; its counts go in the release notes.
