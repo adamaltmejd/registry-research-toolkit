@@ -2222,6 +2222,29 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
             codes,
         )
     if old["mappings"] and new["mappings"]:
+        removed = []
+        added = False
+        # Retired/replacement target IDs are review work, not proof of lost days.
+        # Check physical reach plus each retained target before secondary reviews.
+        shared_targets = set(holdings_targets(old)) & set(holdings_targets(new))
+        for pid in [None, *sorted(shared_targets)]:
+            o, n = holdings_reach(old, pid), holdings_reach(new, pid)
+            removed.extend(piece for span in o for piece in uncovered(span, n))
+            added |= any(uncovered(span, o) for span in n)
+        if removed:
+            loss = holdings_clip_loss(new)
+            if all(not uncovered(span, loss) for span in removed):
+                return result(
+                    "intended clipping",
+                    "Column clipping notices explain every removed target/day slice."
+                    + (" Other slices extend coverage." if added else ""),
+                    codes={"period_clipped"},
+                )
+            return result(
+                "defect",
+                "New reach is narrower without column clipping evidence covering every lost slice.",
+                defect,
+            )
         if holdings_targets(old) != holdings_targets(new):
             return result(
                 "target changed",
@@ -2239,26 +2262,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
                 "key census changed",
                 "Key targets or per-target reach differ.",
                 "Review key requirements separately from ordered columns.",
-            )
-        removed = []
-        added = False
-        for pid in holdings_targets(old):
-            o, n = holdings_reach(old, pid), holdings_reach(new, pid)
-            removed.extend(piece for span in o for piece in uncovered(span, n))
-            added |= any(uncovered(span, o) for span in n)
-        if removed:
-            loss = holdings_clip_loss(new)
-            if all(not uncovered(span, loss) for span in removed):
-                return result(
-                    "intended clipping",
-                    "Column clipping notices explain every removed target/day slice."
-                    + (" Other slices extend coverage." if added else ""),
-                    codes={"period_clipped"},
-                )
-            return result(
-                "defect",
-                "New reach is narrower without column clipping evidence covering every lost slice.",
-                defect,
             )
         if added:
             return result(

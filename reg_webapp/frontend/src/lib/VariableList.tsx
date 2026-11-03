@@ -106,7 +106,9 @@ export function VariableList({
         item.name
       ) : (
         <span className={styles.variableName}>
-          <Highlight text={item.name} needle={needle} />
+          <span className={styles.variableLabel}>
+            <Highlight text={item.name} needle={needle} />
+          </span>
           {item.period && <span className={styles.period}>{item.period}</span>}
         </span>
       ),

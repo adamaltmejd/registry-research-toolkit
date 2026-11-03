@@ -98,11 +98,13 @@
 a.verdict {
   color: inherit;
 }
-.status[data-status="checking"] > .verdict {
+.status[data-status="checking"] > .verdict,
+.status[data-status="empty"] > .verdict {
   color: var(--text-muted);
   font-weight: var(--body-weight);
 }
-.status[data-status="checking"] {
+.status[data-status="checking"],
+.status[data-status="empty"] {
   color: var(--text-muted);
 }
 .status[data-status="ok"] {
