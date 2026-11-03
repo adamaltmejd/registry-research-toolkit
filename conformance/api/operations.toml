@@ -370,8 +370,9 @@ members [{fqid, name, columns [{table, spelling, periods [Period]}], facets [{ax
 tags [{fqid, name}] unioned across members), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \
-Registers list their tables and variables unpaged. Paired roots also expose \
-`steward_providers`; provider summaries expose supplemental `steward_registers`."""
+Registers list their tables and variables unpaged. Paired roots and provider \
+summaries also list the steward's own providers and registers, each ref with \
+`held` (whether the steward holds any of its tables)."""
 
 [shape.Release]
 name = "string; the literal delivery name"

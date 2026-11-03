@@ -1122,14 +1122,13 @@ export interface components {
             /** @enum {string} */
             kind: "root";
             providers: components["schemas"]["ShowProviderRef"][];
-            steward_providers?: components["schemas"]["ShowProviderRef"][] | null;
         } | {
             fqid: string;
             /** @enum {string} */
             kind: "provider";
             name: string;
+            /** @description In steward mode, the steward's own registers too. */
             registers: components["schemas"]["ShowRegisterRef"][];
-            steward_registers?: components["schemas"]["ShowRegisterRef"][] | null;
         } | {
             description: string | null;
             fqid: string;
@@ -1196,10 +1195,14 @@ export interface components {
         };
         ShowProviderRef: {
             fqid: string;
+            /** @description In steward mode, whether the steward holds any of its registers. */
+            held?: boolean;
             name: string;
         };
         ShowRegisterRef: {
             fqid: string;
+            /** @description In steward mode, whether the steward holds any of its tables. */
+            held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
         };

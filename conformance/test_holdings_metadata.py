@@ -45,6 +45,16 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
             "tables": 1,
             "variables": 2,
         }
+        # Fails if `held` resolves placements through one origin only: demo/*
+        # tables are reference tables, steward/slots a steward-only register.
+        providers = client.get("/api/catalog").json()["data"]["providers"]
+        assert {p["fqid"]: p["held"] for p in providers} == {
+            "demo": True,
+            "steward": True,
+        }
+        for provider in ["demo", "steward"]:
+            shown = client.get(f"/api/catalog/{provider}").json()["data"]
+            assert all(r["held"] for r in shown["registers"]), shown
         extra = client.get("/api/catalog/steward/slots/slot2")
         assert extra.status_code == 200
         assert extra.json()["data"]["name"] == "Second position"
