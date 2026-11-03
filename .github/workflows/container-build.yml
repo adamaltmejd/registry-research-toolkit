@@ -230,7 +230,8 @@ jobs:
             echo "${pair%%=*}=$digest" >> "$GITHUB_OUTPUT"
           done
       # The Rust server refuses to boot on an asset whose schema differs from its
-      # `CATALOG_SCHEMA_VERSION` (crates/reg-core/src/lib.rs). The asset's schema is
+      # `CATALOG_SCHEMA_VERSION` (crates/reg-core/src/lib.rs), and the SWECOV server on
+      # its `HOLDINGS_SCHEMA_VERSION`; both are checked. The asset's schema is
       # read from the release tag's source (a data-only release keeps the tag-commit
       # schema), hence the full-history checkout. A release from before the constant
       # existed has none, which is a mismatch too. An explicit `reg_meta_tag` pin
@@ -240,15 +241,16 @@ jobs:
         run: |
           set -euo pipefail
           TAG="${{ steps.regmeta.outputs.tag }}"
-          pattern='CATALOG_SCHEMA_VERSION: u32 = [0-9]+'
-          code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
-          asset=$(git show "$TAG:crates/reg-core/src/lib.rs" | grep -oE "$pattern" || true)
-          if [ -n "$code" ] && [ "$code" = "$asset" ]; then
-            echo "schema-guard: code and $TAG agree (${code#*= })"
-            exit 0
-          fi
-          echo "::error::schema-guard: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first; deploys blocked."
-          exit 1
+          for name in CATALOG_SCHEMA_VERSION HOLDINGS_SCHEMA_VERSION; do
+            pattern="$name: u32 = [0-9]+"
+            code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
+            asset=$(git show "$TAG:crates/reg-core/src/lib.rs" | grep -oE "$pattern" || true)
+            if [ -z "$code" ] || [ "$code" != "$asset" ]; then
+              echo "::error::schema-guard: $name: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first; deploys blocked."
+              exit 1
+            fi
+          done
+          echo "schema-guard: code and $TAG agree on both schema versions"
 
   # A missing paired asset blocks only SWECOV. Keep the run eligible for the
   # success-only deployed-commit resolver above, or every push would rebuild global
