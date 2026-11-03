@@ -16,7 +16,11 @@ export function Home({ config }: { config: StewardConfig | null }) {
         <p className={styles.tagline}>
           {parseInlineMarkdown(presentation.description).map(
             (segment, index) =>
-              segment.emphasis === "strong" ? (
+              segment.href ? (
+                <a key={index} href={segment.href}>
+                  {segment.text}
+                </a>
+              ) : segment.emphasis === "strong" ? (
                 <strong key={index}>{segment.text}</strong>
               ) : segment.emphasis === "em" ? (
                 <em key={index}>{segment.text}</em>

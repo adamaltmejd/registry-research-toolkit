@@ -1,9 +1,7 @@
-import { Button, Tooltip, TooltipTrigger } from "react-aria-components";
 import { type Coverage, getCoverage } from "./api";
-import { catalogHref } from "./catalog";
+import { catalogHref, svCollator } from "./catalog";
 import { catalogWords } from "./catalog_labels";
-import { catalogPeriodLabel } from "./catalog_period";
-import findingStyles from "./Finding.module.css";
+import { catalogPeriodLabel, catalogPeriodRuns } from "./catalog_period";
 import styles from "./HeldPanels.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -14,22 +12,6 @@ import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
 type Placement = NonNullable<Coverage["held"]>[number];
-
-function Caveat({ text }: { text: string }) {
-  return (
-    <TooltipTrigger delay={600}>
-      <Button className={findingStyles.titleButton}>Caveat</Button>
-      <Tooltip
-        className={({ isEntering, isExiting }) =>
-          `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
-        }
-        style={{ zIndex: "var(--z-popover)" }}
-      >
-        {text}
-      </Tooltip>
-    </TooltipTrigger>
-  );
-}
 
 function HeldGroup({
   physicalTable,
@@ -47,18 +29,24 @@ function HeldGroup({
   const sameCarried = rows.every((row) => row.carried === first.carried);
   const sameCaveat = rows.every((row) => row.caveat === first.caveat);
   const notesVary = !sameCarried || !sameCaveat;
+  // Facts every placement shares, stated once. A caveat is text, not a
+  // tooltip: a tooltip opens on hover or focus only, so a touch screen never
+  // showed it (#2110).
+  const facts = [
+    ...(sameRole ? [{ label: "Role", value: catalogWords(first.role) }] : []),
+    ...(sameCarried && first.carried
+      ? [{ label: "Carried forward", value: "Yes" }]
+      : []),
+    ...(sameCaveat && first.caveat
+      ? [{ label: "Caveat", value: first.caveat }]
+      : []),
+  ];
   return (
     <section className={styles.group}>
       <h3 className={`micro-label ${styles.heading}`}>
         <code>{physicalTable}</code>
       </h3>
-      {sameRole && (
-        <KeyValue rows={[{ label: "Role", value: catalogWords(first.role) }]} />
-      )}
-      {sameCarried && first.carried && (
-        <KeyValue rows={[{ label: "Carried forward", value: "Yes" }]} />
-      )}
-      {sameCaveat && first.caveat && <Caveat text={first.caveat} />}
+      {facts.length > 0 && <KeyValue rows={facts} />}
       <DataTable
         columns={[
           ...(showVariable
@@ -93,13 +81,65 @@ function HeldGroup({
               return (
                 <span className={styles.notes}>
                   {!sameCarried && row.carried && <span>Carried forward</span>}
-                  {!sameCaveat && row.caveat && <Caveat text={row.caveat} />}
+                  {!sameCaveat && row.caveat && <span>{row.caveat}</span>}
                 </span>
               );
           }
         }}
       />
     </section>
+  );
+}
+
+/** A register's holdings, one row per table: coverage lists every placement
+ * of every table, too many to read as per-table groups (#2110). The table's
+ * page has the placements. */
+function HeldSummary({
+  held,
+  names,
+}: {
+  held: Placement[];
+  names: ReadonlyMap<string, string>;
+}) {
+  const tables = new Map<string, Placement[]>();
+  for (const row of held) {
+    const placements = tables.get(row.table);
+    if (placements) placements.push(row);
+    else tables.set(row.table, [row]);
+  }
+  const rows = [...tables]
+    .map(([fqid, placements]) => ({
+      fqid,
+      name: names.get(fqid) ?? fqid,
+      variables: new Set(placements.map((row) => row.variable)).size,
+      period: catalogPeriodRuns(placements.map((row) => row.period)),
+    }))
+    .sort((a, b) => svCollator.compare(a.name, b.name));
+  return (
+    <DataTable
+      rowNavigation
+      columns={[
+        { key: "name", label: "Table" },
+        { key: "variables", label: "Held variables", numeric: true },
+        { key: "period", label: "Period", mono: true },
+      ]}
+      rows={rows}
+      getRowId={(row) => row.fqid}
+      renderCell={(row, column) => {
+        switch (column.key) {
+          case "name":
+            return (
+              <a className="link" href={catalogHref(row.fqid)}>
+                {row.name}
+              </a>
+            );
+          case "variables":
+            return String(row.variables);
+          default:
+            return row.period;
+        }
+      }}
+    />
   );
 }
 
@@ -110,7 +150,7 @@ export function HeldPanels({
   names,
 }: {
   fqid: string;
-  kind: "variable" | "table";
+  kind: "variable" | "table" | "register";
   names: ReadonlyMap<string, string>;
 }) {
   const resource = useAsyncResource(fqid, (signal) =>
@@ -136,9 +176,11 @@ export function HeldPanels({
   return (
     <>
       {held != null && (
-        <Panel title="Held">
+        <Panel title="Held" flush={kind === "register" && held.length > 0}>
           {held.length === 0 ? (
             <EmptyState title={`Nothing held for this ${kind}.`} />
+          ) : kind === "register" ? (
+            <HeldSummary held={held} names={names} />
           ) : (
             <div className={styles.groups}>
               {[...groups].map(([physicalTable, rows]) => (
