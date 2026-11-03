@@ -119,7 +119,6 @@ describe("routeBreadcrumbs", () => {
       { name: "catalog-node", fqidPath: "scb/lisa/kon" },
       { name: "catalog-node", fqidPath: "scb" },
       { name: "project" },
-      { name: "doc", identifier: "x" },
     ];
     for (const route of variants) {
       const trail = routeBreadcrumbs(route);

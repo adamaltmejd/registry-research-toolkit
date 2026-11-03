@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   FileTrigger,
   Input,
@@ -7,23 +7,30 @@ import {
   TextField,
 } from "react-aria-components";
 import { type Context, errMessage } from "./api";
-import { catalogHref } from "./catalog";
-import { sourcePeriodLabel } from "./catalog_period";
+import { registerRead, segmentsRead } from "./catalog_names";
+import { focusAfterRemoval } from "./focus_after_removal";
 import { OrderView } from "./OrderView";
 import styles from "./ProjectEditor.module.css";
+import { clampYearWindow, dataAxis } from "./period";
 import type { ProjectData } from "./project_data";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store";
+import { sourcePeriodYears } from "./reg_core";
+import { SourceCard } from "./SourceCard";
+import { tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
-import { useCatalogName } from "./use_catalog_names";
+import { useCatalogNames } from "./use_catalog_names";
 import { type ProjectValidation, useProject } from "./use_project";
 import { useQueryParam } from "./use_router";
-import { LocatedIssue, ValidationPanel } from "./ValidationPanel";
-import { issueId, issuePlace, type ValidationIssue } from "./validation";
+import { useCatalogRead, useDistinct } from "./use_store_read";
+import { ValidationPanel } from "./ValidationPanel";
+import type { ValidationIssue } from "./validation";
+import { windowStore } from "./window";
+import { defaultStudyWindow, windowBounds } from "./window_bounds";
 
 export function ProjectEditor({
   context,
@@ -56,11 +63,17 @@ export function ProjectEditor({
           isInert={!context}
           onPress={() => {
             if (context)
-              replace(() =>
+              replace(() => {
+                const bounds = windowBounds(context);
                 projectStore.newProject({
                   reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
-                }),
-              );
+                  window: clampYearWindow(
+                    windowStore.value ?? defaultStudyWindow(bounds),
+                    bounds.min,
+                    bounds.max,
+                  ),
+                });
+              });
           }}
         >
           Create a project
@@ -150,6 +163,7 @@ export function ProjectEditor({
                 <Input />
               </TextField>
               <Sources
+                context={context}
                 draft={draft}
                 issues={validation.data?.issues ?? []}
                 raw={raw}
@@ -259,95 +273,126 @@ export function ProjectEditor({
   );
 }
 
+const readRegisters = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((ref) => [ref, registerRead(ref)]));
+const readSegments = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((ref) => [ref, segmentsRead(ref)]));
+
 function Sources({
   draft,
   issues,
   raw,
+  context,
 }: {
   draft: ProjectData;
   issues: ValidationIssue[];
   raw: string | null;
+  context: Context | null;
 }) {
-  if (draft.sources.length === 0)
-    return (
-      <EmptyState
-        title="No sources in this project"
-        description="Open a project_data.json with sources to review its order."
-      />
-    );
+  const heading = useRef<HTMLHeadingElement>(null);
+  const registers = useCatalogRead(
+    readRegisters,
+    useDistinct(
+      draft.sources.map((source) =>
+        source.table.split("/").slice(0, 2).join("/"),
+      ),
+    ),
+  );
+  const variables = useDistinct(
+    draft.sources.flatMap((source) =>
+      source.bindings.map((binding) => binding.variable),
+    ),
+  );
+  const segmentReads = useCatalogRead(readSegments, variables);
+  const segments = new Map(
+    Object.entries(segmentReads).flatMap(([ref, read]) =>
+      read.value ? [[ref, read.value] as const] : [],
+    ),
+  );
+  const names = useCatalogNames([
+    ...draft.sources.map((source) => source.table),
+    ...variables,
+    ...[...segments.values()].flatMap((items) =>
+      items.flatMap((segment) =>
+        segment.classification ? [segment.classification] : [],
+      ),
+    ),
+    ...draft.sources.flatMap((source) =>
+      source.bindings.flatMap((binding) =>
+        binding.classification ? [binding.classification] : [],
+      ),
+    ),
+  ]);
+  const catalog = windowBounds(context);
+  const bounds: [number, number] = [catalog.min, catalog.max];
+  const tables = Object.values(registers).flatMap(
+    (read) => read.value?.tables ?? [],
+  );
+  const axis = dataAxis(
+    [
+      ...tables
+        .filter((table) =>
+          draft.sources.some((source) => source.table === table.fqid),
+        )
+        .flatMap((table) => {
+          const years = tableYears(table, bounds);
+          return years ? [years.from, years.to] : [];
+        }),
+      ...draft.sources.flatMap(
+        (source) => sourcePeriodYears(source.period)?.flat() ?? [],
+      ),
+    ],
+    draft.window ?? null,
+    bounds,
+  );
   return (
     <section aria-label="Project sources" className={styles.sources}>
-      {draft.sources.map((source, sourceIndex) => (
-        <Panel key={source.name} title={source.name}>
-          <ul className={styles.plainList}>
-            {issues
-              .filter((issue) => {
-                const place = issuePlace(issue, raw);
-                return (
-                  place.source === source.name &&
-                  !issue.path.startsWith(`/sources/${sourceIndex}/bindings/`)
-                );
-              })
-              .map((issue) => (
-                <LocatedIssue key={issueId(issue)} issue={issue} raw={raw} />
-              ))}
-          </ul>
-          <p className={styles.sourceMeta}>
-            <CatalogNameLink fqid={source.table} kind="Table" />{" "}
-            <span>
-              Period:{" "}
-              {source.period === "_default" ? (
-                "Unbounded"
-              ) : (
-                <code>{sourcePeriodLabel(source.period)}</code>
-              )}
-            </span>
-          </p>
-          <ul className={styles.plainList}>
-            {source.bindings.map((binding, bindingIndex) => {
-              const bindingPath = `/sources/${sourceIndex}/bindings/${bindingIndex}`;
-              return (
-                <li key={bindingPath} className={styles.binding}>
-                  <CatalogNameLink fqid={binding.variable} kind="Variable" />
-                  {binding.display_name && (
-                    <span>
-                      Output name: <code>{binding.display_name}</code>
-                    </span>
-                  )}
-                  <ul className={styles.plainList}>
-                    {issues
-                      .filter((issue) => {
-                        const place = issuePlace(issue, raw);
-                        return (
-                          place.source === source.name &&
-                          (issue.path === bindingPath ||
-                            issue.path.startsWith(`${bindingPath}/`))
-                        );
-                      })
-                      .map((issue) => (
-                        <LocatedIssue
-                          key={issueId(issue)}
-                          issue={issue}
-                          raw={raw}
-                        />
-                      ))}
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
-        </Panel>
-      ))}
+      <h2 ref={heading} tabIndex={-1} className={styles.sourcesHeading}>
+        Sources
+      </h2>
+      {draft.sources.length === 0 ? (
+        <EmptyState
+          title="No sources in this project"
+          description="Browse the catalog to add columns."
+        />
+      ) : (
+        draft.sources.map((source, sourceIndex) => {
+          const register =
+            registers[source.table.split("/").slice(0, 2).join("/")];
+          return (
+            <SourceCard
+              key={source.name}
+              draft={draft}
+              sourceIndex={sourceIndex}
+              issues={issues}
+              raw={raw}
+              names={names}
+              segments={segments}
+              table={tables.find((table) => table.fqid === source.table)}
+              axis={axis}
+              bounds={bounds}
+              loading={
+                !!register?.loading ||
+                source.bindings.some(
+                  (binding) => segmentReads[binding.variable]?.loading,
+                )
+              }
+              loadError={
+                (source.bindings.some((binding) => {
+                  const read = segmentReads[binding.variable];
+                  return read && !read.loading && read.value === null;
+                })
+                  ? "Column coverage is unavailable"
+                  : null) ??
+                (register && !register.loading && !register.value
+                  ? "Table availability is unavailable"
+                  : null)
+              }
+              onRemoved={() => focusAfterRemoval([() => heading.current])}
+            />
+          );
+        })
+      )}
     </section>
-  );
-}
-
-function CatalogNameLink({ fqid, kind }: { fqid: string; kind: string }) {
-  const name = useCatalogName(fqid);
-  if (name.loading) return null;
-  return (
-    <a className="link" href={catalogHref(fqid)}>
-      {name.value ?? `${kind} name unavailable`}
-    </a>
   );
 }

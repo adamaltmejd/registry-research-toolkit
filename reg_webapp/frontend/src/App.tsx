@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
-import { getContext } from "./lib/api";
+import {
+  type Context,
+  getContext,
+  type ValidationResultModel,
+} from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
@@ -86,7 +90,11 @@ export function App() {
                     validation={validation}
                   />
                 ) : (
-                  <RoutedView route={route} />
+                  <RoutedView
+                    route={route}
+                    context={context.data}
+                    validation={validation.data}
+                  />
                 )}
               </div>
             </main>
@@ -98,7 +106,15 @@ export function App() {
 }
 
 // Remaining entity and project pages return in W3–W5.
-function RoutedView({ route }: { route: Route }) {
+function RoutedView({
+  route,
+  context,
+  validation,
+}: {
+  route: Route;
+  context: Context | null;
+  validation: ValidationResultModel | null;
+}) {
   switch (route.name) {
     case "home":
       return <Home />;
@@ -119,9 +135,15 @@ function RoutedView({ route }: { route: Route }) {
           <NotFound path={`/catalog/${route.fqidPath}`} />
         );
       }
-      return <CatalogNodeView key={route.fqidPath} fqidPath={route.fqidPath} />;
+      return (
+        <CatalogNodeView
+          key={route.fqidPath}
+          fqidPath={route.fqidPath}
+          context={context}
+          validation={validation}
+        />
+      );
     case "project":
-    case "doc":
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>
       );

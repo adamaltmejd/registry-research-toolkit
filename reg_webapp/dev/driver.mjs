@@ -180,7 +180,9 @@ async function browseSearchCase(page, shoot) {
   await search.press("Enter");
   await page.getByRole("menu").waitFor();
   check(
-    (await page.getByRole("searchbox").count()) === 1,
+    // Detail panels have their own filters; the shell and portalled palette
+    // still share exactly one field. Fails if the palette adds a second one.
+    (await page.getByRole("searchbox").evaluateAll((fields) => fields.filter((field) => !field.closest("main")).length)) === 1,
     "the open palette renders a search field of its own",
   );
   // Past the popover's entry fade, so the shot shows it opaque.
@@ -435,6 +437,144 @@ async function browseGroupCase(page, shoot) {
   await page.waitForURL("**/catalog/demo/bas/net-household");
 }
 
+// Project + catalog → saved project boundary. Fails if changing a binding's
+// type keeps its old subtype, a keyboard period edit is not saved, or removing
+// a lane loses focus or removes the wrong binding. Existing cases open files
+// and add columns; none edits a source card. Names and initial values come from
+// webapp-dev/project_data.json; the expected year-int range follows one ArrowRight
+// on the To year thumb of its 2020 period. The fixture has no classification refs.
+async function sourceCardsCase(page, shoot) {
+  const main = page.getByRole("main");
+  const projectFile = new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  );
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles(projectFile.pathname);
+  await settled(page);
+
+  await main.getByRole("button", { name: /Type for Ålder in baseline/ }).click();
+  await page.getByRole("option", { name: "Opaque", exact: true }).click();
+  const period = main.getByRole("group", { name: "Period for baseline (years)", exact: true });
+  const toYear = period.getByRole("slider", { name: /^To year/ });
+  await toYear.focus();
+  await toYear.press("ArrowRight");
+  await settled(page);
+  await shoot("source-cards-edited");
+
+  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  await sources.getByRole("button", { name: "Remove KON from baseline", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
+  await page.getByRole("alertdialog").waitFor({ state: "hidden" });
+  await settled(page);
+  check(await sources.getByRole("link", { name: "Kön", exact: true }).count() === 0,
+    "removing Kön left its lane in the source");
+  await sources.getByRole("link", { name: "Ålder", exact: true }).waitFor();
+  check(await sources.evaluate((node) => node.contains(document.activeElement)),
+    "removing the lane lost focus outside the remaining source");
+
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
+  const source = saved.sources[0];
+  check(saved.sources.length === 1 && source.bindings.length === 1 &&
+    source.bindings[0].variable === "demo/bas/alder" && source.bindings[0].type === "opaque" &&
+    !("numeric_subtype" in source.bindings[0]),
+  "the downloaded source lost Ålder's type edit, kept its numeric subtype, or removed the wrong binding");
+  check(source.period !== null && !Array.isArray(source.period) &&
+    typeof source.period === "object" && source.period.from === 2020 && source.period.to === 2021,
+  "the keyboard period edit did not save the year-int range 2020–2021");
+  await shoot("source-cards-removed");
+}
+
+// Project + catalog → saved project boundary. Fails if a variable-page add
+// confuses identical spellings in different tables, loses the binding/type or
+// add-window years, retains a tick outside the moved window,
+// leaves an already-bound column selectable, or strands a failed register read
+// without a working Retry. The older
+// project case opens complete files; none adds a column from the catalog.
+// Names, tables and numeric type are from webapp-dev.jsonl; the window is this
+// readable fixture project's explicit study window and the stated thumb move.
+async function addVariableColumnsCase(page, shoot) {
+  const main = page.getByRole("main");
+  const fixture = JSON.parse(readFileSync(new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  ), "utf8"));
+  fixture.window = { from: 2021, to: 2022 };
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({
+    name: "study-window.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  let failRegister = true;
+  let registerRequests = 0;
+  const registerRoute = "**/api/catalog/demo/hush";
+  const readRegister = async (route) => {
+    registerRequests += 1;
+    if (failRegister) await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({error:{message:"Register unavailable"}}) });
+    else await route.continue();
+  };
+  await page.route(registerRoute, readRegister);
+  await open(page, "/catalog/demo/hush/antal");
+  const registerFailure = main.getByRole("alert").filter({hasText:"Could not load the register's tables."});
+  await registerFailure.waitFor();
+  check(await main.getByRole("checkbox").count() === 0, "the add path remained exposed without table metadata");
+  failRegister = false;
+  await registerFailure.getByRole("button", {name:"Retry", exact:true}).click();
+  await settled(page);
+  await main.getByRole("group", {name:"Add window (years)",exact:true}).waitFor();
+  check(registerRequests >= 2, "Retry reused the failed register request");
+  await page.unroute(registerRoute, readRegister);
+  const familyColumn = main.getByRole("checkbox", { name: /Antal.*Familjer/ });
+  const individualColumn = main.getByRole("checkbox", { name: /Antal.*Individer/ });
+  const addWindow = main.getByRole("group", { name: "Add window (years)", exact: true });
+  const fromYear = addWindow.getByRole("slider", { name: /^From year/ });
+  await individualColumn.focus();
+  await individualColumn.press("Space");
+  await fromYear.press("ArrowRight");
+  await individualColumn.waitFor({ state: "detached" });
+  check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
+    "moving the add window kept a column with no overlapping delivery staged");
+  await fromYear.press("ArrowLeft");
+  check(!(await individualColumn.isChecked()), "returning to a column's delivery years restored its dropped tick");
+  await fromYear.press("ArrowRight");
+  await familyColumn.focus();
+  await familyColumn.press("Space");
+  check(await familyColumn.isChecked(), "the column did not tick from the keyboard");
+  check((await individualColumn.count()) === 0, "the column outside the add window remained selectable");
+  await shoot("add-variable-selected");
+  await main.getByRole("button", { name: "Add 1 column to project", exact: true }).click();
+  await familyColumn.waitFor({ state: "detached" });
+  await main.getByText(/Antal.*Familjer.*in project/i).waitFor();
+  await main.getByText(/Antal.*Individer.*outside the add window/i).waitFor();
+  check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
+    "the add bar kept the committed selection staged");
+
+  await open(page, "/project");
+  await settled(page);
+  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  const source = sources.locator("section").filter({ has: page.getByRole("heading", { name: "fam", exact: true }) });
+  await source.getByRole("link", { name: "Familjer", exact: true }).waitFor();
+  await source.getByRole("link", { name: "Antal personer", exact: true }).waitFor();
+  await source.getByText("Period: 2022", { exact: true }).waitFor();
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
+  const added = saved.sources.filter((item) => item.table === "demo/hush/fam");
+  check(added.length === 1 && added[0].bindings.length === 1 &&
+    added[0].bindings[0].variable === "demo/hush/antal" && added[0].bindings[0].type === "numeric",
+  "the downloaded project lost the selected table, binding or numeric type");
+  check(saved.sources.length === fixture.sources.length + 1,
+    "adding a column changed unrelated project sources");
+  await shoot("add-variable-project");
+
+
+}
+
 // #2056, browser boundary over webapp-dev's Antal occurrences, provider text
 // and variable notice. Fails if variable dispatch or cross-table segments are
 // lost, named table links/storage are lost in the compact layout, evidence is
@@ -477,6 +617,57 @@ async function browseVariableCase(page, shoot) {
   await source.click();
   await settled(page);
   check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
+}
+
+// Browser boundary over webapp-dev's undated Antal succession and its caveat.
+// Fails if the graph filter is lost, succession lanes/legend disappear, or a
+// neighbour becomes selectable, or a cross-register lane loses its register name.
+// Existing browse cases do not check succession.
+// The two focus columns and neighbour href come from webapp-dev.jsonl; the
+// project window keeps both focus columns available, and names come from the page.
+async function variableSuccessionCase(page, shoot) {
+  const main = page.getByRole("main");
+  await open(page, "/project");
+  await settled(page);
+  const fixture = JSON.parse(readFileSync(new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  ), "utf8"));
+  fixture.window = { from: 2021, to: 2022 };
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({
+    name: "succession-window.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await open(page, "/catalog/demo/hush");
+  await settled(page);
+  const graphRequests = [];
+  page.on("requestfinished", async (request) => {
+    if (new URL(request.url()).pathname.startsWith("/api/graph/")) {
+      const response = await request.response();
+      if (response?.ok()) graphRequests.push(request.url());
+    }
+  });
+  await main.locator('a[href="/catalog/demo/hush/antal"]').click();
+  await page.waitForURL("**/catalog/demo/hush/antal");
+  await settled(page);
+  check(graphRequests.length === 1, "the variable must complete exactly one successful graph request");
+  check(new URL(graphRequests[0]).searchParams.get("kind") === "continues",
+    "the variable graph must request only succession relations");
+  const lanes = main.getByRole("list", { name: "Variable columns", exact: true });
+  const neighbour = lanes.locator('a[href="/catalog/demo/hush/antalgammal"]');
+  await neighbour.waitFor();
+  check((await neighbour.innerText()).trim().length > 0, "the neighbour lane lost its variable name");
+  const crossRegisterLane = lanes.getByRole("listitem").filter({
+    has: page.locator('a[href="/catalog/demo/bas/antalbas"]'),
+  });
+  await crossRegisterLane.getByText("Basregistret", { exact: true }).waitFor();
+  await main.getByText("Succeeded by (definition change)", { exact: true }).waitFor();
+  check(await lanes.getByRole("checkbox").count() === 2,
+    "only the focus variable's two columns may be selectable");
+  await shoot("variable-succession");
 }
 
 // Browser boundary over webapp-dev's kon and bransch value sets. Fails if
@@ -534,6 +725,30 @@ async function browseValuesCase(page, shoot) {
 }
 
 
+// Fails if linked documents disappear, parsed text cannot expand inline, or a PDF
+// routes through the deleted hash page. Expected text was read from the fixture
+// server's /api/docs/doc endpoint; titles and source presence are fixture data.
+async function linkedDocumentsCase(page, shoot) {
+  const panel = page.getByRole("heading", { name: "Source documents", exact: true }).locator("..");
+  // Fails if filtering leaves a matching section hidden in a collapsed container.
+  // The expected title comes from the webapp-dev source frame.
+  await panel.getByRole("searchbox", { name: "Filter source documents" }).fill("Beskrivning");
+  const section = panel.getByRole("button", { name: "Beskrivning av Basregistret", exact: true });
+  await section.waitFor({ state: "visible" });
+  await section.click();
+  await panel.getByText("Basregistret innehåller en post per person och år.", { exact: true }).waitFor();
+  await settled(page);
+  await shoot("linked-documents-parsed");
+  await open(page, "/catalog/demo/hush");
+  await settled(page);
+  const pdfPanel = page.getByRole("heading", { name: "Source documents", exact: true }).locator("..");
+  const pdf = pdfPanel.getByRole("link", { name: "Bilaga", exact: true });
+  check(/^\/api\/docs\/file\/[0-9a-f]{64}$/.test(await pdf.getAttribute("href")), "PDF must link to its inline file endpoint");
+  check((await pdfPanel.getByRole("link").count()) === 1, "PDF without a source URL must not invent a source link");
+  await shoot("linked-documents-pdf");
+}
+
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -578,6 +793,16 @@ const scenarios = {
     route: "/catalog/demo/bas/inkomst",
     run: browseGroupCase,
   },
+  "variable-succession": {
+    shots: 1,
+    route: "/catalog/demo/hush",
+    run: variableSuccessionCase,
+  },
+  "linked-documents": {
+    shots: 2,
+    route: "/catalog/demo/bas",
+    run: linkedDocumentsCase,
+  },
   "browse-values": {
     shots: 4,
     route: "/catalog/demo/bas",
@@ -592,6 +817,16 @@ const scenarios = {
     shots: 3,
     route: "/project",
     run: projectPagesCase,
+  },
+  "add-variable-columns": {
+    shots: 2,
+    route: "/project",
+    run: addVariableColumnsCase,
+  },
+  "source-cards": {
+    shots: 2,
+    route: "/project",
+    run: sourceCardsCase,
   },
   "browse-pages": {
     shots: 2,

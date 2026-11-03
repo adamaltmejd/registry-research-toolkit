@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Button,
   Disclosure,
@@ -7,10 +7,14 @@ import {
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
+import { variableColumns } from "./add_columns";
 import {
   type CatalogSegment,
+  type Context,
+  getGraph,
   getSegments,
   getVariableEvidence,
+  type ValidationResultModel,
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
@@ -20,10 +24,17 @@ import {
   humanizeClassificationSlug,
 } from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
-import { registerRead, registerSubjectNames } from "./catalog_names";
+import {
+  loadRegister,
+  registerRead,
+  registerSubjectNames,
+  segmentsRead,
+} from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
+import { Button as ActionButton } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
@@ -33,10 +44,16 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
-import { useCatalogRead } from "./use_store_read";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
+import { useVariableCoverage } from "./VariableCoverage";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
+
+const readNeighbourSegments = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, segmentsRead(fqid)]));
+const readNeighbourRegisters = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, registerRead(fqid)]));
 
 function segmentFacts(row: CatalogSegment) {
   return [
@@ -103,18 +120,89 @@ export function ValueSetLabel({
   );
 }
 
-export function VariableView({ node }: { node: VariableShow }) {
-  const register = useCatalogRead(registerRead, node.register).value;
-  const names = registerSubjectNames(register);
+export function VariableView({
+  node,
+  context,
+  validation,
+}: {
+  node: VariableShow;
+  context: Context | null;
+  validation: ValidationResultModel | null;
+}) {
+  const [registerAttempt, setRegisterAttempt] = useState(0);
+  const registerRegion = useRef<HTMLDivElement>(null);
+  const registerResource = useAsyncResource(
+    `${node.register}:${registerAttempt}`,
+    (signal) => loadRegister(node.register, signal),
+  );
+  const register = registerResource.data;
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
+  const graph = useAsyncResource(node.fqid, (signal) =>
+    getGraph(node.fqid, { kind: "continues", signal }),
+  );
+  const neighbours = useCatalogRead(
+    readNeighbourSegments,
+    useDistinct(
+      (graph.data?.nodes ?? [])
+        .filter(
+          (entry) => entry.kind === "variable" && entry.fqid !== node.fqid,
+        )
+        .map((entry) => entry.fqid),
+    ),
+  );
+  const neighbourRegisters = useCatalogRead(
+    readNeighbourRegisters,
+    useDistinct(
+      Object.keys(neighbours)
+        .map((fqid) => fqid.split("/").slice(0, 2).join("/"))
+        .filter((ref) => ref !== node.register),
+    ),
+  );
+  const names = new Map(registerSubjectNames(register));
+  for (const read of Object.values(neighbourRegisters)) {
+    for (const [fqid, name] of registerSubjectNames(read.value))
+      names.set(fqid, name);
+  }
+  const neighbourColumns = new Map(
+    Object.entries(neighbours).map(([fqid, read]) => [
+      fqid,
+      variableColumns(read.value ?? []),
+    ]),
+  );
+  const successionError = graph.error
+    ? "Succession relations did not load."
+    : Object.values(neighbours).some(
+          (read) => !read.loading && read.value === null,
+        )
+      ? "Neighbour columns did not load."
+      : Object.values(neighbourRegisters).some(
+            (read) => !read.loading && read.value === null,
+          )
+        ? "Neighbour register names did not load."
+        : null;
+  const successionLoading =
+    graph.loading ||
+    Object.values(neighbours).some((read) => read.loading) ||
+    Object.values(neighbourRegisters).some((read) => read.loading);
   // Keep the key after closing: the resource (including a failure) lasts for this page.
   const [evidenceRequested, setEvidenceRequested] = useState(false);
   const evidence = useAsyncResource(
     evidenceRequested ? node.fqid : null,
     (signal) => getVariableEvidence(node.fqid, { signal }),
   );
+  const coverage = useVariableCoverage({
+    node,
+    segments: segments.data ?? [],
+    names,
+    context,
+    tables: register?.tables ?? null,
+    validation,
+    succession: graph.data,
+    neighbourColumns,
+    successionError,
+  });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
     facts.every((row) => row[index].value === fact.value),
@@ -179,6 +267,36 @@ export function VariableView({ node }: { node: VariableShow }) {
             : []),
         ]}
       />
+      <div
+        ref={registerRegion}
+        tabIndex={-1}
+        className={variableStyles.registerRead}
+        aria-busy={registerResource.loading || successionLoading || undefined}
+      >
+        {registerResource.loading ? (
+          <Skeleton count={2} />
+        ) : registerResource.error ? (
+          <StatusRow
+            tone="error"
+            live="alert"
+            action={
+              <ActionButton
+                variant="ghost"
+                onPress={() => {
+                  setRegisterAttempt((attempt) => attempt + 1);
+                  registerRegion.current?.focus();
+                }}
+              >
+                Retry
+              </ActionButton>
+            }
+          >
+            Could not load the register's tables.
+          </StatusRow>
+        ) : (
+          coverage.graph
+        )}
+      </div>
       {node.description ? (
         <Panel title="Description">
           <p className={styles.prose}>{node.description}</p>
@@ -311,7 +429,8 @@ export function VariableView({ node }: { node: VariableShow }) {
         )}
       </Panel>
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
-      <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
+      <ScopedDataWarnings fqid={node.fqid} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} />
       <Disclosure
         className={styles.disclosure}
         onExpandedChange={(expanded) => {
@@ -352,6 +471,7 @@ export function VariableView({ node }: { node: VariableShow }) {
           </>
         )}
       </Disclosure>
+      {coverage.addBar}
     </article>
   );
 }

@@ -1,4 +1,5 @@
 import type { Context } from "./api";
+import { catalogLastDate } from "./catalog_period";
 import type { ProjectStudyWindow } from "./project_data";
 
 // The study window's bounds (#611 → Period model): the viewed catalog's first and
@@ -18,12 +19,14 @@ export interface WindowBounds {
 }
 
 export function windowBounds(context: Context | null): WindowBounds {
-  const vintageYear =
-    Number(context?.import_date.slice(0, 4)) || new Date().getFullYear();
   const span = context?.period_span ?? null;
+  const end = span ? catalogLastDate(span) : null;
+  const vintageYear = end ? Number(end.slice(0, 4)) : new Date().getFullYear();
   return {
-    min: span?.from ?? FALLBACK_WINDOW_FLOOR_YEAR,
-    max: span?.to ?? vintageYear,
+    min: span?.start
+      ? Number(span.start.slice(0, 4))
+      : FALLBACK_WINDOW_FLOOR_YEAR,
+    max: vintageYear,
     enforced: span !== null,
     vintageYear,
   };

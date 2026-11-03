@@ -23,9 +23,6 @@ export type Route =
   | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
   | { name: "project" }
-  // `doc` is the minimal documentation viewer (#394); `identifier` is the doc
-  // filename after `/doc/` (a single path segment, decoded here like catalog).
-  | { name: "doc"; identifier: string }
   | { name: "not-found"; path: string };
 
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
@@ -55,17 +52,6 @@ export function parseRoute(pathname: string): Route {
   }
   if (path === "/project") {
     return { name: "project" };
-  }
-  if (path.startsWith("/doc/")) {
-    // Decode the single filename segment (the router stores the human identifier;
-    // the api layer re-encodes when fetching). A malformed percent-sequence
-    // (`null`) or an empty identifier routes to not-found rather than fetching a
-    // mangled id.
-    const identifier = safeDecode(path.slice("/doc/".length));
-    if (identifier === null || identifier === "") {
-      return { name: "not-found", path };
-    }
-    return { name: "doc", identifier };
   }
   if (path.startsWith("/catalog/")) {
     // Decode each segment (the router stores the human FQID; the api layer

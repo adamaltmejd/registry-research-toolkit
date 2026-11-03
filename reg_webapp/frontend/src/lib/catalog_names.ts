@@ -1,9 +1,12 @@
 import {
+  type CatalogSegment,
+  getSegments,
   getShow,
   type RegisterShow,
   type RootChild,
   type ShowNode,
 } from "./api";
+import { humanizeClassificationSlug } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -49,6 +52,15 @@ export const UNASKED: Read<never> = { value: null, loading: false };
  * started before one cannot write into the cache that replaced it. */
 let generation = 0;
 
+function settleRead(key: string, value: unknown, startedIn: number): void {
+  // A reset abandons old requests. An older failure cannot replace a success.
+  if (startedIn !== generation || (value === null && reads[key]?.value)) return;
+  const current = reads[key];
+  if (current && !current.loading && current.value === value) return;
+  reads = { ...reads, [key]: { value, loading: false } };
+  notify();
+}
+
 /** The cached read for `key`, STARTING it on first ask. Repeat asks (a re-render,
  * a second card on the same register) get the same entry and issue no request. */
 function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
@@ -58,15 +70,7 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
   }
   reads[key] = PENDING;
   const startedIn = generation;
-  const settle = (value: T | null) => {
-    // A read the reset abandoned settles into nothing: repopulating the fresh
-    // cache with the previous one's answer would hand a case the response the
-    // case before it stubbed.
-    if (startedIn === generation) {
-      reads = { ...reads, [key]: { value, loading: false } };
-      notify();
-    }
-  };
+  const settle = (value: T | null) => settleRead(key, value, startedIn);
   // A failed name read is not an error surface — see the module comment.
   fetcher().then(settle, () => settle(null));
   return PENDING;
@@ -172,11 +176,30 @@ export function catalogRootChildren(): Read<RootChild[]> {
 
 /** A register's display names, shared by table headers and located findings. */
 export function registerRead(ref: string): Read<RegisterShow> {
-  return read(`register:${ref}`, async () => {
-    const node = await sharedShow(ref);
-    if (node.kind !== "register") throw new Error(`${ref} is not a register`);
-    return node;
-  });
+  return read(`register:${ref}`, () => loadRegister(ref));
+}
+
+/** Source edits reuse each variable's segments without reloading other cards. */
+export function segmentsRead(ref: string): Read<CatalogSegment[]> {
+  return read(`segments:${ref}`, () => getSegments(ref));
+}
+
+/** A page owns its pending/error state; only a successful cached read is reusable. */
+export async function loadRegister(
+  ref: string,
+  signal?: AbortSignal,
+): Promise<RegisterShow> {
+  const key = `register:${ref}`;
+  const cached = reads[key] as Read<RegisterShow> | undefined;
+  if (cached?.value) return cached.value;
+  // Evict a settled failure on Retry or revisit, without notifying subscribers
+  // into an automatic retry loop. sharedShow only retains in-flight requests.
+  if (cached && !cached.loading) delete reads[key];
+  const startedIn = generation;
+  const node = await sharedShow(ref, signal);
+  if (node.kind !== "register") throw new Error(`${ref} is not a register`);
+  settleRead(key, node, startedIn);
+  return node;
 }
 
 const subjectNames = new WeakMap<RegisterShow, ReadonlyMap<string, string>>();
@@ -210,8 +233,8 @@ export function catalogNames(
   const registers = new Set<string>();
   for (const ref of refs) {
     if (ref.startsWith("class/")) {
-      const node = showRead(ref).value;
-      if (node && "name" in node) names.set(ref, node.name);
+      const name = classificationNameRead(ref).value;
+      if (name) names.set(ref, name);
       continue;
     }
     registers.add(ref.split("/").slice(0, 2).join("/"));
@@ -230,15 +253,19 @@ export function catalogNames(
 export function catalogNameRead(ref: string | null): Read<string> {
   if (ref === null) return UNASKED;
   if (ref.startsWith("class/")) {
-    const node = showRead(ref);
-    return {
-      value: node.value && "name" in node.value ? node.value.name : null,
-      loading: node.loading,
-    };
+    return classificationNameRead(ref);
   }
   const state = registerRead(ref.split("/").slice(0, 2).join("/"));
   return {
     value: registerSubjectNames(state.value).get(ref) ?? null,
     loading: state.loading,
+  };
+}
+
+/** Use the classification page's version title, not content-shared value-set aliases. */
+function classificationNameRead(ref: string): Read<string> {
+  return {
+    value: humanizeClassificationSlug(ref.split("/").at(-1) ?? ""),
+    loading: false,
   };
 }

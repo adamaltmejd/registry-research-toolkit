@@ -24,14 +24,29 @@ first. Download remains available if browser persistence fails.
 The banner and project page share one catalog check. The banner retains the project
 name, source and column counts, verdict and download save state across routes. A
 restored local draft is recovery, so it remains unsaved until downloaded. The study
-window is a readout here; its window-band picker returns in W5b1.
+window is an inline window-band picker bounded by the catalog's half-open period span. A
+new project carries over the browsing window or starts at 2015 through the catalog's
+last year. Moving the study window never rewrites source periods.
+
+Variable pages project their segments into a single coverage LaneGraph. A column is the
+exact table and spelling pair; selection and its availability-bounded add window are
+local to the page. Adding creates or widens one source per table and appends one binding
+per variable, using the segments' default type and agreed classification. WASM checks
+the candidate before the existing project store writes its sources. Source cards author
+binding type, classification pin, removal and source period through checked candidates
+and the same sources write path. Each table supplies a coverage row over its binding
+lanes on one shared data axis. Stored periods are never narrowed on load. Variable pages
+read one hop of succession relations into read-only neighbour lanes on the same
+timeline, with arrows from predecessor to successor and names linking to their variable
+pages. Adding starts from the variable page; register rows link there, and both those
+rows and already-bound columns show in-project state without a checkbox.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
 pane. Register-name reads are shared with catalog browsing; value-set names are read by
 their content identity without displaying hashes. Row keys, period clips and
-non-blocking findings remain separate. Source authoring, catalog picking and panels
-return in W5b; manifests, resolve and steward workflows remain deferred.
+non-blocking findings remain separate. Panels return in W5b; manifests, resolve and
+steward workflows remain deferred.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
