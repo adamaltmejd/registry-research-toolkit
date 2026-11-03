@@ -2327,3 +2327,171 @@ kind = "set"
 subject = "var:valdplan"
 fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Härleds från fr8; sätts till 100 vid reskont=6, till 101 vid reskont=4 eller 5 och till 0 för kvarvarande saknade värden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed derivation is documented only from November 2015; earlier sources name the inputs without the recoding rule. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadstyp"
+fields = { "label" = "Bostadstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:civilstand"
+fields = { "label" = "Civilstånd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:deltagande-folkomrostning"
+fields = { "label" = "Deltagande folkomröstning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:eu-sympati"
+fields = { "label" = "EU-sympati" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvs-och-kapitalinkomst"
+fields = { "label" = "Förvärvs- och kapitalinkomst" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvsarbete"
+fields = { "label" = "Förvärvsarbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvsinkomst"
+fields = { "label" = "Förvärvsinkomst" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:insamlingsresultat"
+fields = { "label" = "Insamlingsresultat" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nast-basta-parti"
+fields = { "label" = "Näst bästa parti" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:opinionsundersokningars-paverkan-pa-partival"
+fields = { "label" = "Opinionsundersökningars påverkan på partival" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overvagda-partier-riksdagsval-idag"
+fields = { "label" = "Övervägda partier riksdagsval idag" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:partiblocksympati"
+fields = { "label" = "Partiblocksympati" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partiblockval-riksdagsval-idag"
+fields = { "label" = "Partiblockval riksdagsval idag" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partiblockval-senaste-riksdagsval"
+fields = { "label" = "Partiblockval senaste riksdagsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partisympati"
+fields = { "label" = "Partisympati" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partival-europaparlamentsval"
+fields = { "label" = "Partival europaparlamentsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:partival-omval-regionfullmaktige"
+fields = { "label" = "Partival omval regionfullmäktige" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partival-riksdagsval-idag"
+fields = { "label" = "Partival riksdagsval idag" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partival-senaste-regionfullmaktigeval"
+fields = { "label" = "Partival senaste regionfullmäktigeval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partival-senaste-riksdagsval"
+fields = { "label" = "Partival senaste riksdagsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:prefererat-svarssatt"
+fields = { "label" = "Prefererat svarssätt" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:rostningssannolikhet"
+fields = { "label" = "Röstningssannolikhet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattning"
+fields = { "label" = "Sysselsättning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:valdeltagande-europaparlamentsval"
+fields = { "label" = "Valdeltagande europaparlamentsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:valdeltagande-hypotetiskt-riksdagsval"
+fields = { "label" = "Valdeltagande hypotetiskt riksdagsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:valdeltagande-regionfullmaktige-vastra-gotaland"
+fields = { "label" = "Valdeltagande regionfullmäktige Västra Götaland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:valdeltagande-senaste-riksdagsval"
+fields = { "label" = "Valdeltagande senaste riksdagsval" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "label" = "Yrke" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

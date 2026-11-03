@@ -1236,3 +1236,81 @@ kind = "set"
 subject = "var:innovationssamarbete-priv-inst-utlandet"
 fields = { "description" = "Objektet samarbetade med privata forskningsinstitut i utlandet i innovationsarbetet. Objektet avser arbetsplatsen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:248707:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:anledningar-till-begransade-innovationsaktiviteter"
+fields = { "label" = "Anledningar till begränsade innovationsaktiviteter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:drivkrafter-bakom-innovation"
+fields = { "label" = "Drivkrafter bakom innovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:effekter-av-innovation"
+fields = { "label" = "Effekter av innovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationens-nyhetsslag"
+fields = { "label" = "Innovationens nyhetsslag" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationsaktivitetens-status"
+fields = { "label" = "Innovationsaktivitetens status" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationsaktiviteternas-arbetsmoment"
+fields = { "label" = "Innovationsaktiviteternas arbetsmoment" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationssamarbete"
+fields = { "label" = "Innovationssamarbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationsutgifter"
+fields = { "label" = "Innovationsutgifter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:miljoinnovation"
+fields = { "label" = "Miljöinnovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:personalstorlek"
+fields = { "label" = "Personalstorlek" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:processinnovation"
+fields = { "label" = "Processinnovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktinnovation"
+fields = { "label" = "Produktinnovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

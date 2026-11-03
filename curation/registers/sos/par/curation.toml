@@ -1540,3 +1540,81 @@ kind = "set"
 subject = "var:anestesikod-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod"
+fields = { "label" = "Åtgärdskod" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardssekvensnummer"
+fields = { "label" = "Åtgärdssekvensnummer" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:besoksdatum"
+fields = { "label" = "Besöksdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod"
+fields = { "label" = "Diagnoskod" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnossekvensnummer"
+fields = { "label" = "Diagnossekvensnummer" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsetid"
+fields = { "label" = "Födelsetid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:folkbokforingsort"
+fields = { "label" = "Folkbokföringsort" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inventeringsdatum"
+fields = { "label" = "Inventeringsdatum" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:klinik-och-medicinskt-verksamhetsomrade"
+fields = { "label" = "Klinik och medicinskt verksamhetsområde" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:senaste-invandring"
+fields = { "label" = "Senaste invandring" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppgiftslamnare"
+fields = { "label" = "Uppgiftslämnare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utskrivningsdatum"
+fields = { "label" = "Utskrivningsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

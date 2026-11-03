@@ -6,6 +6,12 @@
 #   swecov  reg-webapp-swecov behind a worker on data.swecov.se that serves the SPA
 #           as static assets and passes `/api`, `/openapi.json` and `/mcp` through.
 #
+# SWECOV defaults off: all four SWECOV jobs require repository variable
+# SWECOV_DEPLOY to equal exactly "on". After the paired release exists, the
+# maintainer enables it with `gh variable set SWECOV_DEPLOY --body on`.
+# Unset or any other value skips those jobs; turning it off again stops SWECOV
+# redeploys on later pushes without affecting global.
+#
 # PRs: build-only. `build-image` proves the multi-stage Dockerfile still builds,
 # including the digest-verified DB bake, the `reg-meta` Rust build and the #224
 # provenance-confinement assertion #3 (the RUN check fails the build if
@@ -248,6 +254,7 @@ jobs:
   swecov-asset-guard:
     needs: schema-guard
     if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success'
     runs-on: ubuntu-latest
@@ -352,6 +359,7 @@ jobs:
     # loudly if the release has no reg_meta_swecov.db.zst (an empty digest),
     # rather than shipping the steward without its holdings DB (#1091).
     if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
@@ -490,6 +498,7 @@ jobs:
   deploy-swecov:
     needs: [build-swecov-image, wait-ci, schema-guard, swecov-asset-guard]
     if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && needs.build-swecov-image.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
       needs.wait-ci.result == 'success' &&
@@ -620,6 +629,7 @@ jobs:
   edge-deploy-swecov:
     needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard, swecov-asset-guard]
     if: >-
+      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
       needs.schema-guard.result == 'success' &&

@@ -193,23 +193,32 @@ export function plainIssueText(
         message.replaceAll(ref, names.get(ref) ?? "this catalog item"),
       text,
     );
-  // Adapt only the server's exact ISO half-open notation. Keep malformed
-  // intervals and other authored prose intact; the existing formatter owns display.
-  return message.replace(
-    /\[(\d{4}-\d{2}-\d{2}),\s*(\d{4}-\d{2}-\d{2})\)/g,
-    (interval, start: string, end: string) => {
-      if (
-        start >= end ||
-        [start, end].some((date) => {
-          const parsed = new Date(`${date}T00:00:00Z`);
-          return (
-            !Number.isFinite(parsed.getTime()) ||
-            parsed.toISOString().slice(0, 10) !== date
-          );
-        })
-      )
-        return interval;
-      return catalogPeriodLabel({ start, end });
-    },
-  );
+  // The server writes a period as `[start, end)` with `open` for a missing bound
+  // (`span` in reg-catalog's order ops) and a study window as `2019..2020`.
+  // Adapt only those exact forms, in prose with an en dash; malformed intervals
+  // and other authored prose stay intact.
+  return message
+    .replace(
+      /\[(\d{4}-\d{2}-\d{2}|open),\s*(\d{4}-\d{2}-\d{2}|open)\)/g,
+      (interval, start: string, end: string) => {
+        const bound = (date: string) => (date === "open" ? null : date);
+        if (
+          [start, end].some((date) => {
+            if (date === "open") return false;
+            const parsed = new Date(`${date}T00:00:00Z`);
+            return (
+              !Number.isFinite(parsed.getTime()) ||
+              parsed.toISOString().slice(0, 10) !== date
+            );
+          }) ||
+          (start !== "open" && end !== "open" && start >= end)
+        )
+          return interval;
+        return catalogPeriodLabel({
+          start: bound(start),
+          end: bound(end),
+        }).replace("..", "–");
+      },
+    )
+    .replace(/(?<![\d.-])(\d{4})\.\.(\d{4})(?![\d.-])/g, "$1–$2");
 }

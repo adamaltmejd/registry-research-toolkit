@@ -383,3 +383,27 @@ kind = "set"
 subject = "var:antfolkb"
 fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadskategori"
+fields = { "label" = "Bostadskategori" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadstyp"
+fields = { "label" = "Byggnadstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koksutrustning"
+fields = { "label" = "Köksutrustning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:statistikomrade"
+fields = { "label" = "Statistikområde" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

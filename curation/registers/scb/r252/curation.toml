@@ -1280,3 +1280,105 @@ kind = "set"
 subject = "var:total-starkelsepotatisskord"
 fields = { "description" = "Total stärkelsepotatisskörd." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:annan-brukare"
+fields = { "label" = "Annan brukare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hektarskord-av-potatis"
+fields = { "label" = "Hektarskörd av potatis" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ingen-ekologisk-areal"
+fields = { "label" = "Ingen ekologisk areal" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lilla-n"
+fields = { "label" = "Lilla n" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:obargad-potatisareal"
+fields = { "label" = "Obärgad potatisareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:objektsbortfall"
+fields = { "label" = "Objektsbortfall" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:osatt-potatisareal"
+fields = { "label" = "Osatt potatisareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:partiellt-bortfall"
+fields = { "label" = "Partiellt bortfall" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:potatisareal-enligt-sam"
+fields = { "label" = "Potatisareal enligt SAM" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skordad-potatisareal"
+fields = { "label" = "Skördad potatisareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomrade"
+fields = { "label" = "Skördeområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stora-n"
+fields = { "label" = "Stora N" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (statistical notation (population size))."
+
+[[statement]]
+kind = "set"
+subject = "set:total-potatisareal-enligt-brukaren"
+fields = { "label" = "Total potatisareal enligt brukaren" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-potatisskord"
+fields = { "label" = "Total potatisskörd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsstratum"
+fields = { "label" = "Urvalsstratum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

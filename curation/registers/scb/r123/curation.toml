@@ -14190,3 +14190,651 @@ kind = "set"
 subject = "var:rormask"
 fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
 evidence = "r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193. | r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3749\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anstallningstid-pa-arbetsplatsen"
+fields = { "label" = "Anställningstid på arbetsplatsen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-understallda"
+fields = { "label" = "Antal underställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-arbetsutrustning"
+fields = { "label" = "Användning av arbetsutrustning" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-fram-till-pension"
+fields = { "label" = "Arbete fram till pension" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-hemifran"
+fields = { "label" = "Arbete hemifrån" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-med-upplyfta-hander"
+fields = { "label" = "Arbete med upplyfta händer" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsbelastning"
+fields = { "label" = "Arbetsbelastning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsformaga-nedsatt-av-funktionsnedsattning"
+fields = { "label" = "Arbetsförmåga nedsatt av funktionsnedsättning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetskontakt-med-svart-sjuka"
+fields = { "label" = "Arbetskontakt med svårt sjuka" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsledar-och-chefsstallning"
+fields = { "label" = "Arbetsledar- och chefsställning" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (suspended hyphen, diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsplatsens-antal-anstallda"
+fields = { "label" = "Arbetsplatsens antal anställda" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsplatsens-forutsattningar-for-gott-arbete"
+fields = { "label" = "Arbetsplatsens förutsättningar för gott arbete" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstid-vid-dator-och-bildskarm"
+fields = { "label" = "Arbetstid vid dator och bildskärm" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstidens-forlaggning"
+fields = { "label" = "Arbetstidens förläggning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsuppgifternas-svarighetsgrad"
+fields = { "label" = "Arbetsuppgifternas svårighetsgrad" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardade-arbetsmiljobrister"
+fields = { "label" = "Åtgärdade arbetsmiljöbrister" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-fran-tidigare-yrke"
+fields = { "label" = "Besvär från tidigare yrke" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-axlar-och-armar"
+fields = { "label" = "Besvär i axlar och armar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-hander-och-handleder"
+fields = { "label" = "Besvär i händer och handleder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-hofter-och-ben"
+fields = { "label" = "Besvär i höfter och ben" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-nedre-ryggen"
+fields = { "label" = "Besvär i nedre ryggen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-ovre-ryggen-och-nacken"
+fields = { "label" = "Besvär i övre ryggen och nacken" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:buller-i-arbetet"
+fields = { "label" = "Buller i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dalig-belysning-i-arbetet"
+fields = { "label" = "Dålig belysning i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:datorutrustning-i-arbetet"
+fields = { "label" = "Datorutrustning i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:digitala-systems-anvandarvanlighet"
+fields = { "label" = "Digitala systems användarvänlighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:diskriminering-pa-arbetsplatsen"
+fields = { "label" = "Diskriminering på arbetsplatsen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ensamarbete"
+fields = { "label" = "Ensamarbete" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ensidigt-upprepade-arbetsrorelser"
+fields = { "label" = "Ensidigt upprepade arbetsrörelser" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:facklig-anslutning"
+fields = { "label" = "Facklig anslutning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsanvandning-i-arbetet"
+fields = { "label" = "Fordonsanvändning i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foretagshalsovardens-arbetsmiljobedomning"
+fields = { "label" = "Företagshälsovårdens arbetsmiljöbedömning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foretagshalsovardens-insatsomraden"
+fields = { "label" = "Företagshälsovårdens insatsområden" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:fortsatt-enkatmedverkan"
+fields = { "label" = "Fortsatt enkätmedverkan" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forutsattningar-att-klara-arbetsuppgifter"
+fields = { "label" = "Förutsättningar att klara arbetsuppgifter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:framatrojd-arbetsstallning"
+fields = { "label" = "Framåtböjd arbetsställning" }
+evidence = "#2100 group name: named from the members' labels and definitions (slug typo; name from the members' labels)."
+
+[[statement]]
+kind = "set"
+subject = "set:funktionsnedsattning"
+fields = { "label" = "Funktionsnedsättning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-anstrangning-i-arbetet"
+fields = { "label" = "Fysisk ansträngning i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-trotthet-efter-arbetet"
+fields = { "label" = "Fysisk trötthet efter arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hand-armvibrationer-i-arbetet"
+fields = { "label" = "Hand-armvibrationer i arbetet" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:helkroppsvibrationer-i-arbetet"
+fields = { "label" = "Helkroppsvibrationer i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hjalpmedel-vid-datorarbete"
+fields = { "label" = "Hjälpmedel vid datorarbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hot-mot-anstallningen"
+fields = { "label" = "Hot mot anställningen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hudkontakt-med-olja-och-skarvatskor"
+fields = { "label" = "Hudkontakt med olja och skärvätskor" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inflytande-over-arbetet"
+fields = { "label" = "Inflytande över arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkomstgrupp"
+fields = { "label" = "Inkomstgrupp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kemikalier-i-arbetsluften"
+fields = { "label" = "Kemikalier i arbetsluften" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncentrationskrav-i-arbetet"
+fields = { "label" = "Koncentrationskrav i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:konflikter-pa-arbetsplatsen"
+fields = { "label" = "Konflikter på arbetsplatsen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:krankande-sarbehandling-i-arbetet"
+fields = { "label" = "Kränkande särbehandling i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kroppsvatskor-i-arbetet"
+fields = { "label" = "Kroppsvätskor i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kyla-i-arbetet"
+fields = { "label" = "Kyla i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:meningsfullt-arbete"
+fields = { "label" = "Meningsfullt arbete" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:misstrostan-i-arbetet"
+fields = { "label" = "Misströstan i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-arbeta-ostort"
+fields = { "label" = "Möjlighet att arbeta ostört" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-framfora-kritik"
+fields = { "label" = "Möjlighet att framföra kritik" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-vaxla-mellan-sittande-och-staende"
+fields = { "label" = "Möjlighet att växla mellan sittande och stående" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-till-likvardigt-arbete"
+fields = { "label" = "Möjlighet till likvärdigt arbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren-i-huvudsysslan"
+fields = { "label" = "Näringsgren i huvudsysslan" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-arbetet"
+fields = { "label" = "Nöjdhet med arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nuvarande-arbetsformaga"
+fields = { "label" = "Nuvarande arbetsförmåga" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:olust-infor-arbetet"
+fields = { "label" = "Olust inför arbetet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:oorganiskt-damm-i-arbetet"
+fields = { "label" = "Oorganiskt damm i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:organiskt-damm-i-arbetet"
+fields = { "label" = "Organiskt damm i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-att-inte-arbeta-till-pension"
+fields = { "label" = "Orsaker till att inte arbeta till pension" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-sjuknarvaro"
+fields = { "label" = "Orsaker till sjuknärvaro" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overensstammelse-mellan-krav-och-kompetens"
+fields = { "label" = "Överensstämmelse mellan krav och kompetens" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overtidsarbete"
+fields = { "label" = "Övertidsarbete" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overvagd-arbetsforandring-av-halsoskal"
+fields = { "label" = "Övervägd arbetsförändring av hälsoskäl" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:overvakning-av-automatiska-maskiner"
+fields = { "label" = "Övervakning av automatiska maskiner" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:pauser-och-aterhamtning-under-arbetsdagen"
+fields = { "label" = "Pauser och återhämtning under arbetsdagen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:psykisk-anstrangning-i-arbetet"
+fields = { "label" = "Psykisk ansträngning i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rengoringsmedel-i-arbetet"
+fields = { "label" = "Rengöringsmedel i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:risk-for-ofrivillig-forflyttning"
+fields = { "label" = "Risk för ofrivillig förflyttning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sektor-i-huvudsysslan"
+fields = { "label" = "Sektor i huvudsysslan" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sexuella-trakasserier-i-arbetet"
+fields = { "label" = "Sexuella trakasserier i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sittande-arbete"
+fields = { "label" = "Sittande arbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sjuknarvaro"
+fields = { "label" = "Sjuknärvaro" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skyddsombud-pa-arbetsplatsen"
+fields = { "label" = "Skyddsombud på arbetsplatsen" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:social-isolering-i-arbetet"
+fields = { "label" = "Social isolering i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:socioekonomisk-grupp"
+fields = { "label" = "Socioekonomisk grupp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:somnsvarigheter"
+fields = { "label" = "Sömnsvårigheter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stimulans-och-utveckling-i-arbetet"
+fields = { "label" = "Stimulans och utveckling i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stod-for-prioritering-av-arbetsuppgifter"
+fields = { "label" = "Stöd för prioritering av arbetsuppgifter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stod-och-hjalp-i-arbetet"
+fields = { "label" = "Stöd och hjälp i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sura-och-basiska-amnen-i-arbetet"
+fields = { "label" = "Sura och basiska ämnen i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tankar-pa-arbetet-under-ledighet"
+fields = { "label" = "Tankar på arbetet under ledighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tid-i-nuvarande-yrke"
+fields = { "label" = "Tid i nuvarande yrke" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tillgang-till-foretagshalsovard"
+fields = { "label" = "Tillgång till företagshälsovård" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:tillganglighet-for-arbetet-pa-fritiden"
+fields = { "label" = "Tillgänglighet för arbetet på fritiden" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tobaksrok-pa-arbetsplatsen"
+fields = { "label" = "Tobaksrök på arbetsplatsen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tunga-lyft-i-arbetet"
+fields = { "label" = "Tunga lyft i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tydlighet-i-arbetsuppgifter-och-mal"
+fields = { "label" = "Tydlighet i arbetsuppgifter och mål" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-kontorsarbetsplats"
+fields = { "label" = "Typ av kontorsarbetsplats" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:undersokning-och-riskbedomning-av-arbetsmiljon"
+fields = { "label" = "Undersökning och riskbedömning av arbetsmiljön" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:undersokningsvikter"
+fields = { "label" = "Undersökningsvikter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppdrag-i-arbetsmiljoarbetet"
+fields = { "label" = "Uppdrag i arbetsmiljöarbetet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppskattning-i-arbetet"
+fields = { "label" = "Uppskattning i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildning-och-kompetensutveckling-i-arbetet"
+fields = { "label" = "Utbildning och kompetensutveckling i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "label" = "Utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vald-och-hot-i-arbetet"
+fields = { "label" = "Våld och hot i arbetet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vardering-av-arbetets-egenskaper"
+fields = { "label" = "Värdering av arbetets egenskaper" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vattenkontakt-med-huden-i-arbetet"
+fields = { "label" = "Vattenkontakt med huden i arbetet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vriden-arbetsstallning"
+fields = { "label" = "Vriden arbetsställning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-i-huvudsysslan"
+fields = { "label" = "Yrke i huvudsysslan" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesbyte-pa-grund-av-besvar"
+fields = { "label" = "Yrkesbyte på grund av besvär" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."

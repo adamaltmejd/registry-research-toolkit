@@ -310,19 +310,28 @@ hosted MCP through its own origin and worker.
   (DNS-01 cert issuance — the reliable path behind a proxy; never proxy a hostname
   pointing at `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode
   Full (strict). No dedicated IPv4 — the free shared IPv4 works behind the proxy.
+- **SWECOV deployment switch**: all four SWECOV jobs (`swecov-asset-guard`,
+  `build-swecov-image`, `deploy-swecov`, `edge-deploy-swecov`) independently require
+  repository variable `SWECOV_DEPLOY` to equal exactly `on`. It defaults off: unset or
+  any other value skips all four jobs without affecting global. Only after the paired
+  release exists, the maintainer enables it with
+  `gh variable set SWECOV_DEPLOY --body on`. Turning it off again stops SWECOV redeploys
+  on later pushes. Merging with it unset leaves the running 0.64 app and edge worker on
+  `data.swecov.se` unchanged; global redeploys once because the `__edge_v` restoration
+  changed `crates/**` and the global content digest.
 - **SWECOV asset guard**: `schema-guard` resolves the optional paired asset digest,
   warning when absent. The push/dispatch-only `swecov-asset-guard` emits an error naming
   the tag and missing asset and sets no `ok` output on failure. It uses
   `continue-on-error: true` because the deployed-commit resolver counts only successful
   workflow runs: making the whole run fail would repeatedly rebuild the global image
   from an old deployed base. All three SWECOV jobs require explicit `ok=true`; no global
-  job depends on them. On 0.71.0 the guard fails by design and global deployment remains
-  unaffected. There is no holdings schema guard in CI; pair admission and the entrypoint
-  smoke fail the SWECOV deploy if it is incompatible. Frontend-only pushes also run the
-  schema guard and the tolerated failing asset guard until the paired 0.72.0 release. A
-  failing `deploy-swecov` (refused pair, OOM or failed probe) still makes the whole run
-  fail; the resolver then rebuilds and redeploys global on later pushes until SWECOV is
-  fixed, as in the previous deployment design.
+  job depends on them. If enabled on 0.71.0 the guard fails by design and global
+  deployment remains unaffected. There is no holdings schema guard in CI; pair admission
+  and the entrypoint smoke fail the SWECOV deploy if it is incompatible. Frontend-only
+  pushes also run the schema guard; when enabled, the asset guard tolerates failure
+  until the paired 0.72.0 release. A failing `deploy-swecov` (refused pair, OOM or
+  failed probe) still makes the whole run fail; the resolver then rebuilds and redeploys
+  global on later pushes until SWECOV is fixed, as in the previous deployment design.
 - **Edge workers** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
   `reg-webapp-global-edge` on `reg-meta.vqv.uk/*` without assets. It forwards `/mcp`
   alone with the edge token and returns a `no-store` 404 elsewhere.

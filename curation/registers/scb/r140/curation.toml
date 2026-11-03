@@ -580,3 +580,51 @@ kind = "set"
 subject = "var:vpute"
 fields = { "tags" = ["energy"] }
 evidence = "Värdena i förkortningsfamiljen behandlas enhetligt som källmnemoniker. Variabeln anger antal utevärmepumpar som uppvärmningssätt. Målförslaget kolliderar med etiketten för vpumpute och kräver R6-prövning.\ncatalog:occurrence-locators:variable:7554\ncatalog:variable_text:7554:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:energianvandning"
+fields = { "label" = "Energianvändning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:energibesparande-atgarder"
+fields = { "label" = "Energibesparande åtgärder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:graddagar"
+fields = { "label" = "Graddagar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lokalarea"
+fields = { "label" = "Lokalarea" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmningssatt"
+fields = { "label" = "Uppvärmningssätt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varmepumpars-installationsar"
+fields = { "label" = "Värmepumpars installationsår" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:vattenforbrukning"
+fields = { "label" = "Vattenförbrukning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

@@ -1021,3 +1021,159 @@ kind = "set"
 subject = "var:nabs13x"
 fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor. Skattningen använder en fördelningsnyckel från den senaste mätningen av FoU inom statliga myndigheter samt universitet och högskolor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:461476:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsbelopp"
+fields = { "label" = "Anslagsbelopp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsnamn"
+fields = { "label" = "Anslagsnamn" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsnummer"
+fields = { "label" = "Anslagsnummer" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:departement"
+fields = { "label" = "Departement" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-allman-vetenskaplig-utveckling"
+fields = { "label" = "FoU-anslag allmän vetenskaplig utveckling" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-ej-fordelade-pa-forskningsamne"
+fields = { "label" = "FoU-anslag ej fördelade på forskningsämne" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-energi-och-vattenforsorjning"
+fields = { "label" = "FoU-anslag energi- och vattenförsörjning" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-forsvar"
+fields = { "label" = "FoU-anslag försvar" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-halso-och-sjukvard"
+fields = { "label" = "FoU-anslag hälso- och sjukvård" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-humaniora-och-konst"
+fields = { "label" = "FoU-anslag humaniora och konst" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-industriell-verksamhet"
+fields = { "label" = "FoU-anslag industriell verksamhet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-jordbruk-skogsbruk-jakt-och-fiske"
+fields = { "label" = "FoU-anslag jordbruk, skogsbruk, jakt och fiske" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, commas)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-jorden-och-atmosfaren"
+fields = { "label" = "FoU-anslag jorden och atmosfären" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-kultur-fritid-och-massmedia"
+fields = { "label" = "FoU-anslag kultur, fritid och massmedia" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, commas)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-lantbruksvetenskap-och-veterinarmedicin"
+fields = { "label" = "FoU-anslag lantbruksvetenskap och veterinärmedicin" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-medicin-och-halsovetenskap"
+fields = { "label" = "FoU-anslag medicin och hälsovetenskap" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-miljo-och-naturvard"
+fields = { "label" = "FoU-anslag miljö och naturvård" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-naturvetenskap"
+fields = { "label" = "FoU-anslag naturvetenskap" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-politiska-och-sociala-system"
+fields = { "label" = "FoU-anslag politiska och sociala system" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-rymdverksamhet"
+fields = { "label" = "FoU-anslag rymdverksamhet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-samhallsvetenskap"
+fields = { "label" = "FoU-anslag samhällsvetenskap" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-teknik"
+fields = { "label" = "FoU-anslag teknik" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-transport-och-telekommunikationer"
+fields = { "label" = "FoU-anslag transport och telekommunikationer" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-utbildning"
+fields = { "label" = "FoU-anslag utbildning" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:statliga-budgetanslag-till-fou"
+fields = { "label" = "Statliga budgetanslag till FoU" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utgiftsomrade"
+fields = { "label" = "Utgiftsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

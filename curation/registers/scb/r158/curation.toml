@@ -598,3 +598,51 @@ kind = "set"
 subject = "var:urspr-gallandedatum"
 fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
 evidence = "r24, r40 and r53 consistently define when protection takes legal effect, matching the effective-date group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42626\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442876\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42769"
+
+[[statement]]
+kind = "set"
+subject = "set:beslutsdatum-for-skyddad-natur"
+fields = { "label" = "Beslutsdatum för skyddad natur" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forvaltare"
+fields = { "label" = "Förvaltare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:gallandedatum-for-skyddad-natur"
+fields = { "label" = "Gällandedatum för skyddad natur" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:namn-pa-geografiskt-objekt"
+fields = { "label" = "Namn på geografiskt objekt" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:natura-2000-omradestyp"
+fields = { "label" = "Natura 2000-områdestyp" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:registeransvarig"
+fields = { "label" = "Registeransvarig" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skyddad-areal"
+fields = { "label" = "Skyddad areal" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:syfte-for-skyddat-omrade"
+fields = { "label" = "Syfte för skyddat område" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

@@ -670,3 +670,27 @@ kind = "set"
 subject = "var:registrerad-yrkeshogskola"
 fields = { "tags" = ["education"] }
 evidence = "YH är en bokstavskod som inte förekommer i etiketten; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22409:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasieprogram"
+fields = { "label" = "Gymnasieprogram" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:insamlingsmetod"
+fields = { "label" = "Insamlingsmetod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:studiedeltagande-i-skolform"
+fields = { "label" = "Studiedeltagande i skolform" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsstratum"
+fields = { "label" = "Urvalsstratum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

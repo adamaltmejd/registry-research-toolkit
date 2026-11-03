@@ -1576,3 +1576,123 @@ kind = "set"
 subject = "var:ytalok"
 fields = { "tags" = ["property"] }
 evidence = "Avser affärslokalyta i hyreshus.\ncatalog:variable_text:10146:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-varderingsenheter"
+fields = { "label" = "Antal värderingsenheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:basvarde"
+fields = { "label" = "Basvärde" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bebyggelsetyp"
+fields = { "label" = "Bebyggelsetyp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:biutrymmesyta-i-smahus"
+fields = { "label" = "Biutrymmesyta i småhus" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsyta"
+fields = { "label" = "Bostadsyta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bruksar-eller-vardear"
+fields = { "label" = "Bruksår eller värdeår" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnad-under-uppforande"
+fields = { "label" = "Byggnad under uppförande" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadsar"
+fields = { "label" = "Byggnadsår" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggrattsyta"
+fields = { "label" = "Byggrättsyta" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:fastighetskoordinater"
+fields = { "label" = "Fastighetskoordinater" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:glesbygdstillhorighet"
+fields = { "label" = "Glesbygdstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hyresintakter"
+fields = { "label" = "Hyresintäkter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kopeskillingskoefficient"
+fields = { "label" = "Köpeskillingskoefficient" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:markareal"
+fields = { "label" = "Markareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:om-eller-tillbyggnadsar"
+fields = { "label" = "Om- eller tillbyggnadsår" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:postort"
+fields = { "label" = "Postort" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:standardpoang"
+fields = { "label" = "Standardpoäng" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vardear"
+fields = { "label" = "Värdeår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vardegrundande-yta-i-smahus"
+fields = { "label" = "Värdegrundande yta i småhus" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

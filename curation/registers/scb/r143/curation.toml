@@ -328,3 +328,21 @@ kind = "set"
 subject = "var:urval"
 fields = { "tags" = ["methods"] }
 evidence = "Identitetsfakta visar överlappande och periodvis olika tilldelningar av samma källkolumn.\ncatalog:occurrence:391291\ncatalog:occurrence:391316\ncatalog:occurrence:391317\ncatalog:occurrence:391328"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-bostadslagenheter"
+fields = { "label" = "Antal bostadslagenheter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lagenhetstyp-och-bestandsklassificering"
+fields = { "label" = "Lägenhetstyp och beståndsklassificering" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ursprunglig-byggnadstid"
+fields = { "label" = "Ursprunglig byggnadstid" }
+evidence = "#2100 group name: the slug read as words; kept on review."
