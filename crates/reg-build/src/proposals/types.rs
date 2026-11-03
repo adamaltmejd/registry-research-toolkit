@@ -22,7 +22,7 @@ fn proposal(family: &str, codes: &[&str]) -> Option<&'static str> {
     match family {
         "text" if codes.iter().all(|c| integer(c)) => Some("integer"),
         "integer"
-            if codes.iter().all(|c| integer(c) || fraction(c))
+            if codes.iter().all(|c| integer(c) || point(c))
                 && codes.iter().any(|c| fraction(c)) =>
         {
             Some("decimal")
@@ -40,14 +40,23 @@ fn integer(code: &str) -> bool {
         && code != "-0"
 }
 
-/// `1.5`, `-0.25`: a point and a non-zero fractional digit. A comma is not read as a
-/// decimal separator: `1,5` may as well list two codes.
-fn fraction(code: &str) -> bool {
+/// `1.5`, `2.0`, `-0.25`: an integer or `-0`, a point and fractional digits. A comma is
+/// not read as a decimal separator: `1,5` may as well list two codes.
+fn point(code: &str) -> bool {
     code.split_once('.').is_some_and(|(whole, part)| {
         (integer(whole) || whole == "-0")
+            && !part.is_empty()
             && part.bytes().all(|b| b.is_ascii_digit())
-            && part.bytes().any(|b| b != b'0')
     })
+}
+
+/// A point literal with a non-zero fractional digit: `1.5`, not `2.0`.
+fn fraction(code: &str) -> bool {
+    point(code)
+        && code
+            .bytes()
+            .skip_while(|&b| b != b'.')
+            .any(|b| b.is_ascii_digit() && b != b'0')
 }
 
 pub(super) fn generate(
@@ -130,7 +139,7 @@ mod tests {
             ("text", &["1", "A"], None),
             ("text", &["1.5"], None),
             ("text", &[], None),
-            ("integer", &["1", "1.5"], Some("decimal")),
+            ("integer", &["1", "1.5", "2.0"], Some("decimal")),
             ("integer", &["1", "2.0"], None),
             ("integer", &["1", "1,5"], None),
             ("integer", &["1", "."], None),
