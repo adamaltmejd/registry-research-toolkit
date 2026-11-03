@@ -89,7 +89,7 @@ def schema_of(
 ) -> tuple[dict[str, set[tuple[str, str]]], set[str]]:
     """Tables with their (column, type) sets, and the names of the virtual tables."""
     rows = con.execute(
-        "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+        "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*'"
     ).fetchall()
     cols = {
         t: {(c[1], c[2].upper()) for c in con.execute(f'PRAGMA table_xinfo("{t}")')}
