@@ -271,7 +271,7 @@
   "attested_order": {
     "note": "reference-extension/held.csv attests demo/held/value as ReceivedOld (integer) and demo/held/id as Id over 2015..2016, before the base's 2017 start; topology.toml's Attested maps Old and declares demo/held/id as its entity key.",
     "project": {
-      "schema_version": "5.1.0",
+      "schema_version": "5.2.0",
       "reg_meta_version": "0.64.0",
       "name": "Attested earlier years",
       "sources": [
