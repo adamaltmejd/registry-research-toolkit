@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Context, RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
+import { catalogWords } from "./catalog_labels";
 import { registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { dataAxis } from "./period";
@@ -84,8 +85,10 @@ export function RegisterView({
                   );
                 case "period":
                   return catalogPeriodLabel(row.period);
+                case "role":
+                  return catalogWords(row.role);
                 default:
-                  return row[column.key] ?? "Not stated";
+                  return catalogWords(row.cadence);
               }
             }}
           />

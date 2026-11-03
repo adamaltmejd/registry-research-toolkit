@@ -47,15 +47,6 @@
   max-height: var(--space-6);
 }
 
-@media (max-width: 60rem) {
-  .brand:has(.brandLogo) .brandName {
-    display: none;
-  }
-  .brandLogo {
-    display: block;
-  }
-}
-
 /* The project banner (its box or its section, the row's last child) sits at
    the right edge. */
 .inner > :last-child {
@@ -142,9 +133,16 @@ kbd.hint,
 /* Below the narrow breakpoint the mark and the "Search" button share a row and
    the banner takes the next. The button unfolds the field, which then takes
    the first row's whole width in their place (maintainer ruling 2026-10-24). */
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .topBar {
     position: static;
+  }
+  /* The steward's logo stands in for its long name (#1820). */
+  .brand:has(.brandLogo) .brandName {
+    display: none;
+  }
+  .brandLogo {
+    display: block;
   }
   .inner {
     padding: var(--space-2) var(--space-3);

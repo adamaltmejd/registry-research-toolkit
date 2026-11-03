@@ -148,7 +148,7 @@ spacing:
   5: 1.5rem
   6: 2rem
   content-max: 80rem
-  breakpoint-narrow: 48rem
+  breakpoint-narrow: 60rem
   col-browse: 220px
   col-browse-max: 340px
   col-list: 200px
@@ -335,18 +335,18 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   is the deployment's long name too. Its content shares the shell's `shell-max` and
   centring, so the banner sits over the detail pane rather than at the screen's edge.
   Where the row is tight the brand wraps and the search bar shrinks before the banner
-  leaves the row. From 60rem down the name would push the banner off the row, or take a
-  row of its own, so there the brand is the steward's logo, with the full name as the
-  link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward supplies a
-  logo (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. 60rem
-  is the top bar's own fit, not a layout breakpoint. It sticks to the top of the page
-  above `breakpoint-narrow`; below it the logo and a "Search" button share a row, the
-  banner takes the next, and both scroll away with the page. The button unfolds the
-  field, which takes the row's whole width in place of the logo and the button, with
-  focus in it; it stays open while it holds text, and folds back on a blur or an Escape
-  while empty, focus returning to the button (maintainer ruling 2026-10-24). Below the
-  breakpoint every text field is set at 1rem: iOS Safari zooms the page into a focused
-  field under 16px and leaves it zoomed, cut off at the left.
+  leaves the row. Below `breakpoint-narrow` the name would push the banner off the row,
+  or take a row of its own, so there the brand is the steward's logo, with the full name
+  as the link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward
+  supplies a logo (`stewards/<id>/logo.svg`), used in the compact header and as the
+  favicon. The bar sticks to the top of the page above `breakpoint-narrow`; below it the
+  logo and a "Search" button share a row, the banner takes the next, and both scroll
+  away with the page. The button unfolds the field, which takes the row's whole width in
+  place of the logo and the button, with focus in it; it stays open while it holds text,
+  and folds back on a blur or an Escape while empty, focus returning to the button
+  (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem:
+  iOS Safari zooms the page into a focused field under 16px and leaves it zoomed, cut
+  off at the left.
 - **Browse columns (`ColumnList`):** in paired mode, the Registers header places a
   Select beside Collapse all, with accessible labels for the register list and scope,
   limiting variable search matches to held or all reference variables; browsing without
@@ -376,20 +376,21 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   members are lanes on that page, not rows in the column. A browse column fills the
   viewport below the top bar and scrolls its own list. Every item and group carries its
   in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`) the columns stack, one at a time; the way back is the
-  breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its own
-  line above the trail so it reads as an action, not a path segment (#1824). Every
-  page's trail leads with it below the breakpoint (and only there: beside the columns it
-  would repeat them), and it opens the register list; while the search holds text it
-  reads "Show matching registers", since the list the search filters is off screen. Do
-  not mint new breakpoints.
+  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
+  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
+  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
+  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
+  below the breakpoint (and only there: beside the columns it would repeat them), and it
+  opens the register list; while the search holds text it reads "Show matching
+  registers", since the list the search filters is off screen. Do not mint new
+  breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
   hidden until the filter clears (#1830); with none left at all the column says so.
   Matched text is underlined in `accent` at weight 600, a register that matched only
   through its variables says so on its own line under it ("matched on 9 variables", the
-  count in `accent-ink`), the column header states how many registers match, and the
+  count in `accent-ink`), the column's label becomes the count ("12 registers"), and the
   detail pane stays put. The variables column lists the open register's matches first,
   then every other matching register's below it in the register column's order (#1828):
   each under its name as a header, in the register column's group-row type with a

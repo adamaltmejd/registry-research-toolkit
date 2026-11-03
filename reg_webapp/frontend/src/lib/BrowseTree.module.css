@@ -22,14 +22,6 @@
   composes: name from "./ui/ColumnList.module.css";
 }
 
-/* The filter's count beside the header: how many registers it leaves. */
-.matchCount {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  font-variant-numeric: tabular-nums;
-}
-
 /* The row's text: the name, and under it the filter's "matched on" line. */
 .label {
   flex: 1;

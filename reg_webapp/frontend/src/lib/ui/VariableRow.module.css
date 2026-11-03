@@ -88,7 +88,7 @@
 }
 
 /* Narrow (#1826): the coverage bar on top, then the name with its dot. */
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .row {
     grid-template-columns: 6px minmax(0, 1fr);
   }
