@@ -85,6 +85,7 @@ struct Placement {
     projection_of: Option<i64>,
     column: i64,
     days: Days,
+    caveat: Option<String>,
 }
 
 /// A physical table with what a file needs of it.
@@ -95,7 +96,8 @@ struct Holding {
     delivery: Option<String>,
     partition: Option<String>,
     projection: Option<String>,
-    period_column: Option<(String, String)>,
+    /// (column id, name, encoding).
+    period_column: Option<(i64, String, String)>,
     keys: String,
     held: Vec<Days>,
 }
@@ -178,6 +180,24 @@ fn build(
                 .or_insert_with(|| (key, Role::Ordered, vec![]));
             column.0 = column.0.min(key);
             column.2.push(reference(server, entry, piece));
+            if let Some(caveat) = &p.caveat {
+                findings.push(Issue {
+                    level: IssueLevel::Warning,
+                    code: "mapping_caveat".to_owned(),
+                    path: format!("/sources/{s}/bindings/{}", entry.binding),
+                    message: format!(
+                        "{} in {} over {}: {caveat}",
+                        entry.variable,
+                        entry.table,
+                        span(server, piece)
+                    ),
+                    source: Some(entry.source.clone()),
+                    variable: Some(entry.variable.clone()),
+                    table: Some(entry.table.clone()),
+                    period: Some(server.period(piece.0, piece.1)),
+                    successor_fqid: None,
+                });
+            }
         }
         gaps(held, server, s, entry, days, &placements, &mut findings)?;
     }
@@ -324,7 +344,7 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
 }
 
 /// The accepted placements of (table, variable) over `days`; a projection keeps only
-/// the days its parent does not also place.
+/// the days its parent does not also place, and only those inside the request.
 fn placements(
     held: &Connection,
     table: &str,
@@ -333,7 +353,7 @@ fn placements(
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = held
         .prepare(
-            "SELECT h.id, h.projection_of, c.id, m.start, m.end
+            "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
              WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
@@ -345,6 +365,7 @@ fn placements(
                 projection_of: r.get(1)?,
                 column: r.get(2)?,
                 days: (r.get(3)?, r.get(4)?),
+                caveat: r.get(5)?,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
@@ -358,7 +379,8 @@ fn placements(
             out.push(p);
             continue;
         };
-        for days in minus(&[p.days], &merge_days(parent.clone())) {
+        // A remainder can lie wholly outside the request (a parent-covered request).
+        for days in intersect(&minus(&[p.days], &merge_days(parent.clone())), &[days]) {
             out.push(Placement { days, ..p.clone() });
         }
     }
@@ -368,7 +390,7 @@ fn placements(
 fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
     let mut holding = held.query_row(
         "SELECT h.physical_name, h.schema_name, h.file_name, h.delivery, h.partition,
-                h.projection_token, p.name, h.period_encoding, h.key_requirements
+                h.projection_token, p.id, p.name, h.period_encoding, h.key_requirements
          FROM holding_table h LEFT JOIN holding_column p ON p.id = h.period_column_id
          WHERE h.id = ?",
         [id],
@@ -380,11 +402,11 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
                 delivery: r.get(3)?,
                 partition: r.get(4)?,
                 projection: r.get(5)?,
-                period_column: match (r.get(6)?, r.get(7)?) {
-                    (Some(column), Some(encoding)) => Some((column, encoding)),
+                period_column: match (r.get(6)?, r.get(7)?, r.get(8)?) {
+                    (Some(id), Some(column), Some(encoding)) => Some((id, column, encoding)),
                     _ => None,
                 },
-                keys: r.get(8)?,
+                keys: r.get(9)?,
                 held: vec![],
             })
         },
@@ -639,7 +661,8 @@ fn clip(
 /// Add each declared key of the holding over the file's days: the key column joins
 /// once, as `carried` when the table carries its parent's copy, else `row_key`; a
 /// column a binding already orders stays `ordered`. A key on hold, uncovered or placed
-/// in two columns blocks the order.
+/// in two columns blocks the order. A declaration with `period_key = "column"` adds
+/// the physical period column as a `row_key` without references.
 #[allow(clippy::too_many_lines)]
 fn keys(
     server: &Server,
@@ -790,6 +813,16 @@ fn keys(
                     }
                 }
             }
+            // The physical period column is a held row key wherever an active
+            // declaration supplies its time from it; it places no logical variable.
+            if requirement["period_key"].as_str() == Some("column")
+                && let Some((column, ..)) = &holding.period_column
+            {
+                draft
+                    .columns
+                    .entry(*column)
+                    .or_insert_with(|| ((1, r, variables.len(), 0, 0, 0), Role::RowKey, vec![]));
+            }
         }
     }
     Ok(())
@@ -846,7 +879,7 @@ fn row_filter(
         period: None,
         successor_fqid: None,
     };
-    let Some((column, encoding)) = &holding.period_column else {
+    let Some((_, column, encoding)) = &holding.period_column else {
         for (s, days) in &draft.days {
             if !minus(&holding.held, days).is_empty() {
                 findings.push(info(

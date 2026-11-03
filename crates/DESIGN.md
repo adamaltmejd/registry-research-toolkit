@@ -2064,12 +2064,14 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   partial-vs-whole rule. A day of a column carrying an `ambiguous_delivered_owners`
   notice that places the variable is `mapping_missing` even when the rest is held.
 - A partition member is selected when it places a requested entry; a sibling without
-  that column is no gap. A projection serves a (table, variable) only over the days its
-  parent does not place it.
+  that column is no gap. A projection serves a (table, variable) only over the requested
+  days its parent does not place it; a request the parent covers selects no projection
+  file.
 - Keys are the holding's `key_requirements` (entity, then time, in declaration order)
   over the file's days, scoped by a requirement's `period`. A key column a binding
   orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
-  `binding: null` references. A requirement on hold or uncovered is `held_key_missing`,
+  `binding: null` references. An active requirement with `period_key = "column"` adds
+  the physical period column once as a `row_key` with no references. A requirement on hold or uncovered is `held_key_missing`,
   a key in two columns `held_key_ambiguous`; both block the order.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is
@@ -2077,7 +2079,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 - Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
   than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
   `row_filter_union` (a source whose days are narrower than its shared file's union).
-  Each is located at the source.
+  Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
+  warning located at the binding over the selected days (the Operator's 2026-10-19
+  warn-not-hold call).
 
 ### Logical types (N1) and metadata for local mocks
 

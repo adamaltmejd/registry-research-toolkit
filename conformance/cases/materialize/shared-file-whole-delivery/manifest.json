@@ -106,6 +106,17 @@
               "spelling": "Received_Id"
             }
           ]
+        },
+        {
+          "name": "Year",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": []
         }
       ]
     }

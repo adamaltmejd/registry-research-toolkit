@@ -1,0 +1,89 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Parent covered"
+    }
+  },
+  "files": [
+    {
+      "name": "parent",
+      "schema": "dbo",
+      "table": "Parent",
+      "delivery": "2018",
+      "columns": [
+        {
+          "name": "Amount",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "p",
+              "binding": 0,
+              "table": "demo/projected",
+              "variable": "demo/projected/amount",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2018-07-01"
+              },
+              "spelling": "Amount"
+            }
+          ]
+        },
+        {
+          "name": "Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "p",
+              "binding": null,
+              "table": "demo/projected",
+              "variable": "demo/projected/id",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2018-07-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "rows_unfiltered",
+      "path": "/sources/0",
+      "message": "Physical table \"Parent\" has no period column, so every row of its delivery 2018 is extracted",
+      "source": "p",
+      "variable": null,
+      "table": null,
+      "period": null,
+      "successor_fqid": null
+    }
+  ]
+}
