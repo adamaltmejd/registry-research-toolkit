@@ -14056,3 +14056,315 @@ kind = "set"
 subject = "var:ipr-out-sell"
 fields = { "description" = "Anger om företaget har sålt eller överlåtit immateriella rättigheter till andra under undersökningsperioden." }
 evidence = "Definition pass 2026-11-02: The source question distinguishes combined licensing/sale from pure sale; no identity change.\nrel070-base/reg_meta.db:occurrence:248416\nrel070-base/reg_meta.db:occurrence:248604"
+
+[[statement]]
+kind = "set"
+subject = "set:aktiefinansiering"
+fields = { "label" = "Aktiefinansiering" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:andra-anledningar-an-resursbrist"
+fields = { "label" = "Andra anledningar än resursbrist" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:andra-innovationsforberedelser"
+fields = { "label" = "Andra innovationsförberedelser" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bidragsbrist-som-innovationshinder"
+fields = { "label" = "Bidragsbrist som innovationshinder" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bristande-resurser-som-innovationsanledning"
+fields = { "label" = "Bristande resurser som innovationsanledning" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ersattbarhet-av-konkurrenters-produkter"
+fields = { "label" = "Ersättbarhet av konkurrenters produkter" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:forsaljning-av-immateriella-rattigheter"
+fields = { "label" = "Försäljning av immateriella rättigheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hinder-for-logistikinnovation"
+fields = { "label" = "Hinder för logistikinnovation" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hot-fran-nya-konkurrenter"
+fields = { "label" = "Hot från nya konkurrenter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovation-i-upphandlingsavtal"
+fields = { "label" = "Innovation i upphandlingsavtal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationsprofil"
+fields = { "label" = "Innovationsprofil" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationssamarbete-med-offentlig-sektor"
+fields = { "label" = "Innovationssamarbete med offentlig sektor" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:innovationssamarbete-med-privata-foretag"
+fields = { "label" = "Innovationssamarbete med privata företag" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:intern-finansieringsbrist-som-innovationshinder"
+fields = { "label" = "Intern finansieringsbrist som innovationshinder" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunalt-stod"
+fields = { "label" = "Kommunalt stöd" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:koncerninterna-lan"
+fields = { "label" = "Koncerninterna lån" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncerninternt-personalutbyte"
+fields = { "label" = "Koncerninternt personalutbyte" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncerninternt-utbyte-av-finansiella-resurser"
+fields = { "label" = "Koncerninternt utbyte av finansiella resurser" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncerninternt-utbyte-av-foretagsaktiviteter"
+fields = { "label" = "Koncerninternt utbyte av företagsaktiviteter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koncerninternt-utbyte-av-teknisk-kunskap"
+fields = { "label" = "Koncerninternt utbyte av teknisk kunskap" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kop-av-immateriella-rattigheter"
+fields = { "label" = "Köp av immateriella rättigheter" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:kundforlust-vid-prisokning"
+fields = { "label" = "Kundförlust vid prisökning" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:kunskapsforvarv-for-innovation"
+fields = { "label" = "Kunskapsförvärv för innovation" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lanefinansiering"
+fields = { "label" = "Lånefinansiering" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:marknadsintroduktion-av-innovationer"
+fields = { "label" = "Marknadsintroduktion av innovationer" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:miljoinnovation-biologisk-mangfald-i-foretaget"
+fields = { "label" = "Miljöinnovation biologisk mångfald i företaget" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:miljoinnovation-biologisk-mangfald-vid-slutkonsumtion"
+fields = { "label" = "Miljöinnovation biologisk mångfald vid slutkonsumtion" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:monsterskydd"
+fields = { "label" = "Mönsterskydd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattningsandel-marknadsnya-produkter"
+fields = { "label" = "Omsättningsandel marknadsnya produkter" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattningsandel-nya-endast-for-foretaget"
+fields = { "label" = "Omsättningsandel nya endast för företaget" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattningsandel-oforandrade-produkter"
+fields = { "label" = "Omsättningsandel oförändrade produkter" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattningssummor-per-stratum"
+fields = { "label" = "Omsättningssummor per stratum" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:outliermarkering"
+fields = { "label" = "Outliermarkering" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:populationsstorlek-per-stratum"
+fields = { "label" = "Populationsstorlek per stratum" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktinnovationens-nyhetsgrad"
+fields = { "label" = "Produktinnovationens nyhetsgrad" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:risk-for-leverantorsberoende"
+fields = { "label" = "Risk för leverantörsberoende" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:riskminimering-av-leverantorsberoende"
+fields = { "label" = "Riskminimering av leverantörsberoende" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:snabb-produktforaldring"
+fields = { "label" = "Snabb produktföråldring" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:stark-konkurrens-fran-utlandet"
+fields = { "label" = "Stark konkurrens från utlandet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:statligt-stod"
+fields = { "label" = "Statligt stöd" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:svarande-per-stratum"
+fields = { "label" = "Svarande per stratum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svarforutsagbar-teknisk-utveckling"
+fields = { "label" = "Svårförutsägbar teknisk utveckling" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:svarforutsagbara-efterfrageforandringar"
+fields = { "label" = "Svårförutsägbara efterfrågeförändringar" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:svarforutsagbara-konkurrenthandlingar"
+fields = { "label" = "Svårförutsägbara konkurrenthandlingar" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:upphandlingsavtal-efter-motpartens-land"
+fields = { "label" = "Upphandlingsavtal efter motpartens land" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsvikter"
+fields = { "label" = "Uppräkningsvikter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildning-for-innovation"
+fields = { "label" = "Utbildning för innovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utlagd-fou-verksamhet"
+fields = { "label" = "Utlagd FoU-verksamhet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:utrustningsforvarv-for-innovation"
+fields = { "label" = "Utrustningsförvärv för innovation" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utvecklare-av-produktinnovation"
+fields = { "label" = "Utvecklare av produktinnovation" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varumarkesskydd"
+fields = { "label" = "Varumärkesskydd" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

@@ -598,3 +598,39 @@ kind = "set"
 subject = "var:svenska-for-framtida-livet-i-sverige"
 fields = { "tags" = ["language-religion"] }
 evidence = "The item measures the perceived importance of Swedish for future life in Sweden (r9), using an importance scale (r3). This supports the language theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41842"
+
+[[statement]]
+kind = "set"
+subject = "set:anledningar-till-sfi-deltagande"
+fields = { "label" = "Anledningar till SFI-deltagande" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-svenska-i-undervisning-och-praktik"
+fields = { "label" = "Användning av svenska i undervisning och praktik" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:individuell-studieplanering-i-sfi"
+fields = { "label" = "Individuell studieplanering i SFI" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:samhallsinformation-inom-sfi"
+fields = { "label" = "Samhällsinformation inom SFI" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (consistency: abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:studiemiljo-i-sfi-klassen"
+fields = { "label" = "Studiemiljö i SFI-klassen" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-nytta-av-sfi-for-arbete-och-studier"
+fields = { "label" = "Upplevd nytta av SFI för arbete och studier" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: abbreviation casing)."

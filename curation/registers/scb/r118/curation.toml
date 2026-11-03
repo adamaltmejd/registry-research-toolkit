@@ -3082,3 +3082,225 @@ kind = "set"
 subject = "var:katkod"
 fields = { "tags" = ["taxation"] }
 evidence = "The definition classifies taxpayers into natural persons/estates and legal-entity categories (r18), confirmed by the complete four-code list (r17), supporting taxation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44835\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44984"
+
+[[statement]]
+kind = "set"
+subject = "set:allman-loneavgift"
+fields = { "label" = "Allmän löneavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:allman-pensionsavgift"
+fields = { "label" = "Allmän pensionsavgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-med-positiv-beskattningsbar-inkomst"
+fields = { "label" = "Antal med positiv beskattningsbar inkomst" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsavgift"
+fields = { "label" = "Arbetsmarknadsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsskadeavgift"
+fields = { "label" = "Arbetsskadeavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avkastningsskatt"
+fields = { "label" = "Avkastningsskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:efterlevandepensionsavgift"
+fields = { "label" = "Efterlevandepensionsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:expansionsfondsskatt"
+fields = { "label" = "Expansionsfondsskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:faststalld-inkomst"
+fields = { "label" = "Fastställd inkomst" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldraforsakringsavgift"
+fields = { "label" = "Föräldraförsäkringsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forandring-av-expansionsfond"
+fields = { "label" = "Förändring av expansionsfond" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:grundavdrag"
+fields = { "label" = "Grundavdrag" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunal-fastighetsavgift"
+fields = { "label" = "Kommunal fastighetsavgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunal-inkomstskatt"
+fields = { "label" = "Kommunal inkomstskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mervardesskatt"
+fields = { "label" = "Mervärdesskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nedsattning-av-egenavgifter"
+fields = { "label" = "Nedsättning av egenavgifter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-av-kapital"
+fields = { "label" = "Resultat av kapital" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-av-naringsverksamhet"
+fields = { "label" = "Resultat av näringsverksamhet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sarskild-loneskatt-pa-pensionskostnader"
+fields = { "label" = "Särskild löneskatt på pensionskostnader" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sjukforsakringsavgift"
+fields = { "label" = "Sjukförsäkringsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skattereduktion-for-husarbete"
+fields = { "label" = "Skattereduktion för husarbete" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:statlig-fastighetsskatt"
+fields = { "label" = "Statlig fastighetsskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:statlig-inkomstskatt-pa-forvarvsinkomster"
+fields = { "label" = "Statlig inkomstskatt på förvärvsinkomster" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:trossamfundsavgift"
+fields = { "label" = "Trossamfundsavgift" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-allman-loneavgift"
+fields = { "label" = "Underlag för allmän löneavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-allman-pensionsavgift"
+fields = { "label" = "Underlag för allmän pensionsavgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-arbetsmarknadsavgift"
+fields = { "label" = "Underlag för arbetsmarknadsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-arbetsskadeavgift"
+fields = { "label" = "Underlag för arbetsskadeavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-avkastningsskatt"
+fields = { "label" = "Underlag för avkastningsskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-efterlevandepensionsavgift"
+fields = { "label" = "Underlag för efterlevandepensionsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-foraldraforsakringsavgift"
+fields = { "label" = "Underlag för föräldraförsäkringsavgift" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-kommunal-fastighetsavgift"
+fields = { "label" = "Underlag för kommunal fastighetsavgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-sarskild-loneskatt-pa-anstalldas-pensioner"
+fields = { "label" = "Underlag för särskild löneskatt på anställdas pensioner" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-sarskild-loneskatt-pa-egen-pension"
+fields = { "label" = "Underlag för särskild löneskatt på egen pension" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-sarskild-loneskatt-pa-forvarvsinkomster"
+fields = { "label" = "Underlag för särskild löneskatt på förvärvsinkomster" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-sjukforsakringsavgift"
+fields = { "label" = "Underlag för sjukförsäkringsavgift" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-statlig-fastighetsskatt"
+fields = { "label" = "Underlag för statlig fastighetsskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

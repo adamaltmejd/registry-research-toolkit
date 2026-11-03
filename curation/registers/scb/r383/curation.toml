@@ -454,3 +454,33 @@ kind = "set"
 subject = "var:verksamhetsomraden-i-rakenskapssammandraget"
 fields = { "tags" = ["public-finance"] }
 evidence = "The codes classify municipal and regional accounting service areas (r34), spanning healthcare, education and social care (r29). This supports the broad public-finance theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2622\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54543"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-geografiska-tillhorighet"
+fields = { "label" = "Arbetsställets geografiska tillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:belagenhetsadress"
+fields = { "label" = "Belägenhetsadress" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:enhetsstatus"
+fields = { "label" = "Enhetsstatus" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:postadress"
+fields = { "label" = "Postadress" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

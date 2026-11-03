@@ -464,3 +464,63 @@ relation = "continues"
 object = "scb/hostsadda-arealer/hostsadd-areal-hostdinkel"
 at = "2023-01-01.."
 evidence = "Areal_511 non-organic: same broadening."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostdinkel-och-speltvete"
+fields = { "label" = "Höstsådd areal höstdinkel och speltvete" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostkorn"
+fields = { "label" = "Höstsådd areal höstkorn" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostrag"
+fields = { "label" = "Höstsådd areal höstråg" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostragvete"
+fields = { "label" = "Höstsådd areal höstrågvete" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostraps"
+fields = { "label" = "Höstsådd areal höstraps" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostrybs"
+fields = { "label" = "Höstsådd areal höstrybs" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:hostsadd-areal-hostvete"
+fields = { "label" = "Höstsådd areal höstvete" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "label" = "Länstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomradestillhorighet"
+fields = { "label" = "Produktionsområdestillhörighet" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomradestillhorighet"
+fields = { "label" = "Skördeområdestillhörighet" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

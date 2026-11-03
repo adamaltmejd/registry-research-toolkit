@@ -1045,3 +1045,69 @@ kind = "set"
 subject = "var:antal-rumsenheter-fore-ombyggnad"
 fields = { "description" = "Antal rumsenheter före ombyggnad" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "label" = "Ägarkategori" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-bostadslagenheter"
+fields = { "label" = "Antal bostadslagenheter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-rumsenheter"
+fields = { "label" = "Antal rumsenheter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsarea"
+fields = { "label" = "Bostadsarea" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lagenhetstyp"
+fields = { "label" = "Lägenhetstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ombyggnationens-fardigstallande"
+fields = { "label" = "Ombyggnationens färdigställande" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ombyggnationens-paborjande"
+fields = { "label" = "Ombyggnationens påbörjande" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rivningens-paborjande"
+fields = { "label" = "Rivningens påbörjande" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rivningsorsak"
+fields = { "label" = "Rivningsorsak" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ursprunglig-byggnadsperiod"
+fields = { "label" = "Ursprunglig byggnadsperiod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varmesystem"
+fields = { "label" = "Värmesystem" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

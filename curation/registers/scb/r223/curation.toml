@@ -869,3 +869,27 @@ kind = "set"
 subject = "var:summa-anvandning-sanitart"
 fields = { "description" = "Summan av arbetsställets vattenanvändning för sanitärt ändamål." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett stavfel utan att ändra betydelsen.\ncatalog:variable_text:27699:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-geografiska-lage"
+fields = { "label" = "Arbetsställets geografiska läge" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vattenanvandning"
+fields = { "label" = "Vattenanvändning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vattentillforsel"
+fields = { "label" = "Vattentillförsel" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vattenutslapp"
+fields = { "label" = "Vattenutsläpp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

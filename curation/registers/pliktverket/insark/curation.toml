@@ -1096,3 +1096,129 @@ kind = "set"
 subject = "var:startbel"
 fields = { "tags" = ["defence"] }
 evidence = "The starting-load test parameter (r3) fits the enlistment register's conscription-assessment theme, supported by its defence context (r1, r4).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:714\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "set:befattning"
+fields = { "label" = "Befattning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:blodtryck"
+fields = { "label" = "Blodtryck" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:cykelprovseffekt"
+fields = { "label" = "Cykelprovseffekt" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-arbetsformaga"
+fields = { "label" = "Fysisk arbetsförmåga" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:horselformaga"
+fields = { "label" = "Hörselförmåga" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:inryckningstidpunkt"
+fields = { "label" = "Inryckningstidpunkt" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kognitiv-formaga"
+fields = { "label" = "Kognitiv förmåga" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kroppslangd"
+fields = { "label" = "Kroppslängd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:monstringsstatus"
+fields = { "label" = "Mönstringsstatus" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:muskelstyrka"
+fields = { "label" = "Muskelstyrka" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:optisk-synkorrektion"
+fields = { "label" = "Optisk synkorrektion" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:psykisk-funktionsformaga"
+fields = { "label" = "Psykisk funktionsförmåga" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:puls"
+fields = { "label" = "Puls" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:regionkontor"
+fields = { "label" = "Regionkontor" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stepresultat"
+fields = { "label" = "Stepresultat" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:synskarpa"
+fields = { "label" = "Synskärpa" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:syreupptagningsformaga"
+fields = { "label" = "Syreupptagningsförmåga" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tobaksbruk"
+fields = { "label" = "Tobaksbruk" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppresningsresultat"
+fields = { "label" = "Uppresningsresultat" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vapenfrihet"
+fields = { "label" = "Vapenfrihet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varnpliktsvilja"
+fields = { "label" = "Värnpliktsvilja" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

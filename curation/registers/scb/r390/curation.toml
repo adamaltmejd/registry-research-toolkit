@@ -1140,3 +1140,153 @@ kind = "set"
 subject = "var:fiskat-september-december"
 fields = { "sets" = ["fiskedeltagande"] }
 evidence = "Despite the day-interval wording (r56), the operational definition and documented yes/no responses measure September–December fishing participation, including no fishing (r37, r45).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:191320\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:13047\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20954"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-burar-och-tinor"
+fields = { "label" = "Antal burar och tinor" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-fiskedagar"
+fields = { "label" = "Antal fiskedagar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:barn-som-fritidsfiskat"
+fields = { "label" = "Barn som fritidsfiskat" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:boenderegion"
+fields = { "label" = "Boenderegion" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:civilstand"
+fields = { "label" = "Civilstånd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:enkatomgang"
+fields = { "label" = "Enkätomgång" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ensamhet-pa-fiskeplatsen"
+fields = { "label" = "Ensamhet på fiskeplatsen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fiske-fran-bat"
+fields = { "label" = "Fiske från båt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fiskedeltagande"
+fields = { "label" = "Fiskedeltagande" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:information-om-fiskeregler"
+fields = { "label" = "Information om fiskeregler" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "label" = "Län" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:langd-fiskenat"
+fields = { "label" = "Längd fiskenät" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lilla-n"
+fields = { "label" = "Lilla n" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-behalla-fangad-fisk"
+fields = { "label" = "Möjlighet att behålla fångad fisk" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-fanga-fisk"
+fields = { "label" = "Möjlighet att fånga fisk" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-fanga-stor-fisk"
+fields = { "label" = "Möjlighet att fånga stor fisk" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naturupplevelse-vid-fritidsfiske"
+fields = { "label" = "Naturupplevelse vid fritidsfiske" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:pris-pa-fiskekort"
+fields = { "label" = "Pris på fiskekort" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "label" = "Sammanräknad förvärvsinkomst" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stora-n"
+fields = { "label" = "Stora N" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stratum"
+fields = { "label" = "Stratum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tillganglighet-vid-fritidsfiske"
+fields = { "label" = "Tillgänglighet vid fritidsfiske" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

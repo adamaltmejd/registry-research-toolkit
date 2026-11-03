@@ -629,3 +629,45 @@ kind = "set"
 subject = "var:utlandsk-bakgrund"
 fields = { "tags" = ["demographics"] }
 evidence = "Bakgrundskodningen bygger på elevens och föräldrarnas födelseland.\ncatalog:valueset:7011\ncatalog:variable_text:22093:13879:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "label" = "Föräldrars utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "label" = "Kommuntillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-engelska"
+fields = { "label" = "Provresultat engelska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-matematik"
+fields = { "label" = "Provresultat matematik" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-svenska"
+fields = { "label" = "Provresultat svenska" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsgrupp"
+fields = { "label" = "Undervisningsgrupp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

@@ -1347,3 +1347,93 @@ kind = "set"
 subject = "set:kn8"
 fields = { "label" = "KN8-varukod" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/prisindex.toml:28; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:arlig-prisforandring"
+fields = { "label" = "Årlig prisförändring" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:baspris"
+fields = { "label" = "Baspris" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:imputering"
+fields = { "label" = "Imputering" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kvalitetsjusteringsmetod"
+fields = { "label" = "Kvalitetsjusteringsmetod" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ppi-marknad"
+fields = { "label" = "PPI marknad" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:prisindexniva"
+fields = { "label" = "Prisindexnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:prissignal"
+fields = { "label" = "Prissignal" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produkterbjudandevikt"
+fields = { "label" = "Produkterbjudandevikt" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp"
+fields = { "label" = "Produktgrupp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp-sammanvagda-klasser"
+fields = { "label" = "Produktgrupp sammanvägda klasser" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp-sjusifferniva-tpi"
+fields = { "label" = "Produktgrupp sjusiffernivå TPI" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktgruppsvikt"
+fields = { "label" = "Produktgruppsvikt" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktpris"
+fields = { "label" = "Produktpris" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rapporteringsvaluta"
+fields = { "label" = "Rapporteringsvaluta" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sekretess"
+fields = { "label" = "Sekretess" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

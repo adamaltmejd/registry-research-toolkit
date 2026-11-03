@@ -2159,3 +2159,141 @@ kind = "set"
 subject = "var:utbildningstyp"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger program eller fristående kurs.\ncatalog:variable_text:7247:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-kritiskt-tankande"
+fields = { "label" = "Färdighetsträning i kritiskt tänkande" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-muntlig-presentation"
+fields = { "label" = "Färdighetsträning i muntlig presentation" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-problemlosning"
+fields = { "label" = "Färdighetsträning i problemlösning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-samarbete"
+fields = { "label" = "Färdighetsträning i samarbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-skriftlig-presentation"
+fields = { "label" = "Färdighetsträning i skriftlig presentation" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forsorjningskallor-under-studierna"
+fields = { "label" = "Försörjningskällor under studierna" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunikationsfunktioner"
+fields = { "label" = "Kommunikationsfunktioner" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:larcentrumbesok"
+fields = { "label" = "Lärcentrumbesök" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:larplattformens-funktioner"
+fields = { "label" = "Lärplattformens funktioner" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-kursen"
+fields = { "label" = "Nöjdhet med kursen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-lararens-tillganglighet"
+fields = { "label" = "Nöjdhet med lärarens tillgänglighet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-larcentrum"
+fields = { "label" = "Nöjdhet med lärcentrum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-larplattformen"
+fields = { "label" = "Nöjdhet med lärplattformen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nytta-av-tekniska-stod"
+fields = { "label" = "Nytta av tekniska stöd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:obligatoriskt-samarbete"
+fields = { "label" = "Obligatoriskt samarbete" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-distansstudier"
+fields = { "label" = "Orsaker till distansstudier" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-ej-slutford-kurs"
+fields = { "label" = "Orsaker till ej slutförd kurs" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-kursansokan"
+fields = { "label" = "Orsaker till kursansökan" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:retrospektivt-studieval"
+fields = { "label" = "Retrospektivt studieval" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:studietid"
+fields = { "label" = "Studietid" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningstyp"
+fields = { "label" = "Sysselsättningstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tekniska-baskunskaper"
+fields = { "label" = "Tekniska baskunskaper" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tekniska-stod"
+fields = { "label" = "Tekniska stöd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

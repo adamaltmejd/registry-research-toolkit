@@ -324,3 +324,21 @@ relation = "continues"
 object = "scb/kv/ar-och-kvartal"
 at = "2007-01-01.."
 evidence = "KV: year-and-quarter (2005-06) -> quarter (2007+); time key recoded."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lediga-jobb"
+fields = { "label" = "Lediga jobb" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

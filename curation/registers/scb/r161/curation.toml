@@ -238,3 +238,21 @@ kind = "set"
 subject = "var:varukod"
 fields = { "tags" = ["transport"] }
 evidence = "Varukoden klassificerar transporterat gods.\ncatalog:variable_text:23592:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-lastenheter"
+fields = { "label" = "Antal lastenheter" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hamn"
+fields = { "label" = "Hamn" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kustomrade"
+fields = { "label" = "Kustområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

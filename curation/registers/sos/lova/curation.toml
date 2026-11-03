@@ -2722,3 +2722,147 @@ kind = "set"
 subject = "var:utvandringsland-9"
 fields = { "facets" = { "ordinal" = { "value" = "9", "label" = "9:e" } } }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lova.toml:41; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "label" = "Ägarkategori" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstatus"
+fields = { "label" = "Arbetsmarknadsstatus" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-naringsgren"
+fields = { "label" = "Arbetsställets näringsgren" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:aterkallelse-av-legitimation-datum"
+fields = { "label" = "Återkallelse av legitimation, datum" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (comma, casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadskommun"
+fields = { "label" = "Bostadskommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dodstidpunkt"
+fields = { "label" = "Dödstidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:examen"
+fields = { "label" = "Examen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:examenstidpunkt"
+fields = { "label" = "Examenstidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:institutionell-sektor"
+fields = { "label" = "Institutionell sektor" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lakarspecialitet"
+fields = { "label" = "Läkarspecialitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:landklassificering"
+fields = { "label" = "Landklassificering" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:larosate"
+fields = { "label" = "Lärosäte" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:legitimation-specialitetsbevis-utfardandetidpunkt"
+fields = { "label" = "Legitimation/specialitetsbevis utfärdandetidpunkt" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (slash, diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:legitimationsinriktning"
+fields = { "label" = "Legitimationsinriktning" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provotidsperiod"
+fields = { "label" = "Provotidsperiod" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "label" = "Sysselsättningsstatus" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:temporar-legitimationsperiod"
+fields = { "label" = "Temporär legitimationsperiod" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildnings-eller-specialitetsklassificering"
+fields = { "label" = "Utbildnings- eller specialitetsklassificering" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "label" = "Utbildningsinriktning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsland"
+fields = { "label" = "Utbildningsland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "label" = "Utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "label" = "Yrke" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "label" = "Yrkesställning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesuppgiftens-ar"
+fields = { "label" = "Yrkesuppgiftens år" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
