@@ -1388,6 +1388,10 @@
             "fqid": {
               "type": "string"
             },
+            "held": {
+              "description": "In steward mode, whether an accepted placement names the table.",
+              "type": "boolean"
+            },
             "implicit": {
               "type": "boolean"
             },
@@ -1426,6 +1430,10 @@
           "properties": {
             "fqid": {
               "type": "string"
+            },
+            "held": {
+              "description": "In steward mode, whether an accepted placement names the variable.",
+              "type": "boolean"
             },
             "name": {
               "type": "string"

@@ -55,6 +55,17 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
         for provider in ["demo", "steward"]:
             shown = client.get(f"/api/catalog/{provider}").json()["data"]
             assert all(r["held"] for r in shown["registers"]), shown
+        # Fails if a register's variables or tables are marked held without an
+        # accepted placement naming them: no census column carries RelativeId.
+        shown = client.get("/api/catalog/demo/held").json()["data"]
+        assert {v["fqid"]: v["held"] for v in shown["variables"]} == {
+            "demo/held/id": True,
+            "demo/held/late": True,
+            "demo/held/relative-id": False,
+            "demo/held/value": True,
+            "demo/held/year": True,
+        }
+        assert all(t["held"] for t in shown["tables"]), shown
         extra = client.get("/api/catalog/steward/slots/slot2")
         assert extra.status_code == 200
         assert extra.json()["data"]["name"] == "Second position"

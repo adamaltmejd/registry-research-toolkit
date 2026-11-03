@@ -1254,6 +1254,8 @@ export interface components {
         ShowTable: {
             cadence: string | null;
             fqid: string;
+            /** @description In steward mode, whether an accepted placement names the table. */
+            held?: boolean;
             implicit: boolean;
             name: string;
             period: components["schemas"]["Period"];
@@ -1263,6 +1265,8 @@ export interface components {
         };
         ShowVariableRef: {
             fqid: string;
+            /** @description In steward mode, whether an accepted placement names the variable. */
+            held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
             /** @description The fqids of the register's tables the variable has segments in. */
