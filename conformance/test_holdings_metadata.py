@@ -110,10 +110,17 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
         pool.close()
     # A matching advertised generation cannot bypass the byte pin or allow malformed
     # compiled presentation data to panic during server startup. Restore the valid
-    # manifest before each independently invalid mutation.
+    # manifest before each independently invalid mutation. The positional-array
+    # steward fails if admission reads the presentation through Serde's struct-from-
+    # sequence form and serves an array where the OpenAPI promises an object.
     with closing(sqlite3.connect(output)) as db:
         original = dict(db.execute("SELECT key,value FROM meta"))
-    for key, bad in [("catalog_sha256", "0" * 64), ("scope", "{"), ("logo", None)]:
+    for key, bad in [
+        ("catalog_sha256", "0" * 64),
+        ("scope", "{"),
+        ("steward", '["fixture", "Synthetic steward", null, null, null]'),
+        ("logo", None),
+    ]:
         with closing(sqlite3.connect(output)) as db, db:
             db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)", original.items())
             if bad is None:

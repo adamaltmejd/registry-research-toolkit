@@ -141,41 +141,11 @@ export function triggerDownload(blob: Blob, filename: string): void {
 /** The Rust server's `context`: artifact identity and catalog counts. */
 export type Context = RustSchemas["Context"];
 
-/** The presentation subset used by the SPA; the server's generic Object has no TS shape. */
-export type StewardConfig = {
-  presentation: {
-    id: string;
-    name: string;
-    long_name?: string;
-    description?: string;
-  };
-  logo: string;
-};
+/** The steward's presentation, logo and scope; present in paired mode only. */
+export type StewardConfig = RustSchemas["StewardConfig"];
 
 export function stewardConfig(context: Context | null): StewardConfig | null {
-  const config: unknown = context?.steward_config;
-  if (!config || typeof config !== "object") return null;
-  const { presentation, logo } = config as Record<string, unknown>;
-  if (
-    !presentation ||
-    typeof presentation !== "object" ||
-    typeof logo !== "string"
-  )
-    return null;
-  const { id, name, long_name, description } = presentation as Record<
-    string,
-    unknown
-  >;
-  if (typeof id !== "string" || typeof name !== "string") return null;
-  return {
-    presentation: {
-      id,
-      name,
-      ...(typeof long_name === "string" ? { long_name } : {}),
-      ...(typeof description === "string" ? { description } : {}),
-    },
-    logo,
-  };
+  return context?.steward_config ?? null;
 }
 
 export type Coverage = RustSchemas["Coverage"];

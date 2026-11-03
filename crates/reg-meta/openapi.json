@@ -1722,7 +1722,7 @@
             ]
           },
           "steward_config": {
-            "type": "object"
+            "$ref": "#/components/schemas/StewardConfig"
           },
           "steward_sizes": {
             "oneOf": [
@@ -5049,6 +5049,64 @@
           },
           "schema_version": {
             "type": "string"
+          }
+        }
+      },
+      "StewardConfig": {
+        "type": "object",
+        "description": "`Context.steward_config`: the steward's compiled presentation, logo and scope. The\nserver passes the admitted JSON through; this type is its API schema and the\nadmission check that keeps the schema true.",
+        "required": [
+          "presentation",
+          "logo",
+          "scope"
+        ],
+        "properties": {
+          "logo": {
+            "type": "string",
+            "description": "The logo's SVG markup."
+          },
+          "presentation": {
+            "$ref": "#/components/schemas/StewardPresentation"
+          },
+          "scope": {
+            "type": "object",
+            "description": "The steward's `scope.toml` as JSON; its shape is the steward spec's, not this API's."
+          }
+        }
+      },
+      "StewardPresentation": {
+        "type": "object",
+        "description": "The steward's `steward.json`. Other keys pass through untyped.",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Inline markdown: emphasis and `[text](https://…)` links."
+          },
+          "id": {
+            "type": "string"
+          },
+          "long_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "order_instructions": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "How a researcher hands in an order."
           }
         }
       },
