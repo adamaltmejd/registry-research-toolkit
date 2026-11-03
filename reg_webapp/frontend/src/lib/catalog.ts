@@ -110,14 +110,16 @@ export function fqidSegments(fqidPath: string): string[] {
   return fqidPath ? fqidPath.split("/") : [];
 }
 
+/** The catalog ancestry without the group namespace, including partial paths. */
+export function unqualifiedCatalogPath(fqidPath: string): string {
+  return fqidPath.startsWith("set/") ? fqidPath.slice("set/".length) : fqidPath;
+}
+
 /** The owning register for a catalog path, including namespaced groups. */
 export function registerOfPath(fqidPath: string): string | null {
-  const segments = fqidSegments(fqidPath);
+  const segments = fqidSegments(unqualifiedCatalogPath(fqidPath));
   if (segments[0] === "class") return null;
-  const offset = segments[0] === "set" ? 1 : 0;
-  return segments.length >= offset + 2
-    ? segments.slice(offset, offset + 2).join("/")
-    : null;
+  return segments.length >= 2 ? segments.slice(0, 2).join("/") : null;
 }
 
 /** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
@@ -167,12 +169,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       // Each ancestor segment is a link to its cumulative `/catalog/...` path;
       // the leaf segment is the current page (no href). Classification families
       // and their root have no pages, so their ancestors stay plain text.
-      const register = registerOfPath(route.fqidPath);
-      const path =
-        register && route.fqidPath.startsWith("set/")
-          ? route.fqidPath.slice("set/".length)
-          : route.fqidPath;
-      const trail = breadcrumbs(path);
+      const trail = breadcrumbs(unqualifiedCatalogPath(route.fqidPath));
       const classification =
         route.fqidPath === "class" || route.fqidPath.startsWith("class/");
       return [

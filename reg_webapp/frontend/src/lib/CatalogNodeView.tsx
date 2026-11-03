@@ -43,10 +43,10 @@ export function CatalogNodeView({
   if (resource.error || !resource.data) {
     return (
       <StatusRow tone="error" live="alert">
-        {resource.status === 404 ? (
+        {resource.status === 404 || resource.status === 422 ? (
           <>
-            Nothing in the catalog at <code>{fqidPath}</code>. Check the link,
-            or choose a register in the list.
+            Nothing in the catalog at this address. Check the link, or choose a
+            register in the list.
           </>
         ) : (
           <>

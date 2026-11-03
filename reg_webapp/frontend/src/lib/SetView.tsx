@@ -1,14 +1,28 @@
+import { useMemo } from "react";
 import type { SetShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { registerRead } from "./catalog_names";
+import groupStyles from "./SetView.module.css";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
+import { InProjectDot } from "./ui/VariableRow";
+import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 
 export function SetView({ node }: { node: SetShow }) {
+  const { draft } = useProject();
+  const bound = useMemo(
+    () =>
+      new Set(
+        draft?.sources.flatMap((source) =>
+          source.bindings.map((binding) => binding.variable),
+        ) ?? [],
+      ),
+    [draft],
+  );
   const register = useCatalogRead(registerRead, node.register).value;
   const axes = node.axes.flatMap((axis) => {
     const facets = node.members.map((member) =>
@@ -27,14 +41,13 @@ export function SetView({ node }: { node: SetShow }) {
   // Keep axis ids separate from the variable column key, even for an axis named "member".
   const rows: {
     member: SetShow["members"][number];
-    [key: `axis:${string}`]: string;
+    [key: `axis:${string}`]: string | undefined;
   }[] = node.members.map((member) => ({
     member,
     ...Object.fromEntries(
       varying.map((axis) => [
         `axis:${axis.id}`,
-        member.facets.find((facet) => facet.axis === axis.id)?.label ??
-          "Not stated",
+        member.facets.find((facet) => facet.axis === axis.id)?.label,
       ]),
     ),
   }));
@@ -88,9 +101,10 @@ export function SetView({ node }: { node: SetShow }) {
           <ul className={styles.plainList}>
             {node.members.map((member) => (
               <li key={member.fqid}>
-                <a className="link" href={catalogHref(member.fqid)}>
-                  {member.name}
-                </a>
+                <MemberLink
+                  member={member}
+                  inProject={bound.has(member.fqid)}
+                />
               </li>
             ))}
           </ul>
@@ -108,16 +122,37 @@ export function SetView({ node }: { node: SetShow }) {
             getRowId={(row) => row.member.fqid}
             renderCell={(row, column) =>
               column.key === "member" ? (
-                <a className="link" href={catalogHref(row.member.fqid)}>
-                  {row.member.name}
-                </a>
+                <MemberLink
+                  member={row.member}
+                  inProject={bound.has(row.member.fqid)}
+                />
+              ) : row[column.key] === undefined ? (
+                <span className="visually-hidden">Not stated</span>
               ) : (
-                row[column.key]
+                <span className={groupStyles.facet}>{row[column.key]}</span>
               )
             }
           />
         )}
       </Panel>
     </article>
+  );
+}
+
+function MemberLink({
+  member,
+  inProject,
+}: {
+  member: SetShow["members"][number];
+  inProject: boolean;
+}) {
+  return (
+    <span className={groupStyles.member}>
+      <InProjectDot inProject={inProject} />
+      <a className="link" href={catalogHref(member.fqid)}>
+        {member.name}
+      </a>
+      {inProject && <span className="visually-hidden">, in the project</span>}
+    </span>
   );
 }

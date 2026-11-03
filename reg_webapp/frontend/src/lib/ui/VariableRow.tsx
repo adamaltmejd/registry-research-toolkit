@@ -55,7 +55,7 @@ export function VariableRow({
           .join(", ");
   return (
     <li className={styles.row} data-in-project={inProject || undefined}>
-      <span className={styles.dot} aria-hidden="true" />
+      <InProjectDot inProject={inProject} />
       <div className={styles.head}>
         <a className={`link ${styles.name}`} href={href}>
           {name}
@@ -95,5 +95,16 @@ export function VariableRowList({
     <ul className={styles.list} aria-label={label}>
       {children}
     </ul>
+  );
+}
+
+/** The shared read-only project mark on register and group member rows. */
+export function InProjectDot({ inProject }: { inProject: boolean }) {
+  return (
+    <span
+      className={styles.dot}
+      data-in-project={inProject || undefined}
+      aria-hidden="true"
+    />
   );
 }

@@ -26,11 +26,13 @@
 
 /* The in-project mark: a 6px accent dot, absent (not hidden) otherwise. */
 .dot {
+  display: inline-block;
+  flex-shrink: 0;
   width: 6px;
   height: 6px;
   border-radius: 50%;
 }
-.row[data-in-project] .dot {
+.dot[data-in-project] {
   background: var(--accent);
 }
 

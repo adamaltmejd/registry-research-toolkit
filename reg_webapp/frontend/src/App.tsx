@@ -14,6 +14,7 @@ import {
   registerOfPath,
   routeBreadcrumbs,
   SHOW_MATCHING_REGISTERS_LABEL,
+  unqualifiedCatalogPath,
 } from "./lib/catalog";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
@@ -71,7 +72,7 @@ export function App() {
               <VariableList
                 registerFqid={registerFqid}
                 selectedFqid={
-                  !route.fqidPath.startsWith("set/") &&
+                  unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
                   route.fqidPath.split("/").length > 2
                     ? route.fqidPath
                     : null
