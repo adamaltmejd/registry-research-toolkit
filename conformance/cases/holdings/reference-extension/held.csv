@@ -1,7 +1,3 @@
 table,column,label,definition,data_type,unit,codes,code_system,sensitive,identifier,from,to
 ,ReceivedOld,Value,Same canonical variable attested in earlier years,integer,,1=First;2=Second,,false,false,2015-01-01,2016-12-31
 ,Id,Observation identity,,int,,,,,true,2015-01-01,2016-12-31
-,Slot,Steward position slot,Minted by the steward inside a reference register,integer,,,,false,false,2014-01-01,2014-12-31
-grid,GridId,Grid cell,Received grid cell key,integer,,,,false,true,2015-01-01,2016-12-31
-grid,Cells,Cell count,Measure on a steward-minted table inside a reference register,integer,,,,false,false,2015-01-01,2016-12-31
-,ReceivedKey,Received key,Steward-minted row key on a reference table,integer,,,,false,true,2014-01-01,2014-12-31

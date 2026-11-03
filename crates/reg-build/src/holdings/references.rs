@@ -141,3 +141,27 @@ pub(super) fn admitted(db: &Connection, base: &Connection) -> Result<BTreeSet<St
     }
     Ok(allowed)
 }
+
+/// Reference registers and tables the steward extends with variables of its own: the
+/// same entity in both origins (a register under the same provider, a table in the same
+/// register with the same timelessness). Readers keep the reference row; only the
+/// steward's distinct variables and their segments are added.
+pub(super) fn overlays(db: &Connection, base: &Connection) -> Result<BTreeSet<String>, String> {
+    let entities = |conn: &Connection| -> Result<BTreeSet<(String, String, i64)>, String> {
+        conn.prepare(
+            "SELECT r.pid, p.pid, -1 FROM register r JOIN provider p ON p.id = r.provider_id
+             UNION ALL
+             SELECT t.pid, r.pid, t.timeless FROM tbl t JOIN register r ON r.id = t.register_id",
+        )
+        .map_err(|e| e.to_string())?
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .map_err(|e| e.to_string())?
+        .collect::<Result<_, _>>()
+        .map_err(|e| e.to_string())
+    };
+    let global = entities(base)?;
+    Ok(entities(db)?
+        .intersection(&global)
+        .map(|(pid, ..)| pid.clone())
+        .collect())
+}

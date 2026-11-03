@@ -322,21 +322,20 @@
     }
   },
   "steward_minted": {
-    "note": "reference-extension mints, inside the reference register demo/held, the variables steward-slot and received-key (held.csv, 2014) and the table grid with grid-id and cells (tables.csv, held.csv, 2015..2016). topology.toml's AttestedSlot holds Slot on the reference table demo/held with ReceivedKey as its entity key; AttestedGrid holds the grid table. The reference register keeps its own rows and gains the steward's, sorted by public id.",
+    "note": "reference-extension mints, inside the reference register demo/projected (no reference occurrence names it), the variables steward-slot and received-key (projected.csv, 2014) and the table grid with grid-id and cells (tables.csv, projected.csv, 2015..2016); the base defines child-id, amount and status there. topology.toml's AttestedSlot holds Slot on the reference table demo/projected with ReceivedKey as its entity key; AttestedGrid holds the grid table. The reference register keeps its own rows and gains the steward's, sorted by public id.",
     "register_tables": [
-      "demo/held",
-      "demo/held/grid"
+      "demo/projected",
+      "demo/projected/grid"
     ],
     "register_variables": [
-      "demo/held/cells",
-      "demo/held/grid-id",
-      "demo/held/id",
-      "demo/held/late",
-      "demo/held/received-key",
-      "demo/held/relative-id",
-      "demo/held/steward-slot",
-      "demo/held/value",
-      "demo/held/year"
+      "demo/projected/amount",
+      "demo/projected/cells",
+      "demo/projected/child-id",
+      "demo/projected/grid-id",
+      "demo/projected/id",
+      "demo/projected/received-key",
+      "demo/projected/status",
+      "demo/projected/steward-slot"
     ],
     "project": {
       "schema_version": "5.2.0",
@@ -345,14 +344,14 @@
       "sources": [
         {
           "name": "s",
-          "table": "demo/held",
+          "table": "demo/projected",
           "period": {
             "from": 2014,
             "to": 2014
           },
           "bindings": [
             {
-              "variable": "demo/held/steward-slot",
+              "variable": "demo/projected/steward-slot",
               "type": "numeric"
             }
           ]
@@ -367,12 +366,12 @@
           {
             "name": "Slot",
             "role": "ordered",
-            "variable": "demo/held/steward-slot"
+            "variable": "demo/projected/steward-slot"
           },
           {
             "name": "ReceivedKey",
             "role": "row_key",
-            "variable": "demo/held/received-key"
+            "variable": "demo/projected/received-key"
           }
         ]
       }

@@ -32,17 +32,17 @@ locator = "synthetic-delivery:new-membership"
 physical_name = "AttestedGrid"
 disposition = "dated"
 delivery = "2015..2016"
-table_pids = ["demo/held/grid"]
+table_pids = ["demo/projected/grid"]
 locator = "synthetic-census:row=13"
 [[table.column]]
 name = "Cells"
 locator = "synthetic-delivery:row=6"
 [[table.column.mapping]]
-table_pid = "demo/held/grid"
-variable_pid = "demo/held/cells"
+table_pid = "demo/projected/grid"
+variable_pid = "demo/projected/cells"
 locator = "synthetic-delivery:row=6"
 [[table.key]]
-entity = ["demo/held/grid-id"]
+entity = ["demo/projected/grid-id"]
 time = []
 locator = "synthetic-delivery:row=5"
 
@@ -50,16 +50,16 @@ locator = "synthetic-delivery:row=5"
 physical_name = "AttestedSlot"
 disposition = "dated"
 delivery = "2014"
-table_pids = ["demo/held"]
+table_pids = ["demo/projected"]
 locator = "synthetic-census:row=14"
 [[table.column]]
 name = "Slot"
 locator = "synthetic-delivery:row=4"
 [[table.column.mapping]]
-table_pid = "demo/held"
-variable_pid = "demo/held/steward-slot"
+table_pid = "demo/projected"
+variable_pid = "demo/projected/steward-slot"
 locator = "synthetic-delivery:row=4"
 [[table.key]]
-entity = ["demo/held/received-key"]
+entity = ["demo/projected/received-key"]
 time = []
 locator = "synthetic-delivery:row=7"

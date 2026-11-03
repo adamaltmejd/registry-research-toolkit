@@ -143,6 +143,7 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         "earlier.csv",
         "held.csv",
         "owners.csv",
+        "projected.csv",
     ]:
         shutil.copyfile(case / name, source / name)
     ledger = root / "curation/registers/demo/held/ids.toml"
@@ -154,6 +155,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     owner_ledger = ledger.parent.parent / "owners/ids.toml"
     owner_ledger.parent.mkdir()
     shutil.copyfile(case / "owners-ids.toml", owner_ledger)
+    projected_ledger = ledger.parent.parent / "projected/ids.toml"
+    projected_ledger.parent.mkdir()
+    shutil.copyfile(case / "projected-ids.toml", projected_ledger)
     # A class version defined only here, bound to the attested earlier occurrence.
     (source / "codes").mkdir()
     shutil.copyfile(case / "kind.csv", source / "codes/kind.csv")
@@ -259,7 +263,7 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         # steward-mode order refuses a steward-only variable on a reference table
         # (`fqid_unresolved`: the composed view keyed segments by base ids only).
         minted = expected["steward_minted"]
-        register = pool.client(artifact_env(output)).get("/api/catalog/demo/held")
+        register = pool.client(artifact_env(output)).get("/api/catalog/demo/projected")
         assert register.status_code == 200, register.text
         data = register.json()["data"]
         assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
@@ -327,9 +331,8 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     owner_ledger.write_text(ledger_original)
     # The same declaration may add occurrence years, never overwrite a base year.
     source_file = source / "held.csv"
-    source_file.write_text(
-        source_file.read_text().replace("2016-12-31", "2017-12-31", 1)
-    )
+    held_original = source_file.read_text()
+    source_file.write_text(held_original.replace("2016-12-31", "2017-12-31", 1))
     locked = run(
         [
             REG_BUILD,
@@ -350,3 +353,29 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         "synthetic-delivery:row=2: holdings_reference_occurrence_overlap"
         in refused.stderr
     )
+    source_file.write_text(held_original)
+    # Fails if an overlay register also admits an undeclared variable id: a steward
+    # variable may join a reference register, never take one of its variable ids.
+    with (source / "projected.csv").open("a") as f:
+        f.write(
+            ",Amount,Steward amount,,integer,,,,false,false,2014-01-01,2014-12-31\n"
+        )
+    with projected_ledger.open("a") as f:
+        f.write('amount = ["Amount"]\n')
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    collided = run([*command, "--out", tmp_path / "collision.db"])
+    assert collided.returncode != 0
+    assert "holdings_semantic_collision" in collided.stderr
