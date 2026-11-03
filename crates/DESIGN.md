@@ -2062,7 +2062,10 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   day, and `mapping_missing` (error) when it holds none. A day a routing table delivers
   but only a column `window` leaves out is `column_window_unavailable` under the same
   partial-vs-whole rule. A day of a column carrying an `ambiguous_delivered_owners`
-  notice that places the variable is `mapping_missing` even when the rest is held.
+  notice that places the variable is `mapping_missing` even when the rest is held. A
+  clip is the binding's own: its requested days are the logical clip recorded under the
+  project binding's variable, so a `follow_successor` binding whose entries name only
+  successors still reports the days lost between hops.
 - A partition member is selected when it places a requested entry; a sibling without
   that column is no gap. A projection serves a (table, variable) only over the requested
   days its parent does not place it; a request the parent covers selects no projection
@@ -2072,9 +2075,11 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   or the whole delivery when unfiltered), scoped by a requirement's `period`; each
   source sharing the file gets key references over those days. A key column a binding
   orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
-  `binding: null` references. An active requirement with `period_key = "column"` adds
-  the physical period column once as a `row_key` with no references. A requirement on
-  hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
+  `binding: null` references. A source whose binding orders the key column keeps only
+  that binding's reference; every other source sharing the file still gets its
+  `binding: null` key references. An active requirement with `period_key = "column"`
+  adds the physical period column once as a `row_key` with no references. A requirement
+  on hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
   both block the order.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is

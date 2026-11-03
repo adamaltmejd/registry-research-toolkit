@@ -153,9 +153,15 @@ fn build(
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
         let placements = placements(held, &entry.table, &entry.variable, days)?;
-        let binding = bindings
-            .entry((s, entry.binding))
-            .or_insert_with(|| (entry.variable.clone(), vec![], vec![]));
+        // Keyed by the project binding's own variable: a followed successor's entry
+        // names the successor, but its logical clip is recorded under the binding.
+        let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {
+            (
+                project.sources[s].bindings[entry.binding].variable.clone(),
+                vec![],
+                vec![],
+            )
+        });
         binding.1.push(days);
         for p in &placements {
             let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
@@ -797,7 +803,14 @@ fn keys(
                         };
                         ((1, r, v, 0, 0, 0), role, vec![])
                     });
-                    if entry.1 == Role::Ordered {
+                    // A source whose binding orders this key column already references
+                    // it; every other source sharing the file still needs the key.
+                    if entry.1 == Role::Ordered
+                        && entry
+                            .2
+                            .iter()
+                            .any(|r| r.source == sources[*s].name && r.binding.is_some())
+                    {
                         continue;
                     }
                     let name = found

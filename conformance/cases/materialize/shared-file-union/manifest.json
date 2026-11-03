@@ -59,6 +59,51 @@
           ]
         },
         {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "a",
+              "binding": 1,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Id"
+            },
+            {
+              "source": "b",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            },
+            {
+              "source": "b",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        },
+        {
           "name": "Late",
           "storage": {
             "type": "nvarchar",
@@ -86,62 +131,6 @@
           }
         },
         {
-          "name": "Received_Id",
-          "storage": {
-            "type": "int",
-            "length": null,
-            "precision": 10,
-            "scale": 0
-          },
-          "role": "row_key",
-          "refs": [
-            {
-              "source": "a",
-              "binding": null,
-              "table": "demo/held",
-              "variable": "demo/held/id",
-              "period": {
-                "start": "2017-01-01",
-                "end": "2018-01-01"
-              },
-              "spelling": "Received_Id"
-            },
-            {
-              "source": "a",
-              "binding": null,
-              "table": "demo/held",
-              "variable": "demo/held/id",
-              "period": {
-                "start": "2020-01-01",
-                "end": "2021-01-01"
-              },
-              "spelling": "Received_Id"
-            },
-            {
-              "source": "b",
-              "binding": null,
-              "table": "demo/held",
-              "variable": "demo/held/id",
-              "period": {
-                "start": "2017-01-01",
-                "end": "2018-01-01"
-              },
-              "spelling": "Received_Id"
-            },
-            {
-              "source": "b",
-              "binding": null,
-              "table": "demo/held",
-              "variable": "demo/held/id",
-              "period": {
-                "start": "2020-01-01",
-                "end": "2021-01-01"
-              },
-              "spelling": "Received_Id"
-            }
-          ]
-        },
-        {
           "name": "Year",
           "storage": {
             "type": "int",
@@ -157,6 +146,20 @@
   ],
   "clips": [],
   "findings": [
+    {
+      "level": "info",
+      "code": "identifier",
+      "path": "/sources/0/bindings/1",
+      "message": "demo/held/id identifies units in demo/held over [2017-01-01, 2018-01-01)",
+      "source": "a",
+      "variable": "demo/held/id",
+      "table": "demo/held",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    },
     {
       "level": "info",
       "code": "row_filter_union",
