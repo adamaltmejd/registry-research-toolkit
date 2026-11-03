@@ -722,6 +722,12 @@ export interface components {
         ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
+            /**
+             * @description The extract file format. Absent means the order authoring default, `dta`, which
+             *     the order file resolves; it is never inserted here. An explicit `null` is
+             *     `invalid_field_type`.
+             */
+            extract_format?: components["schemas"]["ProjectExtractFormat"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
@@ -729,6 +735,8 @@ export interface components {
             sources: components["schemas"]["ProjectSource"][];
             window?: components["schemas"]["ProjectStudyWindow"];
         };
+        /** @enum {string} */
+        ProjectExtractFormat: "dta" | "parquet" | "csv";
         /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
         /** @enum {string} */

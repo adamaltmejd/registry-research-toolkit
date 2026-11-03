@@ -1079,7 +1079,7 @@ it is posted to `validate` or `order`. Holdings return in milestone E.
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 5.1.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 5.2.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -1163,7 +1163,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "5.1.0",
+    "project": {"name": "income-panel", "schema_version": "5.2.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1203,7 +1203,7 @@ and `sun2000niva`.
        "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
     ]
   },
-  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1231,7 +1231,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1841,11 +1841,9 @@ promised (the runner deliberately has no `ORDER BY`).
 `materialize_order` is `POST /api/project/materialize`, exposed on the existing coarse
 `order` MCP tool. The hosted request is only `project`; the serving steward and pinned
 holdings pair come from startup configuration, with no request owner override. Add
-optional `extract_format = dta|parquet|csv` to the next minor project schema (5.2.0),
-defaulting to `dta` in order authoring. Today's `project.rs::SCHEMA_VERSION` admits
-5.1.0 exactly. E changes `SCHEMA_VERSION` and closed-field validation to admit 5.2.0
-exactly, with optional `extract_format`; every other version is
-`unsupported_schema_version`. Update examples and fixtures together; older projects are
+optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
+5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
+5.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2238,6 +2236,19 @@ the order check's findings ("The logical order"). A failing project is a result,
 error. A structural failure skips the catalog layer, so a rejected document costs no
 catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
 
+### Project document 5.2.0
+
+`schema_version` `5.2.0` adds the optional top-level `extract_format`, one of `dta`,
+`parquet` or `csv`: the file format of the order's extract files, one per project. It is
+a string; an explicit `null` is `invalid_field_type`, any other string is
+`invalid_enum_value`, both at `/extract_format`. Absent means the authoring default
+`dta`. The order file resolves that default ("From a logical order to physical files");
+it is never written into the project, so the project hash covers only what the
+researcher wrote (an absent field hashes as `null`, like every absent optional).
+
+Nothing else changes. The field tables and rules of 5.1.0 below hold for 5.2.0, except
+that `extract_format` is a known top-level key.
+
 ### Project document 5.1.0
 
 `schema_version` `5.1.0` adds optional boolean `follow_successor` to variable bindings
@@ -2251,7 +2262,7 @@ Top level:
   | Field            | 5.1.0     | Why                                                                                                                                                                                                       |
   | ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `steward`        | removed   | Its readers go (the serving catalog's name, `steward_mismatch`, the holdings checks). The holdings layer (E) decides how a project names its steward or holdings. A field nothing checks would be a shim. |
-  | `extract_format` | removed   | A file format is physical. It returns with the order file in E.                                                                                                                                           |
+  | `extract_format` | removed   | A file format is physical. It returns in 5.2.0 as an optional field resolved into the order file.                                                                                                         |
   | the rest         | unchanged | `schema_version`, `reg_meta_version`, `name`, `sources`, `panels`, `window`.                                                                                                                              |
 
 Source:
@@ -2320,7 +2331,7 @@ the key `invalid_field_type` rules. Changed:
 
   | Rule                                                         | 5.1.0                                                                                             |
   | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                             |
+  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field` (`extract_format` is optional from 5.2.0)   |
   | source keys                                                  | `name`, `table`, `period`, `bindings`; `edition` and `qualifier` are `unexpected_field`           |
   | `invalid_fqid` on the source                                 | `table` is a 2- or 3-part public id, provider not `class`                                         |
   | `fqid_table_mismatch` (was `fqid_register_variant_mismatch`) | the binding's `<provider>/<register>` equals the table's first two parts                          |
