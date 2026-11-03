@@ -256,3 +256,39 @@ kind = "set"
 subject = "elavtal-omforhandling-byten: f07c @2013-01-01..2013-12-31 where key = 'v16775'"
 fields = { "variable" = "f07b" }
 evidence = "Both define 'Reason for switching electricity supplier' and use selector v16775 in the same register and table. Their periods [14975,15706) and [15706,16071) are adjacent without overlap. Codes 1–3 mean lower price, environmental reasons, and another reason. Both use the identical complete code list 3401 immediately across the column change from F07b to F07c."
+
+[[statement]]
+kind = "set"
+subject = "var:f05"
+fields = { "label" = "Typ av elavtal (F05)" }
+evidence = "#2102 same-label cluster 'Typ av elavtal' (3 variables): judged different meaning, low confidence; F5 (to 2011) and F05 (from 2011) are one item renamed; F05_txt is a concurrent column with the same code list and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f05-txt"
+fields = { "label" = "Typ av elavtal (F05_txt)" }
+evidence = "#2102 same-label cluster 'Typ av elavtal' (3 variables): judged different meaning, low confidence; F5 (to 2011) and F05 (from 2011) are one item renamed; F05_txt is a concurrent column with the same code list and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f09a"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (F09a)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, low confidence; F9a (to 2011) and F09a (from 2011) look like one item renamed; F9b is a concurrent column with the same yes/no codes and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "label" = "Typ av elavtal (F5)" }
+evidence = "#2102 same-label cluster 'Typ av elavtal' (3 variables): judged different meaning, low confidence; F5 (to 2011) and F05 (from 2011) are one item renamed; F05_txt is a concurrent column with the same code list and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f9a"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (F9a)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, low confidence; F9a (to 2011) and F09a (from 2011) look like one item renamed; F9b is a concurrent column with the same yes/no codes and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f9b"
+fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (F9b)" }
+evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, low confidence; F9a (to 2011) and F09a (from 2011) look like one item renamed; F9b is a concurrent column with the same yes/no codes and no text, so raw column code."

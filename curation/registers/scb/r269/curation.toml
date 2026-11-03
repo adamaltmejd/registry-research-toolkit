@@ -497,3 +497,27 @@ kind = "set"
 subject = "set:stratum"
 fields = { "label" = "Stratum" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bgrstratum"
+fields = { "label" = "Stratum (näringsgren)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdef: SGrStratum is by company size class (employees), BGrStratum by main industry (SNI two-digit)."
+
+[[statement]]
+kind = "set"
+subject = "var:loneintjanande-fran-och-med-manad"
+fields = { "label" = "Månad (löneintjänande från och med)" }
+evidence = "#2102 same-label cluster 'Månad' (2 variables): judged different meaning, high confidence; Opdefs: KuFran is the month of the from date and KuTill the month of the to date of the earning period."
+
+[[statement]]
+kind = "set"
+subject = "var:loneintjanande-till-och-med-manad"
+fields = { "label" = "Månad (löneintjänande till och med)" }
+evidence = "#2102 same-label cluster 'Månad' (2 variables): judged different meaning, high confidence; Opdefs: KuFran is the month of the from date and KuTill the month of the to date of the earning period."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-storleksklass-antal-anstallda"
+fields = { "label" = "Stratum (storleksklass, antal anställda)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdef: SGrStratum is by company size class (employees), BGrStratum by main industry (SNI two-digit)."

@@ -5983,3 +5983,231 @@ kind = "set"
 subject = "set:yrke-i-huvudsysslan"
 fields = { "label" = "Yrke i huvudsysslan" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:fardvagsolycka"
+fields = { "label" = "Olycka på väg till eller från arbetet (inträffade före angivet år)" }
+evidence = "#2102 same-label cluster 'Olycka på väg till eller från arbetet' (2 variables): judged different meaning, medium confidence; TFF covers events before the survey's reference year and TFU events in that year or later, per the opdefs; the two overlap 2001-2011."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm1"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, senaste olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm2"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, näst senaste olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm3"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, tredje senaste olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm4"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, fjärde olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm5"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, femte olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm6"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, sjätte olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm7"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, sjunde olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm8"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, åttonde olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olanm9"
+fields = { "label" = "Arbetsskadeanmälan arbetsolycka, nionde olyckan" }
+evidence = "#2102 same-label cluster 'Arbetsskadeanmälan arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar1"
+fields = { "label" = "Inträffandeår arbetsolycka, senaste olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar2"
+fields = { "label" = "Inträffandeår arbetsolycka, näst senaste olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar3"
+fields = { "label" = "Inträffandeår arbetsolycka, tredje senaste olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar4"
+fields = { "label" = "Inträffandeår arbetsolycka, fjärde olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar5"
+fields = { "label" = "Inträffandeår arbetsolycka, femte olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar6"
+fields = { "label" = "Inträffandeår arbetsolycka, sjätte olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar7"
+fields = { "label" = "Inträffandeår arbetsolycka, sjunde olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar8"
+fields = { "label" = "Inträffandeår arbetsolycka, åttonde olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olar9"
+fields = { "label" = "Inträffandeår arbetsolycka, nionde olyckan" }
+evidence = "#2102 same-label cluster 'Inträffandeår arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm1"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, senaste olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm2"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, näst senaste olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm3"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, tredje senaste olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm4"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, fjärde olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm5"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, femte olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm6"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, sjätte olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm7"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, sjunde olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm8"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, åttonde olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm9"
+fields = { "label" = "År för anmälan av arbetsolycka till Försäkringskassan, nionde olyckan" }
+evidence = "#2102 same-label cluster 'År för anmälan av arbetsolycka till Försäkringskassan' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak1"
+fields = { "label" = "Orsak till arbetsolycka, senaste olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak2"
+fields = { "label" = "Orsak till arbetsolycka, näst senaste olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak3"
+fields = { "label" = "Orsak till arbetsolycka, tredje olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak4"
+fields = { "label" = "Orsak till arbetsolycka, fjärde olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak5"
+fields = { "label" = "Orsak till arbetsolycka, femte olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak6"
+fields = { "label" = "Orsak till arbetsolycka, sjätte olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak7"
+fields = { "label" = "Orsak till arbetsolycka, sjunde olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak8"
+fields = { "label" = "Orsak till arbetsolycka, åttonde olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak9"
+fields = { "label" = "Orsak till arbetsolycka, nionde olyckan" }
+evidence = "#2102 same-label cluster 'Orsak till arbetsolycka' (9 variables): judged different meaning, high confidence; Opdefs say each column concerns the nth latest accident."
+
+[[statement]]
+kind = "set"
+subject = "var:tfu"
+fields = { "label" = "Olycka på väg till eller från arbetet (inträffade under angivet år eller senare)" }
+evidence = "#2102 same-label cluster 'Olycka på väg till eller från arbetet' (2 variables): judged different meaning, medium confidence; TFF covers events before the survey's reference year and TFU events in that year or later, per the opdefs; the two overlap 2001-2011."

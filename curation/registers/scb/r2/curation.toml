@@ -6858,3 +6858,561 @@ kind = "set"
 subject = "set:yrke-vid-arbetstillstand"
 fields = { "label" = "Yrke vid arbetstillstånd" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ald90"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald91"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald92"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald93"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald94"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald95"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald96"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:ald97"
+fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (Alder)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-samhorighet"
+fields = { "label" = "Ålder 31/12 (samhörighetspersonens)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-alder"
+fields = { "label" = "Ålder vid händelsen (asylsökandes uppgivna ålder vid registrering)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-aldernatandr"
+fields = { "label" = "Ålder vid händelsen (medborgarskapsändring)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-ankar"
+fields = { "label" = "Ålder vid händelsen (då personen blev änka/änkling)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-dalar"
+fields = { "label" = "Ålder vid händelsen (dödsfall)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-partneralder"
+fields = { "label" = "Ålder vid händelsen (partnerns ålder vid registrerat partnerskap)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-skilsalder"
+fields = { "label" = "Ålder vid händelsen (skilsmässa)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-vigselalder"
+fields = { "label" = "Ålder vid händelsen (vigsel)" }
+evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut"
+fields = { "label" = "Ålder 31/12 (AlderSlut)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda"
+fields = { "label" = "Antal dödfödda (i samma börd för modern)" }
+evidence = "#2102 same-label cluster 'Antal dödfödda' (2 variables): judged different meaning, medium confidence; Opdefs differ: AntDodFoddTot counts stillborn in the same birth for the mother (dodfodda table), AntDodFodd counts stillborn in the same birth as the live-born child (fodda-kvartal)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda-antdodfodd"
+fields = { "label" = "Antal dödfödda (i samma börd som det levande födda barnet)" }
+evidence = "#2102 same-label cluster 'Antal dödfödda' (2 variables): judged different meaning, medium confidence; Opdefs differ: AntDodFoddTot counts stillborn in the same birth for the mother (dodfodda table), AntDodFodd counts stillborn in the same birth as the live-born child (fodda-kvartal)."
+
+[[statement]]
+kind = "set"
+subject = "var:civilgrupp-eu"
+fields = { "label" = "Civilstånd (grupperad, CivilGrupp_EU)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (3 variables): judged different meaning, high confidence; Civil is civil status after the change, TidCivil is at death (opdefs), CivilGrupp_EU is a grouped derived variable."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-vid-dodsfall"
+fields = { "label" = "Civilstånd (vid dödsfall)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (3 variables): judged different meaning, high confidence; Civil is civil status after the change, TidCivil is at death (opdefs), CivilGrupp_EU is a grouped derived variable."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-civilandrdatum"
+fields = { "label" = "Civilståndsdatum (ändring av civilstånd)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (6 variables): judged different meaning, medium confidence; Opdefs separate the dates of divorce, wedding, partnership and death-time civil status; CivilAndrDatum and CivDat are generic dates."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-partnerdatum"
+fields = { "label" = "Civilståndsdatum (registrerat partnerskap)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (6 variables): judged different meaning, medium confidence; Opdefs separate the dates of divorce, wedding, partnership and death-time civil status; CivilAndrDatum and CivDat are generic dates."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-skilsdatum"
+fields = { "label" = "Civilståndsdatum (skilsmässa)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (6 variables): judged different meaning, medium confidence; Opdefs separate the dates of divorce, wedding, partnership and death-time civil status; CivilAndrDatum and CivDat are generic dates."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-tidcivilandrdatum"
+fields = { "label" = "Civilståndsdatum (för civilstånd vid dödsfall)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (6 variables): judged different meaning, medium confidence; Opdefs separate the dates of divorce, wedding, partnership and death-time civil status; CivilAndrDatum and CivDat are generic dates."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-vigseldatum"
+fields = { "label" = "Civilståndsdatum (vigsel)" }
+evidence = "#2102 same-label cluster 'Civilståndsdatum' (6 variables): judged different meaning, medium confidence; Opdefs separate the dates of divorce, wedding, partnership and death-time civil status; CivilAndrDatum and CivDat are generic dates."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodfar"
+fields = { "label" = "Distrikt (faderns)" }
+evidence = "#2102 same-label cluster 'Distrikt' (4 variables): judged different meaning, high confidence; Opdefs differ: DistriktsKod is the person's or the child's own district, the others are the father's, mother's and relation person's."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodmor"
+fields = { "label" = "Distrikt (moderns)" }
+evidence = "#2102 same-label cluster 'Distrikt' (4 variables): judged different meaning, high confidence; Opdefs differ: DistriktsKod is the person's or the child's own district, the others are the father's, mother's and relation person's."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodrel"
+fields = { "label" = "Distrikt (relationspersonens)" }
+evidence = "#2102 same-label cluster 'Distrikt' (4 variables): judged different meaning, high confidence; Opdefs differ: DistriktsKod is the person's or the child's own district, the others are the father's, mother's and relation person's."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-far"
+fields = { "label" = "Fastighetens identitetsnummer (faderns)" }
+evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: father's, mother's, relation person's property, the person's own property, and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-mor"
+fields = { "label" = "Fastighetens identitetsnummer (moderns)" }
+evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: father's, mother's, relation person's property, the person's own property, and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-relationsperson"
+fields = { "label" = "Fastighetens identitetsnummer (relationspersonens)" }
+evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: father's, mother's, relation person's property, the person's own property, and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
+fields = { "label" = "Fastighetens identitetsnummer (före flytt)" }
+evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: father's, mother's, relation person's property, the person's own property, and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-officiella-nr"
+fields = { "label" = "Fastighetens officiella nummer (folkbokföring)" }
+evidence = "#2102 same-label cluster 'Fastighetens officiella nummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: FastNr is for the property where the person is folkbokförd, MantFastNr for the current mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:fastlopnr"
+fields = { "label" = "Fastighetslöpnummer (folkbokföring)" }
+evidence = "#2102 same-label cluster 'Fastighetslöpnummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: FastLopNr is for the property of folkbokföring, MantFastLopNr for the current mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:fbmantar"
+fields = { "label" = "År (mantalsår för folkbokföring)" }
+evidence = "#2102 same-label cluster 'År' (4 variables): judged different meaning, medium confidence; Opdefs differ: FBMantAr is mantalsår of folkbokföring, MantAr of the current mantalsskrivning, MantArFg of the previous one; Ar is the year of the event (e.g. birth)."
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-far"
+fields = { "label" = "Fastighetsnyckel (faderns)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's property, father's, mother's, relation person's and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-g"
+fields = { "label" = "Fastighetsnyckel (före flytt)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's property, father's, mother's, relation person's and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-mor"
+fields = { "label" = "Fastighetsnyckel (moderns)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's property, father's, mother's, relation person's and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-rel"
+fields = { "label" = "Fastighetsnyckel (relationspersonens)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's property, father's, mother's, relation person's and the property before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "label" = "Födelsedatum (dödfödda barn)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FodDat is the stillborn child's date in dodfodda; FodelseDatumPnr is derived from the first eight positions of the personnummer in folkbokforda-personer-kvartal."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-personnummer"
+fields = { "label" = "Födelsedatum (enligt personnummer)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FodDat is the stillborn child's date in dodfodda; FodelseDatumPnr is derived from the first eight positions of the personnummer in folkbokforda-personer-kvartal."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-eller-lan"
+fields = { "label" = "Födelseland eller -län (personens)" }
+evidence = "#2102 same-label cluster 'Födelseland eller -län' (2 variables): judged different meaning, medium confidence; Opdef of FLandLanMor refers to the mother; FLandLan is the person's own birth country or county."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-eller-lan-mor"
+fields = { "label" = "Födelseland eller -län (moderns)" }
+evidence = "#2102 same-label cluster 'Födelseland eller -län' (2 variables): judged different meaning, medium confidence; Opdef of FLandLanMor refers to the mother; FLandLan is the person's own birth country or county."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-eu"
+fields = { "label" = "Födelseland mor (landskod, FodelselandnamnMor_EU)" }
+evidence = "#2102 same-label cluster 'Födelseland mor' (2 variables): judged different meaning, medium confidence; Country names versus a country-code list (FodelselandnamnMor_EU, 2020-) as concurrent columns with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandgrupp-eu"
+fields = { "label" = "Födelseland RTB (grupperad: inrikes, annat EU-land, utanför EU)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; Country name list vs grouped inrikes/EU/utanför EU (derived, opdef) vs a country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn-eu"
+fields = { "label" = "Födelseland RTB (landskod, Fodelselandnamn_EU)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; Country name list vs grouped inrikes/EU/utanför EU (derived, opdef) vs a country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar-eu"
+fields = { "label" = "Födelseland far (landskod, FodelselandnamnFar_EU)" }
+evidence = "#2102 same-label cluster 'Födelseland far' (2 variables): judged different meaning, medium confidence; Country names versus a country-code list (FodelselandnamnFar_EU, 2020-) as concurrent columns with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomdatum-fel"
+fields = { "label" = "Inkommandedatum (felaktiga värden, används inte längre)" }
+evidence = "#2102 same-label cluster 'Inkommandedatum' (2 variables): judged different meaning, high confidence; InkomDatum_fel holds incorrect values and is no longer used (opdef); InkomDatum is the application receipt date."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-make-maka-partner"
+fields = { "label" = "Kön relationsperson (make/maka/registrerad partner)" }
+evidence = "#2102 same-label cluster 'Kön relationsperson' (2 variables): judged different meaning, medium confidence; KonRel is the relation person's sex in civilstandsandringar-skilda; KonMakPart (opdef) is the sex of a possible spouse or registered partner in folkbokforda-personer-kvartal."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-relationsperson"
+fields = { "label" = "Kön relationsperson (civilståndsändringens relationsperson)" }
+evidence = "#2102 same-label cluster 'Kön relationsperson' (2 variables): judged different meaning, medium confidence; KonRel is the relation person's sex in civilstandsandringar-skilda; KonMakPart (opdef) is the sex of a possible spouse or registered partner in folkbokforda-personer-kvartal."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-samhorighet"
+fields = { "label" = "Kön (samhörighetspersonens)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Opdefs differ: KON is the person's sex, KonSamh the sex of the samhörighetsperson."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
+fields = { "label" = "Lägenhetens identitetsnummer (före flytt)" }
+evidence = "#2102 same-label cluster 'Lägenhetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: apartment before a move, current apartment, father's, mother's and relation person's apartment."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-far"
+fields = { "label" = "Lägenhetsnyckel (faderns)" }
+evidence = "#2102 same-label cluster 'Lägenhetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's apartment, father's, mother's, relation person's and the apartment before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-fore-flytt"
+fields = { "label" = "Lägenhetsnyckel (före flytt)" }
+evidence = "#2102 same-label cluster 'Lägenhetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's apartment, father's, mother's, relation person's and the apartment before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-mor"
+fields = { "label" = "Lägenhetsnyckel (moderns)" }
+evidence = "#2102 same-label cluster 'Lägenhetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's apartment, father's, mother's, relation person's and the apartment before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-rel"
+fields = { "label" = "Lägenhetsnyckel (relationspersonens)" }
+evidence = "#2102 same-label cluster 'Lägenhetsnyckel' (5 variables): judged different meaning, high confidence; Opdefs differ: the person's or child's apartment, father's, mother's, relation person's and the apartment before a move."
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningsforsamling"
+fields = { "label" = "Församling (mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Församling' (2 variables): judged different meaning, high confidence; Opdefs differ: Forsamling is the parish of folkbokföring (at birth, immigration), MantFors is the parish of the current mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningskommun"
+fields = { "label" = "Kommun (mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, high confidence; Opdefs differ: Kommun is the folkbokföringskommun at the event, MantKommun the current mantalsskrivning, MantKommunFg the previous mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:mantar"
+fields = { "label" = "År (mantalsår för mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'År' (4 variables): judged different meaning, medium confidence; Opdefs differ: FBMantAr is mantalsår of folkbokföring, MantAr of the current mantalsskrivning, MantArFg of the previous one; Ar is the year of the event (e.g. birth)."
+
+[[statement]]
+kind = "set"
+subject = "var:mantarfg"
+fields = { "label" = "År (mantalsår för föregående mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'År' (4 variables): judged different meaning, medium confidence; Opdefs differ: FBMantAr is mantalsår of folkbokföring, MantAr of the current mantalsskrivning, MantArFg of the previous one; Ar is the year of the event (e.g. birth)."
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastlopnr"
+fields = { "label" = "Fastighetslöpnummer (mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Fastighetslöpnummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: FastLopNr is for the property of folkbokföring, MantFastLopNr for the current mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastnr"
+fields = { "label" = "Fastighetens officiella nummer (mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Fastighetens officiella nummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: FastNr is for the property where the person is folkbokförd, MantFastNr for the current mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:mantkommunfg"
+fields = { "label" = "Kommun (föregående mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, high confidence; Opdefs differ: Kommun is the folkbokföringskommun at the event, MantKommun the current mantalsskrivning, MantKommunFg the previous mantalsskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:manttaxdist"
+fields = { "label" = "Taxeringsdistrikt (mantalsskrivning)" }
+evidence = "#2102 same-label cluster 'Taxeringsdistrikt' (5 variables): judged different meaning, high confidence; Opdefs differ: district moved from, at death or citizenship change, moved to, current mantalsskrivning and current folkbokföring."
+
+[[statement]]
+kind = "set"
+subject = "var:medbfar"
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (faderns)" }
+evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (4 variables): judged different meaning, high confidence; Opdefs differ: own citizenship after the change, father's, mother's, and before the change (TidMedb)."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgruppmor-eu"
+fields = { "label" = "Medborgarskapsland mor EU (grupperad)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland mor EU' (2 variables): judged different meaning, high confidence; Opdefs differ: grouped citizenship country for the mother versus the mother's country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgrupprel-eu"
+fields = { "label" = "Medborgarskapsland relationsperson EU (grupperad)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland relationsperson EU' (2 variables): judged different meaning, high confidence; Opdefs differ: grouped citizenship country for the relation person versus the relation person's country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamn-eu"
+fields = { "label" = "Medborgarskapsland EU (landskod)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland EU' (2 variables): judged different meaning, high confidence; Medblandnamn_EU is a country-code list, MedblandGrupp_EU a grouped derived variable (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamng-eu"
+fields = { "label" = "Medborgarskapsland tidigare EU (landskod)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland tidigare EU' (2 variables): judged different meaning, high confidence; Opdefs differ: country-code list of the previous citizenship country versus its grouped derived variable."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor-eu"
+fields = { "label" = "Medborgarskapsland mor EU (landskod)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland mor EU' (2 variables): judged different meaning, high confidence; Opdefs differ: grouped citizenship country for the mother versus the mother's country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel-eu"
+fields = { "label" = "Medborgarskapsland relationsperson EU (landskod)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland relationsperson EU' (2 variables): judged different meaning, high confidence; Opdefs differ: grouped citizenship country for the relation person versus the relation person's country-code list."
+
+[[statement]]
+kind = "set"
+subject = "var:medbmor"
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (moderns)" }
+evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (4 variables): judged different meaning, high confidence; Opdefs differ: own citizenship after the change, father's, mother's, and before the change (TidMedb)."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "label" = "Medborgarskapsland, landsnamn" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland' (3 variables): judged different meaning, high confidence; Country-name list versus two grouped EU variables (current and previous citizenship country, opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-eu"
+fields = { "label" = "Medborgarskapsland EU (grupperad)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland EU' (2 variables): judged different meaning, high confidence; Medblandnamn_EU is a country-code list, MedblandGrupp_EU a grouped derived variable (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-gg-eu"
+fields = { "label" = "Medborgarskapsland, EU-grupp för tidigare medborgarskapsland" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland' (3 variables): judged different meaning, high confidence; Country-name list versus two grouped EU variables (current and previous citizenship country, opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-grupp-eu"
+fields = { "label" = "Medborgarskapsland, EU-grupp" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland' (3 variables): judged different meaning, high confidence; Country-name list versus two grouped EU variables (current and previous citizenship country, opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-tidigare-eu"
+fields = { "label" = "Medborgarskapsland tidigare EU (grupperad)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsland tidigare EU' (2 variables): judged different meaning, high confidence; Opdefs differ: country-code list of the previous citizenship country versus its grouped derived variable."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-ankn"
+fields = { "label" = "Personnummer (personen som anknytning sker till)" }
+evidence = "#2102 same-label cluster 'Personnummer' (4 variables): judged different meaning, medium confidence; Opdefs differ: own personnummer, the mother's (of the deceased), the samhörighetsperson's, and the person to whom anknytning is made."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "label" = "Personnummer (moderns)" }
+evidence = "#2102 same-label cluster 'Personnummer' (4 variables): judged different meaning, medium confidence; Opdefs differ: own personnummer, the mother's (of the deceased), the samhörighetsperson's, and the person to whom anknytning is made."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-samhorighet"
+fields = { "label" = "Personnummer (samhörighetspersonens)" }
+evidence = "#2102 same-label cluster 'Personnummer' (4 variables): judged different meaning, medium confidence; Opdefs differ: own personnummer, the mother's (of the deceased), the samhörighetsperson's, and the person to whom anknytning is made."
+
+[[statement]]
+kind = "set"
+subject = "var:taxdistriktfg"
+fields = { "label" = "Taxeringsdistrikt (som personen flyttar från)" }
+evidence = "#2102 same-label cluster 'Taxeringsdistrikt' (5 variables): judged different meaning, high confidence; Opdefs differ: district moved from, at death or citizenship change, moved to, current mantalsskrivning and current folkbokföring."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt"
+fields = { "label" = "Taxeringsdistrikt (folkbokföring)" }
+evidence = "#2102 same-label cluster 'Taxeringsdistrikt' (5 variables): judged different meaning, high confidence; Opdefs differ: district moved from, at death or citizenship change, moved to, current mantalsskrivning and current folkbokföring."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-dodsfall-medborgarskapsandring"
+fields = { "label" = "Taxeringsdistrikt (vid dödsfall eller medborgarskapsändring)" }
+evidence = "#2102 same-label cluster 'Taxeringsdistrikt' (5 variables): judged different meaning, high confidence; Opdefs differ: district moved from, at death or citizenship change, moved to, current mantalsskrivning and current folkbokföring."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-inflyttning"
+fields = { "label" = "Taxeringsdistrikt (som personen flyttar till)" }
+evidence = "#2102 same-label cluster 'Taxeringsdistrikt' (5 variables): judged different meaning, high confidence; Opdefs differ: district moved from, at death or citizenship change, moved to, current mantalsskrivning and current folkbokföring."
+
+[[statement]]
+kind = "set"
+subject = "var:tidmedb"
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (före medborgarskapsändringen)" }
+evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (4 variables): judged different meaning, high confidence; Opdefs differ: own citizenship after the change, father's, mother's, and before the change (TidMedb)."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-far"
+fields = { "label" = "Lägenhetens identitetsnummer (faderns)" }
+evidence = "#2102 same-label cluster 'Lägenhetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: apartment before a move, current apartment, father's, mother's and relation person's apartment."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-mor"
+fields = { "label" = "Lägenhetens identitetsnummer (moderns)" }
+evidence = "#2102 same-label cluster 'Lägenhetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: apartment before a move, current apartment, father's, mother's and relation person's apartment."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-rel"
+fields = { "label" = "Lägenhetens identitetsnummer (relationspersonens)" }
+evidence = "#2102 same-label cluster 'Lägenhetens identitetsnummer' (5 variables): judged different meaning, high confidence; Opdefs differ: apartment before a move, current apartment, father's, mother's and relation person's apartment."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand"
+fields = { "label" = "Yrke vid arbetstillstånd (SSYK 96)" }
+evidence = "#2102 same-label cluster 'Yrke vid arbetstillstånd' (3 variables): judged different meaning, medium confidence; SSYK2012 and SSYK96 are separate classification versions; the unversioned SSYK (2011-2014) has the SSYK 96 value labels (Militärer) and is treated as its predecessor column."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk-2012"
+fields = { "label" = "Yrke vid arbetstillstånd (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke vid arbetstillstånd' (3 variables): judged different meaning, medium confidence; SSYK2012 and SSYK96 are separate classification versions; the unversioned SSYK (2011-2014) has the SSYK 96 value labels (Militärer) and is treated as its predecessor column."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk96-kolumn"
+fields = { "label" = "Yrke vid arbetstillstånd (SSYK 96)" }
+evidence = "#2102 same-label cluster 'Yrke vid arbetstillstånd' (3 variables): judged different meaning, medium confidence; SSYK2012 and SSYK96 are separate classification versions; the unversioned SSYK (2011-2014) has the SSYK 96 value labels (Militärer) and is treated as its predecessor column."

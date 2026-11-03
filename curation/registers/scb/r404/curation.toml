@@ -3058,3 +3058,555 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agi-astnr-justering"
+fields = { "label" = "Justering av angivet arbetsställenummer från AGI (imputering)" }
+evidence = "#2102 same-label cluster 'Justering av angivet arbetsställenummer från AGI' (2 variables): judged different meaning, high confidence; Opdefs: BImpAstNr flags imputation of a missing or invalid workplace number, BJustAstNr flags an adjustment based on other workplace information; they coexist 2023-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetsersattning"
+fields = { "label" = "Aktivitetsersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Aktivitetsersättning' (2 variables): judged different meaning, medium confidence; TAK is in the preliminary monthly tables and TAKp in the final monthly tables; both cover 2020-2025, and final figures are assigned to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetsersattning-takp"
+fields = { "label" = "Aktivitetsersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Aktivitetsersättning' (2 variables): judged different meaning, medium confidence; TAK is in the preliminary monthly tables and TAKp in the final monthly tables; both cover 2020-2025, and final figures are assigned to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod"
+fields = { "label" = "Äldreförsörjningsstöd (preliminär)" }
+evidence = "#2102 same-label cluster 'Äldreförsörjningsstöd' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount is distributed over the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod-ialdfp"
+fields = { "label" = "Äldreförsörjningsstöd (slutlig)" }
+evidence = "#2102 same-label cluster 'Äldreförsörjningsstöd' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount is distributed over the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss"
+fields = { "label" = "Antal sysselsatta på arbetsstället (15–74 år)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på arbetsstället' (2 variables): judged different meaning, medium confidence; Opdefs: AntalSyss counts persons aged 15-74 employed in November, AntalSyssTot has no age limit; both coexist in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:antalsysstot"
+fields = { "label" = "Antal sysselsatta på arbetsstället (totalt)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på arbetsstället' (2 variables): judged different meaning, medium confidence; Opdefs: AntalSyss counts persons aged 15-74 employed in November, AntalSyssTot has no age limit; both coexist in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { "label" = "Arbetsmarknadsstatus (grov gruppering)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (3 variables): judged different meaning, high confidence; Opdefs: BASAlt is a coarse grouping (studerande, pensionär, sjuk and övrigt merged) with a different code list, and BAS_Fel holds erroneous values and is no longer used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-fel"
+fields = { "label" = "Arbetsmarknadsstatus (felaktiga värden, används inte längre)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (3 variables): judged different meaning, high confidence; Opdefs: BASAlt is a coarse grouping (studerande, pensionär, sjuk and övrigt merged) with a different code list, and BAS_Fel holds erroneous values and is no longer used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsrelaterad-inkomstniva"
+fields = { "label" = "Arbetsrelaterad inkomstnivå (kalenderår)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomstnivå' (3 variables): judged different meaning, high confidence; Opdefs: the category is based on income over the calendar year, the last twelve months or the current month, in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsrelaterad-inkomstniva-12m"
+fields = { "label" = "Arbetsrelaterad inkomstnivå (senaste 12 månaderna)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomstnivå' (3 variables): judged different meaning, high confidence; Opdefs: the category is based on income over the calendar year, the last twelve months or the current month, in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsrelaterad-inkomstniva-1m"
+fields = { "label" = "Arbetsrelaterad inkomstnivå (aktuell månad)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomstnivå' (3 variables): judged different meaning, high confidence; Opdefs: the category is based on income over the calendar year, the last twelve months or the current month, in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskadesjukpenning"
+fields = { "label" = "Arbetsskadesjukpenning (preliminär)" }
+evidence = "#2102 same-label cluster 'Arbetsskadesjukpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; final figures are assigned to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskadesjukpenning-tskadep"
+fields = { "label" = "Arbetsskadesjukpenning (slutlig)" }
+evidence = "#2102 same-label cluster 'Arbetsskadesjukpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; final figures are assigned to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:arbink"
+fields = { "label" = "Arbetsrelaterad inkomst (kalenderår)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomst' (3 variables): judged different meaning, high confidence; Opdefs: the sum over the calendar year, over the last twelve months and over the current month."
+
+[[statement]]
+kind = "set"
+subject = "var:arbink12m"
+fields = { "label" = "Arbetsrelaterad inkomst (senaste 12 månaderna)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomst' (3 variables): judged different meaning, high confidence; Opdefs: the sum over the calendar year, over the last twelve months and over the current month."
+
+[[statement]]
+kind = "set"
+subject = "var:arbink1m"
+fields = { "label" = "Arbetsrelaterad inkomst (aktuell månad)" }
+evidence = "#2102 same-label cluster 'Arbetsrelaterad inkomst' (3 variables): judged different meaning, high confidence; Opdefs: the sum over the calendar year, over the last twelve months and over the current month."
+
+[[statement]]
+kind = "set"
+subject = "var:bnordink-fel"
+fields = { "label" = "Sysselsatt utifrån inkomst från annat nordiskt land (felaktiga värden, används inte längre)" }
+evidence = "#2102 same-label cluster 'Sysselsatt utifrån inkomst från annat nordiskt land' (2 variables): judged different meaning, high confidence; Opdef: BNordInk_Fel holds erroneous values for some persons in 2021-2022 next to BNordInk and is no longer used."
+
+[[statement]]
+kind = "set"
+subject = "var:boendetillagg"
+fields = { "label" = "Boendetillägg (preliminär)" }
+evidence = "#2102 same-label cluster 'Boendetillägg' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the payment refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:boendetillagg-iboentp"
+fields = { "label" = "Boendetillägg (slutlig)" }
+evidence = "#2102 same-label cluster 'Boendetillägg' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the payment refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-mfl"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (preliminär)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-for-barnfamiljer-samt-makar-och-ibostbup"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (slutlig)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsersattning"
+fields = { "label" = "Bostadsersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Bostadsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount is distributed over the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsersattning-iebostp"
+fields = { "label" = "Bostadsersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Bostadsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount is distributed over the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-for-personer-med-sjuk-och-ibtpsap"
+fields = { "label" = "Bostadstillägg för personer med sjuk- och aktivitetsersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-pensionarer"
+fields = { "label" = "Bostadstillägg till pensionärer (preliminär)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-sjuk-aktivitet"
+fields = { "label" = "Bostadstillägg för personer med sjuk- och aktivitetsersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtpapp"
+fields = { "label" = "Bostadstillägg till pensionärer (slutlig)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:bsyssstat-fel"
+fields = { "label" = "Klassificerad som sysselsatt (felaktiga värden, används inte längre)" }
+evidence = "#2102 same-label cluster 'Klassificerad som sysselsatt' (2 variables): judged different meaning, high confidence; Opdef: BSyssStat_Fel holds erroneous values for some persons in 2021-2022 next to BSyssStat and is no longer used."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "label" = "Ekonomiskt bistånd (ISOCB)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, low confidence; ISOCB and ISOCBU have identical opdefs and tables and coexist in 2024-2025, so they differ, but nothing documents the meaning of the U suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-isocbu"
+fields = { "label" = "Ekonomiskt bistånd (ISOCBU)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, low confidence; ISOCB and ISOCBU have identical opdefs and tables and coexist in 2024-2025, so they differ, but nothing documents the meaning of the U suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-amprogram-skattefri"
+fields = { "label" = "Ersättning vid deltagande i arbetsmarknadspolitiska program, skattefri (preliminär)" }
+evidence = "#2102 same-label cluster 'Ersättning vid deltagande i arbetsmarknadspolitiska program, skattefri' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the paid amount is attributed to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-amprogram-skattepliktig"
+fields = { "label" = "Ersättning vid deltagande i arbetsmarknadspolitiska program, skattepliktig (preliminär)" }
+evidence = "#2102 same-label cluster 'Ersättning vid deltagande i arbetsmarknadspolitiska program, skattepliktig' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the paid amount is attributed to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-karens"
+fields = { "label" = "Ersättning för karens (preliminär)" }
+evidence = "#2102 same-label cluster 'Ersättning för karens' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-karens-tkarensp"
+fields = { "label" = "Ersättning för karens (slutlig)" }
+evidence = "#2102 same-label cluster 'Ersättning för karens' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-forlangd-skolgang"
+fields = { "label" = "Ersättning vid förlängd skolgång (preliminär)" }
+evidence = "#2102 same-label cluster 'Ersättning vid förlängd skolgång' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-riskgrupper"
+fields = { "label" = "Ersättning till riskgrupper (preliminär)" }
+evidence = "#2102 same-label cluster 'Ersättning till riskgrupper' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-till-riskgrupper-triskp"
+fields = { "label" = "Ersättning till riskgrupper (slutlig)" }
+evidence = "#2102 same-label cluster 'Ersättning till riskgrupper' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vid-deltagande-i-arbetsmarknadspolitiska-iarbutp"
+fields = { "label" = "Ersättning vid deltagande i arbetsmarknadspolitiska program, skattefri (slutlig)" }
+evidence = "#2102 same-label cluster 'Ersättning vid deltagande i arbetsmarknadspolitiska program, skattefri' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the paid amount is attributed to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vid-deltagande-i-arbetsmarknadspolitiska-tarbutp"
+fields = { "label" = "Ersättning vid deltagande i arbetsmarknadspolitiska program, skattepliktig (slutlig)" }
+evidence = "#2102 same-label cluster 'Ersättning vid deltagande i arbetsmarknadspolitiska program, skattepliktig' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025; the final opdef says the paid amount is attributed to the period the event concerns."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vid-forlangd-skolgang-cstudfsp"
+fields = { "label" = "Ersättning vid förlängd skolgång (slutlig)" }
+evidence = "#2102 same-label cluster 'Ersättning vid förlängd skolgång' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-barns-fodelse"
+fields = { "label" = "Föräldrapenning, barns födelse (preliminär)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, barns födelse' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-barns-fodelse-tforpfp"
+fields = { "label" = "Föräldrapenning, barns födelse (slutlig)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, barns födelse' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-tillfallig-vard-av-barn-tforptp"
+fields = { "label" = "Föräldrapenning, tillfällig vård av barn (slutlig)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, tillfällig vård av barn' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-vab"
+fields = { "label" = "Föräldrapenning, tillfällig vård av barn (preliminär)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, tillfällig vård av barn' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:garantipension"
+fields = { "label" = "Garantipension (preliminär)" }
+evidence = "#2102 same-label cluster 'Garantipension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:garantipension-pgarpp"
+fields = { "label" = "Garantipension (slutlig)" }
+evidence = "#2102 same-label cluster 'Garantipension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetsersattning"
+fields = { "label" = "Graviditetsersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Graviditetsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetsersattning-tforhp"
+fields = { "label" = "Graviditetsersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Graviditetsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utbildningsniva-aggregat"
+fields = { "label" = "Utbildningsnivå (aggregerad, 7 värden)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; Opdefs: SUN2020Niva_Old is the aggregate with 7 values, SUN2020Niva the complete three-digit SUN 2020 level code."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utbildningsniva-trestallig"
+fields = { "label" = "Utbildningsnivå (tresiffrig, SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; Opdefs: SUN2020Niva_Old is the aggregate with 7 values, SUN2020Niva the complete three-digit SUN 2020 level code."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-inkomstkalla-12m"
+fields = { "label" = "Huvudsaklig inkomstkälla (senaste 12 månaderna)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; Opdefs: the main income source based on the calendar year, the last twelve months or the current month, in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-inkomstkalla-1m"
+fields = { "label" = "Huvudsaklig inkomstkälla (aktuell månad)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; Opdefs: the main income source based on the calendar year, the last twelve months or the current month, in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstpension"
+fields = { "label" = "Inkomstpension (preliminär)" }
+evidence = "#2102 same-label cluster 'Inkomstpension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstpension-pinkpp"
+fields = { "label" = "Inkomstpension (slutlig)" }
+evidence = "#2102 same-label cluster 'Inkomstpension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:justering-av-angivet-arbetsstallenummer-fran-agi-bjustastnr"
+fields = { "label" = "Justering av angivet arbetsställenummer från AGI (justering)" }
+evidence = "#2102 same-label cluster 'Justering av angivet arbetsställenummer från AGI' (2 variables): judged different meaning, high confidence; Opdefs: BImpAstNr flags imputation of a missing or invalid workplace number, BJustAstNr flags an adjustment based on other workplace information; they coexist 2023-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning"
+fields = { "label" = "Närståendepenning (preliminär)" }
+evidence = "#2102 same-label cluster 'Närståendepenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning-tnarp"
+fields = { "label" = "Närståendepenning (slutlig)" }
+evidence = "#2102 same-label cluster 'Närståendepenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod"
+fields = { "label" = "Omställningsstudiestöd (preliminär, bidrag och lån)" }
+evidence = "#2102 same-label cluster 'Omställningsstudiestöd' (4 variables): judged different meaning, medium confidence; Opdefs: COMST/COMSTp are the sum of grant and loan, TOMSTBID/TOMSTBIDp cover only the grant part, each in a preliminary and a final table."
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-comstp"
+fields = { "label" = "Omställningsstudiestöd (slutlig, bidrag och lån)" }
+evidence = "#2102 same-label cluster 'Omställningsstudiestöd' (4 variables): judged different meaning, medium confidence; Opdefs: COMST/COMSTp are the sum of grant and loan, TOMSTBID/TOMSTBIDp cover only the grant part, each in a preliminary and a final table."
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbid"
+fields = { "label" = "Omställningsstudiestöd (preliminär, endast bidragsdelen)" }
+evidence = "#2102 same-label cluster 'Omställningsstudiestöd' (4 variables): judged different meaning, medium confidence; Opdefs: COMST/COMSTp are the sum of grant and loan, TOMSTBID/TOMSTBIDp cover only the grant part, each in a preliminary and a final table."
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbidp"
+fields = { "label" = "Omställningsstudiestöd (slutlig, endast bidragsdelen)" }
+evidence = "#2102 same-label cluster 'Omställningsstudiestöd' (4 variables): judged different meaning, medium confidence; Opdefs: COMST/COMSTp are the sum of grant and loan, TOMSTBID/TOMSTBIDp cover only the grant part, each in a preliminary and a final table."
+
+[[statement]]
+kind = "set"
+subject = "var:omvardnadsbidrag"
+fields = { "label" = "Omvårdnadsbidrag (preliminär)" }
+evidence = "#2102 same-label cluster 'Omvårdnadsbidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:omvardnadsbidrag-tomvardp"
+fields = { "label" = "Omvårdnadsbidrag (slutlig)" }
+evidence = "#2102 same-label cluster 'Omvårdnadsbidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-ersattning-sjukdom"
+fields = { "label" = "Övrig ersättning vid sjukdom (preliminär)" }
+evidence = "#2102 same-label cluster 'Övrig ersättning vid sjukdom' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-ersattning-vid-sjukdom-csjukovr"
+fields = { "label" = "Övrig ersättning vid sjukdom (slutlig)" }
+evidence = "#2102 same-label cluster 'Övrig ersättning vid sjukdom' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:premiepension"
+fields = { "label" = "Premiepension (preliminär)" }
+evidence = "#2102 same-label cluster 'Premiepension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:premiepension-pprepegp"
+fields = { "label" = "Premiepension (slutlig)" }
+evidence = "#2102 same-label cluster 'Premiepension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning"
+fields = { "label" = "Rehabiliteringsersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Rehabiliteringsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning-trehabp"
+fields = { "label" = "Rehabiliteringsersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Rehabiliteringsersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-for-pensionarer-ibtpsapp"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer (slutlig)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-pensionarer"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer (preliminär)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-pensionstillagg"
+fields = { "label" = "Särskilt pensionstillägg (preliminär)" }
+evidence = "#2102 same-label cluster 'Särskilt pensionstillägg' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-pensionstillagg-psptp"
+fields = { "label" = "Särskilt pensionstillägg (slutlig)" }
+evidence = "#2102 same-label cluster 'Särskilt pensionstillägg' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukersattning"
+fields = { "label" = "Sjukersättning (preliminär)" }
+evidence = "#2102 same-label cluster 'Sjukersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukersattning-tsep"
+fields = { "label" = "Sjukersättning (slutlig)" }
+evidence = "#2102 same-label cluster 'Sjukersättning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning"
+fields = { "label" = "Sjukpenning (preliminär)" }
+evidence = "#2102 same-label cluster 'Sjukpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-tsjukpp"
+fields = { "label" = "Sjukpenning (slutlig)" }
+evidence = "#2102 same-label cluster 'Sjukpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:smittbararpenning"
+fields = { "label" = "Smittbärarpenning (preliminär)" }
+evidence = "#2102 same-label cluster 'Smittbärarpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:smittbararpenning-tsmittp"
+fields = { "label" = "Smittbärarpenning (slutlig)" }
+evidence = "#2102 same-label cluster 'Smittbärarpenning' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp"
+fields = { "label" = "Studiehjälp (preliminär)" }
+evidence = "#2102 same-label cluster 'Studiehjälp' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp-istudhjalpp"
+fields = { "label" = "Studiehjälp (slutlig)" }
+evidence = "#2102 same-label cluster 'Studiehjälp' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-bidrag"
+fields = { "label" = "Studiemedel, bidrag (preliminär)" }
+evidence = "#2102 same-label cluster 'Studiemedel, bidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-bidrag-ismbidrp"
+fields = { "label" = "Studiemedel, bidrag (slutlig)" }
+evidence = "#2102 same-label cluster 'Studiemedel, bidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-m-m"
+fields = { "label" = "Studiemedel, lån m.m. (preliminär)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån m.m.' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-m-m-ismlanp"
+fields = { "label" = "Studiemedel, lån m.m. (slutlig)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån m.m.' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestartsstod"
+fields = { "label" = "Studiestartsstöd (preliminär)" }
+evidence = "#2102 same-label cluster 'Studiestartsstöd' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestartsstod-istudstodp"
+fields = { "label" = "Studiestartsstöd (slutlig)" }
+evidence = "#2102 same-label cluster 'Studiestartsstöd' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:tillaggspension"
+fields = { "label" = "Tilläggspension (preliminär)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:tillaggspension-ptillpp"
+fields = { "label" = "Tilläggspension (slutlig)" }
+evidence = "#2102 same-label cluster 'Tilläggspension' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p), concurrent 2020-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag"
+fields = { "label" = "Vårdbidrag (preliminär)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-tvardp"
+fields = { "label" = "Vårdbidrag (slutlig)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount refers to an activity in the reference month."

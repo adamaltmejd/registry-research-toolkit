@@ -864,3 +864,135 @@ kind = "set"
 subject = "set:varuklassificering"
 fields = { "label" = "Varuklassificering" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:asni"
+fields = { "label" = "Näringsgren (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Opdefs say Asni avser arbetsställets, Vsni varunumrets and VEngs verksamhetsenhetens bransch; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet1"
+fields = { "label" = "Bortfallskod kvantitet (LevB)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet2"
+fields = { "label" = "Bortfallskod kvantitet (LevB2)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-total-kvantitet-enhet2"
+fields = { "label" = "Bortfallskod kvantitet, total kvantitet (TotB2)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev"
+fields = { "label" = "Imputeringsmetod, levererad kvantitet (MetLev)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev-enhet2"
+fields = { "label" = "Imputeringsmetod, levererad kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot"
+fields = { "label" = "Imputeringsmetod, total kvantitet (MetTot)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot-enhet2"
+fields = { "label" = "Imputeringsmetod, total kvantitet (enhet 2)" }
+evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet-4969"
+fields = { "label" = "Kvantitetsenhet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Kvantitetsenhet' (2 variables): judged different meaning, high confidence; Opdef for KvantEnhet2 says it is the second kvantitetsenhet; the other is the first unit; both run concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet2"
+fields = { "label" = "Kvantitetsenhet (KvantEnhet2)" }
+evidence = "#2102 same-label cluster 'Kvantitetsenhet' (2 variables): judged different meaning, high confidence; Opdef for KvantEnhet2 says it is the second kvantitetsenhet; the other is the first unit; both run concurrently."
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet"
+fields = { "label" = "Kvantitet, vara: levererad (enhet 1)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Opdefs: total produktion vs levererad kvantitet, each of kvantitetsenhet 1 and 2, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet-enhet2"
+fields = { "label" = "Kvantitet, vara: levererad (enhet 2)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Opdefs: total produktion vs levererad kvantitet, each of kvantitetsenhet 1 and 2, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle-enligt-nr"
+fields = { "label" = "Näringsgren enligt NR (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Näringsgren enligt NR' (3 variables): judged different meaning, medium confidence; ASNgnr (arbetsställe) and VeNgnr (verksamhetsenhet) are concurrent per opdef; NgNr (2003-2005) has no opdef so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-enligt-nr"
+fields = { "label" = "Näringsgren enligt NR (NgNr)" }
+evidence = "#2102 same-label cluster 'Näringsgren enligt NR' (3 variables): judged different meaning, medium confidence; ASNgnr (arbetsställe) and VeNgnr (verksamhetsenhet) are concurrent per opdef; NgNr (2003-2005) has no opdef so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-verksamhetsenhet"
+fields = { "label" = "Näringsgren (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Opdefs say Asni avser arbetsställets, Vsni varunumrets and VEngs verksamhetsenhetens bransch; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-verksamhetsenhet-enligt-nr"
+fields = { "label" = "Näringsgren enligt NR (verksamhetsenhet)" }
+evidence = "#2102 same-label cluster 'Näringsgren enligt NR' (3 variables): judged different meaning, medium confidence; ASNgnr (arbetsställe) and VeNgnr (verksamhetsenhet) are concurrent per opdef; NgNr (2003-2005) has no opdef so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:partiellt-bortfall-levererad-kvantitet"
+fields = { "label" = "Partiellt bortfall, levererad kvantitet" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall' (3 variables): judged different meaning, high confidence; PartBort flags the post; the Imp_pbf columns flag partial nonresponse of levererad vs totalt producerad kvantitet (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:partiellt-bortfall-totalt-producerad-kvantitet"
+fields = { "label" = "Partiellt bortfall, totalt producerad kvantitet" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall' (3 variables): judged different meaning, high confidence; PartBort flags the post; the Imp_pbf columns flag partial nonresponse of levererad vs totalt producerad kvantitet (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet"
+fields = { "label" = "Kvantitet, vara: total produktion (enhet 1)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Opdefs: total produktion vs levererad kvantitet, each of kvantitetsenhet 1 and 2, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet-enhet2"
+fields = { "label" = "Kvantitet, vara: total produktion (enhet 2)" }
+evidence = "#2102 same-label cluster 'Kvantitet, vara' (4 variables): judged different meaning, high confidence; Opdefs: total produktion vs levererad kvantitet, each of kvantitetsenhet 1 and 2, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:totb-kvant1"
+fields = { "label" = "Bortfallskod kvantitet, total kvantitet (enhet 1)" }
+evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:vsni-4027"
+fields = { "label" = "Näringsgren (varunummer)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Opdefs say Asni avser arbetsställets, Vsni varunumrets and VEngs verksamhetsenhetens bransch; concurrent columns."

@@ -2512,3 +2512,423 @@ kind = "set"
 subject = "set:yngsta-barnets-alder"
 fields = { "label" = "Yngsta barnets ålder" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "label" = "Åldersgrupp (grupper från 16-19 år)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, medium confidence; AldersGrp has coarse classes from 16-19 (opdef: femårsklasser 16-24, then tioårsklasser); RPUAldgrp is age at 31/12 in one-year classes."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp-31-december"
+fields = { "label" = "Åldersgrupp (31 december)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, medium confidence; AldersGrp has coarse classes from 16-19 (opdef: femårsklasser 16-24, then tioårsklasser); RPUAldgrp is age at 31/12 in one-year classes."
+
+[[statement]]
+kind = "set"
+subject = "var:arendeklass"
+fields = { "label" = "Studiemedel och studiestartsstöd (ärendeklass)" }
+evidence = "#2102 same-label cluster 'Studiemedel och studiestartsstöd' (2 variables): judged different meaning, high confidence; Arendeklass and Tabelltyp are concurrent columns in studiemedel-erhallet with different value sets (ärendeklass vs tabelltyp codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:astsnig"
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 92/2002, grupperad i 10 branscher)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:astsnig07"
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007, grupperad)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar-ht"
+fields = { "label" = "Avklarade undervisningstimmar (höstterminen)" }
+evidence = "#2102 same-label cluster 'Avklarade undervisningstimmar' (2 variables): judged different meaning, high confidence; Opdefs differ: KXUTIMHT is autumn term, KXUTIMVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar-vt"
+fields = { "label" = "Avklarade undervisningstimmar (vårterminen)" }
+evidence = "#2102 same-label cluster 'Avklarade undervisningstimmar' (2 variables): judged different meaning, high confidence; Opdefs differ: KXUTIMHT is autumn term, KXUTIMVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiestuderande-hosttermin"
+fields = { "label" = "Gymnasiestuderande (höstterminen, GYDelt)" }
+evidence = "#2102 same-label cluster 'Gymnasiestuderande' (3 variables): judged different meaning, high confidence; Opdefs differ: GYFGH is spring term; GYDelt and GYMNHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiestuderande-vartermin"
+fields = { "label" = "Gymnasiestuderande (vårterminen)" }
+evidence = "#2102 same-label cluster 'Gymnasiestuderande' (3 variables): judged different meaning, high confidence; Opdefs differ: GYFGH is spring term; GYDelt and GYMNHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnht"
+fields = { "label" = "Gymnasiestuderande (höstterminen, GYMNHT)" }
+evidence = "#2102 same-label cluster 'Gymnasiestuderande' (3 variables): judged different meaning, high confidence; Opdefs differ: GYFGH is spring term; GYDelt and GYMNHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:komvuxht"
+fields = { "label" = "Komvuxutbildning (höstterminen, KOMVUXHT)" }
+evidence = "#2102 same-label cluster 'Komvuxutbildning' (3 variables): judged different meaning, high confidence; Opdefs differ: KOMVUXVT is spring term; KXDelt and KOMVUXHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:komvuxutbildning-hosttermin"
+fields = { "label" = "Komvuxutbildning (höstterminen, KXDelt)" }
+evidence = "#2102 same-label cluster 'Komvuxutbildning' (3 variables): judged different meaning, high confidence; Opdefs differ: KOMVUXVT is spring term; KXDelt and KOMVUXHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:komvuxvt"
+fields = { "label" = "Komvuxutbildning (vårterminen)" }
+evidence = "#2102 same-label cluster 'Komvuxutbildning' (3 variables): judged different meaning, high confidence; Opdefs differ: KOMVUXVT is spring term; KXDelt and KOMVUXHT are the same autumn-term flag under successive names."
+
+[[statement]]
+kind = "set"
+subject = "var:kurstyp-folkhogskolan-ht"
+fields = { "label" = "Kurstyp folkhögskolan (höstterminen)" }
+evidence = "#2102 same-label cluster 'Kurstyp folkhögskolan' (2 variables): judged different meaning, high confidence; Opdefs differ: FHKurstypHT is autumn term, FHKurstypVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:kurstyp-folkhogskolan-vt"
+fields = { "label" = "Kurstyp folkhögskolan (vårterminen)" }
+evidence = "#2102 same-label cluster 'Kurstyp folkhögskolan' (2 variables): judged different meaning, high confidence; Opdefs differ: FHKurstypHT is autumn term, FHKurstypVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-1992-2002-femsifferniva"
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 92/2002, 5 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-1992-tvasifferniva"
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 92, 2 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2007-femsifferniva"
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007, 5 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning-ht"
+fields = { "label" = "Nivå på studierna i vuxenutbildning (höstterminen)" }
+evidence = "#2102 same-label cluster 'Nivå på studierna i vuxenutbildning' (2 variables): judged different meaning, high confidence; Opdefs differ: KXNivaHT is autumn term, KXNivaVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning-vt"
+fields = { "label" = "Nivå på studierna i vuxenutbildning (vårterminen)" }
+evidence = "#2102 same-label cluster 'Nivå på studierna i vuxenutbildning' (2 variables): judged different meaning, high confidence; Opdefs differ: KXNivaHT is autumn term, KXNivaVT spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-2"
+fields = { "label" = "Personnummer (Pnr11)" }
+evidence = "#2102 same-label cluster 'Personnummer' (2 variables): judged different meaning, low confidence; Pnr11 runs concurrently with PersonNr in the same table (1995-1997) and no text says how it differs, so qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:rpusuninr-3-vt"
+fields = { "label" = "Utbildningsinriktning (3 siffror, högst prioriterad utbildning, första halvåret)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different SUN versions and detail (first digit, SUN 2000, SUN 2020) plus the two 2024-2025 columns for highest-priority education in the first and second half-year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-vuxenstudiestod-arbetslosa"
+fields = { "label" = "Vuxenstudiestöd (särskilt för arbetslösa)" }
+evidence = "#2102 same-label cluster 'Vuxenstudiestöd' (2 variables): judged different meaning, medium confidence; Opdefs differ: SVUXA is särskilt vuxenstudiestöd for unemployed, Svux is särskilt vuxenstudiestöd; concurrent flags in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorgrov"
+fields = { "label" = "Sektorkod (grov indelning, två grupper)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SEKT (1997-1998) and SektorKod (1998-2021) share the same code list and are one variable renamed; SektorGrov is grouped to two groups (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "label" = "Sektorkod (SEKT)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SEKT (1997-1998) and SektorKod (1998-2021) share the same code list and are one variable renamed; SektorGrov is grouped to two groups (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-huvudsaklig-sysselsattning-november"
+fields = { "label" = "Sektorkod (SektorKod)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SEKT (1997-1998) and SektorKod (1998-2021) share the same code list and are one variable renamed; SektorGrov is grouped to two groups (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-gymnasieskola-hosttermin"
+fields = { "label" = "Kommun för skola/skolenhet (gymnasieskola, höstterminen, GYLAKO)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-komvux-hosttermin"
+fields = { "label" = "Kommun för skola/skolenhet (Komvux, höstterminen, KVLAKO)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skommun"
+fields = { "label" = "Kommun för skola/skolenhet (högst prioriterad utbildning, höstterminen, Skommun)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skommungy"
+fields = { "label" = "Kommun för skola/skolenhet (gymnasieskola, höstterminen, SkommunGY)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skommunhs"
+fields = { "label" = "Kommun för skola/skolenhet (högskola, höstterminen)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skommunht"
+fields = { "label" = "Kommun för skola/skolenhet (högst prioriterad utbildning, höstterminen, SkommunHT)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:skommunkx"
+fields = { "label" = "Kommun för skola/skolenhet (Komvux, höstterminen, SkommunKX)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (7 variables): judged different meaning, medium confidence; Opdefs separate gymnasieskola, högskola and Komvux columns (1995-1998) from the later priority-based column (Skommun/SkommunHT, same variable renamed)."
+
+[[statement]]
+kind = "set"
+subject = "var:studdeltht"
+fields = { "label" = "Studiedeltagande höstterminen (STUDDELTHT)" }
+evidence = "#2102 same-label cluster 'Studiedeltagande höstterminen' (4 variables): judged different meaning, low confidence; Studdelt, UTBDELTH and STUDDELTHT are one variable under successive names; studSDB runs concurrently with STUDDELTHT (1999-2003) and nothing says how it differs, so qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:studiedeltagande-ht"
+fields = { "label" = "Studiedeltagande höstterminen (Studdelt)" }
+evidence = "#2102 same-label cluster 'Studiedeltagande höstterminen' (4 variables): judged different meaning, low confidence; Studdelt, UTBDELTH and STUDDELTHT are one variable under successive names; studSDB runs concurrently with STUDDELTHT (1999-2003) and nothing says how it differs, so qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:studnivaisced"
+fields = { "label" = "Utbildningsnivå (ISCED, studier aktuell termin)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:studsdb"
+fields = { "label" = "Studiedeltagande höstterminen (studSDB)" }
+evidence = "#2102 same-label cluster 'Studiedeltagande höstterminen' (4 variables): judged different meaning, low confidence; Studdelt, UTBDELTH and STUDDELTHT are one variable under successive names; studSDB runs concurrently with STUDDELTHT (1999-2003) and nothing says how it differs, so qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 2 siffror)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-3"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-4"
+fields = { "label" = "Moderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sunnivaMor)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "label" = "Moderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sun2000Niva_oldMor)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor-2"
+fields = { "label" = "Moderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sun2020Niva_oldMor)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different SUN versions and detail (first digit, SUN 2000, SUN 2020) plus the two 2024-2025 columns for highest-priority education in the first and second half-year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (gamla SUN-nivåer, 1 siffra, SUN2000Niva_Old)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 2 siffror)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (exklusive adoptivföräldrar, SunNivaFarMorMax_exklAd)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs differ: two columns exclude adoptive parents (same variable under successive names, 1999-2003), SunNivaOldFarMorMax includes biological or adoptive parent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-far"
+fields = { "label" = "Faderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sun2000Niva_oldFar)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (inklusive adoptivföräldrar)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs differ: two columns exclude adoptive parents (same variable under successive names, 1999-2003), SunNivaOldFarMorMax includes biological or adoptive parent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-for-2"
+fields = { "label" = "Föräldrarnas utbildningsnivå (exklusive adoptivföräldrar, SunNivaOldFarMorMax_exklAd)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs differ: two columns exclude adoptive parents (same variable under successive names, 1999-2003), SunNivaOldFarMorMax includes biological or adoptive parent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different SUN versions and detail (first digit, SUN 2000, SUN 2020) plus the two 2024-2025 columns for highest-priority education in the first and second half-year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå (gamla SUN-nivåer, 1 siffra, SUN2020Niva_old)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old-far"
+fields = { "label" = "Faderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sun2020Niva_oldFar)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far"
+fields = { "label" = "Faderns utbildningsnivå (gamla SUN-nivåer, 1 siffra, sunnivaFar)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-vt"
+fields = { "label" = "Utbildningsnivå (3 siffror, högst prioriterad utbildning, första halvåret)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:tabelltyp"
+fields = { "label" = "Studiemedel och studiestartsstöd (tabelltyp)" }
+evidence = "#2102 same-label cluster 'Studiemedel och studiestartsstöd' (2 variables): judged different meaning, high confidence; Arendeklass and Tabelltyp are concurrent columns in studiemedel-erhallet with different value sets (ärendeklass vs tabelltyp codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:univa"
+fields = { "label" = "Utbildningsnivå (gamla SUN-nivåer, 1 siffra, Univa)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:ursprkat-exklad"
+fields = { "label" = "Nationell bakgrund (exklusive adoptivföräldrar)" }
+evidence = "#2102 same-label cluster 'Nationell bakgrund' (2 variables): judged different meaning, medium confidence; Opdefs differ: Ursprkat_exklAd is derived from biological parents only, UrsprKat also uses adoptive parents in some versions; the two overlap 1999-2003."
+
+[[statement]]
+kind = "set"
+subject = "var:utbdelth"
+fields = { "label" = "Studiedeltagande höstterminen (UTBDELTH)" }
+evidence = "#2102 same-label cluster 'Studiedeltagande höstterminen' (4 variables): judged different meaning, low confidence; Studdelt, UTBDELTH and STUDDELTHT are one variable under successive names; studSDB runs concurrently with STUDDELTHT (1999-2003) and nothing says how it differs, so qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "label" = "Utbildningsgrupp (CSN)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, medium confidence; Utbildningsgrupp is CSN's definition in studiemedel-erhallet; SUN2000Grp is the SUN 2000 group in befolkningens-studiedeltagande, with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-sun2000grp"
+fields = { "label" = "Utbildningsgrupp (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, medium confidence; Utbildningsgrupp is CSN's definition in studiemedel-erhallet; SUN2000Grp is the SUN 2000 group in befolkningens-studiedeltagande, with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
+fields = { "label" = "Utbildningsinriktning (3 siffror, högst prioriterad utbildning, andra halvåret)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different SUN versions and detail (first digit, SUN 2000, SUN 2020) plus the two 2024-2025 columns for highest-priority education in the first and second half-year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun-forsta-siffran"
+fields = { "label" = "Utbildningsinriktning (SUN, första siffran)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different SUN versions and detail (first digit, SUN 2000, SUN 2020) plus the two 2024-2025 columns for highest-priority education in the first and second half-year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-biologisk-far-hogsta-fullfoljda-sun-2000"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
+fields = { "label" = "Utbildningsnivå (3 siffror, högst prioriterad utbildning, andra halvåret)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-mor-sun2000-3-positioner"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, medium confidence; Distinct code lengths and SUN versions: SUN 2000 two-digit, SUN 2000 three-digit, SUN 2020 three-digit; the one-digit old-level column (MIS 1996:1) has identical opdef under three names across 1999-2025 and is treated as one variable."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
+fields = { "label" = "Utbildningsnivå (SUN 2000, sju grupper)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (9 variables): judged different meaning, medium confidence; Different classifications and detail: old one-digit levels (MIS 1996:1, one variable under three names), SUN 2000 and SUN 2020 three-digit, ISCED, SUN 2000 seven groups, and the 2024-2025 high-priority columns for first and second half-year."
+
+[[statement]]
+kind = "set"
+subject = "var:vuxenstudiestod"
+fields = { "label" = "Vuxenstudiestöd (särskilt vuxenstudiestöd)" }
+evidence = "#2102 same-label cluster 'Vuxenstudiestöd' (2 variables): judged different meaning, medium confidence; Opdefs differ: SVUXA is särskilt vuxenstudiestöd for unemployed, Svux is särskilt vuxenstudiestöd; concurrent flags in one table."

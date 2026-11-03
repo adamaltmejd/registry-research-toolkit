@@ -3706,3 +3706,15 @@ kind = "set"
 subject = "set:utlandska-aktier-och-andelar"
 fields = { "label" = "Utländska aktier och andelar" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:komm"
+fields = { "label" = "Kommentar (Komm)" }
+evidence = "#2102 same-label cluster 'Kommentar' (2 variables): judged different meaning, low confidence; Komm and Kommentar are concurrent free-text columns of one table with a shared opdef; nothing says how they differ, so they get raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kommentar-1937"
+fields = { "label" = "Kommentar (Kommentar)" }
+evidence = "#2102 same-label cluster 'Kommentar' (2 variables): judged different meaning, low confidence; Komm and Kommentar are concurrent free-text columns of one table with a shared opdef; nothing says how they differ, so they get raw codes."

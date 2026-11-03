@@ -353,3 +353,27 @@ kind = "set"
 subject = "var:timlon"
 fields = { "description" = "Timlön under referensmånaden. Timlönen beräknas som lön under referensmånaden dividerad med antal timmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437081:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "label" = "Uppräkningstal (företag)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-a51"
+fields = { "label" = "Uppräkningstal (företag och organisationer)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b42"
+fields = { "label" = "Uppräkningstal (individer i privat sektor)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b52"
+fields = { "label" = "Uppräkningstal (individer)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."

@@ -2916,3 +2916,993 @@ kind = "set"
 subject = "set:upplaggningsdatum"
 fields = { "label" = "Uppläggningsdatum" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adressplats)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adressplats)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adressplatstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adressplatstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusdat"
+fields = { "label" = "Kvalitetsmärkning, datum (adresstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adresstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdat"
+fields = { "label" = "Ajourföringsdatum (lägenhetsuppgifter)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, high confidence; Opdefs describe update dates for lägenhetsuppgifter, the latest adress/byggnad update, the registerenhet and (by table) the plan."
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdatum"
+fields = { "label" = "Ajourföringsdatum (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, high confidence; Opdefs describe update dates for lägenhetsuppgifter, the latest adress/byggnad update, the registerenhet and (by table) the plan."
+
+[[statement]]
+kind = "set"
+subject = "var:aktualitetsdatum"
+fields = { "label" = "Datum (aktualitet: inskrivningsdag före pågående ärende)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:andamal"
+fields = { "label" = "Textanmärkning (syfte med tomträttsupplåtelse)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangnamnare"
+fields = { "label" = "Nämnare Lagfart/Tomträtt (förvärvad andel)" }
+evidence = "#2102 same-label cluster 'Nämnare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Opdefs: one is the denominator of the acquired share (fång), the other of the granted tomträtt share."
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangtaljare"
+fields = { "label" = "Täljare Lagfart/Tomträtt (förvärvad andel)" }
+evidence = "#2102 same-label cluster 'Täljare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Opdefs: one is the numerator of the acquired share (fång), the other of the granted tomträtt share."
+
+[[statement]]
+kind = "set"
+subject = "var:anmarkning"
+fields = { "label" = "Textanmärkning (ytterligare upplysning om tomträttsupplåtelse)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:antrumdat"
+fields = { "label" = "Kvalitetsmärkning, datum (antal rum)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:antrumursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (antal rum)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldavgiftvaluta"
+fields = { "label" = "Valuta (tomträttsavgäld och arrendeavgifter)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldperiodlangd"
+fields = { "label" = "Antal (avgäldsperiodens längd, år)" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Opdefs describe three different year counts: avgäldsperiodens längd, framtida avgäldsperiod, uppsägningsperiod."
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldstartdatum"
+fields = { "label" = "Datum (avgäldens start)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:avsertidigareagandeav"
+fields = { "label" = "Universalt unik identitet (referens till inskriven person, tidigare ägande)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "label" = "Beslutsdatum, register (lägenhetsnummer beslutat)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-plan-naturvardsbestammelse-utfardande"
+fields = { "label" = "Beslutsdatum, register (planens utfärdande)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandelnamnare"
+fields = { "label" = "Nämnare Lagfart/Tomträtt (beviljad andel)" }
+evidence = "#2102 same-label cluster 'Nämnare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Opdefs: one is the denominator of the acquired share (fång), the other of the granted tomträtt share."
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandeltaljare"
+fields = { "label" = "Täljare Lagfart/Tomträtt (beviljad andel)" }
+evidence = "#2102 same-label cluster 'Täljare Lagfart/Tomträtt' (2 variables): judged different meaning, high confidence; Opdefs: one is the numerator of the acquired share (fång), the other of the granted tomträtt share."
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "label" = "Bostadsarea (lägenhet)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: BOAREA is the lägenhet's bostadsarea, TOTBOAREA is the total bostadsarea."
+
+[[statement]]
+kind = "set"
+subject = "var:boareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:boareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:byggardat"
+fields = { "label" = "Kvalitetsmärkning, datum (nybyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:byggarursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (nybyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:byggfnr"
+fields = { "label" = "Fastighetsnyckel (markfastighet där registerbyggnaden är belägen)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Opdefs describe six different keys: the main key, the building's land property, the unit a deregistered property moved to, origin, plan, and the property a building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "label" = "Byggnadstyp (detaljerad)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP has detailed building types, TYPBEBYGG broad main groups, different value sets in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (byggnadstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (byggnadstyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "label" = "Distrikt (kod)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; DISTRIKTSKOD holds the six-digit code with a value set, DISTRIKTSNAMN the name (opdef 'Distriksnamn')."
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "label" = "Distrikt (namn)" }
+evidence = "#2102 same-label cluster 'Distrikt' (2 variables): judged different meaning, high confidence; DISTRIKTSKOD holds the six-digit code with a value set, DISTRIKTSNAMN the name (opdef 'Distriksnamn')."
+
+[[statement]]
+kind = "set"
+subject = "var:entretypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (entrétyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:entretypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (entrétyp)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:fang-uuid"
+fields = { "label" = "Universalt unik identitet (referens till fång)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fast-uuid"
+fields = { "label" = "Universalt unik identitet (referens till fastighet, inskrivning)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsagandeforand-uuid"
+fields = { "label" = "Universalt unik identitet (referens till fastighetsägandeförändring)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-byggnad-tillhor-annan-fastighet"
+fields = { "label" = "Fastighetsnyckel (fastighet som byggnaden tillhör, annan än den ligger på)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Opdefs describe six different keys: the main key, the building's land property, the unit a deregistered property moved to, origin, plan, and the property a building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-enhet-dit-avregistrerad-overforts"
+fields = { "label" = "Fastighetsnyckel (enhet dit avregistrerad fastighet överförts)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Opdefs describe six different keys: the main key, the building's land property, the unit a deregistered property moved to, origin, plan, and the property a building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsnyckel-ursprung"
+fields = { "label" = "Fastighetsnyckel (ursprung)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Opdefs describe six different keys: the main key, the building's land property, the unit a deregistered property moved to, origin, plan, and the property a building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsgles"
+fields = { "label" = "Förvärvstillstånd krävs (glesbygdsområde)" }
+evidence = "#2102 same-label cluster 'Förvärvstillstånd krävs' (2 variables): judged different meaning, high confidence; Opdefs: one flag applies within glesbygdsområde, the other within omarronderingsområde."
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsomarr"
+fields = { "label" = "Förvärvstillstånd krävs (omarronderingsområde)" }
+evidence = "#2102 same-label cluster 'Förvärvstillstånd krävs' (2 variables): judged different meaning, high confidence; Opdefs: one flag applies within glesbygdsområde, the other within omarronderingsområde."
+
+[[statement]]
+kind = "set"
+subject = "var:frajdatum"
+fields = { "label" = "Ajourföringsdatum (registerenhet)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, high confidence; Opdefs describe update dates for lägenhetsuppgifter, the latest adress/byggnad update, the registerenhet and (by table) the plan."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgperiod"
+fields = { "label" = "Antal (framtida avgäldsperiod, år)" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Opdefs describe three different year counts: avgäldsperiodens längd, framtida avgäldsperiod, uppsägningsperiod."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgstartdat"
+fields = { "label" = "Datum (framtida avgälds start)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgsumma"
+fields = { "label" = "Tomträttsavgäld och arrendeavgifter (framtida årsbelopp)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld och arrendeavgifter' (2 variables): judged different meaning, high confidence; Opdefs: FRAMTIDAAVGSUMMA is the future annual amount, AVGALDAVGIFTSUMMA the annual amount that applies."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgvaluta"
+fields = { "label" = "Valuta (framtida avgäld)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:galldetidigarei"
+fields = { "label" = "Universalt unik identitet (referens till inskrivningsfastighet, tidigare gällande)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:gdatb"
+fields = { "label" = "Beslutsdatum, register (genomförandetidens början)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:gdatu"
+fields = { "label" = "Beslutsdatum, register (genomförandetidens utgång)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:gemensambostadsambo"
+fields = { "label" = "Textanmärkning (sambo, gemensam bostad)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:gtill"
+fields = { "label" = "Beslutsdatum, register (giltighet)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrankning"
+fields = { "label" = "Textanmärkning (inskränkning av rättigheter i tomträtt)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivenperson-uuid"
+fields = { "label" = "Universalt unik identitet (referens till inskriven person)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningsdag"
+fields = { "label" = "Datum (inskrivningsdag)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningsfastighet-uuid"
+fields = { "label" = "Universalt unik identitet (referens till inskrivningsfastighet, INSKRIVNINGSFASTIGHET_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ir-fast-uuid"
+fields = { "label" = "Universalt unik identitet (referens till inskrivningsfastighet, IR_FAST_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ir-fastighet-uuid"
+fields = { "label" = "Universalt unik identitet (referens till inskrivningsfastighet, IR_FASTIGHET_UUID)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kdat"
+fields = { "label" = "Kvalitetsmärkning, datum (fastighet)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:kdatumursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (adress och byggnad)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemdat"
+fields = { "label" = "Kvalitetsmärkning, datum (gemensamt kök)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (gemensamt kök)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:koktypdat"
+fields = { "label" = "Kvalitetsmärkning, datum (typ av kök)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:koktypursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (typ av kök)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:komkod"
+fields = { "label" = "Kommun (kommunkod, två sista siffrorna)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMKOD opdef describes the last two digits of the municipality code, KOMMUN opdef is 'Kommunnamn'."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (kommunnamn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMKOD opdef describes the last two digits of the municipality code, KOMMUN opdef is 'Kommunnamn'."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskilling-uuid"
+fields = { "label" = "Universalt unik identitet (referens till köpeskilling)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (fast egendom eller tomträtt)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, high confidence; Opdefs describe four different sums: köpeskilling for fast egendom, for lös egendom, mellangift, and preliminär köpeskilling."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastval"
+fields = { "label" = "Valuta (köpeskilling, fast egendom eller tomträtt)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglossum"
+fields = { "label" = "Köpeskilling fastighetsregistret (lös egendom)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, high confidence; Opdefs describe four different sums: köpeskilling for fast egendom, for lös egendom, mellangift, and preliminär köpeskilling."
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglosval"
+fields = { "label" = "Valuta (köpeskilling, lös egendom)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-datum-adress-byggnad"
+fields = { "label" = "Kvalitetsmärkning, datum (adress och byggnad)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-datum-fastighetsnyckel"
+fields = { "label" = "Kvalitetsmärkning, datum (fastighetsnyckel)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
+fields = { "label" = "Kvalitetsmärkning, ursprung (fastighetsnyckel)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:lagfart-uuid"
+fields = { "label" = "Universalt unik identitet (referens till lagfart)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:lagfartsanmarkning"
+fields = { "label" = "Textanmärkning (lagfart)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "label" = "Land (landskod)" }
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, low confidence; LANDSKOD has a country code list; LAND has no value set, opdef or description, so it keeps the plain label."
+
+[[statement]]
+kind = "set"
+subject = "var:ldat"
+fields = { "label" = "Beslutsdatum, register (laga kraft)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum, register' (6 variables): judged different meaning, high confidence; Opdefs describe six different dates: lägenhetsnummer decision, plan decision, genomförandetidens start and end, giltighet, laga kraft."
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetskategori)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetskategori)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetsnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetsnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusdat"
+fields = { "label" = "Kvalitetsmärkning, datum (lägenhetsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (lägenhetsstatus)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (mellangift)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, high confidence; Opdefs describe four different sums: köpeskilling for fast egendom, for lös egendom, mellangift, and preliminär köpeskilling."
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftval"
+fields = { "label" = "Valuta (mellangift)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-i-system-sweref-xr"
+fields = { "label" = "Nordlig koordinat i system Sweref (fastighet)" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; Opdefs: XR is the property's point (fastighetsinformation), XKOORD the address place or building point."
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "label" = "Nordlig koordinat i system Sweref (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Nordlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; Opdefs: XR is the property's point (fastighetsinformation), XKOORD the address place or building point."
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "label" = "Nybyggnadsår (kommunens uppgift)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, high confidence; Opdefs: BYGGAR comes from the municipality, SCB_Byggar is BYGGAR supplemented with SCB's Nybyggnadsstatistik."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutaktnr"
+fields = { "label" = "Aktnummer (nytt beslut)" }
+evidence = "#2102 same-label cluster 'Aktnummer' (2 variables): judged different meaning, high confidence; Opdef of NYTTBESLUTAKTNR says it is the identity of the new decision, AKTNUMMER that of the inskrivning."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutdbnr"
+fields = { "label" = "Dagboksnummer (nytt beslut)" }
+evidence = "#2102 same-label cluster 'Dagboksnummer' (2 variables): judged different meaning, high confidence; Opdef of NYTTBESLUTDBNR says it belongs to the new decision, DAGBOKSNUMMER identifies the beslut itself."
+
+[[statement]]
+kind = "set"
+subject = "var:nyttbeslutinskdag"
+fields = { "label" = "Datum (inskrivningsdag för nytt beslut)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggardat"
+fields = { "label" = "Kvalitetsmärkning, datum (ombyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggarursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (ombyggnadsår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:omradesaktualitet"
+fields = { "label" = "Datum (områdets aktualitet)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-i-system-sweref-yr"
+fields = { "label" = "Ostlig koordinat i system Sweref (fastighet)" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; Opdefs: YR is the property's point (fastighetsinformation), YKOORD the address place or building point."
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "label" = "Ostlig koordinat i system Sweref (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Ostlig koordinat i system Sweref' (2 variables): judged different meaning, high confidence; Opdefs: YR is the property's point (fastighetsinformation), YKOORD the address place or building point."
+
+[[statement]]
+kind = "set"
+subject = "var:overklagande"
+fields = { "label" = "Textanmärkning (överklagande av beslut)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriganmarkning"
+fields = { "label" = "Textanmärkning (övrig, ej preciserad i föreskrift)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaendearende-uuid"
+fields = { "label" = "Universalt unik identitet (referens till pågående ärende)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:pfnr"
+fields = { "label" = "Fastighetsnyckel (plan)" }
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (6 variables): judged different meaning, high confidence; Opdefs describe six different keys: the main key, the building's land property, the unit a deregistered property moved to, origin, plan, and the property a building belongs to."
+
+[[statement]]
+kind = "set"
+subject = "var:pkttyp"
+fields = { "label" = "Punkttyp (fastighetspunkt)" }
+evidence = "#2102 same-label cluster 'Punkttyp' (2 variables): judged different meaning, medium confidence; Different code lists: PKTTYP codes the property point (central point, not located, ...), PUNKTTYP the address point (building, entrance, infart, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:popnamndat"
+fields = { "label" = "Kvalitetsmärkning, datum (populärnamn)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:popnamnursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (populärnamn)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:postnrdat"
+fields = { "label" = "Kvalitetsmärkning, datum (postnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:postnrursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (postnummer)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:postortdat"
+fields = { "label" = "Kvalitetsmärkning, datum (postort)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:postortursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (postort)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastsum"
+fields = { "label" = "Köpeskilling fastighetsregistret (preliminär, fast egendom)" }
+evidence = "#2102 same-label cluster 'Köpeskilling fastighetsregistret' (4 variables): judged different meaning, high confidence; Opdefs describe four different sums: köpeskilling for fast egendom, for lös egendom, mellangift, and preliminär köpeskilling."
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastval"
+fields = { "label" = "Valuta (preliminär köpeskilling, fast egendom)" }
+evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different meaning, high confidence; One currency column per amount; opdefs name which amount each applies to."
+
+[[statement]]
+kind = "set"
+subject = "var:punkttyp"
+fields = { "label" = "Punkttyp (PUNKTTYP)" }
+evidence = "#2102 same-label cluster 'Punkttyp' (2 variables): judged different meaning, medium confidence; Different code lists: PKTTYP codes the property point (central point, not located, ...), PUNKTTYP the address point (building, entrance, infart, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:regbybetursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (registerbyggnadsbeteckning)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "label" = "Uppläggningsdatum (registrering i fastighetsregistret, plan)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; Opdefs: UPPLDAT is creation of a building or flat record, UPPLDATUM of an entrance record, REGDAT the registration date in the plan table."
+
+[[statement]]
+kind = "set"
+subject = "var:ridadrpl"
+fields = { "label" = "Riksnyckelid (adressplats)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: adressplats, entré, lägenhet and registerbyggnad."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-entre"
+fields = { "label" = "Riksnyckelid (entré)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: adressplats, entré, lägenhet and registerbyggnad."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-lagenhet"
+fields = { "label" = "Riksnyckelid (lägenhet)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: adressplats, entré, lägenhet and registerbyggnad."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelid-registerbyggnad"
+fields = { "label" = "Riksnyckelid (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Riksnyckelid' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: adressplats, entré, lägenhet and registerbyggnad."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-entre"
+fields = { "label" = "Riksnyckelprefix (entré)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: entré, lägenhet, registerbyggnad and adressplats."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-lagenhet"
+fields = { "label" = "Riksnyckelprefix (lägenhet)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: entré, lägenhet, registerbyggnad and adressplats."
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckelprefix-registerbyggnad"
+fields = { "label" = "Riksnyckelprefix (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: entré, lägenhet, registerbyggnad and adressplats."
+
+[[statement]]
+kind = "set"
+subject = "var:rnpadrpl"
+fields = { "label" = "Riksnyckelprefix (adressplats)" }
+evidence = "#2102 same-label cluster 'Riksnyckelprefix' (4 variables): judged different meaning, high confidence; Opdefs name four different objects: entré, lägenhet, registerbyggnad and adressplats."
+
+[[statement]]
+kind = "set"
+subject = "var:sajdat"
+fields = { "label" = "Ajourföringsdatum (plan)" }
+evidence = "#2102 same-label cluster 'Ajourföringsdatum' (4 variables): judged different meaning, high confidence; Opdefs describe update dates for lägenhetsuppgifter, the latest adress/byggnad update, the registerenhet and (by table) the plan."
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "label" = "Nybyggnadsår (SCB, kompletterad med Nybyggnadsstatistik)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, high confidence; Opdefs: BYGGAR comes from the municipality, SCB_Byggar is BYGGAR supplemented with SCB's Nybyggnadsstatistik."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-och-arrendeavgifter"
+fields = { "label" = "Tomträttsavgäld och arrendeavgifter (gällande årsbelopp)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld och arrendeavgifter' (2 variables): judged different meaning, high confidence; Opdefs: FRAMTIDAAVGSUMMA is the future annual amount, AVGALDAVGIFTSUMMA the annual amount that applies."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehav-uuid"
+fields = { "label" = "Universalt unik identitet (referens till tomträttsinnehav)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehavsanmarkning"
+fields = { "label" = "Textanmärkning (tomträttsinnehav, enligt föreskrift)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsupplatelse-uuid"
+fields = { "label" = "Universalt unik identitet (referens till tomträttsupplåtelse)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:totboarea"
+fields = { "label" = "Bostadsarea (total)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: BOAREA is the lägenhet's bostadsarea, TOTBOAREA is the total bostadsarea."
+
+[[statement]]
+kind = "set"
+subject = "var:totboareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (total bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:totboareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (total bostadsarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareadat"
+fields = { "label" = "Kvalitetsmärkning, datum (total lokalarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareaursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (total lokalarea)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:tvistavgjordtillformanfor"
+fields = { "label" = "Textanmärkning (tvist avgjord till förmån för)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:txtanm"
+fields = { "label" = "Textanmärkning (fastighet)" }
+evidence = "#2102 same-label cluster 'Textanmärkning' (10 variables): judged different meaning, high confidence; Opdefs describe ten different free-text fields (syfte, anmärkning, inskränkning, överklagande, tvist, etc.); TXTANM has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "label" = "Byggnadstyp (huvudgrupp)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP has detailed building types, TYPBEBYGG broad main groups, different value sets in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggdat"
+fields = { "label" = "Kvalitetsmärkning, datum (typ bebyggelse)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (typ bebyggelse)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "label" = "Typkod (SCB, från Fastighetstaxeringsregistret)" }
+evidence = "#2102 same-label cluster 'Typkod' (2 variables): judged different meaning, medium confidence; Opdefs: SCB_Typkod is fetched by SCB from Fastighetstaxeringsregistret, TYPKODSK is the last linked typkod, not updated since 2010 and NULL from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:typkodsk"
+fields = { "label" = "Typkod (senast kopplade)" }
+evidence = "#2102 same-label cluster 'Typkod' (2 variables): judged different meaning, medium confidence; Opdefs: SCB_Typkod is fetched by SCB from Fastighetstaxeringsregistret, TYPKODSK is the last linked typkod, not updated since 2010 and NULL from 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskdat"
+fields = { "label" = "Kvalitetsmärkning, datum (senast kopplade typkod)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (senast kopplade typkod)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-belagenhetsadress"
+fields = { "label" = "Universalt unik identitet (belägenhetsadress)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-registerbyggnad"
+fields = { "label" = "Universalt unik identitet (registerbyggnad)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-registerenhet-fastighet"
+fields = { "label" = "Universalt unik identitet (registerenhet/fastighet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelsedatum"
+fields = { "label" = "Datum (upplåtelse av tomträtt)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:uppldat"
+fields = { "label" = "Uppläggningsdatum (byggnad eller lägenhet)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; Opdefs: UPPLDAT is creation of a building or flat record, UPPLDATUM of an entrance record, REGDAT the registration date in the plan table."
+
+[[statement]]
+kind = "set"
+subject = "var:uppldatum"
+fields = { "label" = "Uppläggningsdatum (entré)" }
+evidence = "#2102 same-label cluster 'Uppläggningsdatum' (3 variables): judged different meaning, medium confidence; Opdefs: UPPLDAT is creation of a building or flat record, UPPLDATUM of an entrance record, REGDAT the registration date in the plan table."
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsdatum"
+fields = { "label" = "Datum (tidigaste uppsägning av tomträttsavtal)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsperiodar"
+fields = { "label" = "Antal (uppsägningsperiod, år)" }
+evidence = "#2102 same-label cluster 'Antal' (3 variables): judged different meaning, high confidence; Opdefs describe three different year counts: avgäldsperiodens längd, framtida avgäldsperiod, uppsägningsperiod."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsdatum"
+fields = { "label" = "Datum (uppskov gäller till)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:urspstartdatum"
+fields = { "label" = "Datum (ursprunglig start av första avgäldsperiod)" }
+evidence = "#2102 same-label cluster 'Datum' (10 variables): judged different meaning, high confidence; Ten concurrent date columns in inskrivningsinformation whose opdefs each describe a different date."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidadromr"
+fields = { "label" = "Universalt unik identitet (adressområde)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidadrpl"
+fields = { "label" = "Universalt unik identitet (adressplats)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuiddistrikt"
+fields = { "label" = "Universalt unik identitet (distrikt)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidentre"
+fields = { "label" = "Universalt unik identitet (entré)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidgard"
+fields = { "label" = "Universalt unik identitet (gårdsadressområde)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-berorsav"
+fields = { "label" = "Universalt unik identitet (3D-utrymme eller ägarlägenhetsfastighet)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-liggerpa"
+fields = { "label" = "Universalt unik identitet (fastighet eller samfällighet som registerbyggnaden ligger på)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:uuidregenh-tillhor"
+fields = { "label" = "Universalt unik identitet (fastighet, samfällighet eller gemensamhetsanläggning som byggnaden tillhör)" }
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (26 variables): judged different meaning, medium confidence; Opdefs show 26 UUIDs each referring to a different register object; IRFAST is referenced by three concurrent columns with identical opdefs, told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeardat"
+fields = { "label" = "Kvalitetsmärkning, datum (värdeår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, datum' (25 variables): judged different meaning, high confidence; One quality-mark date column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...); KDAT has no opdef and is told apart by its table."
+
+[[statement]]
+kind = "set"
+subject = "var:vardearursp"
+fields = { "label" = "Kvalitetsmärkning, ursprung (värdeår)" }
+evidence = "#2102 same-label cluster 'Kvalitetsmärkning, ursprung' (25 variables): judged different meaning, high confidence; One quality-mark origin column per attribute; opdefs name the attribute (adress, byggnad, lägenhet, kök, area, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:versionsnr-fastighetsreg"
+fields = { "label" = "Versionsnummer fastighetsreg. (adressplats och byggnad)" }
+evidence = "#2102 same-label cluster 'Versionsnummer fastighetsreg.' (2 variables): judged different meaning, medium confidence; VERNR is in adressplats- and byggnadsinformation, VERSION in inskrivningsinformation: version numbers of different register posts."
+
+[[statement]]
+kind = "set"
+subject = "var:versionsnummer-fastighetsreg-version"
+fields = { "label" = "Versionsnummer fastighetsreg. (inskrivning)" }
+evidence = "#2102 same-label cluster 'Versionsnummer fastighetsreg.' (2 variables): judged different meaning, medium confidence; VERNR is in adressplats- and byggnadsinformation, VERSION in inskrivningsinformation: version numbers of different register posts."

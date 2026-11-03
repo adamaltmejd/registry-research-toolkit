@@ -30816,3 +30816,921 @@ kind = "set"
 subject = "set:yrke"
 fields = { "label" = "Yrke" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (individ)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALD is in individregister and related person tables, BALDZ only in kosthushallsregister, with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-baldz"
+fields = { "label" = "Ålder 31/12 (kosthushållsregister)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, medium confidence; BALD is in individregister and related person tables, BALDZ only in kosthushallsregister, with different value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod"
+fields = { "label" = "Äldreförsörjningsstöd (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Äldreförsörjningsstöd' (2 variables): judged different meaning, high confidence; IALDFH opdef says summed on the family household; IALDF is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod-ialdf"
+fields = { "label" = "Äldreförsörjningsstöd (individ)" }
+evidence = "#2102 same-label cluster 'Äldreförsörjningsstöd' (2 variables): judged different meaning, high confidence; IALDFH opdef says summed on the family household; IALDF is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-med-underhallsstod-mottaget-bmani"
+fields = { "label" = "Antal mån med underhållsstöd mottaget (individregister)" }
+evidence = "#2102 same-label cluster 'Antal mån med underhållsstöd mottaget' (2 variables): judged different meaning, medium confidence; BMANI is in the individual register, BBAMANI in the child register (overlap 2016-2017); no opdef, unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-underhallsstod-mottaget"
+fields = { "label" = "Antal mån med underhållsstöd mottaget (barnregister)" }
+evidence = "#2102 same-label cluster 'Antal mån med underhållsstöd mottaget' (2 variables): judged different meaning, medium confidence; BMANI is in the individual register, BBAMANI in the child register (overlap 2016-2017); no opdef, unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-i-sverige"
+fields = { "label" = "Antal månader i Sverige (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Antal månader i Sverige' (2 variables): judged different meaning, medium confidence; BANTMANH is in the family household register, BANTMAN in the individual register (opdef: months an immigrant has been in the country)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-i-sverige-bantman"
+fields = { "label" = "Antal månader i Sverige (individ)" }
+evidence = "#2102 same-label cluster 'Antal månader i Sverige' (2 variables): judged different meaning, medium confidence; BANTMANH is in the family household register, BANTMAN in the individual register (opdef: months an immigrant has been in the country)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vaxelvis-boende-barn-0-19-ar"
+fields = { "label" = "Antal växelvis boende barn, 0-19 år (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Antal växelvis boende barn, 0-19 år' (2 variables): judged different meaning, medium confidence; BANTBVXHB is in the dwelling household register, BVXLBRN in the individual register; unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vaxelvis-boende-barn-0-19-ar-bvxlbrn"
+fields = { "label" = "Antal växelvis boende barn, 0-19 år (individ)" }
+evidence = "#2102 same-label cluster 'Antal växelvis boende barn, 0-19 år' (2 variables): judged different meaning, medium confidence; BANTBVXHB is in the dwelling household register, BVXLBRN in the individual register; unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst"
+fields = { "label" = "Arbetsinkomst (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): judged different meaning, medium confidence; CARBH is in the family household register, CARB in the individual register; same sum definition, different unit."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst-carb"
+fields = { "label" = "Arbetsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): judged different meaning, medium confidence; CARBH is in the family household register, CARB in the individual register; same sum definition, different unit."
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-omradestyp-bsocomr"
+fields = { "label" = "Bakgrund: områdestyp (individ)" }
+evidence = "#2102 same-label cluster 'Bakgrund: områdestyp' (3 variables): judged different meaning, medium confidence; BSOCOMR, BSOCOMRH and BSOCOMRHB are in the individual, family household and dwelling household registers."
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-omradestyp-bsocomrh"
+fields = { "label" = "Bakgrund: områdestyp (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Bakgrund: områdestyp' (3 variables): judged different meaning, medium confidence; BSOCOMR, BSOCOMRH and BSOCOMRHB are in the individual, family household and dwelling household registers."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-med-umgangesratt"
+fields = { "label" = "Antal barn med umgängesrätt (individ)" }
+evidence = "#2102 same-label cluster 'Antal barn med umgängesrätt' (2 variables): judged different meaning, high confidence; Opdefs: BUMGBRN refers to the individual, BUMGBRNH to the household."
+
+[[statement]]
+kind = "set"
+subject = "var:begshb"
+fields = { "label" = "Hushållstyp (vuxna i bostadshushållet)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged different meaning, medium confidence; BEGSHB classifies the adults in the dwelling household, BHT9HB (opdef: derived from RTB, different age limit for children) the household composition, BHTYPHB (opdef: household type per RTB/IOT) a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bht9hb"
+fields = { "label" = "Hushållstyp (BHT9HB)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged different meaning, medium confidence; BEGSHB classifies the adults in the dwelling household, BHT9HB (opdef: derived from RTB, different age limit for children) the household composition, BHTYPHB (opdef: household type per RTB/IOT) a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bktyp3"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (individ)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st' (3 variables): judged different meaning, medium confidence; BKTYP3 (individ), BKTYP3H (family household) and BKTYP3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:bktyp6"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (individ)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st' (3 variables): judged different meaning, medium confidence; BKTYP6 (individ), BKTYP6H (family household) and BKTYP6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:bkuinst"
+fields = { "label" = "Institutionell sektorkod (enbart FDB, juridiska enheter)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (2 variables): judged different meaning, medium confidence; Opdefs: BINST is derived from FDB and the kontrolluppgiftsregister, BKUINST only from FDB legal units; different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:blk"
+fields = { "label" = "Kommun (BLK, kommunkod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; BLK is the municipality code in four registers; BKOMMUN (individual register 2011-2013) has opdef 'folkbokförd vid urvalstillfället' and a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bngr"
+fields = { "label" = "Näringsgren för individ (kontrolluppgifter och Företagsdatabasen)" }
+evidence = "#2102 same-label cluster 'Näringsgren för individ' (2 variables): judged different meaning, high confidence; Opdefs: BNGR combines the kontrolluppgiftsregister (LSUM) and the business register, BKUNGR only the kontrolluppgiftsregister."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-familjehushall"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (3 variables): judged different meaning, high confidence; Opdefs: IBOSTBH is summed on the family household, IBOSTB refers to the individual, IBOSTBU is split on applicant and co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-mfl"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (individ)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (3 variables): judged different meaning, high confidence; Opdefs: IBOSTBH is summed on the family household, IBOSTB refers to the individual, IBOSTBU is split on applicant and co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-sokande-medsokande"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (fördelat på sökande och medsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (3 variables): judged different meaning, high confidence; Opdefs: IBOSTBH is summed on the family household, IBOSTB refers to the individual, IBOSTBU is split on applicant and co-applicant."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-varnpliktiga"
+fields = { "label" = "Bostadsbidrag till värnpliktiga (individ)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag till värnpliktiga' (2 variables): judged different meaning, high confidence; Opdefs: IBOSTVP refers to the individual, IBOSTVPU is split by RTB family."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-varnpliktiga-rtb-familj"
+fields = { "label" = "Bostadsbidrag till värnpliktiga (uppdelat enligt RTB-familj)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag till värnpliktiga' (2 variables): judged different meaning, high confidence; Opdefs: IBOSTVP refers to the individual, IBOSTVPU is split by RTB family."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-for-personer-med-sjuk-och-ibtpsah"
+fields = { "label" = "Bostadstillägg för personer med sjuk- och aktivitetsersättning (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, medium confidence; IBTPSA is in the individual register, IBTPSAH in the family household register."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-sjuk-aktivitet"
+fields = { "label" = "Bostadstillägg för personer med sjuk- och aktivitetsersättning (individ)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, medium confidence; IBTPSA is in the individual register, IBTPSAH in the family household register."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer"
+fields = { "label" = "Bostadstillägg till pensionärer (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (2 variables): judged different meaning, high confidence; Opdef: IBTPAPH is summed on the family household; IBTPAP is in the individual register."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtpap"
+fields = { "label" = "Bostadstillägg till pensionärer (individ)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (2 variables): judged different meaning, high confidence; Opdef: IBTPAPH is summed on the family household; IBTPAP is in the individual register."
+
+[[statement]]
+kind = "set"
+subject = "var:boyta-i-kvadratmeter"
+fields = { "label" = "Boyta i kvadratmeter (hushåll, BBOYTAHB)" }
+evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judged different meaning, medium confidence; BBOSTYT is in the individual register (opdef: derived in FASIT from property tax or apartment register); BBOYTAZ (to 2014) and BBOYTAHB (from 2014) follow each other as the household-level area."
+
+[[statement]]
+kind = "set"
+subject = "var:boyta-i-kvadratmeter-bbostyt"
+fields = { "label" = "Boyta i kvadratmeter (individ)" }
+evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judged different meaning, medium confidence; BBOSTYT is in the individual register (opdef: derived in FASIT from property tax or apartment register); BBOYTAZ (to 2014) and BBOYTAHB (from 2014) follow each other as the household-level area."
+
+[[statement]]
+kind = "set"
+subject = "var:boyta-i-kvadratmeter-bboytaz"
+fields = { "label" = "Boyta i kvadratmeter (hushåll, BBOYTAZ)" }
+evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judged different meaning, medium confidence; BBOSTYT is in the individual register (opdef: derived in FASIT from property tax or apartment register); BBOYTAZ (to 2014) and BBOYTAHB (from 2014) follow each other as the household-level area."
+
+[[statement]]
+kind = "set"
+subject = "var:bslump"
+fields = { "label" = "Rektangulärfördelat slumptal (antal månader med ekonomiskt bistånd)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:bslumpia"
+fields = { "label" = "Rektangulärfördelat slumptal (simulering äldreförsörjningsstöd)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:bslumps"
+fields = { "label" = "Rektangulärfördelat slumptal (simulering ekonomiskt bistånd)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:bumgbrnh"
+fields = { "label" = "Antal barn med umgängesrätt (hushåll)" }
+evidence = "#2102 same-label cluster 'Antal barn med umgängesrätt' (2 variables): judged different meaning, high confidence; Opdefs: BUMGBRN refers to the individual, BUMGBRNH to the household."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "label" = "Ekonomiskt bistånd (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, medium confidence; ISOCB is in the individual register, ISOCBH in the family household register; same description, different unit."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-isocb"
+fields = { "label" = "Ekonomiskt bistånd (individ)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, medium confidence; ISOCB is in the individual register, ISOCBH in the family household register; same description, different unit."
+
+[[statement]]
+kind = "set"
+subject = "var:fa-region-grupperad-3"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 3 st (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 3 st' (3 variables): judged different meaning, medium confidence; BFAREG3 (individ), BFAREG3H (family household) and BFAREG3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:fa-region-grupperad-6"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 6 st (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 6 st' (3 variables): judged different meaning, medium confidence; BFAREG6 (individ), BFAREG6H (family household) and BFAREG6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:familjebidrag-varnpliktiga"
+fields = { "label" = "Familjebidrag till värnpliktiga (individ)" }
+evidence = "#2102 same-label cluster 'Familjebidrag till värnpliktiga' (2 variables): judged different meaning, high confidence; Opdefs: IFAMVP refers to the individual, IFAMVPU is split by RTB family."
+
+[[statement]]
+kind = "set"
+subject = "var:familjebidrag-varnpliktiga-rtb-familj"
+fields = { "label" = "Familjebidrag till värnpliktiga (uppdelat enligt RTB-familj)" }
+evidence = "#2102 same-label cluster 'Familjebidrag till värnpliktiga' (2 variables): judged different meaning, high confidence; Opdefs: IFAMVP refers to the individual, IFAMVPU is split by RTB family."
+
+[[statement]]
+kind = "set"
+subject = "var:fkuofo"
+fields = { "label" = "Övriga fonder (LAA8), deklarationsvärde" }
+evidence = "#2102 same-label cluster 'Övriga fonder (LAA8)' (2 variables): judged different meaning, high confidence; Opdefs: FKUOFO is deklarationsvärde, FKUOFOT is deklarationsvärde föregående år; concurrent 2006-2008."
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokford-kommun"
+fields = { "label" = "Kommun (BKOMMUN, folkbokförd vid urvalstillfället)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; BLK is the municipality code in four registers; BKOMMUN (individual register 2011-2013) has opdef 'folkbokförd vid urvalstillfället' and a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner"
+fields = { "label" = "Funktionella analysregioner (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner' (2 variables): judged different meaning, medium confidence; BFAREGH is in the family household register, BFAREG in the individual register; same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-bfareg"
+fields = { "label" = "Funktionella analysregioner (individ)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner' (2 variables): judged different meaning, medium confidence; BFAREGH is in the family household register, BFAREG in the individual register; same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grov"
+fields = { "label" = "Funktionella analysregioner, grov indelning (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grov indelning' (3 variables): judged different meaning, medium confidence; BFAGREG (individ), BFAGREGH (family household) and BFAGREGHB (dwelling household) read from the column suffixes."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grov-indelning-bfagreg"
+fields = { "label" = "Funktionella analysregioner, grov indelning (individ)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grov indelning' (3 variables): judged different meaning, medium confidence; BFAGREG (individ), BFAGREGH (family household) and BFAGREGHB (dwelling household) read from the column suffixes."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grov-indelning-bfagregh"
+fields = { "label" = "Funktionella analysregioner, grov indelning (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grov indelning' (3 variables): judged different meaning, medium confidence; BFAGREG (individ), BFAGREGH (family household) and BFAGREGHB (dwelling household) read from the column suffixes."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grupperad-fa-region-2021-bfareg3"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 3 st (individ)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 3 st' (3 variables): judged different meaning, medium confidence; BFAREG3 (individ), BFAREG3H (family household) and BFAREG3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grupperad-fa-region-2021-bfareg6"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 6 st (individ)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 6 st' (3 variables): judged different meaning, medium confidence; BFAREG6 (individ), BFAREG6H (family household) and BFAREG6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grupperad-fa-region-bfareg3h"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 3 st (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 3 st' (3 variables): judged different meaning, medium confidence; BFAREG3 (individ), BFAREG3H (family household) and BFAREG3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:funktionella-analysregioner-grupperad-fa-region-bfareg6h"
+fields = { "label" = "Funktionella analysregioner, grupperad FA-region 2021, 6 st (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Funktionella analysregioner, grupperad FA-region 2021, 6 st' (3 variables): judged different meaning, medium confidence; BFAREG6 (individ), BFAREG6H (family household) and BFAREG6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-ersattning-statlig-assistans"
+fields = { "label" = "Hushåll som har ersättningar för statlig assistans (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har ersättningar för statlig assistans' (2 variables): judged different meaning, medium confidence; BFUNKASSHB is in the dwelling household register, BFUNKASSH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-insats-funktionsnedsattning"
+fields = { "label" = "Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans' (2 variables): judged different meaning, medium confidence; BFUNKHB is in the dwelling household register, BFUNKH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-insats-hemtjanst-yngre"
+fields = { "label" = "Hushåll som har insats hemtjänst för yngre (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats hemtjänst för yngre' (2 variables): judged different meaning, medium confidence; BFUNKHTJHB is in the dwelling household register, BFUNKHTJH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-insats-lss-boende"
+fields = { "label" = "Hushåll som har insats LSS boende (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats LSS boende' (2 variables): judged different meaning, medium confidence; BFUNKLSSBOHB is in the dwelling household register, BFUNKLSSBOH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-insats-lss-ovrigt"
+fields = { "label" = "Hushåll som har insats LSS övrigt (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats LSS övrigt' (2 variables): judged different meaning, medium confidence; BFUNKLSSHB is in the dwelling household register, BFUNKLSSH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-merkostnadsersattning"
+fields = { "label" = "Hushåll som har merkostnadsersättning (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har merkostnadsersättning' (2 variables): judged different meaning, medium confidence; BFUNKMEKHB is in the dwelling household register, BFUNKMEKH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-ersattningar-for-statlig-bfunkassh-2"
+fields = { "label" = "Hushåll som har ersättningar för statlig assistans (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har ersättningar för statlig assistans' (2 variables): judged different meaning, medium confidence; BFUNKASSHB is in the dwelling household register, BFUNKASSH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-insats-hemtjanst-for-yngre-bfunkhtjh"
+fields = { "label" = "Hushåll som har insats hemtjänst för yngre (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats hemtjänst för yngre' (2 variables): judged different meaning, medium confidence; BFUNKHTJHB is in the dwelling household register, BFUNKHTJH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-insats-lss-boende-bfunklssboh"
+fields = { "label" = "Hushåll som har insats LSS boende (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats LSS boende' (2 variables): judged different meaning, medium confidence; BFUNKLSSBOHB is in the dwelling household register, BFUNKLSSBOH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-insats-lss-ovrigt-bfunklssh"
+fields = { "label" = "Hushåll som har insats LSS övrigt (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insats LSS övrigt' (2 variables): judged different meaning, medium confidence; BFUNKLSSHB is in the dwelling household register, BFUNKLSSH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-insatser-och-ersattningar-relaterade-bfunkh"
+fields = { "label" = "Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans' (2 variables): judged different meaning, medium confidence; BFUNKHB is in the dwelling household register, BFUNKH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-merkostnadsersattning-bfunkmekh"
+fields = { "label" = "Hushåll som har merkostnadsersättning (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Hushåll som har merkostnadsersättning' (2 variables): judged different meaning, medium confidence; BFUNKMEKHB is in the dwelling household register, BFUNKMEKH in the family household register; same yes/no codes."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-hb"
+fields = { "label" = "Hushållstyp (BHTYPHB)" }
+evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged different meaning, medium confidence; BEGSHB classifies the adults in the dwelling household, BHT9HB (opdef: derived from RTB, different age limit for children) the household composition, BHTYPHB (opdef: household type per RTB/IOT) a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "label" = "Institutionell sektorkod (FDB och kontrolluppgiftsregistret)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (2 variables): judged different meaning, medium confidence; Opdefs: BINST is derived from FDB and the kontrolluppgiftsregister, BKUINST only from FDB legal units; different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:katomboh"
+fields = { "label" = "Tomträttsavgäld (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (3 variables): judged different meaning, medium confidence; KATOMBOH is in familjehushallsregister; KATOMT and KKUTOMT are concurrent individregister columns whose opdefs only say they are identical to each other, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:katomt"
+fields = { "label" = "Tomträttsavgäld (KATOMT)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (3 variables): judged different meaning, medium confidence; KATOMBOH is in familjehushallsregister; KATOMT and KKUTOMT are concurrent individregister columns whose opdefs only say they are identical to each other, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kkutomt"
+fields = { "label" = "Tomträttsavgäld (KKUTOMT)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (3 variables): judged different meaning, medium confidence; KATOMBOH is in familjehushallsregister; KATOMT and KKUTOMT are concurrent individregister columns whose opdefs only say they are identical to each other, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "label" = "Kommungruppsindelning (2017, bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-2011"
+fields = { "label" = "Kommungruppsindelning 2011 (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning 2011' (3 variables): judged different meaning, medium confidence; BKREG is in the individual register, BKREGZ in the food household register, BKREGHB in the dwelling household register; all the 2011 SKL classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-2011-bkreg"
+fields = { "label" = "Kommungruppsindelning 2011 (individ)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning 2011' (3 variables): judged different meaning, medium confidence; BKREG is in the individual register, BKREGZ in the food household register, BKREGHB in the dwelling household register; all the 2011 SKL classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-2011-bkregz"
+fields = { "label" = "Kommungruppsindelning (kosthushåll, BKREGZ)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning 2011' (3 variables): judged different meaning, medium confidence; BKREG is in the individual register, BKREGZ in the food household register, BKREGHB in the dwelling household register; all the 2011 SKL classification."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkreg17"
+fields = { "label" = "Kommungruppsindelning (2017, individ)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkreg17h"
+fields = { "label" = "Kommungruppsindelning (2017, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkreg23"
+fields = { "label" = "Kommungruppsindelning (2023, individ)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkreg23h"
+fields = { "label" = "Kommungruppsindelning (2023, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkreg23hb"
+fields = { "label" = "Kommungruppsindelning (2023, bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppsindelning-bkregh"
+fields = { "label" = "Kommungruppsindelning (2005 och 2011, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (individ)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Opdefs: BKON is the individual's sex, BKONZ the food-household head's sex."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkonz"
+fields = { "label" = "Kön (kosthushållsföreståndare)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Opdefs: BKON is the individual's sex, BKONZ the food-household head's sex."
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhet-2004"
+fields = { "label" = "Konsumtionsenhet enligt 2004 års definition (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Konsumtionsenhet enligt 2004 års definition' (2 variables): judged different meaning, medium confidence; BKE04H is in the family household register, BKE04HB in the dwelling household register."
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhet-enligt-2004-ars-definition-bke04h"
+fields = { "label" = "Konsumtionsenhet enligt 2004 års definition (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Konsumtionsenhet enligt 2004 års definition' (2 variables): judged different meaning, medium confidence; BKE04H is in the family household register, BKE04HB in the dwelling household register."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "label" = "Län-kommun-församling (individ)" }
+evidence = "#2102 same-label cluster 'Län-kommun-församling' (2 variables): judged different meaning, medium confidence; BLKF is in the individual register (2010-2015), BLK in the dwelling household register (2014-2015); unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling-blk"
+fields = { "label" = "Län-kommun-församling (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Län-kommun-församling' (2 variables): judged different meaning, medium confidence; BLKF is in the individual register (2010-2015), BLK in the dwelling household register (2014-2015); unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader"
+fields = { "label" = "Lokala arbetsmarknader (indelning från 2009, bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-bla03reg"
+fields = { "label" = "Lokala arbetsmarknader (indelning 2003, individ)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-bla03regh"
+fields = { "label" = "Lokala arbetsmarknader (indelning 2003, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-bla03regz"
+fields = { "label" = "Lokala arbetsmarknader (indelning 2003, kosthushåll)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-blareg"
+fields = { "label" = "Lokala arbetsmarknader (indelning från 2009, individ)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-blaregh"
+fields = { "label" = "Lokala arbetsmarknader (indelning från 2009, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:lokala-arbetsmarknader-blaregz"
+fields = { "label" = "Lokala arbetsmarknader (indelning från 2009, kosthushåll)" }
+evidence = "#2102 same-label cluster 'Lokala arbetsmarknader' (7 variables): judged different meaning, medium confidence; BLA03REG* use the 2003 delineation (2006-2009) and BLAREG* a later one (from 2009) with a different code list, each for individual, family household, food household or dwelling household."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-individ-kontrolluppgiftsregistret"
+fields = { "label" = "Näringsgren för individ (kontrolluppgiftsregistret)" }
+evidence = "#2102 same-label cluster 'Näringsgren för individ' (2 variables): judged different meaning, high confidence; Opdefs: BNGR combines the kontrolluppgiftsregister (LSUM) and the business register, BKUNGR only the kontrolluppgiftsregister."
+
+[[statement]]
+kind = "set"
+subject = "var:omradestyp"
+fields = { "label" = "Bakgrund: områdestyp (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Bakgrund: områdestyp' (3 variables): judged different meaning, medium confidence; BSOCOMR, BSOCOMRH and BSOCOMRHB are in the individual, family household and dwelling household registers."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-fonder-ej-rantefonder-deklarationsvarde-foregaende-ar"
+fields = { "label" = "Övriga fonder (LAA8), deklarationsvärde föregående år" }
+evidence = "#2102 same-label cluster 'Övriga fonder (LAA8)' (2 variables): judged different meaning, high confidence; Opdefs: FKUOFO is deklarationsvärde, FKUOFOT is deklarationsvärde föregående år; concurrent 2006-2008."
+
+[[statement]]
+kind = "set"
+subject = "var:psep"
+fields = { "label" = "Särskild efterlevandepension (inklusive garantipension)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (2 variables): judged different meaning, medium confidence; PSEP opdef sums garantipension to särskild efterlevandepension plus the pension itself; PIGRSEP opdef says individual figure from Pensionsmyndigheten."
+
+[[statement]]
+kind = "set"
+subject = "var:regionala-statistikomraden-regso-bregso"
+fields = { "label" = "Regionala statistikområden (RegSO) (individ)" }
+evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (3 variables): judged different meaning, medium confidence; BREGSO (individ), BREGSOH (family household) and BREGSOHB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionala-statistikomraden-regso-bregsoh"
+fields = { "label" = "Regionala statistikområden (RegSO) (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (3 variables): judged different meaning, medium confidence; BREGSO (individ), BREGSOH (family household) and BREGSOHB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning"
+fields = { "label" = "Regionindelning (FA-region, bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning' (4 variables): judged different meaning, medium confidence; BHREG/BHREGH hold the H-region (individual and family household), BFAREGZ/BFAREGHB the FA-region (food household and dwelling household); distinguished by value sets and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-bfaregz"
+fields = { "label" = "Regionindelning (FA-region, kosthushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning' (4 variables): judged different meaning, medium confidence; BHREG/BHREGH hold the H-region (individual and family household), BFAREGZ/BFAREGHB the FA-region (food household and dwelling household); distinguished by value sets and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-bhreg"
+fields = { "label" = "Regionindelning (H-region, individ)" }
+evidence = "#2102 same-label cluster 'Regionindelning' (4 variables): judged different meaning, medium confidence; BHREG/BHREGH hold the H-region (individual and family household), BFAREGZ/BFAREGHB the FA-region (food household and dwelling household); distinguished by value sets and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-bhregh"
+fields = { "label" = "Regionindelning (H-region, familjehushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning' (4 variables): judged different meaning, medium confidence; BHREG/BHREGH hold the H-region (individual and family household), BFAREGZ/BFAREGHB the FA-region (food household and dwelling household); distinguished by value sets and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp3h"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st' (3 variables): judged different meaning, medium confidence; BKTYP3 (individ), BKTYP3H (family household) and BKTYP3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp3hb"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st' (3 variables): judged different meaning, medium confidence; BKTYP3 (individ), BKTYP3H (family household) and BKTYP3HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp6h"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st' (3 variables): judged different meaning, medium confidence; BKTYP6 (individ), BKTYP6H (family household) and BKTYP6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp6hb"
+fields = { "label" = "Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st' (3 variables): judged different meaning, medium confidence; BKTYP6 (individ), BKTYP6H (family household) and BKTYP6HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-h-region"
+fields = { "label" = "Regionindelning, H-region enligt SCB (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning, H-region enligt SCB' (2 variables): judged different meaning, medium confidence; BHREGZ is in the food household register (2007-2014), BHREG in the property register (2010-2011); unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-h-region-enligt-scb-bhreg"
+fields = { "label" = "Regionindelning, H-region enligt SCB (fastighet)" }
+evidence = "#2102 same-label cluster 'Regionindelning, H-region enligt SCB' (2 variables): judged different meaning, medium confidence; BHREGZ is in the food household register (2007-2014), BHREG in the property register (2010-2011); unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2"
+fields = { "label" = "Regionindelning NUTS2, 8 st (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning NUTS2, 8 st' (4 variables): judged different meaning, medium confidence; BNUTS2 (individ), BNUTS2H (family household), BNUTS2Z (food household) and BNUTS2HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2-8-st-bnuts2"
+fields = { "label" = "Regionindelning NUTS2, 8 st (individ)" }
+evidence = "#2102 same-label cluster 'Regionindelning NUTS2, 8 st' (4 variables): judged different meaning, medium confidence; BNUTS2 (individ), BNUTS2H (family household), BNUTS2Z (food household) and BNUTS2HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2-8-st-bnuts2h"
+fields = { "label" = "Regionindelning NUTS2, 8 st (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning NUTS2, 8 st' (4 variables): judged different meaning, medium confidence; BNUTS2 (individ), BNUTS2H (family household), BNUTS2Z (food household) and BNUTS2HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2-8-st-bnuts2z"
+fields = { "label" = "Regionindelning NUTS2, 8 st (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Regionindelning NUTS2, 8 st' (4 variables): judged different meaning, medium confidence; BNUTS2 (individ), BNUTS2H (family household), BNUTS2Z (food household) and BNUTS2HB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:regso"
+fields = { "label" = "Regionala statistikområden (RegSO) (bostadshushåll)" }
+evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (3 variables): judged different meaning, medium confidence; BREGSO (individ), BREGSOH (family household) and BREGSOHB (dwelling household) read from the column suffixes and registers."
+
+[[statement]]
+kind = "set"
+subject = "var:renodlad-foretagare"
+fields = { "label" = "Renodlad företagare (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Renodlad företagare' (2 variables): judged different meaning, medium confidence; BRFORH is in the family household register, BRFOR in the individual register (opdef: derived from incomes)."
+
+[[statement]]
+kind = "set"
+subject = "var:renodlad-foretagare-brfor"
+fields = { "label" = "Renodlad företagare (individ)" }
+evidence = "#2102 same-label cluster 'Renodlad företagare' (2 variables): judged different meaning, medium confidence; BRFORH is in the family household register, BRFOR in the individual register (opdef: derived from incomes)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-efterlevandepension"
+fields = { "label" = "Särskild efterlevandepension (från Pensionsmyndigheten)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (2 variables): judged different meaning, medium confidence; PSEP opdef sums garantipension to särskild efterlevandepension plus the pension itself; PIGRSEP opdef says individual figure from Pensionsmyndigheten."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-for-pensionarer-ibtpsap"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer (individ)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; IBTPSAPH is in familjehushallsregister with opdef summed on the family household; IBTPSAP is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-for-personer-med-sjuk-och-ibtpssa"
+fields = { "label" = "Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning (individ)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, high confidence; IBTPSSAH is in familjehushallsregister with opdef summed on the family household; IBTPSSA is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-pensionarer"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; IBTPSAPH is in familjehushallsregister with opdef summed on the family household; IBTPSAP is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-sjuk-akt"
+fields = { "label" = "Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning' (2 variables): judged different meaning, high confidence; IBTPSSAH is in familjehushallsregister with opdef summed on the family household; IBTPSSA is in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenningdagar-sjukfallet"
+fields = { "label" = "Totala antalet sjukpenningdagar i sjukfallet (BSJPDAG)" }
+evidence = "#2102 same-label cluster 'Totala antalet sjukpenningdagar i sjukfallet' (2 variables): judged different meaning, low confidence; BSJPDAG and BSPDAG are concurrent 2008-2011 in sjukpenningsregister with the same definition and no opdef; nothing but the column code separates them (possibly a duplicate)."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-livranta-pension"
+fields = { "label" = "Skattefri del av livränta och pension (PKUSLSF)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-livranta-pension-2"
+fields = { "label" = "Skattefri del av livränta och pension (minus barnpension och efterlevandestöd till barn)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-livranta-pension-3"
+fields = { "label" = "Skattefri del av livränta och pension (PSLSF)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
+
+[[statement]]
+kind = "set"
+subject = "var:slumptal-bostadsbidrag-familj-med-bostadstillagg"
+fields = { "label" = "Rektangulärfördelat slumptal (simulering bostadsbidrag, familj med bostadstillägg)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:slumptal-simulering-bostadsbidrag"
+fields = { "label" = "Rektangulärfördelat slumptal (simulering bostadsbidrag)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:slumptal-simulering-bostadstillagg"
+fields = { "label" = "Rektangulärfördelat slumptal (simulering bostadstillägg)" }
+evidence = "#2102 same-label cluster 'Rektangulärfördelat slumptal' (6 variables): judged different meaning, high confidence; Opdefs: six random numbers, each used for a different simulation (months of economic assistance, economic assistance, housing allowance, old-age support, housing allowance with housing supplement, housing supplement)."
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp-antal-manader-med-studiebidrag-bishbi"
+fields = { "label" = "Studiehjälp, antal månader med studiebidrag (individregister)" }
+evidence = "#2102 same-label cluster 'Studiehjälp, antal månader med studiebidrag' (2 variables): judged different meaning, medium confidence; BISHBI is in the individual register, BBAISHBI in the child register; unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:studiehjalp-manader-studiebidrag"
+fields = { "label" = "Studiehjälp, antal månader med studiebidrag (barnregister)" }
+evidence = "#2102 same-label cluster 'Studiehjälp, antal månader med studiebidrag' (2 variables): judged different meaning, medium confidence; BISHBI is in the individual register, BBAISHBI in the child register; unit read from the register."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg"
+fields = { "label" = "Summa bostadstillägg (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, high confidence; Opdefs: IBTPH is summed on the family household, IBTP is in the individual register."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg-ibtp"
+fields = { "label" = "Summa bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, high confidence; Opdefs: IBTPH is summed on the family household, IBTP is in the individual register."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg"
+fields = { "label" = "Summa särskilt bostadstillägg (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, high confidence; Opdef of IBTPSH says summed on the family household, IBTPS is the individual-level column in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg-ibtps"
+fields = { "label" = "Summa särskilt bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, high confidence; Opdef of IBTPSH says summed on the family household, IBTPS is the individual-level column in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-antalet-sjukpenningdagar-i-sjukfallet-bspdag"
+fields = { "label" = "Totala antalet sjukpenningdagar i sjukfallet (BSPDAG)" }
+evidence = "#2102 same-label cluster 'Totala antalet sjukpenningdagar i sjukfallet' (2 variables): judged different meaning, low confidence; BSJPDAG and BSPDAG are concurrent 2008-2011 in sjukpenningsregister with the same definition and no opdef; nothing but the column code separates them (possibly a duplicate)."
+
+[[statement]]
+kind = "set"
+subject = "var:ukufack"
+fields = { "label" = "Underlag för skattereduktion för fackföreningsavgift (UKUFACK)" }
+evidence = "#2102 same-label cluster 'Underlag för skattereduktion för fackföreningsavgift' (2 variables): judged different meaning, low confidence; UFACK and UKUFACK are concurrent 2018-2020 in individregister with no opdef, description or value set; only the column code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-allman-loneavgift-hela-perioden"
+fields = { "label" = "Underlag för beräkning av löneavgift (ALONE)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases for the general wage fee."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-allman-loneavgift-januari-april"
+fields = { "label" = "Underlag för beräkning av löneavgift (allmän, 1 januari–30 april)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases for the general wage fee."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-allman-loneavgift-maj-juli"
+fields = { "label" = "Underlag för beräkning av löneavgift (allmän, 1 maj–31 juli)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases for the general wage fee."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsmarknadsavgift"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (föregående år)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsmarknadsavgift-hela-perioden"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (AAMAVG)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsmarknadsavgift-januari-april"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (1 januari–30 april)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsmarknadsavgift-maj-juli"
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (1 maj–31 juli)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-efterlevande-pensionsavgift"
+fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (AEPAVG)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av efterlevande pensionsavgift' (4 variables): judged different meaning, medium confidence; Opdefs separate whole period, 1 Jan-30 Apr and 1 May-31 Jul bases; AEPAVGX has a birth-year-dependent rate (1,70 % / 0,85 %) in 2009-2010 that none of the others describe."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-efterlevande-pensionsavgift-x"
+fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (sats efter födelseår, AEPAVGX)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av efterlevande pensionsavgift' (4 variables): judged different meaning, medium confidence; Opdefs separate whole period, 1 Jan-30 Apr and 1 May-31 Jul bases; AEPAVGX has a birth-year-dependent rate (1,70 % / 0,85 %) in 2009-2010 that none of the others describe."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-efterlevandepensionsavgift-januari-april"
+fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (1 januari–30 april)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av efterlevande pensionsavgift' (4 variables): judged different meaning, medium confidence; Opdefs separate whole period, 1 Jan-30 Apr and 1 May-31 Jul bases; AEPAVGX has a birth-year-dependent rate (1,70 % / 0,85 %) in 2009-2010 that none of the others describe."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-efterlevandepensionsavgift-maj-juli"
+fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (1 maj–31 juli)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av efterlevande pensionsavgift' (4 variables): judged different meaning, medium confidence; Opdefs separate whole period, 1 Jan-30 Apr and 1 May-31 Jul bases; AEPAVGX has a birth-year-dependent rate (1,70 % / 0,85 %) in 2009-2010 that none of the others describe."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-loneavgift"
+fields = { "label" = "Underlag för beräkning av löneavgift (allmän, föregående år)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases for the general wage fee."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-fackavgift"
+fields = { "label" = "Underlag för skattereduktion för fackföreningsavgift (UFACK)" }
+evidence = "#2102 same-label cluster 'Underlag för skattereduktion för fackföreningsavgift' (2 variables): judged different meaning, low confidence; UFACK and UKUFACK are concurrent 2018-2020 in individregister with no opdef, description or value set; only the column code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning"
+fields = { "label" = "Yrkesställning (familjehushåll)" }
+evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, high confidence; BYRKSTH is in familjehushallsregister (H suffix), BYRKST in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-byrkst"
+fields = { "label" = "Yrkesställning (individ)" }
+evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, high confidence; BYRKSTH is in familjehushallsregister (H suffix), BYRKST in individregister."

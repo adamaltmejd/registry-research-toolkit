@@ -1618,3 +1618,21 @@ kind = "set"
 subject = "set:utskrivningsdatum"
 fields = { "label" = "Utskrivningsdatum" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "label" = "Inrapporterad klinikkod (inskriven vid inventeringstidpunkten)" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: klinik där patienten varit inskriven respektive där patienten är inskriven vid inventeringstidpunkten."
+
+[[statement]]
+kind = "set"
+subject = "var:lt-klin"
+fields = { "label" = "Inrapporterad klinikkod (där patienten varit inskriven)" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: klinik där patienten varit inskriven respektive där patienten är inskriven vid inventeringstidpunkten."
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring-1"
+fields = { "label" = "Senaste invandring (SENINV1)" }
+evidence = "#2102 same-label cluster 'Senaste invandring' (2 variables): judged different meaning, low confidence; SENINV och SENINV1 löper samtidigt 2015-2016 i par-sv; definitionen nämner två datumformat men inte vilken kolumn som har vilket, så rå kolumnkod används."

@@ -700,3 +700,33 @@ kind = "set"
 subject = "set:utbildningsatgard"
 fields = { "label" = "Utbildningsåtgärd" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "label" = "Poängomfattning (totala poäng)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."
+
+[[statement]]
+kind = "set"
+subject = "var:poang1"
+fields = { "label" = "Poängomfattning (grundläggande nivå)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."
+
+[[statement]]
+kind = "set"
+subject = "var:poang2"
+fields = { "label" = "Poängomfattning (gymnasial nivå)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."
+
+[[statement]]
+kind = "set"
+subject = "var:poang3"
+fields = { "label" = "Poängomfattning (påbyggnadsnivå)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "label" = "Poängomfattning (poäng under aktuellt läsår eller halvår)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."

@@ -1624,3 +1624,189 @@ kind = "set"
 subject = "set:undervisningsgrupp"
 fields = { "label" = "Undervisningsgrupp" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "label" = "Poäng på betygsnivå A (delprov A, muntligt prov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: Ma_A_PoM is delprov A (muntligt prov), Ma_A_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-po"
+fields = { "label" = "Poäng i NO (delprov A)" }
+evidence = "#2102 same-label cluster 'Poäng i NO' (3 variables): judged different meaning, high confidence; Opdefs: percentage score on delprov A, B and C."
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-po"
+fields = { "label" = "Poäng i NO (delprov B)" }
+evidence = "#2102 same-label cluster 'Poäng i NO' (3 variables): judged different meaning, high confidence; Opdefs: percentage score on delprov A, B and C."
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-po"
+fields = { "label" = "Poäng i NO (delprov C)" }
+evidence = "#2102 same-label cluster 'Poäng i NO' (3 variables): judged different meaning, high confidence; Opdefs: percentage score on delprov A, B and C."
+
+[[statement]]
+kind = "set"
+subject = "var:no-prov"
+fields = { "label" = "Deltagande i prov (biologi, fysik, kemi)" }
+evidence = "#2102 same-label cluster 'Deltagande i prov' (2 variables): judged different meaning, high confidence; Opdefs: NO_Prov covers biologi/fysik/kemi, SO_Prov geografi/historia/religion/samhällskunskap."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå A (samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: Ma_A_PoM is delprov A (muntligt prov), Ma_A_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
+fields = { "label" = "Poäng på betygsnivå C (delprov A, muntligt prov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: Ma_C_PoM is delprov A (muntligt prov), Ma_C_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå C (samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: Ma_C_PoM is delprov A (muntligt prov), Ma_C_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
+fields = { "label" = "Poäng på betygsnivå E (delprov A, muntligt prov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: Ma_E_PoM is delprov A (muntligt prov), Ma_E_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
+fields = { "label" = "Poäng på betygsnivå E (samtliga delprov)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: Ma_E_PoM is delprov A (muntligt prov), Ma_E_PoT the total for all delprov."
+
+[[statement]]
+kind = "set"
+subject = "var:so-prov"
+fields = { "label" = "Deltagande i prov (geografi, historia, religion, samhällskunskap)" }
+evidence = "#2102 same-label cluster 'Deltagande i prov' (2 variables): judged different meaning, high confidence; Opdefs: NO_Prov covers biologi/fysik/kemi, SO_Prov geografi/historia/religion/samhällskunskap."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-3"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, SunNiva_Mor)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad-2"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-omkodad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020, each as detailed code and grouped."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, SunNiva_Far)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far-omkodad"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-old-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."

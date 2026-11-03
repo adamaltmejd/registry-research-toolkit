@@ -19955,3 +19955,45 @@ kind = "set"
 subject = "set:yrke-i-huvudsysslan"
 fields = { "label" = "Yrke i huvudsysslan" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:koper-fillagring-som-molntjanst-cc-pay"
+fields = { "label" = "Köper fillagring som molntjänst (privatperson)" }
+evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."
+
+[[statement]]
+kind = "set"
+subject = "var:koper-fillagring-som-molntjanst-cc-pfil"
+fields = { "label" = "Köper fillagring som molntjänst (företag)" }
+evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (kod)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lannamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
+
+[[statement]]
+kind = "set"
+subject = "var:lart-datorer-internet-annat-satt-klartext"
+fields = { "label" = "Lärt om datorer och internet på annat sätt (fritext)" }
+evidence = "#2102 same-label cluster 'Lärt om datorer och internet på annat sätt' (2 variables): judged different meaning, high confidence; DatF5G is the coded answer, DatF5Gtxt the free-text specification (opdef: anges i klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:temp36-text"
+fields = { "label" = "Företaget använde AI för annat (fritext)" }
+evidence = "#2102 same-label cluster 'Företaget använde AI för annat' (2 variables): judged different meaning, high confidence; temp36 is the coded answer, temp36_text the free-text specification."
+
+[[statement]]
+kind = "set"
+subject = "var:temp46-text"
+fields = { "label" = "AI: Hinder: Annat (fritext)" }
+evidence = "#2102 same-label cluster 'AI: Hinder: Annat' (2 variables): judged different meaning, high confidence; temp46 is the coded answer, temp46_text the free-text specification."

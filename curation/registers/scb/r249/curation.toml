@@ -4483,3 +4483,189 @@ kind = "set"
 subject = "set:yrkespaket"
 fields = { "label" = "Yrkespaket" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "label" = "Poäng på betygsnivå A (muntlig del, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: MA_A_POM is the muntliga delen, MA_A_POT the totalt antal A-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "label" = "Kommun (folkbokföringskommun, Hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "label" = "Kommun (folkbokföringskommun, HKOM)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-kod"
+fields = { "label" = "Huvudkurs i komvux (kod)" }
+evidence = "#2102 same-label cluster 'Huvudkurs i komvux' (2 variables): judged different meaning, high confidence; Hkurs_kod holds the course code (value set), Hkurs_text the course name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-text"
+fields = { "label" = "Huvudkurs i komvux (klartext)" }
+evidence = "#2102 same-label cluster 'Huvudkurs i komvux' (2 variables): judged different meaning, high confidence; Hkurs_kod holds the course code (value set), Hkurs_text the course name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-id"
+fields = { "label" = "Kommunalförbund (kod, Gyfid)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-id-2"
+fields = { "label" = "Kommunalförbund (kod, KFID)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-namn"
+fields = { "label" = "Kommunalförbund (namn, Gyfnamn)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-namn-2"
+fields = { "label" = "Kommunalförbund (namn, KFNAMN)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-a-poang-totalt"
+fields = { "label" = "Poäng på betygsnivå A (totalt, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: MA_A_POM is the muntliga delen, MA_A_POT the totalt antal A-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-muntlig-del"
+fields = { "label" = "Poäng på betygsnivå C (muntlig del, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: MA_C_POM is the muntliga delen, MA_C_POT the totalt antal C-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-totalt-gy-2011"
+fields = { "label" = "Poäng på betygsnivå C (totalt, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: MA_C_POM is the muntliga delen, MA_C_POT the totalt antal C-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-muntlig-del-gy-2011"
+fields = { "label" = "Poäng på betygsnivå E (muntlig del, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: MA_E_POM is the muntliga delen, MA_E_POT the totalt antal E-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-totalt"
+fields = { "label" = "Poäng på betygsnivå E (totalt, matematik)" }
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: MA_E_POM is the muntliga delen, MA_E_POT the totalt antal E-poäng, in Matematik."
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "label" = "Poängomfattning (Poang)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the student's courses comprise in total, TPoang the förbrukade verksamhetspoäng in the period."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs1"
+fields = { "label" = "Poängomfattning på grundläggande nivå (kursernas totala poäng)" }
+evidence = "#2102 same-label cluster 'Poängomfattning på grundläggande nivå' (2 variables): judged different meaning, medium confidence; Concurrent in 2019-2020; opdef of Poang_Kurs1 says the points the courses comprise in total, also outside the term, while Poang1 is the sum of points the student has taken."
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs2"
+fields = { "label" = "Poängomfattning på gymnasial nivå (kursernas totala poäng)" }
+evidence = "#2102 same-label cluster 'Poängomfattning på gymnasial nivå' (2 variables): judged different meaning, medium confidence; Concurrent in 2019-2020; opdef of Poang_Kurs2 says the points the courses comprise in total, also outside the term, while Poang2 is the sum of points the student has taken."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhet-kommun"
+fields = { "label" = "Kommun (skolenhetens kommun, Skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "label" = "Kommun för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "label" = "Län för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text"
+fields = { "label" = "Län för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "label" = "Kommun (skolenhetens kommun, SKOM)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Different classification versions and granularities: seven-value aggregate (sunniva), SUN 2000 and SUN 2020 three-digit, SUN 2020 two-digit (_2); UTBSUN has the SUN 2000 code list concurrent with SUN2000Niva in nationella prov, so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Different classification versions and granularities: seven-value aggregate (sunniva), SUN 2000 and SUN 2020 three-digit, SUN 2020 two-digit (_2); UTBSUN has the SUN 2000 code list concurrent with SUN2000Niva in nationella prov, so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, 2-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Different classification versions and granularities: seven-value aggregate (sunniva), SUN 2000 and SUN 2020 three-digit, SUN 2020 two-digit (_2); UTBSUN has the SUN 2000 code list concurrent with SUN2000Niva in nationella prov, so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "label" = "Utbildningsnivå (grov indelning, 7 nivåer)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Different classification versions and granularities: seven-value aggregate (sunniva), SUN 2000 and SUN 2020 three-digit, SUN 2020 two-digit (_2); UTBSUN has the SUN 2000 code list concurrent with SUN2000Niva in nationella prov, so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "label" = "Poängomfattning (TPoang)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the student's courses comprise in total, TPoang the förbrukade verksamhetspoäng in the period."
+
+[[statement]]
+kind = "set"
+subject = "var:utbsun"
+fields = { "label" = "Utbildningsnivå (SUN 2000, UTBSUN)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Different classification versions and granularities: seven-value aggregate (sunniva), SUN 2000 and SUN 2020 three-digit, SUN 2020 two-digit (_2); UTBSUN has the SUN 2000 code list concurrent with SUN2000Niva in nationella prov, so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaket-klartext"
+fields = { "label" = "Yrkespaket (klartext)" }
+evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code, Yrkeskod_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaketkod"
+fields = { "label" = "Yrkespaket (kod)" }
+evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code, Yrkeskod_text the name in clear text (opdef)."

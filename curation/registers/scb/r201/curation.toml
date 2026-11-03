@@ -186,3 +186,15 @@ relation = "continues"
 object = "scb/oljeleveranser-kommunvis/bolag"
 at = "2024-01-01.."
 evidence = "Rename audit #157: the 2024 bolag column retains the company-name role beside ORGNR, kommun, vara and volym; 2004 and 2012-2023 Bolag/bolag explicitly names the delivering company. SCB EN0109 quality declaration 2024, pp. 3-4, identifies energy companies delivering fuel via their own resellers, not agricultural holdings. Replace the copied agricultural-company definition; retain the renamed 2024 owner and link it to bolag. https://www.scb.se/contentassets/b520b09e924c4e2d87ca5ad016f7574b/en0109_kd_2024_20250827.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (klartext)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Kommun is the kommun name in clear text joined from the collected kommunkod (opdef); lk is the four-digit kommunkod with a code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-lk"
+fields = { "label" = "Kommun (kommunkod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Kommun is the kommun name in clear text joined from the collected kommunkod (opdef); lk is the four-digit kommunkod with a code list."

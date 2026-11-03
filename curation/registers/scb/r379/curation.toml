@@ -869,3 +869,147 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:chef"
+fields = { "label" = "Typ av tjänst (chef)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (2 variables): judged different meaning, high confidence; Opdefs: preschool manager flag versus resource/support staff flag."
+
+[[statement]]
+kind = "set"
+subject = "var:chefomf"
+fields = { "label" = "Tjänstgöringsomfattning (chefsbefattning i arbete med barn)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (2 variables): judged different meaning, high confidence; Opdefs: extent of a manager post in work with children versus total extent."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "label" = "Huvudman (kod)" }
+evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different meaning, high confidence; Code column (Hman) versus name column (HmanNamn)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "label" = "Huvudman (namn)" }
+evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different meaning, high confidence; Code column (Hman) versus name column (HmanNamn)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (kommungrupp)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: SKL municipality group 2017 versus municipality code of the activity."
+
+[[statement]]
+kind = "set"
+subject = "var:omfatt"
+fields = { "label" = "Tjänstgöringsomfattning (totalt)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (2 variables): judged different meaning, high confidence; Opdefs: extent of a manager post in work with children versus total extent."
+
+[[statement]]
+kind = "set"
+subject = "var:resurs"
+fields = { "label" = "Typ av tjänst (resurs/stödpersonal)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (2 variables): judged different meaning, high confidence; Opdefs: preschool manager flag versus resource/support staff flag."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio2"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, näst högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio3"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, tredje högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio"
+fields = { "label" = "Utbildningsnivå (SUN 2000, högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio2"
+fields = { "label" = "Utbildningsnivå (SUN 2000, näst högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio3"
+fields = { "label" = "Utbildningsnivå (SUN 2000, tredje högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio2"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, näst högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio3"
+fields = { "label" = "Utbildningsinriktning (SUN 2020, tredje högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio"
+fields = { "label" = "Utbildningsnivå (SUN 2020, högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, näst högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio3"
+fields = { "label" = "Utbildningsnivå (SUN 2020, tredje högsta relevanta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each with the highest overall and the 1st-3rd highest relevant for work with children (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetskommun"
+fields = { "label" = "Kommun (verksamhetskommun, kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: SKL municipality group 2017 versus municipality code of the activity."

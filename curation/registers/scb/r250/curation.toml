@@ -1087,3 +1087,147 @@ kind = "set"
 subject = "set:yrkespaket"
 fields = { "label" = "Yrkespaket" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ant-utim-arb"
+fields = { "label" = "Antal utbildningstimmar under mätveckan (arbetsplatsförlagd utbildning)" }
+evidence = "#2102 same-label cluster 'Antal utbildningstimmar under mätveckan' (4 variables): judged different meaning, high confidence; Opdefs: Ant_Utim_Arb is arbetsplatsförlagd, Ant_Utim_Skola skolförlagd; Utim and Ant_Utim_Tot share the opdef (total hours during mätveckan)."
+
+[[statement]]
+kind = "set"
+subject = "var:ant-utim-skola"
+fields = { "label" = "Antal utbildningstimmar under mätveckan (skolförlagd utbildning)" }
+evidence = "#2102 same-label cluster 'Antal utbildningstimmar under mätveckan' (4 variables): judged different meaning, high confidence; Opdefs: Ant_Utim_Arb is arbetsplatsförlagd, Ant_Utim_Skola skolförlagd; Utim and Ant_Utim_Tot share the opdef (total hours during mätveckan)."
+
+[[statement]]
+kind = "set"
+subject = "var:ant-utim-tot"
+fields = { "label" = "Antal utbildningstimmar under mätveckan (totalt)" }
+evidence = "#2102 same-label cluster 'Antal utbildningstimmar under mätveckan' (4 variables): judged different meaning, high confidence; Opdefs: Ant_Utim_Arb is arbetsplatsförlagd, Ant_Utim_Skola skolförlagd; Utim and Ant_Utim_Tot share the opdef (total hours during mätveckan)."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun and Hkom are the folkbokföringskommun (rename in 2019); SkolKommun is the kommun där skolan är belägen."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun and Hkom are the folkbokföringskommun (rename in 2019); SkolKommun is the kommun där skolan är belägen."
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-kod"
+fields = { "label" = "Huvudkurs i komvux (kod)" }
+evidence = "#2102 same-label cluster 'Huvudkurs i komvux' (2 variables): judged different meaning, high confidence; Hkurs_kod holds the course code (value set), Hkurs_text the course name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-text"
+fields = { "label" = "Huvudkurs i komvux (klartext)" }
+evidence = "#2102 same-label cluster 'Huvudkurs i komvux' (2 variables): judged different meaning, high confidence; Hkurs_kod holds the course code (value set), Hkurs_text the course name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kdeltid"
+fields = { "label" = "Löpnummer för kursdeltagaren (KDeltID)" }
+evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (2 variables): judged different meaning, low confidence; KDeltID and KursDeltID are concurrent columns in one table and period; no text says how they differ, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:komgrupp23"
+fields = { "label" = "Kommungruppsindelning (2023 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; KOMGRUPP17 and KOMGRUPP23 are different classification years with the same coded list; KOMMUNGRUPP_TEXT is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "label" = "Kommungruppsindelning (2017 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; KOMGRUPP17 and KOMGRUPP23 are different classification years with the same coded list; KOMMUNGRUPP_TEXT is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-text"
+fields = { "label" = "Kommungruppsindelning (klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; KOMGRUPP17 and KOMGRUPP23 are different classification years with the same coded list; KOMMUNGRUPP_TEXT is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:kursdeltid"
+fields = { "label" = "Löpnummer för kursdeltagaren (KursDeltID)" }
+evidence = "#2102 same-label cluster 'Löpnummer för kursdeltagaren' (2 variables): judged different meaning, low confidence; KDeltID and KursDeltID are concurrent columns in one table and period; no text says how they differ, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); Skom/SkolKommun and SKOM_TEXT/SkolKommun_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-kod"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun and Hkom are the folkbokföringskommun (rename in 2019); SkolKommun is the kommun där skolan är belägen."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "label" = "Kommun för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); Skom/SkolKommun and SKOM_TEXT/SkolKommun_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "label" = "Län för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); SLAN/SkolLan and SLAN_TEXT/SkolLan_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-2"
+fields = { "label" = "Län för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); SLAN/SkolLan and SLAN_TEXT/SkolLan_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text"
+fields = { "label" = "Län för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); SLAN/SkolLan and SLAN_TEXT/SkolLan_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text-2"
+fields = { "label" = "Län för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); SLAN/SkolLan and SLAN_TEXT/SkolLan_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "label" = "Kommun för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); Skom/SkolKommun and SKOM_TEXT/SkolKommun_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:skom-text"
+fields = { "label" = "Kommun för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (4 variables): judged different meaning, high confidence; Code vs text (opdef: klartext); Skom/SkolKommun and SKOM_TEXT/SkolKommun_text are the same pairs renamed in 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:utim"
+fields = { "label" = "Antal utbildningstimmar under mätveckan (totalt)" }
+evidence = "#2102 same-label cluster 'Antal utbildningstimmar under mätveckan' (4 variables): judged different meaning, high confidence; Opdefs: Ant_Utim_Arb is arbetsplatsförlagd, Ant_Utim_Skola skolförlagd; Utim and Ant_Utim_Tot share the opdef (total hours during mätveckan)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod-text"
+fields = { "label" = "Yrkespaket (klartext)" }
+evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code (value set), Yrkeskod_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaketkod"
+fields = { "label" = "Yrkespaket (kod)" }
+evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code (value set), Yrkeskod_text the name in clear text (opdef)."

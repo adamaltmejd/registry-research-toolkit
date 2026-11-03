@@ -524,3 +524,39 @@ kind = "set"
 subject = "set:skordeomradestillhorighet"
 fields = { "label" = "Skördeområdestillhörighet" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (där arealen är belägen)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: lan is the län where the cultivated area lies, OrdLan the län of the brukningscentrum."
+
+[[statement]]
+kind = "set"
+subject = "var:ordlan"
+fields = { "label" = "Län (brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: lan is the län where the cultivated area lies, OrdLan the län of the brukningscentrum."
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "label" = "Produktionsområden Po8 (brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Produktionsområden Po8' (2 variables): judged different meaning, high confidence; Opdefs: po8 is the area's production region, OrdPo8 the brukningscentrum's."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområden Po8 (där arealen finns)" }
+evidence = "#2102 same-label cluster 'Produktionsområden Po8' (2 variables): judged different meaning, high confidence; Opdefs: po8 is the area's production region, OrdPo8 the brukningscentrum's."
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "label" = "Skördeområde (där arealen finns)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (2 variables): judged different meaning, high confidence; Opdefs: sko is the harvest area where the area lies, OrdSko the brukningscentrum's."
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "label" = "Skördeområde (brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (2 variables): judged different meaning, high confidence; Opdefs: sko is the harvest area where the area lies, OrdSko the brukningscentrum's."

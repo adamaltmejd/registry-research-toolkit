@@ -12617,3 +12617,1143 @@ kind = "set"
 subject = "set:verksamhet-i-utlandet"
 fields = { "label" = "Verksamhet i utlandet" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerade-overavskrivningar"
+fields = { "label" = "Ackumulerade överavskrivningar (V0330, N2)" }
+evidence = "#2102 same-label cluster 'Ackumulerade överavskrivningar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs INK2); the field code and form tell them apart."
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerade-overavskrivningar-v7322"
+fields = { "label" = "Ackumulerade överavskrivningar (v7322, INK2)" }
+evidence = "#2102 same-label cluster 'Ackumulerade överavskrivningar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs INK2); the field code and form tell them apart."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning"
+fields = { "label" = "Aktiverat arbete för egen räkning (V0402, N2)" }
+evidence = "#2102 same-label cluster 'Aktiverat arbete för egen räkning' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs INK2)."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning-v7412"
+fields = { "label" = "Aktiverat arbete för egen räkning (v7412, INK2)" }
+evidence = "#2102 same-label cluster 'Aktiverat arbete för egen räkning' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs INK2)."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt överskott enligt blankett N3B/kapitalvinst (v7659, INK2)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt överskott enligt blankett N3B/kapitalvinst' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7659 sits on INK2, V0635 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd förlust/kapitalförlust (v7660, INK2)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd förlust/kapitalförlust' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7660 sits on INK2, V0636 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7758"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst (v7758, INK2)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7758 sits on INK2, V0634 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7759"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt underskott enligt blankett N3B/kapitalförlust (v7759, INK2)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt underskott enligt blankett N3B/kapitalförlust' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7759 sits on INK2, V0637 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-intakter-ej-bokforda"
+fields = { "label" = "Andra intäkter som ska tas upp men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet (V0603, N2)" }
+evidence = "#2102 same-label cluster 'Andra intäkter som ska tas upp men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602"
+fields = { "label" = "Andra intäkter som ska tas upp men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet (v7602, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Andra intäkter som ska tas upp men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-kostnader-ej-bokforda"
+fields = { "label" = "Andra kostnader som ska dras av men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet (V0610, N2)" }
+evidence = "#2102 same-label cluster 'Andra kostnader som ska dras av men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-kostnader-som-ska-dras-av-men-som-inte-bokforts-v7701"
+fields = { "label" = "Andra kostnader som ska dras av men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet (v7701, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Andra kostnader som ska dras av men som inte bokförts på sådant sätt att de ingår i det redovisade resultatet' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar"
+fields = { "label" = "Antal egna arbetstimmar (V2009, K10)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; Three field codes on different forms (K10, N3A, N1/N2)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar-v0141"
+fields = { "label" = "Antal egna arbetstimmar (V0141, N3A)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; Three field codes on different forms (K10, N3A, N1/N2)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-egna-arbetstimmar-vc0141"
+fields = { "label" = "Antal egna arbetstimmar (VC0141, N1/N2)" }
+evidence = "#2102 same-label cluster 'Antal egna arbetstimmar' (3 variables): judged different meaning, medium confidence; Three field codes on different forms (K10, N3A, N1/N2)."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforda-belopp-restvardeavskrivning"
+fields = { "label" = "Återförda belopp vid restvärdeavskrivning (v8004, NE)" }
+evidence = "#2102 same-label cluster 'Återförda belopp vid restvärdeavskrivning' (2 variables): judged different meaning, medium confidence; Same item under different field codes on NE and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforda-belopp-vid-restvardeavskrivning-v8023"
+fields = { "label" = "Återförda belopp vid restvärdeavskrivning (v8023, INK2)" }
+evidence = "#2102 same-label cluster 'Återförda belopp vid restvärdeavskrivning' (2 variables): judged different meaning, medium confidence; Same item under different field codes on NE and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-av-vardeminskningsavdrag-m-m-vid-v0629"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V0629, N2)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (5 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-av-vardeminskningsavdrag-m-m-vid-v7605"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (v7605, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (5 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-av-vardeminskningsavdrag-m-m-vid-v7662"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (v7662, INK2)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (5 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-av-vardeminskningsavdrag-m-m-vid-v8691"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V8691, INK3)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (5 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-vardeminskning-forsaljning"
+fields = { "label" = "Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning (V0783, N1)" }
+evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag m.m. vid försäljning av näringsfastighet och s.k. avskattning' (5 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsgilla-kostnader-ej-bokforda"
+fields = { "label" = "Kostnader som ska dras av men som inte ingår (v7751, INK2)" }
+evidence = "#2102 same-label cluster 'Kostnader som ska dras av men som inte ingår' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-pensioner"
+fields = { "label" = "Avsättningar för pensioner (V0320, N2)" }
+evidence = "#2102 same-label cluster 'Avsättningar för pensioner' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-pensioner-v7331"
+fields = { "label" = "Avsättningar för pensioner (v7331, INK2)" }
+evidence = "#2102 same-label cluster 'Avsättningar för pensioner' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-pensioner-v8738"
+fields = { "label" = "Avsättningar för pensioner (V8738, INK3)" }
+evidence = "#2102 same-label cluster 'Avsättningar för pensioner' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-byggnader-fast-egendom"
+fields = { "label" = "Avskrivningar på byggnader och övrig fast egendom (V0560, N2)" }
+evidence = "#2102 same-label cluster 'Avskrivningar på byggnader och övrig fast egendom' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-maskiner-inventarier"
+fields = { "label" = "Avskrivningar på maskiner och inventarier (V0559, N2)" }
+evidence = "#2102 same-label cluster 'Avskrivningar på maskiner och inventarier' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-pa-byggnader-och-ovrig-fast-egendom-v7504"
+fields = { "label" = "Avskrivningar på byggnader och övrig fast egendom (v7504, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Avskrivningar på byggnader och övrig fast egendom' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-pa-maskiner-och-inventarier-v7505"
+fields = { "label" = "Avskrivningar på maskiner och inventarier (v7505, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Avskrivningar på maskiner och inventarier' (2 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N2 vs NE/NEA)."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-schablonintakt-pa-periodiseringsfonder-v8688"
+fields = { "label" = "Beräknad schablonintäkt på periodiseringsfonder (V8688, INK3)" }
+evidence = "#2102 same-label cluster 'Beräknad schablonintäkt på periodiseringsfonder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK3 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-intakter-ej-tas-upp"
+fields = { "label" = "Bokförda intäkter som inte ska tas upp (V0604, N2)" }
+evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-intakter-ej-tas-upp-ackord"
+fields = { "label" = "Bokförda intäkter som inte ska tas upp: Ackordsvinster (V0656)" }
+evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp: Ackordsvinster' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7752 sits on INK2, V0656 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-intakter-som-inte-ska-tas-upp-ackordsvinster-v7752"
+fields = { "label" = "Bokförda intäkter som inte ska tas upp: Ackordsvinster (v7752, INK2)" }
+evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp: Ackordsvinster' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7752 sits on INK2, V0656 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-intakter-som-inte-ska-tas-upp-v7700"
+fields = { "label" = "Bokförda intäkter som inte ska tas upp (v7700, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-intakter-som-inte-ska-tas-upp-v7754"
+fields = { "label" = "Bokförda intäkter som inte ska tas upp (v7754, INK2)" }
+evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-kostnader-ej-avdrag"
+fields = { "label" = "Bokförda kostnader som inte ska dras av (V0609, N2)" }
+evidence = "#2102 same-label cluster 'Bokförda kostnader som inte ska dras av' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-kostnader-som-inte-ska-dras-av-v7601"
+fields = { "label" = "Bokförda kostnader som inte ska dras av (v7601, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Bokförda kostnader som inte ska dras av' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:bokforda-kostnader-som-inte-ska-dras-av-v7653"
+fields = { "label" = "Bokförda kostnader som inte ska dras av (v7653, INK2)" }
+evidence = "#2102 same-label cluster 'Bokförda kostnader som inte ska dras av' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-och-mark"
+fields = { "label" = "Byggnader och mark (v7210, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Byggnader och mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-och-mark-v7214"
+fields = { "label" = "Byggnader och mark (v7214, INK2)" }
+evidence = "#2102 same-label cluster 'Byggnader och mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-och-mark-v8721"
+fields = { "label" = "Byggnader och mark (V8721, INK3)" }
+evidence = "#2102 same-label cluster 'Byggnader och mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-markanlaggningar"
+fields = { "label" = "Ej återförda värdeminskningsavdrag, markanläggningar (v8007, NE)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag, markanläggningar' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskning-byggnader"
+fields = { "label" = "Ej återförda värdeminskningsavdrag byggnader (v8006, NE)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag byggnader' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-byggnader-v8020"
+fields = { "label" = "Ej återförda värdeminskningsavdrag byggnader (v8020, INK2)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag byggnader' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-byggnader-v8030"
+fields = { "label" = "Ej återförda värdeminskningsavdrag byggnader (V8030, INK3)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag byggnader' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-markanlaggningar-v8021"
+fields = { "label" = "Ej återförda värdeminskningsavdrag, markanläggningar (v8021, INK2)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag, markanläggningar' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-aterforda-vardeminskningsavdrag-markanlaggningar-v8031"
+fields = { "label" = "Ej återförda värdeminskningsavdrag, markanläggningar (V8031, INK3)" }
+evidence = "#2102 same-label cluster 'Ej återförda värdeminskningsavdrag, markanläggningar' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-avyttrade-inventarier-fonder"
+fields = { "label" = "Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m. (V0753, N1)" }
+evidence = "#2102 same-label cluster 'Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m.' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N1 and N2."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-avyttrade-forlorade-inventarier-som-v0752"
+fields = { "label" = "Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m. (V0752, N2)" }
+evidence = "#2102 same-label cluster 'Ersättning för avyttrade/förlorade inventarier som fanns vid årets början samt ianspråktagna fonder m.m.' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N1 and N2."
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter"
+fields = { "label" = "Extraordinära intäkter (v7418, INK2)" }
+evidence = "#2102 same-label cluster 'Extraordinära intäkter' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter-v8658"
+fields = { "label" = "Extraordinära intäkter (V8658, INK3)" }
+evidence = "#2102 same-label cluster 'Extraordinära intäkter' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader"
+fields = { "label" = "Extraordinära kostnader (v7523, INK2)" }
+evidence = "#2102 same-label cluster 'Extraordinära kostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader-v8759"
+fields = { "label" = "Extraordinära kostnader (V8759, INK3)" }
+evidence = "#2102 same-label cluster 'Extraordinära kostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-anlaggningstillgangar"
+fields = { "label" = "Summa finansiella anläggningstillgångar (V0233, N2)" }
+evidence = "#2102 same-label cluster 'Summa finansiella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; Same item under different field codes: N2, the register, and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-av-lager-och-pagaende-arbete-minskning-v7510"
+fields = { "label" = "Förändring av lager och pågående arbete (minskning) (v7510, INK2)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (minskning)' (2 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2 and INK2 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-av-lager-och-pagaende-arbete-okning-v7411"
+fields = { "label" = "Förändring av lager och pågående arbete (ökning) (v7411, INK2)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (ökning)' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-fran-kunder"
+fields = { "label" = "Förskott från kunder (V0310, N2)" }
+evidence = "#2102 same-label cluster 'Förskott från kunder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-fran-kunder-v7362"
+fields = { "label" = "Förskott från kunder (v7362, INK2)" }
+evidence = "#2102 same-label cluster 'Förskott från kunder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-och-upplupna-intakter-v7263"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (v7263, INK2)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-och-upplupna-intakter-v8729"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (V8729, INK3)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-upplupna-intakter"
+fields = { "label" = "Förutbetalda kostnader och upplupna intäkter (V0205, N2)" }
+evidence = "#2102 same-label cluster 'Förutbetalda kostnader och upplupna intäkter' (3 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:inbetalning-skogsskade-upphovsmannakonto"
+fields = { "label" = "Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto (V0177, N1)" }
+evidence = "#2102 same-label cluster 'Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1, N2 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:inbetalning-till-skogs-skogsskade-upphovsmannakonto-v0845"
+fields = { "label" = "Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto (V0845, N2)" }
+evidence = "#2102 same-label cluster 'Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1, N2 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:inbetalning-till-skogs-skogsskade-upphovsmannakonto-v7707"
+fields = { "label" = "Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto (v7707, NE)" }
+evidence = "#2102 same-label cluster 'Inbetalning till skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1, N2 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank"
+fields = { "label" = "Kassa och bank (V0200, N2)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank-v7280"
+fields = { "label" = "Kassa och bank (v7280, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank-v7281"
+fields = { "label" = "Kassa och bank (v7281, INK2)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank-v8730"
+fields = { "label" = "Kassa och bank (V8730, INK3)" }
+evidence = "#2102 same-label cluster 'Kassa och bank' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-av-bokfort-resultat-for-avskrivningar-pa-v7666"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (+). (V7666, INK2)" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (+).' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-av-bokfort-resultat-for-avskrivningar-pa-v7765"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-). (V7765, INK2)" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-).' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-avskrivning-byggnader"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-). (V0747, N2)" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (-).' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigering-avskrivning-plus"
+fields = { "label" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (+). (V0626, N2)" }
+evidence = "#2102 same-label cluster 'Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier (+).' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-som-ska-dras-av-men-som-inte-ingar-v8788"
+fields = { "label" = "Kostnader som ska dras av men som inte ingår (V8788, INK3)" }
+evidence = "#2102 same-label cluster 'Kostnader som ska dras av men som inte ingår' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar"
+fields = { "label" = "Kundfordringar (V0204, N2)" }
+evidence = "#2102 same-label cluster 'Kundfordringar' (4 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, NE/NEA, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-v7250"
+fields = { "label" = "Kundfordringar (v7250, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Kundfordringar' (4 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, NE/NEA, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-v7251"
+fields = { "label" = "Kundfordringar (v7251, INK2)" }
+evidence = "#2102 same-label cluster 'Kundfordringar' (4 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, NE/NEA, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-v8727"
+fields = { "label" = "Kundfordringar (V8727, INK3)" }
+evidence = "#2102 same-label cluster 'Kundfordringar' (4 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2, NE/NEA, INK2 and INK3 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande-underskott"
+fields = { "label" = "Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809. (V0854, N1/N2)" }
+evidence = "#2102 same-label cluster 'Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande-underskott-overfors-till-ink1-sidan-2-kod-v7730"
+fields = { "label" = "Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809. (v7730, NE)" }
+evidence = "#2102 same-label cluster 'Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande-underskott-overfors-till-ink1-sidan-2-kod-v7780"
+fields = { "label" = "Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809. (v7780, NEA)" }
+evidence = "#2102 same-label cluster 'Kvarvarande underskott. Överförs till INK1 sidan 2, kod 125/126. Nästa år förs beloppet till kod 809.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:lagerforandring-minskning"
+fields = { "label" = "Förändring av lager och pågående arbete (minskning) (V0510, N2)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (minskning)' (2 variables): judged different meaning, medium confidence; Same item under distinct field codes on N2 and INK2 in overlapping years."
+
+[[statement]]
+kind = "set"
+subject = "var:lagerforandring-okning"
+fields = { "label" = "Förändring av lager och pågående arbete (ökning) (V0509, N2)" }
+evidence = "#2102 same-label cluster 'Förändring av lager och pågående arbete (ökning)' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-skulder"
+fields = { "label" = "Långfristiga skulder (V0329, N2)" }
+evidence = "#2102 same-label cluster 'Långfristiga skulder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-skulder-v7380"
+fields = { "label" = "Långfristiga skulder (v7380, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Långfristiga skulder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder"
+fields = { "label" = "Leverantörsskulder (V0300, N2)" }
+evidence = "#2102 same-label cluster 'Leverantörsskulder' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-v7365"
+fields = { "label" = "Leverantörsskulder (v7365, INK2)" }
+evidence = "#2102 same-label cluster 'Leverantörsskulder' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-v7382"
+fields = { "label" = "Leverantörsskulder (v7382, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Leverantörsskulder' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-v8742"
+fields = { "label" = "Leverantörsskulder (V8742, INK3)" }
+evidence = "#2102 same-label cluster 'Leverantörsskulder' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:loner-och-andra-ersattningar-sru"
+fields = { "label" = "Löner och andra ersättningar (SRU) (V0512, N2)" }
+evidence = "#2102 same-label cluster 'Löner och andra ersättningar (SRU)' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:loner-och-andra-ersattningar-sru-v7502"
+fields = { "label" = "Löner och andra ersättningar (SRU) (v7502, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Löner och andra ersättningar (SRU)' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:mark"
+fields = { "label" = "Mark (V0235, N2)" }
+evidence = "#2102 same-label cluster 'Mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:mark-v7211"
+fields = { "label" = "Mark (v7211, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:mark-v8722"
+fields = { "label" = "Mark (V8722, INK3)" }
+evidence = "#2102 same-label cluster 'Mark' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier"
+fields = { "label" = "Maskiner och inventarier (V0236, N2)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier-v7212"
+fields = { "label" = "Maskiner och inventarier (v7212, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier-v7215"
+fields = { "label" = "Maskiner och inventarier (v7215, INK2)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier-v8723"
+fields = { "label" = "Maskiner och inventarier (V8723, INK3)" }
+evidence = "#2102 same-label cluster 'Maskiner och inventarier' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:minskning-av-expansionsfond-sru"
+fields = { "label" = "Minskning av expansionsfond (SRU) (V0878, N1/N2)" }
+evidence = "#2102 same-label cluster 'Minskning av expansionsfond (SRU)' (3 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N1/N2, NE, N3A)."
+
+[[statement]]
+kind = "set"
+subject = "var:minskning-av-expansionsfond-sru-v0864"
+fields = { "label" = "Minskning av expansionsfond (SRU) (v0864, N3A)" }
+evidence = "#2102 same-label cluster 'Minskning av expansionsfond (SRU)' (3 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N1/N2, NE, N3A)."
+
+[[statement]]
+kind = "set"
+subject = "var:minskning-av-expansionsfond-sru-v7609"
+fields = { "label" = "Minskning av expansionsfond (SRU) (v7609, NE)" }
+evidence = "#2102 same-label cluster 'Minskning av expansionsfond (SRU)' (3 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N1/N2, NE, N3A)."
+
+[[statement]]
+kind = "set"
+subject = "var:nedskrivning-av-finansiella-anlaggningstillgangar-v8757"
+fields = { "label" = "Nedskrivning av finansiella anläggningstillgångar (V8757, INK3)" }
+evidence = "#2102 same-label cluster 'Nedskrivning av finansiella anläggningstillgångar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK3 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:nedskrivning-finansiella-tillgangar"
+fields = { "label" = "Nedskrivning av finansiella anläggningstillgångar (v7521, INK2)" }
+evidence = "#2102 same-label cluster 'Nedskrivning av finansiella anläggningstillgångar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK3 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning"
+fields = { "label" = "Nettoomsättning (V0400, N2)" }
+evidence = "#2102 same-label cluster 'Nettoomsättning' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-v7400"
+fields = { "label" = "Nettoomsättning (v7400, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Nettoomsättning' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-v7410"
+fields = { "label" = "Nettoomsättning (v7410, INK2)" }
+evidence = "#2102 same-label cluster 'Nettoomsättning' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-v8653"
+fields = { "label" = "Nettoomsättning (V8653, INK3)" }
+evidence = "#2102 same-label cluster 'Nettoomsättning' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:outnyttjat-underskott-fran-tidigare-ar"
+fields = { "label" = "Outnyttjat underskott från tidigare år (V0809, N1/N2)" }
+evidence = "#2102 same-label cluster 'Outnyttjat underskott från tidigare år' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:outnyttjat-underskott-fran-tidigare-ar-v7705"
+fields = { "label" = "Outnyttjat underskott från tidigare år (v7705, NE)" }
+evidence = "#2102 same-label cluster 'Outnyttjat underskott från tidigare år' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:outnyttjat-underskott-fran-tidigare-ar-v7763"
+fields = { "label" = "Outnyttjat underskott från tidigare år (v7763, INK2)" }
+evidence = "#2102 same-label cluster 'Outnyttjat underskott från tidigare år' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:outnyttjat-underskott-fran-tidigare-ar-v8787"
+fields = { "label" = "Outnyttjat underskott från tidigare år (V8787, INK3)" }
+evidence = "#2102 same-label cluster 'Outnyttjat underskott från tidigare år' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-overfors-till-ink1-sidan-2-kod-100-eller-kod-v7630"
+fields = { "label" = "Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102. (v7630, NE)" }
+evidence = "#2102 same-label cluster 'Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-overfors-till-ink1-sidan-2-kod-100-eller-kod-v7680"
+fields = { "label" = "Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102. (v7680, NEA)" }
+evidence = "#2102 same-label cluster 'Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-till-ink1"
+fields = { "label" = "Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102. (V0829, N1/N2)" }
+evidence = "#2102 same-label cluster 'Överskott. Överförs till INK1 sidan 2, kod 100 eller kod 102.' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2, NE and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-anlaggningstillgangar"
+fields = { "label" = "Övriga anläggningstillgångar (v7213, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Övriga anläggningstillgångar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-anlaggningstillgangar-v8725"
+fields = { "label" = "Övriga anläggningstillgångar (V8725, INK3)" }
+evidence = "#2102 same-label cluster 'Övriga anläggningstillgångar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar"
+fields = { "label" = "Övriga avsättningar (V0302, N2)" }
+evidence = "#2102 same-label cluster 'Övriga avsättningar' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar-v7330"
+fields = { "label" = "Övriga avsättningar (v7330, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Övriga avsättningar' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar-v7333"
+fields = { "label" = "Övriga avsättningar (v7333, INK2)" }
+evidence = "#2102 same-label cluster 'Övriga avsättningar' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar-v8739"
+fields = { "label" = "Övriga avsättningar (V8739, INK3)" }
+evidence = "#2102 same-label cluster 'Övriga avsättningar' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader"
+fields = { "label" = "Övriga externa kostnader (v7513, INK2)" }
+evidence = "#2102 same-label cluster 'Övriga externa kostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader-v8751"
+fields = { "label" = "Övriga externa kostnader (V8751, INK3)" }
+evidence = "#2102 same-label cluster 'Övriga externa kostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-skall-tas-upp"
+fields = { "label" = "Övriga intäkter som skall tas upp (v7655, INK2)" }
+evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-tas-upp-inte-redovisat-resultat"
+fields = { "label" = "Övriga intäkter som skall tas upp (V8689, INK3)" }
+evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar"
+fields = { "label" = "Övriga kortfristiga fordringar (NE/NEA)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; Separate fields (v7260, v7261, V8728) on different tax forms NE/NEA, INK2 and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar-v7261"
+fields = { "label" = "Övriga kortfristiga fordringar (INK2)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; Separate fields (v7260, v7261, V8728) on different tax forms NE/NEA, INK2 and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar-v8728"
+fields = { "label" = "Övriga kortfristiga fordringar (INK3)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; Separate fields (v7260, v7261, V8728) on different tax forms NE/NEA, INK2 and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "label" = "Övriga kostnader (N2)" }
+evidence = "#2102 same-label cluster 'Övriga kostnader' (3 variables): judged different meaning, medium confidence; Separate fields (V0530, v7501, V8754) on different forms N2, NE/NEA and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-2"
+fields = { "label" = "Övriga kostnader (NE/NEA)" }
+evidence = "#2102 same-label cluster 'Övriga kostnader' (3 variables): judged different meaning, medium confidence; Separate fields (V0530, v7501, V8754) on different forms N2, NE/NEA and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-3"
+fields = { "label" = "Övriga kostnader (INK3)" }
+evidence = "#2102 same-label cluster 'Övriga kostnader' (3 variables): judged different meaning, medium confidence; Separate fields (V0530, v7501, V8754) on different forms N2, NE/NEA and INK3; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-obeskattade-reserver"
+fields = { "label" = "Övriga obeskattade reserver (N2)" }
+evidence = "#2102 same-label cluster 'Övriga obeskattade reserver' (3 variables): judged different meaning, medium confidence; Separate fields (V0339, v7323, V8737) on different forms N2, INK2 and INK3; opdef only repeats the field number, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-obeskattade-reserver-v7323"
+fields = { "label" = "Övriga obeskattade reserver (INK2)" }
+evidence = "#2102 same-label cluster 'Övriga obeskattade reserver' (3 variables): judged different meaning, medium confidence; Separate fields (V0339, v7323, V8737) on different forms N2, INK2 and INK3; opdef only repeats the field number, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-obeskattade-reserver-v8737"
+fields = { "label" = "Övriga obeskattade reserver (INK3)" }
+evidence = "#2102 same-label cluster 'Övriga obeskattade reserver' (3 variables): judged different meaning, medium confidence; Separate fields (V0339, v7323, V8737) on different forms N2, INK2 and INK3; opdef only repeats the field number, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skatteskulder"
+fields = { "label" = "Övriga skatteskulder (N2)" }
+evidence = "#2102 same-label cluster 'Övriga skatteskulder' (2 variables): judged different meaning, medium confidence; Separate fields (V0301, v7381) on different forms N2 and NE/NEA; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skatteskulder-v7381"
+fields = { "label" = "Övriga skatteskulder (NE/NEA)" }
+evidence = "#2102 same-label cluster 'Övriga skatteskulder' (2 variables): judged different meaning, medium confidence; Separate fields (V0301, v7381) on different forms N2 and NE/NEA; no opdef, so qualified by form."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-tillgangar-924-v0924"
+fields = { "label" = "Övriga tillgångar   (924) (V0924)" }
+evidence = "#2102 same-label cluster 'Övriga tillgångar   (924)' (2 variables): judged different meaning, low confidence; Two concurrent columns V0924 and V0939 on form N6 with identical definition; no source text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-tillgangar-924-v0939"
+fields = { "label" = "Övriga tillgångar   (924) (V0939)" }
+evidence = "#2102 same-label cluster 'Övriga tillgångar   (924)' (2 variables): judged different meaning, low confidence; Two concurrent columns V0924 and V0939 on form N6 with identical definition; no source text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader"
+fields = { "label" = "Pensionskostnader (V0524, N2)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3; opdefs add ITP-avgifter on N2/NE and 'ingår i redovisade personalkostnader' on INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-v7711"
+fields = { "label" = "Pensionskostnader (v7711, NE)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3; opdefs add ITP-avgifter on N2/NE and 'ingår i redovisade personalkostnader' on INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-v8022"
+fields = { "label" = "Pensionskostnader (v8022, INK2)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3; opdefs add ITP-avgifter on N2/NE and 'ingår i redovisade personalkostnader' on INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-v8032"
+fields = { "label" = "Pensionskostnader (V8032, INK3)" }
+evidence = "#2102 same-label cluster 'Pensionskostnader' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3; opdefs add ITP-avgifter on N2/NE and 'ingår i redovisade personalkostnader' on INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-2003-taxering"
+fields = { "label" = "Periodiseringsfond vid 2003 års taxering (V0343, N1/N2/N3A)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2003 års taxering' (2 variables): judged different meaning, medium confidence; V0343 (N1/N2/N3A) and v7343 (NE/INK3) are concurrent in 2007-2008 on different forms."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2003-ars-taxering-v7343"
+fields = { "label" = "Periodiseringsfond vid 2003 års taxering (v7343, NE/INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2003 års taxering' (2 variables): judged different meaning, medium confidence; V0343 (N1/N2/N3A) and v7343 (NE/INK3) are concurrent in 2007-2008 on different forms."
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader"
+fields = { "label" = "Personalkostnader (v7514, INK2)" }
+evidence = "#2102 same-label cluster 'Personalkostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader-v8752"
+fields = { "label" = "Personalkostnader (V8752, INK3)" }
+evidence = "#2102 same-label cluster 'Personalkostnader' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-borjan"
+fields = { "label" = "Räkenskapsårets början (V0011, N1/N2/N3A/N4)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets början' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-borjan-v0012"
+fields = { "label" = "Räkenskapsårets början (V0012, INK3)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets början' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-borjan-v7011"
+fields = { "label" = "Räkenskapsårets början (v7011, N3B/NE/NEA)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets början' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-slut"
+fields = { "label" = "Räkenskapsårets slut (V0012)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets slut' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-slut-v0011"
+fields = { "label" = "Räkenskapsårets slut (V0011, INK3)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets slut' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rakenskapsarets-slut-v7012"
+fields = { "label" = "Räkenskapsårets slut (v7012, N3B/NE/NEA)" }
+evidence = "#2102 same-label cluster 'Räkenskapsårets slut' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-fran-ovriga"
+fields = { "label" = "Ränteintäkter från övriga (V0568, N2)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter från övriga' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-fran-ovriga-v7403"
+fields = { "label" = "Ränteintäkter från övriga (v7403, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter från övriga' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NE/NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-till-ovriga"
+fields = { "label" = "Räntekostnader till övriga (V0569, N2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader till övriga' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-till-ovriga-v7503"
+fields = { "label" = "Räntekostnader till övriga (v7503, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Räntekostnader till övriga' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-till-ovriga-v7522"
+fields = { "label" = "Räntekostnader till övriga (v7522, INK2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader till övriga' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisad-forlust-enligt-bokforingen"
+fields = { "label" = "Redovisad förlust enligt bokföringen (V0596, N2)" }
+evidence = "#2102 same-label cluster 'Redovisad förlust enligt bokföringen' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisad-forlust-enligt-bokforingen-v8765"
+fields = { "label" = "Redovisad förlust enligt bokföringen (V8765, INK3)" }
+evidence = "#2102 same-label cluster 'Redovisad förlust enligt bokföringen' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisad-vinst-enligt-bokforingen"
+fields = { "label" = "Redovisad vinst enligt bokföringen (V0599, N2)" }
+evidence = "#2102 same-label cluster 'Redovisad vinst enligt bokföringen' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisad-vinst-enligt-bokforingen-v8665"
+fields = { "label" = "Redovisad vinst enligt bokföringen (V8665, INK3)" }
+evidence = "#2102 same-label cluster 'Redovisad vinst enligt bokföringen' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:schablonintakt-periodiseringsfonder"
+fields = { "label" = "Beräknad schablonintäkt på periodiseringsfonder (v7654, INK2)" }
+evidence = "#2102 same-label cluster 'Beräknad schablonintäkt på periodiseringsfonder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK3 and INK2."
+
+[[statement]]
+kind = "set"
+subject = "var:skatteskulder"
+fields = { "label" = "Skatteskulder (v7368, INK2)" }
+evidence = "#2102 same-label cluster 'Skatteskulder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:skatteskulder-v8741"
+fields = { "label" = "Skatteskulder (V8741, INK3)" }
+evidence = "#2102 same-label cluster 'Skatteskulder' (2 variables): judged different meaning, medium confidence; Same item under different field codes on INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:skogsavdrag-substansminskningsavdrag"
+fields = { "label" = "Skogsavdrag, substansminskningsavdrag (V0781, N2)" }
+evidence = "#2102 same-label cluster 'Skogsavdrag, substansminskningsavdrag' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:skogsavdrag-substansminskningsavdrag-v7706"
+fields = { "label" = "Skogsavdrag, substansminskningsavdrag (v7706, NE)" }
+evidence = "#2102 same-label cluster 'Skogsavdrag, substansminskningsavdrag' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:skogsavdrag-substansminskningsavdrag-v7761"
+fields = { "label" = "Skogsavdrag, substansminskningsavdrag (v7761, INK2)" }
+evidence = "#2102 same-label cluster 'Skogsavdrag, substansminskningsavdrag' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:skogsavdrag-substansminskningsavdrag-v8790"
+fields = { "label" = "Skogsavdrag, substansminskningsavdrag (V8790, INK3)" }
+evidence = "#2102 same-label cluster 'Skogsavdrag, substansminskningsavdrag' (4 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-anlaggningstillgangar-v0696"
+fields = { "label" = "Summa finansiella anläggningstillgångar (V0696, register)" }
+evidence = "#2102 same-label cluster 'Summa finansiella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; Same item under different field codes: N2, the register, and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-anlaggningstillgangar-v8724"
+fields = { "label" = "Summa finansiella anläggningstillgångar (V8724, INK3)" }
+evidence = "#2102 same-label cluster 'Summa finansiella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; Same item under different field codes: N2, the register, and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar"
+fields = { "label" = "Summa kortfristiga fordringar (V0220, N2)" }
+evidence = "#2102 same-label cluster 'Summa kortfristiga fordringar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar-v7260"
+fields = { "label" = "Summa kortfristiga fordringar (v7260, NEA)" }
+evidence = "#2102 same-label cluster 'Summa kortfristiga fordringar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NEA."
+
+[[statement]]
+kind = "set"
+subject = "var:upplupna-kostnader-forutbetalda-intakter"
+fields = { "label" = "Upplupna kostnader och förutbetalda intäkter (V0305, N2)" }
+evidence = "#2102 same-label cluster 'Upplupna kostnader och förutbetalda intäkter' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:upplupna-kostnader-och-forutbetalda-intakter-v7370"
+fields = { "label" = "Upplupna kostnader och förutbetalda intäkter (v7370, INK2)" }
+evidence = "#2102 same-label cluster 'Upplupna kostnader och förutbetalda intäkter' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:upplupna-kostnader-och-forutbetalda-intakter-v8744"
+fields = { "label" = "Upplupna kostnader och förutbetalda intäkter (V8744, INK3)" }
+evidence = "#2102 same-label cluster 'Upplupna kostnader och förutbetalda intäkter' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-fran-skogs-skogsskade-upphovsmannakonto-v0842"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0842, N2)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-fran-skogs-skogsskade-upphovsmannakonto-v7606"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (v7606, NE)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-skogs-skogsskade-upphovsmannakonto"
+fields = { "label" = "Uttag från skogs-/ skogsskade-/ upphovsmannakonto (V0153, N1)" }
+evidence = "#2102 same-label cluster 'Uttag från skogs-/ skogsskade-/ upphovsmannakonto' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, N1 and NE."
+
+[[statement]]
+kind = "set"
+subject = "var:v0344"
+fields = { "label" = "Periodiseringsfond (v0344, N3A)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond' (3 variables): judged different meaning, medium confidence; Same item under different field codes on INK2, INK3 and N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:v0634"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst (V0634)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7758 sits on INK2, V0634 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:v0635"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt överskott enligt blankett N3B/kapitalvinst (V0635)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt överskott enligt blankett N3B/kapitalvinst' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7659 sits on INK2, V0635 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:v0636"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd förlust/kapitalförlust (V0636)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd förlust/kapitalförlust' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7660 sits on INK2, V0636 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:v0637"
+fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt underskott enligt blankett N3B/kapitalförlust (V0637)" }
+evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Skattemässigt underskott enligt blankett N3B/kapitalförlust' (2 variables): judged different meaning, medium confidence; Same item under different field codes; v7759 sits on INK2, V0637 on the declaration form and register."
+
+[[statement]]
+kind = "set"
+subject = "var:v73"
+fields = { "label" = "Periodiseringsfond (v7321, INK2)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond' (3 variables): judged different meaning, medium confidence; Same item under different field codes on INK2, INK3 and N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:v8736"
+fields = { "label" = "Periodiseringsfond (V8736, INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond' (3 variables): judged different meaning, medium confidence; Same item under different field codes on INK2, INK3 and N3A."
+
+[[statement]]
+kind = "set"
+subject = "var:varor-och-legoarbeten"
+fields = { "label" = "Varor och legoarbeten (v7500, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Varor och legoarbeten' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:varor-och-legoarbeten-v7512"
+fields = { "label" = "Varor och legoarbeten (v7512, INK2)" }
+evidence = "#2102 same-label cluster 'Varor och legoarbeten' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:varor-och-legoarbeten-v8750"
+fields = { "label" = "Varor och legoarbeten (V8750, INK3)" }
+evidence = "#2102 same-label cluster 'Varor och legoarbeten' (3 variables): judged different meaning, medium confidence; Same item under different field codes on NE/NEA, INK2 and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:varulager"
+fields = { "label" = "Varulager (V0219, N2)" }
+evidence = "#2102 same-label cluster 'Varulager' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:varulager-v7240"
+fields = { "label" = "Varulager (v7240, NE/NEA)" }
+evidence = "#2102 same-label cluster 'Varulager' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:varulager-v8726"
+fields = { "label" = "Varulager (V8726, INK3)" }
+evidence = "#2102 same-label cluster 'Varulager' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."

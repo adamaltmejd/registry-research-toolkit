@@ -850,3 +850,39 @@ kind = "set"
 subject = "set:sociala-avgifter"
 fields = { "label" = "Sociala avgifter" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (SNI 5 siffror, FRSNI92F)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "label" = "Näringsgren (SNI 2 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:sni3"
+fields = { "label" = "Näringsgren (SNI 3 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:sni4"
+fields = { "label" = "Näringsgren (SNI 4 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:sni5"
+fields = { "label" = "Näringsgren (SNI 5 siffror)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:snibokst"
+fields = { "label" = "Näringsgren (SNI-avdelning, bokstav)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."

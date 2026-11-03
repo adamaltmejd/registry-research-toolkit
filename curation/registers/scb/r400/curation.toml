@@ -460,3 +460,81 @@ kind = "set"
 subject = "set:typomrade"
 fields = { "label" = "Typområde" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-fastighet-fore-flytt"
+fields = { "label" = "Bostadsarea (före flytt)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: BostytaG is the area of the property where the person was registered before the move; Bostyta the current one."
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetg"
+fields = { "label" = "Fastighetsbeteckning (före flytt)" }
+evidence = "#2102 same-label cluster 'Fastighetsbeteckning' (2 variables): judged different meaning, high confidence; Opdefs: FastbetG is the designation of the property where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
+fields = { "label" = "Fastighetens identitetsnummer (före flytt)" }
+evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (2 variables): judged different meaning, high confidence; Opdefs: UUID_FastG is the property where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholms-kommun-fore-flytt"
+fields = { "label" = "Församling i Stockholms kommun (före flytt)" }
+evidence = "#2102 same-label cluster 'Församling i Stockholms kommun' (2 variables): judged different meaning, high confidence; Opdefs: NykoPrefixG is the parish of the property where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "label" = "Kommun (före flytt)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: KommunG is the municipality where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
+fields = { "label" = "Lägenhetens identitetsnummer (före flytt)" }
+evidence = "#2102 same-label cluster 'Lägenhetens identitetsnummer' (2 variables): judged different meaning, high confidence; Opdefs: UUID_LghG is the dwelling where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-fore-flytt"
+fields = { "label" = "Län (före flytt)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: LanG is the county where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-lagenhet-fore-flytt"
+fields = { "label" = "Nybyggnadsår (före flytt)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, high confidence; Opdefs: ByggperG is the construction year of the dwelling where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:nyckelkodsomrade-fore-flytt"
+fields = { "label" = "Nyckelkodsområde (NYKO) (före flytt)" }
+evidence = "#2102 same-label cluster 'Nyckelkodsområde (NYKO)' (2 variables): judged different meaning, high confidence; Opdefs: NykoG is the NYKO of the property where the person was registered before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:tyko"
+fields = { "label" = "Typområden (TYKO) (tätort och nivåfaktor)" }
+evidence = "#2102 same-label cluster 'Typområden (TYKO)' (4 variables): judged different meaning, high confidence; Opdefs: Tyko/TykoG are based on tätort size and nivåfaktor, TykoUSK/TykoUSKG on stadsdelsområde; the G columns refer to the property before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:tykousk"
+fields = { "label" = "Typområden (TYKO) (stadsdelsområde)" }
+evidence = "#2102 same-label cluster 'Typområden (TYKO)' (4 variables): judged different meaning, high confidence; Opdefs: Tyko/TykoG are based on tätort size and nivåfaktor, TykoUSK/TykoUSKG on stadsdelsområde; the G columns refer to the property before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:typomrade-stadsdelsomrade-fore-flytt"
+fields = { "label" = "Typområden (TYKO) (stadsdelsområde, före flytt)" }
+evidence = "#2102 same-label cluster 'Typområden (TYKO)' (4 variables): judged different meaning, high confidence; Opdefs: Tyko/TykoG are based on tätort size and nivåfaktor, TykoUSK/TykoUSKG on stadsdelsområde; the G columns refer to the property before the move."
+
+[[statement]]
+kind = "set"
+subject = "var:typomrade-tatort-nivafaktor-fore-flytt"
+fields = { "label" = "Typområden (TYKO) (tätort och nivåfaktor, före flytt)" }
+evidence = "#2102 same-label cluster 'Typområden (TYKO)' (4 variables): judged different meaning, high confidence; Opdefs: Tyko/TykoG are based on tätort size and nivåfaktor, TykoUSK/TykoUSKG on stadsdelsområde; the G columns refer to the property before the move."

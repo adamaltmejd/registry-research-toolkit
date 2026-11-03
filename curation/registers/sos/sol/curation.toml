@@ -1307,3 +1307,9 @@ kind = "set"
 subject = "set:verkstallighetsdatum"
 fields = { "label" = "Verkställighetsdatum" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "label" = "Födelsedatum (numeriskt SAS-datum)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, high confidence; Beskrivningen anger att FODDATN är numeriskt SAS-datum; FODDAT är den andra kolumnen i samma tabeller."

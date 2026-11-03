@@ -1437,3 +1437,243 @@ kind = "set"
 subject = "set:sekretess"
 fields = { "label" = "Sekretess" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:baspris"
+fields = { "label" = "Baspris (tjänsteprisindex)" }
+evidence = "#2102 same-label cluster 'Baspris' (2 variables): judged different meaning, medium confidence; Fv_baspris sits in the producer price index and is fetched from the previous year's round; BasPris is the base price for index calculation in the service price index."
+
+[[statement]]
+kind = "set"
+subject = "var:baspris-fv-baspris"
+fields = { "label" = "Baspris (producentprisindex)" }
+evidence = "#2102 same-label cluster 'Baspris' (2 variables): judged different meaning, medium confidence; Fv_baspris sits in the producer price index and is fetched from the previous year's round; BasPris is the base price for index calculation in the service price index."
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod-period"
+fields = { "label" = "Beräkningsperiod (Period)" }
+evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod-periodid"
+fields = { "label" = "Beräkningsperiod (period-id)" }
+evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod-undersokningskvartal"
+fields = { "label" = "Beräkningsperiod (UndersokningsKvartal)" }
+evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-ftgid"
+fields = { "label" = "Identitet (företag)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-insmetodid"
+fields = { "label" = "Identitet (insamlingsmetod)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-kodid"
+fields = { "label" = "Identitet (KodId)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-landid"
+fields = { "label" = "Identitet (land)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-marknprodgrparid"
+fields = { "label" = "Identitet (MarknProdGrpArId)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-personid"
+fields = { "label" = "Identitet (person)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-prisnotid"
+fields = { "label" = "Identitet (prisnotering)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-prisnotkodid"
+fields = { "label" = "Identitet (prisnoteringskod)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-proderbjid"
+fields = { "label" = "Identitet (produkterbjudande)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-proderbjixid"
+fields = { "label" = "Identitet (ProdErbjIxId)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-prodgrpid"
+fields = { "label" = "Identitet (produktgrupp)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-valutaid"
+fields = { "label" = "Identitet (valuta)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-valutanotid"
+fields = { "label" = "Identitet (valutanotering)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-varvardeid"
+fields = { "label" = "Identitet (VarVardeId)" }
+evidence = "#2102 same-label cluster 'Identitet' (14 variables): judged different meaning, medium confidence; Fourteen concurrent ID columns in one ppi table; the column names name different entities, so they are different keys."
+
+[[statement]]
+kind = "set"
+subject = "var:kn4kod"
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (4 siffror, kod)" }
+evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
+
+[[statement]]
+kind = "set"
+subject = "var:kn4namn"
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (4 siffror, namn)" }
+evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
+
+[[statement]]
+kind = "set"
+subject = "var:kn8beskrivning"
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (KN8, beskrivning)" }
+evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
+
+[[statement]]
+kind = "set"
+subject = "var:kn8kod-2"
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (KN8, kod)" }
+evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod"
+fields = { "label" = "Kvalitetsjusteringsmetod (konsumentprisindex)" }
+evidence = "#2102 same-label cluster 'Kvalitetsjusteringsmetod' (2 variables): judged different meaning, medium confidence; Kval_kod (producer price index, 2001-2013) and KvalJustMetod (consumer and service price index) have different code lists and different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod-kval-kod"
+fields = { "label" = "Kvalitetsjusteringsmetod (producentprisindex)" }
+evidence = "#2102 same-label cluster 'Kvalitetsjusteringsmetod' (2 variables): judged different meaning, medium confidence; Kval_kod (producer price index, 2001-2013) and KvalJustMetod (consumer and service price index) have different code lists and different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:prodnamn"
+fields = { "label" = "Produktgrupp sjusiffernivå TPI (namn)" }
+evidence = "#2102 same-label cluster 'Produktgrupp sjusiffernivå TPI' (2 variables): judged different meaning, high confidence; ProdNamn is the name; ProdKod is the seven-digit code (value set labels=codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp"
+fields = { "label" = "Produktgrupp (kod, varukod)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-beskrivnsv"
+fields = { "label" = "Produktgrupp (beskrivning, svenska)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namn"
+fields = { "label" = "Produktgrupp (namn)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namnsv"
+fields = { "label" = "Produktgrupp (namn, svenska)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-pg"
+fields = { "label" = "Produktgrupp (kod, pg)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-prodgrpkod"
+fields = { "label" = "Produktgrupp (kod, ProdGrpKod)" }
+evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda"
+fields = { "label" = "Produktgrupp Sammanvägda klasser (namn)" }
+evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
+fields = { "label" = "Produktgrupp Sammanvägda klasser (kod)" }
+evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sju-tpi"
+fields = { "label" = "Produktgrupp sjusiffernivå TPI (kod)" }
+evidence = "#2102 same-label cluster 'Produktgrupp sjusiffernivå TPI' (2 variables): judged different meaning, high confidence; ProdNamn is the name; ProdKod is the seven-digit code (value set labels=codes)."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn"
+fields = { "label" = "Produktgruppsnamn (BeskrivnSv)" }
+evidence = "#2102 same-label cluster 'Produktgruppsnamn' (2 variables): judged different meaning, low confidence; BeskrivnSv and NamnSV are concurrent tpi columns with the same value set and no opdef; nothing says how they differ, so qualified with column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn-namnsv"
+fields = { "label" = "Produktgruppsnamn (NamnSV)" }
+evidence = "#2102 same-label cluster 'Produktgruppsnamn' (2 variables): judged different meaning, low confidence; BeskrivnSv and NamnSV are concurrent tpi columns with the same value set and no opdef; nothing says how they differ, so qualified with column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:produktid"
+fields = { "label" = "Produktid (tjänsteprisindex)" }
+evidence = "#2102 same-label cluster 'Produktid' (2 variables): judged different meaning, medium confidence; ProdId is a KPI löpnummer key used with Produktgruppsid; ProduktId is a separate key in the tpi table; keys are local to each index."
+
+[[statement]]
+kind = "set"
+subject = "var:produktid-prodid"
+fields = { "label" = "Produktid (konsumentprisindex)" }
+evidence = "#2102 same-label cluster 'Produktid' (2 variables): judged different meaning, medium confidence; ProdId is a KPI löpnummer key used with Produktgruppsid; ProduktId is a separate key in the tpi table; keys are local to each index."
+
+[[statement]]
+kind = "set"
+subject = "var:stat-id"
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (8 siffror, kod)" }
+evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."

@@ -19208,3 +19208,663 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aapavgx"
+fields = { "label" = "Underlag för beräkning av ålderspensionsavgift (föregående år)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av ålderspensionsavgift' (2 variables): judged different meaning, high confidence; Opdef: AAPAVGX is the underlag for the previous year; concurrent with AAPAVG in 2000-01."
+
+[[statement]]
+kind = "set"
+subject = "var:aforfvi"
+fields = { "label" = "Förlustavdrag (mot förvärvsinkomst, AFORFVI)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:aforkap"
+fields = { "label" = "Förlustavdrag (mot inkomst av kapital, AFORKAP)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:ainjo"
+fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, AINJO)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:ainro"
+fields = { "label" = "Inkomst av rörelse (A-inkomst, AINRO)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:aintj"
+fields = { "label" = "Inkomst av tjänst (A-inkomst, AINTJ)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanna-avdrag-exklusive-underskott-forvarvskalla"
+fields = { "label" = "Allmänna avdrag (statlig taxering, ALAV)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged different meaning, medium confidence; AVKALLM is the kommunal deduction; ALAV and AVSALLM share the statlig-tax opdef and are the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:avforlf"
+fields = { "label" = "Förlustavdrag (mot förvärvsinkomst, AVFORLF)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:avforlk"
+fields = { "label" = "Förlustavdrag (mot inkomst av kapital, AVFORLK)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:avkallm"
+fields = { "label" = "Allmänna avdrag (kommunal taxering)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged different meaning, medium confidence; AVKALLM is the kommunal deduction; ALAV and AVSALLM share the statlig-tax opdef and are the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:avkforl"
+fields = { "label" = "Förlustavdrag (kommunal taxering, AVKFORL)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:avsallm"
+fields = { "label" = "Allmänna avdrag (statlig taxering, AVSALLM)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged different meaning, medium confidence; AVKALLM is the kommunal deduction; ALAV and AVSALLM share the statlig-tax opdef and are the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:avsext"
+fields = { "label" = "Kommunalt extra avdrag (AVSEXT)" }
+evidence = "#2102 same-label cluster 'Kommunalt extra avdrag' (3 variables): judged different meaning, low confidence; KEA and AVKEXT are a rename; AVSEXT is a concurrent separate column (S probably statlig) with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:avsforl"
+fields = { "label" = "Förlustavdrag (statlig taxering, AVSFORL)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:bfoland"
+fields = { "label" = "Födelseland RTB (BFOLAND)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (5 variables): judged different meaning, medium confidence; Different codings: older combined län/country list, län for Swedish-born, country code, grouped (Sverige/Norden/EU15+6 OECD/övriga) and a two-position country code."
+
+[[statement]]
+kind = "set"
+subject = "var:binjo"
+fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, BINJO)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:binro"
+fields = { "label" = "Inkomst av rörelse (B-inkomst, BINRO)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:bintj"
+fields = { "label" = "Inkomst av tjänst (B-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:bkuinst"
+fields = { "label" = "Institutionell sektorkod (BKUINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): judged different meaning, medium confidence; Opdefs: BINST also includes näringsidkare, BKUINST (and its predecessor KUINST) excludes them."
+
+[[statement]]
+kind = "set"
+subject = "var:blandad-inkomst-definition-2003"
+fields = { "label" = "Blandad inkomst (definition 2003)" }
+evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged different meaning, high confidence; CMIX03 is the 2003 definition and runs concurrently with CMIX in 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-barnfamiljer-mfl"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (huvudsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; Opdefs: IBOSTB covers only the main applicant, IBOSTBU is split between applicant and co-applicant; concurrent from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinkomst"
+fields = { "label" = "Bruttoinkomst (BRUTTO)" }
+evidence = "#2102 same-label cluster 'Bruttoinkomst' (3 variables): judged different meaning, medium confidence; CBRUTT03 is the 2003 definition running beside CBRUTTO; BRUTTO continues as CBRUTTO with a revised formula."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinkomst-definition-2003"
+fields = { "label" = "Bruttoinkomst (definition 2003)" }
+evidence = "#2102 same-label cluster 'Bruttoinkomst' (3 variables): judged different meaning, medium confidence; CBRUTT03 is the 2003 definition running beside CBRUTTO; BRUTTO continues as CBRUTTO with a revised formula."
+
+[[statement]]
+kind = "set"
+subject = "var:bstodan"
+fields = { "label" = "Kod för stödområde A (näringsverksamhet inom transportsektorn)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): judged different meaning, high confidence; Opdefs: BSTODA marks residence in stödområde A, BSTODAN marks transport-sector business in stödområde A."
+
+[[statement]]
+kind = "set"
+subject = "var:cbrutto"
+fields = { "label" = "Bruttoinkomst (CBRUTTO)" }
+evidence = "#2102 same-label cluster 'Bruttoinkomst' (3 variables): judged different meaning, medium confidence; CBRUTT03 is the 2003 definition running beside CBRUTTO; BRUTTO continues as CBRUTTO with a revised formula."
+
+[[statement]]
+kind = "set"
+subject = "var:deklarerad-tjansteinkomst-arbetsgivarbetald-socialforsakring"
+fields = { "label" = "Deklarerad inkomst av tjänst (arbetsgivarbetald socialförsäkring)" }
+evidence = "#2102 same-label cluster 'Deklarerad inkomst av tjänst' (2 variables): judged different meaning, high confidence; Opdefs: INDTJ1 is point 1 (employer pays social fees), INDTJ2 is point 2 (employer payments under 1 000 kr); concurrent 1978-1991."
+
+[[statement]]
+kind = "set"
+subject = "var:deklarerad-tjansteinkomst-arbetsgivare-under-1000-kr"
+fields = { "label" = "Deklarerad inkomst av tjänst (arbetsgivare under 1 000 kr)" }
+evidence = "#2102 same-label cluster 'Deklarerad inkomst av tjänst' (2 variables): judged different meaning, high confidence; Opdefs: INDTJ1 is point 1 (employer pays social fees), INDTJ2 is point 2 (employer payments under 1 000 kr); concurrent 1978-1991."
+
+[[statement]]
+kind = "set"
+subject = "var:etableringstillagg-utbetalt-belopp-rtb-familj"
+fields = { "label" = "Etableringstillägg, utbetalt belopp (familj enligt RTB)" }
+evidence = "#2102 same-label cluster 'Etableringstillägg, utbetalt belopp' (2 variables): judged different meaning, high confidence; IETABTU is the family amount per RTB on 31 December, IETABT the person's own amount."
+
+[[statement]]
+kind = "set"
+subject = "var:expansionsmedelsskatt"
+fields = { "label" = "Expansionsmedelsskatt (SEXPAN)" }
+evidence = "#2102 same-label cluster 'Expansionsmedelsskatt' (3 variables): judged different meaning, medium confidence; SEXPAT is the credited (tillgodoräknad) tax, SEXPAN the tax itself; SEXPMED takes over from SEXPAN in 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:expansionsmedelsskatt-tillgodoraknad"
+fields = { "label" = "Expansionsmedelsskatt (tillgodoräknad)" }
+evidence = "#2102 same-label cluster 'Expansionsmedelsskatt' (3 variables): judged different meaning, medium confidence; SEXPAT is the credited (tillgodoräknad) tax, SEXPAN the tax itself; SEXPMED takes over from SEXPAN in 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "label" = "Födelseland RTB (BFLAND)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (5 variables): judged different meaning, medium confidence; Different codings: older combined län/country list, län for Swedish-born, country code, grouped (Sverige/Norden/EU15+6 OECD/övriga) and a two-position country code."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb-grupperat"
+fields = { "label" = "Födelseland RTB (grupperat)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (5 variables): judged different meaning, medium confidence; Different codings: older combined län/country list, län for Swedish-born, country code, grouped (Sverige/Norden/EU15+6 OECD/övriga) and a two-position country code."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb-tva-positioner"
+fields = { "label" = "Födelseland RTB (två positioner)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (5 variables): judged different meaning, medium confidence; Different codings: older combined län/country list, län for Swedish-born, country code, grouped (Sverige/Norden/EU15+6 OECD/övriga) and a two-position country code."
+
+[[statement]]
+kind = "set"
+subject = "var:fortc"
+fields = { "label" = "Födelseland RTB (äldre kodning)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (5 variables): judged different meaning, medium confidence; Different codings: older combined län/country list, län for Swedish-born, country code, grouped (Sverige/Norden/EU15+6 OECD/övriga) and a two-position country code."
+
+[[statement]]
+kind = "set"
+subject = "var:fp"
+fields = { "label" = "Summa folkpensionsbelopp (typ enligt FPKOD)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (4 variables): judged different meaning, medium confidence; Opdefs: FP1 and FP2 are the amounts for the pension types in FPKOD1 and FPKOD2, FP the amount for the type in FPKOD; PFPTOT has no stated meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:fp1"
+fields = { "label" = "Summa folkpensionsbelopp (typ enligt FPKOD1)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (4 variables): judged different meaning, medium confidence; Opdefs: FP1 and FP2 are the amounts for the pension types in FPKOD1 and FPKOD2, FP the amount for the type in FPKOD; PFPTOT has no stated meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:fp2"
+fields = { "label" = "Summa folkpensionsbelopp (typ enligt FPKOD2)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (4 variables): judged different meaning, medium confidence; Opdefs: FP1 and FP2 are the amounts for the pension types in FPKOD1 and FPKOD2, FP the amount for the type in FPKOD; PFPTOT has no stated meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utbildningsniva-reviderad"
+fields = { "label" = "Utbildningsnivå (reviderad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, medium confidence; BSUNNIVR is the revised variant per its opdef, concurrent with BSUNNIV in 2006-07."
+
+[[statement]]
+kind = "set"
+subject = "var:ibostbu"
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (sökande och medsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; Opdefs: IBOSTB covers only the main applicant, IBOSTBU is split between applicant and co-applicant; concurrent from 2014."
+
+[[statement]]
+kind = "set"
+subject = "var:inasjor"
+fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, INASJOR)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inasror"
+fields = { "label" = "Inkomst av rörelse (A-inkomst, INASROR)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inatj"
+fields = { "label" = "Inkomst av tjänst (A-inkomst, INATJ)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:inbsjor"
+fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, INBSJOR)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inbsror"
+fields = { "label" = "Inkomst av rörelse (B-inkomst, INBSROR)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inbtj"
+fields = { "label" = "Inkomst av tjänst (B-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:injo"
+fields = { "label" = "Inkomst av jordbruksfastighet (summa)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inkbesk"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (INKBESK)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, medium confidence; KBIN, KBESK and INKBESK are consecutive names; INKBFOR runs concurrently and contains förskottsbelopp per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:inkbfor"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (förskottsbelopp)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, medium confidence; KBIN, KBESK and INKBESK are consecutive names; INKBFOR runs concurrently and contains förskottsbelopp per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-famansforetag-forhojd-statlig-skatt"
+fields = { "label" = "Inkomst från fåmansföretag (förhöjd statlig skatt)" }
+evidence = "#2102 same-label cluster 'Inkomst från fåmansföretag' (3 variables): judged different meaning, high confidence; TFOABF is the amount taxed with raised state tax regardless of income and need not be in inkomst av tjänst; TJFOAB and TFOAB are a rename with identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-famansforetag-tjanst"
+fields = { "label" = "Inkomst från fåmansföretag (TJFOAB)" }
+evidence = "#2102 same-label cluster 'Inkomst från fåmansföretag' (3 variables): judged different meaning, high confidence; TFOABF is the amount taxed with raised state tax regardless of income and need not be in inkomst av tjänst; TJFOAB and TFOAB are a rename with identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-fran-famansforetag"
+fields = { "label" = "Inkomst från fåmansföretag (TFOAB)" }
+evidence = "#2102 same-label cluster 'Inkomst från fåmansföretag' (3 variables): judged different meaning, high confidence; TFOABF is the amount taxed with raised state tax regardless of income and need not be in inkomst av tjänst; TJFOAB and TFOAB are a rename with identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:inkssku3"
+fields = { "label" = "Underlag för skatt (statligt skatteunderlag)" }
+evidence = "#2102 same-label cluster 'Underlag för skatt' (2 variables): judged different meaning, high confidence; Opdefs: INKSSKU3 is the statligt skatteunderlag, INKKSKU3 the kommunalt; concurrent 1978-80."
+
+[[statement]]
+kind = "set"
+subject = "var:inro"
+fields = { "label" = "Inkomst av rörelse (summa)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:insjor"
+fields = { "label" = "Inkomst av jordbruksfastighet (summa)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:insror"
+fields = { "label" = "Inkomst av rörelse (summa)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "label" = "Institutionell sektorkod (företag och näringsidkare)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): judged different meaning, medium confidence; Opdefs: BINST also includes näringsidkare, BKUINST (and its predecessor KUINST) excludes them."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-agarkategori-juridisk-form"
+fields = { "label" = "Institutionell sektorkod (KUINST)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): judged different meaning, medium confidence; Opdefs: BINST also includes näringsidkare, BKUINST (and its predecessor KUINST) excludes them."
+
+[[statement]]
+kind = "set"
+subject = "var:intj"
+fields = { "label" = "Inkomst av tjänst (summa, INTJ)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:justerad-sammanraknad-inkomst-inkl-sjoinkomst"
+fields = { "label" = "Justerad sammanräknad inkomst (inklusive sjöinkomst)" }
+evidence = "#2102 same-label cluster 'Justerad sammanräknad inkomst' (2 variables): judged different meaning, high confidence; JSINKSJO also includes sjöinkomst per its opdef; concurrent with JSINKF."
+
+[[statement]]
+kind = "set"
+subject = "var:kas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (KAS)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, low confidence; KAS to TKAS is a rename; TKASKU runs concurrently 1993-2004 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kbesk"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (KBESK)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, medium confidence; KBIN, KBESK and INKBESK are consecutive names; INKBFOR runs concurrently and contains förskottsbelopp per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kbin"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (KBIN)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, medium confidence; KBIN, KBESK and INKBESK are consecutive names; INKBFOR runs concurrently and contains förskottsbelopp per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kfoav"
+fields = { "label" = "Förlustavdrag (kommunal taxering, KFOAV)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalt-extra-avdrag"
+fields = { "label" = "Kommunalt extra avdrag (AVKEXT)" }
+evidence = "#2102 same-label cluster 'Kommunalt extra avdrag' (3 variables): judged different meaning, low confidence; KEA and AVKEXT are a rename; AVSEXT is a concurrent separate column (S probably statlig) with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalt-extra-avdrag-nedsatt-skatteformaga"
+fields = { "label" = "Kommunalt extra avdrag (KEA)" }
+evidence = "#2102 same-label cluster 'Kommunalt extra avdrag' (3 variables): judged different meaning, low confidence; KEA and AVKEXT are a rename; AVSEXT is a concurrent separate column (S probably statlig) with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:markering-nolltaxering"
+fields = { "label" = "Markering för nolltaxering (kommunal taxering)" }
+evidence = "#2102 same-label cluster 'Markering för nolltaxering' (3 variables): judged different meaning, medium confidence; Opdefs: KTAXNOL concerns kommunalt taxerad inkomst, STAXNOL statligt; NOLLTAX (1991-92) is a nej/ja marker without a stated split."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsinkomst-definition-2003"
+fields = { "label" = "Näringsinkomst (definition 2003)" }
+evidence = "#2102 same-label cluster 'Näringsinkomst' (2 variables): judged different meaning, high confidence; CFTAG03 is the 2003 definition; CFTAG includes earlier unused deficit per its opdef; concurrent 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsinkomst-med-tidigare-outnyttjat-underskott"
+fields = { "label" = "Näringsinkomst (med tidigare outnyttjat underskott)" }
+evidence = "#2102 same-label cluster 'Näringsinkomst' (2 variables): judged different meaning, high confidence; CFTAG03 is the 2003 definition; CFTAG includes earlier unused deficit per its opdef; concurrent 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:nat"
+fields = { "label" = "Medborgarskap" }
+evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (2 variables): judged different meaning, high confidence; NAT holds citizenship country codes; NATRTB holds the year of Swedish citizenship (value set 1900, 1912, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:negativa-transfereringar"
+fields = { "label" = "Negativa transfereringar (definition 2003)" }
+evidence = "#2102 same-label cluster 'Negativa transfereringar' (2 variables): judged different meaning, high confidence; CNEG03 is the 2003 definition running beside CNEGL in 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:nundt"
+fields = { "label" = "Underskott av näringsverksamhet (föregående år, NUNDT)" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (4 variables): judged different meaning, medium confidence; Opdefs: USKNRV and NUNDER sum aktiv and passiv näringsverksamhet; UNRV and NUNDT are the previous year's underskott (a rename)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-negativa-transfereringar-definition-2003"
+fields = { "label" = "Övriga negativa transfereringar (definition 2003)" }
+evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (2 variables): judged different meaning, high confidence; COVRN03 is the 2003 definition running beside COVRNEGL in 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:pfptot"
+fields = { "label" = "Summa folkpensionsbelopp (PFPTOT)" }
+evidence = "#2102 same-label cluster 'Summa folkpensionsbelopp.' (4 variables): judged different meaning, medium confidence; Opdefs: FP1 and FP2 are the amounts for the pension types in FPKOD1 and FPKOD2, FP the amount for the type in FPKOD; PFPTOT has no stated meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-loneskatt-forvarvsinkomst-p"
+fields = { "label" = "Underlag för beräkning av särskild löneskatt på förvärvsinkomsten (16,16 %)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild löneskatt på förvärvsinkomsten' (2 variables): judged different meaning, medium confidence; Opdef: ASLSFP is the underlag at the 16,16 % rate; ASLSF runs concurrently with no stated rate."
+
+[[statement]]
+kind = "set"
+subject = "var:sexpmed"
+fields = { "label" = "Expansionsmedelsskatt (SEXPMED)" }
+evidence = "#2102 same-label cluster 'Expansionsmedelsskatt' (3 variables): judged different meaning, medium confidence; SEXPAT is the credited (tillgodoräknad) tax, SEXPAN the tax itself; SEXPMED takes over from SEXPAN in 1998."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-beskattningsbar-inkomst"
+fields = { "label" = "Statligt beskattningsbar inkomst (INSBESK)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (3 variables): judged different meaning, low confidence; SBIN precedes INSBESK; SBESK is a concurrent column in 1978-79 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-beskattningsbar-inkomst-2"
+fields = { "label" = "Statligt beskattningsbar inkomst (SBESK)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (3 variables): judged different meaning, low confidence; SBIN precedes INSBESK; SBESK is a concurrent column in 1978-79 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-beskattningsbar-inkomst-3"
+fields = { "label" = "Statligt beskattningsbar inkomst (SBIN)" }
+evidence = "#2102 same-label cluster 'Statligt beskattningsbar inkomst' (3 variables): judged different meaning, low confidence; SBIN precedes INSBESK; SBESK is a concurrent column in 1978-79 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-tjanstepension-2"
+fields = { "label" = "Statlig tjänstepension, övrig (restpost)" }
+evidence = "#2102 same-label cluster 'Statlig tjänstepension' (3 variables): judged different meaning, high confidence; POTJPS is a residual (max(PKUTJPS - PBTJP - PSTJP, 0)) running beside PKUTJPS; STP is the 1981-87 predecessor of PKUTJPS."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-extra-avdrag"
+fields = { "label" = "Statligt extra avdrag (AVSEXT)" }
+evidence = "#2102 same-label cluster 'Statligt extra avdrag' (3 variables): judged different meaning, low confidence; SEA and AVSEXT are a rename; AVKEXT is a concurrent column in the supplement table with no stated difference (K/S looks swapped there, the shared opdef cites kommunalskattelagen), so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-extra-avdrag-avkext"
+fields = { "label" = "Statligt extra avdrag (AVKEXT)" }
+evidence = "#2102 same-label cluster 'Statligt extra avdrag' (3 variables): judged different meaning, low confidence; SEA and AVSEXT are a rename; AVKEXT is a concurrent column in the supplement table with no stated difference (K/S looks swapped there, the shared opdef cites kommunalskattelagen), so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-extra-avdrag-sea"
+fields = { "label" = "Statligt extra avdrag (SEA)" }
+evidence = "#2102 same-label cluster 'Statligt extra avdrag' (3 variables): judged different meaning, low confidence; SEA and AVSEXT are a rename; AVKEXT is a concurrent column in the supplement table with no stated difference (K/S looks swapped there, the shared opdef cites kommunalskattelagen), so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-forlustavdrag"
+fields = { "label" = "Förlustavdrag (statlig taxering, SFOAV)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (renamed in 1978), and from 1991 the deduction against förvärvsinkomst versus against inkomst av kapital."
+
+[[statement]]
+kind = "set"
+subject = "var:staxnol"
+fields = { "label" = "Markering för nolltaxering (statlig taxering)" }
+evidence = "#2102 same-label cluster 'Markering för nolltaxering' (3 variables): judged different meaning, medium confidence; Opdefs: KTAXNOL concerns kommunalt taxerad inkomst, STAXNOL statligt; NOLLTAX (1991-92) is a nej/ja marker without a stated split."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomrade-a-kod"
+fields = { "label" = "Kod för stödområde A (bosatt)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): judged different meaning, high confidence; Opdefs: BSTODA marks residence in stödområde A, BSTODAN marks transport-sector business in stödområde A."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-lan-summa"
+fields = { "label" = "Studiemedel, lån (summa av lånetyper)" }
+evidence = "#2102 same-label cluster 'Studiemedel, lån' (2 variables): judged different meaning, high confidence; Opdef: ISMLAN sums studiemedel lån, utlandslån, merkostnadslån and tilläggslån; ISM is the single studiemedel lån component."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-underskott-aktiv-passiv-naringsverksamhet"
+fields = { "label" = "Underskott av näringsverksamhet (summa aktiv och passiv)" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (4 variables): judged different meaning, medium confidence; Opdefs: USKNRV and NUNDER sum aktiv and passiv näringsverksamhet; UNRV and NUNDT are the previous year's underskott (a rename)."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-kpa"
+fields = { "label" = "Kommunal tjänstepension från KPA (PKTJP)" }
+evidence = "#2102 same-label cluster 'Kommunal tjänstepension från KPA' (2 variables): judged different meaning, medium confidence; Opdef: PKTJP is the sum of PKTKPK and PKTJPS (Statens pensionsverk) until 2005; PKTJPK is the KPA amount from kontrolluppgifter; same from 2005."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-kpa-2"
+fields = { "label" = "Kommunal tjänstepension från KPA (PKTJPK)" }
+evidence = "#2102 same-label cluster 'Kommunal tjänstepension från KPA' (2 variables): judged different meaning, medium confidence; Opdef: PKTJP is the sum of PKTKPK and PKTJPS (Statens pensionsverk) until 2005; PKTJPK is the KPA amount from kontrolluppgifter; same from 2005."
+
+[[statement]]
+kind = "set"
+subject = "var:tkas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (TKAS)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, low confidence; KAS to TKAS is a rename; TKASKU runs concurrently 1993-2004 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:tkasku"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (TKASKU)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, low confidence; KAS to TKAS is a rename; TKASKU runs concurrently 1993-2004 with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ttj"
+fields = { "label" = "Inkomst av tjänst (summa, TTJ)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
+
+[[statement]]
+kind = "set"
+subject = "var:tvard"
+fields = { "label" = "Vårdbidrag (TVARD)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:udfford"
+fields = { "label" = "Utdömning, inkomstberäkning inom kommun" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:udfsfor"
+fields = { "label" = "Utdömning, skattetillägg/förseningsavgift" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-berakning-av-loneavgift"
+fields = { "label" = "Underlag för beräkning av löneavgift (förlängt räkenskapsår)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (2 variables): judged different meaning, medium confidence; Opdef: ALONER is the underlag for extended accounting years; concurrent with ALONE 1997-99."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-fastighetsskatt-med-2-8-avseende-afavat"
+fields = { "label" = "Underlag för fastighetsskatt med 2,8 % avseende elproduktionsenhet, vattenkraft (AFAVAT)" }
+evidence = "#2102 same-label cluster 'Underlag för fastighetsskatt med 2,8 % avseende elproduktionsenhet, vattenkraft' (2 variables): judged different meaning, low confidence; AVAT and AFAVAT overlap in 2014-16 in the same tables with no stated difference, so AFAVAT is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-kommunal-statlig-skatt"
+fields = { "label" = "Underlag för skatt (kommunalt skatteunderlag)" }
+evidence = "#2102 same-label cluster 'Underlag för skatt' (2 variables): judged different meaning, high confidence; Opdefs: INKSSKU3 is the statligt skatteunderlag, INKKSKU3 the kommunalt; concurrent 1978-80."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-naringsverksamhet"
+fields = { "label" = "Underskott av näringsverksamhet (summa aktiv och passiv)" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (4 variables): judged different meaning, medium confidence; Opdefs: USKNRV and NUNDER sum aktiv and passiv näringsverksamhet; UNRV and NUNDT are the previous year's underskott (a rename)."
+
+[[statement]]
+kind = "set"
+subject = "var:unrv"
+fields = { "label" = "Underskott av näringsverksamhet (föregående år, UNRV)" }
+evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (4 variables): judged different meaning, medium confidence; Opdefs: USKNRV and NUNDER sum aktiv and passiv näringsverksamhet; UNRV and NUNDT are the previous year's underskott (a rename)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-hogsta-utbildning-reviderad"
+fields = { "label" = "Utbildningsinriktning (reviderad)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, medium confidence; BSUNINRR is the revised variant per its opdef, concurrent with BSUNINR in 2006-07."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-formogenhetstaxering"
+fields = { "label" = "Utdömning, förmögenhetstaxering" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-gemensam-formogenhet"
+fields = { "label" = "Utdömning, gemensam förmögenhet" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-inkomst-tjanst"
+fields = { "label" = "Utdömning, inkomst av tjänst" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-kommunal-taxering"
+fields = { "label" = "Utdömning, kommunal taxering" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-statlig-taxering"
+fields = { "label" = "Utdömning, statlig taxering" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:utdomning-taxeringsnamndens-anteckningar"
+fields = { "label" = "Utdömning, taxeringsnämndens anteckningar" }
+evidence = "#2102 same-label cluster 'Utdömning, utbotaxering i A-längden' (9 variables): judged different meaning, high confidence; Nine concurrent 0/1 markers; each opdef names a different area the declaration was utdömd for (the shared label only fits UDFUTBO)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardb"
+fields = { "label" = "Vårdbidrag (VARDB)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-kontrolluppgift"
+fields = { "label" = "Vårdbidrag (kontrolluppgift)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:vbbel"
+fields = { "label" = "Vårdbidrag (VBBEL)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."

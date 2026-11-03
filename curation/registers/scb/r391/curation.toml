@@ -454,3 +454,15 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "label" = "Poängomfattning (totala poäng)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the course covers in total, TPoang the points the participant completed in the period."
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "label" = "Poängomfattning (poäng under perioden)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the course covers in total, TPoang the points the participant completed in the period."

@@ -548,3 +548,93 @@ kind = "set"
 subject = "set:undervisningsvolym"
 fields = { "label" = "Undervisningsvolym" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:dist-und"
+fields = { "label" = "Skolform (distansundervisning)" }
+evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags, one per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:fkl-skola"
+fields = { "label" = "Skolform (förskoleklass)" }
+evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags, one per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:gr-skola"
+fields = { "label" = "Skolform (grundskola)" }
+evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags, one per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:gy-skola"
+fields = { "label" = "Skolform (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags, one per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:komp-und"
+fields = { "label" = "Skolform (kompletterande svenskundervisning)" }
+evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags, one per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-dist"
+fields = { "label" = "Lärarkategori i utlandsskola (lärare i distansundervisning)" }
+evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags for whether the school has teachers in a given school form, plus LarKat, a six-category teacher type."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-fkl"
+fields = { "label" = "Lärarkategori i utlandsskola (lärare i förskoleklass)" }
+evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags for whether the school has teachers in a given school form, plus LarKat, a six-category teacher type."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gr"
+fields = { "label" = "Lärarkategori i utlandsskola (lärare i grundskola)" }
+evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags for whether the school has teachers in a given school form, plus LarKat, a six-category teacher type."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gy"
+fields = { "label" = "Lärarkategori i utlandsskola (lärare i gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags for whether the school has teachers in a given school form, plus LarKat, a six-category teacher type."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-komp"
+fields = { "label" = "Lärarkategori i utlandsskola (lärare i kompletterande svenskundervisning)" }
+evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Opdefs: five Ja/Nej flags for whether the school has teachers in a given school form, plus LarKat, a six-category teacher type."
+
+[[statement]]
+kind = "set"
+subject = "var:unddist"
+fields = { "label" = "Undervisningsvolym (distansundervisning)" }
+evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:undfklass"
+fields = { "label" = "Undervisningsvolym (förskoleklass)" }
+evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:undgrund"
+fields = { "label" = "Undervisningsvolym (grundskola)" }
+evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:undgymn"
+fields = { "label" = "Undervisningsvolym (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."
+
+[[statement]]
+kind = "set"
+subject = "var:undkomp"
+fields = { "label" = "Undervisningsvolym (kompletterande svenskundervisning)" }
+evidence = "#2102 same-label cluster 'Undervisningsvolym' (5 variables): judged different meaning, high confidence; Opdefs: weekly teaching hours, one column per school form."

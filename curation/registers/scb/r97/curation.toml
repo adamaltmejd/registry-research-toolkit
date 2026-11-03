@@ -27906,3 +27906,2823 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "label" = "Yrkesställning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agande-andel-hyresfastighet-kfa1102"
+fields = { "label" = "Ägande andel hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ägande andel hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1072"
+fields = { "label" = "Ägarandel eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1073"
+fields = { "label" = "Ägarandel eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-eget-hem-kfa1074"
+fields = { "label" = "Ägarandel eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2072"
+fields = { "label" = "Ägarandel fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2073"
+fields = { "label" = "Ägarandel fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:agarandel-fritidsfastighet-kfa2074"
+fields = { "label" = "Ägarandel fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:ahusfakt"
+fields = { "label" = "Underlag för skattereduktion för husarbete (AHUSFAKT)" }
+evidence = "#2102 same-label cluster 'Underlag för skattereduktion för husarbete' (2 variables): judged different meaning, medium confidence; AHUSFAKT and AHUSG are overlapping columns with no text saying how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:ahusg"
+fields = { "label" = "Underlag för skattereduktion för husarbete (AHUSG)" }
+evidence = "#2102 same-label cluster 'Underlag för skattereduktion för husarbete' (2 variables): judged different meaning, medium confidence; AHUSFAKT and AHUSG are overlapping columns with no text saying how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiva-rorelseidkare-jordbrukare-bforz"
+fields = { "label" = "Aktiva rörelseidkare, jordbrukare (hushåll)" }
+evidence = "#2102 same-label cluster 'Aktiva rörelseidkare, jordbrukare' (2 variables): judged different meaning, medium confidence; Same opdef; BFOR is in the individregister, BFORZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:allmant-avdrag-avseende-premie-for-pensionsforsakring-apensz"
+fields = { "label" = "Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto (hushåll)" }
+evidence = "#2102 same-label cluster 'Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto' (2 variables): judged different meaning, high confidence; Opdef: APENSZ is summed to household level; APENS is the individual figure."
+
+[[statement]]
+kind = "set"
+subject = "var:allmant-avdrag-pensionsforsakring"
+fields = { "label" = "Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto (individ)" }
+evidence = "#2102 same-label cluster 'Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto' (2 variables): judged different meaning, high confidence; Opdef: APENSZ is summed to household level; APENS is the individual figure."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-hyresfastighet-ifa3052"
+fields = { "label" = "Andel av nettointäkt hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2 of a variable with at most two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-jordbruksfastighet-ijb1542"
+fields = { "label" = "Andel av nettointäkt jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-nettointakt-rorelsefastighet-irr1542"
+fields = { "label" = "Andel av nettointäkt rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-hyresfastighet-ifa3072"
+fields = { "label" = "Andel av underskott hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-jordbruksfastighet-ijb1502"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-jordbruksfastighet-ijb1503"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-underskott-rorelsefastighet-irr1502"
+fields = { "label" = "Andel av underskott rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel av underskott rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-procent-naringsfastighet-bknand2"
+fields = { "label" = "Andel i procent, näringsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel i procent, näringsfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-reavinst-forlust-bostadsratt-bkband2"
+fields = { "label" = "Andel reavinst/förlust, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Andel reavinst/förlust, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld"
+fields = { "label" = "Anställd (individ)" }
+evidence = "#2102 same-label cluster 'Anställd' (2 variables): judged different meaning, high confidence; Opdefs: BANZ refers to the reference person of the kosthushåll, BAN to the individual (BFORV = 1 and BFOR = 0)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-banz"
+fields = { "label" = "Anställd (kosthushållets referensperson)" }
+evidence = "#2102 same-label cluster 'Anställd' (2 variables): judged different meaning, high confidence; Opdefs: BANZ refers to the reference person of the kosthushåll, BAN to the individual (BFORV = 1 and BFOR = 0)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-utan-rorelseinkomster"
+fields = { "label" = "Anställning - Anställd utan rörelseinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Anställning - Anställd utan rörelseinkomster' (2 variables): judged different meaning, medium confidence; Same coding and derivation; BRANS is in the individregister, BRANSZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning-anstalld-utan-rorelseinkomster-bransz"
+fields = { "label" = "Anställning - Anställd utan rörelseinkomster (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Anställning - Anställd utan rörelseinkomster' (2 variables): judged different meaning, medium confidence; Same coding and derivation; BRANS is in the individregister, BRANSZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar"
+fields = { "label" = "Antal barn 0-19 år (hemmaboende barn, individ)" }
+evidence = "#2102 same-label cluster 'Antal barn 0-19 år' (2 variables): judged different meaning, medium confidence; Opdefs: BANTBRNZ counts children in the kosthushåll, BBRN19 counts home-living children from the family identity in RTB."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar-bantbrnz"
+fields = { "label" = "Antal barn 0-19 år (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Antal barn 0-19 år' (2 variables): judged different meaning, medium confidence; Opdefs: BANTBRNZ counts children in the kosthushåll, BBRN19 counts home-living children from the family identity in RTB."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "label" = "Antal barn under 18 år (individ)" }
+evidence = "#2102 same-label cluster 'Antal barn under 18 år' (2 variables): judged different meaning, medium confidence; Opdef: BANTBRNZ counts children in the kosthushåll; BANT18 is its individregister counterpart (no text)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar-bantbrnz"
+fields = { "label" = "Antal barn under 18 år (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Antal barn under 18 år' (2 variables): judged different meaning, medium confidence; Opdef: BANTBRNZ counts children in the kosthushåll; BANT18 is its individregister counterpart (no text)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fastigheter-med-en-specifik-typkod-kfa702"
+fields = { "label" = "Antal fastigheter med en specifik typkod (typkod 16)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter med en specifik typkod' (2 variables): judged different meaning, high confidence; Opdefs: KFA701 counts typkod 13, 14, 15; KFA702 counts typkod 16."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst"
+fields = { "label" = "Arbetsinkomst (summa av A-inkomster)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (3 variables): judged different meaning, medium confidence; Opdefs: CAINK is the sum of A-incomes (tjänst, jordbruksfastighet, rörelse); CARB is the general individual figure; CARBZ is the household's work income."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst-2"
+fields = { "label" = "Arbetsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (3 variables): judged different meaning, medium confidence; Opdefs: CAINK is the sum of A-incomes (tjänst, jordbruksfastighet, rörelse); CARB is the general individual figure; CARBZ is the household's work income."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst-hushall"
+fields = { "label" = "Arbetsinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (3 variables): judged different meaning, medium confidence; Opdefs: CAINK is the sum of A-incomes (tjänst, jordbruksfastighet, rörelse); CARB is the general individual figure; CARBZ is the household's work income."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstod"
+fields = { "label" = "Arbetsmarknadsstöd (individ)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstöd' (2 variables): judged different meaning, medium confidence; Same derivation; TARBST is in the individregister, TARBSTZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstod-tarbstz"
+fields = { "label" = "Arbetsmarknadsstöd (hushåll)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstöd' (2 variables): judged different meaning, medium confidence; Same derivation; TARBST is in the individregister, TARBSTZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-egenavgifter"
+fields = { "label" = "Egenavgifter (årets egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; Opdefs: NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate SRU components; ITN014 and SEGEN share one opdef (the sum) in separate periods."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-jordbruksfastighet-ijb1242"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-jordbruksfastighet-ijb1243"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendeintakt-rorelsefastighet-irr1242"
+fields = { "label" = "Arrendeintäkt rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-jordbruksfastighet-ijb1262"
+fields = { "label" = "Arrendekostnader jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-rorelsesfastighet-irr1262"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:arrendekostnader-rorelsesfastighet-irr1263"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-foregaende-ars-egenavgifter"
+fields = { "label" = "Egenavgifter (återföring av föregående års egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; Opdefs: NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate SRU components; ITN014 and SEGEN share one opdef (the sum) in separate periods."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-tidigare-uppskovsbelopp-naringsfastighet"
+fields = { "label" = "Uppskovsbelopp, återföring av tidigare uppskovsbelopp näringsfastighet" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:aterfort-tidigare-uppskovsbelopp-andelbyteslagen"
+fields = { "label" = "Uppskovsbelopp, återfört tidigare uppskov enligt andelsbyteslagen" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:aterfort-uppskovsbelopp-andelsbyteslagen-reaforlust"
+fields = { "label" = "Uppskovsbelopp, återfört enligt andelsbyteslagen (reaförlust B)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:aterstaende-uppskovsbelopp"
+fields = { "label" = "Uppskovsbelopp, återstående enligt K4B" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-naring-avyttring-bostadsratt-kbna2"
+fields = { "label" = "Avdrag näring avyttring bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Avdrag näring avyttring bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-fran-vinst-naringsfastighet-knaav2"
+fields = { "label" = "Avgår från vinst, näringsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Avgår från vinst, näringsfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-vinst-naringsfastighet-forekomst-1"
+fields = { "label" = "Avgår från vinst, näringsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Avgår från vinst, näringsfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bblfors"
+fields = { "label" = "Förekomst av utgift för försäkring, bil" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:bbtfors"
+fields = { "label" = "Förekomst av utgift för försäkring, båt" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1012"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1013"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-inkomst-eget-hem-ifa1014"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2012"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2013"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:beraknad-intakt-fritidsfastighet-ifa2014"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:bfamstut"
+fields = { "label" = "Familjeställning (BFAMSTUT)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; BFAMSTIN and BFAMSTUT are concurrent columns with the same value set and no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:bfdatin"
+fields = { "label" = "Folkbokföringsdatum (BFDATIN)" }
+evidence = "#2102 same-label cluster 'Folkbokföringsdatum' (2 variables): judged different meaning, medium confidence; BFDATIN and BFDATUT are concurrent identically-defined columns with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:bfdatut"
+fields = { "label" = "Folkbokföringsdatum (BFDATUT)" }
+evidence = "#2102 same-label cluster 'Folkbokföringsdatum' (2 variables): judged different meaning, medium confidence; BFDATIN and BFDATUT are concurrent identically-defined columns with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:bfrfors"
+fields = { "label" = "Förekomst av utgift för försäkring, fritidshus" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:bhemavs"
+fields = { "label" = "Hemtjänst - Avgift påverkat (BHEMAVS)" }
+evidence = "#2102 same-label cluster 'Hemtjänst -  Avgift påverkat' (2 variables): judged different meaning, medium confidence; BHEMAVS and BHEMOMF are two concurrent survey items with identical value sets and no text saying what each asks."
+
+[[statement]]
+kind = "set"
+subject = "var:bhemomf"
+fields = { "label" = "Hemtjänst - Avgift påverkat (BHEMOMF)" }
+evidence = "#2102 same-label cluster 'Hemtjänst -  Avgift påverkat' (2 variables): judged different meaning, medium confidence; BHEMAVS and BHEMOMF are two concurrent survey items with identical value sets and no text saying what each asks."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-av-statsmedel-och-ovriga-intakter-ijb1252"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-av-statsmedel-och-ovriga-intakter-irr1252"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:biterin"
+fields = { "label" = "Icke territoriell församling (BITERIN)" }
+evidence = "#2102 same-label cluster 'Icke territoriell församling' (3 variables): judged different meaning, medium confidence; BEJTERR has a different code list from BITERIN/BITERUT, which are concurrent with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:biterut"
+fields = { "label" = "Icke territoriell församling (BITERUT)" }
+evidence = "#2102 same-label cluster 'Icke territoriell församling' (3 variables): judged different meaning, medium confidence; BEJTERR has a different code list from BITERIN/BITERUT, which are concurrent with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:bkband"
+fields = { "label" = "Andel reavinst/förlust, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel reavinst/förlust, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bknand"
+fields = { "label" = "Andel i procent, näringsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel i procent, näringsfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:bksreg"
+fields = { "label" = "Typ av regel, deklaration (avyttring av fastighet, förekomst 1, bilaga K5)" }
+evidence = "#2102 same-label cluster 'Typ av regel, deklaration' (2 variables): judged different meaning, high confidence; Opdefs: BKSREG1 is the rule type for avyttring av fastighet (bilaga K5, förekomst 1), BNAREG for avyttring av näringsfastighet (bilaga K7)."
+
+[[statement]]
+kind = "set"
+subject = "var:blandad-inkomst"
+fields = { "label" = "Blandad inkomst (individ)" }
+evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged different meaning, medium confidence; CMIX is in the individregister, CMIXZ in kosthushall with a household-level derivation in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:blinvut"
+fields = { "label" = "Utvandringsland (BLINVUT)" }
+evidence = "#2102 same-label cluster 'Utvandringsland' (2 variables): judged different meaning, medium confidence; BLINVUT and BLINVIN are concurrent columns with the same country list and no text saying what UT and IN mean."
+
+[[statement]]
+kind = "set"
+subject = "var:bnareg"
+fields = { "label" = "Typ av regel, deklaration (avyttring av näringsfastighet, bilaga K7)" }
+evidence = "#2102 same-label cluster 'Typ av regel, deklaration' (2 variables): judged different meaning, high confidence; Opdefs: BKSREG1 is the rule type for avyttring av fastighet (bilaga K5, förekomst 1), BNAREG for avyttring av näringsfastighet (bilaga K7)."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-rantebidrag-belopp-eget-hem"
+fields = { "label" = "Boende - Räntebidrag belopp (eget hem)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; Opdefs: KIBIDEG is for eget hem and KIBIDFR for fritidshus; WKIRBID (kosthushall, from 1998) has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-rantebidrag-belopp-fritidshus"
+fields = { "label" = "Boende - Räntebidrag belopp (fritidshus)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; Opdefs: KIBIDEG is for eget hem and KIBIDFR for fritidshus; WKIRBID (kosthushall, from 1998) has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:bomsav"
+fields = { "label" = "Barnomsorg - Avgift påverkat (BOMSAV)" }
+evidence = "#2102 same-label cluster 'Barnomsorg - Avgift påverkat' (2 variables): judged different meaning, low confidence; BOMSAV and BOMSTID are concurrent with identical value sets and no definition text, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bomstid"
+fields = { "label" = "Barnomsorg - Avgift påverkat (BOMSTID)" }
+evidence = "#2102 same-label cluster 'Barnomsorg - Avgift påverkat' (2 variables): judged different meaning, low confidence; BOMSAV and BOMSTID are concurrent with identical value sets and no definition text, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-pensionarer"
+fields = { "label" = "Bostadstillägg till pensionärer (individ, IBTPAP)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; Opdefs: IBTPZ is summed over all household members; IBTP is the individual figure and IBTPAP continues it in consecutive periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtp"
+fields = { "label" = "Bostadstillägg till pensionärer (individ, IBTP)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; Opdefs: IBTPZ is summed over all household members; IBTP is the individual figure and IBTPAP continues it in consecutive periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstillagg-till-pensionarer-ibtpz"
+fields = { "label" = "Bostadstillägg till pensionärer (hushåll)" }
+evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; Opdefs: IBTPZ is summed over all household members; IBTP is the individual figure and IBTPAP continues it in consecutive periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bseitid"
+fields = { "label" = "Socioekonomisk grupp (tidigare yrke, personer ej yrkesverksamma)" }
+evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (4 variables): judged different meaning, medium confidence; Opdefs: BSEITID is the SEI code from earlier occupation for people not currently working, BSEIZ is the kosthushållsföreståndare's code for the whole household; WSEI1 (1975-76) is a concurrent column with its own code list and BSEI keeps the base label."
+
+[[statement]]
+kind = "set"
+subject = "var:bseiz"
+fields = { "label" = "Socioekonomisk grupp (kosthushållsföreståndare)" }
+evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (4 variables): judged different meaning, medium confidence; Opdefs: BSEITID is the SEI code from earlier occupation for people not currently working, BSEIZ is the kosthushållsföreståndare's code for the whole household; WSEI1 (1975-76) is a concurrent column with its own code list and BSEI keeps the base label."
+
+[[statement]]
+kind = "set"
+subject = "var:bsofors"
+fields = { "label" = "Förekomst av utgift för försäkring, sjuk- och olycksfall" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:bstodan"
+fields = { "label" = "Kod för stödområde A (näringsverksamhet inom transportsektorn)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): judged different meaning, high confidence; Opdefs: BSTODA is bosatt inom stödområde A, BSTODAN is näringsverksamhet inom transportsektorn inom stödområde A."
+
+[[statement]]
+kind = "set"
+subject = "var:btbtr"
+fields = { "label" = "Träffindikator (SCBTB-registret)" }
+evidence = "#2102 same-label cluster 'Träffindikator' (3 variables): judged different meaning, medium confidence; Opdefs: KOV017 and BTBTR (identical text and codes, disjoint periods) indicate a hit in the SCBTB register, WTRDREG a hit in the DR register."
+
+[[statement]]
+kind = "set"
+subject = "var:byrkez"
+fields = { "label" = "Yrke (hushåll)" }
+evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; BYRKE is derived from WYRKED and WYRKE1, WYRKE1 is the occupation at the company where the person worked longest, KSY007 uses the FoB 80 groups, BYRKEZ is a household variable in kosthushall with unclear owner."
+
+[[statement]]
+kind = "set"
+subject = "var:cmixz"
+fields = { "label" = "Blandad inkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged different meaning, medium confidence; CMIX is in the individregister, CMIXZ in kosthushall with a household-level derivation in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:covrn"
+fields = { "label" = "Övriga negativa transfereringar (COVRN03)" }
+evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (4 variables): judged different meaning, medium confidence; COVRNEG is the individual variable with the old definition, COVRNEGZ the household version; COVRN03 has an unclear definition and COVRN (2013-14) is a separately defined sum of repaid student loans and paid maintenance."
+
+[[statement]]
+kind = "set"
+subject = "var:covrneg"
+fields = { "label" = "Övriga negativa transfereringar (individ, gammal definition)" }
+evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (4 variables): judged different meaning, medium confidence; COVRNEG is the individual variable with the old definition, COVRNEGZ the household version; COVRN03 has an unclear definition and COVRN (2013-14) is a separately defined sum of repaid student loans and paid maintenance."
+
+[[statement]]
+kind = "set"
+subject = "var:covrnegz"
+fields = { "label" = "Övriga negativa transfereringar (hushåll)" }
+evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (4 variables): judged different meaning, medium confidence; COVRNEG is the individual variable with the old definition, COVRNEGZ the household version; COVRN03 has an unclear definition and COVRN (2013-14) is a separately defined sum of repaid student loans and paid maintenance."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-aktuellt-prioriterat-medborgarskap"
+fields = { "label" = "Medborgarskapsdatum (BMBDATUT)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsdatum' (2 variables): judged different meaning, medium confidence; BMBDATIN and BMBDATUT are concurrent identically-defined columns with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-bostadsforestandare-make-maka"
+fields = { "label" = "Hushållets disponibla inkomst (bostadsföreståndare och make/maka)" }
+evidence = "#2102 same-label cluster 'Hushållets disponibla inkomst' (3 variables): judged different meaning, high confidence; Opdefs: CDISPZU is for bostadsföreståndare and spouse, CDISPZ for the household, CDISPKEZ per konsumtionsenhet."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst (individ)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst' (2 variables): judged different meaning, medium confidence; CDISP5Z is in kosthushall (Z = hushåll convention), CDISP5 in individregister with its own formula."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-2004-ars-def-cdisp504z"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def (hushåll)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst, 2004 års def' (2 variables): judged different meaning, medium confidence; CDISP504Z is in kosthushall (Z = hushåll convention), CDISP504 in individregister with its own formula."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-cdisp5z"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst (hushåll)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst' (2 variables): judged different meaning, medium confidence; CDISP5Z is in kosthushall (Z = hushåll convention), CDISP5 in individregister with its own formula."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def (individ)" }
+evidence = "#2102 same-label cluster 'Disponibel inkomst, exkl. kapitalvinst, 2004 års def' (2 variables): judged different meaning, medium confidence; CDISP504Z is in kosthushall (Z = hushåll convention), CDISP504 in individregister with its own formula."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-per-konsumtionsenhet"
+fields = { "label" = "Hushållets disponibla inkomst (per konsumtionsenhet)" }
+evidence = "#2102 same-label cluster 'Hushållets disponibla inkomst' (3 variables): judged different meaning, high confidence; Opdefs: CDISPZU is for bostadsföreståndare and spouse, CDISPZ for the household, CDISPKEZ per konsumtionsenhet."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1042"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1043"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-fardig-ej-fardig-kfa1044"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1052"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, high confidence; Opdefs state that each of KFA1051-KFA1054 is förekomst 1-4 of the same item (max 4 occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1053"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, high confidence; Opdefs state that each of KFA1051-KFA1054 is förekomst 1-4 of the same item (max 4 occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:eget-hem-forvarvats-eller-overlatits-kfa1054"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, high confidence; Opdefs state that each of KFA1051-KFA1054 is förekomst 1-4 of the same item (max 4 occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (hushåll)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd (socialbidrag)' (2 variables): judged different meaning, high confidence; ISOCBIDZ in kosthushall is summed for the household; ISOCBID in individregister is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag-isocbid"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (individ)" }
+evidence = "#2102 same-label cluster 'Ekonomiskt bistånd (socialbidrag)' (2 variables): judged different meaning, high confidence; ISOCBIDZ in kosthushall is summed for the household; ISOCBID in individregister is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:erhallen-ersattning-aktiefond-blandfond"
+fields = { "label" = "Erhållen ersättning, aktie-/blandfond" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:erhallen-ersattning-utlandsk-valuta"
+fields = { "label" = "Erhållen ersättning, utländsk valuta" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-aktieoptioner"
+fields = { "label" = "Erhållen ersättning, aktieoptioner" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-avyttring-andel-handelsbolag"
+fields = { "label" = "Ersättning, avyttring av andel i handelsbolag" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Opdefs name distinct items: sale of share in handelsbolag, uppskov and återfört uppskov under andelsbyteslagen; KPTUBIC's opdef only says K4C.B I, so its relation to KPTUBI is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-ej-marknadsnoterade-aktier"
+fields = { "label" = "Erhållen ersättning, ej marknadsnoterade aktier" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-ratt-till-bete-jakt-fiske-mm-ijb1562"
+fields = { "label" = "Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-for-ratt-till-sten-tovr-grus-mm-ijb1552"
+fields = { "label" = "Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-marknadsnoterade-aktier"
+fields = { "label" = "Erhållen ersättning, marknadsnoterade aktier" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-marknadsnoterade-fordringar"
+fields = { "label" = "Erhållen ersättning, marknadsnoterade fordringar" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-marknadsnoterade-fordringar-kapitalvinst-forlust"
+fields = { "label" = "Erhållen ersättning, marknadsnoterade fordringar (kapitalvinst/-förlust)" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-marknadsnoterade-fordringar-ranteinkomst-utgift"
+fields = { "label" = "Erhållen ersättning, marknadsnoterade fordringar (ränteinkomst/-utgift)" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-ovriga-vardepapper"
+fields = { "label" = "Erhållen ersättning, övriga värdepapper" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-sjukdom-skattepliktig-skattefri-hushall"
+fields = { "label" = "Ersättning i samband med sjukdom (skattepliktig, hushåll)" }
+evidence = "#2102 same-label cluster 'Ersättning i samband med sjukdom, både skattepliktig och skattefri' (3 variables): judged different meaning, medium confidence; TSJPERS is the individual skattepliktig sum, TSJPERSZ the household sum of TSJPERS (opdef), CSJUK a separate individregister column with its own item list."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-skattefri-utdelning"
+fields = { "label" = "Erhållen ersättning, skattefri utdelning" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-eget-hem-ifa1062"
+fields = { "label" = "Extra avdrag eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-eget-hem-ifa1063"
+fields = { "label" = "Extra avdrag eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:extra-avdrag-fritidsfastighet-ifa2062"
+fields = { "label" = "Extra avdrag fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Extra avdrag fritidsfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:famid-ut"
+fields = { "label" = "Familjeidentitet (RTB-familj) (BFAMIDUT)" }
+evidence = "#2102 same-label cluster 'Familjeidentitet (RTB-familj)' (2 variables): judged different meaning, medium confidence; BFAMIDIN and BFAMIDUT are concurrent columns in the same table with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:familjeidentitet-rtb-in"
+fields = { "label" = "Familjeidentitet (RTB-familj) (BFAMIDIN)" }
+evidence = "#2102 same-label cluster 'Familjeidentitet (RTB-familj)' (2 variables): judged different meaning, medium confidence; BFAMIDIN and BFAMIDUT are concurrent columns in the same table with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-in"
+fields = { "label" = "Familjeställning (BFAMSTIN)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; BFAMSTIN and BFAMSTUT are concurrent columns with the same value set and no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt"
+fields = { "label" = "Familjestöd, skattefritt (individ)" }
+evidence = "#2102 same-label cluster 'Familjestöd, skattefritt' (2 variables): judged different meaning, high confidence; IFAMZ is the household variable in kosthushall (Z = hushåll, sum of components), IFAM the individual one in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt-ifamz"
+fields = { "label" = "Familjestöd, skattefritt (hushåll)" }
+evidence = "#2102 same-label cluster 'Familjestöd, skattefritt' (2 variables): judged different meaning, high confidence; IFAMZ is the household variable in kosthushall (Z = hushåll, sum of components), IFAM the individual one in individregister."
+
+[[statement]]
+kind = "set"
+subject = "var:fastbet-in"
+fields = { "label" = "Fastighetsbeteckning (BFFASTIN)" }
+evidence = "#2102 same-label cluster 'Fastighetsbeteckning' (2 variables): judged different meaning, medium confidence; BFFASTIN and BFFASTUT are concurrent columns in the same table with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:fastbet-ut"
+fields = { "label" = "Fastighetsbeteckning (BFFASTUT)" }
+evidence = "#2102 same-label cluster 'Fastighetsbeteckning' (2 variables): judged different meaning, medium confidence; BFFASTIN and BFFASTUT are concurrent columns in the same table with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "label" = "Fastighetsskatt (individ, SFAST)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFASTBOZ is the household column in kosthushall; SFAST (1996-2008) and SFASTT (2008-2014) are consecutive individregister columns taken as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-sfastboz"
+fields = { "label" = "Fastighetsskatt (hushåll)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFASTBOZ is the household column in kosthushall; SFAST (1996-2008) and SFASTT (2008-2014) are consecutive individregister columns taken as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-sfastt"
+fields = { "label" = "Fastighetsskatt (individ, SFASTT)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFASTBOZ is the household column in kosthushall; SFAST (1996-2008) and SFASTT (2008-2014) are consecutive individregister columns taken as the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:fkuutl"
+fields = { "label" = "Utländska värdepapper (summa, KU30)" }
+evidence = "#2102 same-label cluster 'Utländska värdepapper' (2 variables): judged different meaning, high confidence; Opdefs: FKUUTL is the sum of utländska värdepapper from KU30, KKUUTUT is dividends on foreign securities from KU31."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-skattepliktig"
+fields = { "label" = "Föräldrapenning, skattepliktig (individ)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, high confidence; TFORPZ in kosthushall is the sum over household members; TFORP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-skattepliktig-tforpz"
+fields = { "label" = "Föräldrapenning, skattepliktig (hushåll)" }
+evidence = "#2102 same-label cluster 'Föräldrapenning, skattepliktig' (2 variables): judged different meaning, high confidence; TFORPZ in kosthushall is the sum over household members; TFORP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-utgift-forsakring-annat-fordon-an-bil-och-bat"
+fields = { "label" = "Förekomst av utgift för försäkring, annat fordon än bil och båt" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-utgift-forsakring-glasogon-kamera"
+fields = { "label" = "Förekomst av utgift för försäkring, glasögon och kamera" }
+evidence = "#2102 same-label cluster 'Förekomst av utgift för försäkring' (6 variables): judged different meaning, high confidence; Opdefs name six different insurance types (bil, båt, fritidshus, sjuk-/olycksfall, annat fordon, glasögon/kamera)."
+
+[[statement]]
+kind = "set"
+subject = "var:forlustavdrag-isu009"
+fields = { "label" = "Förlustavdrag (kommunalt)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (2 variables): judged different meaning, high confidence; Opdefs: ISU009 is kommunalt förlustavdrag, ISU008 statligt."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-ijb1282"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader jordbruksfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader jordbruksfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max six occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-rorelse-irr1282"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max six occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavgifter-och-ovriga-kostnader-rorelse-irr1283"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max six occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsintakt-aterfort-uppskov-andelbyteslagen"
+fields = { "label" = "Ersättning, återfört uppskov enligt andelsbyteslagen" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Opdefs name distinct items: sale of share in handelsbolag, uppskov and återfört uppskov under andelsbyteslagen; KPTUBIC's opdef only says K4C.B I, so its relation to KPTUBI is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsintakt-uppskov-andelbyteslagen"
+fields = { "label" = "Ersättning, uppskov enligt andelsbyteslagen" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Opdefs name distinct items: sale of share in handelsbolag, uppskov and återfört uppskov under andelsbyteslagen; KPTUBIC's opdef only says K4C.B I, so its relation to KPTUBI is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-bostadsratt"
+fields = { "label" = "Försäljningspris, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäljningspris, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-bostadsratt-kbpris2"
+fields = { "label" = "Försäljningspris, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Försäljningspris, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-los-ej-personlig-egendom"
+fields = { "label" = "Försäljningspris, lös ej personlig egendom" }
+evidence = "#2102 same-label cluster 'Försäljningspris' (2 variables): judged different meaning, high confidence; Opdefs: KEJPRIS is the price for lös ej personlig egendom, KLEPRIS for personlig egendom."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-personlig-egendom"
+fields = { "label" = "Försäljningspris, personlig egendom" }
+evidence = "#2102 same-label cluster 'Försäljningspris' (2 variables): judged different meaning, high confidence; Opdefs: KEJPRIS is the price for lös ej personlig egendom, KLEPRIS for personlig egendom."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { "label" = "Förvärvsarbetande (individ)" }
+evidence = "#2102 same-label cluster 'Förvärvsarbetande' (2 variables): judged different meaning, high confidence; BFORV is the individual flag; BFORVZ (kosthushall) states whether the household's föreståndare is förvärvsarbetande."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande-bforvz"
+fields = { "label" = "Förvärvsarbetande (hushållets föreståndare)" }
+evidence = "#2102 same-label cluster 'Förvärvsarbetande' (2 variables): judged different meaning, high confidence; BFORV is the individual flag; BFORVZ (kosthushall) states whether the household's föreståndare is förvärvsarbetande."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvspris-bostadsratt-kbkop2"
+fields = { "label" = "Förvärvspris, bostadsrätt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Förvärvspris, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr101"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr102"
+fields = { "label" = "Skuldbelopp eget hem, statligt (förekomst 2, FPR1021)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, statligt' (2 variables): judged different meaning, medium confidence; Opdefs and descriptions number the occurrences in reverse of the column suffix (FPR1021 is förekomst 2, FPR1022 is förekomst 1), so labels carry both the opdef number and the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr103"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr201"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr202"
+fields = { "label" = "Skuldbelopp fritidsfastighet, statligt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, statligt' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:fpr203"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-fardig-ej-fardig-kfa2042"
+fields = { "label" = "Fritidsfastighet färdig ej färdig (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet färdig ej färdig' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-forvarvats-eller-overlatits-kfa2052"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:fritidsfastighet-forvarvats-eller-overlatits-kfa2053"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandare"
+fields = { "label" = "Hushållsföreståndare (HINK-hushåll)" }
+evidence = "#2102 same-label cluster 'Hushållsföreståndare' (2 variables): judged different meaning, high confidence; Opdefs: BHF is the föreståndare of the HINK-hushåll, BKF of the kosthushåll."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandare-kosthushall"
+fields = { "label" = "Hushållsföreståndare (kosthushåll)" }
+evidence = "#2102 same-label cluster 'Hushållsföreståndare' (2 variables): judged different meaning, high confidence; Opdefs: BHF is the föreståndare of the HINK-hushåll, BKF of the kosthushåll."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa101"
+fields = { "label" = "Beräknad inkomst eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Beräknad inkomst eget hem' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa102"
+fields = { "label" = "Räntekostnad eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa106"
+fields = { "label" = "Extra avdrag eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Extra avdrag eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa107"
+fields = { "label" = "Nettointäkt eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa108"
+fields = { "label" = "Underskott av eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa201"
+fields = { "label" = "Beräknad intäkt fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Beräknad intäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa202"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa206"
+fields = { "label" = "Extra avdrag fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Extra avdrag fritidsfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa207"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa302"
+fields = { "label" = "Ränta hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränta hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa304"
+fields = { "label" = "Nettointäkt hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max two."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa305"
+fields = { "label" = "Andel av nettointäkt hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2 of a variable with at most two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa306"
+fields = { "label" = "Underskott hyresfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Underskott hyresfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max two."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa307"
+fields = { "label" = "Andel av underskott hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa310"
+fields = { "label" = "Koncernbidrag hyresfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Koncernbidrag hyresfastigheter' (2 variables): judged different meaning, high confidence; IFA3102 opdef says förekomst nummer 2 of max 2; IFA3101 has no opdef and is the first by suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa311"
+fields = { "label" = "Utgifter för försäkringar hyresfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Utgifter för försäkringar hyresfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ifa7"
+fields = { "label" = "Inkomst av eget hem (taxeringsmässig beräkning)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem' (3 variables): judged different meaning, medium confidence; IFA712 is the taxeringsmässig calculation; IFA722 and IFA725 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb00"
+fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: IJB001 is A-inkomst, IJB002 is B-inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb119"
+fields = { "label" = "Nettointäkt av jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb120"
+fields = { "label" = "Underskott av jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb124"
+fields = { "label" = "Arrendeintäkt jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb125"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb126"
+fields = { "label" = "Arrendekostnader jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb128"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader jordbruksfastigheter (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader jordbruksfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max six occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb134"
+fields = { "label" = "Värdeminskning av skog och naturtillgångar jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av skog och naturtillgångar jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb135"
+fields = { "label" = "Ränteintäkter jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb136"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb137"
+fields = { "label" = "Uttag från skogskonto jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Uttag från skogskonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb138"
+fields = { "label" = "Insättning på skogskonto jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Insättning på skogskonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb140"
+fields = { "label" = "Särskilt investeringsbidrag jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Särskilt investeringsbidrag jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb150"
+fields = { "label" = "Andel av underskott jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb151"
+fields = { "label" = "Insättning på investeringkonto jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Insättning på investeringkonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb154"
+fields = { "label" = "Andel av nettointäkt jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb155"
+fields = { "label" = "Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till sten, tovr, grus mm jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb156"
+fields = { "label" = "Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ersättning för rätt till bete, jakt, fiske mm jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ijb157"
+fields = { "label" = "Sjukpenning jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Sjukpenning jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:individ-hushallsid"
+fields = { "label" = "Individ-/hushållsidentitet (kosthushåll och ordningsnummer)" }
+evidence = "#2102 same-label cluster 'Individ-/hushållsidentitet' (2 variables): judged different meaning, high confidence; Opdefs: BUBNR identifies kosthushåll plus order number, BUBNRH is the urvalshushåll UB-number."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-eget-hem-ifa722"
+fields = { "label" = "Inkomst av eget hem (ränta på eget kapital, IFA722)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem' (3 variables): judged different meaning, medium confidence; IFA712 is the taxeringsmässig calculation; IFA722 and IFA725 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-eget-hem-ifa725"
+fields = { "label" = "Inkomst av eget hem (ränta på eget kapital, IFA725)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem' (3 variables): judged different meaning, medium confidence; IFA712 is the taxeringsmässig calculation; IFA722 and IFA725 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-eget-hem-och-fritidshus-ifa721"
+fields = { "label" = "Inkomst av eget hem och fritidshus (NR-metoden, löpande medelränta)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem och fritidshus' (3 variables): judged different meaning, high confidence; Opdefs: IFA721 by NR-metoden, IFA724 with 3 percent interest, IFA711 net income minus deficit."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-eget-hem-och-fritidshus-ifa724"
+fields = { "label" = "Inkomst av eget hem och fritidshus (3 procents ränta)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem och fritidshus' (3 variables): judged different meaning, high confidence; Opdefs: IFA721 by NR-metoden, IFA724 with 3 percent interest, IFA711 net income minus deficit."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-fritidshus"
+fields = { "label" = "Inkomst av fritidshus (taxeringsmässig beräkning)" }
+evidence = "#2102 same-label cluster 'Inkomst av fritidshus' (3 variables): judged different meaning, medium confidence; IFA714 is the taxeringsmässig calculation; IFA723 and IFA726 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-fritidshus-ifa723"
+fields = { "label" = "Inkomst av fritidshus (ränta på eget kapital, IFA723)" }
+evidence = "#2102 same-label cluster 'Inkomst av fritidshus' (3 variables): judged different meaning, medium confidence; IFA714 is the taxeringsmässig calculation; IFA723 and IFA726 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-fritidshus-ifa726"
+fields = { "label" = "Inkomst av fritidshus (ränta på eget kapital, IFA726)" }
+evidence = "#2102 same-label cluster 'Inkomst av fritidshus' (3 variables): judged different meaning, medium confidence; IFA714 is the taxeringsmässig calculation; IFA723 and IFA726 are both interest on equity but their opdefs are cut before the rate, so they are separated by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-jordbruksfastighet-ijb002"
+fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs: IJB001 is A-inkomst, IJB002 is B-inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-rorelse-irr002"
+fields = { "label" = "Inkomst av rörelse (B-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (2 variables): judged different meaning, high confidence; Opdefs: IRR001 is A-inkomst, IRR002 is B-inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-eget-hem-fritidshus"
+fields = { "label" = "Inkomst av eget hem och fritidshus (nettointäkt minus underskott)" }
+evidence = "#2102 same-label cluster 'Inkomst av eget hem och fritidshus' (3 variables): judged different meaning, high confidence; Opdefs: IFA721 by NR-metoden, IFA724 with 3 percent interest, IFA711 net income minus deficit."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-vid-avyttring-av-fastighet-kspris2"
+fields = { "label" = "Inkomst vid avyttring av fastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Inkomst vid avyttring av fastighet' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad-los-ej-personlig-egendom"
+fields = { "label" = "Inköpskostnad, lös ej personlig egendom" }
+evidence = "#2102 same-label cluster 'Inköpskostnad' (2 variables): judged different meaning, high confidence; Opdefs: KEJKOP is the cost for lös ej personlig egendom, KLEKOP for personlig egendom."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad-personlig-egendom"
+fields = { "label" = "Inköpskostnad, personlig egendom" }
+evidence = "#2102 same-label cluster 'Inköpskostnad' (2 variables): judged different meaning, high confidence; Opdefs: KEJKOP is the cost for lös ej personlig egendom, KLEKOP for personlig egendom."
+
+[[statement]]
+kind = "set"
+subject = "var:insattning-pa-investeringkonto-jordbruksfastighet-ijb1512"
+fields = { "label" = "Insättning på investeringkonto jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Insättning på investeringkonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:insattning-pa-skogskonto-jordbruksfastighet-ijb1382"
+fields = { "label" = "Insättning på skogskonto jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Insättning på skogskonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr00"
+fields = { "label" = "Inkomst av rörelse (A-inkomst)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse' (2 variables): judged different meaning, high confidence; Opdefs: IRR001 is A-inkomst, IRR002 is B-inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:irr119"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:irr120"
+fields = { "label" = "Underskott av rörelsesfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 2 and 3; IRR1201's opdef omits the number, so 1 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:irr124"
+fields = { "label" = "Arrendeintäkt rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendeintäkt rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr125"
+fields = { "label" = "Bidrag av statsmedel och övriga intäkter rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Bidrag av statsmedel och övriga intäkter rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr126"
+fields = { "label" = "Arrendekostnader rörelsesfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Arrendekostnader rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs: occurrences 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:irr128"
+fields = { "label" = "Försäkringsavgifter och övriga kostnader rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Försäkringsavgifter och övriga kostnader rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max six occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:irr134"
+fields = { "label" = "Värdeminskning av patenträtter och naturtillgånger, rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av patenträtter och naturtillgånger, rörelse' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr135"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:irr136"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:irr148"
+fields = { "label" = "Vinst vid avyttring av inventarier (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av inventarier' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr150"
+fields = { "label" = "Andel av underskott rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av underskott rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr154"
+fields = { "label" = "Andel av nettointäkt rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Andel av nettointäkt rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:irr157"
+fields = { "label" = "Sjukpenning rörelsefastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Sjukpenning rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:isu00"
+fields = { "label" = "Förlustavdrag (statligt)" }
+evidence = "#2102 same-label cluster 'Förlustavdrag' (2 variables): judged different meaning, high confidence; Opdefs: ISU009 is kommunalt förlustavdrag, ISU008 statligt."
+
+[[statement]]
+kind = "set"
+subject = "var:itn70"
+fields = { "label" = "Skatteandel (av sammanräknad inkomst)" }
+evidence = "#2102 same-label cluster 'Skatteandel' (3 variables): judged different meaning, high confidence; Opdefs: ITN705 is tax over sammanräknad inkomst minus beskattningsbar sjöinkomst, ITN706 tax over arbetsinkomst, ITN707 tax over statlig taxerad inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:itp105"
+fields = { "label" = "Utbetalt från Försäkringskassan (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-5 of a variable with max five occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:katomboh"
+fields = { "label" = "Tomträttsavgäld (hushåll)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:katomboz"
+fields = { "label" = "Tomträttsavgäld (hushåll)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:katomeg"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kbkop"
+fields = { "label" = "Förvärvspris, bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Förvärvspris, bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kbna"
+fields = { "label" = "Avdrag näring avyttring bostadsrätt (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Avdrag näring avyttring bostadsrätt' (2 variables): judged different meaning, high confidence; Opdefs: occurrence 1 and occurrence 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kbtupp"
+fields = { "label" = "Uppskovsavdrag bostadsrätt (tidigare uppskovsavdrag, förekomst 1)" }
+evidence = "#2102 same-label cluster 'Uppskovsavdrag bostadsrätt' (2 variables): judged different meaning, medium confidence; KBTUPP1's opdef says tidigare uppskovsavdrag, förekomst 1; KBUPP is a concurrent column with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:kbupp"
+fields = { "label" = "Uppskovsavdrag bostadsrätt (KBUPP)" }
+evidence = "#2102 same-label cluster 'Uppskovsavdrag bostadsrätt' (2 variables): judged different meaning, medium confidence; KBTUPP1's opdef says tidigare uppskovsavdrag, förekomst 1; KBUPP is a concurrent column with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa"
+fields = { "label" = "Län (fastighet eget hem, förekomst 1)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: KFA1011 is the län where the egna hem is located (förekomst 1), LAN is the person's folkbokföringslän."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa102"
+fields = { "label" = "Kommunkod eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4 of a variable with max 5 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa103"
+fields = { "label" = "Typkod eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa104"
+fields = { "label" = "Eget hem färdig ej färdig (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Eget hem färdig ej färdig' (4 variables): judged different meaning, high confidence; Opdefs: occurrences 1 to 4."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa105"
+fields = { "label" = "Eget hem förvärvats eller överlåtits (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Eget hem förvärvats eller överlåtits' (4 variables): judged different meaning, high confidence; Opdefs state that each of KFA1051-KFA1054 is förekomst 1-4 of the same item (max 4 occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa106"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa107"
+fields = { "label" = "Ägarandel eget hem (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ägarandel eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa110"
+fields = { "label" = "Ägande andel hyresfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ägande andel hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa202"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1, 3 and 4; KFA2022's opdef omits the number, so 2 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa203"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa204"
+fields = { "label" = "Fritidsfastighet färdig ej färdig (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet färdig ej färdig' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa205"
+fields = { "label" = "Fritidsfastighet förvärvats eller överlåtits (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Fritidsfastighet  förvärvats eller överlåtits' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa206"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa207"
+fields = { "label" = "Ägarandel fritidsfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Ägarandel fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:kfa70"
+fields = { "label" = "Antal fastigheter med en specifik typkod (typkod 13–15)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter med en specifik typkod' (2 variables): judged different meaning, high confidence; Opdefs: KFA701 counts typkod 13, 14, 15; KFA702 counts typkod 16."
+
+[[statement]]
+kind = "set"
+subject = "var:kfub"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen reaförlust" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kfubb"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen (reaförlust B)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kfubc"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen (reaförlust C)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kjb110"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 3, KJB1101)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; Opdefs number the occurrences in reverse of the column suffix (KJB1101 is förekomst 3, KJB1103 is förekomst 1), so labels carry both the opdef number and the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kkutomt"
+fields = { "label" = "Tomträttsavgäld (KKUTOMT)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-forekomst-1"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-kjb1012"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:klassning-jordbruksfastighet-kjb1013"
+fields = { "label" = "Klassning jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Klassning jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:knakop"
+fields = { "label" = "Omkostnadsbelopp, näringsfastighet" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1022"
+fields = { "label" = "Kommunkod eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4 of a variable with max 5 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1023"
+fields = { "label" = "Kommunkod eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4 of a variable with max 5 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-eget-hem-kfa1024"
+fields = { "label" = "Kommunkod eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Kommunkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4 of a variable with max 5 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2022"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1, 3 and 4; KFA2022's opdef omits the number, so 2 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2023"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1, 3 and 4; KFA2022's opdef omits the number, so 2 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod-fritidsfastighet-kfa2024"
+fields = { "label" = "Kommunkod fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Kommunkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1, 3 and 4; KFA2022's opdef omits the number, so 2 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kompletterande-belopp-till-bostadstillagg-ibtpkz"
+fields = { "label" = "Kompletterande belopp till bostadstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Kompletterande belopp till bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPKZ (kosthushall) is summed over all household members; IBTPK (individregister) is the individual amount."
+
+[[statement]]
+kind = "set"
+subject = "var:kompletterande-bostadstillagg"
+fields = { "label" = "Kompletterande belopp till bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Kompletterande belopp till bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPKZ (kosthushall) is summed over all household members; IBTPK (individregister) is the individual amount."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (individ)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Opdefs: BKON is the person's sex, BKONZ is the kosthushållsföreståndare's sex."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkonz"
+fields = { "label" = "Kön (hushållsföreståndare)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Opdefs: BKON is the person's sex, BKONZ is the kosthushållsföreståndare's sex."
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-hyresfastigheter-ifa3102"
+fields = { "label" = "Koncernbidrag hyresfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Koncernbidrag hyresfastigheter' (2 variables): judged different meaning, high confidence; IFA3102 opdef says förekomst nummer 2 of max 2; IFA3101 has no opdef and is the first by suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-arbetsmarknadsstod-hushall"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (hushåll)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is the individual amount, TKASZ the household sum (opdef); TKASKU is a concurrent individregister column with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigeringsfaktor"
+fields = { "label" = "Korrigeringsfaktor (kalibrerad uppräkningsfaktor)" }
+evidence = "#2102 same-label cluster 'Korrigeringsfaktor' (2 variables): judged different meaning, high confidence; Opdefs: BSMEDV is the calibrated uppräkningsfaktor for household weights, GK is used for order statistics such as deciles and percentiles."
+
+[[statement]]
+kind = "set"
+subject = "var:korrigeringsfaktor-gk"
+fields = { "label" = "Korrigeringsfaktor (för order statistics, deciler och percentiler)" }
+evidence = "#2102 same-label cluster 'Korrigeringsfaktor' (2 variables): judged different meaning, high confidence; Opdefs: BSMEDV is the calibrated uppräkningsfaktor for household weights, GK is used for order statistics such as deciles and percentiles."
+
+[[statement]]
+kind = "set"
+subject = "var:kov017"
+fields = { "label" = "Träffindikator (SCBTB-registret)" }
+evidence = "#2102 same-label cluster 'Träffindikator' (3 variables): judged different meaning, medium confidence; Opdefs: KOV017 and BTBTR (identical text and codes, disjoint periods) indicate a hit in the SCBTB register, WTRDREG a hit in the DR register."
+
+[[statement]]
+kind = "set"
+subject = "var:kpfkop"
+fields = { "label" = "Inköpskostnad, aktiefonder" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:kpfpris"
+fields = { "label" = "Försäljningspris, aktiefonder" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kplkop"
+fields = { "label" = "Omkostnadsbelopp, lättnadsregler onoterade bolag" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kpovrkp"
+fields = { "label" = "Omkostnadsbelopp, övriga värdepapper" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubic"
+fields = { "label" = "Ersättning enligt K4C avsnitt B I" }
+evidence = "#2102 same-label cluster 'Ersättning' (4 variables): judged different meaning, medium confidence; Opdefs name distinct items: sale of share in handelsbolag, uppskov and återfört uppskov under andelsbyteslagen; KPTUBIC's opdef only says K4C.B I, so its relation to KPTUBI is not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubub"
+fields = { "label" = "Uppskovsbelopp, återfört enligt K4B" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kptubuc"
+fields = { "label" = "Uppskovsbelopp, tidigare enligt K4C.B" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kpubu"
+fields = { "label" = "Uppskovsbelopp, uppskov enligt andelsbyteslagen" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kpvkop"
+fields = { "label" = "Omkostnadsbelopp, övriga värdepapper (premieobligationer, blandfonder m.m.)" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kpvpris"
+fields = { "label" = "Erhållen ersättning, övriga värdepapper (premieobligationer, blandfonder m.m.)" }
+evidence = "#2102 same-label cluster 'Erhållen ersättning' (12 variables): judged different meaning, medium confidence; Twelve concurrent columns for different asset types per their opdefs; KPFKOP's opdef is Inköpskostnad aktiefonder (misfiled under this label); KPVPRIS (övriga värdepapper incl. blandfonder, 1999-2000) is kept apart from KPOVRPR (2003-04) because the scope differs."
+
+[[statement]]
+kind = "set"
+subject = "var:krr101"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:krr110"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:kskop"
+fields = { "label" = "Omkostnadsbelopp, avyttring av fastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kspris"
+fields = { "label" = "Inkomst vid avyttring av fastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Inkomst vid avyttring av fastighet' (2 variables): judged different meaning, high confidence; Opdefs say Förekomst 1 and Förekomst 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kstupp"
+fields = { "label" = "Uppskovsbelopp, tidigare uppskov vid avyttring av fastighet (förekomst 1)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar"
+fields = { "label" = "Kvarboende 18-29 år (individ)" }
+evidence = "#2102 same-label cluster 'Kvarboende 18-29 år' (2 variables): judged different meaning, high confidence; BKVARBO is the individual flag, BKVARBOZ the kosthushåll version (lives in the same kosthushåll as a parent)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar-bkvarboz"
+fields = { "label" = "Kvarboende 18-29 år (hushåll)" }
+evidence = "#2102 same-label cluster 'Kvarboende 18-29 år' (2 variables): judged different meaning, high confidence; BKVARBO is the individual flag, BKVARBOZ the kosthushåll version (lives in the same kosthushåll as a parent)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarstaende-lattnadsbelopp-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp, kvarstående (skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Opdefs: KPLKLAT is kvarstående, KPLSLAT sparad and KPLTLAT tidigare lättnad, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande-underskott"
+fields = { "label" = "Underskott, kvarvarande" }
+evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, high confidence; Opdefs: NSKKVU is kvarvarande underskott, NSKUND plain underskott, NSIUTN utnyttjat underskott vissa intäkter."
+
+[[statement]]
+kind = "set"
+subject = "var:kvkufon0"
+fields = { "label" = "Realisationsvinster, rest (kontrolluppgift KU40)" }
+evidence = "#2102 same-label cluster 'Realisationsvinster' (3 variables): judged different meaning, high confidence; Opdefs: KVFOND is fonder from KURU with allemansfond reduced to 2/3, KVFONDO is övriga fonder ej allemansfond, KVKUFON0 is rest (KU40)."
+
+[[statement]]
+kind = "set"
+subject = "var:kvtubb"
+fields = { "label" = "Uppskovsbelopp, återfört enligt andelsbyteslagen (reavinst B)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (folkbokföring)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: KFA1011 is the län where the egna hem is located (förekomst 1), LAN is the person's folkbokföringslän."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1062"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1063"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-eget-hem-kfa1064"
+fields = { "label" = "Månad för förvärvats eller överlåtesle eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-kfa2062"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-forvarvats-eller-overlatesle-kfa2063"
+fields = { "label" = "Månad för förvärvats eller överlåtesle fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Månad för förvärvats eller överlåtesle fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:marginalskatt"
+fields = { "label" = "Marginalskatt (statlig inkomstskatt)" }
+evidence = "#2102 same-label cluster 'Marginalskatt' (2 variables): judged different meaning, high confidence; Opdefs: SMSKS is the marginal rate of state income tax, SMSKTOT the total of state and municipal rates."
+
+[[statement]]
+kind = "set"
+subject = "var:marginalskatt-i-procent"
+fields = { "label" = "Marginalskatt i procent (statlig skatt)" }
+evidence = "#2102 same-label cluster 'Marginalskatt i procent' (2 variables): judged different meaning, high confidence; Opdefs: SMSKS is the marginal rate on state tax, SMSKTOT is computed from final tax plus 1 000 kr of earnings (total)."
+
+[[statement]]
+kind = "set"
+subject = "var:marginalskatt-procent-total"
+fields = { "label" = "Marginalskatt i procent (total)" }
+evidence = "#2102 same-label cluster 'Marginalskatt i procent' (2 variables): judged different meaning, high confidence; Opdefs: SMSKS is the marginal rate on state tax, SMSKTOT is computed from final tax plus 1 000 kr of earnings (total)."
+
+[[statement]]
+kind = "set"
+subject = "var:marginalskatt-total"
+fields = { "label" = "Marginalskatt (total, statlig och kommunal)" }
+evidence = "#2102 same-label cluster 'Marginalskatt' (2 variables): judged different meaning, high confidence; Opdefs: SMSKS is the marginal rate of state income tax, SMSKTOT the total of state and municipal rates."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsdatum"
+fields = { "label" = "Medborgarskapsdatum (BMBDATIN)" }
+evidence = "#2102 same-label cluster 'Medborgarskapsdatum' (2 variables): judged different meaning, medium confidence; BMBDATIN and BMBDATUT are concurrent identically-defined columns with no text saying what IN and UT mean."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-underhallsbidrag-forskott"
+fields = { "label" = "Mottaget underhållsbidrag inklusive bidragsförskott (individ)" }
+evidence = "#2102 same-label cluster 'Mottaget underhållsbidrag inklusive bidragsförskott' (2 variables): judged different meaning, high confidence; IUNDBIDZ (kosthushall) is summed over household members; IUNDBID is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-underhallsbidrag-inklusive-bidragsforskott-iundbidz"
+fields = { "label" = "Mottaget underhållsbidrag inklusive bidragsförskott (hushåll)" }
+evidence = "#2102 same-label cluster 'Mottaget underhållsbidrag inklusive bidragsförskott' (2 variables): judged different meaning, high confidence; IUNDBIDZ (kosthushall) is summed over household members; IUNDBID is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:negativ-rantefordelning-enskilda-naringsidkare"
+fields = { "label" = "Räntefördelning (negativ)" }
+evidence = "#2102 same-label cluster 'Räntefördelning' (2 variables): judged different meaning, high confidence; Opdefs: NSINEGR is negativ räntefördelning, NSKPOSR positiv."
+
+[[statement]]
+kind = "set"
+subject = "var:negativa-transfereringar"
+fields = { "label" = "Negativa transfereringar (individ)" }
+evidence = "#2102 same-label cluster 'Negativa transfereringar' (3 variables): judged different meaning, medium confidence; CTRAN is the individual variable, CTRANZ the household sum; CTRAN03's opdef says its definition is unclear and probably differs from CTRAN."
+
+[[statement]]
+kind = "set"
+subject = "var:negativa-transfereringar-ctran03"
+fields = { "label" = "Negativa transfereringar (CTRAN03)" }
+evidence = "#2102 same-label cluster 'Negativa transfereringar' (3 variables): judged different meaning, medium confidence; CTRAN is the individual variable, CTRANZ the household sum; CTRAN03's opdef says its definition is unclear and probably differs from CTRAN."
+
+[[statement]]
+kind = "set"
+subject = "var:negativa-transfereringar-hushall"
+fields = { "label" = "Negativa transfereringar (hushåll)" }
+evidence = "#2102 same-label cluster 'Negativa transfereringar' (3 variables): judged different meaning, medium confidence; CTRAN is the individual variable, CTRANZ the household sum; CTRAN03's opdef says its definition is unclear and probably differs from CTRAN."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-jordbruksfastighet-ijb1192"
+fields = { "label" = "Nettointäkt av jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-rorelsefastighet-irr1192"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-av-rorelsefastighet-irr1193"
+fields = { "label" = "Nettointäkt av rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt av rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1072"
+fields = { "label" = "Nettointäkt eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1073"
+fields = { "label" = "Nettointäkt eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-eget-hem-ifa1074"
+fields = { "label" = "Nettointäkt eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Nettointäkt eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2072"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2073"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-fritidsfastighet-ifa2074"
+fields = { "label" = "Nettointäkt fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Nettointäkt fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:nettointakt-hyresfastighet-ifa3042"
+fields = { "label" = "Nettointäkt hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Nettointäkt hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max two."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnad-marknadsnoterade-fordringar-kapitalvinst-forlust"
+fields = { "label" = "Omkostnadsbelopp, marknadsnoterade fordringar (kapitalvinst/-förlust)" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnad-marknadsnoterade-fordringar-ranteinkomst-utgift"
+fields = { "label" = "Omkostnadsbelopp, marknadsnoterade fordringar (ränteinkomst/-utgift)" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-aktiefond-blandfond"
+fields = { "label" = "Omkostnadsbelopp, aktie-/blandfond" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-aktieoptioner"
+fields = { "label" = "Omkostnadsbelopp, aktieoptioner" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-ej-marknadsnoterade-aktier"
+fields = { "label" = "Omkostnadsbelopp, ej marknadsnoterade aktier" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-marknadsnoterade-aktier"
+fields = { "label" = "Omkostnadsbelopp, marknadsnoterade aktier" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-marknadsnoterade-fordringar"
+fields = { "label" = "Omkostnadsbelopp, marknadsnoterade fordringar" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-skattefri-utdelning"
+fields = { "label" = "Omkostnadsbelopp, skattefri utdelning" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omkostnadsbelopp-utlandsk-valuta"
+fields = { "label" = "Omkostnadsbelopp, utländsk valuta" }
+evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-fastighetsforvaltning"
+fields = { "label" = "Omsättning, fastighetsförvaltning" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; Opdefs: NFOMS, NJOMS and NROMS are omsättning for fastighetsförvaltning, jordbruk and rörelse (1996-97); NOMS (2004-2014) has no text and keeps the unqualified label."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-jordbruk"
+fields = { "label" = "Omsättning, jordbruk" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; Opdefs: NFOMS, NJOMS and NROMS are omsättning for fastighetsförvaltning, jordbruk and rörelse (1996-97); NOMS (2004-2014) has no text and keeps the unqualified label."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-rorelse"
+fields = { "label" = "Omsättning, rörelse" }
+evidence = "#2102 same-label cluster 'Omsättning' (4 variables): judged different meaning, medium confidence; Opdefs: NFOMS, NJOMS and NROMS are omsättning for fastighetsförvaltning, jordbruk and rörelse (1996-97); NOMS (2004-2014) has no text and keeps the unqualified label."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-negativa-transfereringar-covrn"
+fields = { "label" = "Övriga negativa transfereringar (COVRN)" }
+evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (4 variables): judged different meaning, medium confidence; COVRNEG is the individual variable with the old definition, COVRNEGZ the household version; COVRN03 has an unclear definition and COVRN (2013-14) is a separately defined sum of repaid student loans and paid maintenance."
+
+[[statement]]
+kind = "set"
+subject = "var:paforda-egenavgifter"
+fields = { "label" = "Egenavgifter (påförda egenavgifter)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (5 variables): judged different meaning, medium confidence; Opdefs: NSKEGEN (årets), NSIAVEG (återföring av föregående års) and NSKPAEG (påförda) are separate SRU components; ITN014 and SEGEN share one opdef (the sum) in separate periods."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattefri"
+fields = { "label" = "Pension och livränta, skattefri (individ)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattefri' (2 variables): judged different meaning, high confidence; PPENSSFZ (kosthushall) is the sum over household members; PPENSSF is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattefri-ppenssfz"
+fields = { "label" = "Pension och livränta, skattefri (hushåll)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattefri' (2 variables): judged different meaning, high confidence; PPENSSFZ (kosthushall) is the sum over household members; PPENSSF is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattepliktig"
+fields = { "label" = "Pension och livränta, skattepliktig (individ)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattepliktig' (2 variables): judged different meaning, high confidence; PPENSSPZ (kosthushall) is the sum over household members; PPENSSP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-och-livranta-skattepliktig-ppensspz"
+fields = { "label" = "Pension och livränta, skattepliktig (hushåll)" }
+evidence = "#2102 same-label cluster 'Pension och livränta, skattepliktig' (2 variables): judged different meaning, high confidence; PPENSSPZ (kosthushall) is the sum over household members; PPENSSP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:personbilar-deklarationsvarde"
+fields = { "label" = "Personbilar (deklarationsvärde)" }
+evidence = "#2102 same-label cluster 'Personbilar' (2 variables): judged different meaning, high confidence; Opdefs: FBILSP is deklarationsvärde, FBILMV marknadsvärde."
+
+[[statement]]
+kind = "set"
+subject = "var:personbilar-marknadsvarde"
+fields = { "label" = "Personbilar (marknadsvärde)" }
+evidence = "#2102 same-label cluster 'Personbilar' (2 variables): judged different meaning, high confidence; Opdefs: FBILSP is deklarationsvärde, FBILMV marknadsvärde."
+
+[[statement]]
+kind = "set"
+subject = "var:positiv-rantefordelning-enskilda-naringsidkare"
+fields = { "label" = "Räntefördelning (positiv)" }
+evidence = "#2102 same-label cluster 'Räntefördelning' (2 variables): judged different meaning, high confidence; Opdefs: NSINEGR is negativ räntefördelning, NSKPOSR positiv."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandel-av-intakt-eller-underskott-for-rorelse-krr1102"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandel-av-intakt-eller-underskott-for-rorelse-krr1103"
+fields = { "label" = "Procentandel av intäkt eller underskott för rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott för rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandet-av-intakt-underskott-for-kjb1102"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 2, KJB1102)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; Opdefs number the occurrences in reverse of the column suffix (KJB1101 is förekomst 3, KJB1103 is förekomst 1), so labels carry both the opdef number and the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:procentandet-av-intakt-underskott-for-kjb1103"
+fields = { "label" = "Procentandet av intäkt/underskott för jordbruksfastighet (förekomst 1, KJB1103)" }
+evidence = "#2102 same-label cluster 'Procentandet av intäkt/underskott  för jordbruksfastighet.' (3 variables): judged different meaning, medium confidence; Opdefs number the occurrences in reverse of the column suffix (KJB1101 is förekomst 3, KJB1103 is förekomst 1), so labels carry both the opdef number and the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:psep"
+fields = { "label" = "Särskild efterlevandepension (summa inklusive garantipension)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (2 variables): judged different meaning, medium confidence; PSEP is the sum of garantipension to särskild efterlevandepension and särskild efterlevandepension; PIGRSEP is described as a part of PSEP."
+
+[[statement]]
+kind = "set"
+subject = "var:ranta-hyresfastighet-ifa3022"
+fields = { "label" = "Ränta hyresfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränta hyresfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-jordbruksfastighet-ijb1352"
+fields = { "label" = "Ränteintäkter jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of a variable with max two occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-rorelsefastighet-irr1352"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-rorelsefastighet-irr1353"
+fields = { "label" = "Ränteintäkter rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Ränteintäkter rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1022"
+fields = { "label" = "Räntekostnad eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1023"
+fields = { "label" = "Räntekostnad eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-eget-hem-ifa1024"
+fields = { "label" = "Räntekostnad eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Räntekostnad eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-fritidsfastighet-ifa2022"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnad-fritidsfastighet-ifa2023"
+fields = { "label" = "Räntekostnad fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnad fritidsfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-jordbruksfastighet-ijb1362"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-jordbruksfastighet-ijb1363"
+fields = { "label" = "Räntekostnader jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnader jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-rorelsefastighet-irr1362"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-rorelsefastighet-irr1363"
+fields = { "label" = "Räntekostnader rörelsefastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Räntekostnader rörelsefastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:reaforlust-ovriga-fonder-ej-allemansfond"
+fields = { "label" = "Realisationsförluster, övriga fonder ej allemansfond" }
+evidence = "#2102 same-label cluster 'Realisationsförluster' (3 variables): judged different meaning, high confidence; Opdefs: KFFONDO is övriga fonder ej allemansfond, KFKUFON0 is rest (KU40), KFFOND is fonder from KURU with allemansfond reduced to 2/3."
+
+[[statement]]
+kind = "set"
+subject = "var:reaforlust-rest"
+fields = { "label" = "Realisationsförluster, rest (kontrolluppgift KU40)" }
+evidence = "#2102 same-label cluster 'Realisationsförluster' (3 variables): judged different meaning, high confidence; Opdefs: KFFONDO is övriga fonder ej allemansfond, KFKUFON0 is rest (KU40), KFFOND is fonder from KURU with allemansfond reduced to 2/3."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsforlust-allemansfond"
+fields = { "label" = "Realisationsförlust, allemansfond (brutto, beräknad)" }
+evidence = "#2102 same-label cluster 'Realisationsförlust, allemansfond' (2 variables): judged different meaning, medium confidence; Opdefs: KFALLEF is a computed gross loss from declaration data, KFKUFON1 a declaration variable from KU40."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsforlust-allemansfond-kontrolluppgift"
+fields = { "label" = "Realisationsförlust, allemansfond (kontrolluppgift KU40)" }
+evidence = "#2102 same-label cluster 'Realisationsförlust, allemansfond' (2 variables): judged different meaning, medium confidence; Opdefs: KFALLEF is a computed gross loss from declaration data, KFKUFON1 a declaration variable from KU40."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsforluster"
+fields = { "label" = "Realisationsförluster, fonder (allemansfond reducerad till 2/3)" }
+evidence = "#2102 same-label cluster 'Realisationsförluster' (3 variables): judged different meaning, high confidence; Opdefs: KFFONDO is övriga fonder ej allemansfond, KFKUFON0 is rest (KU40), KFFOND is fonder from KURU with allemansfond reduced to 2/3."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsvinst-allemansfond"
+fields = { "label" = "Realisationsvinst, allemansfond (brutto, beräknad)" }
+evidence = "#2102 same-label cluster 'Realisationsvinst, allemansfond' (2 variables): judged different meaning, medium confidence; Opdefs: KVALLEF is a computed gross gain from declaration data, KVKUFON1 a declaration variable from KU40."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsvinst-allemansfond-kontrolluppgift"
+fields = { "label" = "Realisationsvinst, allemansfond (kontrolluppgift KU40)" }
+evidence = "#2102 same-label cluster 'Realisationsvinst, allemansfond' (2 variables): judged different meaning, medium confidence; Opdefs: KVALLEF is a computed gross gain from declaration data, KVKUFON1 a declaration variable from KU40."
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsvinster"
+fields = { "label" = "Realisationsvinster, fonder (allemansfond reducerad till 2/3)" }
+evidence = "#2102 same-label cluster 'Realisationsvinster' (3 variables): judged different meaning, high confidence; Opdefs: KVFOND is fonder from KURU with allemansfond reduced to 2/3, KVFONDO is övriga fonder ej allemansfond, KVKUFON0 is rest (KU40)."
+
+[[statement]]
+kind = "set"
+subject = "var:reavinst-ovriga-fonder-ej-allemansfond"
+fields = { "label" = "Realisationsvinster, övriga fonder ej allemansfond" }
+evidence = "#2102 same-label cluster 'Realisationsvinster' (3 variables): judged different meaning, high confidence; Opdefs: KVFOND is fonder from KURU with allemansfond reduced to 2/3, KVFONDO is övriga fonder ej allemansfond, KVKUFON0 is rest (KU40)."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningssatt-for-inkomst-av-rorelse-krr1012"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningssatt-for-inkomst-av-rorelse-krr1013"
+fields = { "label" = "Redovisningssätt för inkomst av rörelse (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Redovisningssätt för inkomst av rörelse' (3 variables): judged different meaning, high confidence; Opdefs say förekomst 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fem-regioner"
+fields = { "label" = "Region, indelning i fem regioner (individ, utifrån BLKFUP)" }
+evidence = "#2102 same-label cluster 'Region, indelning i fem regioner' (2 variables): judged different meaning, medium confidence; Opdefs: BBOREG5 (kosthushall) is derived from BLKF and has code 0 for no interview; BREGION (individregister) is derived from BLKFUP, folkbokföringsort 31/12; the periods overlap in 2011-2013."
+
+[[statement]]
+kind = "set"
+subject = "var:region-indelning-i-fem-regioner-bboreg5"
+fields = { "label" = "Region, indelning i fem regioner (kosthushåll, utifrån BLKF)" }
+evidence = "#2102 same-label cluster 'Region, indelning i fem regioner' (2 variables): judged different meaning, medium confidence; Opdefs: BBOREG5 (kosthushall) is derived from BLKF and has code 0 for no interview; BREGION (individregister) is derived from BLKFUP, folkbokföringsort 31/12; the periods overlap in 2011-2013."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseidkare-jordbrukare"
+fields = { "label" = "Aktiva rörelseidkare, jordbrukare (individ)" }
+evidence = "#2102 same-label cluster 'Aktiva rörelseidkare, jordbrukare' (2 variables): judged different meaning, medium confidence; Same opdef; BFOR is in the individregister, BFORZ in kosthushall (Z = hushåll convention)."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "label" = "Sammanräknad förvärvsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; CSFVIZ (kosthushall) is the household version (Z = hushåll); CSFVI is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-csfviz"
+fields = { "label" = "Sammanräknad förvärvsinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; CSFVIZ (kosthushall) is the household version (Z = hushåll); CSFVI is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-efterlevandepension"
+fields = { "label" = "Särskild efterlevandepension (delbelopp, PIGRSEP)" }
+evidence = "#2102 same-label cluster 'Särskild efterlevandepension' (2 variables): judged different meaning, medium confidence; PSEP is the sum of garantipension to särskild efterlevandepension and särskild efterlevandepension; PIGRSEP is described as a part of PSEP."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-investeringsbidrag-jordbruksfastighet-ijb1402"
+fields = { "label" = "Särskilt investeringsbidrag jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Särskilt investeringsbidrag jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-jordbruksfastighet-ijb1572"
+fields = { "label" = "Sjukpenning jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Sjukpenning jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-rorelsefastighet-irr1572"
+fields = { "label" = "Sjukpenning rörelsefastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Sjukpenning rörelsefastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri"
+fields = { "label" = "Sjukpenning, skattefri (individ)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (2 variables): judged different meaning, high confidence; ISUKZ opdef: summation of the household members' skattefri sjukpenning; ISJUK is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri-isjukz"
+fields = { "label" = "Sjukpenning, skattefri (hushåll)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (2 variables): judged different meaning, high confidence; ISUKZ opdef: summation of the household members' skattefri sjukpenning; ISJUK is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatteandel-itn706"
+fields = { "label" = "Skatteandel (av arbetsinkomst)" }
+evidence = "#2102 same-label cluster 'Skatteandel' (3 variables): judged different meaning, high confidence; Opdefs: ITN705 is tax over sammanräknad inkomst minus beskattningsbar sjöinkomst, ITN706 tax over arbetsinkomst, ITN707 tax over statlig taxerad inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:skatteandel-itn707"
+fields = { "label" = "Skatteandel (av statlig taxerad inkomst)" }
+evidence = "#2102 same-label cluster 'Skatteandel' (3 variables): judged different meaning, high confidence; Opdefs: ITN705 is tax over sammanräknad inkomst minus beskattningsbar sjöinkomst, ITN706 tax over arbetsinkomst, ITN707 tax over statlig taxerad inkomst."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1032"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1033"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-ovriga-fpr1034"
+fields = { "label" = "Skuldbelopp eget hem, övriga (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, övriga' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-eget-hem-statligt-fpr1022"
+fields = { "label" = "Skuldbelopp eget hem, statligt (förekomst 1, FPR1022)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp eget hem, statligt' (2 variables): judged different meaning, medium confidence; Opdefs and descriptions number the occurrences in reverse of the column suffix (FPR1021 is förekomst 2, FPR1022 is förekomst 1), so labels carry both the opdef number and the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-ovriga-fpr2032"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-ovriga-fpr2033"
+fields = { "label" = "Skuldbelopp fritidsfastighet, övriga (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, övriga' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:skuldbelopp-fritidsfastighet-statligt-fpr2022"
+fields = { "label" = "Skuldbelopp fritidsfastighet, statligt (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Skuldbelopp fritidsfastighet, statligt' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt"
+fields = { "label" = "Slutlig skatt (ITN010)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): judged different meaning, low confidence; ITN010 and STOTEX are concurrent 1975-76 columns (only ITN010 has an opdef) and SSLUT (1996-2014) has no text, so all three are separated by column code; SSLUT may continue ITN010 but nothing says so."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-2"
+fields = { "label" = "Slutlig skatt (STOTEX)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): judged different meaning, low confidence; ITN010 and STOTEX are concurrent 1975-76 columns (only ITN010 has an opdef) and SSLUT (1996-2014) has no text, so all three are separated by column code; SSLUT may continue ITN010 but nothing says so."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-exkl-avdragsgilla-skatter"
+fields = { "label" = "Slutlig skatt (SSLUT)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt' (3 variables): judged different meaning, low confidence; ITN010 and STOTEX are concurrent 1975-76 columns (only ITN010 has an opdef) and SSLUT (1996-2014) has no text, so all three are separated by column code; SSLUT may continue ITN010 but nothing says so."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-lattnadsbelopp-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp, sparat (skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Opdefs: KPLKLAT is kvarstående, KPLSLAT sparad and KPLTLAT tidigare lättnad, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:sparat-lattnadsbelopp-tidigare-ar-skattefri-utdelning"
+fields = { "label" = "Lättnadsbelopp, tidigare (skattefri utdelning)" }
+evidence = "#2102 same-label cluster 'Lättnadsbelopp' (3 variables): judged different meaning, high confidence; Opdefs: KPLKLAT is kvarstående, KPLSLAT sparad and KPLTLAT tidigare lättnad, all for skattefri utdelning."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-taxerad-inkomst-isu773"
+fields = { "label" = "Statligt taxerad inkomst (med tillägg för kontantinkomst ombord på svenskt fartyg)" }
+evidence = "#2102 same-label cluster 'Statligt taxerad inkomst' (2 variables): judged different meaning, medium confidence; Opdefs: ISU773 adds kontantinkomst ombord på svenskt fartyg to the ISU011 definition."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomrade-a-kod"
+fields = { "label" = "Kod för stödområde A (bosatt)" }
+evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): judged different meaning, high confidence; Opdefs: BSTODA is bosatt inom stödområde A, BSTODAN is näringsverksamhet inom transportsektorn inom stödområde A."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "label" = "Stratum (BSTRATV)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdefs: BSTRATV is the stratum from the sample draw, WSTRAT2 the stratum in the urvalsram for adults (different code lists)."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-urvalsram-vuxna-individer"
+fields = { "label" = "Stratum (urvalsramen, vuxna individer)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdefs: BSTRATV is the stratum from the sample draw, WSTRAT2 the stratum in the urvalsram for adults (different code lists)."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestod"
+fields = { "label" = "Studiestöd (individ)" }
+evidence = "#2102 same-label cluster 'Studiestöd' (2 variables): judged different meaning, high confidence; CSTUDTZ (kosthushall) is the household sum (Z = hushåll); CSTUDT is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:studiestod-cstudtz"
+fields = { "label" = "Studiestöd (hushåll)" }
+evidence = "#2102 same-label cluster 'Studiestöd' (2 variables): judged different meaning, high confidence; CSTUDTZ (kosthushall) is the household sum (Z = hushåll); CSTUDT is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg"
+fields = { "label" = "Summa bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPZ opdef: summation for all household members; IBTP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadstillagg-ibtpz"
+fields = { "label" = "Summa bostadstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPZ opdef: summation for all household members; IBTP is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forvarvs-och-kapitalinkomster"
+fields = { "label" = "Summa förvärvs- och kapitalinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomster' (2 variables): judged different meaning, high confidence; CFVIKIZ is the household column in kosthushall (Z = hushåll), CFVIKI the individregister column."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forvarvs-och-kapitalinkomster-cfviki"
+fields = { "label" = "Summa förvärvs- och kapitalinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomster' (2 variables): judged different meaning, high confidence; CFVIKIZ is the household column in kosthushall (Z = hushåll), CFVIKI the individregister column."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg"
+fields = { "label" = "Summa särskilt bostadstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPSZ opdef: summation for all household members; IBTPS is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-sarskilt-bostadstillagg-ibtpsz"
+fields = { "label" = "Summa särskilt bostadstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa särskilt bostadstillägg' (2 variables): judged different meaning, high confidence; IBTPSZ opdef: summation for all household members; IBTPS is the individual variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-1"
+fields = { "label" = "Sysselsättningsgrad 1 (individ)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsgrad 1' (2 variables): judged different meaning, medium confidence; BSYSS (individregister, four classes) and BSYSSZ (kosthushall, six hour-based classes, Z = hushåll) have different code lists and tables."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-1-bsyssz"
+fields = { "label" = "Sysselsättningsgrad 1 (hushåll)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsgrad 1' (2 variables): judged different meaning, medium confidence; BSYSS (individregister, four classes) and BSYSSZ (kosthushall, six hour-based classes, Z = hushåll) have different code lists and tables."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1012"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1013"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-eget-hem-fpr1014"
+fields = { "label" = "Taxeringsvärde eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2012"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2013"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fritidsfastighet-fpr2014"
+fields = { "label" = "Taxeringsvärde fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:tkas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (individ)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is the individual amount, TKASZ the household sum (opdef); TKASKU is a concurrent individregister column with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:tkasku"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (TKASKU)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, medium confidence; TKAS is the individual amount, TKASZ the household sum (opdef); TKASKU is a concurrent individregister column with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:tkuvard"
+fields = { "label" = "Vårdbidrag (kontrolluppgift)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (2 variables): judged different meaning, high confidence; Opdefs: TKUVARD is per kontrolluppgift from pension and insurance payers, TVARD per deklarationsuppgift."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald"
+fields = { "label" = "Tomträttsavgäld (eget hem)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-eget-hem-katomeg2"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-eget-hem-katomeg3"
+fields = { "label" = "Tomträttsavgäld eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld eget hem' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3 of a variable with max 4 occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-fritids"
+fields = { "label" = "Tomträttsavgäld (fritidsfastighet)" }
+evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:traffindikator-dr-register"
+fields = { "label" = "Träffindikator (DR-registret)" }
+evidence = "#2102 same-label cluster 'Träffindikator' (3 variables): judged different meaning, medium confidence; Opdefs: KOV017 and BTBTR (identical text and codes, disjoint periods) indicate a hit in the SCBTB register, WTRDREG a hit in the DR register."
+
+[[statement]]
+kind = "set"
+subject = "var:tsjpers"
+fields = { "label" = "Ersättning i samband med sjukdom (skattepliktig, individ)" }
+evidence = "#2102 same-label cluster 'Ersättning i samband med sjukdom, både skattepliktig och skattefri' (3 variables): judged different meaning, medium confidence; TSJPERS is the individual skattepliktig sum, TSJPERSZ the household sum of TSJPERS (opdef), CSJUK a separate individregister column with its own item list."
+
+[[statement]]
+kind = "set"
+subject = "var:tvard"
+fields = { "label" = "Vårdbidrag (deklarationsuppgift)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag' (2 variables): judged different meaning, high confidence; Opdefs: TKUVARD is per kontrolluppgift from pension and insurance payers, TVARD per deklarationsuppgift."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1032"
+fields = { "label" = "Typkod eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1033"
+fields = { "label" = "Typkod eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-eget-hem-kfa1034"
+fields = { "label" = "Typkod eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Typkod eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2032"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2033"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-fritidsfastighet-kfa2034"
+fields = { "label" = "Typkod fritidsfastighet (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Typkod fritidsfastighet' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-asjuk2"
+fields = { "label" = "Underlag för sjukförsäkringsavgift (från och med 1 juli)" }
+evidence = "#2102 same-label cluster 'Underlag för sjukförsäkringsavgift' (2 variables): judged different meaning, high confidence; Opdefs: ASJUK1 is the basis before 1 July, ASJUK2 from 1 July."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-sarskild-loneskatt-forvarvsinkomst-16-16-procent"
+fields = { "label" = "Underlag för beräkning av särskild löneskatt på förvärvsinkomsten (16,16 procent)" }
+evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild löneskatt på förvärvsinkomsten' (2 variables): judged different meaning, medium confidence; ASLSFP's opdef names the 16,16 % rate; ASLSF is a concurrent column (2004-2014) with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-sjukforsakringsavgift"
+fields = { "label" = "Underlag för sjukförsäkringsavgift (före 1 juli)" }
+evidence = "#2102 same-label cluster 'Underlag för sjukförsäkringsavgift' (2 variables): judged different meaning, high confidence; Opdefs: ASJUK1 is the basis before 1 July, ASJUK2 from 1 July."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1082"
+fields = { "label" = "Underskott av eget hem (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1083"
+fields = { "label" = "Underskott av eget hem (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-eget-hem-ifa1084"
+fields = { "label" = "Underskott av eget hem (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Underskott av eget hem' (4 variables): judged different meaning, high confidence; Opdefs say förekomst 1-4."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-jordbruksfastighet-ijb1202"
+fields = { "label" = "Underskott av jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-jordbruksfastighet-ijb1203"
+fields = { "label" = "Underskott av jordbruksfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Underskott av jordbruksfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-rorelsesfastighet-irr1202"
+fields = { "label" = "Underskott av rörelsesfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 2 and 3; IRR1201's opdef omits the number, so 1 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-rorelsesfastighet-irr1203"
+fields = { "label" = "Underskott av rörelsesfastighet (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Underskott av rörelsesfastighet' (3 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 2 and 3; IRR1201's opdef omits the number, so 1 follows from the suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-hyresfastigheter-ifa3062"
+fields = { "label" = "Underskott hyresfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Underskott hyresfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst 1 and 2 of max two."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsbelopp-andelsbyteslagen-reavinst"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen (reavinst B)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsbelopp-kontantvederlag-period-10592-10957"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag (KPUBK)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsbelopp-kontantvederlag-period-10957-11323"
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag (KPUBKB)" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:uppskovsbelopp-skattefri-utdelning"
+fields = { "label" = "Uppskovsbelopp, skattefri utdelning" }
+evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalshushall-ub-nummer"
+fields = { "label" = "Individ-/hushållsidentitet (urvalshushållets UB-nummer)" }
+evidence = "#2102 same-label cluster 'Individ-/hushållsidentitet' (2 variables): judged different meaning, high confidence; Opdefs: BUBNR identifies kosthushåll plus order number, BUBNRH is the urvalshushåll UB-number."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1052"
+fields = { "label" = "Utbetalt från Försäkringskassan (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-5 of a variable with max five occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1053"
+fields = { "label" = "Utbetalt från Försäkringskassan (förekomst 3)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-5 of a variable with max five occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1054"
+fields = { "label" = "Utbetalt från Försäkringskassan (förekomst 4)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-5 of a variable with max five occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-fran-forsakringskassan-itp1055"
+fields = { "label" = "Utbetalt från Försäkringskassan (förekomst 5)" }
+evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1-5 of a variable with max five occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-utlandska-vardepapper"
+fields = { "label" = "Utländska värdepapper (utdelning, KU31)" }
+evidence = "#2102 same-label cluster 'Utländska värdepapper' (2 variables): judged different meaning, high confidence; Opdefs: FKUUTL is the sum of utländska värdepapper from KU30, KKUUTUT is dividends on foreign securities from KU31."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-forsakringar-hyresfastigheter-ifa3112"
+fields = { "label" = "Utgifter för försäkringar hyresfastigheter (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Utgifter för försäkringar hyresfastigheter' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2 of max 2."
+
+[[statement]]
+kind = "set"
+subject = "var:utnyttjat-underskott-vissa-intakter"
+fields = { "label" = "Underskott, utnyttjat vid vissa intäkter" }
+evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, high confidence; Opdefs: NSKKVU is kvarvarande underskott, NSKUND plain underskott, NSIUTN utnyttjat underskott vissa intäkter."
+
+[[statement]]
+kind = "set"
+subject = "var:uttag-fran-skogskonto-jordbruksfastighet-ijb1372"
+fields = { "label" = "Uttag från skogskonto jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Uttag från skogskonto jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "label" = "Utvandringsland (BLINVIN)" }
+evidence = "#2102 same-label cluster 'Utvandringsland' (2 variables): judged different meaning, medium confidence; BLINVUT and BLINVIN are concurrent columns with the same country list and no text saying what UT and IN mean."
+
+[[statement]]
+kind = "set"
+subject = "var:uvbmed"
+fields = { "label" = "Vårdbidrag barn - utgift läkemedel (utgiftsklass)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag barn - utgift läkemedel' (2 variables): judged different meaning, high confidence; Opdefs: UVBMED is given in classes (1-400 kr, ...), UVBMEDK in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:uvbmedk"
+fields = { "label" = "Vårdbidrag barn - utgift läkemedel (kronor)" }
+evidence = "#2102 same-label cluster 'Vårdbidrag barn - utgift läkemedel' (2 variables): judged different meaning, high confidence; Opdefs: UVBMED is given in classes (1-400 kr, ...), UVBMEDK in kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeminskning-av-patentratter-och-naturtillganger-irr1342"
+fields = { "label" = "Värdeminskning av patenträtter och naturtillgånger, rörelse (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av patenträtter och naturtillgånger, rörelse' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:vardeminskning-av-skog-och-naturtillgangar-ijb1342"
+fields = { "label" = "Värdeminskning av skog och naturtillgångar jordbruksfastighet (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Värdeminskning av skog och naturtillgångar jordbruksfastighet' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-inventarier-irr1482"
+fields = { "label" = "Vinst vid avyttring av inventarier (förekomst 2)" }
+evidence = "#2102 same-label cluster 'Vinst vid avyttring av inventarier' (2 variables): judged different meaning, high confidence; Opdefs say förekomst nummer 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:wkirbid"
+fields = { "label" = "Boende - Räntebidrag belopp (WKIRBID)" }
+evidence = "#2102 same-label cluster 'Boende - Räntebidrag belopp' (3 variables): judged different meaning, medium confidence; Opdefs: KIBIDEG is for eget hem and KIBIDFR for fritidshus; WKIRBID (kosthushall, from 1998) has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:wsei1"
+fields = { "label" = "Socioekonomisk grupp (WSEI1)" }
+evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (4 variables): judged different meaning, medium confidence; Opdefs: BSEITID is the SEI code from earlier occupation for people not currently working, BSEIZ is the kosthushållsföreståndare's code for the whole household; WSEI1 (1975-76) is a concurrent column with its own code list and BSEI keeps the base label."
+
+[[statement]]
+kind = "set"
+subject = "var:wyrke1"
+fields = { "label" = "Yrke (WYRKE1, företaget med längst arbetstid)" }
+evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; BYRKE is derived from WYRKED and WYRKE1, WYRKE1 is the occupation at the company where the person worked longest, KSY007 uses the FoB 80 groups, BYRKEZ is a household variable in kosthushall with unclear owner."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-fob-80"
+fields = { "label" = "Yrke (FoB 80)" }
+evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; BYRKE is derived from WYRKED and WYRKE1, WYRKE1 is the occupation at the company where the person worked longest, KSY007 uses the FoB 80 groups, BYRKEZ is a household variable in kosthushall with unclear owner."

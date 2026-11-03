@@ -7648,3 +7648,2025 @@ kind = "set"
 subject = "set:ytterligare-vardavtalssystem"
 fields = { "label" = "Ytterligare vårdavtalssystem" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:annat-arvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:annat-arvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-behandlade-bifallna-medborgarforslag-regioner"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bifallna-e-forslag-kommuner"
+fields = { "label" = "Inkomna e-förslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bifallna-medborgarforslag-kommuner"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-folkinitiativ-beslut-folkomrostning-mandatperiod"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2016"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2020"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inkomna-e-forslag-regioner"
+fields = { "label" = "Inkomna e-förslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inkomna-folkinitiativ-kommun-mandatperiod"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr12a_text)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2016"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2020"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr9a_text)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antkoop"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:avtlakvardersant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal vårdavtal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med läkare i privat regi' (4 variables): judged different meaning, high confidence; PRIVLAK and AVTLAKVARDERS are the Ja/Nej flags (adjacent periods); PRIVLAKANT counts physicians (vårdgivare) while AVTLAKVARDERSANT counts care agreements, per description."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopald"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopaldant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (äldreomsorg, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopannat"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopannatant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (annat område, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkooparbf"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (ARBF)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkooparbfant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (ARBF, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopfs"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (förskola)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopfsant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (förskola, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopfunk"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopfunkant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (funktionsnedsättning, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopgs"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (grundskola)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopgsant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (grundskola, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopgym"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopgymant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (gymnasieskola, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopifo"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brkoopifoant"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (individ- och familjeomsorg, antal)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation"
+fields = { "label" = "Brukarrepresentation (område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation' (2 variables): judged different meaning, medium confidence; BRUKARSYS is the Ja/Nej question whether any system was used (matches the definition); BRUKAROMR (OMR for område) is a separate column without code list."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-aldreomsorg-2020"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-annat-omrade-2020"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-fr27"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-grundskola"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysald"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfs"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfunk"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgs"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgym"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysifo"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysovr"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (övrigt)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:ekverkmalsamt"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:ekverkmalvis"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:faststall-bolagsmal-fr24"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:faststall-bolagsmal-fr26"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:faststall-bolagsmal-fr39"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:faststallande-i-fullmaktige-av-ek-och-verksamh-mal-for-fr10a"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fokusgrupp"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (vilken fokusgrupp)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinit"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinit2011"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, variant 2011)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitant"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitant2011"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna sedan 2011)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitbes"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitbes2011ant"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning sedan 2011)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitbesant"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2016"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2020"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr9a)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-fr10a"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr10a)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-fr10a-text"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr10a_text)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-fr10b-text"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-fr8a-text"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkinitiativ-folkomrostning-fr8b-text"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostant"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-fr8"
+fields = { "label" = "Förekomst av folkomröstning (Fr8)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-fr9"
+fields = { "label" = "Förekomst av folkomröstning (Fr9)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-text"
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr11_text)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr13"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (regioner 2016)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr15"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner 2016)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr24"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (regioner 2020)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr28a"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner 2024)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-medbdiastrat"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner och regioner 2012)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:fr1"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr10"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr10)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr10b"
+fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:fr11"
+fields = { "label" = "Förekomst av folkomröstning (Fr11)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr12-text"
+fields = { "label" = "Inkomna medborgarförslag (Fr12_text)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr12a"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr12a)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:fr13"
+fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr13-text"
+fields = { "label" = "Inkomna medborgarförslag (Fr13_text)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr14-28632"
+fields = { "label" = "Inkomna medborgarförslag (Fr14)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr15"
+fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr16"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr17-text"
+fields = { "label" = "Inkomna e-förslag (Fr17_text)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr18"
+fields = { "label" = "Inkomna e-förslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr18-text"
+fields = { "label" = "Inkomna e-förslag (Fr18_text)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr19"
+fields = { "label" = "Inkomna e-förslag (Fr19)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr1a-10"
+fields = { "label" = "Politisk majoritet - annat parti (Fr1a_10)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr1a-11"
+fields = { "label" = "Politisk majoritet - annat parti (Fr1a_11)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr1a-9"
+fields = { "label" = "Politisk majoritet - annat parti (Fr1a_9)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr2"
+fields = { "label" = "Inkomna e-förslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr2-text"
+fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
+subject = "var:fr21"
+fields = { "label" = "Inkomna e-förslag (antal bifallna)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr24_1)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-2"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr24_2)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-2-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-3"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr24_3)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-3-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-4"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr24_4)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-4-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-5"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr24_5)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr24-5-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (inga ekonomiska mål eller verksamhetsmål)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (hälso- och sjukvård)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr26_2)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2-28613"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-3"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr26_3)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-3-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-4"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr26_4)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-4-29350"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-5"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr26_5)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-5"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-6"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-7"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-8"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-2"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (grundskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-3"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (gymnasieskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-4"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-6"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-7"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (annan verksamhet)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr28-8"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr29"
+fields = { "label" = "Medborgarkontor (Fr29_1)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr29-2"
+fields = { "label" = "Medborgarkontor (Fr29_2)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr29-3"
+fields = { "label" = "Medborgarkontor (Fr29_3)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr30"
+fields = { "label" = "Webbplats med medborgarförslag (Fr30_10)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr30-9"
+fields = { "label" = "Webbplats med medborgarförslag (Fr30_9)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr38"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fr39"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (hälso- och sjukvård)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-2"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-3"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41"
+fields = { "label" = "Medborgarkontor (fysiskt)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-2"
+fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-2-35983"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (grundskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-3-35983"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (gymnasieskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-4"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-5"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om äldre)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-6"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-7"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (annan verksamhet)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr41-8"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-2"
+fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-2-28613"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-3"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-3-28613"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-5-28613"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-6"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-7"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-8"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-2"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (grundskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-3"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (gymnasieskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-4"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-5"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om äldre)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-6"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr43-7"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (annan verksamhet)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-5"
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr45_5)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:fr5-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr6-6"
+fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:fr7-6"
+fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:fr7-text"
+fields = { "label" = "Förekomst av folkomröstning (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr8-text"
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr8_text)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fr8a"
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:fr9-text"
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr9_text)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktige-ekonomiska-mal-samtliga-bolag-arligen"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, årligen)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktige-hallbarhetsmal-samtliga-bolag-arligen"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, årligen)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktige-verksamhetsmal-samtliga-bolag-arligen"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, årligen)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:fysiskt-medborgarkontor"
+fields = { "label" = "Medborgarkontor (fysiskt)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:har-inte-medborgarkontor"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-medborgarkontor"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-e-forslag-fr17"
+fields = { "label" = "Inkomna e-förslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr10a"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr10b"
+fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr11"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr8a"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr8b"
+fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:interreligiosa-rad-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr23_6)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering"
+fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr29"
+fields = { "label" = "Klagomålshantering (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr31"
+fields = { "label" = "Klagomålshantering (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr43"
+fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-klagom"
+fields = { "label" = "Klagomålshantering (ja/nej)" }
+evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-ekonomiska-mal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-verksamhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-inte-brukarrepresentation-2020"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-webbplats-folja-medborgarforslag"
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-webbplats-information-medborgarforslag"
+fields = { "label" = "Webbplats med medborgarförslag (information om medborgarförslag)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:koopomr"
+fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (område)" }
+evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysald"
+fields = { "label" = "Valfrihetssystem (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysannat"
+fields = { "label" = "Valfrihetssystem (annat område)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfs"
+fields = { "label" = "Valfrihetssystem (förskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfunk"
+fields = { "label" = "Valfrihetssystem (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgs"
+fields = { "label" = "Valfrihetssystem (grundskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgy"
+fields = { "label" = "Valfrihetssystem (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysifo"
+fields = { "label" = "Valfrihetssystem (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvomr"
+fields = { "label" = "Valfrihetssystem (område)" }
+evidence = "#2102 same-label cluster 'Valfrihetssystem' (10 variables): judged different meaning, medium confidence; KUNDVSYS (2003-09) and KUNDVALSYS (2012) are the overall Ja/Nej question; KUNDVOMR asks for the area; the 2012 columns with suffix ALD, ANNAT, FS, FUNK, GS, GY, IFO are one per service area (suffixes decoded from the column names, not stated in an opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:landsting-fullmaktige-inga-ekonomiska-verksamhetsmal-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (inga ekonomiska mål eller verksamhetsmål)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:lokparti"
+fields = { "label" = "Politisk majoritet - annat parti (partinamn i klartext)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:maj"
+fields = { "label" = "Politisk majoritet - annat parti (lokalt parti i majoriteten)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:manadsarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:manadsarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:mbfant"
+fields = { "label" = "Inkomna medborgarförslag (MBFANT)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:mbfbeh"
+fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:mbfbif"
+fields = { "label" = "Inkomna medborgarförslag (MBFBIF)" }
+evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medbkontant"
+fields = { "label" = "Medborgarkontor (antal)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medbkontfys"
+fields = { "label" = "Medborgarkontor (fysiskt)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medbkontweb"
+fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgardialog-strategi"
+fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner 2020, regioner 2024)" }
+evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarkontor-fr42"
+fields = { "label" = "Medborgarkontor (fysiskt)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarkontor-fysiskt"
+fields = { "label" = "Medborgarkontor (fysiskt)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarkontor-webbportal-callcenter-kundtjanst"
+fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarkontor-webbportal-eller-callcenter-kundtjanst"
+fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradald"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradannat"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradfunk"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradnatmin"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradung"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medbradutlb"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomald"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomannat"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (annat område)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomfs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (förskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomfunk"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomgs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (grundskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomgym"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapkomifo"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i kommunens verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012."
+
+[[statement]]
+kind = "set"
+subject = "var:medskappriv"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (enbart nej-svar)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivald"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (äldreomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivannat"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (annat område)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivfs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (förskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivfunk"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivgs"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (grundskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivgym"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:medskapprivifo"
+fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (individ- och familjeomsorg)" }
+evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag"
+fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr14"
+fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15"
+fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15a"
+fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr10"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11a"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr7"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr9"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-medbforslag"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (när möjligheten infördes)" }
+evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:namndgemant"
+fields = { "label" = "Samverkan med annat landsting eller annan kommun (antal nämnder)" }
+evidence = "#2102 same-label cluster 'Samverkan med annat landsting eller annan kommun' (2 variables): judged different meaning, high confidence; NAMNDGEM is the Ja/Nej question; NAMNDGEMANT counts the nämnder where samverkan occurs (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrvardvalprivbol"
+fields = { "label" = "Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården (bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården' (2 variables): judged different meaning, high confidence; Opdefs: OVRVARDVALPRIVBOL is for bolagiserade leverantörer, OVRVARDVALPRIVIDEL for ideella leverantörer; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrvardvalprividel"
+fields = { "label" = "Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården (ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har ytterligare vårdavtalsystem inom hälso- och sjukvården' (2 variables): judged different meaning, high confidence; Opdefs: OVRVARDVALPRIVBOL is for bolagiserade leverantörer, OVRVARDVALPRIVIDEL for ideella leverantörer; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr7"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr7)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr8"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr8)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:politisk-majoritet-annat-parti"
+fields = { "label" = "Politisk majoritet - annat parti (fritext)" }
+evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:polsekrant"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (antal)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:privlakant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med läkare i privat regi' (4 variables): judged different meaning, high confidence; PRIVLAK and AVTLAKVARDERS are the Ja/Nej flags (adjacent periods); PRIVLAKANT counts physicians (vårdgivare) while AVTLAKVARDERSANT counts care agreements, per description."
+
+[[statement]]
+kind = "set"
+subject = "var:privsjukhant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med sjukhus i privat regi' (4 variables): judged different meaning, medium confidence; PRIVSJUKH and VARDAVTALPRIV are the Ja/Nej flags (adjacent periods); the count columns hold hospitals in 2003-09 and care agreements in 2012 per descriptions (the 2003-09 opdef also says vårdavtal)."
+
+[[statement]]
+kind = "set"
+subject = "var:privvardcant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:profnamnd"
+fields = { "label" = "Professionella nämnder/styrelser (PROFNAMND)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
+subject = "var:profnamndant"
+fields = { "label" = "Professionella nämnder/styrelser (PROFNAMNDANT)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-aldre-kommuner-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-aldre-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr23_2)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-2019-2023"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr24_7)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-2023"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr26_7)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-kommuner-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-annan-grupp-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr23_7)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-fokusgrupper-fr26"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr26_1)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-funktionsnedsattning-kommuner-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-funktionsnedsattning-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr23_4)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-interreligiosa-2019-2023"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr24_6)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-interreligiosa-2023"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr26_6)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-aldre-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-annan-grupp-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-nationella-minoriteter-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-personer-funktionsnedsattning-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-personer-utlandsk-bakgrund-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-ungdomar-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-nationella-minoriteter-kommuner-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-nationella-minoriteter-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr23_3)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-ungdomar-kommuner-2011"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-ungdomar-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr23_1)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-utlandsk-bakgrund-kommuner-2015"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-utlandsk-bakgrund-regioner-2019"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr23_5)" }
+evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-ekonomiska-mal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-hallbarhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-hallbarhetsmal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-verksamhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-verksamhetsmal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
+evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-medborgarkontor"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
+evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (region, ingen strategi)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-annat"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (region, annat)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:region-webb-folja-hantering-inlamnade-medborgarforslag"
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr42_5)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr19"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr21"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr32"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr33"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (Fr33)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr35"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur styret, oppositionen eller annat)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:revisionens-ordforande-minoritet"
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur majoriteten eller minoriteten)" }
+evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
+
+[[statement]]
+kind = "set"
+subject = "var:samarbete-verksamhetsutveckling-fr40"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (region, hälso- och sjukvård)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:samarbete-verksamhetsutveckling-fr41"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:sammantradesarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:sammantradesarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode)" }
+evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
+
+[[statement]]
+kind = "set"
+subject = "var:sjforgant"
+fields = { "label" = "Självförvaltningsorgan med uppdrag om drift (antal)" }
+evidence = "#2102 same-label cluster 'Självförvaltningsorgan med uppdrag om drift' (2 variables): judged different meaning, high confidence; SJFORG is the Ja/Nej question; SJFORGANT counts the självförvaltningsorgan (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om äldre)" }
+evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
+
+[[statement]]
+kind = "set"
+subject = "var:styrpro"
+fields = { "label" = "Professionella nämnder/styrelser (STYRPRO)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
+subject = "var:styrproant"
+fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr10"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr21"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22a"
+fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr24a"
+fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-radiotv"
+fields = { "label" = "TV-, radio- eller webbsändningar (förekomst)" }
+evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
+
+[[statement]]
+kind = "set"
+subject = "var:vardavtalprivant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal vårdavtal)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med sjukhus i privat regi' (4 variables): judged different meaning, medium confidence; PRIVSJUKH and VARDAVTALPRIV are the Ja/Nej flags (adjacent periods); the count columns hold hospitals in 2003-09 and care agreements in 2012 per descriptions (the 2003-09 opdef also says vårdavtal)."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprivbol"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprivbolant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal bolagiserade leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprividel"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprividelant"
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal ideella leverantörer)" }
+evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:verkmalsamt"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:verkmalvis"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
+evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
+
+[[statement]]
+kind = "set"
+subject = "var:webbmedb"
+fields = { "label" = "Webbplats med medborgarförslag (information om medborgarförslag)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:webbmedbfors"
+fields = { "label" = "Webbplats med medborgarförslag (WEBBMEDBFORS)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:webbmedbforsant"
+fields = { "label" = "Webbplats med medborgarförslag (WEBBMEDBFORSANT)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:webbmedbhant"
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."

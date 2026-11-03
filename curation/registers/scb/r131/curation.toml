@@ -798,3 +798,15 @@ kind = "set"
 subject = "set:urvalsar"
 fields = { "label" = "Urvalsår" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp"
+fields = { "label" = "Blankettyp (kvartalsomsättning tjänstesektorn)" }
+evidence = "#2102 same-label cluster 'Blankettyp' (2 variables): judged different meaning, high confidence; Different surveys with different form-type value sets: lagerstatistik versus kvartalsomsättning tjänstesektorn."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp-svalt"
+fields = { "label" = "Blankettyp (lagerstatistik)" }
+evidence = "#2102 same-label cluster 'Blankettyp' (2 variables): judged different meaning, high confidence; Different surveys with different form-type value sets: lagerstatistik versus kvartalsomsättning tjänstesektorn."

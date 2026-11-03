@@ -616,3 +616,15 @@ kind = "set"
 subject = "set:utbildningsgrupp"
 fields = { "label" = "Utbildningsgrupp" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "label" = "Utbildningsgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Opdefs: coded group (UtbGrp) versus group name in plain text (UtbNamn)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbnamn"
+fields = { "label" = "Utbildningsgrupp (namn)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Opdefs: coded group (UtbGrp) versus group name in plain text (UtbNamn)."

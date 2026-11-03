@@ -1642,3 +1642,15 @@ kind = "set"
 subject = "set:vilja-att-arbeta-mer"
 fields = { "label" = "Vilja att arbeta mer" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkefar"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (pappans yrke)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Opdefs: Yrkefar is the father's occupation, Yrkemor the mother's."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkemor"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (mammans yrke)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Opdefs: Yrkefar is the father's occupation, Yrkemor the mother's."

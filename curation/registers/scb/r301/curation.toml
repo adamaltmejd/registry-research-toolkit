@@ -7590,3 +7590,1209 @@ kind = "set"
 subject = "set:utbildningstyp-pa-formell-niva"
 fields = { "label" = "Utbildningstyp på formell nivå" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetstyp-icke-formell-andra-slumpmassiga"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (andra slumpmässiga aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetstyp-icke-formell-forsta-slumpmassiga"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (första slumpmässiga aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetstyp-icke-formell-tredje-slumpmassiga"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (tredje slumpmässiga aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-kontrollera-programkonfiguration-utom-webblasare"
+fields = { "label" = "Datorrelaterad aktivitet (kontrollera programkonfiguration utanför webbläsare)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-webblasarens-sakerhetsinstallningar"
+fields = { "label" = "Internetrelaterad aktivitet (ändra webbläsarens säkerhetsinställningar)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resultat-icke-formell-utbildning-andra"
+fields = { "label" = "Antal resultat av nya kunskaper, icke-formell utbildning (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal resultat av nya kunskaper, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resultat-icke-formell-utbildning-forsta"
+fields = { "label" = "Antal resultat av nya kunskaper, icke-formell utbildning (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal resultat av nya kunskaper, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resultat-icke-formell-utbildning-tredje"
+fields = { "label" = "Antal resultat av nya kunskaper, icke-formell utbildning (tredje aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal resultat av nya kunskaper, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-skal-deltagande-icke-formell-andra-aktiviteten"
+fields = { "label" = "Antal skäl till deltagande, icke-formell utbildning (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal skäl till deltagande, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-skal-deltagande-icke-formell-forsta-aktiviteten"
+fields = { "label" = "Antal skäl till deltagande, icke-formell utbildning (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal skäl till deltagande, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-skal-deltagande-icke-formell-tredje-aktiviteten"
+fields = { "label" = "Antal skäl till deltagande, icke-formell utbildning (tredje aktiviteten)" }
+evidence = "#2102 same-label cluster 'Antal skäl till deltagande, icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-hogsta-niva-typ"
+fields = { "label" = "Typ av utbildning på den högsta nivån (avbruten utbildning)" }
+evidence = "#2102 same-label cluster 'Typ av utbildning på den högsta nivån' (2 variables): judged different meaning, high confidence; Opdefs: HATVOC is the highest completed education, DROPEDUCVOC the interrupted education."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-formell-utbildning-arbetsformedlingen"
+fields = { "label" = "Betalande objekt, formell utbildning (Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 variables): judged different meaning, high confidence; Five separate payer items (FEDPAIDBY_1-5), each named by its value set."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-formell-utbildning-arbetsgivare-eller-blivande"
+fields = { "label" = "Betalande objekt, formell utbildning (arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 variables): judged different meaning, high confidence; Five separate payer items (FEDPAIDBY_1-5), each named by its value set."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-formell-utbildning-hushallsmedlem-eller-slakting"
+fields = { "label" = "Betalande objekt, formell utbildning (hushållsmedlem eller släkting)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 variables): judged different meaning, high confidence; Five separate payer items (FEDPAIDBY_1-5), each named by its value set."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-formell-utbildning-intervjupersonen-sjalv"
+fields = { "label" = "Betalande objekt, formell utbildning (intervjupersonen själv)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 variables): judged different meaning, high confidence; Five separate payer items (FEDPAIDBY_1-5), each named by its value set."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-formell-utbildning-offentlig-eller-privat-sektor"
+fields = { "label" = "Betalande objekt, formell utbildning (offentlig eller privat sektor)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, formell utbildning' (5 variables): judged different meaning, high confidence; Five separate payer items (FEDPAIDBY_1-5), each named by its value set."
+
+[[statement]]
+kind = "set"
+subject = "var:betald-arbetstid-senaste-formella-utbildning-12-manader"
+fields = { "label" = "Arbetstid formell utbildning (senaste formella utbildningen)" }
+evidence = "#2102 same-label cluster 'Arbetstid formell utbildning' (3 variables): judged different meaning, high confidence; farbtid and farbtid2 are formal education 1 and 2 (2005-06); the 2011-23 column covers the latest formal education in the last 12 months."
+
+[[statement]]
+kind = "set"
+subject = "var:betald-information-utbildningsmojligheter"
+fields = { "label" = "Information funnen (betald information om utbildningsmöjligheter)" }
+evidence = "#2102 same-label cluster 'Information funnen' (4 variables): judged different meaning, high confidence; seekfound asks whether information was found; GUIDEINST_1-3 are separate derived items (free, paid, not received)."
+
+[[statement]]
+kind = "set"
+subject = "var:betalning-sjalv-annan-gratis-icke-formell-utbildning-forsta"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Icke-formell utbildning, kostnadsvariabler' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-ansluta-installera-ny-utrustning"
+fields = { "label" = "Datorrelaterad aktivitet (ansluta och installera ny utrustning)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-berakningar-formler-kalkylprogram"
+fields = { "label" = "Datorrelaterad aktivitet (beräkningar med formler i kalkylprogram)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-flytta-fil-eller-mapp"
+fields = { "label" = "Datorrelaterad aktivitet (flytta fil eller mapp)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-installera-ersatta-operativsystem"
+fields = { "label" = "Datorrelaterad aktivitet (installera eller ersätta operativsystem)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-komprimera-filer"
+fields = { "label" = "Datorrelaterad aktivitet (komprimera filer)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-overfora-filer-dator-annan-utrustning"
+fields = { "label" = "Datorrelaterad aktivitet (överföra filer mellan dator och annan utrustning)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-skapa-elektroniska-presentationer"
+fields = { "label" = "Datorrelaterad aktivitet (skapa elektroniska presentationer)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:datoraktivitet-skriva-datorprogram"
+fields = { "label" = "Datorrelaterad aktivitet (skriva datorprogram)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:delta-chatt-diskussionsgrupp-forum-socialt-natverk"
+fields = { "label" = "Internetrelaterad aktivitet (delta i chatt, forum eller socialt nätverk)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-icke-formell-utbildning-handledd-arbetsplats"
+fields = { "label" = "Aktivitetsdeltagande, icke-formell utbildning (handledd utbildning på arbetsplatsen)" }
+evidence = "#2102 same-label cluster 'Aktivitetsdeltagande, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Four concurrent yes/no items, one per type of non-formal activity, named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-icke-formell-utbildning-kurser"
+fields = { "label" = "Aktivitetsdeltagande, icke-formell utbildning (kurser)" }
+evidence = "#2102 same-label cluster 'Aktivitetsdeltagande, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Four concurrent yes/no items, one per type of non-formal activity, named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-icke-formell-utbildning-privatlektioner"
+fields = { "label" = "Aktivitetsdeltagande, icke-formell utbildning (privatlektioner)" }
+evidence = "#2102 same-label cluster 'Aktivitetsdeltagande, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Four concurrent yes/no items, one per type of non-formal activity, named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-icke-formell-workshopar-seminarier"
+fields = { "label" = "Aktivitetsdeltagande, icke-formell utbildning (workshopar och seminarier)" }
+evidence = "#2102 same-label cluster 'Aktivitetsdeltagande, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Four concurrent yes/no items, one per type of non-formal activity, named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:deltogvillemer"
+fields = { "label" = "Studiehinder (deltog, ville delta i mer utbildning)" }
+evidence = "#2102 same-label cluster 'Studiehinder' (2 variables): judged different meaning, high confidence; Opdefs: took part but wanted more education versus did not take part but wanted to."
+
+[[statement]]
+kind = "set"
+subject = "var:dropeduclevel"
+fields = { "label" = "Utbildningsnivå ISCED (ej fullföljd utbildning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:droplevel"
+fields = { "label" = "Utbildningsnivå ISCED (ej fullföljd utbildning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:farbtid"
+fields = { "label" = "Arbetstid formell utbildning (formell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Arbetstid formell utbildning' (3 variables): judged different meaning, high confidence; farbtid and farbtid2 are formal education 1 and 2 (2005-06); the 2011-23 column covers the latest formal education in the last 12 months."
+
+[[statement]]
+kind = "set"
+subject = "var:farbtid2"
+fields = { "label" = "Arbetstid formell utbildning (formell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Arbetstid formell utbildning' (3 variables): judged different meaning, high confidence; farbtid and farbtid2 are formal education 1 and 2 (2005-06); the 2011-23 column covers the latest formal education in the last 12 months."
+
+[[statement]]
+kind = "set"
+subject = "var:fedfield"
+fields = { "label" = "Inriktning formell utbildning (senaste formella utbildningen)" }
+evidence = "#2102 same-label cluster 'Inriktning formell utbildning' (3 variables): judged different meaning, medium confidence; finr and finr2 are the first and second formal education (ISCED3, 2005-06); FEDFIELD is a single field with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:fedlevel"
+fields = { "label" = "Nivå formell utbildning (senaste formella utbildningen)" }
+evidence = "#2102 same-label cluster 'Nivå formell utbildning' (3 variables): judged different meaning, high confidence; fniva1/2 are formal education 1 and 2 (ISCED1, coarse); FEDLEVEL is derived for the latest formal education with a detailed coding."
+
+[[statement]]
+kind = "set"
+subject = "var:fedmainstat"
+fields = { "label" = "Huvudsaklig sysselsättning (vid start av senaste formella utbildning)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (3 variables): judged different meaning, high confidence; syss and MAINSTAT are the current main activity over time; FEDMAINSTAT asks about the activity at the start of the latest formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:fedoera"
+fields = { "label" = "Formell utbildning under det senaste året (frekvens)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (2 variables): judged different meaning, high confidence; FEDOERA is a frequency scale and FEDOERB a yes/no item, both concurrent in the 2016 survey."
+
+[[statement]]
+kind = "set"
+subject = "var:fedoerb"
+fields = { "label" = "Formell utbildning under det senaste året (ja/nej)" }
+evidence = "#2102 same-label cluster 'Formell utbildning under det senaste året' (2 variables): judged different meaning, high confidence; FEDOERA is a frequency scale and FEDOERB a yes/no item, both concurrent in the 2016 survey."
+
+[[statement]]
+kind = "set"
+subject = "var:fedreason-06"
+fields = { "label" = "Skäl till deltagande, formell utbildning (allmänbildning, personlig utveckling eller nyttiga kunskaper för dagliga livet)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:fedreasonmain"
+fields = { "label" = "Skäl till deltagande, formell utbildning (viktigaste skälet)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:feduse"
+fields = { "label" = "Kunskapsanvändning, formell utbildning (hittills haft)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, formell utbildning' (3 variables): judged different meaning, medium confidence; FEDUSEB asks for expected future use, FEDUSEA for use so far; FEDUSE (2011-12) has the same scale and is taken as the use-so-far item over time."
+
+[[statement]]
+kind = "set"
+subject = "var:feduseb"
+fields = { "label" = "Kunskapsanvändning, formell utbildning (förväntad framtida användning)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, formell utbildning' (3 variables): judged different meaning, medium confidence; FEDUSEB asks for expected future use, FEDUSEA for use so far; FEDUSE (2011-12) has the same scale and is taken as the use-so-far item over time."
+
+[[statement]]
+kind = "set"
+subject = "var:feurohjalp1"
+fields = { "label" = "Kostnader studiehjälpmedel formell utbildning (formell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel formell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: formal education 1 and formal education 2."
+
+[[statement]]
+kind = "set"
+subject = "var:feurohjalp2"
+fields = { "label" = "Kostnader studiehjälpmedel formell utbildning (formell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel formell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: formal education 1 and formal education 2."
+
+[[statement]]
+kind = "set"
+subject = "var:finr"
+fields = { "label" = "Inriktning formell utbildning (formell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Inriktning formell utbildning' (3 variables): judged different meaning, medium confidence; finr and finr2 are the first and second formal education (ISCED3, 2005-06); FEDFIELD is a single field with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:finr2"
+fields = { "label" = "Inriktning formell utbildning (formell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Inriktning formell utbildning' (3 variables): judged different meaning, medium confidence; finr and finr2 are the first and second formal education (ISCED3, 2005-06); FEDFIELD is a single field with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:fniva"
+fields = { "label" = "Nivå formell utbildning (formell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Nivå formell utbildning' (3 variables): judged different meaning, high confidence; fniva1/2 are formal education 1 and 2 (ISCED1, coarse); FEDLEVEL is derived for the latest formal education with a detailed coding."
+
+[[statement]]
+kind = "set"
+subject = "var:fniva2"
+fields = { "label" = "Nivå formell utbildning (formell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Nivå formell utbildning' (3 variables): judged different meaning, high confidence; fniva1/2 are formal education 1 and 2 (ISCED1, coarse); FEDLEVEL is derived for the latest formal education with a detailed coding."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-iso-far"
+fields = { "label" = "Födelseland, ISO-kod (faderns)" }
+evidence = "#2102 same-label cluster 'Födelseland, ISO-kod' (4 variables): judged different meaning, high confidence; Opdefs: own, father's and mother's country of birth; fodland and BIRTHPLACE are the respondent's own over time."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-iso-mor"
+fields = { "label" = "Födelseland, ISO-kod (moderns)" }
+evidence = "#2102 same-label cluster 'Födelseland, ISO-kod' (4 variables): judged different meaning, high confidence; Opdefs: own, father's and mother's country of birth; fodland and BIRTHPLACE are the respondent's own over time."
+
+[[statement]]
+kind = "set"
+subject = "var:frsprak"
+fields = { "label" = "Språk som personen kan använda (bäst kända språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:frsprak2"
+fields = { "label" = "Språk som personen kan använda (näst bäst kända språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:fsyfte1"
+fields = { "label" = "Syfte formell utbildning (första formella utbildningen)" }
+evidence = "#2102 same-label cluster 'Syfte formell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: first and second formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:fsyfte2"
+fields = { "label" = "Syfte formell utbildning (andra formella utbildningen)" }
+evidence = "#2102 same-label cluster 'Syfte formell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: first and second formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:gratis-information-utbildningsmojligheter"
+fields = { "label" = "Information funnen (gratis information om utbildningsmöjligheter)" }
+evidence = "#2102 same-label cluster 'Information funnen' (4 variables): judged different meaning, high confidence; seekfound asks whether information was found; GUIDEINST_1-3 are separate derived items (free, paid, not received)."
+
+[[statement]]
+kind = "set"
+subject = "var:hatvoc"
+fields = { "label" = "Typ av utbildning på den högsta nivån (fullföljd)" }
+evidence = "#2102 same-label cluster 'Typ av utbildning på den högsta nivån' (2 variables): judged different meaning, high confidence; Opdefs: HATVOC is the highest completed education, DROPEDUCVOC the interrupted education."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utbildningsniva-isced"
+fields = { "label" = "Utbildningsnivå ISCED (högsta nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-andra-aktivitet"
+fields = { "label" = "Förvärvad förmåga eller kunskap (andra icke-formella aktiviteten)" }
+evidence = "#2102 same-label cluster 'Förvärvad förmåga eller kunskap' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-forsta-aktivitet"
+fields = { "label" = "Förvärvad förmåga eller kunskap (första icke-formella aktiviteten)" }
+evidence = "#2102 same-label cluster 'Förvärvad förmåga eller kunskap' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:icke-formell-utbildning-kostnadsvariabler-nfepaid2"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Icke-formell utbildning, kostnadsvariabler' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:ifarbtid"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:ifarbtid2"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:ifarbtid3"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:ifeurohjalp1"
+fields = { "label" = "Kostnader studiehjälpmedel icke-formell utbildning (icke-formell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs: non-formal education 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ifeurohjalp2"
+fields = { "label" = "Kostnader studiehjälpmedel icke-formell utbildning (icke-formell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs: non-formal education 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ifeurohjalp3"
+fields = { "label" = "Kostnader studiehjälpmedel icke-formell utbildning (icke-formell utbildning 3)" }
+evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs: non-formal education 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:ifinr"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:ifinr2"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:ifinr3"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:ifsyfte"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:ifsyfte2"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:ifsyfte3"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:inffield"
+fields = { "label" = "Inriktning informell utbildning (informell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:inffield2"
+fields = { "label" = "Inriktning informell utbildning (informell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:infinr"
+fields = { "label" = "Inriktning informell utbildning (informell utbildning 1)" }
+evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:infinr2"
+fields = { "label" = "Inriktning informell utbildning (informell utbildning 2)" }
+evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:infinr3"
+fields = { "label" = "Inriktning informell utbildning (informell utbildning 3)" }
+evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-besoka-larocenter-bibliotek"
+fields = { "label" = "Undervisningsmetod, informell utbildning (besöka lärocenter, bibliotek)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-bok-tidning-instruktionsbok"
+fields = { "label" = "Undervisningsmetod, informell utbildning (bok, tidning, instruktionsbok)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-dator-surfplatta-smartphone"
+fields = { "label" = "Undervisningsmetod, informell utbildning (dator, surfplatta, smartphone)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-guidade-visningar"
+fields = { "label" = "Undervisningsmetod, informell utbildning (guidade visningar)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-mobil-surfplatta-dator-tv-radio"
+fields = { "label" = "Undervisningsmetod, informell utbildning (mobil, surfplatta, dator, TV, radio)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:informell-inlarning-van-kollega-familjemedlem"
+fields = { "label" = "Undervisningsmetod, informell utbildning (vän, kollega, familjemedlem)" }
+evidence = "#2102 same-label cluster 'Undervisningsmetod, informell utbildning' (6 variables): judged different meaning, high confidence; Six separate tick-box learning methods, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:infpurp2"
+fields = { "label" = "Syfte informell utbildning (näst senaste aktiviteten)" }
+evidence = "#2102 same-label cluster 'Syfte informell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: purpose of the latest versus the second latest activity."
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-icke-formell-andra-slumpvalda-aktivitet"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-icke-formell-forsta-slumpvalda-aktivitet"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod-guideinter-2"
+fields = { "label" = "Insamlingsmetod (chatt-robot eller annan automatisk funktion på internet)" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (3 variables): judged different meaning, high confidence; Three different information channels (computer application, automatic internet communication, personal contact), named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod-guidemode-3"
+fields = { "label" = "Insamlingsmetod (datorbaserad applikation)" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (3 variables): judged different meaning, high confidence; Three different information channels (computer application, automatic internet communication, personal contact), named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fatt-information-utbildningsmojligheter-trots-sokning"
+fields = { "label" = "Information funnen (ingen information trots sökning)" }
+evidence = "#2102 same-label cluster 'Information funnen' (4 variables): judged different meaning, high confidence; seekfound asks whether information was found; GUIDEINST_1-3 are separate derived items (free, paid, not received)."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-anvanda-fildelningsprogram"
+fields = { "label" = "Internetrelaterad aktivitet (använda fildelningsprogram)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-ladda-upp-pa-webbplatser"
+fields = { "label" = "Internetrelaterad aktivitet (ladda upp på webbplatser)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-ringa-telefonsamtal"
+fields = { "label" = "Internetrelaterad aktivitet (ringa telefonsamtal via internet)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-skapa-webbsida"
+fields = { "label" = "Internetrelaterad aktivitet (skapa webbsida)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-skicka-e-post-med-bilagor"
+fields = { "label" = "Internetrelaterad aktivitet (skicka e-post med bilagor)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:internetaktivitet-sokmotor-hitta-information"
+fields = { "label" = "Internetrelaterad aktivitet (söka information med sökmotor)" }
+evidence = "#2102 same-label cluster 'Internetrelaterad aktivitet' (8 variables): judged different meaning, high confidence; Eight concurrent tick-box items; each opdef names a different internet activity."
+
+[[statement]]
+kind = "set"
+subject = "var:kopiera-klippa-klistra-flytta-information-i-dokument"
+fields = { "label" = "Datorrelaterad aktivitet (kopiera, klistra och flytta information i dokument)" }
+evidence = "#2102 same-label cluster 'Datorrelaterad aktivitet' (10 variables): judged different meaning, high confidence; Ten concurrent tick-box items, each opdef names a different computer activity."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskapsanvandning-formell-utbildning-hittills"
+fields = { "label" = "Kunskapsanvändning, formell utbildning (hittills haft)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, formell utbildning' (3 variables): judged different meaning, medium confidence; FEDUSEB asks for expected future use, FEDUSEA for use so far; FEDUSE (2011-12) has the same scale and is taken as the use-so-far item over time."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskapsanvandning-hittills-icke-formell-forsta-aktivitet"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning (första aktiviteten, hittills haft)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Opdefs: use so far (NFEUSEA) versus expected future use (NFEUSEB), each for the first and second activity."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskapsanvandning-icke-formell-utbildning-nfeusea2"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning (andra aktiviteten, hittills haft)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Opdefs: use so far (NFEUSEA) versus expected future use (NFEUSEB), each for the first and second activity."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskapsanvandning-icke-formell-utbildning-nfeuseb2"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning (andra aktiviteten, förväntad framtida användning)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Opdefs: use so far (NFEUSEA) versus expected future use (NFEUSEB), each for the first and second activity."
+
+[[statement]]
+kind = "set"
+subject = "var:langbest"
+fields = { "label" = "Språk som personen kan använda (bäst kända språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:langbest2"
+fields = { "label" = "Språk som personen kan använda (näst bäst kända språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel1"
+fields = { "label" = "Kunskapsnivå i språk (bästa språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Kunskapsnivå i språk' (2 variables): judged different meaning, high confidence; Opdefs: level in the best language versus the second best language besides mother tongue."
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel2"
+fields = { "label" = "Kunskapsnivå i språk (näst bästa språket förutom modersmål)" }
+evidence = "#2102 same-label cluster 'Kunskapsnivå i språk' (2 variables): judged different meaning, high confidence; Opdefs: level in the best language versus the second best language besides mother tongue."
+
+[[statement]]
+kind = "set"
+subject = "var:langlevel2-24959"
+fields = { "label" = "Språk som personen kan använda (kunskapsnivå i näst bästa språket)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:langmoth"
+fields = { "label" = "Modersmål (första)" }
+evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:langmoth2"
+fields = { "label" = "Modersmål (andra)" }
+evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:langmother"
+fields = { "label" = "Modersmål (första)" }
+evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:langmother2"
+fields = { "label" = "Modersmål (andra)" }
+evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:langused"
+fields = { "label" = "Språk som personen kan använda (antal språk)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:langused-1"
+fields = { "label" = "Språk som personen kan använda (språk 1)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:missnoje-formell-utbildning-administration"
+fields = { "label" = "Orsak till missnöje, formell utbildning (administrationen av utbildningen)" }
+evidence = "#2102 same-label cluster 'Orsak till missnöje, formell utbildning' (5 variables): judged different meaning, high confidence; Five concurrent tick-box reasons, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:missnoje-formell-utbildning-for-hog-utbildningsniva"
+fields = { "label" = "Orsak till missnöje, formell utbildning (för hög utbildningsnivå)" }
+evidence = "#2102 same-label cluster 'Orsak till missnöje, formell utbildning' (5 variables): judged different meaning, high confidence; Five concurrent tick-box reasons, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:missnoje-formell-utbildning-for-lag-utbildningsniva"
+fields = { "label" = "Orsak till missnöje, formell utbildning (för låg utbildningsnivå)" }
+evidence = "#2102 same-label cluster 'Orsak till missnöje, formell utbildning' (5 variables): judged different meaning, high confidence; Five concurrent tick-box reasons, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:missnoje-formell-utbildning-inte-relevant-ingen-nytta"
+fields = { "label" = "Orsak till missnöje, formell utbildning (inte relevant, ingen nytta)" }
+evidence = "#2102 same-label cluster 'Orsak till missnöje, formell utbildning' (5 variables): judged different meaning, high confidence; Five concurrent tick-box reasons, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:missnoje-formell-utbildning-undervisningskvalitet"
+fields = { "label" = "Orsak till missnöje, formell utbildning (undervisningens kvalitet)" }
+evidence = "#2102 same-label cluster 'Orsak till missnöje, formell utbildning' (5 variables): judged different meaning, high confidence; Five concurrent tick-box reasons, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "label" = "Modersmål (första)" }
+evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact01-mainstat"
+fields = { "label" = "Sysselsättning vid start av icke-formell utbildning (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Opdefs name the first to fifth non-formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact01-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact01-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact01-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact02-mainstat"
+fields = { "label" = "Sysselsättning vid start av icke-formell utbildning (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Opdefs name the first to fifth non-formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact02-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact02-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact02-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact03-mainstat"
+fields = { "label" = "Sysselsättning vid start av icke-formell utbildning (tredje aktiviteten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Opdefs name the first to fifth non-formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact03-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact03-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact03-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact04-mainstat"
+fields = { "label" = "Sysselsättning vid start av icke-formell utbildning (fjärde aktiviteten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Opdefs name the first to fifth non-formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact04-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 4)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact04-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 4)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact04-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 4)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact05-mainstat"
+fields = { "label" = "Sysselsättning vid start av icke-formell utbildning (femte aktiviteten)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid start av icke-formell utbildning' (5 variables): judged different meaning, high confidence; Opdefs name the first to fifth non-formal education."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact05-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 5)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact05-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 5)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact05-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 5)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact06-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 6)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact06-type"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 6)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact06-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 6)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact07-purp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 7)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact07-worktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 7)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfefield3"
+fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeoera"
+fields = { "label" = "Utbildningsaktiviter under det senaste året (första aktiviteten, NFEOERA)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviter under det senaste året' (4 variables): judged different meaning, medium confidence; Opdefs give first versus second activity; NFEOERA versus NFEOERB differ in an unstated way, so the raw column code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeoera2"
+fields = { "label" = "Utbildningsaktiviter under det senaste året (andra aktiviteten, NFEOERA)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviter under det senaste året' (4 variables): judged different meaning, medium confidence; Opdefs give first versus second activity; NFEOERA versus NFEOERB differ in an unstated way, so the raw column code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeoerb"
+fields = { "label" = "Utbildningsaktiviter under det senaste året (första aktiviteten, NFEOERB)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviter under det senaste året' (4 variables): judged different meaning, medium confidence; Opdefs give first versus second activity; NFEOERA versus NFEOERB differ in an unstated way, so the raw column code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeoerb2"
+fields = { "label" = "Utbildningsaktiviter under det senaste året (andra aktiviteten, NFEOERB)" }
+evidence = "#2102 same-label cluster 'Utbildningsaktiviter under det senaste året' (4 variables): judged different meaning, medium confidence; Opdefs give first versus second activity; NFEOERA versus NFEOERB differ in an unstated way, so the raw column code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:nfepurp"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfepurp2"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfepurp3"
+fields = { "label" = "Syfte icke-formell utbildning (aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeuseb"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning (första aktiviteten, förväntad framtida användning)" }
+evidence = "#2102 same-label cluster 'Kunskapsanvändning, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Opdefs: use so far (NFEUSEA) versus expected future use (NFEUSEB), each for the first and second activity."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeworktime"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 1)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeworktime2"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 2)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeworktime3"
+fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 3)" }
+evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-battre-arbete-och-eller-karriarmojligheter"
+fields = { "label" = "Skäl till deltagande, formell utbildning (bättre i arbetet och/eller karriärmöjligheter)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-oka-kunskap-fardighet-intresserande-amne"
+fields = { "label" = "Skäl till deltagande, formell utbildning (öka kunskaper i ämne som intresserar)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-fa-arbete-eller-byta-arbete-yrke"
+fields = { "label" = "Skäl till deltagande, formell utbildning (få arbete eller byta arbete/yrke)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-minska-risk-forlora-arbetet"
+fields = { "label" = "Skäl till deltagande, formell utbildning (minska risken att förlora arbetet)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-oka-karriarmojligheter"
+fields = { "label" = "Skäl till deltagande, formell utbildning (öka karriärmöjligheterna)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
+fields = { "label" = "Skäl till deltagande, formell utbildning (öka kunskaper i ämne som intresserar)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-starta-eget-foretag"
+fields = { "label" = "Skäl till deltagande, formell utbildning (starta eget företag)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-traffa-nya-manniskor-noje"
+fields = { "label" = "Skäl till deltagande, formell utbildning (träffa nya människor, nöje)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-tvungen-delta"
+fields = { "label" = "Skäl till deltagande, formell utbildning (tvungen att delta)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-utbildningsbevis"
+fields = { "label" = "Skäl till deltagande, formell utbildning (få ett utbildningsbevis)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-formell-utbildning-utfora-arbetet-battre"
+fields = { "label" = "Skäl till deltagande, formell utbildning (utföra arbetet bättre)" }
+evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak"
+fields = { "label" = "Språk som personen kan använda (språk 1)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak-niva-fold"
+fields = { "label" = "Språk som personen kan använda (kunskapsnivå i bästa språket)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak2"
+fields = { "label" = "Språk som personen kan använda (språk 2)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak3"
+fields = { "label" = "Språk som personen kan använda (språk 3)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak4"
+fields = { "label" = "Språk som personen kan använda (språk 4)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprak5"
+fields = { "label" = "Språk som personen kan använda (språk 5)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 2)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-femte-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 5)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 4)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 6)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 7)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
+fields = { "label" = "Språk som personen kan använda (språk 3)" }
+evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
+
+[[statement]]
+kind = "set"
+subject = "var:syfte-icke-formell"
+fields = { "label" = "Syfte icke-formell utbildning (lärt på egen hand eller av kollega, vän eller familjemedlem)" }
+evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
+
+[[statement]]
+kind = "set"
+subject = "var:syfte-informell-utbildning-senaste-aktiviteten"
+fields = { "label" = "Syfte informell utbildning (senaste aktiviteten)" }
+evidence = "#2102 same-label cluster 'Syfte informell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: purpose of the latest versus the second latest activity."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-icke-formell-utbildning-attonde-aktivitet"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 8)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-icke-formell-utbildning-nionde-aktivitet"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 9)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-icke-formell-utbildning-sjunde-aktivitet"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 7)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-icke-formell-utbildning-tionde-aktivitet"
+fields = { "label" = "Typ av aktivitet, icke-formell utbildning (aktivitet 10)" }
+evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning' (13 variables): judged different meaning, high confidence; Opdefs name activity 1-10 and the first to third randomly selected activity; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-utbildningsanordnare-andra-aktiviteten"
+fields = { "label" = "Typ av utbildningsanordnare (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-utbildningsanordnare-forsta-aktiviteten"
+fields = { "label" = "Typ av utbildningsanordnare (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-utbildningsanordnare-tredje-aktiviteten"
+fields = { "label" = "Typ av utbildningsanordnare (tredje aktiviteten)" }
+evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:uppmanare-utbildning-andra-slumpvalda-aktivitet"
+fields = { "label" = "Uppmanare till utbildning (andra aktiviteten)" }
+evidence = "#2102 same-label cluster 'Uppmanare till utbildning' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:uppmanare-utbildning-forsta-slumpvalda-aktivitet"
+fields = { "label" = "Uppmanare till utbildning (första aktiviteten)" }
+evidence = "#2102 same-label cluster 'Uppmanare till utbildning' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected activity."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning"
+fields = { "label" = "Utbildningsnivå ISCED (högsta nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbevis-icke-formell-utbildning-andra"
+fields = { "label" = "Utbildningsbevis (andra icke-formella aktiviteten)" }
+evidence = "#2102 same-label cluster 'Utbildningsbevis' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbevis-icke-formell-utbildning-forsta"
+fields = { "label" = "Utbildningsbevis (första icke-formella aktiviteten)" }
+evidence = "#2102 same-label cluster 'Utbildningsbevis' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbevis-icke-formell-utbildning-tredje"
+fields = { "label" = "Utbildningsbevis (tredje icke-formella aktiviteten)" }
+evidence = "#2102 same-label cluster 'Utbildningsbevis' (3 variables): judged different meaning, high confidence; Opdefs name the first, second and third non-formal activity."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinformation-personlig-kontakt-12-manader"
+fields = { "label" = "Insamlingsmetod (personlig kontakt)" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (3 variables): judged different meaning, high confidence; Three different information channels (computer application, automatic internet communication, personal contact), named in the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-far"
+fields = { "label" = "Föräldrarnas utbildningsnivå (faderns)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (2 variables): judged different meaning, high confidence; Opdefs: father's and mother's highest education."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-mor"
+fields = { "label" = "Föräldrarnas utbildningsnivå (moderns)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (2 variables): judged different meaning, high confidence; Opdefs: father's and mother's highest education."
+
+[[statement]]
+kind = "set"
+subject = "var:villedelta"
+fields = { "label" = "Studiehinder (deltog inte, ville delta i utbildning)" }
+evidence = "#2102 same-label cluster 'Studiehinder' (2 variables): judged different meaning, high confidence; Opdefs: took part but wanted more education versus did not take part but wanted to."
