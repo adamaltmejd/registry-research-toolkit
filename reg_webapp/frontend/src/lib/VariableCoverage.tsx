@@ -27,6 +27,7 @@ import { variableSpans } from "./picker_graph";
 import type { ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import { columnYearRuns, studyWindow } from "./study_window";
+import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
@@ -259,14 +260,7 @@ export function useVariableCoverage({
               </>
             ) : null)}
         </StatusRow>
-        {picked.length > 0 && (
-          <div className={styles.addBar}>
-            <Button variant="primary" onPress={add}>
-              Add {picked.length} {picked.length === 1 ? "column" : "columns"}{" "}
-              to project
-            </Button>
-          </div>
-        )}
+        {picked.length > 0 && <AddBar count={picked.length} onAdd={add} />}
       </>
     ),
   };

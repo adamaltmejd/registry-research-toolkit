@@ -1,0 +1,35 @@
+.heading:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.hint {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  cursor: pointer;
+  scroll-margin-block: var(--space-6);
+}
+.tick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: transparent;
+  font-size: var(--text-sm);
+}
+.checkbox[data-selected] .tick {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+.checkbox[data-focus-visible] .tick {
+  box-shadow: var(--focus-ring);
+}

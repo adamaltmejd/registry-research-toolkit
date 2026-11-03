@@ -531,12 +531,22 @@ Time is the axis every relation is drawn on.
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
-  face, the bar, and under them each delivery column as a `ColumnChip` with its tick (a
-  real checkbox; a column already in the project shows its `in` chip and no tick). Below
+  face, the bar, and one real checkbox named "Add <variable name>". The tick stands for
+  every delivery column with a delivery in the study window that is not already in the
+  project. With no study window it uses the variable's whole availability within the
+  catalog bounds. The register page has no add window; per-column choice stays on the
+  variable page. Segments are read only on tick; once loaded, the selected columns
+  appear under the name as `ColumnChip`s without ticks. A variable bound in any source
+  shows the dot and no checkbox; topping up a partially bound variable is deferred. A
+  hull outside the window has no checkbox and says "outside the study window" to
+  assistive technology. With no project there are no ticks, and a paragraph under the
+  panel title says "Create or open a project to select columns." Below
   `breakpoint-narrow` the row stacks into one column: the bar on top, then the name,
-  then the chips (#1826). While anything is ticked, a sticky add bar reads "Add N
-  columns to project" as the pane's one `primary` button; with nothing ticked there is
-  no bar.
+  then the chips (#1826). While anything is ticked, the shared `AddBar` reads "Add N
+  columns to project" as the pane's one `primary` button; N counts loaded columns and
+  the button is disabled while a tick's columns load. With nothing ticked there is no
+  bar. Adding uses one source per table and one binding per variable; it clears ticks,
+  shows the variable page's status copy and focuses the panel heading.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A succession arrow between overlapping spans drops at the edge's effective
@@ -624,6 +634,9 @@ not grow new visual language meanwhile.
   (`body-sm`, weight 500, `spacing.2` / `spacing.3` padding). A disabled button takes
   `--opacity-disabled`. There is no success variant. A button says what happens: "Add
   column to project", never "Submit".
+- **AddBar:** the shared sticky bottom bar for staged columns on register and variable
+  pages. Its one `primary` button reads "Add N columns to project" and can be disabled
+  while selected columns load. The caller omits it when nothing is selected.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
