@@ -1,0 +1,8 @@
+{
+  "note": "Fails if a register stops listing its curated sets with their members in public-id order, or its tags stop being the union of its variables' tags (inkomst's income tag lifts to demo/bas). The second register has neither, so it fails if sets or tags leak across registers. Oracle is the authored webapp-dev set and tag statements; register tags are derived, never curated.",
+  "fixture": "webapp-dev",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/demo/bas"},
+    {"operation": "show", "path": "/api/catalog/demo/hush"}
+  ]
+}

@@ -335,7 +335,7 @@ Accepting one requires reviewed curation and a premise lock.
   bounds. The overridden source bound remains evidence and the review premise, so a
   source-bound change reopens review. `sets` and `tags` belong to variables; typed
   curation decisions resolve to variable memberships. Tags use the existing variable tag
-  storage; register tags have no home and remain deferred rather than propagating to
+  storage; register tags are derived by the reader, never curated or propagated to
   variables. `notice` resolves to a finding on its selected subject. The emitter
   serializes these resolved facts and never derives them from provenance. Occurrence
   descriptions are not a field: source wording stays in occurrence labels, definitions
@@ -2574,11 +2574,19 @@ sort by facet value in axis order (missing coordinates first), then by name and 
 `tags` is the union of the members' tags in public-id order. The summary contains
 curated presentation data; source evidence remains on the individual variables.
 
+`show` at a register lists its `sets` (`fqid`, `name`, member variable `fqid`s, each in
+public-id order) for the register page's grouping, and `tags`, the union of its
+variables' tags in public-id order. Register tags are derived, not curated: a register
+carries a tag iff one of its variables does. The 12 legacy curated register tags and
+their ranks are not ported; derivation reproduces each where the register's variables
+carry that tag.
+
 The D-9 converter ported memberships; W6 restores unambiguously mapped legacy set
 labels, axes and member coordinates. Delivery-column hints, multi-coordinate identity
-splits, tag rank and classification groups stay outside this presentation model.
-Register tag memberships and tag star/notes remain maintainer decisions; register tags
-are never expanded onto variables. Tags filter search and have no `show` page.
+splits, tag rank, star and note, and classification groups stay outside this
+presentation model: a tag is a broad search theme with thousands of members, so a ranked
+or starred representative per register would surface co-tagged variables, which the tag
+ruling excludes (#1794). Tags filter search and have no `show` page.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it
