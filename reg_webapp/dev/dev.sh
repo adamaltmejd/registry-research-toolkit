@@ -20,7 +20,7 @@
 #                          (the shell/search case at four viewports), tear down,
 #                          exit with the driver's status. The PNGs land in
 #                          <out-dir>. Named scenarios run only those cases;
-#                          no names runs the shell/search case.
+#                          no names runs cases matching the selected fixture.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive
@@ -36,13 +36,16 @@
 #                          $PORT so preview_start attaches to OUR vite and parallel
 #                          sessions don't collide. Not meant to be run by hand.
 #
-# Leading flag (before the mode), works with every mode:
+# Leading flags (before the mode), mutually exclusive, work with every mode:
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
 #                          REG_META_DB you name: the reg_meta.db `reg-build` makes
 #                          from conformance/cases/fixtures/webapp-dev, looked up in the
 #                          shared fixture cache (conformance/fixture_cache.py, built on
 #                          a miss) and exported as REG_META_DB. Without the flag,
 #                          REG_META_DB (a directory holding reg_meta.db) is required.
+#   --paired-fixture       build the synthetic holdings pair into a per-session
+#                          temp directory (conformance/paired_fixture.py), export
+#                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
 #
 # smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
@@ -66,11 +69,19 @@ set -m
 # `fixture_db_dir` is the session's copy of the fixture (empty when the flag is
 # absent); cleanup() removes it, so it must be defined before the trap is installed.
 fixture_db=""
+paired_fixture=""
 fixture_db_dir=""
-if [ "${1:-}" = "--fixture-db" ]; then
-	fixture_db=1
+while [ "${1:-}" = "--fixture-db" ] || [ "${1:-}" = "--paired-fixture" ]; do
+	if [ -n "$fixture_db$paired_fixture" ]; then
+		echo "dev: choose only one of --fixture-db and --paired-fixture" >&2
+		exit 2
+	fi
+	case "$1" in
+	--fixture-db) fixture_db=1 ;;
+	--paired-fixture) paired_fixture=1 ;;
+	esac
 	shift
-fi
+done
 
 mode=serve
 case "${1:-}" in
@@ -106,7 +117,7 @@ preview)
 	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [--fixture-db] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> [scenario...] | preview]" >&2
+	echo "usage: dev.sh [--fixture-db | --paired-fixture] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> [scenario...] | preview]" >&2
 	exit 2
 	;;
 esac
@@ -293,7 +304,16 @@ trap 'exit 143' TERM
 # COPIED into a per-session temp dir after the trap: the cache prunes a generation
 # idle for 6 hours, and serving requests does not mark it used, so a long session
 # served straight from the cache would lose its catalog mid-run.
-if [ -n "$fixture_db" ]; then
+catalog=""
+if [ -n "$paired_fixture" ]; then
+	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
+	catalog=$(.venv/bin/python conformance/paired_fixture.py "$fixture_db_dir") || {
+		echo "dev: building the paired fixture failed — see 'conformance/paired_fixture.py'." >&2
+		exit 1
+	}
+	export REG_META_DB="$fixture_db_dir"
+	export REG_WEBAPP_FIXTURE=paired
+elif [ -n "$fixture_db" ]; then
 	fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py webapp-dev) || {
 		echo "dev: building the webapp-dev fixture failed — see 'conformance/fixture_cache.py webapp-dev'." >&2
 		exit 1
@@ -301,15 +321,18 @@ if [ -n "$fixture_db" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
 	cp "$fixture_catalog" "$fixture_db_dir/reg_meta.db" || exit 1
 	export REG_META_DB="$fixture_db_dir"
+	export REG_WEBAPP_FIXTURE=webapp-dev
 fi
 
 # The Rust server reads the directory holding reg_meta.db; there is no default.
 if [ -z "${REG_META_DB:-}" ]; then
-	echo "dev: set REG_META_DB to a directory holding reg_meta.db, or pass --fixture-db" >&2
+	echo "dev: set REG_META_DB to a directory holding reg_meta.db, or pass --fixture-db or --paired-fixture" >&2
 	exit 1
 fi
 rust_db=$REG_META_DB
-target/debug/reg-meta serve --db "$rust_db" --port "$rust_port" &
+server_command=(target/debug/reg-meta serve --db "$rust_db" --port "$rust_port")
+if [ -n "$catalog" ]; then server_command+=(--catalog "$catalog"); fi
+"${server_command[@]}" &
 pids+=($!)
 (
 	cd reg_webapp/frontend &&

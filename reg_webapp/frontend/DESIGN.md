@@ -326,25 +326,27 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Top bar:** brand (the deployment's long name in `h3`, one link home, unadorned on
   hover; without a deployment it is "Registry Research Toolkit"), one search bar (a
   filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the palette), and
-  the `ProjectBanner` at the right. The field reads "Search registers, variables,
-  codes…". While it holds text, focused or not, it takes an `accent` border with an
-  `accent-bg` halo, and its hint becomes the count of matching registers ("12
-  registers", naming its noun so it never reads as the palette's hits) in `accent-ink`
-  with an `Esc` key hint; the key hints are `text-muted` on `surface-sunken`. There are
-  no "Search" or "Project" nav items; the bar and the banner are those. The tab's title
-  is the deployment's long name too. Its content shares the shell's `shell-max` and
-  centring, so the banner sits over the detail pane rather than at the screen's edge.
-  Where the row is tight the brand wraps and the search bar shrinks before the banner
-  leaves the row. From 60rem down the name would push the banner off the row, or take a
-  row of its own, so there the brand is the steward's logo, with the full name as the
-  link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward supplies a
-  logo (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. 60rem
-  is the top bar's own fit, not a layout breakpoint. It sticks to the top of the page
-  above `breakpoint-narrow`; below it the logo and a "Search" button share a row, the
-  banner takes the next, and both scroll away with the page. The button unfolds the
-  field, which takes the row's whole width in place of the logo and the button, with
-  focus in it; it stays open while it holds text, and folds back on a blur or an Escape
-  while empty, focus returning to the button (maintainer ruling 2026-10-24). Below the
+  the `ProjectBanner` at the right. Paired deployments place a browse-scope Select
+  beside the search field, defaulting to metadata held by the steward with all reference
+  metadata as the other choice. The field reads "Search registers, variables, codes…".
+  While it holds text, focused or not, it takes an `accent` border with an `accent-bg`
+  halo, and its hint becomes the count of matching registers ("12 registers", naming its
+  noun so it never reads as the palette's hits) in `accent-ink` with an `Esc` key hint;
+  the key hints are `text-muted` on `surface-sunken`. There are no "Search" or "Project"
+  nav items; the bar and the banner are those. The tab's title is the deployment's long
+  name too. Its content shares the shell's `shell-max` and centring, so the banner sits
+  over the detail pane rather than at the screen's edge. Where the row is tight the
+  brand wraps and the search bar shrinks before the banner leaves the row. From 60rem
+  down the name would push the banner off the row, or take a row of its own, so there
+  the brand is the steward's logo, with the full name as the link's accessible name
+  (#1820, maintainer rulings 2026-10-23). Each steward supplies a logo
+  (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. 60rem is
+  the top bar's own fit, not a layout breakpoint. It sticks to the top of the page above
+  `breakpoint-narrow`; below it the logo and a "Search" button share a row, the banner
+  takes the next, and both scroll away with the page. The button unfolds the field,
+  which takes the row's whole width in place of the logo and the button, with focus in
+  it; it stays open while it holds text, and folds back on a blur or an Escape while
+  empty, focus returning to the button (maintainer ruling 2026-10-24). Below the
   breakpoint every text field is set at 1rem: iOS Safari zooms the page into a focused
   field under 16px and leaves it zoomed, cut off at the left.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
@@ -426,7 +428,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   kind mark and a member-of line naming its register, with constant facets shown once in
   the facets row. Members appear as a member × axis table until `LaneGraph` lanes land,
   with axes in curated order and members in API order; only varying axes are columns,
-  and groups without varying axes use a plain list.
+  and groups without varying axes use a plain list. Paired variable and table pages show
+  a Held panel grouped by physical table, with delivered column chips, periods and
+  plain-word placement details, or an EmptyState when nothing is held. Steward
+  documentation appears in its own panel when supplied by coverage; neither panel
+  appears while its data is loading.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

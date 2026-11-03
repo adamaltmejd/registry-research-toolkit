@@ -14,17 +14,20 @@ import {
   type RegisterChild,
   type RootChild,
   SEARCH_MIN_QUERY_LENGTH,
+  type StewardConfig,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
 import {
+  allRegisterFacets,
   browseMatches,
   browseOrder,
   useBrowseFilter,
+  useBrowseScope,
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
-import { catalogRootChildren } from "./catalog_names";
+import { catalogRootChildren, uniqueCatalogRefs } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
@@ -173,7 +176,13 @@ function browseNodes(
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
-export function BrowseTree({ className }: { className?: string }) {
+export function BrowseTree({
+  className,
+  config = null,
+}: {
+  className?: string;
+  config?: StewardConfig | null;
+}) {
   const labelId = useId();
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
@@ -192,7 +201,12 @@ export function BrowseTree({ className }: { className?: string }) {
       return Object.fromEntries(
         shown.map((node, i) => [
           providers[i].fqid,
-          node.kind === "provider" ? node.registers : [],
+          node.kind === "provider"
+            ? uniqueCatalogRefs([
+                ...node.registers,
+                ...(node.steward_registers ?? []),
+              ])
+            : [],
         ]),
       );
     },
@@ -201,14 +215,17 @@ export function BrowseTree({ className }: { className?: string }) {
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
   const facetKey = useSettledFilter();
-  const facetResource = useAsyncResource(facetKey, (signal) =>
-    searchFacets(facetKey ?? "", { signal }),
+  const scope = useBrowseScope(config);
+  const facetResource = useAsyncResource(
+    facetKey === null ? null : `${scope ?? ""}\u0000${facetKey}`,
+    (signal) => searchFacets(facetKey ?? "", { signal, scope }),
   );
   const facets = new Map(
-    (facetKey === null ? [] : (facetResource.data ?? [])).flatMap((f) =>
-      f.fqid && f.variable_matches > 0
-        ? [[f.fqid, f.variable_matches] as const]
-        : [],
+    (facetKey === null ? [] : allRegisterFacets(facetResource.data)).flatMap(
+      (f) =>
+        f.fqid && f.variable_matches > 0
+          ? [[f.fqid, f.variable_matches] as const]
+          : [],
     ),
   );
   const allNodes = browseNodes(

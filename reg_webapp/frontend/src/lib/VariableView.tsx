@@ -32,6 +32,7 @@ import {
 } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import { HeldPanels } from "./HeldPanels";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button as ActionButton } from "./ui/Button";
@@ -309,6 +310,9 @@ export function VariableView({
           <p className={styles.prose}>{node.source_definition.text}</p>
         </Panel>
       ) : null}
+      {context?.steward_config != null && (
+        <HeldPanels fqid={node.fqid} kind="variable" names={names} />
+      )}
       <Panel title="Tables">
         {node.tables.length ? (
           <ul className={`${styles.plainList} ${variableStyles.listGap}`}>

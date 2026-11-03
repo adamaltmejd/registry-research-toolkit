@@ -4,11 +4,12 @@ import {
   DisclosurePanel,
   Heading,
 } from "react-aria-components";
-import type { TableShow } from "./api";
+import type { Context, TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import { HeldPanels } from "./HeldPanels";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -27,7 +28,13 @@ type PopulationGroup = Pick<Population, "name" | "definition"> & {
   releases: PopulationApplication[];
 };
 
-export function TableView({ node }: { node: TableShow }) {
+export function TableView({
+  node,
+  context,
+}: {
+  node: TableShow;
+  context: Context | null;
+}) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
   const releases = [...node.releases].sort(
@@ -86,6 +93,9 @@ export function TableView({ node }: { node: TableShow }) {
           { term: "Implicit", value: node.implicit ? "Yes" : "No" },
         ]}
       />
+      {context?.steward_config != null && (
+        <HeldPanels fqid={node.fqid} kind="table" names={names} />
+      )}
       <Panel title="Spans">
         {node.spans.length === 0 ? (
           <EmptyState title="This table has no dated spans." />
