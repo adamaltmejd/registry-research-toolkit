@@ -3780,18 +3780,6 @@ evidence = "Kodningen hör till tjänstgöringsnivå för tjänstlediga.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:tjanstgoringsniva-tjanstlediga-nivakodtjl"
-fields = { "sets" = ["tjanstgoringsniva"] }
-evidence = "Kodningen hör till tjänstgöringsnivå för tjänstlediga.\ncatalog:variable_text:35548:16252:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstgoringsniva-tjanstlediga-nivakodtjl"
-fields = { "tags" = ["employment"] }
-evidence = "Kodningen hör till tjänstgöringsnivå för tjänstlediga.\ncatalog:variable_text:35548:16252:20270"
-
-[[statement]]
-kind = "set"
 subject = "var:tjanstgoringstimmar-fatim2"
 fields = { "sets" = ["tjanstgoringstid"] }
 evidence = "Timmarna ingår i tjänstgöringstid.\ncatalog:variable_text:35549:3103:10408"
@@ -6974,3 +6962,9 @@ kind = "set"
 subject = "var:typ-av-anstallning"
 fields = { "label" = "Typ av anställning (PrAnstSlag)" }
 evidence = "#2102 same-label cluster 'Typ av anställning' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Anst (1992-95, 0/1/2 codes) and AnstSlag (1995-, 1/2) have the same definition; AnstSlag in personregistret and PrAnstSlag both have the opdef 'för prioriterad tjänst' (PrAnstSlag only in 2006-2010), so 'prioriterad tjänst' separates nothing and PrAnstSlag takes its code."
+
+[[statement]]
+kind = "set"
+subject = "tjansteregistret: nivakodtjl @2014-07-01..2025-06-30 where key = 'v35203'"
+fields = { "variable" = "tjanstgoringsniva-tjanstlediga" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): PrNivaKodTjl in personregistret; NivaKodTjl in tjansteregistret: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Identical text apart from a typo ('är inte är')); folded into tjanstgoringsniva-tjanstlediga."

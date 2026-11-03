@@ -278,18 +278,6 @@ evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; 
 
 [[statement]]
 kind = "set"
-subject = "var:antal-giltiga-roster-kristdemokraterna"
-fields = { "sets" = ["giltiga-roster"] }
-evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2951"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-giltiga-roster-kristdemokraterna"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2951"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-giltiga-roster-kristdemokraterna-kds-antrost"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2952"
@@ -1783,3 +1771,21 @@ kind = "set"
 subject = "var:region-ll"
 fields = { "label" = "Region (kod, ll)" }
 evidence = "#2102 same-label cluster 'Region' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ltnamn is the region name where the vote was cast; Lk is a code where the vote was cast but lowercase lk and ll are codes for where the mandate was allocated, and lk shares member region-lk with Lk, so that member's label names both spellings."
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: kd_antrost @1994-01-01..2022-12-31 where key = 'v24267'"
+fields = { "variable" = "antal-giltiga-roster-kristdemokraterna-kds-antrost" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): kds_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval; KD_antrost/kd_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval: same definition and code list, never concurrent under another spelling in one table; folded into antal-giltiga-roster-kristdemokraterna-kds-antrost."
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: kd_antrost @1994-01-01..2022-12-31 where key = 'v24267'"
+fields = { "variable" = "antal-giltiga-roster-kristdemokraterna-kds-antrost" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): kds_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval; KD_antrost/kd_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval: same definition and code list, never concurrent under another spelling in one table; folded into antal-giltiga-roster-kristdemokraterna-kds-antrost."
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: kd_antrost @1994-01-01..2022-12-31 where key = 'v24267'"
+fields = { "variable" = "antal-giltiga-roster-kristdemokraterna-kds-antrost" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): kds_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval; KD_antrost/kd_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval: same definition and code list, never concurrent under another spelling in one table; folded into antal-giltiga-roster-kristdemokraterna-kds-antrost."

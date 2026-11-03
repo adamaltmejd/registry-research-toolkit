@@ -398,26 +398,8 @@ evidence = "AE är en ogenomskinlig källförkortning för arbetsställe.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:agarkontroll"
-fields = { "sets" = ["agarkontroll"] }
-evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12023:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:agarkontroll"
 fields = { "tags" = ["business"] }
 evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12023:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:agarkontroll-agkat"
-fields = { "sets" = ["agarkontroll"] }
-evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12024:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:agarkontroll-agkat"
-fields = { "tags" = ["business"] }
-evidence = "Kodning av ägarkontroll.\ncatalog:variable_text:12024:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -482,50 +464,14 @@ evidence = "Den tidigare variabeln omfattar även arbetsställen.\ncatalog:occur
 [[statement]]
 kind = "set"
 subject = "var:antal-arbetsstallen"
-fields = { "sets" = ["antal-arbetsstallen"] }
-evidence = "Antal arbetsställen.\ncatalog:variable_text:12030:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen"
 fields = { "tags" = ["business"] }
 evidence = "Antal arbetsställen.\ncatalog:variable_text:12030:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-aeant"
-fields = { "sets" = ["antal-arbetsstallen"] }
-evidence = "Antal arbetsställen.\ncatalog:variable_text:12031:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-aeant"
-fields = { "tags" = ["business"] }
-evidence = "Antal arbetsställen.\ncatalog:variable_text:12031:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-firmor"
-fields = { "sets" = ["antal-firmor"] }
-evidence = "Antal registrerade firmor.\ncatalog:variable_text:12032:10592:19358"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-firmor"
 fields = { "tags" = ["business"] }
 evidence = "Antal registrerade firmor.\ncatalog:variable_text:12032:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-firmor-firmaant"
-fields = { "sets" = ["antal-firmor"] }
-evidence = "Antal registrerade firmor.\ncatalog:variable_text:12033:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-firmor-firmaant"
-fields = { "tags" = ["business"] }
-evidence = "Antal registrerade firmor.\ncatalog:variable_text:12033:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -914,26 +860,8 @@ evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:juridisk-form"
-fields = { "sets" = ["juridisk-form"] }
-evidence = "Kodning av juridisk form.\ncatalog:variable_text:12082:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:juridisk-form"
 fields = { "tags" = ["business"] }
 evidence = "Kodning av juridisk form.\ncatalog:variable_text:12082:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:juridisk-form-jurform"
-fields = { "sets" = ["juridisk-form"] }
-evidence = "Kodning av juridisk form.\ncatalog:variable_text:12083:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:juridisk-form-jurform"
-fields = { "tags" = ["business"] }
-evidence = "Kodning av juridisk form.\ncatalog:variable_text:12083:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -1178,26 +1106,8 @@ evidence = "Postort i postadress.\ncatalog:variable_text:12112:17897:19358"
 [[statement]]
 kind = "set"
 subject = "var:privat-publikt-foretag"
-fields = { "sets" = ["privat-publikt-foretag"] }
-evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12113:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:privat-publikt-foretag"
 fields = { "tags" = ["business"] }
 evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12113:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:privat-publikt-foretag-privpubl"
-fields = { "sets" = ["privat-publikt-foretag"] }
-evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12114:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:privat-publikt-foretag-privpubl"
-fields = { "tags" = ["business"] }
-evidence = "Klassificering av privat eller publikt företag.\ncatalog:variable_text:12114:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -1238,26 +1148,8 @@ evidence = "Säteslän ingår i gruppen för länskodningar och beskriver geogra
 [[statement]]
 kind = "set"
 subject = "var:sektortillhorighet"
-fields = { "sets" = ["sektortillhorighet"] }
-evidence = "Kodning av institutionell sektor.\ncatalog:variable_text:12120:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sektortillhorighet"
 fields = { "tags" = ["business"] }
 evidence = "Kodning av institutionell sektor.\ncatalog:variable_text:12120:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sektortillhorighet-sektor"
-fields = { "sets" = ["sektortillhorighet"] }
-evidence = "Kodning av institutionell sektor.\ncatalog:variable_text:12121:10592:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sektortillhorighet-sektor"
-fields = { "tags" = ["business"] }
-evidence = "Kodning av institutionell sektor.\ncatalog:variable_text:12121:10592:19358"
 
 [[statement]]
 kind = "set"
@@ -1367,33 +1259,9 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:agarkontroll"
-fields = { "label" = "Ägarkontroll" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:antal-anstallda"
 fields = { "label" = "Antal anställda" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-arbetsstallen"
-fields = { "label" = "Antal arbetsställen" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-firmor"
-fields = { "label" = "Antal firmor" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:juridisk-form"
-fields = { "label" = "Juridisk form" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1435,18 +1303,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:postort"
 fields = { "label" = "Postort" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:privat-publikt-foretag"
-fields = { "label" = "Privat/publikt företag" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:sektortillhorighet"
-fields = { "label" = "Sektortillhörighet" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -1766,3 +1622,45 @@ kind = "set"
 subject = "var:tel"
 fields = { "label" = "Telefonnummer (enhetens egen)" }
 evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAETel is the main workplace's number, Tel is the legal unit's number."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: firmaant @1999-01-01..2022-12-31 where key = 'v1038'"
+fields = { "variable" = "antal-firmor" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEFirmaAnt in arbetsstalleenheter; FirmaAnt in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into antal-firmor."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: jurform @1999-01-01..2022-12-31 where key = 'v34'"
+fields = { "variable" = "juridisk-form" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEJurForm in arbetsstalleenheter; JurForm in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into juridisk-form."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: peorgnrkoncmod @1999-01-01..2022-12-31 where key = 'v1130'"
+fields = { "variable" = "koncernmoderns-orgnr" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEPeOrgNrKoncMod in arbetsstalleenheter; PeOrgNrKoncMod in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into koncernmoderns-orgnr."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: privpubl @1999-01-01..2022-12-31 where key = 'v1133'"
+fields = { "variable" = "privat-publikt-foretag" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEPrivPubl in arbetsstalleenheter; PrivPubl in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into privat-publikt-foretag."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: sektor @1999-01-01..2022-12-31 where key = 'v1141'"
+fields = { "variable" = "sektortillhorighet" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JESektor in arbetsstalleenheter; Sektor in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into sektortillhorighet."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: agkat @1999-01-01..2022-12-31 where key = 'v74'"
+fields = { "variable" = "agarkontroll" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEAgKat in arbetsstalleenheter; AgKat in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; folded into agarkontroll."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: aeant @1999-01-01..2022-12-31 where key = 'v17484'"
+fields = { "variable" = "antal-arbetsstallen" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEAEAnt in arbetsstalleenheter; AEAnt in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (One member states the count is of arbetsställen belonging to the juridisk enhet; the other has no opdef); folded into antal-arbetsstallen."

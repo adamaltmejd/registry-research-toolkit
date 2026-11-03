@@ -747,7 +747,6 @@ public = "lisa"
 "yrkesstallning-storsta-forvarvskallan" = ["Individer, 15 år och äldre: KU1YrkStalln"]
 "yrkesstallning-storsta-forvarvskallan-agi" = ["Individer, 15 år och äldre: AGI1YrkStalln"]
 "yrkstallnkomb" = ["Individer, 15 år och äldre: YrkStallnKomb"]
-"antal-sysselsatta-pa-arbetsstallet-antalsys" = ["Individer, 15 år och äldre: AntalSys"]
 "arbetad-tid" = ["Individer, 16 år och äldre: arbtid"]
 "arbetslivsutvecklingsbidrag-fran-amk" = ["Individer, 16 år och äldre: aluamk"]
 "arbetsstalle-november-enligt-justerad-metod" = ["Individer, 16 år och äldre: cfarnrsregj"]

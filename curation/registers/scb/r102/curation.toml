@@ -4079,18 +4079,6 @@ evidence = "Kodad programinriktning ingår i kandidaten.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:inriktning-fristaende-gr"
-fields = { "sets" = ["fristaende-skolas-inriktning"] }
-evidence = "Klassificeringen av skolans inriktning hör till gruppen och utbildning.\ncatalog:valueset:11959\ncatalog:variable_text:22685:15156:19905"
-
-[[statement]]
-kind = "set"
-subject = "var:inriktning-fristaende-gr"
-fields = { "tags" = ["education"] }
-evidence = "Klassificeringen av skolans inriktning hör till gruppen och utbildning.\ncatalog:valueset:11959\ncatalog:variable_text:22685:15156:19905"
-
-[[statement]]
-kind = "set"
 subject = "var:inriktning-fristaende-grundskola-inriktning"
 fields = { "sets" = ["fristaende-skolas-inriktning"] }
 evidence = "Fältet klassificerar fristående skolors inriktning.\ncatalog:variable_text:22686:13695:20270"
@@ -8654,3 +8642,9 @@ kind = "set"
 subject = "var:kamne2"
 fields = { "label" = "Betyg i Karaktärsämne 2 (KAmne2)" }
 evidence = "#2102 same-label cluster 'Betyg i Karaktärsämne 2' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; KaraktärNy2Betyg's opdef is 'Uppdaterad version' in every occurrence and runs concurrently with Karaktär2Betyg (1998-2002); KAmne2 has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: inriktninggr @2011-07-01..2024-06-30 where key = 'v26963'"
+fields = { "variable" = "inriktning-fristaende-grundskola-inriktning" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Inriktning in slutbetyg; InriktningGr in gymnasieintyg: same definition and code list, never concurrent under another spelling in one table; folded into inriktning-fristaende-grundskola-inriktning."

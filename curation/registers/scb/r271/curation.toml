@@ -307,12 +307,6 @@ evidence = "Markeringen anger vilket förnamn som är tilltalsnamn och ingår i 
 
 [[statement]]
 kind = "set"
-subject = "var:tilltalsnamn"
-fields = { "sets" = ["tilltalsnamn"] }
-evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39366:19357:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:tilltalsnamn-namn"
 fields = { "sets" = ["tilltalsnamn"] }
 evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39367:12417:19358"
@@ -355,12 +349,6 @@ evidence = "Identifies which recorded given name is a registered person's usual 
 
 [[statement]]
 kind = "set"
-subject = "var:tilltalsnamn"
-fields = { "tags" = ["demographics"] }
-evidence = "Records registered persons' usual first names, derived from the population register's name marker (r184), supporting demographic searches.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389447"
-
-[[statement]]
-kind = "set"
 subject = "var:tilltalsnamn-namn"
 fields = { "tags" = ["demographics"] }
 evidence = "Records registered persons' usual first names, derived from the population register's name marker (r134), supporting demographic searches.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39226\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389339"
@@ -382,3 +370,9 @@ kind = "set"
 subject = "set:tilltalsnamn"
 fields = { "label" = "Tilltalsnamn" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer: tilltalsnamn @2021-12-31..2022-12-31 where key = 'v16384'"
+fields = { "variable" = "tilltalsnamn-namn" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Namn in folkbokforda-namn, folkbokforda-personer, namngivna-nyfodda; Tilltalsnamn in folkbokforda-personer: same definition and code list, never concurrent under another spelling in one table; folded into tilltalsnamn-namn."

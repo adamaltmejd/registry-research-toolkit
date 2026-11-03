@@ -473,18 +473,6 @@ evidence = "Antal studieveckor under vårterminen.\ncatalog:variable_text:55423:
 
 [[statement]]
 kind = "set"
-subject = "var:avslutsar"
-fields = { "sets" = ["utbildningsomgangens-avslut"] }
-evidence = "År för utbildningsomgångens avslut.\ncatalog:variable_text:55426:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avslutsar"
-fields = { "tags" = [] }
-evidence = "År för utbildningsomgångens avslut.\ncatalog:variable_text:55426:16071:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:avslutsar-avslutsar-utb"
 fields = { "sets" = ["utbildningsomgangens-avslut"] }
 evidence = "Utbildningsomgångens avslutsår hör till avslutstidpunkterna.\ncatalog:variable_text:55427:12784:20089"
@@ -494,18 +482,6 @@ kind = "set"
 subject = "var:avslutsar-avslutsar-utb"
 fields = { "tags" = [] }
 evidence = "Utbildningsomgångens avslutsår hör till avslutstidpunkterna.\ncatalog:variable_text:55427:12784:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:avslutsar-manad"
-fields = { "sets" = ["utbildningsomgangens-avslut"] }
-evidence = "År och månad för utbildningsomgångens avslut.\ncatalog:variable_text:55428:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avslutsar-manad"
-fields = { "tags" = [] }
-evidence = "År och månad för utbildningsomgångens avslut.\ncatalog:variable_text:55428:16071:19723"
 
 [[statement]]
 kind = "set"
@@ -1178,30 +1154,6 @@ kind = "set"
 subject = "var:soktutb"
 fields = { "tags" = ["education"] }
 evidence = "Ansökan till utbildning.\ncatalog:variable_text:55491:16436:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:startar"
-fields = { "sets" = ["utbildningsomgangens-start"] }
-evidence = "Utbildningsomgångens startår.\ncatalog:variable_text:55492:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:startar"
-fields = { "tags" = [] }
-evidence = "Utbildningsomgångens startår.\ncatalog:variable_text:55492:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:startar-manad"
-fields = { "sets" = ["utbildningsomgangens-start"] }
-evidence = "Utbildningsomgångens startår och månad.\ncatalog:variable_text:55493:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:startar-manad"
-fields = { "tags" = [] }
-evidence = "Utbildningsomgångens startår och månad.\ncatalog:variable_text:55493:16071:19723"
 
 [[statement]]
 kind = "set"
@@ -2114,18 +2066,6 @@ kind = "set"
 subject = "var:utbildningsomrade-inom-yrkeshogskolan"
 fields = { "tags" = ["education"] }
 evidence = "Utbildningsområde inom yrkeshögskolan.\ncatalog:variable_text:55571:12784:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningspoang-yh"
-fields = { "sets" = ["utbildningens-yh-poang"] }
-evidence = "Utbildningens omfattning i YH-poäng.\ncatalog:variable_text:55572:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningspoang-yh"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningens omfattning i YH-poäng.\ncatalog:variable_text:55572:16071:19723"
 
 [[statement]]
 kind = "set"
@@ -2931,3 +2871,33 @@ kind = "set"
 subject = "var:utlsvbakg-yh"
 fields = { "label" = "Utländsk/svensk bakgrund (detaljerad, UtlSvBakG_YH)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; UtlSvBakG_YH och UtlSvBakG har samma detaljerade koder och opdef (samma variabel i olika tabeller); UtlSvBakG_grov är en grov indelning; Svensk_Utlandsk_yh saknar källtext."
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: avslutsar @2014-01-01..2023-12-31 where key = 'v49719'"
+fields = { "variable" = "avslutsar-avslutsar-utb" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): AvslutsAr_Utb in studerande-kurser, studerande-source-range-2005-2024; AvslutsAr in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; folded into avslutsar-avslutsar-utb."
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: avslutsarmanad @2014-01-01..2023-12-31 where key = 'v49718'"
+fields = { "variable" = "avslutsar-manad-avslutsarmanad-utb" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): AvslutsArManad_Utb in studerande-kurser, studerande-source-range-2005-2024; AvslutsArManad in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; folded into avslutsar-manad-avslutsarmanad-utb."
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: startar @2014-01-01..2023-12-31 where key = 'v49716'"
+fields = { "variable" = "startar-startar-utb" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): StartAr_Utb in studerande-kurser, studerande-source-range-2005-2024; StartAr in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; folded into startar-startar-utb."
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: startarmanad @2014-01-01..2023-12-31 where key = 'v49709'"
+fields = { "variable" = "startar-manad-startarmanad-utb" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): StartArManad_Utb in studerande-kurser, studerande-source-range-2005-2024; StartArManad in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; folded into startar-manad-startarmanad-utb."
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: utbildningslangdyhpoang @2014-01-01..2023-12-31 where key = 'v49914'"
+fields = { "variable" = "utbildningspoang-yh-utbildningslangdpoangyh-utb" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): UtbildningsLangdPoangYH_Utb in studerande-kurser, studerande-source-range-2005-2024; UtbildningslangdYHpoang in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only a note that 5 YH-points equal one week of full-time study; other members have none); folded into utbildningspoang-yh-utbildningslangdpoangyh-utb."

@@ -13765,18 +13765,6 @@ evidence = "Antal svarande per stratum är undersökningsmetadata.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:svarande-per-stratum-svar"
-fields = { "sets" = [] }
-evidence = "Antal svarande per stratum är undersökningsmetadata.\ncatalog:variable_text:54568:12418:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:svarande-per-stratum-svar"
-fields = { "tags" = ["methods"] }
-evidence = "Antal svarande per stratum är undersökningsmetadata.\ncatalog:variable_text:54568:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:svarsstatus"
 fields = { "sets" = [] }
 evidence = "Variabeln anger om enkäten inkommit.\ncatalog:occurrence:511206\ncatalog:variable_text:54570:16801:17167"
@@ -19786,3 +19774,15 @@ kind = "set"
 subject = "var:yrke-kodat-fritextsvar"
 fields = { "label" = "Yrke (SSYK, 4-siffernivå, kodat från fritext)" }
 evidence = "#2102 same-label cluster 'Yrke' (2 variables): judged different meaning, high confidence; F25 holds the free-text occupation answer; SSYK_4siffer is the 4-digit code assigned from that free text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning-gymnasieskolan: personnr @2020-01-01..2022-12-31 where key = 'stmt:f3eae7f61db7289285a78a2d0d23c4670a8f301cdf8f2557311ad459ceb4dbdc'"
+fields = { "variable" = "personnummer-for-eleven-personnr-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): personnr in distansundervisning-grundskola; personnr in distansundervisning-gymnasieskolan: same definition and code list, never concurrent under another spelling in one table; folded into personnummer-for-eleven-personnr-2."
+
+[[statement]]
+kind = "set"
+subject = "lararforsorjningen-icke-aktiva: svar @2004-01-01..2004-12-31 where key = 'v6211'"
+fields = { "variable" = "svarande-per-stratum" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Nsvar in folkhogskoleuppfoljningen, internationell-rorlighet, lararforsorjningen; svar in lararforsorjningen-icke-aktiva: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'respondent size per stratum including overcoverage' text where present; others have none); folded into svarande-per-stratum."

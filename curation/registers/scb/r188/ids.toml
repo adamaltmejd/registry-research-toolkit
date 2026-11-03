@@ -28,7 +28,6 @@ public = "utrikeshandel"
 "spin2015" = ["Varu- och landfördelad i löpande priser, Extrastat: SPIN2015"]
 "statistiskt-varde" = ["Varu- och landfördelad i löpande priser, Extrastat: Varde"]
 "tillnr" = ["Varu- och landfördelad i löpande priser, Intrastat: Tillnr"]
-"transaktionstyp" = ["Varu- och landfördelad i löpande priser, Extrastat: Transaktionsslag"]
 "tullid" = ["Varu- och landfördelad i löpande priser, Extrastat: Tullid"]
 "ursland" = ["Varu- och landfördelad i löpande priser, Extrastat: UrsLand"]
 "varugrupp-kn" = ["Varu- och landfördelad i löpande priser, Extrastat: Varukod @ 2017-01-01"]

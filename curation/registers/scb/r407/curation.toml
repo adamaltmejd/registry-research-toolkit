@@ -1314,3 +1314,9 @@ kind = "set"
 subject = "set:produktinnovation"
 fields = { "label" = "Produktinnovation" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "innovation-juridiska: scbname @2021-01-01..2022-12-31 where key = 'v1086'"
+fields = { "variable" = "namn-juridiska-enheten" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): NAME_INST in innovation-arbetsstalleenheter; SCBNAME in innovation-juridiska: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both give the name of the juridisk enhet (the AE's parent unit vs the authority/region/municipality's official name)); folded into namn-juridiska-enheten."

@@ -302,7 +302,6 @@ public = "lararreg"
 "skolenhet-prskolenhetskod" = ["Personregistret: PrSkolenhetskod"]
 "skolform-prskolform" = ["Personregistret: PrSkolForm # v1996"]
 "skolform-sform" = ["Tjänsteregistret: Sform"]
-"tjanstgoringsniva-tjanstlediga-nivakodtjl" = ["Tjänsteregistret: NivaKodTjl"]
 "typ-av-anstallning-anst" = ["Tjänsteregistret: Anst"]
 "typ-av-anstallning-anstslag" = ["Personregistret: AnstSlag"]
 "verksamhetstyp-prverksamhetstyp" = ["Personregistret: PrVerksamhetstyp"]

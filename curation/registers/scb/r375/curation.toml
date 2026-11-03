@@ -224,26 +224,8 @@ evidence = "Posten är ett aktieägartillskott redovisat i eget kapital.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:aktiekapital"
-fields = { "sets" = ["aktiekapital"] }
-evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12132:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:aktiekapital"
 fields = { "tags" = ["business"] }
 evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12132:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:aktiekapital-bl2201"
-fields = { "sets" = ["aktiekapital"] }
-evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12133:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:aktiekapital-bl2201"
-fields = { "tags" = ["business"] }
-evidence = "Redovisat aktiekapital.\ncatalog:variable_text:12133:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -320,26 +302,8 @@ evidence = "Andelsinnehav.\ncatalog:variable_text:12139:9862:12053"
 [[statement]]
 kind = "set"
 subject = "var:andra-langfristiga-fordringar"
-fields = { "sets" = ["andra-langfristiga-fordringar"] }
-evidence = "Balanspost.\ncatalog:variable_text:12140:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-langfristiga-fordringar"
 fields = { "tags" = ["business"] }
 evidence = "Balanspost.\ncatalog:variable_text:12140:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-langfristiga-fordringar-bl2039"
-fields = { "sets" = ["andra-langfristiga-fordringar"] }
-evidence = "Balanspost.\ncatalog:variable_text:12141:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-langfristiga-fordringar-bl2039"
-fields = { "tags" = ["business"] }
-evidence = "Balanspost.\ncatalog:variable_text:12141:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -352,18 +316,6 @@ kind = "set"
 subject = "var:andra-ranteintakter"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Ränteintäkter.\ncatalog:variable_text:12142:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-ranteintakter-gem0922"
-fields = { "sets" = ["ranteintakter"] }
-evidence = "Ränteintäkter.\ncatalog:variable_text:12143:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-ranteintakter-gem0922"
-fields = { "tags" = ["business", "finance"] }
-evidence = "Ränteintäkter.\ncatalog:variable_text:12143:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -3193,18 +3145,6 @@ evidence = "Bokförda tillgångar.\ncatalog:variable_text:12382:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:byggnader-mark-och-markanlaggningar-bl2012"
-fields = { "sets" = [] }
-evidence = "Bokförda tillgångar.\ncatalog:variable_text:12383:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:byggnader-mark-och-markanlaggningar-bl2012"
-fields = { "tags" = ["business", "property"] }
-evidence = "Bokförda tillgångar.\ncatalog:variable_text:12383:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:eget-kapital-och-skulder"
 fields = { "sets" = [] }
 evidence = "Samlad balanspost.\ncatalog:variable_text:12385:9862:12053"
@@ -4184,26 +4124,8 @@ evidence = "Kostnader för handelsvaror.\ncatalog:variable_text:12466:9862:12053
 [[statement]]
 kind = "set"
 subject = "var:kundfordringar"
-fields = { "sets" = ["kundfordringar"] }
-evidence = "Kundfordringar.\ncatalog:variable_text:12467:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:kundfordringar"
 fields = { "tags" = ["business"] }
 evidence = "Kundfordringar.\ncatalog:variable_text:12467:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:kundfordringar-bl2111"
-fields = { "sets" = ["kundfordringar"] }
-evidence = "Kundfordringar.\ncatalog:variable_text:12468:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:kundfordringar-bl2111"
-fields = { "tags" = ["business"] }
-evidence = "Kundfordringar.\ncatalog:variable_text:12468:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4244,26 +4166,8 @@ evidence = "Lån till delägare eller närstående.\ncatalog:variable_text:12471
 [[statement]]
 kind = "set"
 subject = "var:leverantorsskulder"
-fields = { "sets" = ["leverantorsskulder"] }
-evidence = "Leverantörsskulder.\ncatalog:variable_text:12472:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:leverantorsskulder"
 fields = { "tags" = ["business"] }
 evidence = "Leverantörsskulder.\ncatalog:variable_text:12472:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:leverantorsskulder-bl2325"
-fields = { "sets" = ["leverantorsskulder"] }
-evidence = "Leverantörsskulder.\ncatalog:variable_text:12473:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:leverantorsskulder-bl2325"
-fields = { "tags" = ["business"] }
-evidence = "Leverantörsskulder.\ncatalog:variable_text:12473:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4663,18 +4567,6 @@ evidence = "Balanspost.\ncatalog:variable_text:12507:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-avsattningar-bl2309"
-fields = { "sets" = ["avsattningar"] }
-evidence = "Balanspost.\ncatalog:variable_text:12508:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-avsattningar-bl2309"
-fields = { "tags" = ["business"] }
-evidence = "Balanspost.\ncatalog:variable_text:12508:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-bokslutsdispositioner"
 fields = { "sets" = ["bokslutsdispositioner"] }
 evidence = "Variabeln mäter övriga bokslutsdispositioner.\ncatalog:variable_text:12509:9862:12053"
@@ -4684,18 +4576,6 @@ kind = "set"
 subject = "var:ovriga-bokslutsdispositioner"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln mäter övriga bokslutsdispositioner.\ncatalog:variable_text:12509:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-bokslutsdispositioner-gem0969"
-fields = { "sets" = ["bokslutsdispositioner"] }
-evidence = "Variabeln mäter övriga bokslutsdispositioner.\ncatalog:variable_text:12510:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-bokslutsdispositioner-gem0969"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter övriga bokslutsdispositioner.\ncatalog:variable_text:12510:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4736,26 +4616,8 @@ evidence = "Finansiella kostnader.\ncatalog:variable_text:12513:9862:12053"
 [[statement]]
 kind = "set"
 subject = "var:ovriga-forandringar"
-fields = { "sets" = ["ovriga-kapitalforandringar"] }
-evidence = "Övriga kapitalförändringar.\ncatalog:variable_text:12514:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-forandringar"
 fields = { "tags" = ["business"] }
 evidence = "Övriga kapitalförändringar.\ncatalog:variable_text:12514:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-forandringar-bl2739"
-fields = { "sets" = ["ovriga-kapitalforandringar"] }
-evidence = "Övriga kapitalförändringar.\ncatalog:variable_text:12515:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-forandringar-bl2739"
-fields = { "tags" = ["business"] }
-evidence = "Övriga kapitalförändringar.\ncatalog:variable_text:12515:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4828,18 +4690,6 @@ kind = "set"
 subject = "var:ovriga-obeskattade-reserver"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln mäter övriga obeskattade reserver.\ncatalog:variable_text:12521:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-obeskattade-reserver-bl2219"
-fields = { "sets" = ["obeskattade-reserver"] }
-evidence = "Variabeln mäter övriga obeskattade reserver.\ncatalog:variable_text:12522:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-obeskattade-reserver-bl2219"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter övriga obeskattade reserver.\ncatalog:variable_text:12522:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -5365,18 +5215,6 @@ evidence = "Posten avser realiserat resultat vid avyttring av aktier.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:vinst-forlust-avyttring-aktier"
-fields = { "sets" = ["avyttringsresultat-vardepapper"] }
-evidence = "Posten avser realiserat resultat vid avyttring av aktier.\ncatalog:variable_text:12569:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-forlust-avyttring-aktier"
-fields = { "tags" = ["business", "finance"] }
-evidence = "Posten avser realiserat resultat vid avyttring av aktier.\ncatalog:variable_text:12569:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-anskaffningar-av-flygplan"
 fields = { "sets" = ["anskaffningar-maskiner-inventarier"] }
 evidence = "r111 records annual aircraft acquisitions in SEK, explicitly included by the fixed definition, with the machinery/equipment partner in r116.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:12138\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12156\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12331"
@@ -5452,18 +5290,6 @@ kind = "set"
 subject = "set:aktieagartillskott"
 fields = { "label" = "Aktieägartillskott" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:aktiekapital"
-fields = { "label" = "Aktiekapital" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:andra-langfristiga-fordringar"
-fields = { "label" = "Andra långfristiga fordringar" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -5677,12 +5503,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:kundfordringar"
-fields = { "label" = "Kundfordringar" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:lager-fardiga-egenproducerade-varor"
 fields = { "label" = "Lager färdiga egenproducerade varor" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
@@ -5710,12 +5530,6 @@ kind = "set"
 subject = "set:lagerforandring-produkter"
 fields = { "label" = "Lagerförändring produkter" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:leverantorsskulder"
-fields = { "label" = "Leverantörsskulder" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -5794,12 +5608,6 @@ kind = "set"
 subject = "set:ovriga-fordringar"
 fields = { "label" = "Övriga fordringar" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:ovriga-kapitalforandringar"
-fields = { "label" = "Övriga kapitalförändringar" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"
@@ -6154,3 +5962,69 @@ kind = "set"
 subject = "var:ravaror-och-fornodenheter-har0006"
 fields = { "label" = "Råvaror och förnödenheter, lokal enhet" }
 evidence = "#2102 same-label cluster 'Råvaror och förnödenheter' (3 variables): judged different meaning, medium confidence; Three different item numbers in the company-unit, general and local-unit tables; only the table distinguishes them, and the general-table item has no further source text."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2201 @1997-01-01..2002-12-31 where key = 'v971'"
+fields = { "variable" = "aktiekapital" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2201 in fs-slutdata-foretagsenhet; bl2201 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into aktiekapital."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2039 @1997-01-01..2002-12-31 where key = 'v19945'"
+fields = { "variable" = "andra-langfristiga-fordringar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2039 in fs-slutdata-foretagsenhet; bl2039 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into andra-langfristiga-fordringar."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet: gem0922 @1997-01-01..2002-12-31 where key = 'v38015'"
+fields = { "variable" = "andra-ranteintakter" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): bl0922 in fs-slutdata-resultatrakning; gem0922 in fs-slutdata-foretagsenhet: same definition and code list, never concurrent under another spelling in one table; folded into andra-ranteintakter."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2012 @1997-01-01..2002-12-31 where key = 'v19939'"
+fields = { "variable" = "byggnader-mark-markanlaggningar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2012 in fs-slutdata-foretagsenhet; bl2012 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into byggnader-mark-markanlaggningar."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2111 @1997-01-01..2002-12-31 where key = 'v4206'"
+fields = { "variable" = "kundfordringar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2111 in fs-slutdata-foretagsenhet; bl2111 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into kundfordringar."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2325 @1997-01-01..2002-12-31 where key = 'v4228'"
+fields = { "variable" = "leverantorsskulder" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2325 in fs-slutdata-foretagsenhet; bl2325 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into leverantorsskulder."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-resultatrakning: bl0906 @1997-01-01..2002-12-31 where key = 'v38014'"
+fields = { "variable" = "vinst-eller-forlust-vid-avyttring-av-aktier-gem0906" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem0906 in fs-slutdata-foretagsenhet; bl0906 in fs-slutdata-resultatrakning: same definition and code list, never concurrent under another spelling in one table; folded into vinst-eller-forlust-vid-avyttring-av-aktier-gem0906."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2309 @1997-01-01..2002-12-31 where key = 'v4243'"
+fields = { "variable" = "ovriga-avsattningar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2309 in fs-slutdata-foretagsenhet; bl2309 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into ovriga-avsattningar."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2739 @1997-01-01..2002-12-31 where key = 'v38023'"
+fields = { "variable" = "ovriga-forandringar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2739 in fs-slutdata-foretagsenhet; bl2739 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into ovriga-forandringar."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl2219 @1997-01-01..2002-12-31 where key = 'v4245'"
+fields = { "variable" = "ovriga-obeskattade-reserver" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): gem2219 in fs-slutdata-foretagsenhet; bl2219 in fs-slutdata-foretagsenhet-ovr: same definition and code list, never concurrent under another spelling in one table; folded into ovriga-obeskattade-reserver."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet: gem0969 @1997-01-01..2002-12-31 where key = 'v4291'"
+fields = { "variable" = "ovriga-bokslutsdispositioner" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): bl0969 in fs-slutdata-resultatrakning; gem0969 in fs-slutdata-foretagsenhet: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both say the values may be imputed, differing only by 'Uppgift'/'Uppgifterna'); folded into ovriga-bokslutsdispositioner."

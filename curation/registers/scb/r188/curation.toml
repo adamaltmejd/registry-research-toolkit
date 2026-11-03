@@ -265,24 +265,6 @@ evidence = "Samma källkolumn har överlappande mappningar till olika värdebegr
 
 [[statement]]
 kind = "set"
-subject = "var:transaktionstyp"
-fields = { "sets" = ["transaktionstyp"] }
-evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54900:14975:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:transaktionstyp"
-fields = { "tags" = ["trade"] }
-evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54900:14975:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:transaktionstyp-transtyp"
-fields = { "sets" = ["transaktionstyp"] }
-evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
-
-[[statement]]
-kind = "set"
 subject = "var:transaktionstyp-transtyp"
 fields = { "tags" = ["trade"] }
 evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
@@ -439,12 +421,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:transaktionstyp"
-fields = { "label" = "Transaktionstyp" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:varugrupp-sitc"
 fields = { "label" = "Varugrupp SITC" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -496,3 +472,9 @@ kind = "set"
 subject = "var:varugrupp-sitc-rev3-rev4-sitc3"
 fields = { "label" = "Varugrupp SITC rev3/rev4 (volymutveckling, SITC3)" }
 evidence = "#2102 same-label cluster 'Varugrupp SITC rev3/rev4' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SITC5 holds 5-digit codes (2970) in the trade tables; SITC3 in volymutveckling holds 3-digit codes (262) from 2018, so the granularity differs."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: transaktionsslag @2011-01-01..2026-12-31 where key = 'v18378'"
+fields = { "variable" = "transaktionstyp-transtyp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Transtyp in varu-landfordelat-intrastat; Transaktionsslag in landfordelad-extrastat: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only note is the 2-digit transaction code being mandatory for dispatch only; extrastat has no opdef); folded into transaktionstyp-transtyp."

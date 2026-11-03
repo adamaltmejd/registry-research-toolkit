@@ -877,24 +877,6 @@ evidence = "Årsmodell är en fordonsuppgift.\ncatalog:occurrence:105077"
 
 [[statement]]
 kind = "set"
-subject = "var:arsmodell-imputerad"
-fields = { "sets" = ["arsmodell-imputerad"] }
-evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:103316"
-
-[[statement]]
-kind = "set"
-subject = "var:arsmodell-imputerad"
-fields = { "tags" = ["methods"] }
-evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:103316"
-
-[[statement]]
-kind = "set"
-subject = "var:arsmodell-imputerad-arsmod-imp"
-fields = { "sets" = ["arsmodell-imputerad"] }
-evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
-
-[[statement]]
-kind = "set"
 subject = "var:arsmodell-imputerad-arsmod-imp"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
@@ -2089,18 +2071,6 @@ evidence = "Källans etikett anger koppling 2.\ncatalog:variable_text:11882:2045
 
 [[statement]]
 kind = "set"
-subject = "var:koppling-2-koppling2"
-fields = { "sets" = ["kopplingsanordning"] }
-evidence = "Den andra kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11883:12052:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:koppling-2-koppling2"
-fields = { "tags" = ["transport"] }
-evidence = "Den andra kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11883:12052:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:koppling-koppl1"
 fields = { "sets" = ["kopplingsanordning"] }
 evidence = "Kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11884:20453:20454"
@@ -3103,12 +3073,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:arsmodell-imputerad"
-fields = { "label" = "Årsmodell imputerad" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:axelavstand"
 fields = { "label" = "Axelavstånd" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -3934,3 +3898,69 @@ kind = "set"
 subject = "var:koppling-koppling1"
 fields = { "label" = "Koppling (Koppling1)" }
 evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: koppling2 @2002-12-31..2002-12-31 where key = 'v3062'"
+fields = { "variable" = "koppling-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): KOPPL2/Koppl2 in lastbilar, slapvagnar; Koppling2 in lastbilar, slapvagnar: same definition and code list, never concurrent under another spelling in one table; folded into koppling-2."
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: koppling2 @2000-12-31..2002-12-31 where key = 'v3062'"
+fields = { "variable" = "koppling-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): KOPPL2/Koppl2 in lastbilar, slapvagnar; Koppling2 in lastbilar, slapvagnar: same definition and code list, never concurrent under another spelling in one table; folded into koppling-2."
+
+[[statement]]
+kind = "set"
+subject = "bussar: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: arsm_imp @1999-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: arsm_imp @1999-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
+fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
