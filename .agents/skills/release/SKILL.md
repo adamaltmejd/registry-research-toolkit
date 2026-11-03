@@ -85,9 +85,9 @@ same release, and vice versa. **The holdings DDL pairs the same way:**
 reader admits on exact equality, without a major/minor compatibility rule. If a paired
 change is missing, stop and land it through a reviewed PR first. A bump's PR and
 subsequent main pushes are expected to be red at `schema-guard` (which compares both
-`CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION`) until the matching release publishes; that check is not
-required on main. Merge first, then release when the maintainer runs it. A gap is
-allowed; the guard blocks deployment throughout it.
+`CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION`) until the matching release
+publishes; that check is not required on main. Merge first, then release when the
+maintainer runs it. A gap is allowed; the guard blocks deployment throughout it.
 
 ### 4. Gate the committed bump
 
@@ -380,9 +380,10 @@ gh release edit reg_meta/vX.Y.Z --draft=false
 global asset, and the paired SWECOV asset when the release has one), and dispatches
 `container-build.yml`, which bakes and deploys the catalog (and the pair, when
 `SWECOV_DEPLOY` is `on`). Integration and deployment dispatch both depend on CI, not on
-each other. The deploy guard passes only when the released `CATALOG_SCHEMA_VERSION`
-and `HOLDINGS_SCHEMA_VERSION` both equal main's; a missing constant or a mismatch blocks deployment. Scope the run lookup
-to this release; an unfiltered `--limit 1` can match a stale run:
+each other. The deploy guard passes only when the released `CATALOG_SCHEMA_VERSION` and
+`HOLDINGS_SCHEMA_VERSION` both equal main's; a missing constant or a mismatch blocks
+deployment. Scope the run lookup to this release; an unfiltered `--limit 1` can match a
+stale run:
 
 ```sh
 git fetch --tags origin
