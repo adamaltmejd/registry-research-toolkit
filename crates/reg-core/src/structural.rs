@@ -23,7 +23,7 @@
 
 use serde_json::{Map, Value};
 
-use crate::grammar::{Date, PeriodToken};
+use crate::grammar::{Date, PeriodToken, iso};
 use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
@@ -133,10 +133,6 @@ fn jp_escape(token: &str) -> String {
 /// An int: a JSON integer that fits `i64` (never a bool or a float).
 fn int(v: &Value) -> Option<i64> {
     v.as_i64()
-}
-
-fn iso((y, m, d): Date) -> String {
-    format!("{y:04}-{m:02}-{d:02}")
 }
 
 fn check_unexpected_keys(

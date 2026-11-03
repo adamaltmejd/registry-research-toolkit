@@ -602,20 +602,6 @@ fn tree<T: Serialize>(value: &T) -> Value {
     tree
 }
 
-/// The manifest and validation-result encoding: sorted keys, two-space indent,
-/// non-ASCII as is, trailing newline. Python's
-/// `json.dumps(..., sort_keys=True, indent=2, ensure_ascii=False) + "\n"`.
-///
-/// # Panics
-///
-/// If `value` has a map with non-string keys, which no type of this crate has.
-#[must_use]
-pub fn to_json_pretty<T: Serialize>(value: &T) -> String {
-    let mut text = serde_json::to_string_pretty(&tree(value)).expect("a JSON tree encodes");
-    text.push('\n');
-    text
-}
-
 /// The project identity of an order manifest: SHA-256, as lowercase hex, of the
 /// project's compact canonical JSON (sorted keys, no whitespace, non-ASCII as is).
 #[must_use]
