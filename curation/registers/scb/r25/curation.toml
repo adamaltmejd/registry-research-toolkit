@@ -26683,14 +26683,14 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (
 [[statement]]
 kind = "set"
 subject = "var:underlag-loneskatt-egna-pensionskostnader-foregaende-ar"
-fields = { "label" = "Underlag för särskild löneskatt på egna pensionskostnader (17,69 procent)" }
-evidence = "#2102 same-label cluster 'Underlag för särskild löneskatt på egna pensionskostnader' (4 variables): judged different meaning, medium confidence; Opdefs give distinct rates: ASLSPE1 21,42 %, ASLSPE2 22,42 %, ASLSPEX 17,69 %; ASLSPE0 has no stated formula and takes its raw code."
+fields = { "label" = "Underlag för särskild löneskatt på egna pensionskostnader (ASLSPEX)" }
+evidence = "#2102 same-label cluster 'Underlag för särskild löneskatt på egna pensionskostnader' (4 variables): judged different meaning, medium confidence; Opdefs give distinct rates: ASLSPE1 21,42 %, ASLSPE2 22,42 %, ASLSPEX 17,69 %; ASLSPE0 has no stated formula and takes its raw code. ASLSPEX also covers other rates for broken financial years, so it takes its column code (Codex review)."
 
 [[statement]]
 kind = "set"
 subject = "var:underlag-loneskatt-pensionskostnader-anstalld-17-69-procent"
-fields = { "label" = "Underlag för särskild löneskatt på pensionskostnader, anställd (17,69 procent)" }
-evidence = "#2102 same-label cluster 'Underlag för särskild löneskatt på pensionskostnader, anställd' (4 variables): judged different meaning, medium confidence; Opdefs give distinct rates: ASLSPA1 21,39 %, ASLSPA2 22,42 %, ASLSPAX 17,69 %; ASLSPA has no stated formula and takes its raw code."
+fields = { "label" = "Underlag för särskild löneskatt på pensionskostnader, anställd (ASLSPAX)" }
+evidence = "#2102 same-label cluster 'Underlag för särskild löneskatt på pensionskostnader, anställd' (4 variables): judged different meaning, medium confidence; Opdefs give distinct rates: ASLSPA1 21,39 %, ASLSPA2 22,42 %, ASLSPAX 17,69 %; ASLSPA has no stated formula and takes its raw code. ASLSPAX also covers other rates for broken financial years, so it takes its column code (Codex review)."
 
 [[statement]]
 kind = "set"
