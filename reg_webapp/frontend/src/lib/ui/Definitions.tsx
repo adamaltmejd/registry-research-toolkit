@@ -19,9 +19,8 @@ export interface Definition {
 }
 
 interface Props {
-  /** What the page is, marked over the title, so a register's page and a
-   * variable's page are told apart at a glance (maintainer ruling
-   * 2026-10-22). */
+  /** The page's kind mark over its title. Registers and variables have glyphs;
+   * groups use the Group label without a glyph. */
   kind?: "register" | "variable" | "group";
   title: string;
   /** The subject's machine identifier under the title, in mono; omitted where

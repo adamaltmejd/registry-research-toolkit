@@ -22,8 +22,7 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 
-/** A node's display label — its `name` when present, else its FQID. Groups are
- * labelled off their own `label` by their views. */
+/** A node's display label — its `name` when present, else its FQID. */
 export function nodeLabel(node: {
   fqid: string;
   name?: string | null;

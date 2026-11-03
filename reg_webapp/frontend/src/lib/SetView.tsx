@@ -10,15 +10,18 @@ import { useCatalogRead } from "./use_store_read";
 
 export function SetView({ node }: { node: SetShow }) {
   const register = useCatalogRead(registerRead, node.register).value;
-  const axes = node.axes.map((axis) => {
+  const axes = node.axes.flatMap((axis) => {
     const facets = node.members.map((member) =>
       member.facets.find((facet) => facet.axis === axis.id),
     );
-    return {
-      ...axis,
-      varying: new Set(facets.map((facet) => facet?.value)).size > 1,
-      labelValue: facets[0]?.label ?? "Not stated",
-    };
+    if (!facets.some((facet) => facet !== undefined)) return [];
+    return [
+      {
+        ...axis,
+        varying: new Set(facets.map((facet) => facet?.value)).size > 1,
+        labelValue: facets[0]?.label ?? "Not stated",
+      },
+    ];
   });
   const varying = axes.filter((axis) => axis.varying);
   // Keep axis ids separate from the variable column key, even for an axis named "member".

@@ -252,12 +252,8 @@ export async function validateProject(
 // ── Search surface (#379) ───────────────────────────────────────────────────
 // The Rust server's `search` (`GET /api/search?q=`): one ranked list
 // per call, `{items, next_cursor}` inside `{data, meta}`. With `type` the list is
-// one arm's hits (its pins first); without it, every arm's hits ranked together
-// (grouped variable members hidden). A concept-group hit (`type:"group"`) is not
-// an FQID, but it can be linked to its fixed group route when the scope is
-// derivable from members; its `members` carry the real leaf FQIDs for fallback
-// links. A `fqid` can be `null` on any leaf (a hit with no resolvable catalog
-// node).
+// one arm's hits; without it, every arm's hits ranked together. Groups are not
+// search hits.
 
 export type SearchPage = RustSchemas["SearchPage"];
 
