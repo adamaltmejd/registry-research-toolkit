@@ -414,6 +414,57 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
+// Project + catalog → saved project boundary. Fails if changing a binding's
+// type keeps its old subtype, a keyboard period edit is not saved, or removing
+// a lane loses focus or removes the wrong binding. Existing cases open files
+// and add columns; none edits a source card. Names and initial values come from
+// webapp-dev/project_data.json; the expected year-int range follows one ArrowRight
+// on the To year thumb of its 2020 period. The fixture has no classification refs.
+async function sourceCardsCase(page, shoot) {
+  const main = page.getByRole("main");
+  const projectFile = new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  );
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles(projectFile.pathname);
+  await settled(page);
+
+  await main.getByRole("button", { name: /Type for Ålder in baseline/ }).click();
+  await page.getByRole("option", { name: "Opaque", exact: true }).click();
+  const period = main.getByRole("group", { name: "Period for baseline (years)", exact: true });
+  const toYear = period.getByRole("slider", { name: /^To year/ });
+  await toYear.focus();
+  await toYear.press("ArrowRight");
+  await settled(page);
+  await shoot("source-cards-edited");
+
+  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  await sources.getByRole("button", { name: "Remove KON from baseline", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
+  await page.getByRole("alertdialog").waitFor({ state: "hidden" });
+  await settled(page);
+  check(await sources.getByRole("link", { name: "Kön", exact: true }).count() === 0,
+    "removing Kön left its lane in the source");
+  await sources.getByRole("link", { name: "Ålder", exact: true }).waitFor();
+  check(await sources.evaluate((node) => node.contains(document.activeElement)),
+    "removing the lane lost focus outside the remaining source");
+
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
+  const source = saved.sources[0];
+  check(saved.sources.length === 1 && source.bindings.length === 1 &&
+    source.bindings[0].variable === "demo/bas/alder" && source.bindings[0].type === "opaque" &&
+    !("numeric_subtype" in source.bindings[0]),
+  "the downloaded source lost Ålder's type edit, kept its numeric subtype, or removed the wrong binding");
+  check(source.period !== null && !Array.isArray(source.period) &&
+    typeof source.period === "object" && source.period.from === 2020 && source.period.to === 2021,
+  "the keyboard period edit did not save the year-int range 2020–2021");
+  await shoot("source-cards-removed");
+}
+
 // Project + catalog → saved project boundary. Fails if a variable-page add
 // confuses identical spellings in different tables, loses the binding/type or
 // add-window years, retains a tick outside the moved window,
@@ -687,6 +738,11 @@ const scenarios = {
     shots: 2,
     route: "/project",
     run: addVariableColumnsCase,
+  },
+  "source-cards": {
+    shots: 2,
+    route: "/project",
+    run: sourceCardsCase,
   },
   "browse-pages": {
     shots: 2,
