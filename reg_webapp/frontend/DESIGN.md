@@ -565,21 +565,23 @@ Time is the axis every relation is drawn on.
   dot (#1826). Adding starts from the variable page, where the coverage `LaneGraph`, add
   window and add bar show which tables and years are added.
 
-- A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
-  facet), columns as spans, and relations as arrows: solid for succession, dashed for
-  rename. A succession arrow between overlapping spans drops at the edge's effective
-  year. A lane's title joins its facet values with a comma, and its name opens the
-  variable; its line under the name is plain words, never a slug: the register when it
-  differs from the page's, or what tells two lanes of one name apart. A read-only
-  neighbour lane still shows its columns' "in project" state. A span is a checkbox for
-  the add bar, and hovering it highlights its edges. On `/project` a column's findings
-  sit across its lane, under its spans. It shares the page's axis with the `Timeline`.
-  It draws the study window's band and, over it, an add window that differs, as on the
-  variable page, with the axis years on the add window's bounds when one is drawn. Its
-  legend keys only the marks drawn: the plain chip is "Click to select" and the filled
-  one "In project"; a chip outside the window needs no key. Its add bar shows only while
-  a change is staged. On a variable page the `LaneGraph` is the `Timeline` (above).
-  Don't draw free-form node graphs; the time axis is the information.
+- A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
+  member order), columns as spans, and relations as arrows: solid for succession, dashed
+  for rename. A succession arrow between overlapping spans drops at the edge's effective
+  year. A group lane's title joins its varying facet values with a comma, falling back
+  to the variable's name, and its name opens the variable; its line under the name is
+  plain words, never a slug: the register when it differs from the page's, the
+  variable's name under a facet title, or what tells two lanes of one name apart (their
+  column names); it also describes the link. A read-only neighbour lane still shows its
+  columns' "in project" state. A span is a checkbox for the add bar, and hovering it
+  highlights its edges. On `/project` a column's findings sit across its lane, under its
+  spans. It shares the page's axis with the `Timeline`. It draws the study window's band
+  and, over it, an add window that differs, as on the variable page, with the axis years
+  on the add window's bounds when one is drawn. Its legend keys only the marks drawn:
+  the plain chip is "Click to select" and the filled one "In project"; a chip outside
+  the window needs no key. Its add bar shows only while a change is staged. On a
+  variable page the `LaneGraph` is the `Timeline` (above). Don't draw free-form node
+  graphs; the time axis is the information.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").

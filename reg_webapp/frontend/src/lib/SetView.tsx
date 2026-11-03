@@ -52,6 +52,45 @@ export function SetView({
     study,
     bounds,
   );
+  // A lane's title is its varying facets, else its name; the line under it is
+  // the name, or the column names where title and name repeat another lane's.
+  const titled = node.members.map((member) => {
+    const facets = varying.flatMap((axis) => {
+      const label = member.facets.find(
+        (facet) => facet.axis === axis.id,
+      )?.label;
+      return label ? [label] : [];
+    });
+    return {
+      member,
+      title: facets.length ? facets.join(", ") : member.name,
+      name: facets.length ? member.name : null,
+    };
+  });
+  const seen = new Map<string, number>();
+  for (const { title, name } of titled) {
+    const key = JSON.stringify([title, name]);
+    seen.set(key, (seen.get(key) ?? 0) + 1);
+  }
+  const lanes = titled.map(({ member, title, name }) => {
+    const repeated = (seen.get(JSON.stringify([title, name])) ?? 0) > 1;
+    const spellings = [
+      ...new Set(member.columns.map((column) => column.spelling)),
+    ].join(", ");
+    return {
+      id: member.fqid,
+      name: title,
+      sub:
+        repeated && spellings
+          ? name
+            ? { text: `${name}, ${spellings}` }
+            : { text: spellings, mono: true }
+          : name
+            ? { text: name }
+            : null,
+      href: catalogHref(member.fqid),
+    };
+  });
   return (
     <article className={styles.page}>
       <Definitions
@@ -98,21 +137,7 @@ export function SetView({
         ) : (
           <LaneGraph
             label="Group members"
-            lanes={node.members.map((member) => {
-              // A lane's title is its varying facets; its name tells it apart otherwise.
-              const facets = varying.flatMap((axis) => {
-                const label = member.facets.find(
-                  (facet) => facet.axis === axis.id,
-                )?.label;
-                return label ? [label] : [];
-              });
-              return {
-                id: member.fqid,
-                name: facets.length ? facets.join(", ") : member.name,
-                sub: facets.length ? { text: member.name } : null,
-                href: catalogHref(member.fqid),
-              };
-            })}
+            lanes={lanes}
             spans={node.members.flatMap((member) =>
               memberSpans({
                 member,
