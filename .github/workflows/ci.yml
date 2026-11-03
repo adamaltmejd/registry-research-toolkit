@@ -113,7 +113,7 @@ jobs:
         with:
           sparse-checkout: *no-locks
           sparse-checkout-cone-mode: false
-      - uses: dorny/paths-filter@v4.0.3
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: filter
         with:
           # Diff with git, not the GitHub API: the API refuses a PR diff as
@@ -163,10 +163,10 @@ jobs:
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
       # Keep the archived frontend runtime while the deployment remains unchanged.
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "26.12.1"
-      - uses: oven-sh/setup-bun@v2.2.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: "1.4.4"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
@@ -175,8 +175,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2.9.3
-      - uses: taiki-e/install-action@v2.87.31
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
         with:
           tool: wasm-bindgen@0.2.129
       # The gate script runs from the repository root on a uv-managed Python; it
@@ -186,7 +186,7 @@ jobs:
       # unchanged). Browser checks run in the separate flows job.
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "0.13.5"
+          version: "0.13.6"
       - run: uv run --no-project scripts/gate.py frontend
         working-directory: .
 
@@ -209,10 +209,10 @@ jobs:
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
       # Keep the archived frontend runtime while the deployment remains unchanged.
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "26.12.1"
-      - uses: oven-sh/setup-bun@v2.2.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: "1.4.4"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
@@ -221,8 +221,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2.9.3
-      - uses: taiki-e/install-action@v2.87.31
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
         with:
           tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
@@ -230,7 +230,7 @@ jobs:
       # headless Chromium via Playwright. Cache the browser binary (keyed on the
       # lockfile, so it re-downloads only when deps change) so the ~90 MB download is a one-time cost, not per-run.
       - name: Cache Playwright browser
-        uses: actions/cache@v6.1.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}
@@ -243,7 +243,7 @@ jobs:
       - run: bunx playwright install chromium
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "0.13.5"
+          version: "0.13.6"
       # Bootstrap plus shell/search against the source-built synthetic fixture.
       - run: uv run --no-project scripts/gate.py flows
         working-directory: .
