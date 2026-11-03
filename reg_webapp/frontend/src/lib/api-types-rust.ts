@@ -430,11 +430,6 @@ export interface components {
             kind: string;
             /** @description The entity's hull. */
             period: components["schemas"]["Period"];
-            /**
-             * @description Same canonical variable, documented in additional steward-attested periods.
-             *     Reference spans above retain the global catalog's meaning.
-             */
-            steward_occurrences?: components["schemas"]["StewardOccurrence"][] | null;
             tables: components["schemas"]["CoverageTable"][];
         };
         CoverageColumn: {
@@ -1285,24 +1280,6 @@ export interface components {
             holdings_generation: string;
             owner: string;
             schema_version: string;
-        };
-        /**
-         * @description A source occurrence in the steward's supplemental semantics. Its identity
-         *     declaration and ordinary transcription locators both remain available.
-         */
-        StewardOccurrence: {
-            coded: string;
-            definition: string | null;
-            evidence: string;
-            label: string | null;
-            locator: string;
-            period: components["schemas"]["Period"];
-            sources: components["schemas"]["Locator"][];
-            spelling: string;
-            table: string;
-            type: string | null;
-            value_set: components["schemas"]["ValueSetRef"] | null;
-            variable: string;
         };
         StewardRegisterFacets: {
             owner: string;

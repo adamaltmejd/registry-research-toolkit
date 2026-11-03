@@ -1696,13 +1696,12 @@ other collisions still refuse. These declarations are occurrence bindings, not a
 derivations or copied reference rows. The verifier compares them with the pinned input.
 Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
 
-Reference `coverage` spans retain their original meaning. In selected steward mode,
-`coverage.steward_occurrences` exposes these canonical variables' attested supplemental
-periods, documentary label/definition, logical type/coding/value set and local source
-locators, beside accepted physical `held` intervals. Variable holdings include these
-steward-attested memberships even when the global member list omits them. This keeps the
-provenance and scope explicit without widening or copying global semantics. Logical
-order consumption of these occurrences remains e-order work.
+Reference `coverage` spans retain their original meaning. In selected steward mode, the
+attested periods reach readers only as accepted physical `held` intervals; variable
+holdings include these steward-attested memberships even when the global member list
+omits them. The occurrences' own text and locators are not served: a release carries
+catalog items, never steward working files or census row references (maintainer
+2026-11-03), and the per-occurrence listing repeated what `held` already shows.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog

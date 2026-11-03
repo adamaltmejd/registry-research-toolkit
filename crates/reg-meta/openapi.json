@@ -1777,16 +1777,6 @@
             "$ref": "#/components/schemas/Period",
             "description": "The entity's hull."
           },
-          "steward_occurrences": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/StewardOccurrence"
-            },
-            "description": "Same canonical variable, documented in additional steward-attested periods.\nReference spans above retain the global catalog's meaning."
-          },
           "tables": {
             "type": "array",
             "items": {
@@ -4994,81 +4984,6 @@
             "type": "string"
           },
           "schema_version": {
-            "type": "string"
-          }
-        }
-      },
-      "StewardOccurrence": {
-        "type": "object",
-        "description": "A source occurrence in the steward's supplemental semantics. Its identity\ndeclaration and ordinary transcription locators both remain available.",
-        "required": [
-          "table",
-          "variable",
-          "period",
-          "spelling",
-          "label",
-          "definition",
-          "type",
-          "coded",
-          "value_set",
-          "locator",
-          "evidence",
-          "sources"
-        ],
-        "properties": {
-          "coded": {
-            "type": "string"
-          },
-          "definition": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "evidence": {
-            "type": "string"
-          },
-          "label": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "locator": {
-            "type": "string"
-          },
-          "period": {
-            "$ref": "#/components/schemas/Period"
-          },
-          "sources": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Locator"
-            }
-          },
-          "spelling": {
-            "type": "string"
-          },
-          "table": {
-            "type": "string"
-          },
-          "type": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "value_set": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ValueSetRef"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "variable": {
             "type": "string"
           }
         }

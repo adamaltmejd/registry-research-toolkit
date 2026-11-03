@@ -2711,16 +2711,6 @@
               "$ref": "#/$defs/Period",
               "description": "The entity's hull."
             },
-            "steward_occurrences": {
-              "description": "Same canonical variable, documented in additional steward-attested periods.\nReference spans above retain the global catalog's meaning.",
-              "items": {
-                "$ref": "#/$defs/StewardOccurrence"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
             "tables": {
               "items": {
                 "$ref": "#/$defs/CoverageTable"
@@ -2878,21 +2868,6 @@
           ],
           "type": "object"
         },
-        "Locator": {
-          "properties": {
-            "input": {
-              "type": "string"
-            },
-            "locator": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "input",
-            "locator"
-          ],
-          "type": "object"
-        },
         "Meta": {
           "description": "The response `meta` (`shape.Meta`).",
           "properties": {
@@ -3045,117 +3020,6 @@
             "catalog_generation",
             "holdings_generation",
             "schema_version"
-          ],
-          "type": "object"
-        },
-        "StewardOccurrence": {
-          "description": "A source occurrence in the steward's supplemental semantics. Its identity\ndeclaration and ordinary transcription locators both remain available.",
-          "properties": {
-            "coded": {
-              "type": "string"
-            },
-            "definition": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "evidence": {
-              "type": "string"
-            },
-            "label": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "locator": {
-              "type": "string"
-            },
-            "period": {
-              "$ref": "#/$defs/Period"
-            },
-            "sources": {
-              "items": {
-                "$ref": "#/$defs/Locator"
-              },
-              "type": "array"
-            },
-            "spelling": {
-              "type": "string"
-            },
-            "table": {
-              "type": "string"
-            },
-            "type": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "value_set": {
-              "oneOf": [
-                {
-                  "$ref": "#/$defs/ValueSetRef"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "variable": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "table",
-            "variable",
-            "period",
-            "spelling",
-            "label",
-            "definition",
-            "type",
-            "coded",
-            "value_set",
-            "locator",
-            "evidence",
-            "sources"
-          ],
-          "type": "object"
-        },
-        "ValueSetRef": {
-          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
-          "properties": {
-            "classification": {
-              "description": "The curated classification version's ref; `null` until a version is curated.",
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "hash": {
-              "type": "string"
-            },
-            "hierarchical": {
-              "type": "boolean"
-            },
-            "n_items": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "names": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            }
-          },
-          "required": [
-            "hash",
-            "n_items",
-            "hierarchical",
-            "names",
-            "classification"
           ],
           "type": "object"
         }
