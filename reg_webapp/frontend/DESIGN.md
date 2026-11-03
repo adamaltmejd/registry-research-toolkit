@@ -419,8 +419,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
-  data) in `text-muted`. The browse columns are beside it and the project box is in the
-  top bar, so there is no link into either.
+  data) in `text-muted`, with inline emphasis and `http(s)` links. The browse columns
+  are beside it and the project box is in the top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
@@ -433,8 +433,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   name on the line under it, and by the name alone when no axis varies. Paired variable
   and table pages show a Held panel grouped by physical table, with delivered column
   chips, periods and plain-word placement details, or an EmptyState when nothing is
-  held. Steward documentation appears in its own panel when supplied by coverage;
-  neither panel appears while its data is loading.
+  held. A caveat shared by a group's placements is a fact row, one that varies is a
+  Notes cell; neither is a tooltip, which a touch screen cannot open. A paired register
+  page shows a Held summary instead, one row per table with its held-variable count and
+  period runs, since its coverage lists every table's placements (#2110). Steward
+  documentation appears in its own panel when supplied by coverage; neither panel
+  appears while its data is loading.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

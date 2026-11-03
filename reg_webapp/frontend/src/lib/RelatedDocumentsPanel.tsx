@@ -15,7 +15,7 @@ import pageStyles from "./CatalogNodeView.module.css";
 import { catalogHref, matchesFilter } from "./catalog";
 import { catalogWords } from "./catalog_labels";
 import { FilterInput } from "./FilterInput";
-import { parseInlineMarkdown } from "./inline_markdown";
+import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./RelatedDocumentsPanel.module.css";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -78,13 +78,7 @@ function DocumentBody({
       {paragraphs.map((paragraph, index) => (
         // Paragraphs and inline segments have no independent identity in the source text.
         <p className={styles.paragraph} key={index}>
-          {parseInlineMarkdown(paragraph).map((segment, part) => {
-            const text = segment.text;
-            if (segment.emphasis === "strong")
-              return <strong key={part}>{text}</strong>;
-            if (segment.emphasis === "em") return <em key={part}>{text}</em>;
-            return text;
-          })}
+          <InlineMarkdown text={paragraph} />
         </p>
       ))}
       {subjects.size > 0 && (

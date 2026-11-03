@@ -1,8 +1,7 @@
 import type { StewardConfig } from "./api";
 import styles from "./Home.module.css";
-import { parseInlineMarkdown } from "./inline_markdown";
+import { InlineMarkdown } from "./InlineMarkdown";
 
-/* oxlint-disable react/no-array-index-key -- Immutable description segments have no independent ids. */
 export function Home({ config }: { config: StewardConfig | null }) {
   const presentation = config?.presentation;
   return (
@@ -14,16 +13,7 @@ export function Home({ config }: { config: StewardConfig | null }) {
       </h1>
       {presentation?.description && (
         <p className={styles.tagline}>
-          {parseInlineMarkdown(presentation.description).map(
-            (segment, index) =>
-              segment.emphasis === "strong" ? (
-                <strong key={index}>{segment.text}</strong>
-              ) : segment.emphasis === "em" ? (
-                <em key={index}>{segment.text}</em>
-              ) : (
-                segment.text
-              ),
-          )}
+          <InlineMarkdown text={presentation.description} />
         </p>
       )}
     </article>
