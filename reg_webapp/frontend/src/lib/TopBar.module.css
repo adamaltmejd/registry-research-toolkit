@@ -137,7 +137,11 @@ kbd.hint,
   .topBar {
     position: static;
   }
-  /* The steward's logo stands in for its long name (#1820). */
+  /* The register column is not beside the brand here, so its width is no
+     cap. The steward's logo stands in for its long name (#1820). */
+  .brand {
+    max-width: none;
+  }
   .brand:has(.brandLogo) .brandName {
     display: none;
   }

@@ -62,6 +62,8 @@ export function TableView({
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
   const releases = [...node.releases].sort(compareReleases);
+  // Most providers state no edition: the column shows only where one does.
+  const editioned = releases.some((release) => release.edition !== "unstated");
   const populations = new Map<string, PopulationGroup>();
   for (const release of releases) {
     for (const population of release.populations) {
@@ -193,7 +195,9 @@ export function TableView({
             columns={[
               { key: "name", label: "Release" },
               { key: "period", label: "Period", mono: true },
-              { key: "edition", label: "Edition" },
+              ...(editioned
+                ? [{ key: "edition" as const, label: "Edition" }]
+                : []),
               { key: "primary", label: "Primary" },
             ]}
             rows={releases}
@@ -223,9 +227,9 @@ export function TableView({
   );
 }
 
-/** The releases a population applies to: "All releases" when it is every one,
- * else the one release or a disclosure listing them, with a reference day the
- * releases share stated once. */
+/** The releases a population applies to: "All releases" when it is every one
+ * on one reference day, else the one release or a disclosure listing them, with
+ * a reference day the releases share stated once. */
 function PopulationReleases({
   population,
   allReleases,
@@ -249,7 +253,7 @@ function PopulationReleases({
   );
   return (
     <>
-      {names.size === allReleases && allReleases > 1 ? (
+      {names.size === allReleases && allReleases > 1 && refDays.size === 1 ? (
         "All releases"
       ) : applied.length === 1 && applied[0] ? (
         item(applied[0])

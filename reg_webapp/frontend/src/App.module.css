@@ -57,8 +57,7 @@
   min-width: 0;
 }
 
-/* The routed page grows through the pane, so the footer stays at its foot. It
-   stays `overflow: visible`: anything else would make it the scrollport of every
+/* The routed page grows through the pane. It stays `overflow: visible`: anything else would make it the scrollport of every
    sticky descendant (Y-97). */
 .routed {
   flex: 1 0 auto;
