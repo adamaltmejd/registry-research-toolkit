@@ -1,0 +1,78 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Key only"
+    }
+  },
+  "files": [
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "k",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "identifier",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/held/id identifies units in demo/held over [2017-01-01, 2018-01-01)",
+      "source": "k",
+      "variable": "demo/held/id",
+      "table": "demo/held",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

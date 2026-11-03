@@ -1,0 +1,32 @@
+{
+  "note": "Fails if two sources sharing a physical table get two files, per-column filters, or a silent union: one file, one OR filter over both years, the key once with both sources' references, and an inclusion finding per source.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Shared file",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/held",
+        "period": 2017,
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "type": "numeric"
+          }
+        ]
+      },
+      {
+        "name": "b",
+        "table": "demo/held",
+        "period": 2020,
+        "bindings": [
+          {
+            "variable": "demo/held/late",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

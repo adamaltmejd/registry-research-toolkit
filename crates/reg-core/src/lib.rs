@@ -24,6 +24,8 @@ pub const HOLDINGS_SCHEMA_VERSION: u32 = 4;
 mod case_folding;
 mod grammar;
 mod interval;
+pub mod issue;
+pub mod manifest;
 pub mod project;
 mod structural;
 mod validation;

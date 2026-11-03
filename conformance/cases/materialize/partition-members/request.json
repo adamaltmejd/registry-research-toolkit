@@ -1,0 +1,24 @@
+{
+  "note": "Fails if a request reaching a partitioned delivery selects one member, or the pooled earlier delivery is dropped: three files, partitions unfiltered, the pool filtered to 2020.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Partitions",
+    "sources": [
+      {
+        "name": "v",
+        "table": "demo/held",
+        "period": {
+          "from": 2020,
+          "to": 2021
+        },
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

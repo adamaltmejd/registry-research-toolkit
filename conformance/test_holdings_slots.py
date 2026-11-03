@@ -3,33 +3,26 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 import sqlite3
 from contextlib import closing
 
 import pytest
-from holdings_artifacts import HOLDINGS_CASE, pin_steward, prepare_holdings, run
+from holdings_artifacts import (
+    SLOTS,
+    pin_steward,
+    prepare_holdings,
+    run,
+    splice_slot_family,
+)
 from http_cases import ServerPool, artifact_env
 from reader_artifacts import REG_BUILD
-
-SLOTS = HOLDINGS_CASE / "slot-family"
 
 
 @pytest.fixture
 def slot_family(tmp_path):
     base, root, command = prepare_holdings(tmp_path)
-    for name in ["census.csv", "storage.csv"]:
-        shutil.copyfile(SLOTS / name, root / name)
-    path = root / "holdings.toml"
-    text = re.sub(
-        r'\[\[table\.column\]\]\nname = "Slot2"\n.*?(?=\[\[table\.column\]\])',
-        (SLOTS / "columns.toml").read_text(),
-        path.read_text(),
-        count=1,
-        flags=re.DOTALL,
-    )
-    path.write_text(text)
+    splice_slot_family(root)
     return base, root, command
 
 

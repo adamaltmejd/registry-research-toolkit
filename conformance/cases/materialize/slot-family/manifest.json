@@ -1,0 +1,147 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Slot family"
+    }
+  },
+  "files": [
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Position1",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "s",
+              "binding": 0,
+              "table": "steward/slots",
+              "variable": "steward/slots/slot2",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Slot2"
+            }
+          ],
+          "slot": {
+            "family": "received-position",
+            "kind": "position",
+            "index": "1"
+          }
+        },
+        {
+          "name": "Slot2",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "s",
+              "binding": 0,
+              "table": "steward/slots",
+              "variable": "steward/slots/slot2",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Slot2"
+            }
+          ],
+          "slot": {
+            "family": "received-position",
+            "kind": "position",
+            "index": "2"
+          }
+        },
+        {
+          "name": "Position10",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "s",
+              "binding": 0,
+              "table": "steward/slots",
+              "variable": "steward/slots/slot2",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Slot2"
+            }
+          ],
+          "slot": {
+            "family": "received-position",
+            "kind": "position",
+            "index": "10"
+          }
+        },
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "s",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": []
+}

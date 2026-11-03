@@ -1,0 +1,10 @@
+# Synthetic: Part B also delivers the relative identifier under a header that is no
+# Stata variable name (47 characters, spaces). Spliced after Part B's locator.
+[[table.column]]
+name = "Relative identifier as received in the delivery"
+locator = "fixture:partition-b-long-header"
+[[table.column.mapping]]
+table_pid = "demo/held"
+variable_pid = "demo/held/relative-id"
+locator = "fixture:partition-b-long-header"
+
