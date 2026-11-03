@@ -1408,7 +1408,7 @@ def _panache_format(out_dir: Path) -> None:
         [
             "uvx",
             "--from",
-            "panache-cli==3.17.0",
+            "panache-cli==3.17.1",
             "panache",
             "--config",
             str(PANACHE_CONFIG),

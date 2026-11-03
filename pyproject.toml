@@ -10,12 +10,12 @@ dependencies = [
 [dependency-groups]
 dev = [
   "httpx2>=2.16.0",
-  "hypothesis>=6.170.9",
+  "hypothesis>=6.170.13",
   "jsonschema>=4.26.0",
   "maturin>=1.15.0",
-  "pytest>=9.1.1",
+  "pytest>=9.2.0",
   "pytest-xdist>=3.8.0",
-  "ruff>=0.17.2",
+  "ruff>=0.17.3",
 ]
 
 [tool.pytest.ini_options]
