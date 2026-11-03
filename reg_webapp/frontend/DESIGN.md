@@ -438,7 +438,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   page shows a Held summary instead, one row per table with its held-variable count and
   period runs, since its coverage lists every table's placements (#2110). Steward
   documentation appears in its own panel when supplied by coverage; neither panel
-  appears while its data is loading.
+  appears while its data is loading. In steward mode a supplemental-only variable is
+  selectable for a project like a reference variable: `order` and `validate` read the
+  composed steward view (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

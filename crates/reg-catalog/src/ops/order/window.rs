@@ -4,14 +4,14 @@
 
 use reg_core::project::{Binding, Source};
 use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
-use rusqlite::{Connection, Row};
+use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
     Issue, OrderClip, OrderEntry, OrderValueSet, Serving, day, interval, iso_day, period, refused,
     span,
 };
-use crate::Error;
 use crate::ops::{Server, refs};
+use crate::{Code, Error};
 
 /// What a binding is checked against: its source and the source's serving tables.
 pub(super) struct Scope<'a> {
@@ -27,6 +27,9 @@ pub(super) struct Scope<'a> {
     pub chain: &'a [i64],
     /// Every requested day (inclusive ISO intervals, ascending).
     pub requested: &'a [Interval],
+    /// The steward's composed view over a base table: its variables' held segments
+    /// (reference occurrences) join the base ones.
+    pub composed: bool,
 }
 
 /// A binding's findings, entries and clip.
@@ -42,7 +45,8 @@ pub(super) struct Outcome {
 pub(super) struct Variable {
     id: i64,
     pid: String,
-    classification: Option<i64>,
+    /// The pinned class version's public id.
+    classification: Option<String>,
 }
 
 /// One served piece of the request: part of a primary segment inside the requested days.
@@ -54,8 +58,10 @@ struct Piece {
     spelling: String,
     dtype: Option<String>,
     length: Option<i64>,
-    valueset: Option<i64>,
-    class_version: Option<i64>,
+    /// The value set's hash and size.
+    valueset: Option<(String, i64)>,
+    /// The class version's public id.
+    class_version: Option<String>,
     sensitive: bool,
     identifier: bool,
     state: String,
@@ -63,16 +69,47 @@ struct Piece {
     open: bool,
 }
 
-/// The columns [`piece`] reads, after `start, end`.
-const FORM: &str = "sp.exact, x.dtype, x.length, x.valueset_id, x.class_version_id, \
-    COALESCE(x.sensitive, 0), COALESCE(x.identifier, 0)";
+/// The segments a binding reads, keyed by the connection's own table and variable ids,
+/// with value sets and class versions by public identity so rows never cross origins.
+/// In the composed view a base table's held segments of a base variable (a reference
+/// occurrence, never overlapping the base ones) join through their public ids.
+pub(super) fn segments(scope: &Scope) -> String {
+    let part = |db: &str, ids: &str, joins: &str| {
+        format!(
+            "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
+             x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
+             cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, \
+             COALESCE(x.identifier, 0) AS identifier, x.state AS state
+             FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
+             LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
+             LEFT JOIN {db}.class_version cv ON cv.id = x.class_version_id"
+        )
+    };
+    let base = part(
+        "main",
+        "x.table_id AS table_id, x.variable_id AS variable_id",
+        "",
+    );
+    if !scope.composed {
+        return base;
+    }
+    let held = part(
+        "held",
+        "bt.id, bv.id",
+        "JOIN held.tbl ht ON ht.id = x.table_id JOIN main.tbl bt ON bt.pid = ht.pid
+         JOIN held.variable hv ON hv.id = x.variable_id JOIN main.variable bv ON bv.pid = hv.pid",
+    );
+    format!("{base} UNION ALL {held}")
+}
 
 /// The binding's variable and its classification pin, and the findings refusing them
 /// (`fqid_unresolved`, `retired_ref`), located at the field. A resolved variable is
 /// returned even when its pin is refused, so its window checks still run: a blocked
-/// order reports every finding at once.
+/// order reports every finding at once. In the composed view (`composed`) a pin the base
+/// does not know may name a class version defined only in the holdings database.
 pub(super) fn refs(
     conn: &Connection,
+    composed: bool,
     index: usize,
     b: usize,
     source: &Source,
@@ -118,17 +155,28 @@ pub(super) fn refs(
     let mut classification = None;
     if let Some(pin) = &binding.classification {
         match refs::resolve(conn, pin) {
-            Ok(hit) if hit.kind == "class_version" => classification = Some(hit.id),
+            Ok(hit) if hit.kind == "class_version" => classification = Some(hit.pid),
             Ok(_) => issue(
                 "classification",
                 pid,
                 unresolved(pin, "classification version"),
             ),
-            Err(err) => issue(
-                "classification",
-                pid,
-                refused(conn, pin, "classification version", &err)?,
-            ),
+            Err(err) => {
+                // The base wins when it knows the id; only a miss falls through.
+                let held = if composed && err.kind() == Code::NotFound {
+                    held_class_version(conn, pin)?
+                } else {
+                    None
+                };
+                match held {
+                    Some(pid) => classification = Some(pid),
+                    None => issue(
+                        "classification",
+                        pid,
+                        refused(conn, pin, "classification version", &err)?,
+                    ),
+                }
+            }
         }
     }
     let variable = variable.map(|(id, pid)| Variable {
@@ -139,10 +187,22 @@ pub(super) fn refs(
     Ok((variable, findings))
 }
 
+/// A class version of the attached holdings database, by exact public id.
+fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT pid FROM held.ident WHERE pid = ?1 AND kind = 'class_version'",
+            [pin],
+            |row| row.get(0),
+        )
+        .optional()?)
+}
+
 /// One binding over its source's serving tables.
 pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
     let (variable, findings) = refs(
         scope.conn,
+        scope.composed,
         scope.index,
         b,
         scope.source,
@@ -190,17 +250,20 @@ fn materialize(
     for k in 0..scope.serving.len() {
         pieces.extend(served(scope, k, variable.id)?);
     }
-    if let Some(version) = variable.classification {
+    if let Some(version) = &variable.classification {
         // Ambiguous windows must still block: their unresolved version is not a clip.
-        pieces.retain(|p| p.state == "ambiguous" || p.class_version == Some(version));
+        pieces.retain(|p| p.state == "ambiguous" || p.class_version.as_ref() == Some(version));
         let mut compatible = !pieces.is_empty();
         for &table in scope.chain {
             if compatible {
                 break;
             }
             compatible = scope.conn.query_row(
-                "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 \
-                 AND table_id = ?2 AND class_version_id = ?3)",
+                &format!(
+                    "SELECT EXISTS (SELECT 1 FROM ({}) WHERE variable_id = ?1 \
+                     AND table_id = ?2 AND cv_pid = ?3)",
+                    segments(scope)
+                ),
                 rusqlite::params![variable.id, table, version],
                 |row| row.get(0),
             )?;
@@ -266,8 +329,10 @@ fn materialize(
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
     outcome.findings.extend(replaced(&at)?);
-    let versions: std::collections::BTreeSet<i64> =
-        pieces.iter().filter_map(|p| p.class_version).collect();
+    let versions: std::collections::BTreeSet<&String> = pieces
+        .iter()
+        .filter_map(|p| p.class_version.as_ref())
+        .collect();
     if versions.len() > 1 && variable.classification.is_none() {
         let days = hull(&ordered);
         outcome.findings.push(at.issue(
@@ -283,7 +348,7 @@ fn materialize(
             ),
         ));
     }
-    let (entries, change) = entries(&at, binding, &pieces)?;
+    let (entries, change) = entries(&at, binding, &pieces);
     outcome.entries = entries;
     outcome.findings.extend(change);
     Ok(outcome)
@@ -329,7 +394,10 @@ impl Located<'_> {
 pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
     for &table in scope.chain {
         let hit: bool = scope.conn.query_row(
-            "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 AND table_id = ?2)",
+            &format!(
+                "SELECT EXISTS (SELECT 1 FROM ({}) WHERE variable_id = ?1 AND table_id = ?2)",
+                segments(scope)
+            ),
             [variable, table],
             |row| row.get(0),
         )?;
@@ -347,10 +415,11 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let rows: Vec<Piece> = scope
         .conn
         .prepare(&format!(
-            "SELECT x.start, x.end, {FORM}, x.state, x.end = ?3
-             FROM segment x JOIN spelling sp ON sp.id = x.spelling_id
-             WHERE x.variable_id = ?1 AND x.table_id = ?2
-             ORDER BY x.start"
+            "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
+             identifier, state, end = ?3
+             FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
+             ORDER BY start",
+            segments(scope)
         ))?
         .query_map(
             rusqlite::params![variable, s.table.id, scope.server.open.1],
@@ -369,20 +438,21 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     Ok(pieces)
 }
 
-/// A segment row: `start, end`, the [`FORM`] columns, `state` and `open`.
+/// A [`segments`] row as [`served`] selects it, then `open`.
 fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
+    let hash: Option<String> = row.get(5)?;
     Ok(Piece {
         serving,
         days: interval(row.get(0)?, row.get(1)?),
         spelling: row.get(2)?,
         dtype: row.get(3)?,
         length: row.get(4)?,
-        valueset: row.get(5)?,
-        class_version: row.get(6)?,
-        sensitive: row.get(7)?,
-        identifier: row.get(8)?,
-        state: row.get(9)?,
-        open: row.get(10)?,
+        valueset: hash.map(|h| row.get(6).map(|n| (h, n))).transpose()?,
+        class_version: row.get(7)?,
+        sensitive: row.get(8)?,
+        identifier: row.get(9)?,
+        state: row.get(10)?,
+        open: row.get(11)?,
     })
 }
 
@@ -458,14 +528,36 @@ fn runs(pieces: &[Piece], test: &dyn Fn(&Piece) -> bool) -> Vec<(usize, Interval
 fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let mut found = Vec::new();
-    let mut query = scope.conn.prepare(
-        "SELECT DISTINCT f.start, f.end
-         FROM finding f JOIN release r ON r.id = f.subject_id
-         WHERE f.subject_kind = 'release' AND f.code = 'F7:edition-disagreement'
-           AND f.start IS NOT NULL AND r.table_id = ?1
-           AND EXISTS (SELECT 1 FROM occurrence o WHERE o.release_id = r.id AND o.variable_id = ?2)
-         ORDER BY f.start, f.end",
-    )?;
+    let part = |db: &str, table: &str, variable: &str, joins: &str| {
+        format!(
+            "SELECT f.start, f.end
+             FROM {db}.finding f JOIN {db}.release r ON r.id = f.subject_id {joins}
+             WHERE f.subject_kind = 'release' AND f.code = 'F7:edition-disagreement'
+               AND f.start IS NOT NULL AND {table} = ?1
+               AND EXISTS (SELECT 1 FROM {db}.occurrence o {variable})"
+        )
+    };
+    let base = part(
+        "main",
+        "r.table_id",
+        "WHERE o.release_id = r.id AND o.variable_id = ?2",
+        "",
+    );
+    // The holdings database's own findings reach a base table and variable by public id.
+    let sql = if scope.composed {
+        let held = part(
+            "held",
+            "bt.id",
+            "JOIN held.variable hv ON hv.id = o.variable_id \
+             JOIN main.variable bv ON bv.pid = hv.pid \
+             WHERE o.release_id = r.id AND bv.id = ?2",
+            "JOIN held.tbl ht ON ht.id = r.table_id JOIN main.tbl bt ON bt.pid = ht.pid",
+        );
+        format!("SELECT DISTINCT start, end FROM ({base} UNION ALL {held}) ORDER BY start, end")
+    } else {
+        format!("SELECT DISTINCT start, end FROM ({base}) ORDER BY start, end")
+    };
+    let mut query = scope.conn.prepare(&sql)?;
     for (k, s) in scope.serving.iter().enumerate() {
         let here = merge(
             pieces
@@ -553,11 +645,7 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
 /// The entries: adjacent pieces of one table merge when spelling, type and value set
 /// and classification agree, so a flag-only boundary never splits one; the latest
 /// piece's length stands. More than one spelling/type/value-set form is a `form_change`.
-fn entries(
-    at: &Located,
-    binding: &Binding,
-    pieces: &[Piece],
-) -> Result<(Vec<OrderEntry>, Option<Issue>), Error> {
+fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry>, Option<Issue>) {
     let scope = at.scope;
     let mut merged: Vec<&Piece> = Vec::new();
     let mut spans: Vec<Interval> = Vec::new();
@@ -565,8 +653,8 @@ fn entries(
         let joins = merged.last().is_some_and(|last| {
             last.serving == p.serving
                 && next_iso_day(&spans[spans.len() - 1].1) == p.days.0
-                && (&last.spelling, &last.dtype, last.valueset)
-                    == (&p.spelling, &p.dtype, p.valueset)
+                && (&last.spelling, &last.dtype, &last.valueset)
+                    == (&p.spelling, &p.dtype, &p.valueset)
                 && last.class_version == p.class_version
         });
         if joins {
@@ -581,8 +669,8 @@ fn entries(
     let mut boundaries = Vec::new();
     let mut spellings = vec![merged[0].spelling.as_str()];
     for (pair, days) in merged.windows(2).zip(&spans[1..]) {
-        if (&pair[0].spelling, &pair[0].dtype, pair[0].valueset)
-            != (&pair[1].spelling, &pair[1].dtype, pair[1].valueset)
+        if (&pair[0].spelling, &pair[0].dtype, &pair[0].valueset)
+            != (&pair[1].spelling, &pair[1].dtype, &pair[1].valueset)
         {
             boundaries.push(days.0.clone());
             spellings.push(&pair[1].spelling);
@@ -618,33 +706,14 @@ fn entries(
             spelling: p.spelling.clone(),
             dtype: p.dtype.clone(),
             length: p.length,
-            value_set: p.valueset.map(|id| value_set(scope.conn, id)).transpose()?,
-            classification: p
-                .class_version
-                .map(|id| {
-                    scope.conn.query_row(
-                        "SELECT pid FROM class_version WHERE id = ?",
-                        [id],
-                        |row| row.get(0),
-                    )
-                })
-                .transpose()?,
+            value_set: p
+                .valueset
+                .clone()
+                .map(|(hash, n_items)| OrderValueSet { hash, n_items }),
+            classification: p.class_version.clone(),
         });
     }
-    Ok((entries, change))
-}
-
-fn value_set(conn: &Connection, id: i64) -> rusqlite::Result<OrderValueSet> {
-    conn.query_row(
-        "SELECT hash, n_items FROM valueset WHERE id = ?",
-        [id],
-        |row| {
-            Ok(OrderValueSet {
-                hash: row.get(0)?,
-                n_items: row.get(1)?,
-            })
-        },
-    )
+    (entries, change)
 }
 
 /// The result periods of inclusive ISO intervals.
