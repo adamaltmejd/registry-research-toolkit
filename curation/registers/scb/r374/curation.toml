@@ -2247,19 +2247,19 @@ evidence = "#2102 same-label cluster 'Kurs genom arbetsgivare' (4 variables): ju
 [[statement]]
 kind = "set"
 subject = "var:b2a"
-fields = { "label" = "Annan utbildning, instruktioner på arbetsplatsen (andel anställda)" }
+fields = { "label" = "Annan utbildning, instruktioner på arbetsplatsen (deltagande anställda)" }
 evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; Opdefs: five forms of other training (a-e), each as a share-of-employees category and a yes/no flag."
 
 [[statement]]
 kind = "set"
 subject = "var:b2b"
-fields = { "label" = "Annan utbildning, arbetsrotation, utbyten eller studiebesök (andel anställda)" }
+fields = { "label" = "Annan utbildning, arbetsrotation, utbyten eller studiebesök (deltagande anställda)" }
 evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; Opdefs: five forms of other training (a-e), each as a share-of-employees category and a yes/no flag."
 
 [[statement]]
 kind = "set"
 subject = "var:b2c"
-fields = { "label" = "Annan utbildning, konferenser, workshops, föreläsningar eller företagsmässor (andel anställda)" }
+fields = { "label" = "Annan utbildning, konferenser, workshops, föreläsningar eller företagsmässor (deltagande anställda)" }
 evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; Opdefs: five forms of other training (a-e), each as a share-of-employees category and a yes/no flag."
 
 [[statement]]
@@ -2271,19 +2271,19 @@ evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:b2d"
-fields = { "label" = "Annan utbildning, studie- eller kvalitetscirklar (andel anställda)" }
+fields = { "label" = "Annan utbildning, studie- eller kvalitetscirklar (deltagande anställda)" }
 evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; Opdefs: five forms of other training (a-e), each as a share-of-employees category and a yes/no flag."
 
 [[statement]]
 kind = "set"
 subject = "var:b2e"
-fields = { "label" = "Annan utbildning, självstudier (andel anställda)" }
+fields = { "label" = "Annan utbildning, självstudier (deltagande anställda)" }
 evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged different meaning, high confidence; Opdefs: five forms of other training (a-e), each as a share-of-employees category and a yes/no flag."
 
 [[statement]]
 kind = "set"
 subject = "var:b3a"
-fields = { "label" = "Kurs genom arbetsgivare (kurs året före referensåret)" }
+fields = { "label" = "Kurs genom arbetsgivare (kurs anordnad av företaget)" }
 evidence = "#2102 same-label cluster 'Kurs genom arbetsgivare' (4 variables): judged different meaning, medium confidence; Four different survey items; opdefs for B3a and B4a are internally inconsistent, so their qualifiers follow the distinguishing 'året före referensåret' reading."
 
 [[statement]]
@@ -2337,7 +2337,7 @@ evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (8 variables)
 [[statement]]
 kind = "set"
 subject = "var:c6flag"
-fields = { "label" = "Typ av utbildningsanordnare (förekomst av extern utbildningsanordnare)" }
+fields = { "label" = "Typ av utbildningsanordnare (C6flag)" }
 evidence = "#2102 same-label cluster 'Typ av utbildningsanordnare' (8 variables): judged different meaning, high confidence; Opdefs: seven provider types (C6a-g) and an overall C6flag on whether any external provider was used."
 
 [[statement]]
@@ -2529,49 +2529,49 @@ evidence = "#2102 same-label cluster 'Kompetensbehov' (4 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-allmanna-it-kunskaper"
-fields = { "label" = "Kompetensområden variant (kursutbud: allmänna IT-kunskaper)" }
+fields = { "label" = "Kompetensområden variant (allmänna IT-kunskaper)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-foretagsadministration"
-fields = { "label" = "Kompetensområden variant (kursutbud: företagsadministration)" }
+fields = { "label" = "Kompetensområden variant (företagsadministration)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-kundhantering"
-fields = { "label" = "Kompetensområden variant (kursutbud: kundhantering)" }
+fields = { "label" = "Kompetensområden variant (kundhantering)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-ledarkompetens"
-fields = { "label" = "Kompetensområden variant (kursutbud: ledarkompetens)" }
+fields = { "label" = "Kompetensområden variant (ledarkompetens)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-problemlosning"
-fields = { "label" = "Kompetensområden variant (kursutbud: problemlösning)" }
+fields = { "label" = "Kompetensområden variant (problemlösning)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-sprak"
-fields = { "label" = "Kompetensområden variant (kursutbud: språk)" }
+fields = { "label" = "Kompetensområden variant (språk)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-teamwork"
-fields = { "label" = "Kompetensområden variant (kursutbud: teamwork)" }
+fields = { "label" = "Kompetensområden variant (teamwork)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:kompetensomrade-kursutbud-yrkesanpassad-it"
-fields = { "label" = "Kompetensområden variant (kursutbud: yrkesfärdigheter inom IT)" }
+fields = { "label" = "Kompetensområden variant (yrkesfärdigheter inom IT)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
@@ -2673,7 +2673,7 @@ evidence = "#2102 same-label cluster 'Personalrepresentant' (8 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:personalutbildning-annat-kompetensomrade"
-fields = { "label" = "Kompetensområden variant (kursutbud: annat kompetensområde)" }
+fields = { "label" = "Kompetensområden variant (annat kompetensområde)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
@@ -2691,13 +2691,13 @@ evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:personalutbildning-matematik-laskunskaper"
-fields = { "label" = "Kompetensområden variant (kursutbud: räkne- och läskunskaper)" }
+fields = { "label" = "Kompetensområden variant (räkne- och läskunskaper)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
 kind = "set"
 subject = "var:personalutbildning-muntlig-skriftlig-kommunikation"
-fields = { "label" = "Kompetensområden variant (kursutbud: muntlig eller skriftlig kommunikation)" }
+fields = { "label" = "Kompetensområden variant (muntlig eller skriftlig kommunikation)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]
@@ -2715,7 +2715,7 @@ evidence = "#2102 same-label cluster 'Annan utbildning' (10 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:personalutbildning-yrkesanpassad-teknisk-praktisk-kompetens"
-fields = { "label" = "Kompetensområden variant (kursutbud: yrkesanpassad, teknisk eller praktisk kompetens)" }
+fields = { "label" = "Kompetensområden variant (yrkesanpassad, teknisk eller praktisk kompetens)" }
 evidence = "#2102 same-label cluster 'Kompetensområden variant' (13 variables): judged different meaning, high confidence; Opdefs: one flag per skill area in the course supply (C5a-l) plus the overall C5flag; separate from the A12 block of important areas."
 
 [[statement]]

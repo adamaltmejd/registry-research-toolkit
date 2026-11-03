@@ -1814,7 +1814,7 @@ evidence = "#2102 same-label cluster 'Glesbygd' (2 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:om-eller-tillbyggnar"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad (hyreshus, ArTillb)" }
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (ArTillb)" }
 evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillbSma has opdef 'Avser småhus'; ArTillb and ArTillbHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
@@ -1850,7 +1850,7 @@ evidence = "#2102 same-label cluster 'Taxeringsvärde för betesmark' (2 variabl
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-byggnader-vardebygg"
-fields = { "label" = "Taxeringsvärde för byggnader (annan fastighet än lantbruk)" }
+fields = { "label" = "Taxeringsvärde för byggnader (VardeBygg)" }
 evidence = "#2102 same-label cluster 'Taxeringsvärde för byggnader' (2 variables): judged different meaning, high confidence; Opdefs: VardeBygg 'Avser annan fastighet än lantbruk', VardeByggLant 'Avser lantbruksfastigheter'."
 
 [[statement]]

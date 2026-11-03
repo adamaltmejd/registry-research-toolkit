@@ -4992,19 +4992,31 @@ evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:familjestallning"
-fields = { "label" = "Familjeställning (äldre kodning)" }
+fields = { "label" = "Familjeställning (FamStall)" }
 evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; FamStall and FamStall_BarnReg overlap in 2014-2015 and use different code lists (11/12/13 vs 110/120/130)."
 
 [[statement]]
 kind = "set"
 subject = "var:familjestallning-famstall-barnreg"
-fields = { "label" = "Familjeställning (barnregistrets kodning)" }
+fields = { "label" = "Familjeställning (FamStall_BarnReg)" }
 evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, medium confidence; FamStall and FamStall_BarnReg overlap in 2014-2015 and use different code lists (11/12/13 vs 110/120/130)."
 
 [[statement]]
 kind = "set"
+subject = "var:familjetyp"
+fields = { "label" = "Familjetyp (FamTyp)" }
+evidence = "#2102 same-label cluster 'Familjetyp' (3 variables): judged different meaning, medium confidence; FamTyp and Famtyp_BarnReg share a code list and follow each other (one series); Famtyp_Samens is a coarse lone parent/cohabiting grouping."
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp-barnreg"
+fields = { "label" = "Familjetyp (Famtyp_BarnReg)" }
+evidence = "#2102 same-label cluster 'Familjetyp' (3 variables): judged different meaning, medium confidence; FamTyp and Famtyp_BarnReg share a code list and follow each other (one series); Famtyp_Samens is a coarse lone parent/cohabiting grouping."
+
+[[statement]]
+kind = "set"
 subject = "var:famtyp-foresep"
-fields = { "label" = "Familjetyp, variant (boende med föräldrar före separation)" }
+fields = { "label" = "Familjetyp, variant (boende med ursprungliga eller andra föräldrar)" }
 evidence = "#2102 same-label cluster 'Familjetyp, variant' (3 variables): judged different meaning, medium confidence; FamTyp2 is the detailed variant, Famtyp2_grupperad its coarse grouping, Famtyp_ForeSep the living arrangement with parents before separation."
 
 [[statement]]

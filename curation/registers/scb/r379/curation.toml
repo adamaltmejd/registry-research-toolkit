@@ -873,7 +873,7 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:chef"
-fields = { "label" = "Typ av tjänst (förskolechef)" }
+fields = { "label" = "Typ av tjänst (chef)" }
 evidence = "#2102 same-label cluster 'Typ av tjänst' (2 variables): judged different meaning, high confidence; Opdefs: preschool manager flag versus resource/support staff flag."
 
 [[statement]]
@@ -897,7 +897,7 @@ evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "label" = "Kommun (kommungrupp, SKL 2017)" }
+fields = { "label" = "Kommun (kommungrupp)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: SKL municipality group 2017 versus municipality code of the activity."
 
 [[statement]]

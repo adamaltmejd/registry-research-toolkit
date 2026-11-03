@@ -5692,7 +5692,7 @@ evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:hushallstyp"
-fields = { "label" = "Hushållstyp (bostadshushåll eller kollektivt hushåll)" }
+fields = { "label" = "Hushållstyp (HhTyp)" }
 evidence = "#2102 same-label cluster 'Hushållstyp' (8 variables): judged different meaning, high confidence; Eight different household typologies; opdefs and value sets describe each (HhTyp: bostads-/kollektivhushåll; HhTyp1: barn 0-15; HhTyp2: referenspersonens ålder; HhTyp3: 16-24 år; HhTyp4: äldre; HhTyp5: födda utomlands; HhTyp6: barn 0-17; HhTyp7: BHU)."
 
 [[statement]]
@@ -5794,7 +5794,7 @@ evidence = "#2102 same-label cluster 'Sammanräknad nettoinkomst FoB' (2 variabl
 [[statement]]
 kind = "set"
 subject = "var:trangbo"
-fields = { "label" = "Trångboddhet (norm 1)" }
+fields = { "label" = "Trångboddhet (norm 1, TrangBo1)" }
 evidence = "#2102 same-label cluster 'Trångboddhet' (5 variables): judged different meaning, high confidence; Opdefs define norms 1 to 4 differently; TrangBo (1960-61) and TrangBo1 (1965-76) both carry the norm 1 definition and are disjoint in time, so they share a label."
 
 [[statement]]

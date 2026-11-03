@@ -5177,8 +5177,20 @@ evidence = "#2102 same-label cluster 'Trädgård (areal i ha)' (3 variables): ju
 
 [[statement]]
 kind = "set"
+subject = "var:konservarter"
+fields = { "label" = "Konservärter (areal i ha, Konservarter)" }
+evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
 subject = "var:konservarter-i-konser"
 fields = { "label" = "Konservärter (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-konsarter"
+fields = { "label" = "Konservärter (areal i ha, konsarter)" }
 evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
 
 [[statement]]
@@ -5201,8 +5213,20 @@ evidence = "#2102 same-label cluster 'Rågvete (areal i ha)' (2 variables): judg
 
 [[statement]]
 kind = "set"
+subject = "var:regionkod"
+fields = { "label" = "Regionkod (region)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
 subject = "var:regionkod-ragvete"
 fields = { "label" = "Regionkod (ragvete)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod"
+fields = { "label" = "Regionkod (Regkod)" }
 evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
 
 [[statement]]

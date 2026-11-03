@@ -7706,7 +7706,7 @@ evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:antal-inkomna-folkinitiativ-kommun-mandatperiod"
-fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr12a_text)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
@@ -7718,7 +7718,7 @@ evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 va
 [[statement]]
 kind = "set"
 subject = "var:antal-inkomna-folkinitiativ-regioner-2020"
-fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr9a_text)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
@@ -8048,19 +8048,19 @@ evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 va
 [[statement]]
 kind = "set"
 subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2020"
-fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr9a)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
 kind = "set"
 subject = "var:folkinitiativ-folkomrostning-fr10a"
-fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr10a)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
 kind = "set"
 subject = "var:folkinitiativ-folkomrostning-fr10a-text"
-fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr10a_text)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
@@ -8089,8 +8089,20 @@ evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variabl
 
 [[statement]]
 kind = "set"
+subject = "var:folkomrostning-forekomst-fr8"
+fields = { "label" = "Förekomst av folkomröstning (Fr8)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-fr9"
+fields = { "label" = "Förekomst av folkomröstning (Fr9)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
+
+[[statement]]
+kind = "set"
 subject = "var:folkomrostning-forekomst-text"
-fields = { "label" = "Förekomst av folkomröstning (antal)" }
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr11_text)" }
 evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
 
 [[statement]]
@@ -8131,9 +8143,21 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 
 [[statement]]
 kind = "set"
+subject = "var:fr10"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr10)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
 subject = "var:fr10b"
 fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
+
+[[statement]]
+kind = "set"
+subject = "var:fr11"
+fields = { "label" = "Förekomst av folkomröstning (Fr11)" }
+evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
 
 [[statement]]
 kind = "set"
@@ -8144,7 +8168,7 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 [[statement]]
 kind = "set"
 subject = "var:fr12a"
-fields = { "label" = "Folkinitiativ till folkomröstning (förekomst)" }
+fields = { "label" = "Folkinitiativ till folkomröstning (förekomst, Fr12a)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
 
 [[statement]]
@@ -8240,13 +8264,13 @@ evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fr24"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr24_1)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:fr24-2"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr24_2)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8258,7 +8282,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr24-3"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr24_3)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8270,7 +8294,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr24-4"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr24_4)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8282,7 +8306,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr24-5"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr24_5)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8300,7 +8324,7 @@ evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering ti
 [[statement]]
 kind = "set"
 subject = "var:fr26-2"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr26_2)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8318,7 +8342,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr26-3"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr26_3)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8330,7 +8354,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr26-4"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr26_4)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8342,7 +8366,7 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 [[statement]]
 kind = "set"
 subject = "var:fr26-5"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr26_5)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8618,7 +8642,7 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 [[statement]]
 kind = "set"
 subject = "var:fr45-5"
-fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen)" }
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr45_5)" }
 evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
 
 [[statement]]
@@ -8648,7 +8672,7 @@ evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variabl
 [[statement]]
 kind = "set"
 subject = "var:fr8-text"
-fields = { "label" = "Förekomst av folkomröstning (antal)" }
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr8_text)" }
 evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
 
 [[statement]]
@@ -8660,7 +8684,7 @@ evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 va
 [[statement]]
 kind = "set"
 subject = "var:fr9-text"
-fields = { "label" = "Förekomst av folkomröstning (antal)" }
+fields = { "label" = "Förekomst av folkomröstning (antal, Fr9_text)" }
 evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
 
 [[statement]]
@@ -8756,7 +8780,7 @@ evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 v
 [[statement]]
 kind = "set"
 subject = "var:interreligiosa-rad-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr23_6)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -8924,7 +8948,7 @@ evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 v
 [[statement]]
 kind = "set"
 subject = "var:mbfant"
-fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
+fields = { "label" = "Inkomna medborgarförslag (MBFANT)" }
 evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
@@ -8936,7 +8960,7 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 [[statement]]
 kind = "set"
 subject = "var:mbfbif"
-fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
+fields = { "label" = "Inkomna medborgarförslag (MBFBIF)" }
 evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
@@ -8960,7 +8984,7 @@ evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:medborgardialog-strategi"
-fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner och regioner 2020–2025)" }
+fields = { "label" = "Förekomst av beslut om medborgardialoger (kommuner 2020, regioner 2024)" }
 evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger' (6 variables): judged different meaning, medium confidence; Codes 1 and 2 swap meaning (4+ times vs 1-3 times) between the 2012-2016 and 2020+ surveys, and question wording and respondent group (kommuner, regioner) differ per column."
 
 [[statement]]
@@ -9176,7 +9200,7 @@ evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (
 [[statement]]
 kind = "set"
 subject = "var:mojlighet-att-lamna-medborgarforslag-medbforslag"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2007)" }
+fields = { "label" = "Möjlighet att lämna medborgarförslag (när möjligheten infördes)" }
 evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
 
 [[statement]]
@@ -9199,6 +9223,18 @@ evidence = "#2102 same-label cluster 'Landstinget/kommunen har ytterligare vård
 
 [[statement]]
 kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr7"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr7)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
+subject = "var:pol-sekreterare-forekomst-fr8"
+fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr8)" }
+evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
+
+[[statement]]
+kind = "set"
 subject = "var:politisk-majoritet-annat-parti"
 fields = { "label" = "Politisk majoritet - annat parti (fritext)" }
 evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
@@ -9212,25 +9248,31 @@ evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekrete
 [[statement]]
 kind = "set"
 subject = "var:privlakant"
-fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal läkare)" }
+fields = { "label" = "Landstinget/kommunen har vårdavtal med läkare i privat regi (antal)" }
 evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med läkare i privat regi' (4 variables): judged different meaning, high confidence; PRIVLAK and AVTLAKVARDERS are the Ja/Nej flags (adjacent periods); PRIVLAKANT counts physicians (vårdgivare) while AVTLAKVARDERSANT counts care agreements, per description."
 
 [[statement]]
 kind = "set"
 subject = "var:privsjukhant"
-fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal sjukhus)" }
+fields = { "label" = "Landstinget/kommunen har vårdavtal med sjukhus i privat regi (antal)" }
 evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med sjukhus i privat regi' (4 variables): judged different meaning, medium confidence; PRIVSJUKH and VARDAVTALPRIV are the Ja/Nej flags (adjacent periods); the count columns hold hospitals in 2003-09 and care agreements in 2012 per descriptions (the 2003-09 opdef also says vårdavtal)."
 
 [[statement]]
 kind = "set"
 subject = "var:privvardcant"
-fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal vårdcentraler)" }
+fields = { "label" = "Landstinget/kommunen har vårdavtal med vårdcentral i privat regi (antal)" }
 evidence = "#2102 same-label cluster 'Landstinget/kommunen har vårdavtal med vårdcentral i privat regi' (6 variables): judged different meaning, high confidence; A Ja/Nej flag and a count for all private health centres (2003-09), and in 2012 a flag and a count each for companies (bolagiserade) and non-profit (ideella) providers per opdef."
 
 [[statement]]
 kind = "set"
+subject = "var:profnamnd"
+fields = { "label" = "Professionella nämnder/styrelser (PROFNAMND)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
 subject = "var:profnamndant"
-fields = { "label" = "Professionella nämnder/styrelser (antal)" }
+fields = { "label" = "Professionella nämnder/styrelser (PROFNAMNDANT)" }
 evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
 
 [[statement]]
@@ -9242,19 +9284,19 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-aldre-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr23_2)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:rad-annan-grupp-2019-2023"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr24_7)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:rad-annan-grupp-2023"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr26_7)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9266,13 +9308,13 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-annan-grupp-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (annan grupp, Fr23_7)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:rad-fokusgrupper-fr26"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr26_1)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9284,19 +9326,19 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-funktionsnedsattning-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med funktionsnedsättning, Fr23_4)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:rad-interreligiosa-2019-2023"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr24_6)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
 kind = "set"
 subject = "var:rad-interreligiosa-2023"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr26_6)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9344,7 +9386,7 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-nationella-minoriteter-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (nationella minoriteter, Fr23_3)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9356,7 +9398,7 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-ungdomar-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (ungdomar, Fr23_1)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9368,7 +9410,7 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 [[statement]]
 kind = "set"
 subject = "var:rad-utlandsk-bakgrund-regioner-2019"
-fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund)" }
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr23_5)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
 
 [[statement]]
@@ -9434,7 +9476,7 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 [[statement]]
 kind = "set"
 subject = "var:region-webb-folja-hantering-inlamnade-medborgarforslag"
-fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen)" }
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr42_5)" }
 evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
 
 [[statement]]
@@ -9458,7 +9500,7 @@ evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/maj
 [[statement]]
 kind = "set"
 subject = "var:revisionens-ordforande-fran-minoriet-majoritet-fr33"
-fields = { "label" = "Revisionens ordförande från minoriet/majoritet (ur styret, oppositionen eller annat)" }
+fields = { "label" = "Revisionens ordförande från minoriet/majoritet (Fr33)" }
 evidence = "#2102 same-label cluster 'Revisionens ordförande från minoriet/majoritet' (6 variables): judged different meaning, high confidence; Up to 2020-21 the code list is majority or minority; Fr33 and Fr35 use styret, oppositionen or annat."
 
 [[statement]]
@@ -9511,6 +9553,12 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 
 [[statement]]
 kind = "set"
+subject = "var:styrpro"
+fields = { "label" = "Professionella nämnder/styrelser (STYRPRO)" }
+evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
+
+[[statement]]
+kind = "set"
 subject = "var:styrproant"
 fields = { "label" = "Professionella nämnder/styrelser (antal)" }
 evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
@@ -9554,7 +9602,7 @@ evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 vari
 [[statement]]
 kind = "set"
 subject = "var:tv-radio-eller-webbsandningar-radiotv"
-fields = { "label" = "TV-, radio- eller webbsändningar (hur ofta)" }
+fields = { "label" = "TV-, radio- eller webbsändningar (förekomst)" }
 evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
 
 [[statement]]

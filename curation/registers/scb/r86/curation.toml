@@ -11467,7 +11467,7 @@ evidence = "#2102 same-label cluster 'Arbetsinkomst' (11 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:arbetsinkomst-2001"
-fields = { "label" = "Arbetsinkomst (HINK, 2001)" }
+fields = { "label" = "Arbetsinkomst (2001)" }
 evidence = "#2102 same-label cluster 'Arbetsinkomst' (11 variables): judged different meaning, high confidence; Opdefs: CARB1 is the sampled person, CARB2-CARB8 persons 2-8; scarb00, scarb01 and scarb02 are year-specific (2000, 2001, 2002)."
 
 [[statement]]

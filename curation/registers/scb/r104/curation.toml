@@ -1198,7 +1198,7 @@ evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different
 [[statement]]
 kind = "set"
 subject = "var:skolenhetskod-2"
-fields = { "label" = "Skolenhet (aktuell skolenhet)" }
+fields = { "label" = "Skolenhet (aktuell skolenhet, Skolenhkod)" }
 evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Opdefs: NySkolEnhKod is the school unit the pupil moved to, Skolenhkod the current spring-term school unit; Skolenhetskod (2013, no opdef) precedes Skolenhkod (2014-) as the current unit."
 
 [[statement]]

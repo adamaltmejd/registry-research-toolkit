@@ -2598,25 +2598,25 @@ evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id"
-fields = { "label" = "Kommunalförbund (kod)" }
+fields = { "label" = "Kommunalförbund (kod, GyFId)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id-2"
-fields = { "label" = "Kommunalförbund (kod)" }
+fields = { "label" = "Kommunalförbund (kod, KFID)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn"
-fields = { "label" = "Kommunalförbund (namn)" }
+fields = { "label" = "Kommunalförbund (namn, GyFNamn)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn-2"
-fields = { "label" = "Kommunalförbund (namn)" }
+fields = { "label" = "Kommunalförbund (namn, KFNAMN)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]

@@ -1452,8 +1452,20 @@ evidence = "#2102 same-label cluster 'Baspris' (2 variables): judged different m
 
 [[statement]]
 kind = "set"
+subject = "var:berakningsperiod-period"
+fields = { "label" = "Beräkningsperiod (Period)" }
+evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
+
+[[statement]]
+kind = "set"
 subject = "var:berakningsperiod-periodid"
 fields = { "label" = "Beräkningsperiod (period-id)" }
+evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod-undersokningskvartal"
+fields = { "label" = "Beräkningsperiod (UndersokningsKvartal)" }
 evidence = "#2102 same-label cluster 'Beräkningsperiod' (3 variables): judged different meaning, medium confidence; UndersokningsKvartal and Period are the same variable renamed over time (2007-2012, 2012-2015); PeriodId is a concurrent id column in the same table."
 
 [[statement]]
@@ -1567,7 +1579,7 @@ evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' 
 [[statement]]
 kind = "set"
 subject = "var:kvalitetsjusteringsmetod"
-fields = { "label" = "Kvalitetsjusteringsmetod (konsumentprisindex och tjänsteprisindex)" }
+fields = { "label" = "Kvalitetsjusteringsmetod (konsumentprisindex)" }
 evidence = "#2102 same-label cluster 'Kvalitetsjusteringsmetod' (2 variables): judged different meaning, medium confidence; Kval_kod (producer price index, 2001-2013) and KvalJustMetod (consumer and service price index) have different code lists and different opdefs."
 
 [[statement]]
@@ -1585,7 +1597,7 @@ evidence = "#2102 same-label cluster 'Produktgrupp sjusiffernivå TPI' (2 variab
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp"
-fields = { "label" = "Produktgrupp (kod)" }
+fields = { "label" = "Produktgrupp (kod, varukod)" }
 evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
 
 [[statement]]
@@ -1609,13 +1621,13 @@ evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-pg"
-fields = { "label" = "Produktgrupp (kod)" }
+fields = { "label" = "Produktgrupp (kod, pg)" }
 evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
 
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-prodgrpkod"
-fields = { "label" = "Produktgrupp (kod)" }
+fields = { "label" = "Produktgrupp (kod, ProdGrpKod)" }
 evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged different meaning, medium confidence; varukod, pg and ProdGrpKod are the code column under successive names with the same value set; BeskrivnSV, Namn and NamnSV are separate name/description columns in ppi."
 
 [[statement]]

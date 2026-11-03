@@ -3101,7 +3101,7 @@ evidence = "#2102 same-label cluster 'Folkhögskola' (2 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:grundlbeh"
-fields = { "label" = "Grundläggande behörighet till högskolestudier (uppnådd under terminen)" }
+fields = { "label" = "Grundläggande behörighet till högskolestudier (Grundlbeh)" }
 evidence = "#2102 same-label cluster 'Grundläggande behörighet till högskolestudier' (3 variables): judged different meaning, medium confidence; Grundlbeh and Beh are concurrent flags in deltagarregister (Beh: after gymnasieutbildning), AntGrund is a count of course participants in the group tables."
 
 [[statement]]

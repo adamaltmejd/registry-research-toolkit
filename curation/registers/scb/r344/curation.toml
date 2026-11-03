@@ -1700,49 +1700,49 @@ evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunsk
 [[statement]]
 kind = "set"
 subject = "var:beh-ehs"
-fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram, Beh_EHS)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:beh-est"
-fields = { "label" = "Behörighet till gymnasieskolan (estetiska program)" }
+fields = { "label" = "Behörighet till gymnasieskolan (estetiska program, Beh_EST)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:beh-nt"
-fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram, Beh_NT)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:beh-yrk"
-fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram, Beh_YRK)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-ehs"
-fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram, Beht_EHS)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-est"
-fields = { "label" = "Behörighet till gymnasieskolan (estetiska program)" }
+fields = { "label" = "Behörighet till gymnasieskolan (estetiska program, Beht_EST)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-nt"
-fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram, Beht_NT)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-yrk"
-fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram, Beht_YRK)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, medium confidence; Opdefs name the programme group each flag covers; Beht_X (2010-2012) and Beh_X (2012-2025) carry the same programme-group opdef and are consecutive, so they share a label."
 
 [[statement]]

@@ -4243,7 +4243,7 @@ evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 v
 [[statement]]
 kind = "set"
 subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
-fields = { "label" = "Identitetsnummer för värdeområdet (lokal, typkod 300- och 500-serien)" }
+fields = { "label" = "Identitetsnummer för värdeområdet (lokal)" }
 evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
 
 [[statement]]

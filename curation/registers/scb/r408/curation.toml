@@ -1918,7 +1918,7 @@ evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (4 variables)
 [[statement]]
 kind = "set"
 subject = "var:person-orgnr-anstalld"
-fields = { "label" = "Person-/organisationsnummer (arbetsgivare, enkla bolag enligt FDB)" }
+fields = { "label" = "Person-/organisationsnummer (arbetsgivare)" }
 evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (4 variables): judged different meaning, medium confidence; Opdefs: generic employer/payer number, employer number with enkla bolag replaced by the FDB number, employer number with enkla bolag as the representative's, and a frame variable without opdef."
 
 [[statement]]

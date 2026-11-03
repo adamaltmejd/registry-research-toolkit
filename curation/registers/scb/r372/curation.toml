@@ -1584,13 +1584,13 @@ evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:epost"
-fields = { "label" = "Elektronisk postadress (juridisk enhet)" }
+fields = { "label" = "Elektronisk postadress (enhetens egen)" }
 evidence = "#2102 same-label cluster 'Elektronisk postadress' (2 variables): judged different meaning, high confidence; Opdefs: Epost is the legal unit's address, HAEEpost applies to the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:faxnummer"
-fields = { "label" = "Faxnummer (juridisk enhet)" }
+fields = { "label" = "Faxnummer (enhetens egen)" }
 evidence = "#2102 same-label cluster 'Faxnummer' (2 variables): judged different meaning, high confidence; Opdefs and descriptions: Fax is the legal unit's number, HAEFax applies to the main workplace."
 
 [[statement]]
@@ -1764,5 +1764,5 @@ evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:tel"
-fields = { "label" = "Telefonnummer (juridisk enhet)" }
+fields = { "label" = "Telefonnummer (enhetens egen)" }
 evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAETel is the main workplace's number, Tel is the legal unit's number."

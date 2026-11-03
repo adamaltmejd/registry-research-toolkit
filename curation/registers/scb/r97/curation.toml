@@ -28378,13 +28378,13 @@ evidence = "#2102 same-label cluster 'Barnomsorg - Avgift påverkat' (2 variable
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-pensionarer"
-fields = { "label" = "Bostadstillägg till pensionärer (individ)" }
+fields = { "label" = "Bostadstillägg till pensionärer (individ, IBTPAP)" }
 evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; Opdefs: IBTPZ is summed over all household members; IBTP is the individual figure and IBTPAP continues it in consecutive periods."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-till-pensionarer-ibtp"
-fields = { "label" = "Bostadstillägg till pensionärer (individ)" }
+fields = { "label" = "Bostadstillägg till pensionärer (individ, IBTP)" }
 evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (3 variables): judged different meaning, medium confidence; Opdefs: IBTPZ is summed over all household members; IBTP is the individual figure and IBTPAP continues it in consecutive periods."
 
 [[statement]]
@@ -28690,7 +28690,7 @@ evidence = "#2102 same-label cluster 'Fastighetsbeteckning' (2 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:fastighetsskatt"
-fields = { "label" = "Fastighetsskatt (individ)" }
+fields = { "label" = "Fastighetsskatt (individ, SFAST)" }
 evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFASTBOZ is the household column in kosthushall; SFAST (1996-2008) and SFASTT (2008-2014) are consecutive individregister columns taken as the same variable."
 
 [[statement]]
@@ -28702,7 +28702,7 @@ evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:fastighetsskatt-sfastt"
-fields = { "label" = "Fastighetsskatt (individ)" }
+fields = { "label" = "Fastighetsskatt (individ, SFASTT)" }
 evidence = "#2102 same-label cluster 'Fastighetsskatt' (3 variables): judged different meaning, medium confidence; SFASTBOZ is the household column in kosthushall; SFAST (1996-2008) and SFASTT (2008-2014) are consecutive individregister columns taken as the same variable."
 
 [[statement]]
@@ -29584,7 +29584,7 @@ evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:kplkop"
-fields = { "label" = "Omkostnadsbelopp, lättnadsregler onoterade bolag (omräknat)" }
+fields = { "label" = "Omkostnadsbelopp, lättnadsregler onoterade bolag" }
 evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
 
 [[statement]]
@@ -29644,7 +29644,7 @@ evidence = "#2102 same-label cluster 'Procentandel av intäkt eller underskott f
 [[statement]]
 kind = "set"
 subject = "var:kskop"
-fields = { "label" = "Omkostnadsbelopp, avyttring av småhus (förekomst 1)" }
+fields = { "label" = "Omkostnadsbelopp, avyttring av fastighet (förekomst 1)" }
 evidence = "#2102 same-label cluster 'Omkostnadsbeloppet' (15 variables): judged different meaning, medium confidence; Fifteen concurrent columns for different asset types per their opdefs; KPFPRIS's opdef is Försäljningspris aktiefonder (misfiled under this label); KPLKOP and KPLANSK both concern skattefri utdelning/lättnadsregler but have different opdefs."
 
 [[statement]]
@@ -30322,7 +30322,7 @@ evidence = "#2102 same-label cluster 'Kod för stödområde A' (2 variables): ju
 [[statement]]
 kind = "set"
 subject = "var:stratum"
-fields = { "label" = "Stratum (urvalsdragningen)" }
+fields = { "label" = "Stratum (BSTRATV)" }
 evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdefs: BSTRATV is the stratum from the sample draw, WSTRAT2 the stratum in the urvalsram for adults (different code lists)."
 
 [[statement]]
@@ -30598,13 +30598,13 @@ evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:uppskovsbelopp-kontantvederlag-period-10592-10957"
-fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag" }
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag (KPUBK)" }
 evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:uppskovsbelopp-kontantvederlag-period-10957-11323"
-fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag" }
+fields = { "label" = "Uppskovsbelopp, andelsbyteslagen kontantvederlag (KPUBKB)" }
 evidence = "#2102 same-label cluster 'Uppskovsbelopp' (16 variables): judged different meaning, medium confidence; Sixteen columns for different deferral items per their opdefs (återföring, andelsbyteslagen reavinst/reaförlust, kontantvederlag, K4B/K4C, skattefri utdelning); KPUBK (1999-2000) and KPUBKB (2000-01) have the same opdef text in adjacent periods and share a label."
 
 [[statement]]

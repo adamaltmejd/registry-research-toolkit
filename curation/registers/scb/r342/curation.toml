@@ -1227,13 +1227,13 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:utl-bakg"
-fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige)" }
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige, UTL_BAKG)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
 
 [[statement]]
 kind = "set"
 subject = "var:utlbakgr"
-fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige)" }
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige, UtlBakGr)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
 
 [[statement]]

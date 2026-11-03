@@ -1327,7 +1327,7 @@ evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 var
 [[statement]]
 kind = "set"
 subject = "var:fodelselandvdnamn"
-fields = { "label" = "Födelseland, världsdel/landgrupp (klartext)" }
+fields = { "label" = "Födelseland, världsdel/landgrupp (klartext, fodelselandVDnamn)" }
 evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): judged different meaning, medium confidence; Opdefs: fodelselandVD is the code, fodelselandVDnamn the plain-text name; FodelselandGrp (2019-) has no value set and the same derivation text, read as the later text column."
 
 [[statement]]
@@ -1381,13 +1381,13 @@ evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (3 v
 [[statement]]
 kind = "set"
 subject = "var:medborgarland-varldsdel-namn"
-fields = { "label" = "Medborgarland, världsdel/landsgrupp (klartext)" }
+fields = { "label" = "Medborgarland, världsdel/landsgrupp (klartext, medborgarlandVDnamn)" }
 evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (3 variables): judged different meaning, high confidence; Opdefs: medborgarlandVD is the code, medborgarlandVDnamn and MedblandGrp (2019-) the plain-text name."
 
 [[statement]]
 kind = "set"
 subject = "var:valdistrikt"
-fields = { "label" = "Valdistrikt (åttasiffrig kod med län och kommun)" }
+fields = { "label" = "Valdistrikt (llkkdddd)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, medium confidence; valdistrikt is a four-digit code unique with municipality code, llkkdddd an eight-digit code with county and municipality, valdistnamn the name."
 
 [[statement]]

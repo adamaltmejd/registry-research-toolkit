@@ -13509,7 +13509,7 @@ evidence = "#2102 same-label cluster 'Räkenskapsårets början' (3 variables): 
 [[statement]]
 kind = "set"
 subject = "var:rakenskapsarets-slut"
-fields = { "label" = "Räkenskapsårets slut (V0012, N1/N2/N3A/N4)" }
+fields = { "label" = "Räkenskapsårets slut (V0012)" }
 evidence = "#2102 same-label cluster 'Räkenskapsårets slut' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N1/N2/N3A/N4, INK3 and N3B/NE/NEA."
 
 [[statement]]

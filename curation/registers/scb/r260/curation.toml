@@ -3384,37 +3384,37 @@ evidence = "#2102 same-label cluster 'Studieväg i gymnasieskolan' (12 variables
 [[statement]]
 kind = "set"
 subject = "var:grupp"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 1:a hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 1:a hand, GRUPP1)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:grupp2"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 2:a hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 2:a hand, GRUPP2)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:grupp3"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 3:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 3:e hand, GRUPP3)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:grupp4"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 4:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 4:e hand, GRUPP4)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:grupp5"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 5:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 5:e hand, GRUPP5)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:grupp6"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 6:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 6:e hand, GRUPP6)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
@@ -3624,37 +3624,37 @@ evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 1:a hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 1:a hand, SGRUPP1)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp-gymnasieprogram-val-2"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 2:a hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 2:a hand, SGRUPP2)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp-gymnasieprogram-val-3"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 3:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 3:e hand, SGRUPP3)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp-gymnasieprogram-val-4"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 4:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 4:e hand, SGRUPP4)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp-gymnasieprogram-val-5"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 5:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 5:e hand, SGRUPP5)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]
 kind = "set"
 subject = "var:sokgrupp-gymnasieprogram-val-6"
-fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 6:e hand)" }
+fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 6:e hand, SGRUPP6)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
 
 [[statement]]

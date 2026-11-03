@@ -1104,25 +1104,25 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:ateranskhandelsvaror"
-fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde)" }
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde, AteranskHandelsvaror)" }
 evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
 
 [[statement]]
 kind = "set"
 subject = "var:ateranskins"
-fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde)" }
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde, AteranskINS)" }
 evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
 
 [[statement]]
 kind = "set"
 subject = "var:fft0-ater"
-fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde)" }
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde, FFT0_Ater)" }
 evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
 
 [[statement]]
 kind = "set"
 subject = "var:ins0-ater"
-fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde)" }
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde, INS0_Ater)" }
 evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
 
 [[statement]]

@@ -2491,13 +2491,13 @@ evidence = "#2102 same-label cluster 'Födelseland' (2 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:fodelseland-gruppering-yh"
-fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp, 5 grupper)" }
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp, FodelseLand_gruppering_YH)" }
 evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Gruppering_YH och gruppering har samma fem landgrupper (olika tabeller, samma variabel); Varldsdel och Varldsdel_Flergen är separata samtidiga kolumner utan kodlista."
 
 [[statement]]
 kind = "set"
 subject = "var:fodelseland-varldsdel"
-fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp, 5 grupper)" }
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp, FodelseLand_gruppering)" }
 evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (4 variables): judged different meaning, medium confidence; Gruppering_YH och gruppering har samma fem landgrupper (olika tabeller, samma variabel); Varldsdel och Varldsdel_Flergen är separata samtidiga kolumner utan kodlista."
 
 [[statement]]
@@ -2695,73 +2695,73 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-2"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_OLD)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov-2014"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov_2014)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov-2015"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov_2015)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov-2016"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov_2016)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov-2017"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov_2017)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-grov-2018"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning, 4 nivåer, SUN2000Niva_Grov_2018)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-2014"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_Old_2014)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-2015"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_Old_2015)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-2016"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_Old_2016)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-2017"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_Old_2017)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-2018"
-fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer, SUN2000Niva_Old_2018)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged different meaning, medium confidence; Olika indelningar: SUN 2000 och SUN 2020 (detaljerad, 7 nivåer, grov 4 nivåer, 1-siffernivå), en egen grov indelning med 3 nivåer, samt klartextkolumner; årssuffixade kolumner i sökande är samma variabel över tid."
 
 [[statement]]
@@ -2917,7 +2917,7 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå' (21 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:utlsvbakg"
-fields = { "label" = "Utländsk/svensk bakgrund (detaljerad)" }
+fields = { "label" = "Utländsk/svensk bakgrund (detaljerad, UtlSvBakG)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; UtlSvBakG_YH och UtlSvBakG har samma detaljerade koder och opdef (samma variabel i olika tabeller); UtlSvBakG_grov är en grov indelning; Svensk_Utlandsk_yh saknar källtext."
 
 [[statement]]
@@ -2929,5 +2929,5 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): 
 [[statement]]
 kind = "set"
 subject = "var:utlsvbakg-yh"
-fields = { "label" = "Utländsk/svensk bakgrund (detaljerad)" }
+fields = { "label" = "Utländsk/svensk bakgrund (detaljerad, UtlSvBakG_YH)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; UtlSvBakG_YH och UtlSvBakG har samma detaljerade koder och opdef (samma variabel i olika tabeller); UtlSvBakG_grov är en grov indelning; Svensk_Utlandsk_yh saknar källtext."

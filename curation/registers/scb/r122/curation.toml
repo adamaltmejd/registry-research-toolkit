@@ -17827,6 +17827,18 @@ evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsyss
 
 [[statement]]
 kind = "set"
+subject = "var:huarbhem-frekvens"
+fields = { "label" = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEMANT)" }
+evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsysslan, frekvens' (3 variables): judged different meaning, low confidence; HUARBHEMANT and HUARBHEMMAANT are a rename (2008 overlap); HUARBHEM runs concurrently with HUARBHEMANT and nothing states how it differs, so the raw column code qualifies."
+
+[[statement]]
+kind = "set"
+subject = "var:huarbhemmaant"
+fields = { "label" = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEMMAANT)" }
+evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsysslan, frekvens' (3 variables): judged different meaning, low confidence; HUARBHEMANT and HUARBHEMMAANT are a rename (2008 overlap); HUARBHEM runs concurrently with HUARBHEMANT and nothing states how it differs, so the raw column code qualifies."
+
+[[statement]]
+kind = "set"
 subject = "var:husni"
 fields = { "label" = "Näringsgren i huvudsysslan (SNI 69)" }
 evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 69 versus SNI 92."

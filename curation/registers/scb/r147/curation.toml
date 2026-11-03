@@ -813,11 +813,11 @@ evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)'
 [[statement]]
 kind = "set"
 subject = "var:wkout-po8-lan"
-fields = { "label" = "Kalibreringsvikt (riket, län och 8 produktionsområden)" }
+fields = { "label" = "Kalibreringsvikt (wkout_po8_lan)" }
 evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, high confidence; Shared opdef: wkout_po8_lan is calibrated for riket, län and 8 produktionsområden, wkout_strl for storleksgrupper."
 
 [[statement]]
 kind = "set"
 subject = "var:wkout-strl"
-fields = { "label" = "Kalibreringsvikt (storleksgrupper)" }
+fields = { "label" = "Kalibreringsvikt (wkout_strl)" }
 evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, high confidence; Shared opdef: wkout_po8_lan is calibrated for riket, län and 8 produktionsområden, wkout_strl for storleksgrupper."

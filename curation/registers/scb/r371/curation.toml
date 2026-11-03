@@ -30916,7 +30916,7 @@ evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:bht9hb"
-fields = { "label" = "Hushållstyp (hushållssammansättning, härledd från RTB)" }
+fields = { "label" = "Hushållstyp (BHT9HB)" }
 evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged different meaning, medium confidence; BEGSHB classifies the adults in the dwelling household, BHT9HB (opdef: derived from RTB, different age limit for children) the household composition, BHTYPHB (opdef: household type per RTB/IOT) a different code list."
 
 [[statement]]
@@ -31006,7 +31006,7 @@ evidence = "#2102 same-label cluster 'Bostadstillägg till pensionärer' (2 vari
 [[statement]]
 kind = "set"
 subject = "var:boyta-i-kvadratmeter"
-fields = { "label" = "Boyta i kvadratmeter (hushåll)" }
+fields = { "label" = "Boyta i kvadratmeter (hushåll, BBOYTAHB)" }
 evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judged different meaning, medium confidence; BBOSTYT is in the individual register (opdef: derived in FASIT from property tax or apartment register); BBOYTAZ (to 2014) and BBOYTAHB (from 2014) follow each other as the household-level area."
 
 [[statement]]
@@ -31018,7 +31018,7 @@ evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:boyta-i-kvadratmeter-bboytaz"
-fields = { "label" = "Boyta i kvadratmeter (hushåll)" }
+fields = { "label" = "Boyta i kvadratmeter (hushåll, BBOYTAZ)" }
 evidence = "#2102 same-label cluster 'Boyta i kvadratmeter' (3 variables): judged different meaning, medium confidence; BBOSTYT is in the individual register (opdef: derived in FASIT from property tax or apartment register); BBOYTAZ (to 2014) and BBOYTAHB (from 2014) follow each other as the household-level area."
 
 [[statement]]
@@ -31222,7 +31222,7 @@ evidence = "#2102 same-label cluster 'Hushåll som har merkostnadsersättning' (
 [[statement]]
 kind = "set"
 subject = "var:hushallstyp-hb"
-fields = { "label" = "Hushållstyp (enligt RTB/IOT)" }
+fields = { "label" = "Hushållstyp (BHTYPHB)" }
 evidence = "#2102 same-label cluster 'Hushållstyp' (3 variables): judged different meaning, medium confidence; BEGSHB classifies the adults in the dwelling household, BHT9HB (opdef: derived from RTB, different age limit for children) the household composition, BHTYPHB (opdef: household type per RTB/IOT) a different code list."
 
 [[statement]]
@@ -31270,7 +31270,7 @@ evidence = "#2102 same-label cluster 'Kommungruppsindelning 2011' (3 variables):
 [[statement]]
 kind = "set"
 subject = "var:kommungruppsindelning-2011-bkregz"
-fields = { "label" = "Kommungruppsindelning 2011 (kosthushåll)" }
+fields = { "label" = "Kommungruppsindelning (kosthushåll, BKREGZ)" }
 evidence = "#2102 same-label cluster 'Kommungruppsindelning 2011' (3 variables): judged different meaning, medium confidence; BKREG is in the individual register, BKREGZ in the food household register, BKREGHB in the dwelling household register; all the 2011 SKL classification."
 
 [[statement]]
@@ -31306,7 +31306,7 @@ evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:kommungruppsindelning-bkregh"
-fields = { "label" = "Kommungruppsindelning (2005, familjehushåll)" }
+fields = { "label" = "Kommungruppsindelning (2005 och 2011, familjehushåll)" }
 evidence = "#2102 same-label cluster 'Kommungruppsindelning' (7 variables): judged different meaning, high confidence; Opdefs and column suffixes: SKL classification versions 2005, 2017 and 2023, each in individual, family household and dwelling household columns."
 
 [[statement]]
@@ -31563,8 +31563,20 @@ evidence = "#2102 same-label cluster 'Totala antalet sjukpenningdagar i sjukfall
 
 [[statement]]
 kind = "set"
+subject = "var:skattefri-del-livranta-pension"
+fields = { "label" = "Skattefri del av livränta och pension (PKUSLSF)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
+
+[[statement]]
+kind = "set"
 subject = "var:skattefri-del-livranta-pension-2"
 fields = { "label" = "Skattefri del av livränta och pension (minus barnpension och efterlevandestöd till barn)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-livranta-pension-3"
+fields = { "label" = "Skattefri del av livränta och pension (PSLSF)" }
 evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (3 variables): judged different meaning, medium confidence; PKUSLSF (to 2019) and PSLSF (from 2019) follow each other; PRESTSF (2013-2014) is a created variable (opdef: tax-free pension minus tax-free child pension and survivor support to children)."
 
 [[statement]]
@@ -31636,7 +31648,7 @@ evidence = "#2102 same-label cluster 'Underlag för skattereduktion för fackfö
 [[statement]]
 kind = "set"
 subject = "var:underlag-allman-loneavgift-hela-perioden"
-fields = { "label" = "Underlag för beräkning av löneavgift (allmän, hela perioden)" }
+fields = { "label" = "Underlag för beräkning av löneavgift (ALONE)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av löneavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases for the general wage fee."
 
 [[statement]]
@@ -31660,7 +31672,7 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknads
 [[statement]]
 kind = "set"
 subject = "var:underlag-arbetsmarknadsavgift-hela-perioden"
-fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (hela perioden)" }
+fields = { "label" = "Underlag för beräkning av arbetsmarknadsavgift (AAMAVG)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknadsavgift' (4 variables): judged different meaning, high confidence; Opdefs separate whole period, previous year, 1 Jan-30 Apr and 1 May-31 Jul bases."
 
 [[statement]]
@@ -31678,7 +31690,7 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av arbetsmarknads
 [[statement]]
 kind = "set"
 subject = "var:underlag-efterlevande-pensionsavgift"
-fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (hela perioden)" }
+fields = { "label" = "Underlag för beräkning av efterlevande pensionsavgift (AEPAVG)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av efterlevande pensionsavgift' (4 variables): judged different meaning, medium confidence; Opdefs separate whole period, 1 Jan-30 Apr and 1 May-31 Jul bases; AEPAVGX has a birth-year-dependent rate (1,70 % / 0,85 %) in 2009-2010 that none of the others describe."
 
 [[statement]]

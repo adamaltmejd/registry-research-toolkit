@@ -76828,13 +76828,13 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:afjaapensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, januari-april)" }
+fields = { "label" = "Skattesats, energiskatt (AFJAAPENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:afjaapmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, annan flygbensin, januari-april)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (AFJAAPMNG)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -76846,25 +76846,25 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:afmaseensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, maj-september)" }
+fields = { "label" = "Skattesats, energiskatt (AFMASEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:afmasemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, annan flygbensin, maj–september)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (AFMASEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:afnuvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, annan flygbensin, innevarande år, AFNUVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:afnuvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, innevarande år, AFNUVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -76882,7 +76882,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:afnvmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, annan flygbensin, innevarande år, AFNVMNG)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -76894,13 +76894,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:afokdeensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, oktober-december)" }
+fields = { "label" = "Skattesats, energiskatt (AFOKDEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:afokdemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, annan flygbensin, oktober–december)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (AFOKDEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -77032,7 +77032,7 @@ evidence = "#2102 same-label cluster 'Annan förbrukning' (21 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:annan-forbrukning-dieannfb"
-fields = { "label" = "Annan förbrukning (diesel)" }
+fields = { "label" = "Annan förbrukning (DIEANNFB)" }
 evidence = "#2102 same-label cluster 'Annan förbrukning' (21 variables): judged different meaning, medium confidence; Concurrent excise-tax columns per fuel (and per period); the qualifier is the fuel decoded from the column name and the opdef where it names it (e.g. diesel MK1 0 %/5 %/>5 % RME/HVO); several opdefs contradict the column name (DIEHALVAR1ANNFB says gasol) and the name is followed."
 
 [[statement]]
@@ -78082,7 +78082,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:arbdiemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diesel arbetsfordon, jord- och skogsbruk samt vattenbruk)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ARBDIEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78094,7 +78094,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:arbdienvensksats"
-fields = { "label" = "Skattesats, energiskatt (jord- och skogsbruk, diesel arbetsfordon, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (ARBDIENVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -78184,7 +78184,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:arbfargadmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, bränslen, ARBFARGADMNG)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ARBFARGADMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78322,7 +78322,7 @@ evidence = "#2102 same-label cluster 'Årsverken av understödjande personal i F
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-diesel-okt"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, diesel arbetsfordon, oktober)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ARBDIEOKTMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78334,7 +78334,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-arbdienvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, diesel arbetsfordon, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ARBDIENVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78346,25 +78346,25 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-benatermngm2"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENATERMNGM2)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-benatermngm3"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENATERMNGM3)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-bentotm2"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, totalt förbrukat, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENTOTM2)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-bentotm3"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, totalt förbrukat, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENTOTM3)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78430,25 +78430,25 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-diemanmngm2"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANMNGM2)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-diemanmngm3"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANMNGM3)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-diemantotm2"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, totalt förbrukat, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANTOTM2)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-diemantotm3"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, totalt förbrukat, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANTOTM3)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78502,7 +78502,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-gasnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, gasol, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer och industri utsläppsrätter, gasol, innevarande år)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78538,7 +78538,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-ngasnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, naturgas, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (NGASNVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78556,13 +78556,13 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-oljfgmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, eldningsolja, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer och industri utsläppsrätter, eldningsolja, föregående år)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-oljnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, eldningsolja, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer och industri utsläppsrätter, eldningsolja, innevarande år)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78574,7 +78574,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-oljvxfg"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, föregående år, OLJVXFG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78586,7 +78586,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-ovratermng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (övrigt bränsle, industri samt jord- och skogsbruk)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (övrigt bränsle, industri, båt och skepp samt jord- och skogsbruk)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78598,7 +78598,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:aterbetalningsberattigad-mangd-bransle-ovrfgmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, övrigt bränsle, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (OVRFGMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -78768,6 +78768,18 @@ kind = "set"
 subject = "var:aterforing-av-vardeminskningsavdrag-korrigering-av-v0687"
 fields = { "label" = "Återföring av värdeminskningsavdrag, korrigering av resultatet enligt blankett N3B m.m. (V0687)" }
 evidence = "#2102 same-label cluster 'Återföring av värdeminskningsavdrag, korrigering av resultatet enligt blankett N3B m.m.' (2 variables): judged different meaning, low confidence; V0686 and V0687 are concurrent handelsbolag fields with no text on how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-fran-periodiseringsfond-sru"
+fields = { "label" = "Återföring från periodiseringsfond (SRU, V0589)" }
+evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond (SRU)' (3 variables): judged different meaning, medium confidence; V0589 and V7420 are the same aktiebolag field across a form change; V8238 is on bilaga N9."
+
+[[statement]]
+kind = "set"
+subject = "var:aterforing-fran-periodiseringsfond-sru-v7420"
+fields = { "label" = "Återföring från periodiseringsfond (SRU, V7420)" }
+evidence = "#2102 same-label cluster 'Återföring från periodiseringsfond (SRU)' (3 variables): judged different meaning, medium confidence; V0589 and V7420 are the same aktiebolag field across a form change; V8238 is on bilaga N9."
 
 [[statement]]
 kind = "set"
@@ -79738,25 +79750,25 @@ evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle, tidigare sk
 [[statement]]
 kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-43"
-fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., energiskatt)" }
+fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., energiskatt, V712_43)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp' (33 variables): judged different meaning, medium confidence; 33 concurrent tax-return lines; opdefs name the declaration group and item. V712_431/V712_441 (2012-13) carry the same opdefs as V712_43/V712_44 (2014-) in adjacent periods and are treated as the same variable renamed; V736_09/10 share 'råtallolja' and carry codes."
 
 [[statement]]
 kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-431"
-fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., energiskatt)" }
+fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., energiskatt, V712_431)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp' (33 variables): judged different meaning, medium confidence; 33 concurrent tax-return lines; opdefs name the declaration group and item. V712_431/V712_441 (2012-13) carry the same opdefs as V712_43/V712_44 (2014-) in adjacent periods and are treated as the same variable renamed; V736_09/10 share 'råtallolja' and carry codes."
 
 [[statement]]
 kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-44"
-fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., CO2-skatt)" }
+fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., CO2-skatt, V712_44)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp' (33 variables): judged different meaning, medium confidence; 33 concurrent tax-return lines; opdefs name the declaration group and item. V712_431/V712_441 (2012-13) carry the same opdefs as V712_43/V712_44 (2014-) in adjacent periods and are treated as the same variable renamed; V736_09/10 share 'råtallolja' and carry codes."
 
 [[statement]]
 kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-441"
-fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., CO2-skatt)" }
+fields = { "label" = "Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp (olja, gasol m.m., CO2-skatt, V712_441)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle, tidigare skattskyldighet eller återköp' (33 variables): judged different meaning, medium confidence; 33 concurrent tax-return lines; opdefs name the declaration group and item. V712_431/V712_441 (2012-13) carry the same opdefs as V712_43/V712_44 (2014-) in adjacent periods and are treated as the same variable renamed; V736_09/10 share 'råtallolja' and carry codes."
 
 [[statement]]
@@ -80325,6 +80337,18 @@ evidence = "#2102 same-label cluster 'Avyttring av delägarrätter: Kapitalförl
 
 [[statement]]
 kind = "set"
+subject = "var:avyttring-av-delagarratter-kapitalforlust-som-ska-dras-v7757"
+fields = { "label" = "Avyttring av delägarrätter: Kapitalförlust som ska dras av (V7757)" }
+evidence = "#2102 same-label cluster 'Avyttring av delägarrätter: Kapitalförlust som ska dras av' (3 variables): judged different meaning, low confidence; V0624 (to 2007) and V7757 (from 2007) follow one another in the same table; V7658 runs concurrently with V7757 and nothing says how it differs."
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-delagarratter-kapitalforlust"
+fields = { "label" = "Avyttring av delägarrätter: Kapitalförlust som ska dras av (V0624)" }
+evidence = "#2102 same-label cluster 'Avyttring av delägarrätter: Kapitalförlust som ska dras av' (3 variables): judged different meaning, low confidence; V0624 (to 2007) and V7757 (from 2007) follow one another in the same table; V7658 runs concurrently with V7757 and nothing says how it differs."
+
+[[statement]]
+kind = "set"
 subject = "var:badelf"
 fields = { "label" = "Justering för reducering vid förtida uttag o uppräkn vid uppskjutet uttag, TP (antal månader med helt förtida uttag)" }
 evidence = "#2102 same-label cluster 'Justering för reducering vid förtida uttag o uppräkn vid uppskjutet uttag, TP' (3 variables): judged different meaning, medium confidence; Opdefs: BADELF counts months with fully early withdrawal, BADELU is fully deferred withdrawal; BJUSTTP (2005-2007) has no text, so raw code."
@@ -80596,13 +80620,13 @@ evidence = "#2102 same-label cluster 'Belopp som beskattas i tjänst' (4 variabl
 [[statement]]
 kind = "set"
 subject = "var:benannfb"
-fields = { "label" = "Annan förbrukning (bensin)" }
+fields = { "label" = "Annan förbrukning (BENANNFB)" }
 evidence = "#2102 same-label cluster 'Annan förbrukning' (21 variables): judged different meaning, medium confidence; Concurrent excise-tax columns per fuel (and per period); the qualifier is the fuel decoded from the column name and the opdef where it names it (e.g. diesel MK1 0 %/5 %/>5 % RME/HVO); several opdefs contradict the column name (DIEHALVAR1ANNFB says gasol) and the name is followed."
 
 [[statement]]
 kind = "set"
 subject = "var:benatermngm"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, period 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENATERMNGM1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -80620,7 +80644,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:benensksatsm"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, bensin, period 1)" }
+fields = { "label" = "Skattesats, energiskatt (BENENSKSATSM1)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -80638,25 +80662,25 @@ evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punk
 [[statement]]
 kind = "set"
 subject = "var:benink"
-fields = { "label" = "Inköp, återbetalningar och punktskatter (framställning av el, bensin)" }
+fields = { "label" = "Inköp, återbetalningar och punktskatter (BENINK)" }
 evidence = "#2102 same-label cluster 'Inköp, återbetalningar och punktskatter' (23 variables): judged different meaning, medium confidence; 23 concurrent columns whose opdefs name use and fuel; DIEHALVAR1INK and FARHALVAR1INK have opdefs that collide with other columns, so raw codes."
 
 [[statement]]
 kind = "set"
 subject = "var:benman1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, förbrukad mängd, BENMAN1MNG)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENMAN1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:benman2mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, förbrukad mängd, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENMAN2MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:benman3mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, förbrukad mängd, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENMAN3MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -80668,7 +80692,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:benpriv"
-fields = { "label" = "Privat förbrukning/uttag (bensin, BENPRIV)" }
+fields = { "label" = "Privat förbrukning/uttag (BENPRIV)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
@@ -80680,13 +80704,13 @@ evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables):
 [[statement]]
 kind = "set"
 subject = "var:benprivutm"
-fields = { "label" = "Privat förbrukning/uttag (bensin, båt och skepp, period 1, uttag)" }
+fields = { "label" = "Privat förbrukning/uttag (BENPRIVUTM1)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
 kind = "set"
 subject = "var:bentotm"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, bensin, totalt förbrukat, period 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENTOTM1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -80716,7 +80740,7 @@ evidence = "#2102 same-label cluster 'Negativt räntenetto' (9 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:betald-kyrkoavgift"
-fields = { "label" = "Betald kyrkoavgift inkl. begravningsavgift" }
+fields = { "label" = "Betald kyrkoavgift (SBEGR)" }
 evidence = "#2102 same-label cluster 'Betald kyrkoavgift exkl. begravningsavgift' (2 variables): judged different meaning, high confidence; Opdefs: SBEGR includes the burial fee, UKYRK excludes it, so the current label is wrong for SBEGR."
 
 [[statement]]
@@ -80818,7 +80842,7 @@ evidence = "#2102 same-label cluster 'Föräldrapenning garantidagar maka' (6 va
 [[statement]]
 kind = "set"
 subject = "var:bfp"
-fields = { "label" = "Folkpensionskod (ja/nej)" }
+fields = { "label" = "Folkpensionskod (BFP)" }
 evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged different meaning, high confidence; Eight concurrent columns with different opdefs and value sets (yes/no, KUSOC source, old-age code, SGA code, own benefit, partial FP, partial FP 2001, type)."
 
 [[statement]]
@@ -81004,7 +81028,7 @@ evidence = "#2102 same-label cluster 'Blandad inkomst' (2 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:bngr"
-fields = { "label" = "Näringsgren för individ (SNI 2002)" }
+fields = { "label" = "Näringsgren för individ (BNGR)" }
 evidence = "#2102 same-label cluster 'Näringsgren för individ' (2 variables): judged different meaning, high confidence; BNGR is näringsgren per SNI2002 from the largest-income employment; BKUNGR comes from the kontrolluppgiftsregistret (LSUM)."
 
 [[statement]]
@@ -81016,7 +81040,7 @@ evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (
 [[statement]]
 kind = "set"
 subject = "var:bokforda-intakter-ej-tas-upp"
-fields = { "label" = "Bokförda intäkter som inte ska tas upp (andra intäkter)" }
+fields = { "label" = "Bokförda intäkter som inte ska tas upp (andra intäkter, V7754)" }
 evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' (5 variables): judged different meaning, medium confidence; Opdefs: V0616 sjukpenning, V0801 skatteutjämningsreserv, V0604 and V7754 'Andra intäkter' (same label, successive periods); V7700 has no text so raw code."
 
 [[statement]]
@@ -81148,7 +81172,7 @@ evidence = "#2102 same-label cluster 'Folkpensionskod' (8 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:bsni200"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
+fields = { "label" = "Näringsgren, huvudsaklig (BSNI2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (4 variables): judged different meaning, high confidence; Columns hold different SNI versions (92, 2002, 2007) plus a punktskatt variant (Ng1) per column names and opdefs."
 
 [[statement]]
@@ -81280,13 +81304,13 @@ evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:dieanvco2"
-fields = { "label" = "HVO/RME-faktor (annan dieselolja, innevarande år, CO2-skatt)" }
+fields = { "label" = "HVO/RME-faktor (annan dieselolja, innevarande år, DIEANVCO2)" }
 evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged different meaning, high confidence; Opdefs: mining-industry diesel blend (annan dieselolja, MK1 over 5 % RME/HVO), previous or current year, factor for CO2 tax or energy tax."
 
 [[statement]]
 kind = "set"
 subject = "var:diefb"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (vattenbruk, bränslen, DIEFB)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEFB)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81340,7 +81364,7 @@ evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables):
 [[statement]]
 kind = "set"
 subject = "var:diehalvar1utg"
-fields = { "label" = "Utgående lager, punktskatter (gruvindustri, dieselolja MK1 >5 % RME/HVO)" }
+fields = { "label" = "Utgående lager, punktskatter (gruvindustri, dieselolja MK1 >5 % RME/HVO, DIEHALVAR1UTG)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -81358,7 +81382,7 @@ evidence = "#2102 same-label cluster 'Inköp, återbetalningar och punktskatter'
 [[statement]]
 kind = "set"
 subject = "var:diejanfb"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, bränslen, januari)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEJANFB)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81376,7 +81400,7 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 [[statement]]
 kind = "set"
 subject = "var:diemajfb"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, bränslen, maj)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMAJFB)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81388,7 +81412,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:dieman1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, förbrukad mängd, period 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMAN1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81400,7 +81424,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:dieman2mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, förbrukad mängd, period 2)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMAN2MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81412,31 +81436,31 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:dieman3mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, förbrukad mängd, period 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMAN3MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:diemanensksatsm"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, diesel, period 1)" }
+fields = { "label" = "Skattesats, energiskatt (DIEMANENSKSATSM1)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:diemanmngm"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, period 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANMNGM1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:diemanprivm"
-fields = { "label" = "Privat förbrukning/uttag (diesel, båt och skepp, period 1)" }
+fields = { "label" = "Privat förbrukning/uttag (DIEMANPRIVM1)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
 kind = "set"
 subject = "var:diemantotm"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (båt och skepp, båt utan fiskelicens, dieselolja, totalt förbrukat, period 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEMANTOTM1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81448,7 +81472,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:dienvfb"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, bränslen, dieselolja)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIENVFB)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81460,7 +81484,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:dieoktfb"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (jord- och skogsbruk, bränslen, oktober)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (DIEOKTFB)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81916,7 +81940,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:elaterfbiomng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, el, framställning av biogas)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ELATERFBIOMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81934,7 +81958,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:elaterfenmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, el, framställning av energiprodukt)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ELATERFENMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81958,7 +81982,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:elaterkemmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, el, kemisk reduktion eller elektrolytisk process)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ELATERKEMMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -81976,7 +82000,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:elatermetmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, el, metallurgisk process)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ELATERMETMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -82000,7 +82024,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:elatertagmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (diverse industriella processer, el, ELATERTAGMNG)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (ELATERTAGMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -82060,7 +82084,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:eldpcar1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, eldningsolja, år 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, eldningsolja, ELDPCAR1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -82108,7 +82132,7 @@ evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktska
 [[statement]]
 kind = "set"
 subject = "var:elhalv1elsk"
-fields = { "label" = "Skatt att betala, punktskatter/återbetalningar (datorhallar och industri, el, första halvåret)" }
+fields = { "label" = "Skatt att betala, punktskatter/återbetalningar (el, första halvåret)" }
 evidence = "#2102 same-label cluster 'Skatt att betala, punktskatter/återbetalningar' (8 variables): judged different meaning, medium confidence; Eight concurrent punktskatter columns; opdefs name the tax, use and half-year."
 
 [[statement]]
@@ -82354,7 +82378,7 @@ evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables):
 [[statement]]
 kind = "set"
 subject = "var:farhalvar1utg"
-fields = { "label" = "Utgående lager, punktskatter (industri utsläppsrätter, kvartal 1, eldningsolja)" }
+fields = { "label" = "Utgående lager, punktskatter (industri utsläppsrätter, kvartal 1, eldningsolja, FARHALVAR1UTG)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -82468,7 +82492,7 @@ evidence = "#2102 same-label cluster 'Boende - Fastighetens ålder, värdeår' (
 [[statement]]
 kind = "set"
 subject = "var:fforst"
-fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år)" }
+fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år, FFORST)" }
 evidence = "#2102 same-label cluster 'Skattepliktig förmögenhet' (11 variables): judged different meaning, medium confidence; Concurrent wealth columns with different opdefs (deklarerad, restpost, sammanlagd, 2/3 år gamla, från IoF); FSP03, FSP04 and FFORST share one opdef and have adjacent disjoint periods, so treated as one variable; FSP02 has no text."
 
 [[statement]]
@@ -82570,19 +82594,19 @@ evidence = "#2102 same-label cluster 'Folkpension' (2 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:folkpensionsbelopp"
-fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng)" }
+fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng, BSA00)" }
 evidence = "#2102 same-label cluster 'Folkpensionsbelopp' (4 variables): judged different meaning, medium confidence; PFP is a code for ordinary folkpension; BSA00, BSA01 and BSA02 share the opdef 'Summa pensionspoäng' and have successive periods, so they are one variable by year."
 
 [[statement]]
 kind = "set"
 subject = "var:folkpensionsbelopp-bsa01"
-fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng)" }
+fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng, BSA01)" }
 evidence = "#2102 same-label cluster 'Folkpensionsbelopp' (4 variables): judged different meaning, medium confidence; PFP is a code for ordinary folkpension; BSA00, BSA01 and BSA02 share the opdef 'Summa pensionspoäng' and have successive periods, so they are one variable by year."
 
 [[statement]]
 kind = "set"
 subject = "var:folkpensionsbelopp-bsa02"
-fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng)" }
+fields = { "label" = "Folkpensionsbelopp (summa pensionspoäng, BSA02)" }
 evidence = "#2102 same-label cluster 'Folkpensionsbelopp' (4 variables): judged different meaning, medium confidence; PFP is a code for ordinary folkpension; BSA00, BSA01 and BSA02 share the opdef 'Summa pensionspoäng' and have successive periods, so they are one variable by year."
 
 [[statement]]
@@ -82774,7 +82798,7 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 [[statement]]
 kind = "set"
 subject = "var:forbrukad-mangd-luftfart-annan-flygbensin"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, annan flygbensin, AFNUVMNG)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -82870,7 +82894,7 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 [[statement]]
 kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (övrigt bränsle, föregående år)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (föregående år, OVRFGMNG)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -82936,13 +82960,13 @@ evidence = "#2102 same-label cluster 'Företaget har rätt till statligt stöd, 
 [[statement]]
 kind = "set"
 subject = "var:foretagets-id-nummer"
-fields = { "label" = "Företagets id-nummer (företag, egen löpnummerserie)" }
+fields = { "label" = "Företagets id-nummer (företag)" }
 evidence = "#2102 same-label cluster 'Företagets id-nummer' (4 variables): judged different meaning, medium confidence; Opdefs and tables: bidnr_agbol numbers the partner company (N3B), bidnr_ftg the company, bidnr_pers the person (N8, deklarationsuppgifter), BIDNR is the finansbolag column."
 
 [[statement]]
 kind = "set"
 subject = "var:foretagets-id-pers"
-fields = { "label" = "Företagets id-nummer (person, egen löpnummerserie)" }
+fields = { "label" = "Företagets id-nummer (person)" }
 evidence = "#2102 same-label cluster 'Företagets id-nummer' (4 variables): judged different meaning, medium confidence; Opdefs and tables: bidnr_agbol numbers the partner company (N3B), bidnr_ftg the company, bidnr_pers the person (N8, deklarationsuppgifter), BIDNR is the finansbolag column."
 
 [[statement]]
@@ -83038,7 +83062,7 @@ evidence = "#2102 same-label cluster 'Försäljning återbetalningar/punktskatte
 [[statement]]
 kind = "set"
 subject = "var:forsaljningsdatum"
-fields = { "label" = "Försäljningsdatum (K10)" }
+fields = { "label" = "Försäljningsdatum (K10, V0650)" }
 evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; Columns belong to blankett K10 or K10A (V0650 then V4544 in K10, V0464 then V4837 in K10A, successive periods); Forsdat covers both forms from 2014."
 
 [[statement]]
@@ -83050,19 +83074,19 @@ evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:forsaljningsdatum-v0464"
-fields = { "label" = "Försäljningsdatum (K10A)" }
+fields = { "label" = "Försäljningsdatum (K10A, V0464)" }
 evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; Columns belong to blankett K10 or K10A (V0650 then V4544 in K10, V0464 then V4837 in K10A, successive periods); Forsdat covers both forms from 2014."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljningsdatum-v4544"
-fields = { "label" = "Försäljningsdatum (K10)" }
+fields = { "label" = "Försäljningsdatum (K10, V4544)" }
 evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; Columns belong to blankett K10 or K10A (V0650 then V4544 in K10, V0464 then V4837 in K10A, successive periods); Forsdat covers both forms from 2014."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljningsdatum-v4837"
-fields = { "label" = "Försäljningsdatum (K10A)" }
+fields = { "label" = "Försäljningsdatum (K10A, V4837)" }
 evidence = "#2102 same-label cluster 'Försäljningsdatum' (5 variables): judged different meaning, medium confidence; Columns belong to blankett K10 or K10A (V0650 then V4544 in K10, V0464 then V4837 in K10A, successive periods); Forsdat covers both forms from 2014."
 
 [[statement]]
@@ -83158,13 +83182,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:fotjaapensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, januari-april)" }
+fields = { "label" = "Skattesats, energiskatt (FOTJAAPENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:fotjaapmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, flygfotogen, inköpt januari–april)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (FOTJAAPMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -83176,19 +83200,19 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:fotmaseensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, maj-september)" }
+fields = { "label" = "Skattesats, energiskatt (FOTMASEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:fotmasemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, flygfotogen, inköpt maj–september)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (FOTMASEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:fotnuvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, innevarande år, FOTNUVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -83206,7 +83230,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:fotokdecmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, flygfotogen, oktober–december)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (FOTOKDECMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -83218,7 +83242,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:fotokdeensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, oktober-december)" }
+fields = { "label" = "Skattesats, energiskatt (FOTOKDEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -83464,7 +83488,7 @@ evidence = "#2102 same-label cluster 'Inköp, återbetalningar och punktskatter'
 [[statement]]
 kind = "set"
 subject = "var:gaskvnvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (kraftvärme, gasol, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (kraftvärme och industri utsläppsrätter, gasol, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -83494,7 +83518,7 @@ evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktska
 [[statement]]
 kind = "set"
 subject = "var:gasnvsnensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeproduktion med utsläppsrätter ej KV, gasol, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (GASNVSNENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -83686,19 +83710,19 @@ evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:hvo-rme-faktor-dieovfgco2"
-fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, föregående år, CO2-skatt)" }
+fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, DIEOVFGCO2)" }
 evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged different meaning, high confidence; Opdefs: mining-industry diesel blend (annan dieselolja, MK1 over 5 % RME/HVO), previous or current year, factor for CO2 tax or energy tax."
 
 [[statement]]
 kind = "set"
 subject = "var:hvo-rme-faktor-dieovfgen"
-fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, föregående år, energiskatt)" }
+fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, DIEOVFGEN)" }
 evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged different meaning, high confidence; Opdefs: mining-industry diesel blend (annan dieselolja, MK1 over 5 % RME/HVO), previous or current year, factor for CO2 tax or energy tax."
 
 [[statement]]
 kind = "set"
 subject = "var:hvo-rme-faktor-dieovnvco2"
-fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, innevarande år, CO2-skatt)" }
+fields = { "label" = "HVO/RME-faktor (dieselolja MK1 över 5 % RME/HVO, innevarande år, DIEOVNVCO2)" }
 evidence = "#2102 same-label cluster 'HVO/RME-faktor' (8 variables): judged different meaning, high confidence; Opdefs: mining-industry diesel blend (annan dieselolja, MK1 over 5 % RME/HVO), previous or current year, factor for CO2 tax or energy tax."
 
 [[statement]]
@@ -83734,13 +83758,13 @@ evidence = "#2102 same-label cluster 'Identitetsnummer' (4 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:immateriella-anlaggningstillgangar"
-fields = { "label" = "Immateriella anläggningstillgångar (aktiebolag)" }
+fields = { "label" = "Immateriella anläggningstillgångar (aktiebolag, V0234)" }
 evidence = "#2102 same-label cluster 'Immateriella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; V0234 and V7201 follow one another in the aktiebolag table (same label); VA10 is the finansbolag column."
 
 [[statement]]
 kind = "set"
 subject = "var:immateriella-anlaggningstillgangar-v7201"
-fields = { "label" = "Immateriella anläggningstillgångar (aktiebolag)" }
+fields = { "label" = "Immateriella anläggningstillgångar (aktiebolag, V7201)" }
 evidence = "#2102 same-label cluster 'Immateriella anläggningstillgångar' (3 variables): judged different meaning, medium confidence; V0234 and V7201 follow one another in the aktiebolag table (same label); VA10 is the finansbolag column."
 
 [[statement]]
@@ -83800,7 +83824,7 @@ evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punk
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager-bensin-framstallning-el"
-fields = { "label" = "Ingående lager, återbetalningar och punktskatter (framställning av el, bensin)" }
+fields = { "label" = "Ingående lager, återbetalningar och punktskatter (FARING)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
 
 [[statement]]
@@ -83818,7 +83842,7 @@ evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punk
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager-punktskatter-gas"
-fields = { "label" = "Ingående lager, återbetalningar och punktskatter (industri, utsläppsrätter, gasol)" }
+fields = { "label" = "Ingående lager, återbetalningar och punktskatter (GASING)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
 
 [[statement]]
@@ -83830,13 +83854,13 @@ evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punk
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager-punktskatter-ngas"
-fields = { "label" = "Ingående lager, återbetalningar och punktskatter (industri, utsläppsrätter, naturgas)" }
+fields = { "label" = "Ingående lager, återbetalningar och punktskatter (NGASING)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
 
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager-punktskatter-olja"
-fields = { "label" = "Ingående lager, återbetalningar och punktskatter (industri, utsläppsrätter, olja)" }
+fields = { "label" = "Ingående lager, återbetalningar och punktskatter (OLJING)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
 
 [[statement]]
@@ -84232,13 +84256,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:kolpcnvensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeleveranser, kol/koks, vissa industriella processer, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (KOLPCNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:kolpcnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, kol, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (KOLPCNVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -84328,13 +84352,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:kolvxnvensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeleveranser, kol/koks, tillverkningsprocess, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (KOLVXNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:kolvxnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, kol, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (KOLVXNVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -84486,6 +84510,18 @@ kind = "set"
 subject = "var:kyrkoavgift-exkl-begravningsavgift-akyrk11"
 fields = { "label" = "Kyrkoavgift exkl. begravningsavgift (år 2011)" }
 evidence = "#2102 same-label cluster 'Kyrkoavgift exkl. begravningsavgift' (13 variables): judged different meaning, high confidence; AKYRK00-AKYRK11 each hold the church fee for a different year per the opdefs (Avser år NNNN); AKYRK has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:l25"
+fields = { "label" = "Övriga skatter (L25, L25)" }
+evidence = "#2102 same-label cluster 'Övriga skatter (L25)' (3 variables): judged different meaning, medium confidence; L25 continues as L26 (adjacent periods); R24 is the skadebolag resultaträkning item per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:l26"
+fields = { "label" = "Övriga skatter (L25, L26)" }
+evidence = "#2102 same-label cluster 'Övriga skatter (L25)' (3 variables): judged different meaning, medium confidence; L25 continues as L26 (adjacent periods); R24 is the skadebolag resultaträkning item per its opdef."
 
 [[statement]]
 kind = "set"
@@ -84754,13 +84790,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:mk1jaapensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, januari-april)" }
+fields = { "label" = "Skattesats, energiskatt (MK1JAAPENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:mk1jaapmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, blyfri flygbensin, inköpt januari–april)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (MK1JAAPMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -84772,25 +84808,25 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:mk1maseensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, maj-september)" }
+fields = { "label" = "Skattesats, energiskatt (MK1MASEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:mk1masemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, blyfri flygbensin, inköpt maj–september)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (MK1MASEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:mk1nuvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år, MK1NUVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:mk1nuvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år, MK1NUVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -84820,13 +84856,13 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:mk1okdeensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, oktober-december)" }
+fields = { "label" = "Skattesats, energiskatt (MK1OKDEENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:mk1okdemng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (yrkesmässig luftfart, blyfri flygbensin, inköpt oktober–december)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (MK1OKDEMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85132,7 +85168,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:ngasvxfg"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, naturgas, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, naturgas, föregående år, NGASVXFG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85150,7 +85186,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:ngasvxfgmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, naturgas, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, naturgas, föregående år, NGASVXFGMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85264,19 +85300,19 @@ evidence = "#2102 same-label cluster 'Annan förbrukning' (21 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:oljar1co2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (värmeproduktion med utsläppsrätter ej KV, olja, givet år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (utsläppsrätter, olja)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:oljar1ensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeproduktion med utsläppsrätter ej KV, olja, givet år)" }
+fields = { "label" = "Skattesats, energiskatt (OLJAR1ENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:oljar1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeproduktion med utsläppsrätter ej kraftvärme, olja, givet år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (OLJAR1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85366,7 +85402,7 @@ evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktska
 [[statement]]
 kind = "set"
 subject = "var:oljkv1utg"
-fields = { "label" = "Utgående lager, punktskatter (industri utsläppsrätter, kvartal 1, eldningsolja)" }
+fields = { "label" = "Utgående lager, punktskatter (industri utsläppsrätter, kvartal 1, eldningsolja, OLJKV1UTG)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -85432,7 +85468,7 @@ evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables):
 [[statement]]
 kind = "set"
 subject = "var:oljkvfgutg"
-fields = { "label" = "Utgående lager, punktskatter (olja, kraftvärme föregående år)" }
+fields = { "label" = "Utgående lager, punktskatter (olja, kraftvärme och industri utsläppsrätter)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -85558,7 +85594,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:oljvx3"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, år 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, år 3, OLJVX3)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85576,7 +85612,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:oljvx3mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, år 3)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, år 3, OLJVX3MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85594,7 +85630,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:oljvxfgmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, föregående år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, eldningsolja, föregående år, OLJVXFGMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -85882,13 +85918,13 @@ evidence = "#2102 same-label cluster 'Outnyttjat underskott av näringsverksamhe
 [[statement]]
 kind = "set"
 subject = "var:overskott-av-naringsverksamhet"
-fields = { "label" = "Överskott av näringsverksamhet (deklarationsblankett)" }
+fields = { "label" = "Överskott av näringsverksamhet (deklarationsblankett, V0777)" }
 evidence = "#2102 same-label cluster 'Överskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V58 is from the taxed result; V0777 and V7670 both come from the declaration form and follow each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:overskott-naringsverksamhet-7670"
-fields = { "label" = "Överskott av näringsverksamhet (deklarationsblankett)" }
+fields = { "label" = "Överskott av näringsverksamhet (deklarationsblankett, V7670)" }
 evidence = "#2102 same-label cluster 'Överskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V58 is from the taxed result; V0777 and V7670 both come from the declaration form and follow each other in time."
 
 [[statement]]
@@ -85984,19 +86020,19 @@ evidence = "#2102 same-label cluster 'Annan förbrukning' (21 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:ovrar1co2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (värmeproduktion med utsläppsrätter ej KV, övrigt bränsle, givet år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (utsläppsrätter, övrigt bränsle)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrar1ensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeproduktion med utsläppsrätter ej KV, övrigt bränsle, givet år)" }
+fields = { "label" = "Skattesats, energiskatt (OVRAR1ENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrar1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeproduktion med utsläppsrätter ej kraftvärme, övrigt bränsle, givet år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (OVRAR1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -86038,7 +86074,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:ovrfgmngd"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (övrigt bränsle, föregående år)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, övrigt bränsle, föregående år)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -86091,15 +86127,51 @@ evidence = "#2102 same-label cluster 'Övriga fonder (LAA8)' (4 variables): judg
 
 [[statement]]
 kind = "set"
+subject = "var:ovriga-intakter-skall-tas-upp"
+fields = { "label" = "Övriga intäkter som skall tas upp (V0603)" }
+evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 variables): judged different meaning, medium confidence; V0603 and V7655 are adjacent in the same table (one variable renamed); V7665 has the opdef 'Andra ej bokförda intäkter'."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-som-skall-tas-upp-v7655"
+fields = { "label" = "Övriga intäkter som skall tas upp (V7655)" }
+evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 variables): judged different meaning, medium confidence; V0603 and V7655 are adjacent in the same table (one variable renamed); V7665 has the opdef 'Andra ej bokförda intäkter'."
+
+[[statement]]
+kind = "set"
 subject = "var:ovriga-intakter-som-skall-tas-upp-v7665"
 fields = { "label" = "Övriga intäkter som skall tas upp (andra ej bokförda intäkter)" }
 evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 variables): judged different meaning, medium confidence; V0603 and V7655 are adjacent in the same table (one variable renamed); V7665 has the opdef 'Andra ej bokförda intäkter'."
 
 [[statement]]
 kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar"
+fields = { "label" = "Övriga kortfristiga fordringar (V0220)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; V0220 continues as V7261 in aktiebolag; V7260 is a separate deklarationsuppgifter field."
+
+[[statement]]
+kind = "set"
 subject = "var:ovriga-kortfristiga-fordringar-v7260"
 fields = { "label" = "Övriga kortfristiga fordringar (V7260)" }
 evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; V0220 continues as V7261 in aktiebolag; V7260 is a separate deklarationsuppgifter field."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar-v7261"
+fields = { "label" = "Övriga kortfristiga fordringar (V7261)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga fordringar' (3 variables): judged different meaning, medium confidence; V0220 continues as V7261 in aktiebolag; V7260 is a separate deklarationsuppgifter field."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-skulder"
+fields = { "label" = "Övriga kortfristiga skulder (V0319)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga skulder' (4 variables): judged different meaning, medium confidence; V0319 continues as V7369 in aktiebolag; V7383 and V7380 are separate deklarationsuppgifter fields with no text."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-skulder-v7369"
+fields = { "label" = "Övriga kortfristiga skulder (V7369)" }
+evidence = "#2102 same-label cluster 'Övriga kortfristiga skulder' (4 variables): judged different meaning, medium confidence; V0319 continues as V7369 in aktiebolag; V7383 and V7380 are separate deklarationsuppgifter fields with no text."
 
 [[statement]]
 kind = "set"
@@ -86200,7 +86272,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:ovrkvfgco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (kraftvärme, övrigt bränsle, föregående år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (kraftvärme och industri utsläppsrätter, övrigt bränsle, föregående år)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -86212,19 +86284,19 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:ovrkving"
-fields = { "label" = "Ingående lager, återbetalningar och punktskatter (industri, utsläppsrätter, kraftvärme, övrigt bränsle)" }
+fields = { "label" = "Ingående lager, återbetalningar och punktskatter (övrigt bränsle, OVRKVING)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrkvink"
-fields = { "label" = "Inköp, återbetalningar och punktskatter (industri, utsläppsrätter, kraftvärme, övrigt bränsle)" }
+fields = { "label" = "Inköp, återbetalningar och punktskatter (övrigt bränsle, OVRKVINK)" }
 evidence = "#2102 same-label cluster 'Inköp, återbetalningar och punktskatter' (23 variables): judged different meaning, medium confidence; 23 concurrent columns whose opdefs name use and fuel; DIEHALVAR1INK and FARHALVAR1INK have opdefs that collide with other columns, so raw codes."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrkvutg"
-fields = { "label" = "Utgående lager, punktskatter (övrigt bränsle, kraftvärme föregående år)" }
+fields = { "label" = "Utgående lager, punktskatter (övrigt bränsle, kraftvärme och industri utsläppsrätter)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -86248,7 +86320,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:ovrnvensksats"
-fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, övrigt bränsle, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (OVRNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -86266,25 +86338,25 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:ovrnvmngd"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (övrigt bränsle, innevarande år)" }
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (luftfart, övrigt bränsle, innevarande år)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrpcar1co2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (värmeleveranser, vissa industriella processer, övrigt bränsle, angivet år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (värmeleveranser, vissa industriella processer, övrigt bränsle)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrpcar1ensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeleveranser, vissa industriella processer, övrigt bränsle, angivet år)" }
+fields = { "label" = "Skattesats, energiskatt (OVRPCAR1ENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrpcar1mng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, övrigt bränsle, år 1)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, övrigt bränsle, OVRPCAR1MNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -86314,19 +86386,19 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:ovrpcnvensksats"
-fields = { "label" = "Skattesats, energiskatt (värmeleveranser, övrigt bränsle, vissa industriella processer, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (OVRPCNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrpcnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, övrigt bränsle, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (OVRPCNVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrpriv"
-fields = { "label" = "Privat förbrukning/uttag (övrigt bränsle, OVRPRIV)" }
+fields = { "label" = "Privat förbrukning/uttag (OVRPRIV)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
@@ -86428,7 +86500,7 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 [[statement]]
 kind = "set"
 subject = "var:ovrvxnvmng"
-fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, tillverkningsprocess, övrigt bränsle, innevarande år)" }
+fields = { "label" = "Återbetalningsberättigad mängd, bränsle (OVRVXNVMNG)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
 
 [[statement]]
@@ -86530,7 +86602,7 @@ evidence = "#2102 same-label cluster 'Periodiseringsfond' (6 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:periodiseringsfond-v0349"
-fields = { "label" = "Periodiseringsfond (1999 års taxering)" }
+fields = { "label" = "Periodiseringsfond (V0349)" }
 evidence = "#2102 same-label cluster 'Periodiseringsfond' (6 variables): judged different meaning, high confidence; Opdefs tie V0341-V0349 to the fund of a specific taxation year (1995-1999); V7321 is the aktiebolag column without text."
 
 [[statement]]
@@ -86644,7 +86716,7 @@ evidence = "#2102 same-label cluster 'Positivt justerad anskaffningsutgift vid b
 [[statement]]
 kind = "set"
 subject = "var:positivt-rantenetto-v8215"
-fields = { "label" = "Positivt räntenetto (från block B och C)" }
+fields = { "label" = "Positivt räntenetto (V8215)" }
 evidence = "#2102 same-label cluster 'Positivt räntenetto' (4 variables): judged different meaning, medium confidence; Four concurrent bilaga N9 columns; opdefs name block B(+C), efter koncernutjämning and block D."
 
 [[statement]]
@@ -86680,25 +86752,25 @@ evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables):
 [[statement]]
 kind = "set"
 subject = "var:privat-forbrukning-uttag-benprivutm2"
-fields = { "label" = "Privat förbrukning/uttag (bensin, båt och skepp, period 2, uttag)" }
+fields = { "label" = "Privat förbrukning/uttag (BENPRIVUTM2)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
 kind = "set"
 subject = "var:privat-forbrukning-uttag-benprivutm3"
-fields = { "label" = "Privat förbrukning/uttag (bensin, båt och skepp, period 3, uttag)" }
+fields = { "label" = "Privat förbrukning/uttag (BENPRIVUTM3)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
 kind = "set"
 subject = "var:privat-forbrukning-uttag-diemanprivm2"
-fields = { "label" = "Privat förbrukning/uttag (diesel, båt och skepp, period 2)" }
+fields = { "label" = "Privat förbrukning/uttag (DIEMANPRIVM2)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
 kind = "set"
 subject = "var:privat-forbrukning-uttag-diemanprivm3"
-fields = { "label" = "Privat förbrukning/uttag (diesel, båt och skepp, period 3)" }
+fields = { "label" = "Privat förbrukning/uttag (DIEMANPRIVM3)" }
 evidence = "#2102 same-label cluster 'Privat förbrukning/uttag' (28 variables): judged different meaning, medium confidence; 28 concurrent punktskatter columns by fuel, förbrukning vs uttag and period; opdefs are partly inconsistent so the qualifiers follow the column-name decoding, with the column code where unclear."
 
 [[statement]]
@@ -86830,7 +86902,7 @@ evidence = "#2102 same-label cluster 'Årets resultat (L27)' (3 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:rantebidrag"
-fields = { "label" = "Räntebidrag (statligt, bostadslån)" }
+fields = { "label" = "Räntebidrag (statligt, bostadslån, KKURBID)" }
 evidence = "#2102 same-label cluster 'Räntebidrag' (3 variables): judged different meaning, medium confidence; KKURBO is the småhus loan; KKURBF (2000-2001) and KKURBID (2001-2005) have identical opdefs and adjacent periods, so treated as a rename of one variable."
 
 [[statement]]
@@ -87214,13 +87286,13 @@ evidence = "#2102 same-label cluster 'Skattepliktig förmögenhet' (11 variables
 [[statement]]
 kind = "set"
 subject = "var:skattepliktig-formogenhet-fsp03"
-fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år)" }
+fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år, FSP03)" }
 evidence = "#2102 same-label cluster 'Skattepliktig förmögenhet' (11 variables): judged different meaning, medium confidence; Concurrent wealth columns with different opdefs (deklarerad, restpost, sammanlagd, 2/3 år gamla, från IoF); FSP03, FSP04 and FFORST share one opdef and have adjacent disjoint periods, so treated as one variable; FSP02 has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:skattepliktig-formogenhet-fsp04"
-fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år)" }
+fields = { "label" = "Skattepliktig förmögenhet (förmögenhetsskattepliktig försäkring, föregående år, FSP04)" }
 evidence = "#2102 same-label cluster 'Skattepliktig förmögenhet' (11 variables): judged different meaning, medium confidence; Concurrent wealth columns with different opdefs (deklarerad, restpost, sammanlagd, 2/3 år gamla, från IoF); FSP03, FSP04 and FFORST share one opdef and have adjacent disjoint periods, so treated as one variable; FSP02 has no text."
 
 [[statement]]
@@ -87250,7 +87322,7 @@ evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): j
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt"
-fields = { "label" = "Skattesats, energiskatt (tåg och andra spårbundna färdmedel, dieselolja, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (tåg, dieselolja, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87262,7 +87334,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-afnvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, annan flygbensin, innevarande år, AFNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87274,13 +87346,13 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-benensksatsm2"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, bensin, period 2)" }
+fields = { "label" = "Skattesats, energiskatt (BENENSKSATSM2)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-benensksatsm3"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, bensin, period 3)" }
+fields = { "label" = "Skattesats, energiskatt (BENENSKSATSM3)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87328,13 +87400,13 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-diemanensksatsm2"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, diesel, period 2)" }
+fields = { "label" = "Skattesats, energiskatt (DIEMANENSKSATSM2)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-diemanensksatsm3"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, diesel, period 3)" }
+fields = { "label" = "Skattesats, energiskatt (DIEMANENSKSATSM3)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87364,7 +87436,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-fotnvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, innevarande år, FOTNVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87412,13 +87484,13 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-mk1nvensksats"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år, MK1NVENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-ngasnvensksats"
-fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, naturgas, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (industri utsläppsrätter och diverse industriella processer, naturgas, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87430,13 +87502,13 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-oljfgensksats"
-fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, eldningsolja, föregående år)" }
+fields = { "label" = "Skattesats, energiskatt (industri utsläppsrätter och diverse industriella processer, olja, föregående år)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-oljnvensksats"
-fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, eldningsolja, innevarande år)" }
+fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, olja, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87466,7 +87538,7 @@ evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-ovrfgensksats"
-fields = { "label" = "Skattesats, energiskatt (diverse industriella processer, övrigt bränsle, föregående år)" }
+fields = { "label" = "Skattesats, energiskatt (OVRFGENSKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
@@ -87514,7 +87586,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-afnvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, annan flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, annan flygbensin, innevarande år, AFNVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -87616,7 +87688,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-flygfotogen-innevarande-ar-2023"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, innevarande år, FOTNUVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -87628,7 +87700,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-fotnvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, innevarande år, FOTNVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -87664,7 +87736,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-mk1nvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, blyfri flygbensin, innevarande år, MK1NVCO2SKSATS)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -87676,7 +87748,7 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-ngasnvco2sksats"
-fields = { "label" = "Skattesats, koldioxidskatt (diverse industriella processer, naturgas, innevarande år)" }
+fields = { "label" = "Skattesats, koldioxidskatt (naturgas, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -87814,7 +87886,7 @@ evidence = "#2102 same-label cluster 'Sgi från FK' (2 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:statligt-rantebidrag-bostad-lan"
-fields = { "label" = "Räntebidrag (statligt, bostadslån)" }
+fields = { "label" = "Räntebidrag (statligt, bostadslån, KKURBF)" }
 evidence = "#2102 same-label cluster 'Räntebidrag' (3 variables): judged different meaning, medium confidence; KKURBO is the småhus loan; KKURBF (2000-2001) and KKURBID (2001-2005) have identical opdefs and adjacent periods, so treated as a rename of one variable."
 
 [[statement]]
@@ -87892,13 +87964,13 @@ evidence = "#2102 same-label cluster 'Summa periodiseringsfonder vid beskattning
 [[statement]]
 kind = "set"
 subject = "var:summa-skatt-svavel-flytande-bransle-2019-2021"
-fields = { "label" = "Summa skatt svavel (flytande bränsle)" }
+fields = { "label" = "Summa skatt svavel (flytande bränsle, V718_68)" }
 evidence = "#2102 same-label cluster 'Summa skatt svavel' (4 variables): judged different meaning, medium confidence; SUMSVASK (användning för svavelrensning) differs from the others; V718_68 and V718_70 share one opdef (flytande bränsle) with adjacent periods and are treated as one variable; V718_52 has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:summa-skatt-svavel-flytande-bransle-2022-2023"
-fields = { "label" = "Summa skatt svavel (flytande bränsle)" }
+fields = { "label" = "Summa skatt svavel (flytande bränsle, V718_70)" }
 evidence = "#2102 same-label cluster 'Summa skatt svavel' (4 variables): judged different meaning, medium confidence; SUMSVASK (användning för svavelrensning) differs from the others; V718_68 and V718_70 share one opdef (flytande bränsle) with adjacent periods and are treated as one variable; V718_52 has no text."
 
 [[statement]]
@@ -87934,7 +88006,7 @@ evidence = "#2102 same-label cluster 'Survavsättning i handelsbolaget' (3 varia
 [[statement]]
 kind = "set"
 subject = "var:survavsattning-i-handelsbolaget-v0828"
-fields = { "label" = "Survavsättning i handelsbolaget (delägarens återförda skattepliktiga andel, tillskott)" }
+fields = { "label" = "Survavsättning i handelsbolaget (V0828)" }
 evidence = "#2102 same-label cluster 'Survavsättning i handelsbolaget' (3 variables): judged different meaning, medium confidence; Opdefs: V0737 is the partner's returned taxable share, V0801 the returned share as avdrag, V0828 the returned share as tillskott."
 
 [[statement]]
@@ -88276,7 +88348,7 @@ evidence = "#2102 same-label cluster 'Skatt, total' (2 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:tredje-ar-varmeproduktion-ej-kraftvarme-utslappsratter"
-fields = { "label" = "Angivet år (värmeproduktion ej kraftvärme, utsläppsrätter, tredje året i ansökan)" }
+fields = { "label" = "Angivet år (värmeproduktion ej kraftvärme, utsläppsrätter)" }
 evidence = "#2102 same-label cluster 'Angivet år' (7 variables): judged different meaning, medium confidence; Opdefs name which year of the application each column holds (first, second, third, innevarande) and two special heat-delivery/heat-production items; UTSLNV has no description."
 
 [[statement]]
@@ -88396,13 +88468,13 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild lön
 [[statement]]
 kind = "set"
 subject = "var:underskott-av-naringsverksamhet"
-fields = { "label" = "Underskott av näringsverksamhet (deklarationsblankett)" }
+fields = { "label" = "Underskott av näringsverksamhet (deklarationsblankett, V0778)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V70 is taken from the assessed result; V0778 and V7770 both come from the declaration form and follow each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:underskott-naringsverksamhet-7770"
-fields = { "label" = "Underskott av näringsverksamhet (deklarationsblankett)" }
+fields = { "label" = "Underskott av näringsverksamhet (deklarationsblankett, V7770)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet' (3 variables): judged different meaning, medium confidence; V70 is taken from the assessed result; V0778 and V7770 both come from the declaration form and follow each other in time."
 
 [[statement]]
@@ -88522,13 +88594,13 @@ evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variabl
 [[statement]]
 kind = "set"
 subject = "var:utgaende-lager-punktskatter-dieovutglager"
-fields = { "label" = "Utgående lager, punktskatter (gruvindustri, dieselolja MK1 >5 % RME/HVO)" }
+fields = { "label" = "Utgående lager, punktskatter (gruvindustri, dieselolja MK1 >5 % RME/HVO, DIEOVUTGLAGER)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
 kind = "set"
 subject = "var:utgaende-lager-punktskatter-gas"
-fields = { "label" = "Utgående lager, punktskatter (gasol, industri utsläppsrätter)" }
+fields = { "label" = "Utgående lager, punktskatter (gasol)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -88540,7 +88612,7 @@ evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variabl
 [[statement]]
 kind = "set"
 subject = "var:utgaende-lager-punktskatter-ngas"
-fields = { "label" = "Utgående lager, punktskatter (naturgas, industri utsläppsrätter)" }
+fields = { "label" = "Utgående lager, punktskatter (naturgas)" }
 evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
@@ -88756,7 +88828,7 @@ evidence = "#2102 same-label cluster 'Vinst vid avyttring av värdepapper' (3 va
 [[statement]]
 kind = "set"
 subject = "var:v06"
-fields = { "label" = "Bokförda intäkter som inte ska tas upp (andra intäkter)" }
+fields = { "label" = "Bokförda intäkter som inte ska tas upp (andra intäkter, V0604)" }
 evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' (5 variables): judged different meaning, medium confidence; Opdefs: V0616 sjukpenning, V0801 skatteutjämningsreserv, V0604 and V7754 'Andra intäkter' (same label, successive periods); V7700 has no text so raw code."
 
 [[statement]]
@@ -88936,7 +89008,7 @@ evidence = "#2102 same-label cluster 'Bokförda intäkter som inte ska tas upp' 
 [[statement]]
 kind = "set"
 subject = "var:v8081"
-fields = { "label" = "Har ni uppburit ersättning från handelsbolaget för upplåtelse av lokal eller annat utrymme? (svar ja, nej eller vet ej)" }
+fields = { "label" = "Har ni uppburit ersättning från handelsbolaget för upplåtelse av lokal eller annat utrymme? (V8081)" }
 evidence = "#2102 same-label cluster 'Har ni uppburit ersättning från handelsbolaget för upplåtelse av lokal eller annat utrymme?  (886)' (3 variables): judged different meaning, medium confidence; Opdefs: V0886 is the yes answer, V2350 the no answer; V8081 (2012-2024) is a single answer column with its own coding (ja, nej, vet ej, okänt)."
 
 [[statement]]
@@ -88978,19 +89050,19 @@ evidence = "#2102 same-label cluster 'Regel' (2 variables): judged different mea
 [[statement]]
 kind = "set"
 subject = "var:valuta-for-kapitalforandringen-bval"
-fields = { "label" = "Valuta för kapitalförändringen (skuldebrev/konvertibler/teckningsoptioner)" }
+fields = { "label" = "Valuta för kapitalförändringen (skuldebrev/konvertibler/teckningsoptioner, bval)" }
 evidence = "#2102 same-label cluster 'Valuta för kapitalförändringen' (3 variables): judged different meaning, medium confidence; BVALKAP and bval share a currency list and adjacent periods; bvalny is concurrent from 2015 and its opdef adds nyemission and fondemission."
 
 [[statement]]
 kind = "set"
 subject = "var:valuta-for-kapitalforandringen-bvalny"
-fields = { "label" = "Valuta för kapitalförändringen (fondemission, nyemission m.m.)" }
+fields = { "label" = "Valuta för kapitalförändringen (BVALNY)" }
 evidence = "#2102 same-label cluster 'Valuta för kapitalförändringen' (3 variables): judged different meaning, medium confidence; BVALKAP and bval share a currency list and adjacent periods; bvalny is concurrent from 2015 and its opdef adds nyemission and fondemission."
 
 [[statement]]
 kind = "set"
 subject = "var:valuta-kapitalforandring"
-fields = { "label" = "Valuta för kapitalförändringen (skuldebrev/konvertibler/teckningsoptioner)" }
+fields = { "label" = "Valuta för kapitalförändringen (skuldebrev/konvertibler/teckningsoptioner, BVALKAP)" }
 evidence = "#2102 same-label cluster 'Valuta för kapitalförändringen' (3 variables): judged different meaning, medium confidence; BVALKAP and bval share a currency list and adjacent periods; bvalny is concurrent from 2015 and its opdef adds nyemission and fondemission."
 
 [[statement]]
@@ -89194,5 +89266,5 @@ evidence = "#2102 same-label cluster 'Procent av heltid' (2 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:zsaink"
-fields = { "label" = "Sjuk- och aktivitetsersättning (antagandeinkomst)" }
+fields = { "label" = "Sjuk- och aktivitetsersättning (ZSAINK)" }
 evidence = "#2102 same-label cluster 'Sjuk- och aktivitetsersättning' (2 variables): judged different meaning, medium confidence; ZSAINK opdef adds antagandeinkomst; TSA carries only the summation text."

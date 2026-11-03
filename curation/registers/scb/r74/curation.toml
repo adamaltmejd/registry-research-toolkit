@@ -1160,7 +1160,7 @@ evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:uppv11"
-fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (luft-luft och frånluft/luft-luft)" }
+fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (luft-luft och frånluft/luft-luft, UPPV11)" }
 evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share a code list and follow each other; uppv4 has a different code 2 ('uppvärmningsmöjlighet finns') in the value set."
 
 [[statement]]
@@ -1172,5 +1172,5 @@ evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftv�
 [[statement]]
 kind = "set"
 subject = "var:uppv5"
-fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (luft-luft och frånluft/luft-luft)" }
+fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (luft-luft och frånluft/luft-luft, uppv5)" }
 evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share a code list and follow each other; uppv4 has a different code 2 ('uppvärmningsmöjlighet finns') in the value set."

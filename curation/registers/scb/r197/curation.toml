@@ -2208,7 +2208,7 @@ evidence = "#2102 same-label cluster 'Lokaler, antal' (3 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:lokaler-antal-lokf"
-fields = { "label" = "Lokaler, antal, allmännyttiga bostadsföretag (genomsnitt under året)" }
+fields = { "label" = "Lokaler, antal, allmännyttiga bostadsföretag" }
 evidence = "#2102 same-label cluster 'Lokaler, antal' (3 variables): judged different meaning, medium confidence; LOKF is an average of the number of premises on 1 Jan and 31 Dec for allmännyttiga companies, A20 the association's total, A21 an extra privatägda column with LOA-h wording."
 
 [[statement]]

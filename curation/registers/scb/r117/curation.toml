@@ -1890,7 +1890,7 @@ evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:forvdoda-29649"
-fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (förväntat antal döda)" }
+fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (ForvDoda)" }
 evidence = "#2102 same-label cluster 'Tillägg/avdrag för ohälsa, kr/inv' (2 variables): judged different meaning, medium confidence; ForvDoda (förväntade döda) and ObsDoda (observerade döda) are different concurrent columns under one component label."
 
 [[statement]]

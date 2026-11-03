@@ -1030,7 +1030,7 @@ evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged differen
 [[statement]]
 kind = "set"
 subject = "var:startdatum-inskr"
-fields = { "label" = "Startdatum (inskrivning i förskolan)" }
+fields = { "label" = "Startdatum (inskrivning)" }
 evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged different meaning, medium confidence; InskrDat is the enrolment date in förskolan; StartDat is the date enrolled at the current förskola; concurrent columns in one table."
 
 [[statement]]

@@ -3367,12 +3367,6 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-inkomstkalla"
-fields = { "label" = "Huvudsaklig inkomstkälla (kalenderår)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; Opdefs: the main income source based on the calendar year, the last twelve months or the current month, in different tables."
-
-[[statement]]
-kind = "set"
 subject = "var:huvudsaklig-inkomstkalla-12m"
 fields = { "label" = "Huvudsaklig inkomstkälla (senaste 12 månaderna)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; Opdefs: the main income source based on the calendar year, the last twelve months or the current month, in different tables."

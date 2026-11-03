@@ -290,7 +290,7 @@ evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:antalmer"
-fields = { "label" = "Inmatningspunkter (mer än 1000 kW)" }
+fields = { "label" = "Inmatningspunkter (mer än 1000 kW, AntalMer)" }
 evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes by installed kW per opdef; 2016-2024 columns use mindre/mellan/mer, 2024-2025 columns use XS-XL, and AntalMer and AntalXL share the same threshold (mer än 1000 kW) over adjacent periods so they get one label."
 
 [[statement]]
@@ -308,7 +308,7 @@ evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:antalxl"
-fields = { "label" = "Inmatningspunkter (mer än 1000 kW)" }
+fields = { "label" = "Inmatningspunkter (mer än 1000 kW, AntalXL)" }
 evidence = "#2102 same-label cluster 'Inmatningspunkter' (8 variables): judged different meaning, medium confidence; Size classes by installed kW per opdef; 2016-2024 columns use mindre/mellan/mer, 2024-2025 columns use XS-XL, and AntalMer and AntalXL share the same threshold (mer än 1000 kW) over adjacent periods so they get one label."
 
 [[statement]]
@@ -326,7 +326,7 @@ evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:effektmer"
-fields = { "label" = "Installerad effekt (anläggningar större än 1000 kW)" }
+fields = { "label" = "Installerad effekt (anläggningar större än 1000 kW, EffektMer)" }
 evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes by installed kW per opdef; EffektMer and EffektXL share the same threshold (större än 1000 kW) over adjacent periods so they get one label."
 
 [[statement]]
@@ -362,5 +362,5 @@ evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:installerad-effekt-solceller-storre-an-1000-kw"
-fields = { "label" = "Installerad effekt (anläggningar större än 1000 kW)" }
+fields = { "label" = "Installerad effekt (anläggningar större än 1000 kW, EffektXL)" }
 evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes by installed kW per opdef; EffektMer and EffektXL share the same threshold (större än 1000 kW) over adjacent periods so they get one label."

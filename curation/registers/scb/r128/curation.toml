@@ -2521,6 +2521,12 @@ evidence = "#2102 same-label cluster 'Betalar skatt i beskickningslandet' (4 var
 
 [[statement]]
 kind = "set"
+subject = "var:antal-med-inrikes-schablontraktamente"
+fields = { "label" = "Antal AGI/KU med Traktamente (AntTraktInr)" }
+evidence = "#2102 same-label cluster 'Antal AGI/KU med Traktamente' (3 variables): judged different meaning, medium confidence; AntTraktInr (to 2019) is followed by AntTraktamente (from 2019) with the same definition and opdef, so treated as one variable over time; AntTraktamente_Fel holds erroneous values (opdef)."
+
+[[statement]]
+kind = "set"
 subject = "var:antambassadanstsv"
 fields = { "label" = "Betalar skatt i beskickningslandet (antal AGI/KU per företag)" }
 evidence = "#2102 same-label cluster 'Betalar skatt i beskickningslandet' (4 variables): judged different meaning, high confidence; A 0/1 marker per employment versus a count per company (Ant prefix, description), each with a _Fel version holding erroneous values (opdef)."
@@ -2554,6 +2560,12 @@ kind = "set"
 subject = "var:antpensforman-fel"
 fields = { "label" = "Antal AGI/KU med förmån som pension (felaktiga värden)" }
 evidence = "#2102 same-label cluster 'Antal AGI/KU med förmån som pension' (2 variables): judged different meaning, high confidence; AntPensForman_Fel holds erroneous values and is no longer used (opdef); concurrent with AntPensForman 2022-23."
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktamente"
+fields = { "label" = "Antal AGI/KU med Traktamente (AntTraktamente)" }
+evidence = "#2102 same-label cluster 'Antal AGI/KU med Traktamente' (3 variables): judged different meaning, medium confidence; AntTraktInr (to 2019) is followed by AntTraktamente (from 2019) with the same definition and opdef, so treated as one variable over time; AntTraktamente_Fel holds erroneous values (opdef)."
 
 [[statement]]
 kind = "set"
@@ -2654,7 +2666,7 @@ evidence = "#2102 same-label cluster 'Institutionell sektorkod i LSUM' (2 variab
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-lsum"
-fields = { "label" = "Institutionell sektorkod i LSUM (femsiffrig)" }
+fields = { "label" = "Institutionell sektorkod i LSUM (InstKod)" }
 evidence = "#2102 same-label cluster 'Institutionell sektorkod i LSUM' (2 variables): judged different meaning, high confidence; InstKod has five-digit codes and instkod7 seven-digit codes, concurrent 2001-02 with different code lists."
 
 [[statement]]

@@ -3845,7 +3845,7 @@ evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:anstallningskategori-2012"
-fields = { "label" = "Anställningskategori (klassifikation 2012)" }
+fields = { "label" = "Anställningskategori (aktuell klassifikation)" }
 evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Four classification versions (1995, 2001, 2008, 2012) with different category sets, partly concurrent in the same tables."
 
 [[statement]]
@@ -3941,7 +3941,7 @@ evidence = "#2102 same-label cluster 'Imputerad' (7 variables): judged different
 [[statement]]
 kind = "set"
 subject = "var:kon"
-fields = { "label" = "Kön (bokstavskod K/M)" }
+fields = { "label" = "Kön (Kon)" }
 evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; Kon uses letter codes K/M and Kon2 digit codes 1/2 for the same attribute, concurrently."
 
 [[statement]]

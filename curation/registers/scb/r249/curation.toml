@@ -4493,13 +4493,13 @@ evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): j
 [[statement]]
 kind = "set"
 subject = "var:hemkommun"
-fields = { "label" = "Kommun (folkbokföringskommun)" }
+fields = { "label" = "Kommun (folkbokföringskommun, Hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
 
 [[statement]]
 kind = "set"
 subject = "var:hkom"
-fields = { "label" = "Kommun (folkbokföringskommun)" }
+fields = { "label" = "Kommun (folkbokföringskommun, HKOM)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
 
 [[statement]]
@@ -4517,25 +4517,25 @@ evidence = "#2102 same-label cluster 'Huvudkurs i komvux' (2 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id"
-fields = { "label" = "Kommunalförbund (kod)" }
+fields = { "label" = "Kommunalförbund (kod, Gyfid)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id-2"
-fields = { "label" = "Kommunalförbund (kod)" }
+fields = { "label" = "Kommunalförbund (kod, KFID)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn"
-fields = { "label" = "Kommunalförbund (namn)" }
+fields = { "label" = "Kommunalförbund (namn, Gyfnamn)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn-2"
-fields = { "label" = "Kommunalförbund (namn)" }
+fields = { "label" = "Kommunalförbund (namn, KFNAMN)" }
 evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: id is the code, namn the name; KFID/KFNAMN and Gyfid/Gyfnamn are the same pair renamed in 2018."
 
 [[statement]]
@@ -4571,7 +4571,7 @@ evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): j
 [[statement]]
 kind = "set"
 subject = "var:poang"
-fields = { "label" = "Poängomfattning (kursernas totala poäng)" }
+fields = { "label" = "Poängomfattning (Poang)" }
 evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the student's courses comprise in total, TPoang the förbrukade verksamhetspoäng in the period."
 
 [[statement]]
@@ -4589,7 +4589,7 @@ evidence = "#2102 same-label cluster 'Poängomfattning på gymnasial nivå' (2 v
 [[statement]]
 kind = "set"
 subject = "var:skolenhet-kommun"
-fields = { "label" = "Kommun (skolenhetens kommun)" }
+fields = { "label" = "Kommun (skolenhetens kommun, Skolkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
 
 [[statement]]
@@ -4619,7 +4619,7 @@ evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): 
 [[statement]]
 kind = "set"
 subject = "var:skom"
-fields = { "label" = "Kommun (skolenhetens kommun)" }
+fields = { "label" = "Kommun (skolenhetens kommun, SKOM)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Opdefs: HKOM/Hemkommun is the folkbokföringskommun and SKOM/Skolkommun the kommun där skolenheten är belägen; each pair is a rename in 2018."
 
 [[statement]]
@@ -4649,7 +4649,7 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:tpoang"
-fields = { "label" = "Poängomfattning (förbrukade verksamhetspoäng)" }
+fields = { "label" = "Poängomfattning (TPoang)" }
 evidence = "#2102 same-label cluster 'Poängomfattning' (2 variables): judged different meaning, high confidence; Opdefs: Poang is the points the student's courses comprise in total, TPoang the förbrukade verksamhetspoäng in the period."
 
 [[statement]]

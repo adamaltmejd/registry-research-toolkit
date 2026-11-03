@@ -12051,21 +12051,21 @@ evidence = "#2102 same-label cluster 'Nytta med olika typer av ämnen i arbetet'
 
 [[statement]]
 kind = "set"
-subject = "var:f11-0"
-fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): judged different meaning, medium confidence; The overall satisfaction question recurs over waves under one label; 2017 and 2021 also have separate aspect items (tasks, further training, influence over work situation) per opdef."
+subject = "var:f10-5083"
+fields = { "label" = "Anställningsform (F10)" }
+evidence = "#2102 same-label cluster 'Anställningsform' (10 variables): judged different meaning, medium confidence; The coded employment-form question recurs across waves and surveys (fr6, AnstForm, F12, F11, F16, F10, F3_ny, F3, F6) and keeps one label; F3_txt is the free-text answer to the same question, concurrent with F3."
 
 [[statement]]
 kind = "set"
-subject = "var:f12-0"
-fields = { "label" = "Nöjdhet med arbete (möjligheter att påverka arbetssituationen)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): judged different meaning, medium confidence; The overall satisfaction question recurs over waves under one label; 2017 and 2021 also have separate aspect items (tasks, further training, influence over work situation) per opdef."
+subject = "var:f11-5083"
+fields = { "label" = "Anställningsform (F11)" }
+evidence = "#2102 same-label cluster 'Anställningsform' (10 variables): judged different meaning, medium confidence; The coded employment-form question recurs across waves and surveys (fr6, AnstForm, F12, F11, F16, F10, F3_ny, F3, F6) and keeps one label; F3_txt is the free-text answer to the same question, concurrent with F3."
 
 [[statement]]
 kind = "set"
-subject = "var:f17-0"
-fields = { "label" = "Nöjdhet med arbete (möjligheter till vidareutbildning)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): judged different meaning, medium confidence; The overall satisfaction question recurs over waves under one label; 2017 and 2021 also have separate aspect items (tasks, further training, influence over work situation) per opdef."
+subject = "var:f16"
+fields = { "label" = "Anställningsform (F16)" }
+evidence = "#2102 same-label cluster 'Anställningsform' (10 variables): judged different meaning, medium confidence; The coded employment-form question recurs across waves and surveys (fr6, AnstForm, F12, F11, F16, F10, F3_ny, F3, F6) and keeps one label; F3_txt is the free-text answer to the same question, concurrent with F3."
 
 [[statement]]
 kind = "set"
@@ -12120,6 +12120,12 @@ kind = "set"
 subject = "var:f3-03"
 fields = { "label" = "Orsak  till att examenskrav inte nåtts (fick ett arbete)" }
 evidence = "#2102 same-label cluster 'Orsak  till att examenskrav inte nåtts' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent yes/no columns, one per reason alternative."
+
+[[statement]]
+kind = "set"
+subject = "var:f3-ny"
+fields = { "label" = "Anställningsform (F3_ny)" }
+evidence = "#2102 same-label cluster 'Anställningsform' (10 variables): judged different meaning, medium confidence; The coded employment-form question recurs across waves and surveys (fr6, AnstForm, F12, F11, F16, F10, F3_ny, F3, F6) and keeps one label; F3_txt is the free-text answer to the same question, concurrent with F3."
 
 [[statement]]
 kind = "set"
@@ -12226,7 +12232,7 @@ evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:gyprogr"
-fields = { "label" = "Gymnasieprogram (programkod)" }
+fields = { "label" = "Gymnasieprogram (programkod, GYprogr)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, medium confidence; Programme code columns (Program, GYprogr, Utbild_Sl) versus the grouped yrkesprogram/högskoleförberedande question (F9_ny, F9)."
 
 [[statement]]
@@ -12328,7 +12334,7 @@ evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different mean
 [[statement]]
 kind = "set"
 subject = "var:kalibrerad-vikt-direkta-svar-upprakningstal"
-fields = { "label" = "Vikt (kalibrerad, direkta svar, uppräkningstal)" }
+fields = { "label" = "Vikt (kalibrerad, wk)" }
 evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Different weights per opdef and slug: the plain weight, a register-calibrated weight (KALVIKT), calibrated weights for direct and indirect responses as counts or scaling factors, and the YH calibrated weight."
 
 [[statement]]
@@ -12394,13 +12400,13 @@ evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:manadslon-f16"
-fields = { "label" = "Månadslön (intervall, lägsta klass 0-9 999 kr)" }
+fields = { "label" = "Månadslön (intervall, F16)" }
 evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
 
 [[statement]]
 kind = "set"
 subject = "var:manadslon-f17"
-fields = { "label" = "Månadslön (intervall, lägsta klass 0-14 999 kr)" }
+fields = { "label" = "Månadslön (intervall, F17)" }
 evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
 
 [[statement]]
@@ -12432,12 +12438,6 @@ kind = "set"
 subject = "var:mode-indirektasvar"
 fields = { "label" = "Urvalsdesignvariabel (svarssätt, indirekta svar)" }
 evidence = "#2102 same-label cluster 'Urvalsdesignvariabel' (6 variables): judged different meaning, medium confidence; Opdefs: response mode (derived), and the Nshg and Nrhg counts, each for direct and indirect responses."
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-alternativ"
-fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): judged different meaning, medium confidence; The overall satisfaction question recurs over waves under one label; 2017 and 2021 also have separate aspect items (tasks, further training, influence over work situation) per opdef."
 
 [[statement]]
 kind = "set"
@@ -12574,7 +12574,7 @@ evidence = "#2102 same-label cluster 'Programtyp, högskoleutbildning' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:program"
-fields = { "label" = "Gymnasieprogram (programkod)" }
+fields = { "label" = "Gymnasieprogram (programkod, Program)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, medium confidence; Programme code columns (Program, GYprogr, Utbild_Sl) versus the grouped yrkesprogram/högskoleförberedande question (F9_ny, F9)."
 
 [[statement]]

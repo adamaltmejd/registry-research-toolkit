@@ -22923,19 +22923,19 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "var:agi1faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan, AGI1FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:agi2faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan, AGI2FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:agi3faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan, AGI3FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
@@ -23127,19 +23127,19 @@ evidence = "#2102 same-label cluster 'Källa för yrkesuppgift, huvudsaklig syss
 [[statement]]
 kind = "set"
 subject = "var:ku1faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan, KU1FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:ku2faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan, KU2FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:ku3faman"
-fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
+fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan, KU3FAman)" }
 evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
@@ -23181,7 +23181,7 @@ evidence = "#2102 same-label cluster 'Sektorkod' (4 variables): judged different
 [[statement]]
 kind = "set"
 subject = "var:org-typ"
-fields = { "label" = "Typ av företag (företagstabell, enligt BAS)" }
+fields = { "label" = "Typ av företag (företagstabell)" }
 evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_Typ is derived from the number of workplaces per BAS and Org_TypBAS from FDB (with code 9 = not in FDB) in the company table; Ast_FtgTyp is the same classification in the workplace table."
 
 [[statement]]

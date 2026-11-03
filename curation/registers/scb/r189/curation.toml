@@ -2050,55 +2050,55 @@ evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunsk
 [[statement]]
 kind = "set"
 subject = "var:antal-ettor"
-fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (antal)" }
+fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (Antal_Ettor)" }
 evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): judged different meaning, medium confidence; Antal_Ettor continues as Antal_F as a count; Antal (from 2015) is coded in four groups per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:beh-yrk"
-fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram, Beh_YRK)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-ekonomi-humanistiska-samhallsvetenskapsprogram"
-fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram, Beh_EHS)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-estetiska-program"
-fields = { "label" = "Behörighet till gymnasieskolan (estetiska program)" }
+fields = { "label" = "Behörighet till gymnasieskolan (estetiska program, Beh_EST)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-ehs"
-fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (ekonomi-, humanistiska och samhällsvetenskapsprogram, Beht_EHS)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-est"
-fields = { "label" = "Behörighet till gymnasieskolan (estetiska program)" }
+fields = { "label" = "Behörighet till gymnasieskolan (estetiska program, Beht_EST)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-nt"
-fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram, Beht_NT)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-gy-yrk"
-fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (yrkesprogram, Beht_YRK)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-naturvetenskapsprogram-teknikprogram"
-fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram)" }
+fields = { "label" = "Behörighet till gymnasieskolan (naturvetenskaps- och teknikprogram, Beh_NT)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (9 variables): judged different meaning, high confidence; One column per programme group; Beht_* (2010-2012) and Beh_* (2012-2025) have identical opdefs per group and are renames."
 
 [[statement]]
@@ -2140,19 +2140,19 @@ evidence = "#2102 same-label cluster 'Betyg i ämnet matematik' (3 variables): j
 [[statement]]
 kind = "set"
 subject = "var:ht7"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 7)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 7, HT7)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:ht8"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 8)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 8, HT8)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:ht9"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 9)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 9, HT9)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
@@ -2212,7 +2212,7 @@ evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-1-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, första positionen)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, första positionen, Sun2000Niva_1_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
@@ -2230,7 +2230,7 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-3"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, första positionen)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, första positionen, SunNiva_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
@@ -2248,7 +2248,7 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-omkodad"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, SunNiva_Mor_Omkodad)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
@@ -2260,19 +2260,19 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-sv-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, Sun2000Niva_Sv_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-sv-mor-2"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, SunNiva_Sv_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-1-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, första positionen)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, första positionen, Sun2000Niva_1_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
@@ -2308,7 +2308,7 @@ evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-sv-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, Sun2000Niva_Sv_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
@@ -2338,55 +2338,55 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, första positionen)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, första positionen, SunNiva_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far-omkodad"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, SunNiva_Far_Omkodad)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:sunniva-sv-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer, SunNiva_Sv_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (10 variables): judged different meaning, high confidence; Several SUN codings: old 7-level, 7-level first position, 3-level (renamed over time), 3-digit SUN 2000, grouped SUN 2000, SUN 2020 and grouped SUN 2020; same-code-list renames share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-ht"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 7)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 7, TV1_HT7)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-ht8"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 8)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 8, TV1_HT8)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-ht9"
-fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 9)" }
+fields = { "label" = "Första tillvalsämne (höstterminen, årskurs 9, TV1_HT9)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-vt"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 7)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 7, TV1_VT7)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-vt8"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 8)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 8, TV1_VT8)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:tv1-vt9"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 9)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 9, TV1_VT9)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
@@ -2428,7 +2428,7 @@ evidence = "#2102 same-label cluster 'Andra tillvalsämne' (6 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:utlbakgr"
-fields = { "label" = "Utländsk/svensk bakgrund (saknat födelseland räknas som Sverige)" }
+fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."
 
 [[statement]]
@@ -2446,17 +2446,17 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): 
 [[statement]]
 kind = "set"
 subject = "var:vt7"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 7)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 7, VT7)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:vt8"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 8)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 8, VT8)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
 
 [[statement]]
 kind = "set"
 subject = "var:vt9"
-fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 9)" }
+fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 9, VT9)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."

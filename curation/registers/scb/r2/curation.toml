@@ -6909,6 +6909,12 @@ evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged diffe
 
 [[statement]]
 kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (Alder)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
+
+[[statement]]
+kind = "set"
 subject = "var:alder-samhorighet"
 fields = { "label" = "Ålder 31/12 (samhörighetspersonens)" }
 evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
@@ -6954,6 +6960,12 @@ kind = "set"
 subject = "var:alder-vid-handelsen-vigselalder"
 fields = { "label" = "Ålder vid händelsen (vigsel)" }
 evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judged different meaning, high confidence; Opdefs name the event per column: citizenship change, becoming widowed, death, divorce, wedding, partner's age at partnership, generic AlderH, and asylum seekers' stated age at registration."
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut"
+fields = { "label" = "Ålder 31/12 (AlderSlut)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
 
 [[statement]]
 kind = "set"

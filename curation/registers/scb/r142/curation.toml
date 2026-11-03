@@ -866,7 +866,7 @@ evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variab
 [[statement]]
 kind = "set"
 subject = "var:ng"
-fields = { "label" = "Näringsgren för arbetsställe (SNI 2002)" }
+fields = { "label" = "Näringsgren för arbetsställe (Ng)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): judged different meaning, medium confidence; Ng opdef says SNI enligt standard 2002, Ng2007 says standard 2007; they run concurrently 2011-2023."
 
 [[statement]]

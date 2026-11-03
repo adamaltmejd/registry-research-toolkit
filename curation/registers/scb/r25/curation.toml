@@ -24637,55 +24637,55 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:a-inkomst-jordbruksfastighet"
-fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, brukad)" }
+fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, brukad, AINJO)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variables): judged different meaning, high confidence; Opdefs: INSJOR sums A- and B-income; AINJO/INASJOR are A-income (brukad), BINJO/INBSJOR B-income (ej brukad); each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:a-inkomst-jordbruksfastighet-brukad"
-fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, brukad)" }
+fields = { "label" = "Inkomst av jordbruksfastighet (A-inkomst, brukad, INASJOR)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variables): judged different meaning, high confidence; Opdefs: INSJOR sums A- and B-income; AINJO/INASJOR are A-income (brukad), BINJO/INBSJOR B-income (ej brukad); each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:afa02"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus (0,2 procent)" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus (0,2 procent, AFA02)" }
 evidence = "#2102 same-label cluster 'Underlag för fastighetsavgift avseende hyreshus' (7 variables): judged different meaning, medium confidence; Opdef rates separate AHY02/AFA02 (0,2 %, same opdef, adjacent in time) and AFAHHALV (0,15 %); AHY17, AHY15 and AHY075 carry their rates in the column names and AHY085 has none stated, so it takes its raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:aforfvi"
-fields = { "label" = "Förlustavdrag (förvärvsinkomst)" }
+fields = { "label" = "Förlustavdrag (förvärvsinkomst, AFORFVI)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:aforkap"
-fields = { "label" = "Förlustavdrag (inkomst av kapital)" }
+fields = { "label" = "Förlustavdrag (inkomst av kapital, AFORKAP)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:ahy02"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus (0,2 procent)" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus (0,2 procent, AHY02)" }
 evidence = "#2102 same-label cluster 'Underlag för fastighetsavgift avseende hyreshus' (7 variables): judged different meaning, medium confidence; Opdef rates separate AHY02/AFA02 (0,2 %, same opdef, adjacent in time) and AFAHHALV (0,15 %); AHY17, AHY15 and AHY075 carry their rates in the column names and AHY085 has none stated, so it takes its raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:ainro"
-fields = { "label" = "Inkomst av rörelse (A-inkomst)" }
+fields = { "label" = "Inkomst av rörelse (A-inkomst, AINRO)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, high confidence; Opdefs: INSROR sums A- and B-income; AINRO/INASROR are A-income, BINRO/INBSROR B-income; each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:aintj"
-fields = { "label" = "Inkomst av tjänst (A-inkomst)" }
+fields = { "label" = "Inkomst av tjänst (A-inkomst, AINTJ)" }
 evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
 
 [[statement]]
 kind = "set"
 subject = "var:aktuell-folkbokforingsort-31-12-inkomstar"
-fields = { "label" = "Aktuell folkbokföringsort (31 december inkomståret)" }
+fields = { "label" = "Aktuell folkbokföringsort (31 december inkomståret, BLKFF)" }
 evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (4 variables): judged different meaning, high confidence; Opdefs separate the place at tax-data extraction (LKF, BLKFA) from the place at 31 December of the income year (AKBF, BLKFF); each pair is the same variable over time."
 
 [[statement]]
@@ -24745,13 +24745,13 @@ evidence = "#2102 same-label cluster 'Allmän pensionsavgift' (2 variables): jud
 [[statement]]
 kind = "set"
 subject = "var:allmanna-avdrag"
-fields = { "label" = "Allmänna avdrag (statlig inkomstskatt)" }
+fields = { "label" = "Allmänna avdrag (statlig inkomstskatt, AVSALLM)" }
 evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged different meaning, medium confidence; ALAV and AVSALLM share the opdef (deductions for state income tax) and follow each other; AVKALLM has the opdef 'Allmänna kommunala avdrag'."
 
 [[statement]]
 kind = "set"
 subject = "var:allmanna-avdrag-exklusive-underskott-forvarvskalla"
-fields = { "label" = "Allmänna avdrag (statlig inkomstskatt)" }
+fields = { "label" = "Allmänna avdrag (statlig inkomstskatt, ALAV)" }
 evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged different meaning, medium confidence; ALAV and AVSALLM share the opdef (deductions for state income tax) and follow each other; AVKALLM has the opdef 'Allmänna kommunala avdrag'."
 
 [[statement]]
@@ -24811,7 +24811,7 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av föräldraför
 [[statement]]
 kind = "set"
 subject = "var:atp-kod-efterlevandeforman"
-fields = { "label" = "Kod för ATP (efterlevandeförmån)" }
+fields = { "label" = "Kod för ATP (efterlevandeförmån, BATPF)" }
 evidence = "#2102 same-label cluster 'Kod för ATP' (7 variables): judged different meaning, medium confidence; Opdefs separate ATP code for own benefit (TPEKOD, BATPE), the survivor benefit (TPFKOD, BATPF) and the three survivor-benefit slots from 1997 (BATPF1-3, opdef 'förmån 1/2/3')."
 
 [[statement]]
@@ -24835,19 +24835,19 @@ evidence = "#2102 same-label cluster 'Kod för ATP' (7 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:atp-kod-egen-forman"
-fields = { "label" = "Kod för ATP (egen förmån)" }
+fields = { "label" = "Kod för ATP (egen förmån, BATPE)" }
 evidence = "#2102 same-label cluster 'Kod för ATP' (7 variables): judged different meaning, medium confidence; Opdefs separate ATP code for own benefit (TPEKOD, BATPE), the survivor benefit (TPFKOD, BATPF) and the three survivor-benefit slots from 1997 (BATPF1-3, opdef 'förmån 1/2/3')."
 
 [[statement]]
 kind = "set"
 subject = "var:avforlf"
-fields = { "label" = "Förlustavdrag (förvärvsinkomst)" }
+fields = { "label" = "Förlustavdrag (förvärvsinkomst, AVFORLF)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:avforlk"
-fields = { "label" = "Förlustavdrag (inkomst av kapital)" }
+fields = { "label" = "Förlustavdrag (inkomst av kapital, AVFORLK)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
@@ -24859,13 +24859,13 @@ evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:avkforl"
-fields = { "label" = "Förlustavdrag (kommunal skatt)" }
+fields = { "label" = "Förlustavdrag (kommunal skatt, AVKFORL)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:avsforl"
-fields = { "label" = "Förlustavdrag (statlig skatt)" }
+fields = { "label" = "Förlustavdrag (statlig skatt, AVSFORL)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
@@ -24883,13 +24883,13 @@ evidence = "#2102 same-label cluster 'Avtalspension' (2 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:b-inkomst-jordbruksfastighet"
-fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, ej brukad)" }
+fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, ej brukad, BINJO)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variables): judged different meaning, high confidence; Opdefs: INSJOR sums A- and B-income; AINJO/INASJOR are A-income (brukad), BINJO/INBSJOR B-income (ej brukad); each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:b-inkomst-jordbruksfastighet-ej-brukad"
-fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, ej brukad)" }
+fields = { "label" = "Inkomst av jordbruksfastighet (B-inkomst, ej brukad, INBSJOR)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variables): judged different meaning, high confidence; Opdefs: INSJOR sums A- and B-income; AINJO/INASJOR are A-income (brukad), BINJO/INBSJOR B-income (ej brukad); each pair follows each other in time."
 
 [[statement]]
@@ -24906,6 +24906,18 @@ evidence = "#2102 same-label cluster 'Barnpension skattepliktig och skattefri' (
 
 [[statement]]
 kind = "set"
+subject = "var:bciv"
+fields = { "label" = "Civilstånd (BCIV)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): judged different meaning, medium confidence; Value sets separate the detailed civil status (CIV, BCIV, Civil in sequence) from the reduced three-group version (CIVRED, BCIVRED)."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivt"
+fields = { "label" = "Civilstånd för inkomståret (BCIVT)" }
+evidence = "#2102 same-label cluster 'Civilstånd för inkomståret' (3 variables): judged different meaning, medium confidence; CIV and BCIVT share the same six categories in sequence; CIVI runs concurrently with the detailed list (sambo, partnerskap)."
+
+[[statement]]
+kind = "set"
 subject = "var:betald-begravningsavgift-hushall"
 fields = { "label" = "Betald begravningsavgift (hushåll)" }
 evidence = "#2102 same-label cluster 'Betald begravningsavgift' (2 variables): judged different meaning, high confidence; Same amount for individ (SBEGR) and bostadshushåll (SBEGRHB)."
@@ -24919,7 +24931,7 @@ evidence = "#2102 same-label cluster 'Betald begravningsavgift' (2 variables): j
 [[statement]]
 kind = "set"
 subject = "var:bfpmark"
-fields = { "label" = "Pensionsmarkering (folkpension enligt kontrolluppgift)" }
+fields = { "label" = "Pensionsmarkering (folkpension enligt kontrolluppgift, BFPMARK)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
@@ -24931,7 +24943,7 @@ evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:binro"
-fields = { "label" = "Inkomst av rörelse (B-inkomst)" }
+fields = { "label" = "Inkomst av rörelse (B-inkomst, BINRO)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, high confidence; Opdefs: INSROR sums A- and B-income; AINRO/INASROR are A-income, BINRO/INBSROR B-income; each pair follows each other in time."
 
 [[statement]]
@@ -24967,7 +24979,7 @@ evidence = "#2102 same-label cluster 'Delägare m.fl. i fåmansföretag' (4 vari
 [[statement]]
 kind = "set"
 subject = "var:bkungr"
-fields = { "label" = "Näringsgren för individ (kontrolluppgiftsregistret)" }
+fields = { "label" = "Näringsgren för individ (kontrolluppgiftsregistret, BKUNGR)" }
 evidence = "#2102 same-label cluster 'Näringsgren för individ' (4 variables): judged different meaning, medium confidence; SNI is the coarse list, BNGR the five-digit industry from kontrolluppgifter and FDB; BKUNGR and BNGRA share an opdef (SNI2007 from the control-statement register only) and follow each other."
 
 [[statement]]
@@ -25003,19 +25015,19 @@ evidence = "#2102 same-label cluster 'Blandad inkomst' (3 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:bnat"
-fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (år för svenskt medborgarskap)" }
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (BNAT)" }
 evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (5 variables): judged different meaning, medium confidence; BNATT lists country of citizenship; NATRTB, NAT, BNAT and Medblandnamn follow each other with Sverige plus the year of Swedish citizenship."
 
 [[statement]]
 kind = "set"
 subject = "var:bnatt"
-fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (medborgarskapsland)" }
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (BNATT)" }
 evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (5 variables): judged different meaning, medium confidence; BNATT lists country of citizenship; NATRTB, NAT, BNAT and Medblandnamn follow each other with Sverige plus the year of Swedish citizenship."
 
 [[statement]]
 kind = "set"
 subject = "var:bngra"
-fields = { "label" = "Näringsgren för individ (kontrolluppgiftsregistret)" }
+fields = { "label" = "Näringsgren för individ (kontrolluppgiftsregistret, BNGRA)" }
 evidence = "#2102 same-label cluster 'Näringsgren för individ' (4 variables): judged different meaning, medium confidence; SNI is the coarse list, BNGR the five-digit industry from kontrolluppgifter and FDB; BKUNGR and BNGRA share an opdef (SNI2007 from the control-statement register only) and follow each other."
 
 [[statement]]
@@ -25081,13 +25093,13 @@ evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstill�
 [[statement]]
 kind = "set"
 subject = "var:bpens"
-fields = { "label" = "Pensionsmarkering (uttagen pension)" }
+fields = { "label" = "Pensionsmarkering (uttagen pension, BPENS)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
 kind = "set"
 subject = "var:bruttoinkomst"
-fields = { "label" = "Bruttoinkomst (individ)" }
+fields = { "label" = "Bruttoinkomst (individ, BRUTTO)" }
 evidence = "#2102 same-label cluster 'Bruttoinkomst' (4 variables): judged different meaning, high confidence; BRUTTO continues as CBRUTTO (individ); CBRUTT03 is the concurrent definition-2003 column and CBRUTTOHB the household version."
 
 [[statement]]
@@ -25117,7 +25129,7 @@ evidence = "#2102 same-label cluster 'Bruttoinkomst, definition 2015' (2 variabl
 [[statement]]
 kind = "set"
 subject = "var:bruttoinkomst-individ"
-fields = { "label" = "Bruttoinkomst (individ)" }
+fields = { "label" = "Bruttoinkomst (individ, CBRUTTO)" }
 evidence = "#2102 same-label cluster 'Bruttoinkomst' (4 variables): judged different meaning, high confidence; BRUTTO continues as CBRUTTO (individ); CBRUTT03 is the concurrent definition-2003 column and CBRUTTOHB the household version."
 
 [[statement]]
@@ -25128,9 +25140,21 @@ evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, fami
 
 [[statement]]
 kind = "set"
+subject = "var:civ"
+fields = { "label" = "Civilstånd (CIV)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): judged different meaning, medium confidence; Value sets separate the detailed civil status (CIV, BCIV, Civil in sequence) from the reduced three-group version (CIVRED, BCIVRED)."
+
+[[statement]]
+kind = "set"
 subject = "var:civi"
 fields = { "label" = "Civilstånd för inkomståret (CIVI)" }
 evidence = "#2102 same-label cluster 'Civilstånd för inkomståret' (3 variables): judged different meaning, medium confidence; CIV and BCIVT share the same six categories in sequence; CIVI runs concurrently with the detailed list (sambo, partnerskap)."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (Civil)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): judged different meaning, medium confidence; Value sets separate the detailed civil status (CIV, BCIV, Civil in sequence) from the reduced three-group version (CIVRED, BCIVRED)."
 
 [[statement]]
 kind = "set"
@@ -25141,8 +25165,14 @@ evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:civilstand-civred"
-fields = { "label" = "Civilstånd (reducerat)" }
+fields = { "label" = "Civilstånd (CIVRED)" }
 evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): judged different meaning, medium confidence; Value sets separate the detailed civil status (CIV, BCIV, Civil in sequence) from the reduced three-group version (CIVRED, BCIVRED)."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-inkomstar"
+fields = { "label" = "Civilstånd för inkomståret (CIV)" }
+evidence = "#2102 same-label cluster 'Civilstånd för inkomståret' (3 variables): judged different meaning, medium confidence; CIV and BCIVT share the same six categories in sequence; CIVI runs concurrently with the detailed list (sambo, partnerskap)."
 
 [[statement]]
 kind = "set"
@@ -25314,8 +25344,14 @@ evidence = "#2102 same-label cluster 'Personnummer, huvudman' (3 variables): jud
 
 [[statement]]
 kind = "set"
+subject = "var:finkt"
+fields = { "label" = "Summa förvärvs- och kapitalinkomst, familj (FINKT)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, familj' (3 variables): judged different meaning, low confidence; FINKT continues as CFVIKIH (same opdef); CFVIKIHT runs concurrently in 1998-2000 with the opdef 'Härledd variabel' only, so it takes its raw column code."
+
+[[statement]]
+kind = "set"
 subject = "var:folkbokforingsort-31-december-indelning-1-januari"
-fields = { "label" = "Aktuell folkbokföringsort (31 december inkomståret)" }
+fields = { "label" = "Aktuell folkbokföringsort (31 december inkomståret, AKBF)" }
 evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (4 variables): judged different meaning, high confidence; Opdefs separate the place at tax-data extraction (LKF, BLKFA) from the place at 31 December of the income year (AKBF, BLKFF); each pair is the same variable over time."
 
 [[statement]]
@@ -25363,8 +25399,14 @@ evidence = "#2102 same-label cluster 'Förlängd omställningspension, summerad'
 [[statement]]
 kind = "set"
 subject = "var:forv"
-fields = { "label" = "Förvärvsarbetande (individ)" }
+fields = { "label" = "Förvärvsarbetande (individ, FORV)" }
 evidence = "#2102 same-label cluster 'Förvärvsarbetande' (3 variables): judged different meaning, high confidence; FORV continues as BFORV with the same opdef; BFORVFAM opdef says it is calculated on RTB-familj (anyone in the family employed)."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-kapitalinkomst-familj"
+fields = { "label" = "Summa förvärvs- och kapitalinkomst, familj (CFVIKIH)" }
+evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, familj' (3 variables): judged different meaning, low confidence; FINKT continues as CFVIKIH (same opdef); CFVIKIHT runs concurrently in 1998-2000 with the opdef 'Härledd variabel' only, so it takes its raw column code."
 
 [[statement]]
 kind = "set"
@@ -25375,7 +25417,7 @@ evidence = "#2102 same-label cluster 'Förvärvsarbetande' (3 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:forvarvsarbetande-arbetsinkomst-storre-an-basbelopp"
-fields = { "label" = "Förvärvsarbetande (individ)" }
+fields = { "label" = "Förvärvsarbetande (individ, BFORV)" }
 evidence = "#2102 same-label cluster 'Förvärvsarbetande' (3 variables): judged different meaning, high confidence; FORV continues as BFORV with the same opdef; BFORVFAM opdef says it is calculated on RTB-familj (anyone in the family employed)."
 
 [[statement]]
@@ -25393,7 +25435,7 @@ evidence = "#2102 same-label cluster 'Folkpension, egen förmån' (4 variables):
 [[statement]]
 kind = "set"
 subject = "var:fpmark"
-fields = { "label" = "Pensionsmarkering (folkpension enligt kontrolluppgift)" }
+fields = { "label" = "Pensionsmarkering (folkpension enligt kontrolluppgift, FPMARK)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
@@ -25453,19 +25495,19 @@ evidence = "#2102 same-label cluster 'Inackorderingsbidrag' (2 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:inasror"
-fields = { "label" = "Inkomst av rörelse (A-inkomst)" }
+fields = { "label" = "Inkomst av rörelse (A-inkomst, INASROR)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, high confidence; Opdefs: INSROR sums A- and B-income; AINRO/INASROR are A-income, BINRO/INBSROR B-income; each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:inatj"
-fields = { "label" = "Inkomst av tjänst (A-inkomst)" }
+fields = { "label" = "Inkomst av tjänst (A-inkomst, INATJ)" }
 evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
 
 [[statement]]
 kind = "set"
 subject = "var:inbsror"
-fields = { "label" = "Inkomst av rörelse (B-inkomst)" }
+fields = { "label" = "Inkomst av rörelse (B-inkomst, INBSROR)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, high confidence; Opdefs: INSROR sums A- and B-income; AINRO/INASROR are A-income, BINRO/INBSROR B-income; each pair follows each other in time."
 
 [[statement]]
@@ -25473,12 +25515,6 @@ kind = "set"
 subject = "var:inbtj"
 fields = { "label" = "Inkomst av tjänst (B-inkomst)" }
 evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:inkbfor"
-fields = { "label" = "Kommunalt beskattningsbar inkomst (förskottsbelopp)" }
-evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, high confidence; KBIN, KBESK and INKBESK follow each other as the same variable; INKBFOR opdef says it holds the advance (förskott) amount."
 
 [[statement]]
 kind = "set"
@@ -25495,7 +25531,7 @@ evidence = "#2102 same-label cluster 'Deklarerad inkomst av tjänst' (2 variable
 [[statement]]
 kind = "set"
 subject = "var:inkomst-fran-famansforetag"
-fields = { "label" = "Inkomst från fåmansföretag (redovisad som inkomst av tjänst)" }
+fields = { "label" = "Inkomst från fåmansföretag (redovisad som inkomst av tjänst, TFOAB)" }
 evidence = "#2102 same-label cluster 'Inkomst från fåmansföretag' (3 variables): judged different meaning, high confidence; TJFOAB continues as TFOAB (same opdef, income reported as inkomst av tjänst); TFOABF opdef says income taxed with förhöjd statlig skatt, not necessarily part of inkomst av tjänst."
 
 [[statement]]
@@ -25525,13 +25561,13 @@ evidence = "#2102 same-label cluster 'Taxerad inkomst' (2 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:insjor"
-fields = { "label" = "Inkomst av jordbruksfastighet (A- och B-inkomst)" }
+fields = { "label" = "Inkomst av jordbruksfastighet (totalt)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variables): judged different meaning, high confidence; Opdefs: INSJOR sums A- and B-income; AINJO/INASJOR are A-income (brukad), BINJO/INBSJOR B-income (ej brukad); each pair follows each other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:insror"
-fields = { "label" = "Inkomst av rörelse (A- och B-inkomst)" }
+fields = { "label" = "Inkomst av rörelse (totalt)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, high confidence; Opdefs: INSROR sums A- and B-income; AINRO/INASROR are A-income, BINRO/INBSROR B-income; each pair follows each other in time."
 
 [[statement]]
@@ -25539,6 +25575,12 @@ kind = "set"
 subject = "var:instax"
 fields = { "label" = "Taxerad inkomst (statlig)" }
 evidence = "#2102 same-label cluster 'Taxerad inkomst' (2 variables): judged different meaning, high confidence; Opdefs: INKTAX is computed with kommunalt förlustavdrag, INSTAX with statligt förlustavdrag."
+
+[[statement]]
+kind = "set"
+subject = "var:intj"
+fields = { "label" = "Inkomst av tjänst (INTJ)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
 
 [[statement]]
 kind = "set"
@@ -25572,8 +25614,14 @@ evidence = "#2102 same-label cluster 'Kapitalvinst, brutto' (2 variables): judge
 
 [[statement]]
 kind = "set"
+subject = "var:kas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (KAS)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, low confidence; KAS continues as TKAS (same opdef); TKASKU runs concurrently with TKAS with no documented difference, so it takes its raw column code."
+
+[[statement]]
+kind = "set"
 subject = "var:kfoav"
-fields = { "label" = "Förlustavdrag (kommunal skatt)" }
+fields = { "label" = "Förlustavdrag (kommunal skatt, KFOAV)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
 
 [[statement]]
@@ -25603,7 +25651,7 @@ evidence = "#2102 same-label cluster 'Kommunal inkomstskatt på förvärvsinkoms
 [[statement]]
 kind = "set"
 subject = "var:kontant-bruttolon-deklaration-ruta-1-1"
-fields = { "label" = "Kontant bruttolön (deklaration ruta 1.1)" }
+fields = { "label" = "Kontant bruttolön (deklaration ruta 1.1, TTJLON)" }
 evidence = "#2102 same-label cluster 'Kontant bruttolön' (7 variables): judged different meaning, high confidence; Opdefs: KULON1-3 are control-statement points 1-3, TJLON/TTJLON the declaration box 1.1, TTJLONU/TTJLONUHB Nordic foreign-taxed wages."
 
 [[statement]]
@@ -25669,7 +25717,7 @@ evidence = "#2102 same-label cluster 'Markering för nolltaxering' (2 variables)
 [[statement]]
 kind = "set"
 subject = "var:medborgarskap-eller-ar-sverige"
-fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (år för svenskt medborgarskap)" }
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (Medblandnamn)" }
 evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (5 variables): judged different meaning, medium confidence; BNATT lists country of citizenship; NATRTB, NAT, BNAT and Medblandnamn follow each other with Sverige plus the year of Swedish citizenship."
 
 [[statement]]
@@ -25717,13 +25765,13 @@ evidence = "#2102 same-label cluster 'Näringsinkomst' (3 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:nat"
-fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (år för svenskt medborgarskap)" }
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (NAT)" }
 evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (5 variables): judged different meaning, medium confidence; BNATT lists country of citizenship; NATRTB, NAT, BNAT and Medblandnamn follow each other with Sverige plus the year of Swedish citizenship."
 
 [[statement]]
 kind = "set"
 subject = "var:natrtb"
-fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (år för svenskt medborgarskap)" }
+fields = { "label" = "Medborgarskap eller år för svenskt medborgarskap (NATRTB)" }
 evidence = "#2102 same-label cluster 'Medborgarskap eller år för svenskt medborgarskap' (5 variables): judged different meaning, medium confidence; BNATT lists country of citizenship; NATRTB, NAT, BNAT and Medblandnamn follow each other with Sverige plus the year of Swedish citizenship."
 
 [[statement]]
@@ -25765,7 +25813,7 @@ evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:nundt"
-fields = { "label" = "Underskott av näringsverksamhet. (individ)" }
+fields = { "label" = "Underskott av näringsverksamhet. (individ, NUNDT)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 variables): judged different meaning, medium confidence; UNRV, NUNDT and NUNDER are consecutive individ columns; USKNRV is a concurrent column with no stated difference, so it takes its raw code; NUNDERHB is the hushåll version."
 
 [[statement]]
@@ -25813,25 +25861,25 @@ evidence = "#2102 same-label cluster 'Övriga negativa transfereringar' (2 varia
 [[statement]]
 kind = "set"
 subject = "var:ovriga-positiva-transfereringar-hushall-fore-2016"
-fields = { "label" = "Övriga positiva transfereringar (hushåll)" }
+fields = { "label" = "Övriga positiva transfereringar (hushåll, CTRAPOVHB)" }
 evidence = "#2102 same-label cluster 'Övriga positiva transfereringar' (4 variables): judged different meaning, high confidence; Individ versus hushåll columns; within each unit the pre-2016 and post-2016 columns are the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:ovriga-positiva-transfereringar-hushall-fran-2016"
-fields = { "label" = "Övriga positiva transfereringar (hushåll)" }
+fields = { "label" = "Övriga positiva transfereringar (hushåll, CTRAPSPOVHB)" }
 evidence = "#2102 same-label cluster 'Övriga positiva transfereringar' (4 variables): judged different meaning, high confidence; Individ versus hushåll columns; within each unit the pre-2016 and post-2016 columns are the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:ovriga-positiva-transfereringar-individ-fore-2016"
-fields = { "label" = "Övriga positiva transfereringar (individ)" }
+fields = { "label" = "Övriga positiva transfereringar (individ, CTRAPOV)" }
 evidence = "#2102 same-label cluster 'Övriga positiva transfereringar' (4 variables): judged different meaning, high confidence; Individ versus hushåll columns; within each unit the pre-2016 and post-2016 columns are the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:ovriga-positiva-transfereringar-individ-fran-2016"
-fields = { "label" = "Övriga positiva transfereringar (individ)" }
+fields = { "label" = "Övriga positiva transfereringar (individ, CTRAPSPOV)" }
 evidence = "#2102 same-label cluster 'Övriga positiva transfereringar' (4 variables): judged different meaning, high confidence; Individ versus hushåll columns; within each unit the pre-2016 and post-2016 columns are the same variable over time."
 
 [[statement]]
@@ -25849,19 +25897,19 @@ evidence = "#2102 same-label cluster 'Övriga positiva transfereringar, skattefr
 [[statement]]
 kind = "set"
 subject = "var:penmark"
-fields = { "label" = "Pensionsmarkering (uttagen pension)" }
+fields = { "label" = "Pensionsmarkering (uttagen pension, PENMARK)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
 kind = "set"
 subject = "var:penmg"
-fields = { "label" = "Pensionsmarkering (gifta och sambo)" }
+fields = { "label" = "Pensionsmarkering (gifta och sambo, PENMG)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
 kind = "set"
 subject = "var:penmog"
-fields = { "label" = "Pensionsmarkering (ensamstående)" }
+fields = { "label" = "Pensionsmarkering (ensamstående, PENMOG)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
@@ -25933,13 +25981,13 @@ evidence = "#2102 same-label cluster 'Pensionsförsäkring/pensionssparkonto, in
 [[statement]]
 kind = "set"
 subject = "var:pensionsmarkering-ensamstaende"
-fields = { "label" = "Pensionsmarkering (ensamstående)" }
+fields = { "label" = "Pensionsmarkering (ensamstående, BPMRKOG)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
 kind = "set"
 subject = "var:pensionsmarkering-gifta-sambo"
-fields = { "label" = "Pensionsmarkering (gifta och sambo)" }
+fields = { "label" = "Pensionsmarkering (gifta och sambo, BPMRKG)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), for single persons (PENMOG, BPMRKOG) and folkpension from kontrolluppgifter (FPMARK, BFPMARK); each follows its predecessor."
 
 [[statement]]
@@ -25993,13 +26041,13 @@ evidence = "#2102 same-label cluster 'Deklarerad pension som ej motsvaras av kon
 [[statement]]
 kind = "set"
 subject = "var:primarinkomst"
-fields = { "label" = "Primärinkomst (individ)" }
+fields = { "label" = "Primärinkomst (individ, CPRIM)" }
 evidence = "#2102 same-label cluster 'Primärinkomst' (4 variables): judged different meaning, high confidence; PRIMINK continues as CPRIM (individ); CPRIM03 is the concurrent definition-2003 column and CPRIMHB the household version."
 
 [[statement]]
 kind = "set"
 subject = "var:primarinkomst-2"
-fields = { "label" = "Primärinkomst (individ)" }
+fields = { "label" = "Primärinkomst (individ, PRIMINK)" }
 evidence = "#2102 same-label cluster 'Primärinkomst' (4 variables): judged different meaning, high confidence; PRIMINK continues as CPRIM (individ); CPRIM03 is the concurrent definition-2003 column and CPRIMHB the household version."
 
 [[statement]]
@@ -26034,6 +26082,12 @@ evidence = "#2102 same-label cluster 'Samfundskod' (2 variables): judged differe
 
 [[statement]]
 kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-familj"
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj (CSFVIH)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, low confidence; SINKFT continues as CSFVIH (same opdef); CSFVIHT runs concurrently in 1998-2000 with the opdef 'Härledd variabel' only, so it takes its raw column code."
+
+[[statement]]
+kind = "set"
 subject = "var:sarskild-loneskatt-forvarvsinkomst"
 fields = { "label" = "Underlag för beräkning av särskild löneskatt på förvärvsinkomsten (24,26 procent)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av särskild löneskatt på förvärvsinkomsten' (2 variables): judged different meaning, high confidence; Opdefs give the rates: ASLSF 24,26 % and ASLSFP 16,16 %; concurrent columns."
@@ -26059,8 +26113,14 @@ evidence = "#2102 same-label cluster 'Expansionsmedelsskatt' (4 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:sfoav"
-fields = { "label" = "Förlustavdrag (statlig skatt)" }
+fields = { "label" = "Förlustavdrag (statlig skatt, SFOAV)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, high confidence; Opdefs separate kommunalt and statligt förlustavdrag (KFOAV/AVKFORL, SFOAV/AVSFORL) and later avdrag against förvärvsinkomst and against kapital (AVFORLF/AFORFVI, AVFORLK/AFORKAP); each pair follows the other in time."
+
+[[statement]]
+kind = "set"
+subject = "var:sinkft"
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj (SINKFT)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, low confidence; SINKFT continues as CSFVIH (same opdef); CSFVIHT runs concurrently in 1998-2000 with the opdef 'Härledd variabel' only, so it takes its raw column code."
 
 [[statement]]
 kind = "set"
@@ -26121,12 +26181,6 @@ kind = "set"
 subject = "var:sjukforsakringsavg-lag-inkomst-delperiod-3"
 fields = { "label" = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp (augusti–december)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp' (4 variables): judged different meaning, high confidence; Opdefs: ASJUKM is the total basis, ASJUKM1-3 the bases for 1/1-30/4, 1/5-31/7 and 1/8-31/12."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-skattefri-divfrip"
-fields = { "label" = "Sjukpenning, skattefri (inklusive skattefri frivillig pension och särskilt pensionstillägg)" }
-evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (3 variables): judged different meaning, medium confidence; SJUKPF and ISJUK/SJUKPF follow each other; DIVFRIP opdef sums tax-free sjukpenning with tax-free voluntary pension and särskilt pensionstillägg, concurrent 1983-1986."
 
 [[statement]]
 kind = "set"
@@ -26203,31 +26257,31 @@ evidence = "#2102 same-label cluster 'Skattereduktion för sjuk- och aktivitetse
 [[statement]]
 kind = "set"
 subject = "var:sni"
-fields = { "label" = "Näringsgren för individ (grov indelning)" }
+fields = { "label" = "Näringsgren för individ (SNI)" }
 evidence = "#2102 same-label cluster 'Näringsgren för individ' (4 variables): judged different meaning, medium confidence; SNI is the coarse list, BNGR the five-digit industry from kontrolluppgifter and FDB; BKUNGR and BNGRA share an opdef (SNI2007 from the control-statement register only) and follow each other."
 
 [[statement]]
 kind = "set"
 subject = "var:socialbidrag-inkl-introduktion"
-fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (individ)" }
+fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (individ, ISOCBID)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Opdefs: SOCB and ISOCBID are individ amounts, SOCBF and ISOCBIDH are summed over the RTB family; each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:socialbidrag-inkl-introduktion-2"
-fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (individ)" }
+fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (individ, SOCB)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Opdefs: SOCB and ISOCBID are individ amounts, SOCBF and ISOCBIDH are summed over the RTB family; each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:socialbidrag-inkl-introduktion-familj"
-fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (familj)" }
+fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (familj, SOCBF)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Opdefs: SOCB and ISOCBID are individ amounts, SOCBF and ISOCBIDH are summed over the RTB family; each pair follows the other in time."
 
 [[statement]]
 kind = "set"
 subject = "var:socialbidrag-introduktionsersattning-flyktingar-familj"
-fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (familj)" }
+fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (familj, ISOCBIDH)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Opdefs: SOCB and ISOCBID are individ amounts, SOCBF and ISOCBIDH are summed over the RTB family; each pair follows the other in time."
 
 [[statement]]
@@ -26347,7 +26401,7 @@ evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag 
 [[statement]]
 kind = "set"
 subject = "var:sumtj"
-fields = { "label" = "Inkomst av tjänst (summa deklarerad)" }
+fields = { "label" = "Inkomst av tjänst (summa deklarerad, SUMTJ)" }
 evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
 
 [[statement]]
@@ -26383,14 +26437,20 @@ evidence = "#2102 same-label cluster 'Tillfällig skattereduktion för arbetsink
 [[statement]]
 kind = "set"
 subject = "var:tjfoab"
-fields = { "label" = "Inkomst från fåmansföretag (redovisad som inkomst av tjänst)" }
+fields = { "label" = "Inkomst från fåmansföretag (redovisad som inkomst av tjänst, TJFOAB)" }
 evidence = "#2102 same-label cluster 'Inkomst från fåmansföretag' (3 variables): judged different meaning, high confidence; TJFOAB continues as TFOAB (same opdef, income reported as inkomst av tjänst); TFOABF opdef says income taxed with förhöjd statlig skatt, not necessarily part of inkomst av tjänst."
 
 [[statement]]
 kind = "set"
 subject = "var:tjlon"
-fields = { "label" = "Kontant bruttolön (deklaration ruta 1.1)" }
+fields = { "label" = "Kontant bruttolön (deklaration ruta 1.1, TJLON)" }
 evidence = "#2102 same-label cluster 'Kontant bruttolön' (7 variables): judged different meaning, high confidence; Opdefs: KULON1-3 are control-statement points 1-3, TJLON/TTJLON the declaration box 1.1, TTJLONU/TTJLONUHB Nordic foreign-taxed wages."
+
+[[statement]]
+kind = "set"
+subject = "var:tkas"
+fields = { "label" = "Kontant arbetsmarknadsstöd Kontrolluppgift (TKAS)" }
+evidence = "#2102 same-label cluster 'Kontant arbetsmarknadsstöd Kontrolluppgift' (3 variables): judged different meaning, low confidence; KAS continues as TKAS (same opdef); TKASKU runs concurrently with TKAS with no documented difference, so it takes its raw column code."
 
 [[statement]]
 kind = "set"
@@ -26419,13 +26479,13 @@ evidence = "#2102 same-label cluster 'Totalt arbetsmarknadsstöd' (2 variables):
 [[statement]]
 kind = "set"
 subject = "var:tpekod"
-fields = { "label" = "Kod för ATP (egen förmån)" }
+fields = { "label" = "Kod för ATP (egen förmån, TPEKOD)" }
 evidence = "#2102 same-label cluster 'Kod för ATP' (7 variables): judged different meaning, medium confidence; Opdefs separate ATP code for own benefit (TPEKOD, BATPE), the survivor benefit (TPFKOD, BATPF) and the three survivor-benefit slots from 1997 (BATPF1-3, opdef 'förmån 1/2/3')."
 
 [[statement]]
 kind = "set"
 subject = "var:tpfkod"
-fields = { "label" = "Kod för ATP (efterlevandeförmån)" }
+fields = { "label" = "Kod för ATP (efterlevandeförmån, TPFKOD)" }
 evidence = "#2102 same-label cluster 'Kod för ATP' (7 variables): judged different meaning, medium confidence; Opdefs separate ATP code for own benefit (TPEKOD, BATPE), the survivor benefit (TPFKOD, BATPF) and the three survivor-benefit slots from 1997 (BATPF1-3, opdef 'förmån 1/2/3')."
 
 [[statement]]
@@ -26443,7 +26503,13 @@ evidence = "#2102 same-label cluster 'Ersättning i samband med sjukdom, både s
 [[statement]]
 kind = "set"
 subject = "var:tsum"
-fields = { "label" = "Inkomst av tjänst (summa deklarerad)" }
+fields = { "label" = "Inkomst av tjänst (summa deklarerad, TSUM)" }
+evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
+
+[[statement]]
+kind = "set"
+subject = "var:ttj"
+fields = { "label" = "Inkomst av tjänst (TTJ)" }
 evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
 
 [[statement]]
@@ -26695,7 +26761,7 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av skogsvårdsavg
 [[statement]]
 kind = "set"
 subject = "var:underskott-naringsverksamhet"
-fields = { "label" = "Underskott av näringsverksamhet. (individ)" }
+fields = { "label" = "Underskott av näringsverksamhet. (individ, NUNDER)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 variables): judged different meaning, medium confidence; UNRV, NUNDT and NUNDER are consecutive individ columns; USKNRV is a concurrent column with no stated difference, so it takes its raw code; NUNDERHB is the hushåll version."
 
 [[statement]]
@@ -26713,7 +26779,7 @@ evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 vari
 [[statement]]
 kind = "set"
 subject = "var:unrv"
-fields = { "label" = "Underskott av näringsverksamhet. (individ)" }
+fields = { "label" = "Underskott av näringsverksamhet. (individ, UNRV)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 variables): judged different meaning, medium confidence; UNRV, NUNDT and NUNDER are consecutive individ columns; USKNRV is a concurrent column with no stated difference, so it takes its raw code; NUNDERHB is the hushåll version."
 
 [[statement]]

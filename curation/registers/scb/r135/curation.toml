@@ -874,25 +874,25 @@ evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:bortfall-leverad-kvantitet-enhet1"
-fields = { "label" = "Bortfallskod kvantitet, levererad kvantitet (enhet 1)" }
+fields = { "label" = "Bortfallskod kvantitet (LevB)" }
 evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
 
 [[statement]]
 kind = "set"
 subject = "var:bortfall-leverad-kvantitet-enhet2"
-fields = { "label" = "Bortfallskod kvantitet, levererad kvantitet (enhet 2)" }
+fields = { "label" = "Bortfallskod kvantitet (LevB2)" }
 evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
 
 [[statement]]
 kind = "set"
 subject = "var:bortfall-total-kvantitet-enhet2"
-fields = { "label" = "Bortfallskod kvantitet, total kvantitet (enhet 2)" }
+fields = { "label" = "Bortfallskod kvantitet, total kvantitet (TotB2)" }
 evidence = "#2102 same-label cluster 'Bortfallskod kvantitet' (4 variables): judged different meaning, high confidence; Four concurrent columns whose opdefs say levererad vs totalt producerad kvantitet, each for kvantitetsenhet 1 and 2."
 
 [[statement]]
 kind = "set"
 subject = "var:imputeringsmetod-lev"
-fields = { "label" = "Imputeringsmetod, levererad kvantitet (enhet 1)" }
+fields = { "label" = "Imputeringsmetod, levererad kvantitet (MetLev)" }
 evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
 
 [[statement]]
@@ -904,7 +904,7 @@ evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:imputeringsmetod-tot"
-fields = { "label" = "Imputeringsmetod, total kvantitet (enhet 1)" }
+fields = { "label" = "Imputeringsmetod, total kvantitet (MetTot)" }
 evidence = "#2102 same-label cluster 'Imputeringsmetod' (4 variables): judged different meaning, high confidence; Opdefs say the method refers to levererad vs totalt producerad kvantitet, enhet 1 or 2; Lev and Tot also have different code lists."
 
 [[statement]]
@@ -922,7 +922,7 @@ evidence = "#2102 same-label cluster 'Kvantitetsenhet' (2 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:kvantenhet2"
-fields = { "label" = "Kvantitetsenhet (enhet 2)" }
+fields = { "label" = "Kvantitetsenhet (KvantEnhet2)" }
 evidence = "#2102 same-label cluster 'Kvantitetsenhet' (2 variables): judged different meaning, high confidence; Opdef for KvantEnhet2 says it is the second kvantitetsenhet; the other is the first unit; both run concurrently."
 
 [[statement]]

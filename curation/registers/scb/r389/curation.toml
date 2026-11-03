@@ -770,13 +770,13 @@ evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+fields = { "label" = "Utbildningsnivå (SUN2020Niva)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2020, grov indelning)" }
+fields = { "label" = "Utbildningsnivå (grov indelning, SUN2020Niva_OLD)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
 
 [[statement]]

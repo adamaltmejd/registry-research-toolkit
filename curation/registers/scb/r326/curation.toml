@@ -784,7 +784,7 @@ evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:fullfoljt-under"
-fields = { "label" = "Fullföljt utbildning (under referensåret)" }
+fields = { "label" = "Fullföljt utbildning (Fullfoljt_Under)" }
 evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judged different meaning, medium confidence; FullF and Fullfoljt_Under share the opdef (fullföljt under referensåret) and adjacent periods; Fullfoljt_Efter is fullföljs efter referensåret; Resultat is a three-value outcome."
 
 [[statement]]

@@ -4626,12 +4626,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:agarkontroll"
-fields = { "label" = "Ägarkontroll (1-siffrig ägarkategori)" }
-evidence = "#2102 same-label cluster 'Ägarkontroll' (3 variables): judged different meaning, medium confidence; AgKat is a one-digit ägarkategori; AgKat1 and AgKat2 are two-digit FAD codes for November of the year before and of the measurement year (opdefs)."
-
-[[statement]]
-kind = "set"
 subject = "var:agkat"
 fields = { "label" = "Ägarkontroll (FAD, 2-siffrig kontrollkategori, företag november året före)" }
 evidence = "#2102 same-label cluster 'Ägarkontroll' (3 variables): judged different meaning, medium confidence; AgKat is a one-digit ägarkategori; AgKat1 and AgKat2 are two-digit FAD codes for November of the year before and of the measurement year (opdefs)."
@@ -4711,13 +4705,13 @@ evidence = "#2102 same-label cluster 'CFAR-Nummer' (3 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:foregaende-ars-arbetsstallenummer-foreg"
-fields = { "label" = "Föregående års arbetsställenummer (indikator)" }
+fields = { "label" = "Föregående års arbetsställenummer (indikator, FOREG)" }
 evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 variables): judged different meaning, medium confidence; FOREG and ForegAstNr are the same Nej/Ja indicator under successive names (identical opdef); AstNr1 is an arbetsställenummer, not an indicator."
 
 [[statement]]
 kind = "set"
 subject = "var:foregaende-ars-arbetsstallenummer-foregastnr"
-fields = { "label" = "Föregående års arbetsställenummer (indikator)" }
+fields = { "label" = "Föregående års arbetsställenummer (indikator, ForegAstNr)" }
 evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 variables): judged different meaning, medium confidence; FOREG and ForegAstNr are the same Nej/Ja indicator under successive names (identical opdef); AstNr1 is an arbetsställenummer, not an indicator."
 
 [[statement]]
@@ -4737,12 +4731,6 @@ kind = "set"
 subject = "var:gamsyssstat"
 fields = { "label" = "Sysselsättningsstatus, november (gammal avgränsning)" }
 evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; GAMSyssStat uses the old delimitation method of 1985-1993 (opdef); SyssStat the current one."
-
-[[statement]]
-kind = "set"
-subject = "var:institutionell-sektor"
-fields = { "label" = "Institutionell sektor (3-siffrig kod)" }
-evidence = "#2102 same-label cluster 'Institutionell sektor' (3 variables): judged different meaning, high confidence; Sektor holds three-digit codes; Sektor1 and Sektor2 hold six-digit codes in FAD for the year before and the measurement year (opdefs)."
 
 [[statement]]
 kind = "set"

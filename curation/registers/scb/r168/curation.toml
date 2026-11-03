@@ -5776,7 +5776,7 @@ evidence = "#2102 same-label cluster 'Bidrag för verksamheten' (3 variables): j
 [[statement]]
 kind = "set"
 subject = "var:bruttoinv-ny-ombygg-byggnader-mark"
-fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företagsenhet)" }
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företagsenhet, fga121)" }
 evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företagsenhet, verksamhetsenhet, lokal); within a level the 2003-2007 code 121 and the 2007-2024 code 141 are the same item renumbered, so they share a label."
 
 [[statement]]
@@ -5938,7 +5938,7 @@ evidence = "#2102 same-label cluster 'Bruttoinvesteringar maskiner och inventari
 [[statement]]
 kind = "set"
 subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-fga141"
-fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företagsenhet)" }
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (företagsenhet, fga141)" }
 evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företagsenhet, verksamhetsenhet, lokal); within a level the 2003-2007 code 121 and the 2007-2024 code 141 are the same item renumbered, so they share a label."
 
 [[statement]]
@@ -5956,13 +5956,13 @@ evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad
 [[statement]]
 kind = "set"
 subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga121"
-fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet)" }
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet, vga121)" }
 evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företagsenhet, verksamhetsenhet, lokal); within a level the 2003-2007 code 121 and the 2007-2024 code 141 are the same item renumbered, so they share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga141"
-fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet)" }
+fields = { "label" = "Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar (verksamhetsenhet, vga141)" }
 evidence = "#2102 same-label cluster 'Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar' (5 variables): judged different meaning, high confidence; Three levels (företagsenhet, verksamhetsenhet, lokal); within a level the 2003-2007 code 121 and the 2007-2024 code 141 are the same item renumbered, so they share a label."
 
 [[statement]]
@@ -6106,13 +6106,13 @@ evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): 
 [[statement]]
 kind = "set"
 subject = "var:interna-kop-av-tjanster-vgr0874"
-fields = { "label" = "Interna köp av tjänster (verksamhetsenhet)" }
+fields = { "label" = "Interna köp av tjänster (verksamhetsenhet, vgr0874)" }
 evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): judged different meaning, medium confidence; vgrk0873 (to 2013) and vgr0874 (from 2013) are the same verksamhetsenhet variable over adjacent periods, so they share a label; lgr0874 is the lokal level in a different table."
 
 [[statement]]
 kind = "set"
 subject = "var:interna-kop-av-tjanster-vgrk0873"
-fields = { "label" = "Interna köp av tjänster (verksamhetsenhet)" }
+fields = { "label" = "Interna köp av tjänster (verksamhetsenhet, vgrk0873)" }
 evidence = "#2102 same-label cluster 'Interna köp av tjänster' (3 variables): judged different meaning, medium confidence; vgrk0873 (to 2013) and vgr0874 (from 2013) are the same verksamhetsenhet variable over adjacent periods, so they share a label; lgr0874 is the lokal level in a different table."
 
 [[statement]]
@@ -6250,7 +6250,7 @@ evidence = "#2102 same-label cluster 'Legoarbeten och underentreprenörer' (3 va
 [[statement]]
 kind = "set"
 subject = "var:naringsgren"
-fields = { "label" = "Näringsgren (verksamhetsenhet)" }
+fields = { "label" = "Näringsgren (Ng)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, high confidence; Opdefs separate verksamhetsenhet, lokal verksamhetsenhet, and SNI 2007 / SNI 2002 codings for administrativ and statistisk enhet."
 
 [[statement]]
@@ -6424,7 +6424,7 @@ evidence = "#2102 same-label cluster 'Nettoinvesteringar rälsfordon' (3 variabl
 [[statement]]
 kind = "set"
 subject = "var:ng-ej-aktuell"
-fields = { "label" = "Näringsgren (SNI 2007, administrativ enhet)" }
+fields = { "label" = "Näringsgren (ej aktuell)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, high confidence; Opdefs separate verksamhetsenhet, lokal verksamhetsenhet, and SNI 2007 / SNI 2002 codings for administrativ and statistisk enhet."
 
 [[statement]]

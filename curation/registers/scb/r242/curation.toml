@@ -1911,18 +1911,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:aldersgrupp-arsslut-2010"
-fields = { "label" = "Gruppering av ålder 31/12 (valet 2010)" }
-evidence = "#2102 same-label cluster 'Gruppering av ålder 31/12' (2 variables): judged different meaning, high confidence; Opdefs: ordinary election 2010 versus the 2011 re-elections."
-
-[[statement]]
-kind = "set"
-subject = "var:alderslut"
-fields = { "label" = "Ålder 31/12 (valet 2010)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Opdefs: age at the end of 2010 versus age at the end of 2011 (re-election year)."
-
-[[statement]]
-kind = "set"
 subject = "var:alderslut11"
 fields = { "label" = "Ålder 31/12 (omvalen 2011)" }
 evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Opdefs: age at the end of 2010 versus age at the end of 2011 (re-election year)."
@@ -1953,18 +1941,6 @@ evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 var
 
 [[statement]]
 kind = "set"
-subject = "var:fortidsrostat-allmanna-val-2010"
-fields = { "label" = "Förtidsröstat (allmänna valen 2010)" }
-evidence = "#2102 same-label cluster 'Förtidsröstat' (2 variables): judged different meaning, high confidence; Opdefs: early voting in the 2010 general elections versus in the 2011 re-elections."
-
-[[statement]]
-kind = "set"
-subject = "var:individuellt-lopnummer-urval-2010"
-fields = { "label" = "UENR (valet 2010)" }
-evidence = "#2102 same-label cluster 'UENR' (2 variables): judged different meaning, high confidence; Opdefs: the 2010 sample id versus the id in the 2011 re-election survey."
-
-[[statement]]
-kind = "set"
 subject = "var:kalibrerad-vikt-aku-svarande-kommunval-omval-2011"
 fields = { "label" = "Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval (omvalet 2011)" }
 evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid kommunfullmäktigval' (2 variables): judged different meaning, high confidence; Opdefs: 2010 election versus 2011 re-election."
@@ -1974,12 +1950,6 @@ kind = "set"
 subject = "var:kalibrerad-vikt-aku-svarande-landstingsval-omval-2011"
 fields = { "label" = "Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval (omvalet 2011)" }
 evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid landstingsfullmäktigval' (2 variables): judged different meaning, high confidence; Opdefs: 2010 election versus 2011 re-election."
-
-[[statement]]
-kind = "set"
-subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-2010"
-fields = { "label" = "Kalibrerad vikt _landstingsfullmäktigval (valet 2010)" }
-evidence = "#2102 same-label cluster 'Kalibrerad vikt _landstingsfullmäktigval' (2 variables): judged different meaning, high confidence; Opdefs: 2010 election versus 2011 re-election."
 
 [[statement]]
 kind = "set"
@@ -2043,21 +2013,9 @@ evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:kon-alder-medborgarskap-kommunval-2010"
-fields = { "label" = "Gruppering av kön och ålder_kommunval (valet 2010)" }
-evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_kommunval' (2 variables): judged different meaning, high confidence; Opdefs: the 2010 municipal election versus the 2011 re-election."
-
-[[statement]]
-kind = "set"
 subject = "var:kon-alder-medborgarskap-kommunval-omval-2011"
 fields = { "label" = "Gruppering av kön och ålder_kommunval (omvalet 2011)" }
 evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_kommunval' (2 variables): judged different meaning, high confidence; Opdefs: the 2010 municipal election versus the 2011 re-election."
-
-[[statement]]
-kind = "set"
-subject = "var:kon-alder-medborgarskap-landstingsval-2010"
-fields = { "label" = "Gruppering av kön och ålder_landstingsval (valet 2010)" }
-evidence = "#2102 same-label cluster 'Gruppering av kön och ålder_landstingsval' (2 variables): judged different meaning, high confidence; Opdefs: the 2010 county council election versus the 2011 re-election."
 
 [[statement]]
 kind = "set"
@@ -2070,12 +2028,6 @@ kind = "set"
 subject = "var:krost"
 fields = { "label" = "Röstande i kommunfullmäktigval - kalibrering (efter län)" }
 evidence = "#2102 same-label cluster 'Röstande i kommunfullmäktigval - kalibrering' (2 variables): judged different meaning, medium confidence; Opdefs: xrost splits Örebro län differently from krost; the columns are concurrent in 2011-2012."
-
-[[statement]]
-kind = "set"
-subject = "var:kvikt-ko"
-fields = { "label" = "Kalibrerad vikt _kommunfullmäktigval (valet 2010)" }
-evidence = "#2102 same-label cluster 'Kalibrerad vikt _kommunfullmäktigval' (3 variables): judged different meaning, high confidence; Opdefs: ordinary weight, revised 2010 weight and the 2011 re-election weight are distinct concurrent columns."
 
 [[statement]]
 kind = "set"
@@ -2157,12 +2109,6 @@ evidence = "#2102 same-label cluster 'Rösträttskod' (2 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:rostrattskod-2010"
-fields = { "label" = "Rösträttskod (valet 2010)" }
-evidence = "#2102 same-label cluster 'Rösträttskod' (2 variables): judged different meaning, high confidence; Opdefs: 2010 election versus the 2011 re-elections."
-
-[[statement]]
-kind = "set"
 subject = "var:sun2000inr"
 fields = { "label" = "Utbildningsinriktning (SUN 2000, kod)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning' (4 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020, each as code and as text column."
@@ -2211,12 +2157,6 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:svensk-utlandsk-medborgare-2010"
-fields = { "label" = "Svensk/utländsk medborgare (valet 2010)" }
-evidence = "#2102 same-label cluster 'Svensk/utländsk medborgare' (2 variables): judged different meaning, high confidence; Opdefs and value sets: 2010 election coded 0/1 versus 2011 re-election coded 1/2."
-
-[[statement]]
-kind = "set"
 subject = "var:svmedb11"
 fields = { "label" = "Svensk/utländsk medborgare (omvalen 2011)" }
 evidence = "#2102 same-label cluster 'Svensk/utländsk medborgare' (2 variables): judged different meaning, high confidence; Opdefs and value sets: 2010 election coded 0/1 versus 2011 re-election coded 1/2."
@@ -2231,12 +2171,6 @@ evidence = "#2102 same-label cluster 'UENR' (2 variables): judged different mean
 kind = "set"
 subject = "var:undnr11"
 fields = { "label" = "Undersökningsid (omvalen 2011)" }
-evidence = "#2102 same-label cluster 'Undersökningsid' (2 variables): judged different meaning, high confidence; Separate 2010 and 2011 (re-election) sample-part id columns."
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsdel-id-2010"
-fields = { "label" = "Undersökningsid (valet 2010)" }
 evidence = "#2102 same-label cluster 'Undersökningsid' (2 variables): judged different meaning, high confidence; Separate 2010 and 2011 (re-election) sample-part id columns."
 
 [[statement]]

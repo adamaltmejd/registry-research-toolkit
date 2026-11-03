@@ -3592,7 +3592,7 @@ evidence = "#2102 same-label cluster 'Valuta' (6 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:punkttyp"
-fields = { "label" = "Punkttyp (adresspunkt)" }
+fields = { "label" = "Punkttyp (PUNKTTYP)" }
 evidence = "#2102 same-label cluster 'Punkttyp' (2 variables): judged different meaning, medium confidence; Different code lists: PKTTYP codes the property point (central point, not located, ...), PUNKTTYP the address point (building, entrance, infart, ...)."
 
 [[statement]]

@@ -756,13 +756,13 @@ evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-kod"
-fields = { "label" = "Kommunvalkrets (kod)" }
+fields = { "label" = "Kommunvalkrets (kod, KO_valkretskod)" }
 evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: name in plain text versus constituency number; the 1998-1999 column has the code opdef and overlaps the code column, so it gets the code label."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-kommunvalkrets"
-fields = { "label" = "Kommunvalkrets (kod)" }
+fields = { "label" = "Kommunvalkrets (kod, kommunvalkrets)" }
 evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: name in plain text versus constituency number; the 1998-1999 column has the code opdef and overlaps the code column, so it gets the code label."
 
 [[statement]]
@@ -810,7 +810,7 @@ evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different mea
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-kod"
-fields = { "label" = "Riksdagsvalkrets (kod)" }
+fields = { "label" = "Riksdagsvalkrets (kod, RI_valkretskod)" }
 evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code versus name; the 1998-1999 column repeats the code list and gets the code label."
 
 [[statement]]
@@ -822,7 +822,7 @@ evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-riksdagsvalkrets"
-fields = { "label" = "Riksdagsvalkrets (kod)" }
+fields = { "label" = "Riksdagsvalkrets (kod, riksdagsvalkrets)" }
 evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code versus name; the 1998-1999 column repeats the code list and gets the code label."
 
 [[statement]]

@@ -1517,19 +1517,19 @@ evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-kod"
-fields = { "label" = "Kommunvalkrets (kod, avgivna röster)" }
+fields = { "label" = "Kommunvalkrets (KO_valkretskod)" }
 evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, high confidence; Opdefs: code for cast votes, name for cast votes, and name for obtained seats."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-namn"
-fields = { "label" = "Kommunvalkrets (namn, avgivna röster)" }
+fields = { "label" = "Kommunvalkrets (KO_valkretsnamn)" }
 evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, high confidence; Opdefs: code for cast votes, name for cast votes, and name for obtained seats."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-valkretsnamn"
-fields = { "label" = "Kommunvalkrets (namn, erhållna mandat)" }
+fields = { "label" = "Kommunvalkrets (valkretsnamn)" }
 evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, high confidence; Opdefs: code for cast votes, name for cast votes, and name for obtained seats."
 
 [[statement]]
@@ -1559,13 +1559,13 @@ evidence = "#2102 same-label cluster 'Landstingskod' (2 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-kod"
-fields = { "label" = "Landstingsvalkrets (kod, tillsatta mandat)" }
+fields = { "label" = "Landstingsvalkrets (kod)" }
 evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code and name for assigned seats, and Ovr_antmand, a code for obtained seats."
 
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-namn"
-fields = { "label" = "Landstingsvalkrets (namn, tillsatta mandat)" }
+fields = { "label" = "Landstingsvalkrets (namn)" }
 evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code and name for assigned seats, and Ovr_antmand, a code for obtained seats."
 
 [[statement]]
@@ -1619,13 +1619,13 @@ evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-ri-valkretskod"
-fields = { "label" = "Riksdagsvalkrets (kod, erhållna mandat)" }
+fields = { "label" = "Riksdagsvalkrets (kod)" }
 evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, high confidence; Opdefs: name for votes per party at district level, name for cast votes, and code for obtained seats."
 
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-valkretsnamn"
-fields = { "label" = "Riksdagsvalkrets (namn, röster per parti och valdistrikt)" }
+fields = { "label" = "Riksdagsvalkrets (valkretsnamn)" }
 evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, high confidence; Opdefs: name for votes per party at district level, name for cast votes, and code for obtained seats."
 
 [[statement]]
@@ -1733,7 +1733,7 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): 
 [[statement]]
 kind = "set"
 subject = "var:valdistrikt"
-fields = { "label" = "Valdistrikt (kod, avgivna röster)" }
+fields = { "label" = "Valdistrikt (kod)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, high confidence; Opdefs: name for cast votes, code for cast votes, and name for eligible voters."
 
 [[statement]]
@@ -1745,5 +1745,5 @@ evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:valdistriktsnamn-2"
-fields = { "label" = "Valdistrikt (namn, avgivna röster)" }
+fields = { "label" = "Valdistrikt (vdnamn)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, high confidence; Opdefs: name for cast votes, code for cast votes, and name for eligible voters."

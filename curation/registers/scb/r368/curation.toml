@@ -1178,13 +1178,13 @@ evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:kommunreg"
-fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret" }
+fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret (KommunReg)" }
 evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:registrerande-kommun-aktivitetsansvar"
-fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret" }
+fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret (Rkom)" }
 evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
 
 [[statement]]

@@ -5994,13 +5994,13 @@ evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): 
 [[statement]]
 kind = "set"
 subject = "var:befattningskod-pedagogisk"
-fields = { "label" = "Befattningskod pedagogisk personal (4-ställig kod)" }
+fields = { "label" = "Befattningskod pedagogisk personal (4-ställig kod, BefKod)" }
 evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Tjb/Tjben share a 3-digit list (to 1991), Bef/BefKod a 4-digit list (1991-2013); PrBefKod's opdef says prioriterad tjänst and runs concurrently with BefKod."
 
 [[statement]]
 kind = "set"
 subject = "var:befattningskod-pedagogisk-personal-bef"
-fields = { "label" = "Befattningskod pedagogisk personal (4-ställig kod)" }
+fields = { "label" = "Befattningskod pedagogisk personal (4-ställig kod, Bef)" }
 evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Tjb/Tjben share a 3-digit list (to 1991), Bef/BefKod a 4-digit list (1991-2013); PrBefKod's opdef says prioriterad tjänst and runs concurrently with BefKod."
 
 [[statement]]
@@ -6012,13 +6012,13 @@ evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 var
 [[statement]]
 kind = "set"
 subject = "var:befattningskod-pedagogisk-personal-tjb"
-fields = { "label" = "Befattningskod pedagogisk personal (3-ställig kod)" }
+fields = { "label" = "Befattningskod pedagogisk personal (3-ställig kod, Tjb)" }
 evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Tjb/Tjben share a 3-digit list (to 1991), Bef/BefKod a 4-digit list (1991-2013); PrBefKod's opdef says prioriterad tjänst and runs concurrently with BefKod."
 
 [[statement]]
 kind = "set"
 subject = "var:befattningskod-pedagogisk-personal-tjben"
-fields = { "label" = "Befattningskod pedagogisk personal (3-ställig kod)" }
+fields = { "label" = "Befattningskod pedagogisk personal (3-ställig kod, Tjben)" }
 evidence = "#2102 same-label cluster 'Befattningskod pedagogisk personal' (5 variables): judged different meaning, medium confidence; Tjb/Tjben share a 3-digit list (to 1991), Bef/BefKod a 4-digit list (1991-2013); PrBefKod's opdef says prioriterad tjänst and runs concurrently with BefKod."
 
 [[statement]]
@@ -6108,7 +6108,7 @@ evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables):
 [[statement]]
 kind = "set"
 subject = "var:mmalkod"
-fields = { "label" = "Undervisning i modersmål (språk)" }
+fields = { "label" = "Undervisning i modersmål (språk, MMalKod)" }
 evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hours of hemspråksundervisning per tjänst (opdefs); Hemsp and MMalKod share the opdef 'vilket språk läraren undervisar i' and adjacent periods; MMal says whether any part of the tjänstgöring is modersmålsundervisning; Amn/Omf are årskursnivå and share of tjänsteomfattning."
 
 [[statement]]
@@ -6120,19 +6120,19 @@ evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables):
 [[statement]]
 kind = "set"
 subject = "var:omfattgr"
-fields = { "label" = "Tjänstgöringsomfattning (grundskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (grundskolan, OmfattGr)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattgy"
-fields = { "label" = "Tjänstgöringsomfattning (gymnasieskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (gymnasieskolan, OmfattGy)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattkv"
-fields = { "label" = "Tjänstgöringsomfattning (komvux)" }
+fields = { "label" = "Tjänstgöringsomfattning (komvux, OmfattKv)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
@@ -6144,31 +6144,31 @@ evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables):
 [[statement]]
 kind = "set"
 subject = "var:omfattsa"
-fields = { "label" = "Tjänstgöringsomfattning (särskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (särskolan, OmfattSa)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattsf"
-fields = { "label" = "Tjänstgöringsomfattning (svenska för invandrare)" }
+fields = { "label" = "Tjänstgöringsomfattning (svenska för invandrare, OmfattSf)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattsp"
-fields = { "label" = "Tjänstgöringsomfattning (specialskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (specialskolan, OmfattSp)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattsv"
-fields = { "label" = "Tjänstgöringsomfattning (särvux)" }
+fields = { "label" = "Tjänstgöringsomfattning (särvux, OmfattSv)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:omfattx"
-fields = { "label" = "Tjänstgöringsomfattning (totalt, oavsett skolform)" }
+fields = { "label" = "Tjänstgöringsomfattning (Omfattx)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
@@ -6348,13 +6348,13 @@ evidence = "#2102 same-label cluster 'Undervisning i moderna språk, övriga' (2
 [[statement]]
 kind = "set"
 subject = "var:omfpsykolodi"
-fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattningen)" }
+fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattningen, OmfPsykolodi)" }
 evidence = "#2102 same-label cluster 'Undervisning i psykologi' (3 variables): judged different meaning, high confidence; AmnPsykologi is the årskursnivå; OmfPsykolodi (2013-2014, misspelt) and OmfPsykologi (2014-2025) are consecutive spellings of the share of the tjänsteomfattning."
 
 [[statement]]
 kind = "set"
 subject = "var:omfpsykologi"
-fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattningen)" }
+fields = { "label" = "Undervisning i psykologi (andel av tjänsteomfattningen, OmfPsykologi)" }
 evidence = "#2102 same-label cluster 'Undervisning i psykologi' (3 variables): judged different meaning, high confidence; AmnPsykologi is the årskursnivå; OmfPsykolodi (2013-2014, misspelt) and OmfPsykologi (2014-2025) are consecutive spellings of the share of the tjänsteomfattning."
 
 [[statement]]
@@ -6503,6 +6503,18 @@ evidence = "#2102 same-label cluster 'Undervisning i yrkesämne' (4 variables): 
 
 [[statement]]
 kind = "set"
+subject = "var:pedagogisk-hogskoleexamen"
+fields = { "label" = "Pedagogisk högskoleexamen - lärarutbildning (BehKod)" }
+evidence = "#2102 same-label cluster 'Pedagogisk högskoleexamen - lärarutbildning' (3 variables): judged different meaning, medium confidence; Beh (to 1995) and BehKod (from 1995) share an opdef and adjacent periods; PrBehKod is a concurrent column for the prioriterade tjänsten (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:pedagogisk-hogskoleexamen-lararutbildning-beh"
+fields = { "label" = "Pedagogisk högskoleexamen - lärarutbildning (Beh)" }
+evidence = "#2102 same-label cluster 'Pedagogisk högskoleexamen - lärarutbildning' (3 variables): judged different meaning, medium confidence; Beh (to 1995) and BehKod (from 1995) share an opdef and adjacent periods; PrBehKod is a concurrent column for the prioriterade tjänsten (opdef)."
+
+[[statement]]
+kind = "set"
 subject = "var:pedagogisk-hogskoleexamen-lararutbildning-prbehkod"
 fields = { "label" = "Pedagogisk högskoleexamen - lärarutbildning (prioriterad tjänst)" }
 evidence = "#2102 same-label cluster 'Pedagogisk högskoleexamen - lärarutbildning' (3 variables): judged different meaning, medium confidence; Beh (to 1995) and BehKod (from 1995) share an opdef and adjacent periods; PrBehKod is a concurrent column for the prioriterade tjänsten (opdef)."
@@ -6576,7 +6588,7 @@ evidence = "#2102 same-label cluster 'Skolform' (3 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:stad"
-fields = { "label" = "Tjänstgöringsnivå (första tjänsten)" }
+fields = { "label" = "Tjänstgöringsnivå (första tjänsten, Stad1)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsnivå' (4 variables): judged different meaning, medium confidence; Stad1 and NivaKod1 are both the personens första tjänst (opdef) with different code lists over adjacent periods; NivaKod covers persons in tjänst from 1998; PrNivaKod is the personregistret column (Pr read as prioriterad tjänst)."
 
 [[statement]]
@@ -6654,7 +6666,7 @@ evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6
 [[statement]]
 kind = "set"
 subject = "var:tjanstgoringsniva"
-fields = { "label" = "Tjänstgöringsnivå (första tjänsten)" }
+fields = { "label" = "Tjänstgöringsnivå (första tjänsten, NivaKod1)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsnivå' (4 variables): judged different meaning, medium confidence; Stad1 and NivaKod1 are both the personens första tjänst (opdef) with different code lists over adjacent periods; NivaKod covers persons in tjänst from 1998; PrNivaKod is the personregistret column (Pr read as prioriterad tjänst)."
 
 [[statement]]
@@ -6672,19 +6684,19 @@ evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables):
 [[statement]]
 kind = "set"
 subject = "var:tjomfgr"
-fields = { "label" = "Tjänstgöringsomfattning (grundskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (grundskolan, Tjomfgr)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:tjomfgy"
-fields = { "label" = "Tjänstgöringsomfattning (gymnasieskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (gymnasieskolan, Tjomfgy)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:tjomfkv"
-fields = { "label" = "Tjänstgöringsomfattning (komvux)" }
+fields = { "label" = "Tjänstgöringsomfattning (komvux, Tjomfkv)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
@@ -6702,25 +6714,25 @@ evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables):
 [[statement]]
 kind = "set"
 subject = "var:tjomfsa"
-fields = { "label" = "Tjänstgöringsomfattning (särskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (särskolan, Tjomfsa)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:tjomfsf"
-fields = { "label" = "Tjänstgöringsomfattning (svenska för invandrare)" }
+fields = { "label" = "Tjänstgöringsomfattning (svenska för invandrare, Tjomfsf)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:tjomfsp"
-fields = { "label" = "Tjänstgöringsomfattning (specialskolan)" }
+fields = { "label" = "Tjänstgöringsomfattning (specialskolan, Tjomfsp)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:tjomfsv"
-fields = { "label" = "Tjänstgöringsomfattning (särvux)" }
+fields = { "label" = "Tjänstgöringsomfattning (särvux, Tjomfsv)" }
 evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (22 variables): judged different meaning, medium confidence; Opdefs name the school form of each column (folkhögskola, grundskola, gymnasieskola, komvux, särskola, SFI, specialskola, särvux); Tjomf* (1994-95) and Omfatt* (1995-) share opdefs per school form and have adjacent periods; Tjomfn/p/t, Omfatty/x/Omfatt and omfattning each have their own opdef."
 
 [[statement]]
@@ -6780,7 +6792,7 @@ evidence = "#2102 same-label cluster 'Typ av hemspråksundervisning' (8 variable
 [[statement]]
 kind = "set"
 subject = "var:undervisning-i-modersmal"
-fields = { "label" = "Undervisning i modersmål (språk)" }
+fields = { "label" = "Undervisning i modersmål (språk, Hemsp)" }
 evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hours of hemspråksundervisning per tjänst (opdefs); Hemsp and MMalKod share the opdef 'vilket språk läraren undervisar i' and adjacent periods; MMal says whether any part of the tjänstgöring is modersmålsundervisning; Amn/Omf are årskursnivå and share of tjänsteomfattning."
 
 [[statement]]

@@ -704,5 +704,5 @@ evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:sni92"
-fields = { "label" = "Näringsgren (SNI 92)" }
+fields = { "label" = "Näringsgren (SNI 92/2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI92 vs SNI2007 classification versions with different code lists."

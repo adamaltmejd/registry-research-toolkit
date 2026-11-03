@@ -2904,13 +2904,13 @@ evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-aktsni92"
-fields = { "label" = "Näringsgren (SNI 92)" }
+fields = { "label" = "Näringsgren (AktSni92)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-al2undeju"
-fields = { "label" = "Näringsgren (SNI 2002)" }
+fields = { "label" = "Näringsgren (AL2UndEjU)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
 
 [[statement]]

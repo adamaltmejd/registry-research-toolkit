@@ -8344,7 +8344,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact01-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 1)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 1)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8368,7 +8368,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact02-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 2)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 2)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8392,7 +8392,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact03-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 3)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 3)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8416,7 +8416,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact04-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 4)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 4)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8440,7 +8440,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact05-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 5)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 5)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8458,7 +8458,7 @@ evidence = "#2102 same-label cluster 'Typ av aktivitet, icke-formell utbildning'
 [[statement]]
 kind = "set"
 subject = "var:nfeact06-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 6)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 6)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]
@@ -8470,7 +8470,7 @@ evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variabl
 [[statement]]
 kind = "set"
 subject = "var:nfeact07-worktime"
-fields = { "label" = "Arbetstid icke-formell utbildning (ja/nej, aktivitet 7)" }
+fields = { "label" = "Arbetstid icke-formell utbildning (aktivitet 7)" }
 evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
 
 [[statement]]

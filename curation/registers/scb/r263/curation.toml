@@ -122,7 +122,7 @@ evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:beskrivnsv"
-fields = { "label" = "Delkostnadsslag (numrering 1–6)" }
+fields = { "label" = "Delkostnadsslag (BeskrivnSV)" }
 evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
 
 [[statement]]
@@ -134,7 +134,7 @@ evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged differen
 [[statement]]
 kind = "set"
 subject = "var:namnsv"
-fields = { "label" = "Delkostnadsslag (namn i klartext)" }
+fields = { "label" = "Delkostnadsslag (NamnSV)" }
 evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
 
 [[statement]]

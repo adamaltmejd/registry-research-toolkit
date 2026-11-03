@@ -1200,7 +1200,7 @@ evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): j
 [[statement]]
 kind = "set"
 subject = "var:utlbakgr"
-fields = { "label" = "Utländsk/svensk bakgrund (saknat födelseland räknas som Sverige)" }
+fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."
 
 [[statement]]

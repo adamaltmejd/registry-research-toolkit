@@ -2248,7 +2248,7 @@ evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables)
 [[statement]]
 kind = "set"
 subject = "var:glyfosat-omrade-fanggroda"
-fields = { "label" = "Glyfosatmedel användningsområde, fånggröda eller mellangröda" }
+fields = { "label" = "Glyfosatmedel användningsområde, fånggröda" }
 evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
 
 [[statement]]

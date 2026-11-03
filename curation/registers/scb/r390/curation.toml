@@ -1324,7 +1324,7 @@ evidence = "#2102 same-label cluster 'Antal burar/tinor' (4 variables): judged d
 [[statement]]
 kind = "set"
 subject = "var:antal-fiskedagar-ifjol"
-fields = { "label" = "Fiskat ifjol (antal fiskedagar)" }
+fields = { "label" = "Fiskat ifjol (antal fiskedagar, F1b)" }
 evidence = "#2102 same-label cluster 'Fiskat ifjol' (3 variables): judged different meaning, high confidence; F1b continues as F01 (same day-interval code list); F1a is a separate Nej/ja question."
 
 [[statement]]
@@ -1408,13 +1408,13 @@ evidence = "#2102 same-label cluster 'Att vara ensam på fiskeplatsen' (2 variab
 [[statement]]
 kind = "set"
 subject = "var:f01"
-fields = { "label" = "Fiskat ifjol (antal fiskedagar)" }
+fields = { "label" = "Fiskat ifjol (antal fiskedagar, F01)" }
 evidence = "#2102 same-label cluster 'Fiskat ifjol' (3 variables): judged different meaning, high confidence; F1b continues as F01 (same day-interval code list); F1a is a separate Nej/ja question."
 
 [[statement]]
 kind = "set"
 subject = "var:f02a"
-fields = { "label" = "Fiskat januari-april (ja/nej, omgång maj-augusti och september-december)" }
+fields = { "label" = "Fiskat januari-april (ja/nej)" }
 evidence = "#2102 same-label cluster 'Fiskat januari-april' (2 variables): judged different meaning, high confidence; Opdefs: F02 is the day-interval question for round januari-april, F02a the yes/no for the other rounds."
 
 [[statement]]

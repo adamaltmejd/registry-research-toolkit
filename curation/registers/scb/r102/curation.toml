@@ -7787,6 +7787,18 @@ evidence = "#2102 same-label cluster 'Antal VG' (2 variables): judged different 
 
 [[statement]]
 kind = "set"
+subject = "var:antal-gymnasiepoang"
+fields = { "label" = "Antal gymnasiepoäng (TotalPoang)" }
+evidence = "#2102 same-label cluster 'Antal gymnasiepoäng' (4 variables): judged different meaning, medium confidence; TotalPoäng and TotalPoang are a rename (same derivation); TotalPoangUtanU excludes extended courses and TotalPoangU covers only extended courses (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-gymnasiepoang-totalpoang"
+fields = { "label" = "Antal gymnasiepoäng (TotalPoäng)" }
+evidence = "#2102 same-label cluster 'Antal gymnasiepoäng' (4 variables): judged different meaning, medium confidence; TotalPoäng and TotalPoang are a rename (same derivation); TotalPoangUtanU excludes extended courses and TotalPoangU covers only extended courses (opdefs)."
+
+[[statement]]
+kind = "set"
 subject = "var:behorighet-gy-ehs"
 fields = { "label" = "Behörighet till gymnasieskolan (EHS-program)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (10 variables): judged different meaning, high confidence; Five programme groups (EHS, EST, NT, YRK, IMPRO), each computed from new grundskola grades or from earlier årskurs 9 grades (opdefs)."
@@ -7944,7 +7956,7 @@ evidence = "#2102 same-label cluster 'Blockbetyg i samhällsorienterade ämnen' 
 [[statement]]
 kind = "set"
 subject = "var:faderns-utbildningsniva"
-fields = { "label" = "Faderns utbildningsnivå (äldre indelning)" }
+fields = { "label" = "Faderns utbildningsnivå (äldre indelning, Putb)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Putb, SUNNiva_Far), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Putb and SUNNiva_Far are treated as one older coding in adjacent periods."
 
 [[statement]]
@@ -7974,20 +7986,26 @@ evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:inriktning-fristaende-gy"
-fields = { "label" = "Inriktning fristående gymnasieskola (typ av fristående skola)" }
+fields = { "label" = "Inriktning fristående gymnasieskola (typ av fristående skola, FriTypGy)" }
 evidence = "#2102 same-label cluster 'Inriktning fristående gymnasieskola' (3 variables): judged different meaning, medium confidence; frityp and FriTypGy share a value set over adjacent periods; InriktningGy is concurrent with a reduced value set and, per its opdef, applies to students who started 2006/07 or later."
 
 [[statement]]
 kind = "set"
 subject = "var:inriktning-fristaende-gymnasieskola-frityp"
-fields = { "label" = "Inriktning fristående gymnasieskola (typ av fristående skola)" }
+fields = { "label" = "Inriktning fristående gymnasieskola (typ av fristående skola, frityp)" }
 evidence = "#2102 same-label cluster 'Inriktning fristående gymnasieskola' (3 variables): judged different meaning, medium confidence; frityp and FriTypGy share a value set over adjacent periods; InriktningGy is concurrent with a reduced value set and, per its opdef, applies to students who started 2006/07 or later."
 
 [[statement]]
 kind = "set"
 subject = "var:inriktning-fristaende-gymnasieskola-inriktninggy"
-fields = { "label" = "Inriktning fristående gymnasieskola (elever som började 2006/07 eller senare)" }
+fields = { "label" = "Inriktning fristående gymnasieskola (InriktningGy)" }
 evidence = "#2102 same-label cluster 'Inriktning fristående gymnasieskola' (3 variables): judged different meaning, medium confidence; frityp and FriTypGy share a value set over adjacent periods; InriktningGy is concurrent with a reduced value set and, per its opdef, applies to students who started 2006/07 or later."
+
+[[statement]]
+kind = "set"
+subject = "var:invbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (Invbakgr)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, low confidence; Invbakgr and UtlBakGr share an opdef over adjacent periods (one variable); UtlBakGr2 is concurrent from 2011 with the same value set and near-identical opdef text, so only its column name distinguishes it."
 
 [[statement]]
 kind = "set"
@@ -8244,7 +8262,7 @@ evidence = "#2102 same-label cluster 'Programbidrag' (2 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:program"
-fields = { "label" = "Gymnasieprogram (examensprogram)" }
+fields = { "label" = "Gymnasieprogram (Program)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (3 variables): judged different meaning, high confidence; Opdefs: programme of the certificate/examen, programme at start, and the programme an introduction programme is attached to."
 
 [[statement]]
@@ -8328,7 +8346,7 @@ evidence = "#2102 same-label cluster 'Läroplan' (2 variables): judged different
 [[statement]]
 kind = "set"
 subject = "var:st-hman"
-fields = { "label" = "Huvudman (vid start)" }
+fields = { "label" = "Huvudman (vid start, St_Hman)" }
 evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different meaning, medium confidence; Opdefs: St_Hman/StHman is the huvudman where the student started, HMan_Ar9 the type of huvudman of the school finished in grundskolan, HManNamn the name; HMan itself has opdefs for both exam school and start school, so it keeps the plain label."
 
 [[statement]]
@@ -8358,7 +8376,7 @@ evidence = "#2102 same-label cluster 'Gymnasieprogram' (3 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:sthman"
-fields = { "label" = "Huvudman (vid start)" }
+fields = { "label" = "Huvudman (vid start, StHman)" }
 evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different meaning, medium confidence; Opdefs: St_Hman/StHman is the huvudman where the student started, HMan_Ar9 the type of huvudman of the school finished in grundskolan, HManNamn the name; HMan itself has opdefs for both exam school and start school, so it keeps the plain label."
 
 [[statement]]
@@ -8394,13 +8412,13 @@ evidence = "#2102 same-label cluster 'Studieväg' (6 variables): judged differen
 [[statement]]
 kind = "set"
 subject = "var:stvkod10"
-fields = { "label" = "Fullständig, utökad eller reducerad kurs/linje (typ av studiekurs)" }
+fields = { "label" = "Fullständig, utökad eller reducerad kurs/linje (typ av studiekurs, StvKod10)" }
 evidence = "#2102 same-label cluster 'Fullständig, utökad eller reducerad kurs/linje' (3 variables): judged different meaning, medium confidence; Kurskod (opdef: grouping of course types, codes 0-4) differs in coding from TypAvStudiekurs/StvKod10, which share one value set and follow each other."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-3-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad, SUN2000_Niva3_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Mutb, SUNNiva_Mor), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Mutb and SUNNiva_Mor are treated as one older coding in adjacent periods."
 
 [[statement]]
@@ -8412,13 +8430,13 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): j
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor"
-fields = { "label" = "Moderns utbildningsnivå (äldre indelning)" }
+fields = { "label" = "Moderns utbildningsnivå (äldre indelning, Mutb)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Mutb, SUNNiva_Mor), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Mutb and SUNNiva_Mor are treated as one older coding in adjacent periods."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-2"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad, SUN2000Niva_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Mutb, SUNNiva_Mor), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Mutb and SUNNiva_Mor are treated as one older coding in adjacent periods."
 
 [[statement]]
@@ -8430,7 +8448,7 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): j
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-4"
-fields = { "label" = "Moderns utbildningsnivå (äldre indelning)" }
+fields = { "label" = "Moderns utbildningsnivå (äldre indelning, SUNNiva_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Mutb, SUNNiva_Mor), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Mutb and SUNNiva_Mor are treated as one older coding in adjacent periods."
 
 [[statement]]
@@ -8454,13 +8472,13 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (9 variables): j
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-3-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad, SUN2000_Niva3_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Putb, SUNNiva_Far), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Putb and SUNNiva_Far are treated as one older coding in adjacent periods."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad, SUN2000Niva_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Putb, SUNNiva_Far), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Putb and SUNNiva_Far are treated as one older coding in adjacent periods."
 
 [[statement]]
@@ -8520,8 +8538,20 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far"
-fields = { "label" = "Faderns utbildningsnivå (äldre indelning)" }
+fields = { "label" = "Faderns utbildningsnivå (äldre indelning, SUNNiva_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (9 variables): judged different meaning, medium confidence; Value sets and opdefs separate the older coarse coding (Putb, SUNNiva_Far), SUN 2000 detailed, SUN 2000 4-level letter code, 3-level numeric code, grouped, and SUN 2020 detailed/grouped; Putb and SUNNiva_Far are treated as one older coding in adjacent periods."
+
+[[statement]]
+kind = "set"
+subject = "var:sv-b"
+fields = { "label" = "Betyg i Svenska B (SV_B)" }
+evidence = "#2102 same-label cluster 'Betyg i Svenska B' (4 variables): judged different meaning, medium confidence; SV201L and SV201S are parallel part grades (opdefs: litteratur, svenska språket); SV204 and SV_B are adjacent whole-course grades."
+
+[[statement]]
+kind = "set"
+subject = "var:sv204"
+fields = { "label" = "Betyg i Svenska B (SV204)" }
+evidence = "#2102 same-label cluster 'Betyg i Svenska B' (4 variables): judged different meaning, medium confidence; SV201L and SV201S are parallel part grades (opdefs: litteratur, svenska språket); SV204 and SV_B are adjacent whole-course grades."
 
 [[statement]]
 kind = "set"
@@ -8538,7 +8568,7 @@ evidence = "#2102 same-label cluster 'Antal gymnasiepoäng' (4 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:typavstudiekurs"
-fields = { "label" = "Fullständig, utökad eller reducerad kurs/linje (typ av studiekurs)" }
+fields = { "label" = "Fullständig, utökad eller reducerad kurs/linje (typ av studiekurs, TypAvStudiekurs)" }
 evidence = "#2102 same-label cluster 'Fullständig, utökad eller reducerad kurs/linje' (3 variables): judged different meaning, medium confidence; Kurskod (opdef: grouping of course types, codes 0-4) differs in coding from TypAvStudiekurs/StvKod10, which share one value set and follow each other."
 
 [[statement]]
@@ -8564,6 +8594,12 @@ kind = "set"
 subject = "var:utbild-st"
 fields = { "label" = "Gymnasieutbildning (vid start)" }
 evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, high confidence; Opdefs: Utbild_Sl is the education the student finished, Utbild_St the one the student started."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, low confidence; Invbakgr and UtlBakGr share an opdef over adjacent periods (one variable); UtlBakGr2 is concurrent from 2011 with the same value set and near-identical opdef text, so only its column name distinguishes it."
 
 [[statement]]
 kind = "set"

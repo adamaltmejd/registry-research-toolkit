@@ -901,7 +901,7 @@ evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:hmanfth"
-fields = { "label" = "Huvudman (fritidshem)" }
+fields = { "label" = "Huvudman (HMANFTH)" }
 evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school unit's huvudman and HMANFTH the fritidshem's; the two name columns follow the same split."
 
 [[statement]]
@@ -913,7 +913,7 @@ evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:huvudman"
-fields = { "label" = "Huvudman (skolenhet)" }
+fields = { "label" = "Huvudman (Hman)" }
 evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school unit's huvudman and HMANFTH the fritidshem's; the two name columns follow the same split."
 
 [[statement]]
@@ -1057,7 +1057,7 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): 
 [[statement]]
 kind = "set"
 subject = "var:utlbakgr"
-fields = { "label" = "Utländsk/svensk bakgrund (saknat födelseland räknas som Sverige)" }
+fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige and has no missing code; Utl_BakG and UtlBakGr2 share an identical opdef and a value set with an 'Uppgift saknas' code."
 
 [[statement]]

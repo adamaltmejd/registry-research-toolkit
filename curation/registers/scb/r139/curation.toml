@@ -1012,8 +1012,20 @@ evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables)
 
 [[statement]]
 kind = "set"
+subject = "var:identitet"
+fields = { "label" = "Identitet (SCBid)" }
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
 subject = "var:identitet-koppling-industrins-energianvandning"
 fields = { "label" = "Identitet (koppling till industrins energianvändning)" }
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
+subject = "var:idnr"
+fields = { "label" = "Identitet (IdNr)" }
 evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
 
 [[statement]]
@@ -1036,12 +1048,6 @@ evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): ju
 
 [[statement]]
 kind = "set"
-subject = "var:landnamn-import-export"
-fields = { "label" = "Land för import/export (namn)" }
-evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid is the country code (opdef: Landkod), LNamn the country name (opdef: Landnamn)."
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-arbetsstalle"
 fields = { "label" = "Näringsgren för arbetsställe (SNI 2007)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
@@ -1049,11 +1055,11 @@ evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variab
 [[statement]]
 kind = "set"
 subject = "var:ng"
-fields = { "label" = "Näringsgren för arbetsställe (SNI 2002)" }
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2002, Ng)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
 
 [[statement]]
 kind = "set"
 subject = "var:ng2002"
-fields = { "label" = "Näringsgren för arbetsställe (SNI 2002)" }
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2002, Ng2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."

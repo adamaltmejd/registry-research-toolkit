@@ -19958,12 +19958,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "var:c2ftxt"
-fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (fritext)" }
-evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): judged different meaning, medium confidence; DatD2F, GOV12RTX_OTH, C2g/D2g, C2f and C2h are the same item renumbered over the years (identical definition, adjacent periods); C2ftxt is the free-text specification."
-
-[[statement]]
-kind = "set"
 subject = "var:koper-fillagring-som-molntjanst-cc-pay"
 fields = { "label" = "Köper fillagring som molntjänst (privatperson)" }
 evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."

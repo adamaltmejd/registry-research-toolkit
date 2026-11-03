@@ -110729,7 +110729,7 @@ evidence = "#2102 same-label cluster 'Födelseår barn 1' (2 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-barn-1-barnomsorg-0-12-ar"
-fields = { "label" = "Födelseår barn 1 (barntillsyn 0–12 år)" }
+fields = { "label" = "Födelseår barn 1 (barntillsyn)" }
 evidence = "#2102 same-label cluster 'Födelseår barn 1' (2 variables): judged different meaning, medium confidence; Opdef: GO0101 is the child's birth year in the childcare block (children 0-12); FU1399 is a separate 1993-1994 item with no stated difference, so raw code."
 
 [[statement]]
@@ -110741,7 +110741,7 @@ evidence = "#2102 same-label cluster 'Födelseår barn 2' (2 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-barn-2-barnomsorg-0-12-ar"
-fields = { "label" = "Födelseår barn 2 (barntillsyn 0–12 år)" }
+fields = { "label" = "Födelseår barn 2 (barntillsyn)" }
 evidence = "#2102 same-label cluster 'Födelseår barn 2' (2 variables): judged different meaning, medium confidence; Opdef: GO0201 is the child's birth year in the childcare block (children 0-12); FU1499 is a separate 1993-1994 item with no stated difference, so raw code."
 
 [[statement]]
@@ -110753,7 +110753,7 @@ evidence = "#2102 same-label cluster 'Födelseår barn 3' (2 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-barn-3-barntillsyn-0-12-ar"
-fields = { "label" = "Födelseår barn 3 (barntillsyn 0–12 år)" }
+fields = { "label" = "Födelseår barn 3 (barntillsyn)" }
 evidence = "#2102 same-label cluster 'Födelseår barn 3' (2 variables): judged different meaning, medium confidence; Opdef: GO0301 is the child's birth year in the childcare block (children 0-12); FU1599 is a separate 1993-1994 item with no stated difference, so raw code."
 
 [[statement]]
@@ -110765,7 +110765,7 @@ evidence = "#2102 same-label cluster 'Födelseår barn 4' (2 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-barn-4-barntillsyn-0-12-ar"
-fields = { "label" = "Födelseår barn 4 (barntillsyn 0–12 år)" }
+fields = { "label" = "Födelseår barn 4 (barntillsyn)" }
 evidence = "#2102 same-label cluster 'Födelseår barn 4' (2 variables): judged different meaning, medium confidence; Opdef: GO0401 is the child's birth year in the childcare block (children 0-12); FU1699 is a separate 1993-1994 item with no stated difference, so raw code."
 
 [[statement]]
@@ -110818,14 +110818,26 @@ evidence = "#2102 same-label cluster 'Fördel arbete i bostaden 7' (2 variables)
 
 [[statement]]
 kind = "set"
+subject = "var:forestallning-antal-ganger-2014"
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (FT2243M)" }
+evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, high confidence; Opdefs: FT2243M/FT2243MFDJ are the derived all-respondent variable (renamed in 2015); FT2243AA/FT2243AAFDJ are asked only of those who attended."
+
+[[statement]]
+kind = "set"
+subject = "var:forestallning-antal-ganger-2015"
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (FT2243MFDJ)" }
+evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, high confidence; Opdefs: FT2243M/FT2243MFDJ are the derived all-respondent variable (renamed in 2015); FT2243AA/FT2243AAFDJ are asked only of those who attended."
+
+[[statement]]
+kind = "set"
 subject = "var:forestallning-antal-ganger-bland-besokare-2014"
-fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare)" }
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare, FT2243AA)" }
 evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, high confidence; Opdefs: FT2243M/FT2243MFDJ are the derived all-respondent variable (renamed in 2015); FT2243AA/FT2243AAFDJ are asked only of those who attended."
 
 [[statement]]
 kind = "set"
 subject = "var:forestallning-antal-ganger-bland-besokare-2015"
-fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare)" }
+fields = { "label" = "Föreställning, teater, konsert etc. - Antal ggr (bland besökare, FT2243AAFDJ)" }
 evidence = "#2102 same-label cluster 'Föreställning, teater, konsert etc. - Antal ggr' (4 variables): judged different meaning, high confidence; Opdefs: FT2243M/FT2243MFDJ are the derived all-respondent variable (renamed in 2015); FT2243AA/FT2243AAFDJ are asked only of those who attended."
 
 [[statement]]
@@ -110909,7 +110921,7 @@ evidence = "#2102 same-label cluster 'Hälsa i allmänhet' (3 variables): judged
 [[statement]]
 kind = "set"
 subject = "var:halsa-allmanhet-direkt-intervjuade"
-fields = { "label" = "Hälsa i allmänhet (personer 16 år och äldre)" }
+fields = { "label" = "Hälsa i allmänhet (endast direkt intervjuade)" }
 evidence = "#2102 same-label cluster 'Hälsa i allmänhet' (3 variables): judged different meaning, medium confidence; Opdef: RCH010 covers children 0-15; PH010U14 (to 2021) and PH010 (from 2021) are taken as the same item for persons 16 and older renamed over time."
 
 [[statement]]
@@ -111058,6 +111070,12 @@ evidence = "#2102 same-label cluster 'Intervjumetod' (3 variables): judged diffe
 
 [[statement]]
 kind = "set"
+subject = "var:iscoup"
+fields = { "label" = "Yrke, nuvarande arbete (ISCO, 4-siffrig, ISCOUP_1)" }
+evidence = "#2102 same-label cluster 'Yrke, nuvarande arbete (ISCO, 4-siffrig)' (4 variables): judged different meaning, high confidence; ISCOup_2 is the code for an additional job (opdef); PLISCO08kod covers the selected person and household members 16+ (opdef); ISCOup_1 and ISCOup are the main-job code over time."
+
+[[statement]]
+kind = "set"
 subject = "var:kommungrupper-3-grupper-kommunsklgrupp-nationell17"
 fields = { "label" = "Kommungrupper (3 grupper) (SKL 2017)" }
 evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, high confidence; Opdefs: three versions of the municipality grouping with different code lists: SKL 2011 (codes 1-3; Nationell and its rename Nationell11), SKL 2017 (A-C) and SKR 2023 (A-C)."
@@ -111065,13 +111083,13 @@ evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): 
 [[statement]]
 kind = "set"
 subject = "var:kommunsklgrupp-nationell"
-fields = { "label" = "Kommungrupper (3 grupper) (SKL 2011)" }
+fields = { "label" = "Kommungrupper (3 grupper) (SKL 2011, KommunSKLGrupp_Nationell)" }
 evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, high confidence; Opdefs: three versions of the municipality grouping with different code lists: SKL 2011 (codes 1-3; Nationell and its rename Nationell11), SKL 2017 (A-C) and SKR 2023 (A-C)."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunsklgrupp-nationell1"
-fields = { "label" = "Kommungrupper (3 grupper) (SKL 2011)" }
+fields = { "label" = "Kommungrupper (3 grupper) (SKL 2011, KommunSKLGrupp_Nationell11)" }
 evidence = "#2102 same-label cluster 'Kommungrupper (3 grupper)' (4 variables): judged different meaning, high confidence; Opdefs: three versions of the municipality grouping with different code lists: SKL 2011 (codes 1-3; Nationell and its rename Nationell11), SKL 2017 (A-C) and SKR 2023 (A-C)."
 
 [[statement]]
@@ -111582,6 +111600,12 @@ evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen under
 kind = "set"
 subject = "var:yrke-isco-08-4-siffrig-hushallsmedlemmar-16-ar-aldre"
 fields = { "label" = "Yrke, nuvarande arbete (ISCO, 4-siffrig), urvalsperson och hushållsmedlemmar 16 år och äldre" }
+evidence = "#2102 same-label cluster 'Yrke, nuvarande arbete (ISCO, 4-siffrig)' (4 variables): judged different meaning, high confidence; ISCOup_2 is the code for an additional job (opdef); PLISCO08kod covers the selected person and household members 16+ (opdef); ISCOup_1 and ISCOup are the main-job code over time."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-isco-4-siffrig"
+fields = { "label" = "Yrke, nuvarande arbete (ISCO, 4-siffrig, ISCOup)" }
 evidence = "#2102 same-label cluster 'Yrke, nuvarande arbete (ISCO, 4-siffrig)' (4 variables): judged different meaning, high confidence; ISCOup_2 is the code for an additional job (opdef); PLISCO08kod covers the selected person and household members 16+ (opdef); ISCOup_1 and ISCOup are the main-job code over time."
 
 [[statement]]

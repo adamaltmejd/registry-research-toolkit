@@ -5102,7 +5102,7 @@ evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): 
 [[statement]]
 kind = "set"
 subject = "var:astsni2007"
-fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007, AstSNI2007)" }
 evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
 
 [[statement]]
@@ -5114,7 +5114,7 @@ evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variabl
 [[statement]]
 kind = "set"
 subject = "var:belagenhet-gy-avg"
-fields = { "label" = "Belägenhet för gymnasieskola (DeSO, avslutad gymnasieskola)" }
+fields = { "label" = "Belägenhet för gymnasieskola (DeSOGyAvg)" }
 evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variables): judged different meaning, medium confidence; Opdefs separate SAMS vs DeSO area and (Avg) the school the pupil finished from the school attended."
 
 [[statement]]
@@ -5282,7 +5282,7 @@ evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2007"
-fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007, AstNgS07)" }
 evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
 
 [[statement]]

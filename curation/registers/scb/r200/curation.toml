@@ -10138,13 +10138,13 @@ evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (
 [[statement]]
 kind = "set"
 subject = "var:elforb-sumvel"
-fields = { "label" = "Elförbrukning vid produktion av värme (totalt)" }
+fields = { "label" = "Elförbrukning vid produktion av värme (totalt, elforb_sumvel)" }
 evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
 
 [[statement]]
 kind = "set"
 subject = "var:elforb-sumvnat"
-fields = { "label" = "Elförbrukning vid produktion av värme (totalt)" }
+fields = { "label" = "Elförbrukning vid produktion av värme (totalt, elforb_sumvnat)" }
 evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
 
 [[statement]]

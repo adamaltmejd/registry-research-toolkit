@@ -704,7 +704,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:poang"
-fields = { "label" = "Poängomfattning (kursens totala poäng)" }
+fields = { "label" = "Poängomfattning (totala poäng)" }
 evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."
 
 [[statement]]
@@ -728,5 +728,5 @@ evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged di
 [[statement]]
 kind = "set"
 subject = "var:tpoang"
-fields = { "label" = "Poängomfattning (förverkade poäng under läsåret)" }
+fields = { "label" = "Poängomfattning (poäng under aktuellt läsår eller halvår)" }
 evidence = "#2102 same-label cluster 'Poängomfattning' (5 variables): judged different meaning, high confidence; Opdefs: Poang is the course's total points, TPoang the points earned in the school year, Poang1-3 points on basic, upper-secondary and supplementary levels."

@@ -3278,7 +3278,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:agarkategori"
-fields = { "label" = "Ägarkategori (ägare)" }
+fields = { "label" = "Ägarkategori (agkat)" }
 evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
 
 [[statement]]
@@ -3290,13 +3290,13 @@ evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:agarkategori-agkat-3"
-fields = { "label" = "Ägarkategori (nästföregående ägare)" }
+fields = { "label" = "Ägarkategori (agkat_3)" }
 evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
 
 [[statement]]
 kind = "set"
 subject = "var:agarnummer-agnr"
-fields = { "label" = "Ägarnummer (ägare)" }
+fields = { "label" = "Ägarnummer (agnr)" }
 evidence = "#2102 same-label cluster 'Ägarnummer' (4 variables): judged different meaning, medium confidence; Opdefs: AGNR is the owner, AGNR_2 the previous owner, AGNR_3 the owner before that; AgNr_old (1980-1985) also says owner and is concurrent with AGNR, so it is told apart by column code."
 
 [[statement]]
@@ -3326,7 +3326,7 @@ evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:bransleforbrukning"
-fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 1)" }
+fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 1, BrForbr)" }
 evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
 
 [[statement]]
@@ -3392,19 +3392,19 @@ evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:buller"
-fields = { "label" = "Fordonets bullernivå (drivmedel 1)" }
+fields = { "label" = "Fordonets bullernivå (buller)" }
 evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
 
 [[statement]]
 kind = "set"
 subject = "var:co2varde"
-fields = { "label" = "Koldioxidutsläpp (NEDC, drivmedel 1)" }
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde1)" }
 evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
 
 [[statement]]
 kind = "set"
 subject = "var:co2vardeviktad"
-fields = { "label" = "Koldioxidutsläpp (NEDC, viktad)" }
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2vardeviktad)" }
 evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
 
 [[statement]]
@@ -3416,7 +3416,7 @@ evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP viktad' (3 variable
 [[statement]]
 kind = "set"
 subject = "var:datovl"
-fields = { "label" = "Datum för ägarbyte (ägare)" }
+fields = { "label" = "Datum för ägarbyte (datovl1)" }
 evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
 
 [[statement]]
@@ -3428,13 +3428,13 @@ evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judge
 [[statement]]
 kind = "set"
 subject = "var:datum-for-agarbyte-datovl-3"
-fields = { "label" = "Datum för ägarbyte (nästföregående ägare)" }
+fields = { "label" = "Datum för ägarbyte (datovl_3)" }
 evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
 
 [[statement]]
 kind = "set"
 subject = "var:datum-for-agarbyte-literal-datovl-2-472a8fd9"
-fields = { "label" = "Datum för ägarbyte (föregående ägare)" }
+fields = { "label" = "Datum för ägarbyte (datovl_2)" }
 evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
 
 [[statement]]
@@ -3464,19 +3464,19 @@ evidence = "#2102 same-label cluster 'Elenergiförbrukning WLTP' (2 variables): 
 [[statement]]
 kind = "set"
 subject = "var:fordonets-bullerniva-literal-buller2"
-fields = { "label" = "Fordonets bullernivå (drivmedel 2)" }
+fields = { "label" = "Fordonets bullernivå (buller2)" }
 evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
 
 [[statement]]
 kind = "set"
 subject = "var:fordonets-bullerniva-literal-buller3"
-fields = { "label" = "Fordonets bullernivå (drivmedel 3)" }
+fields = { "label" = "Fordonets bullernivå (buller3)" }
 evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
 
 [[statement]]
 kind = "set"
 subject = "var:fordonskategori"
-fields = { "label" = "Fordonskategori (EU-kategori)" }
+fields = { "label" = "Fordonskategori (EU-kategori, fkateu)" }
 evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged different meaning, medium confidence; Hjul (to 2008) and FKatEU (from 2008) share the EU category code list over adjacent periods and get the same label; FSlag has a different value set (personbil, lastbil, buss, ...)."
 
 [[statement]]
@@ -3488,7 +3488,7 @@ evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:fordonskategori-hjul"
-fields = { "label" = "Fordonskategori (EU-kategori)" }
+fields = { "label" = "Fordonskategori (EU-kategori, hjul)" }
 evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged different meaning, medium confidence; Hjul (to 2008) and FKatEU (from 2008) share the EU category code list over adjacent periods and get the same label; FSlag has a different value set (personbil, lastbil, buss, ...)."
 
 [[statement]]
@@ -3524,43 +3524,43 @@ evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-kod"
-fields = { "label" = "Institutionell kod (ägare)" }
+fields = { "label" = "Institutionell kod (inst)" }
 evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-kod-literal-inst-2"
-fields = { "label" = "Institutionell kod (föregående ägare)" }
+fields = { "label" = "Institutionell kod (inst_2)" }
 evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-kod-literal-inst-3"
-fields = { "label" = "Institutionell kod (nästföregående ägare)" }
+fields = { "label" = "Institutionell kod (inst_3)" }
 evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
 
 [[statement]]
 kind = "set"
 subject = "var:karosserikod"
-fields = { "label" = "Karosserikod (huvudsaklig)" }
+fields = { "label" = "Karosserikod (kaross)" }
 evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:karosserikod-2"
-fields = { "label" = "Karosserikod (huvudsaklig)" }
+fields = { "label" = "Karosserikod (karosserikod1)" }
 evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:karosserikod-literal-kaross2"
-fields = { "label" = "Karosserikod (kompletterande)" }
+fields = { "label" = "Karosserikod (kaross2)" }
 evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:karosserikod-literal-karosserikod2"
-fields = { "label" = "Karosserikod (kompletterande)" }
+fields = { "label" = "Karosserikod (karosserikod2)" }
 evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
 
 [[statement]]
@@ -3590,13 +3590,13 @@ evidence = "#2102 same-label cluster 'Koldioxidutsläpp landsväg NEDC' (3 varia
 [[statement]]
 kind = "set"
 subject = "var:koldioxidutslapp-literal-co2varde2"
-fields = { "label" = "Koldioxidutsläpp (NEDC, drivmedel 2)" }
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde2)" }
 evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
 
 [[statement]]
 kind = "set"
 subject = "var:koldioxidutslapp-literal-co2varde3"
-fields = { "label" = "Koldioxidutsläpp (NEDC, drivmedel 3)" }
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde3)" }
 evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
 
 [[statement]]
@@ -3704,13 +3704,13 @@ evidence = "#2102 same-label cluster 'Motorstyrka' (4 variables): judged differe
 [[statement]]
 kind = "set"
 subject = "var:naringsgren"
-fields = { "label" = "Näringsgren (SNI 2002, ägare)" }
+fields = { "label" = "Näringsgren (sni2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2002-foregaende"
-fields = { "label" = "Näringsgren (SNI 2002, föregående ägare)" }
+fields = { "label" = "Näringsgren (sni2002_2)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
 
 [[statement]]
@@ -3722,7 +3722,7 @@ evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2007"
-fields = { "label" = "Näringsgren (SNI 2007, ägare)" }
+fields = { "label" = "Näringsgren (sni2007)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
 
 [[statement]]
@@ -3740,13 +3740,13 @@ evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged diffe
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2007-nastforegaende"
-fields = { "label" = "Näringsgren (SNI 2007, nästföregående ägare)" }
+fields = { "label" = "Näringsgren (sni2007_3)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni92"
-fields = { "label" = "Näringsgren (SNI 1992, ägare)" }
+fields = { "label" = "Näringsgren (SNI 69/92/2002, ägare)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
 
 [[statement]]
@@ -3794,13 +3794,13 @@ evidence = "#2102 same-label cluster 'Räckvidd WLTP' (2 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:statkod"
-fields = { "label" = "Fordonsmodell (bussar, lastbilar, motorcyklar och övriga fordonsslag)" }
+fields = { "label" = "Fordonsmodell (statkod)" }
 evidence = "#2102 same-label cluster 'Fordonsmodell' (2 variables): judged different meaning, medium confidence; STATKOD (bussar, lastbilar, motorcyklar, övriga fordonsslag) and TOPKOD (personbilar) are different model code lists for different vehicle types."
 
 [[statement]]
 kind = "set"
 subject = "var:tankvol"
-fields = { "label" = "Tankvolym (drivmedel 1)" }
+fields = { "label" = "Tankvolym (tankvol)" }
 evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different meaning, medium confidence; Opdefs: TankVol, TankVol2, TankVol3 are tank volume for drivmedel 1, 2, 3 (merged opdefs partly contradictory), consistent with the numbered suffix."
 
 [[statement]]
@@ -3812,7 +3812,7 @@ evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different
 [[statement]]
 kind = "set"
 subject = "var:tankvolym-literal-tankvol3"
-fields = { "label" = "Tankvolym (drivmedel 3)" }
+fields = { "label" = "Tankvolym (tankvol3)" }
 evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different meaning, medium confidence; Opdefs: TankVol, TankVol2, TankVol3 are tank volume for drivmedel 1, 2, 3 (merged opdefs partly contradictory), consistent with the numbered suffix."
 
 [[statement]]

@@ -6038,7 +6038,7 @@ evidence = "#2102 same-label cluster 'Industriverksamhet' (4 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:gem2209"
-fields = { "label" = "Årets resultat (balansräkning)" }
+fields = { "label" = "Årets resultat (gem2209)" }
 evidence = "#2102 same-label cluster 'Årets resultat' (2 variables): judged different meaning, high confidence; Opdefs say gem0190 is årets resultat in resultaträkningen and gem2209 in balansräkningen."
 
 [[statement]]

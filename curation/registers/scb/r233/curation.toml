@@ -1641,7 +1641,7 @@ evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variab
 [[statement]]
 kind = "set"
 subject = "var:direkt"
-fields = { "label" = "Direktövergång (från grundskolan, ja/nej)" }
+fields = { "label" = "Direktövergång (Direkt)" }
 evidence = "#2102 same-label cluster 'Direktövergång' (2 variables): judged different meaning, high confidence; Opdefs: Direkt is a yes/no flag for direct transition from grundskolan; Direkt9 concerns transition from årskurs 9 in grundskolan or grundsärskolan with a different value set."
 
 [[statement]]
@@ -1779,7 +1779,7 @@ evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:studievag-gymnasieskolan"
-fields = { "label" = "Studieväg i gymnasieskolan (Gy2011)" }
+fields = { "label" = "Studieväg i gymnasieskolan (StvKod)" }
 evidence = "#2102 same-label cluster 'Studieväg i gymnasieskolan' (3 variables): judged different meaning, high confidence; Opdefs: study-path codes for Gy2011, for Lpf94, and at education start."
 
 [[statement]]

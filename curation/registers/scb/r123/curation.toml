@@ -14841,12 +14841,6 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 
 [[statement]]
 kind = "set"
-subject = "var:annatarb-3851"
-fields = { "label" = "Risk att mot sin vilja förflyttas till annat arbete (härledd)" }
-evidence = "#2102 same-label cluster 'Risk att mot sin vilja förflyttas till annat arbete' (2 variables): judged different meaning, medium confidence; ANNATARB is derived Ja/Nej from E5A while AnnatArb05 is the 2005 item with a Ja-only code list that runs concurrently."
-
-[[statement]]
-kind = "set"
 subject = "var:annatarb05-3851"
 fields = { "label" = "Risk att mot sin vilja förflyttas till annat arbete (version 2005)" }
 evidence = "#2102 same-label cluster 'Risk att mot sin vilja förflyttas till annat arbete' (2 variables): judged different meaning, medium confidence; ANNATARB is derived Ja/Nej from E5A while AnnatArb05 is the 2005 item with a Ja-only code list that runs concurrently."
@@ -15120,12 +15114,6 @@ kind = "set"
 subject = "var:overtid-med-ersattning-2"
 fields = { "label" = "Övertid med ersättning i huvudsysslan, anställda (arbetar övertid)" }
 evidence = "#2102 same-label cluster 'Övertid med ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, medium confidence; enbers is 'arbetar enbart övertid som ger ersättning' while HUOTERS and hsoters (a rename) are 'arbetar övertid som ger ersättning'."
-
-[[statement]]
-kind = "set"
-subject = "var:permitte-3922"
-fields = { "label" = "Hot om permittering eller uppsägning? (härledd)" }
-evidence = "#2102 same-label cluster 'Hot om permittering eller uppsägning?' (2 variables): judged different meaning, medium confidence; PERMITTE is derived from item 5B (Ja/Nej) while Permitte05 is the 2005 item with a Ja-only code list that runs concurrently."
 
 [[statement]]
 kind = "set"

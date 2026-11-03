@@ -4374,19 +4374,19 @@ evidence = "#2102 same-label cluster 'Kassar för odling av matfisk, antal' (2 v
 [[statement]]
 kind = "set"
 subject = "var:antal-odlingar-lan1"
-fields = { "label" = "Antal odlingar, län 1" }
+fields = { "label" = "Antal odlingar, län 1 (Lan1)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-odlingar-lan2"
-fields = { "label" = "Antal odlingar, län 2" }
+fields = { "label" = "Antal odlingar, län 2 (Lan2)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-odlingar-lan3"
-fields = { "label" = "Antal odlingar, län 3" }
+fields = { "label" = "Antal odlingar, län 3 (Lan3)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
@@ -4890,19 +4890,19 @@ evidence = "#2102 same-label cluster 'Odling av alger' (2 variables): judged dif
 [[statement]]
 kind = "set"
 subject = "var:odling-lan"
-fields = { "label" = "Antal odlingar, län 1" }
+fields = { "label" = "Antal odlingar, län 1 (odling_lan1)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
 kind = "set"
 subject = "var:odling-lan2"
-fields = { "label" = "Antal odlingar, län 2" }
+fields = { "label" = "Antal odlingar, län 2 (odling_lan2)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
 kind = "set"
 subject = "var:odling-lan3"
-fields = { "label" = "Antal odlingar, län 3" }
+fields = { "label" = "Antal odlingar, län 3 (odling_lan3)" }
 evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
@@ -5094,13 +5094,13 @@ evidence = "#2102 same-label cluster 'Produktion under referensåret' (4 variabl
 [[statement]]
 kind = "set"
 subject = "var:ryovr1f-salt"
-fields = { "label" = "Försäljning av rom eller yngel, övrig art (2), i havet" }
+fields = { "label" = "Försäljning av rom eller yngel, övrig art (2) (RYOvr1f_salt)" }
 evidence = "#2102 same-label cluster 'Försäljning av rom eller yngel, övrig art (2)' (2 variables): judged different meaning, medium confidence; RYOvr1f_salt follows the _salt naming for sea-water production from 2018; both columns carry the same havet and sötvatten opdefs, so the non-salt column keeps the current label."
 
 [[statement]]
 kind = "set"
 subject = "var:ryrblp-salt"
-fields = { "label" = "Produktion av regnbåge (rom eller yngel), i havet" }
+fields = { "label" = "Produktion av regnbåge (rom eller yngel) (RYRblp_salt)" }
 evidence = "#2102 same-label cluster 'Produktion av regnbåge (rom eller yngel)' (2 variables): judged different meaning, medium confidence; No opdefs; RYRblp_salt follows the _salt naming for the sea-water twin used by sibling variables, so the non-salt column keeps the current label."
 
 [[statement]]
