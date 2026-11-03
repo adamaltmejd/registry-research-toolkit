@@ -1214,3 +1214,21 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "label" = "Utländsk/svensk bakgrund (härledd variabel)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (kodad i grupper)" }
+evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Antal opdef: 'grupperat i 4 grupper' (2016-) and a 4-code grouped list in 2015; AntalF opdef is the count of subjects with F / not A-E, same spelling in adjacent periods."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-ej-natt"
+fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (antal)" }
+evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Antal opdef: 'grupperat i 4 grupper' (2016-) and a 4-code grouped list in 2015; AntalF opdef is the count of subjects with F / not A-E, same spelling in adjacent periods."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-utan-godkant-betyg"
+fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (antal)" }
+evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Antal opdef: 'grupperat i 4 grupper' (2016-) and a 4-code grouped list in 2015; AntalF opdef is the count of subjects with F / not A-E, same spelling in adjacent periods."

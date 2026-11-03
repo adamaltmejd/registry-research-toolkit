@@ -1063,3 +1063,39 @@ kind = "set"
 subject = "var:ng2002"
 fields = { "label" = "Näringsgren för arbetsställe (SNI 2002, Ng2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-namn"
+fields = { "label" = "Bränsleslag (BrSlag)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:text1"
+fields = { "label" = "Bränsleslag (Text1)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "label" = "Bränsleslag (tvåsifferkod)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-text"
+fields = { "label" = "Bränsleslag (Text)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-text"
+fields = { "label" = "Bränsleslaget i klartext (Text)" }
+evidence = "#2102 same-label cluster 'Bränsleslaget i klartext' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BrSlag and Text are both 'Anger benämning på bränslet' with no documented difference; Text in this member spans 2005-2020, so the spelling is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "label" = "Bränsleslaget i klartext (BrSlag)" }
+evidence = "#2102 same-label cluster 'Bränsleslaget i klartext' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BrSlag and Text are both 'Anger benämning på bränslet' with no documented difference; Text in this member spans 2005-2020, so the spelling is the qualifier."

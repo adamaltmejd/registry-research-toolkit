@@ -26012,20 +26012,20 @@ evidence = "Part of #2040. scb/hek/forvarvsinkomt: Restore missing s in Förvär
 [[statement]]
 kind = "set"
 subject = "individregister: IFA2081 @1975-01-01..1975-12-31 where key = 'v43012'"
-fields = { "label" = "Underskott av fritidsfastighet" }
-evidence = "Part of #2040. scb/hek/ifa208: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+fields = { "label" = "Underskott av fritidsfastighet (förekomst 1)" }
+evidence = "Part of #2040. scb/hek/ifa208: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet\n\n#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef states 'Variabeln kan ha max 4 förekomster. Detta är förekomst N' with N = 1, 2, 3 for IFA2081-IFA2083."
 
 [[statement]]
 kind = "set"
 subject = "individregister: IFA2082 @1975-01-01..1975-12-31 where key = 'v43012'"
-fields = { "label" = "Underskott av fritidsfastighet" }
-evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2082: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+fields = { "label" = "Underskott av fritidsfastighet (förekomst 2)" }
+evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2082: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet\n\n#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef states 'Variabeln kan ha max 4 förekomster. Detta är förekomst N' with N = 1, 2, 3 for IFA2081-IFA2083."
 
 [[statement]]
 kind = "set"
 subject = "individregister: IFA2083 @1975-01-01..1975-12-31 where key = 'v43012'"
-fields = { "label" = "Underskott av fritidsfastighet" }
-evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2083: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet"
+fields = { "label" = "Underskott av fritidsfastighet (förekomst 3)" }
+evidence = "Part of #2040. scb/hek/underskott-av-firtidsfastighet-ifa2083: Correct transposed letters in firtidsfastighet; no punctuation change. Reviewed occurrence label: Underskott av firtidsfastighet\n\n#2102 same-label cluster 'Underskott av fritidsfastighet' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each opdef states 'Variabeln kan ha max 4 förekomster. Detta är förekomst N' with N = 1, 2, 3 for IFA2081-IFA2083."
 
 [[statement]]
 kind = "set"
@@ -30726,3 +30726,69 @@ kind = "set"
 subject = "var:yrke-fob-80"
 fields = { "label" = "Yrke (FoB 80)" }
 evidence = "#2102 same-label cluster 'Yrke' (4 variables): judged different meaning, medium confidence; BYRKE is derived from WYRKED and WYRKE1, WYRKE1 is the occupation at the company where the person worked longest, KSY007 uses the FoB 80 groups, BYRKEZ is a household variable in kosthushall with unclear owner."
+
+[[statement]]
+kind = "set"
+subject = "var:aallmfl"
+fields = { "label" = "Allmänna avdrag samt förlustavdrag (individ)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition and 'Härledd summering från uppgifter i IoT' opdef; AALLMFL is in individregister, AALLMFLZ in kosthushall (household) table."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanna-avdrag-samt-forlustavdrag"
+fields = { "label" = "Allmänna avdrag samt förlustavdrag (hushåll)" }
+evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition and 'Härledd summering från uppgifter i IoT' opdef; AALLMFL is in individregister, AALLMFLZ in kosthushall (household) table."
+
+[[statement]]
+kind = "set"
+subject = "var:fors"
+fields = { "label" = "Församling (vid urvalstillfället, FORS)" }
+evidence = "#2102 same-label cluster 'Församling' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FORS opdef: folkbokföringsförsamling vid urvalstillfället (individregister); BLKF opdef: folkbokföringsförsamling för urvalsperson vid urvalstillfället (kosthushall); BFORSIN/BFORSUT opdefs say början/slutet av året; BLKFUT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "label" = "Församling (vid urvalstillfället, BLKF)" }
+evidence = "#2102 same-label cluster 'Församling' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FORS opdef: folkbokföringsförsamling vid urvalstillfället (individregister); BLKF opdef: folkbokföringsförsamling för urvalsperson vid urvalstillfället (kosthushall); BFORSIN/BFORSUT opdefs say början/slutet av året; BLKFUT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:bforsin"
+fields = { "label" = "Församling (början av året)" }
+evidence = "#2102 same-label cluster 'Församling' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FORS opdef: folkbokföringsförsamling vid urvalstillfället (individregister); BLKF opdef: folkbokföringsförsamling för urvalsperson vid urvalstillfället (kosthushall); BFORSIN/BFORSUT opdefs say början/slutet av året; BLKFUT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:bforsut"
+fields = { "label" = "Församling (slutet av året)" }
+evidence = "#2102 same-label cluster 'Församling' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FORS opdef: folkbokföringsförsamling vid urvalstillfället (individregister); BLKF opdef: folkbokföringsförsamling för urvalsperson vid urvalstillfället (kosthushall); BFORSIN/BFORSUT opdefs say början/slutet av året; BLKFUT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:blkfut"
+fields = { "label" = "Församling (BLKFUT)" }
+evidence = "#2102 same-label cluster 'Församling' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FORS opdef: folkbokföringsförsamling vid urvalstillfället (individregister); BLKF opdef: folkbokföringsförsamling för urvalsperson vid urvalstillfället (kosthushall); BFORSIN/BFORSUT opdefs say början/slutet av året; BLKFUT has no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsforman-utgiftsklass-vuxna"
+fields = { "label" = "Läkemedel - Vuxna - Utgift för läkemedel m.m., utgiftsklass" }
+evidence = "#2102 same-label cluster 'Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; UMED has unit Kronor (SEK) and an amount question; BMED has a 9-value coded expenditure class list (1-400 kr, 401-900 kr, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (endast förvärvsarbetande)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only BNGR's opdef says 'endast förvärvsarbetande'. The 'längsta tiden under året' text appears only in WNGR1's 1975 occurrence (1996-2000 opdefs say SNI-92 coding from interview), and 'kosthushållsföreståndaren' is absent from BNGR2Z's SNI-07 occurrences, so those use code and table."
+
+[[statement]]
+kind = "set"
+subject = "var:wngr1"
+fields = { "label" = "Näringsgren (WNGR1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only BNGR's opdef says 'endast förvärvsarbetande'. The 'längsta tiden under året' text appears only in WNGR1's 1975 occurrence (1996-2000 opdefs say SNI-92 coding from interview), and 'kosthushållsföreståndaren' is absent from BNGR2Z's SNI-07 occurrences, so those use code and table."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tvasifferniva-kosthushallsforestandare"
+fields = { "label" = "Näringsgren (kosthushåll, BNGR2Z)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only BNGR's opdef says 'endast förvärvsarbetande'. The 'längsta tiden under året' text appears only in WNGR1's 1975 occurrence (1996-2000 opdefs say SNI-92 coding from interview), and 'kosthushållsföreståndaren' is absent from BNGR2Z's SNI-07 occurrences, so those use code and table."

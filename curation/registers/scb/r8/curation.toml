@@ -3820,3 +3820,39 @@ kind = "set"
 subject = "var:topkod"
 fields = { "label" = "Fordonsmodell (personbilar)" }
 evidence = "#2102 same-label cluster 'Fordonsmodell' (2 variables): judged different meaning, medium confidence; STATKOD (bussar, lastbilar, motorcyklar, övriga fordonsslag) and TOPKOD (personbilar) are different model code lists for different vehicle types."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "label" = "Drivmedel (Drivm, Drivm1)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-drivm2"
+fields = { "label" = "Drivmedel (Drivm2)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-literal-drivm3"
+fields = { "label" = "Drivmedel (Drivm3)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
+fields = { "label" = "Drivmedel (officiell statistik, terrängskotrar)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning-avrors"
+fields = { "label" = "Fordonets benämning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets benämning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-handelsbeteckning-avrors"
+fields = { "label" = "Fordonets handelsbeteckning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets handelsbeteckning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."

@@ -19868,3 +19868,63 @@ kind = "set"
 subject = "var:vbbel"
 fields = { "label" = "Vårdbidrag (VBBEL)" }
 evidence = "#2102 same-label cluster 'Vårdbidrag' (4 variables): judged different meaning, medium confidence; TKUVARD is taken from kontrolluppgifter, TVARD from Försäkringskassan or the declaration; VBBEL runs beside VARDB without a stated difference."
+
+[[statement]]
+kind = "set"
+subject = "var:civ"
+fields = { "label" = "Civilstånd (CIV/CIVR)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-rtb"
+fields = { "label" = "Civilstånd (RTB)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bciv"
+fields = { "label" = "Civilstånd (detaljerad indelning, beskattningsåret)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bcivakt"
+fields = { "label" = "Civilstånd (senast kända)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (befolkningsregistret först, taxeringsregistret i andra hand)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BCIVRTB opdef is RTB/befolkningsregistret in every occurrence; BCIVR is befolkningsregistret first and Inkomst- och taxeringsregistret second; BCIV is for beskattningsåret; BCIVAKT 'senast kända' in all occurrences but its list shrinks to 7 codes in 2016-2019, so 'detaljerad' is dropped; CIV/CIVR share an RTB-plus-extra-codes opdef and had the same '(RTB)' label as BCIVRTB."
+
+[[statement]]
+kind = "set"
+subject = "var:bkungr-4027"
+fields = { "label" = "Näringsgren (BKUNGR)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BKUNGR opdefs name SNI 92 (1993-2004), SNI2002 (2005-07) and SNI2007 (2008-); BKUNGR07 (2007-08) has no opdef, so both are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-produktionsenhet-sni-2007"
+fields = { "label" = "Näringsgren (BKUNGR07)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BKUNGR opdefs name SNI 92 (1993-2004), SNI2002 (2005-07) and SNI2007 (2008-); BKUNGR07 (2007-08) has no opdef, so both are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:penmark"
+fields = { "label" = "Pensionsmarkering (PENMARK)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bfpmark"
+fields = { "label" = "Pensionsmarkering (BFPMARK, FPMARK)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:bpens"
+fields = { "label" = "Pensionsmarkering (BPENS)" }
+evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; PENMARK and BPENS share the code list 0-5; BFPMARK/FPMARK has no code list and only the opdef \"kontrolluppgifter från sociala utbetalare\", so the earlier \"folkpension\" qualifier is undocumented and replaced by the column codes."

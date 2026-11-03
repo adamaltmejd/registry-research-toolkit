@@ -26841,3 +26841,591 @@ kind = "set"
 subject = "var:utlandsk-forsakring-foregaende-ar-kapitalunderlag-sek"
 fields = { "label" = "Utländsk försäkring, föregående år (kapitalunderlag i SEK)" }
 evidence = "#2102 same-label cluster 'Utländsk försäkring, föregående år' (2 variables): judged different meaning, high confidence; Opdef: FKUUTFTSEK is the capital base converted to SEK; FKUUTFT is the base column."
+
+[[statement]]
+kind = "set"
+subject = "var:pagsft"
+fields = { "label" = "AGS m.m., särskild löneskatt på förvärvsinkomster (individ)" }
+evidence = "#2102 same-label cluster 'AGS m.m., särskild löneskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same amount, separated by table: individer-och-dodsbon vs bostadshushåll; opdefs agree. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:ags-sarskild-loneskatt-hushall"
+fields = { "label" = "AGS m.m., särskild löneskatt på förvärvsinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'AGS m.m., särskild löneskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same amount, separated by table: individer-och-dodsbon vs bostadshushåll; opdefs agree. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:barnbidrag-forlangt-flerbarnstillagg-individ"
+fields = { "label" = "Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (individ)" }
+evidence = "#2102 same-label cluster 'Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same amount, separated by table: individer-och-dodsbon vs bostadshushåll. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:barnbidrag-forlangt-flerbarnstillagg-hushall"
+fields = { "label" = "Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (hushåll)" }
+evidence = "#2102 same-label cluster 'Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same amount, separated by table: individer-och-dodsbon vs bostadshushåll. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst-carb-2"
+fields = { "label" = "Arbetsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same sum; the household opdef gives a different (household-level) computation and table is bostadshushåll. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst-carbhb"
+fields = { "label" = "Arbetsinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same sum; the household opdef gives a different (household-level) computation and table is bostadshushåll. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:barnpension-skattefri-del-individ"
+fields = { "label" = "Barnpension, skattefri del (individ)" }
+evidence = "#2102 same-label cluster 'Barnpension, skattefri del' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Household opdef: Barnpension, skattefri del + Summa livränta och pension, skattefri del; individ column is the child pension only. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:barnpension-livranta-och-pension-skattefri-hushall"
+fields = { "label" = "Barnpension, skattefri del (hushåll, inklusive skattefri livränta och pension)" }
+evidence = "#2102 same-label cluster 'Barnpension, skattefri del' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Household opdef: Barnpension, skattefri del + Summa livränta och pension, skattefri del; individ column is the child pension only. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsbar-kapitalinkomst-individ"
+fields = { "label" = "Beskattningsbar inkomst av kapital (individ)" }
+evidence = "#2102 same-label cluster 'Beskattningsbar inkomst av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same label and opdef; separated by table (individer-och-dodsbon vs bostadshushåll). Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsbar-kapitalinkomst-hushall"
+fields = { "label" = "Beskattningsbar inkomst av kapital (hushåll)" }
+evidence = "#2102 same-label cluster 'Beskattningsbar inkomst av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same label and opdef; separated by table (individer-och-dodsbon vs bostadshushåll). Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst"
+fields = { "label" = "Delkomponent till disponibel inkomst (CDISP)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:dinkd"
+fields = { "label" = "Delkomponent till disponibel inkomst (DINKD)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-tidigare-definition"
+fields = { "label" = "Delkomponent till disponibel inkomst (tidigare definition, DIND)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-definition-1982"
+fields = { "label" = "Delkomponent till disponibel inkomst (DINU82)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:din8"
+fields = { "label" = "Delkomponent till disponibel inkomst (DIN83, DIN84, DIN86)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:din88k"
+fields = { "label" = "Delkomponent till disponibel inkomst (DIN88K)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:din91"
+fields = { "label" = "Delkomponent till disponibel inkomst (definition 1991, DIN91)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-exkl-kapitalvinst"
+fields = { "label" = "Delkomponent till disponibel inkomst (exklusive kapitalvinst)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only DIND ('tidigare gällande definition'), CDISP5 (kapitalvinst räknas bort) and DIN91 (formula identical to the 1991 definition CDISP cites from 2010) are supported; CDISP's opdef changes definition over 1968-2025 and DINKD/DINU82/DIN83-86/DIN88K do not state a definition year throughout, so they use their codes."
+
+[[statement]]
+kind = "set"
+subject = "var:egenavgifter-individ"
+fields = { "label" = "Egenavgifter (individ)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Identical definition and opdef; AVEGEN/SEGEN occur only in individer-och-dodsbon and SEGENHB only in bostadshushall, so individ/hushåll holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:egenavgifter-hushall"
+fields = { "label" = "Egenavgifter (hushåll)" }
+evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Identical definition and opdef; AVEGEN/SEGEN occur only in individer-och-dodsbon and SEGENHB only in bostadshushall, so individ/hushåll holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-forsakringskassa-ku-individ"
+fields = { "label" = "Ersättning från allmän försäkringskassa enligt KU (individ)" }
+evidence = "#2102 same-label cluster 'Ersättning från allmän försäkringskassa enligt KU' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-forsakringskassa-ku-hushall"
+fields = { "label" = "Ersättning från allmän försäkringskassa enligt KU (hushåll)" }
+evidence = "#2102 same-label cluster 'Ersättning från allmän försäkringskassa enligt KU' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:statligt-extra-avdrag"
+fields = { "label" = "Extra avdrag (statlig skatt)" }
+evidence = "#2102 same-label cluster 'Extra avdrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:avkext"
+fields = { "label" = "Extra avdrag (kommunal skatt)" }
+evidence = "#2102 same-label cluster 'Extra avdrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:faktorinkomst-individ-2003"
+fields = { "label" = "Faktorinkomst (individ, definition 2003)" }
+evidence = "#2102 same-label cluster 'Faktorinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:faktorinkomst-hushall"
+fields = { "label" = "Faktorinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Faktorinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp-bfamtyp"
+fields = { "label" = "Familjetyp (efter förvärvsarbete)" }
+evidence = "#2102 same-label cluster 'Familjetyp' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp-famtyp"
+fields = { "label" = "Familjetyp (efter familjesammansättning)" }
+evidence = "#2102 same-label cluster 'Familjetyp' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst-cfviki-2"
+fields = { "label" = "Förvärvs- och kapitalinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Förvärvs- och kapitalinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst-cfvikihb"
+fields = { "label" = "Förvärvs- och kapitalinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Förvärvs- och kapitalinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:givet-underhallsbidrag-aterbetalt-individ"
+fields = { "label" = "Givet underhållsbidrag, återbetalt bidragsförskott (individ)" }
+evidence = "#2102 same-label cluster 'Givet underhållsbidrag, återbetalt bidragsförskott' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:givet-underhallsbidrag-aterbetalt-hushall"
+fields = { "label" = "Givet underhållsbidrag, återbetalt bidragsförskott (hushåll)" }
+evidence = "#2102 same-label cluster 'Givet underhållsbidrag, återbetalt bidragsförskott' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:handikappersattning-individ"
+fields = { "label" = "Handikappersättning (individ)" }
+evidence = "#2102 same-label cluster 'Handikappersättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:handikappersattning-hushall"
+fields = { "label" = "Handikappersättning (hushåll)" }
+evidence = "#2102 same-label cluster 'Handikappersättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-individ"
+fields = { "label" = "Inkomst av näringsverksamhet (individ)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-naringsverksamhet-hushall"
+fields = { "label" = "Inkomst av näringsverksamhet (hushåll)" }
+evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstranta-och-utdelning-kapital-kaprta-2"
+fields = { "label" = "Inkomstränta och utdelning, kapital (individ)" }
+evidence = "#2102 same-label cluster 'Inkomstränta och utdelning, kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstranta-och-utdelning-kapital-kirantahb"
+fields = { "label" = "Inkomstränta och utdelning, kapital (hushåll)" }
+evidence = "#2102 same-label cluster 'Inkomstränta och utdelning, kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalinkomster-bank-aktier-individ"
+fields = { "label" = "Kapitalinkomster från bank, aktier och andra värdepapper (individ)" }
+evidence = "#2102 same-label cluster 'Kapitalinkomster från bank, aktier och andra värdepapper' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalinkomster-bank-aktier-hushall"
+fields = { "label" = "Kapitalinkomster från bank, aktier och andra värdepapper (hushåll)" }
+evidence = "#2102 same-label cluster 'Kapitalinkomster från bank, aktier och andra värdepapper' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:kbin"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (KBIN)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text separates KBIN, KBESK and INKBESK (same label and definition, adjacent periods); INKBFOR opdefs say it holds förskottsbelopp/förskottsbetalning."
+
+[[statement]]
+kind = "set"
+subject = "var:kbesk"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (KBESK)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text separates KBIN, KBESK and INKBESK (same label and definition, adjacent periods); INKBFOR opdefs say it holds förskottsbelopp/förskottsbetalning."
+
+[[statement]]
+kind = "set"
+subject = "var:inkbesk"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (INKBESK)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text separates KBIN, KBESK and INKBESK (same label and definition, adjacent periods); INKBFOR opdefs say it holds förskottsbelopp/förskottsbetalning."
+
+[[statement]]
+kind = "set"
+subject = "var:inkbfor"
+fields = { "label" = "Kommunalt beskattningsbar inkomst (förskottsbelopp)" }
+evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text separates KBIN, KBESK and INKBESK (same label and definition, adjacent periods); INKBFOR opdefs say it holds förskottsbelopp/förskottsbetalning."
+
+[[statement]]
+kind = "set"
+subject = "var:livranta-individ"
+fields = { "label" = "Livränta (individ)" }
+evidence = "#2102 same-label cluster 'Livränta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:livranta-hushall"
+fields = { "label" = "Livränta (hushåll)" }
+evidence = "#2102 same-label cluster 'Livränta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst-lon-2"
+fields = { "label" = "Löneinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Löneinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst-tlonthb"
+fields = { "label" = "Löneinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Löneinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-bidragsforskott-individ"
+fields = { "label" = "Mottaget bidragsförskott (individ)" }
+evidence = "#2102 same-label cluster 'Mottaget bidragsförskott' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-bidragsforskott-hushall"
+fields = { "label" = "Mottaget bidragsförskott (hushåll)" }
+evidence = "#2102 same-label cluster 'Mottaget bidragsförskott' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsbeloppskontroll-per-person-penst-2"
+fields = { "label" = "Pensionsbeloppskontroll, per person (individ)" }
+evidence = "#2102 same-label cluster 'Pensionsbeloppskontroll, per person' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsbeloppskontroll-per-person-pkontrhb"
+fields = { "label" = "Pensionsbeloppskontroll, per person (hushåll)" }
+evidence = "#2102 same-label cluster 'Pensionsbeloppskontroll, per person' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-csfvi-2"
+fields = { "label" = "Sammanräknad förvärvsinkomst (individ)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-csfvihb"
+fields = { "label" = "Sammanräknad förvärvsinkomst (hushåll)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri-sjukpf-2"
+fields = { "label" = "Sjukpenning, skattefri (SJUKPF)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SJUKPF opdef (1983-90) says amount from the frivilliga sjukpenningförsäkringen; DIVFRIP opdef sums skattefri sjukpenning with skattefri frivillig pension and särskilt pensionstillägg. SJUKPF also appears as the spelling of the ISJUK pid in 1990-93, so the codes only partly distinguish them."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri-divfrip"
+fields = { "label" = "Sjukpenning, skattefri (inklusive skattefri frivillig pension och särskilt pensionstillägg)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SJUKPF opdef (1983-90) says amount from the frivilliga sjukpenningförsäkringen; DIVFRIP opdef sums skattefri sjukpenning with skattefri frivillig pension and särskilt pensionstillägg. SJUKPF also appears as the spelling of the ISJUK pid in 1990-93, so the codes only partly distinguish them."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattefri-isjuk-2"
+fields = { "label" = "Sjukpenning, skattefri (ISJUK)" }
+evidence = "#2102 same-label cluster 'Sjukpenning, skattefri' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SJUKPF opdef (1983-90) says amount from the frivilliga sjukpenningförsäkringen; DIVFRIP opdef sums skattefri sjukpenning with skattefri frivillig pension and särskilt pensionstillägg. SJUKPF also appears as the spelling of the ISJUK pid in 1990-93, so the codes only partly distinguish them."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-hek-individ"
+fields = { "label" = "Skatt enligt hushållens ekonomi, HEK (individ)" }
+evidence = "#2102 same-label cluster 'Skatt enligt hushållens ekonomi, HEK' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-hek-hushall"
+fields = { "label" = "Skatt enligt hushållens ekonomi, HEK (hushåll)" }
+evidence = "#2102 same-label cluster 'Skatt enligt hushållens ekonomi, HEK' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-av-livranta-och-pension-livskf-2"
+fields = { "label" = "Skattefri del av livränta och pension (individ)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-del-av-livranta-och-pension-pslsfhb"
+fields = { "label" = "Skattefri del av livränta och pension (hushåll)" }
+evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underskott-kapital-individ"
+fields = { "label" = "Skattereduktion för underskott av kapital (individ)" }
+evidence = "#2102 same-label cluster 'Skattereduktion för underskott av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underskott-kapital-hushall"
+fields = { "label" = "Skattereduktion för underskott av kapital (hushåll)" }
+evidence = "#2102 same-label cluster 'Skattereduktion för underskott av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-exkl-egenavgifter-individ"
+fields = { "label" = "Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter (individ)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The individ and hushåll members sit in different tables (individer-och-dodsbon vs bostadshushall) with the same definition; opdef differs in wording only."
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-skatt-exkl-egenavgifter-hushall"
+fields = { "label" = "Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter (hushåll)" }
+evidence = "#2102 same-label cluster 'Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The individ and hushåll members sit in different tables (individer-och-dodsbon vs bostadshushall) with the same definition; opdef differs in wording only."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-forvarv-individ"
+fields = { "label" = "Statlig inkomstskatt på förvärvsinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Statlig inkomstskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition for the same tax."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-forvarv-hushall"
+fields = { "label" = "Statlig inkomstskatt på förvärvsinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'Statlig inkomstskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition for the same tax."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-kapitalinkomster-individ"
+fields = { "label" = "Statlig inkomstskatt på kapitalinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Statlig inkomstskatt på kapitalinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition for the same tax."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-kapitalinkomster-hushall"
+fields = { "label" = "Statlig inkomstskatt på kapitalinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'Statlig inkomstskatt på kapitalinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition for the same tax."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-kommunal-inkomstskatt-individ"
+fields = { "label" = "Statlig och kommunal inkomstskatt på förvärvsinkomster (individ)" }
+evidence = "#2102 same-label cluster 'Statlig och kommunal inkomstskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; the hushåll opdef gives the same SSFVI+SKLFVIE+SKLFVIF sum as the individ column from 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-kommunal-inkomstskatt-hushall"
+fields = { "label" = "Statlig och kommunal inkomstskatt på förvärvsinkomster (hushåll)" }
+evidence = "#2102 same-label cluster 'Statlig och kommunal inkomstskatt på förvärvsinkomster' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; the hushåll opdef gives the same SSFVI+SKLFVIE+SKLFVIF sum as the individ column from 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-taxerad-kapitalinkomst-individ"
+fields = { "label" = "Statlig taxerad inkomst av kapital (individ)" }
+evidence = "#2102 same-label cluster 'Statlig taxerad inkomst av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-taxerad-kapitalinkomst-hushall"
+fields = { "label" = "Statlig taxerad inkomst av kapital (hushåll)" }
+evidence = "#2102 same-label cluster 'Statlig taxerad inkomst av kapital' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiehjalp-lan-och-bidrag-istud-2"
+fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (individ)" }
+evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same sum of studiemedel components."
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiehjalp-lan-och-bidrag-istudhb"
+fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (hushåll)" }
+evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same sum of studiemedel components."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-allman-pension-tjanstepension-tjanst-kuapens-2"
+fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (individ, KUAPENS/PKUSSP)" }
+evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KUAPENS (1991-93) then PKUSSP (1993-2019), so both codes are named. No opdef separates the two individ members."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-allman-pension-tjanstepension-tjanst-pssp"
+fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (individ, PSSP)" }
+evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KUAPENS (1991-93) then PKUSSP (1993-2019), so both codes are named. No opdef separates the two individ members."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-allman-pension-tjanstepension-tjanst-pssphb"
+fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KUAPENS (1991-93) then PKUSSP (1993-2019), so both codes are named. No opdef separates the two individ members."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf-2"
+fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (individ, CKULONF/KULONS/WKULONF)" }
+evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONS, WKULONF and CKULONF over 1991-2019, all with the same opdef as CLONF (Kontant bruttolön + Skattepliktiga förmåner)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-clonf"
+fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (individ, CLONF)" }
+evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONS, WKULONF and CKULONF over 1991-2019, all with the same opdef as CLONF (Kontant bruttolön + Skattepliktiga förmåner)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-tlonfhb"
+fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONS, WKULONF and CKULONF over 1991-2019, all with the same opdef as CLONF (Kontant bruttolön + Skattepliktiga förmåner)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-pension-enligt-kontrolluppgift-kupenst-2"
+fields = { "label" = "Summa pension (enligt kontrolluppgift) (individ, KUPENST/PKUPENS)" }
+evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table, split at 2019 (PKUPENS/PAPENS) where the code changes; the individ PKUPENS opdef from 2017 is identical to PAPENS."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-pension-enligt-kontrolluppgift-pkupenshb"
+fields = { "label" = "Summa pension (enligt kontrolluppgift) (hushåll, PKUPENSHB)" }
+evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table, split at 2019 (PKUPENS/PAPENS) where the code changes; the individ PKUPENS opdef from 2017 is identical to PAPENS."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-pension-enligt-kontrolluppgift-papens"
+fields = { "label" = "Summa pension (enligt kontrolluppgift) (individ, PAPENS)" }
+evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table, split at 2019 (PKUPENS/PAPENS) where the code changes; the individ PKUPENS opdef from 2017 is identical to PAPENS."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-pension-enligt-kontrolluppgift-papenshb"
+fields = { "label" = "Summa pension (enligt kontrolluppgift) (hushåll, PAPENSHB)" }
+evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table, split at 2019 (PKUPENS/PAPENS) where the code changes; the individ PKUPENS opdef from 2017 is identical to PAPENS."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-privat-pensionsforsakring-skattepliktig-kuppens-2"
+fields = { "label" = "Summa privat pensionsförsäkring/skattepliktig livränta, tjänst (individ)" }
+evidence = "#2102 same-label cluster 'Summa privat pensionsförsäkring/skattepliktig livränta, tjänst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-privat-pensionsforsakring-skattepliktig-pslsphb"
+fields = { "label" = "Summa privat pensionsförsäkring/skattepliktig livränta, tjänst (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa privat pensionsförsäkring/skattepliktig livränta, tjänst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-formaner-tjanst-individ"
+fields = { "label" = "Summa sociala förmåner, tjänst (individ)" }
+evidence = "#2102 same-label cluster 'Summa sociala förmåner, tjänst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same summed components (TFKASSA + TKASSA + ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-formaner-tjanst-hushall"
+fields = { "label" = "Summa sociala förmåner, tjänst (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa sociala förmåner, tjänst' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same summed components (TFKASSA + TKASSA + ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-vissa-skattepliktiga-formaner-kulonf-2"
+fields = { "label" = "Summa vissa skattepliktiga förmåner (individ, KULONF/TKULONF)" }
+evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONF (1991-93) and TKULONF (1993-2019), so both are named. TLONF carries the same opdef as TKULONF from 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-vissa-skattepliktiga-formaner-tlonf"
+fields = { "label" = "Summa vissa skattepliktiga förmåner (individ, TLONF)" }
+evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONF (1991-93) and TKULONF (1993-2019), so both are named. TLONF carries the same opdef as TKULONF from 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-vissa-skattepliktiga-formaner-clonfhb"
+fields = { "label" = "Summa vissa skattepliktiga förmåner (hushåll)" }
+evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll by table; the first individ member spells KULONF (1991-93) and TKULONF (1993-2019), so both are named. TLONF carries the same opdef as TKULONF from 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-aktiv-naringsverksamhet-individ"
+fields = { "label" = "Underskott av aktiv näringsverksamhet. (individ)" }
+evidence = "#2102 same-label cluster 'Underskott av aktiv näringsverksamhet.' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; identical NUAKTE+NUAKTHB opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-aktiv-naringsverksamhet-hushall"
+fields = { "label" = "Underskott av aktiv näringsverksamhet. (hushåll)" }
+evidence = "#2102 same-label cluster 'Underskott av aktiv näringsverksamhet.' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; identical NUAKTE+NUAKTHB opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-passiv-naringsverksamhet-individ"
+fields = { "label" = "Underskott av passiv näringsverksamhet (individ)" }
+evidence = "#2102 same-label cluster 'Underskott av passiv näringsverksamhet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; identical NUPASE+NUPASHB opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-passiv-naringsverksamhet-hushall"
+fields = { "label" = "Underskott av passiv näringsverksamhet (hushåll)" }
+evidence = "#2102 same-label cluster 'Underskott av passiv näringsverksamhet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; identical NUPASE+NUPASHB opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:aterbetalt-studielan-individ"
+fields = { "label" = "Återbetalt belopp, studielån (individ)" }
+evidence = "#2102 same-label cluster 'Återbetalt belopp, studielån' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:aterbetalt-studielan-hushall"
+fields = { "label" = "Återbetalt belopp, studielån (hushåll)" }
+evidence = "#2102 same-label cluster 'Återbetalt belopp, studielån' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Individ vs hushåll tables; same definition."

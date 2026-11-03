@@ -1877,3 +1877,21 @@ kind = "set"
 subject = "var:utbild2"
 fields = { "label" = "Gymnasieutbildning (korrigerade värden, Lpf94)" }
 evidence = "#2102 same-label cluster 'Gymnasieutbildning' (3 variables): judged different meaning, medium confidence; Opdefs: Utbild is derived from study path, Utbild2 holds corrected values for education reported under Lpf94, Utbild_Start is derived from the start study-path code."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, Utl_BakG)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Utl_BakG (codes 0,1,2) and UtlBakGr (codes 0,1,2 plus blank) are three categories; UtlSvBakg has codes 11, 12, 21, 22 (four) and runs concurrently with UtlBakGr."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, UtlBakGr)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Utl_BakG (codes 0,1,2) and UtlBakGr (codes 0,1,2 plus blank) are three categories; UtlSvBakg has codes 11, 12, 21, 22 (four) and runs concurrently with UtlBakGr."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Utl_BakG (codes 0,1,2) and UtlBakGr (codes 0,1,2 plus blank) are three categories; UtlSvBakg has codes 11, 12, 21, 22 (four) and runs concurrently with UtlBakGr."

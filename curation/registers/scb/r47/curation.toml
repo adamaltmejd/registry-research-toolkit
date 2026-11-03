@@ -4099,3 +4099,15 @@ kind = "set"
 subject = "var:utbildningsniva-tva-positioner"
 fields = { "label" = "Utbildningsnivå (2 positioner, härledd från examenstyp)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; Opdefs: SUNNiva1, SUNNiva2 and SUNNiva are 1-, 2- and 3-position SUN levels derived from examenstyp in the examination table; SunNiva3 is the 3-position SUN 2020 level in the applicant tables."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "label" = "År (referensår)" }
+evidence = "#2102 same-label cluster 'År' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Ar opdef: 'Endast ett värde: referensåret' (personal-1995-2000 table); KAr opdef: calendar year when the doctoral student received credit transfer (forskarutbildning-tillgodoraknande)."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-tillgodoraknande"
+fields = { "label" = "År (tillgodoräknande)" }
+evidence = "#2102 same-label cluster 'År' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Ar opdef: 'Endast ett värde: referensåret' (personal-1995-2000 table); KAr opdef: calendar year when the doctoral student received credit transfer (forskarutbildning-tillgodoraknande)."

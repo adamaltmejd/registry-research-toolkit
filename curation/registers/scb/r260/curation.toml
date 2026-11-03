@@ -3854,3 +3854,87 @@ kind = "set"
 subject = "var:vy-skolkod"
 fields = { "label" = "Skola (Vy_Skolkod)" }
 evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different meaning, medium confidence; Opdefs: final admitted school (ISKENH), school applied to in 1st-6th hand (SKOLA1-6), school applied to (SkolKod), and the grundskola school (Skol_Ar9, Skolkod_Ak9); Vy_Skolkod has no text, so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (hemkommun, HGYREG)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:u-hkom"
+fields = { "label" = "Kommun (hemkommun, U_HKOM)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:u-ukom"
+fields = { "label" = "Kommun (skolkommun, där eleven är antagen, U_UKOM)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:u-utbort"
+fields = { "label" = "Kommun (skola för sökt utbildning, U_Utbort)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "label" = "Kommun (hemkommun, HKom)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "label" = "Kommun (skolkommun, där eleven är antagen, SKom)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:skola-kommun"
+fields = { "label" = "Kommun (skolkommun, där eleven är antagen, Kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:utbort"
+fields = { "label" = "Kommun (skola för vald eller sökt utbildning, UtbOrt)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom-ans"
+fields = { "label" = "Kommun (hemkommun vid ansökan, Hkom_ans)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-ht"
+fields = { "label" = "Kommun (skolkommun, där eleven är antagen, Kommun_HT)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "label" = "Kommun (hemkommun, Hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun-ans"
+fields = { "label" = "Kommun (hemkommun vid ansökan, Hemkommun_ans)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun (skola för sökt utbildning, Skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-ht"
+fields = { "label" = "Kommun (skolkommun, där eleven är registrerad, SkolKommun_HT)" }
+evidence = "#2102 same-label cluster 'Kommun' (14 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give four meanings: folkbokförd (HGYREG, U_HKOM, HKom, Hemkommun), folkbokförd vid ansökan (Hkom_ans, Hemkommun_ans), skolan där eleven är antagen (U_UKOM, SKom, Kommun, Kommun_HT) or registrerad (SkolKommun_HT), skola för sökt/vald utbildning (U_Utbort, UtbOrt, Skolkommun). Members with identical text carry their column spelling; SkolKommun_HT's opdef says 'registrerad', not 'antagen'."

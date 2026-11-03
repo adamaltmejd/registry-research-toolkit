@@ -23291,3 +23291,609 @@ kind = "set"
 subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
 fields = { "label" = "Yrkeskodens överensstämmelse med organisationsnumret (inklusive härledda yrken för företagare)" }
 evidence = "#2102 same-label cluster 'Yrkeskodens överensstämmelse med organisationsnumret' (2 variables): judged different meaning, high confidence; Opdef: SsykStatus_J16 includes derived occupations for business owners and has a different code list; it runs beside SsykStatus in 2016-17."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1968"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1999"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-2000"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 10-siffrig kod (KU2InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), näst största förvärvskälla, 10-siffrig kod (AGI2InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), näst största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1968"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1999"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-2000"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 10-siffrig kod (KU1InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), största förvärvskälla, 10-siffrig kod (AGI1InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 5-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-1999"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 6-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2000"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 7-siffrig kod" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2014"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 10-siffrig kod (KU3InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3instkod-2014-agi"
+fields = { "label" = "Institutionell sektorkod (företag), tredje största förvärvskälla, 10-siffrig kod (AGI3InstKod10)" }
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag), tredje största förvärvskälla' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Digit counts follow the code lists (5, 6, 7 and 10 digits); the two 10-digit columns have the same opdef and code list."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni69"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 69, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni92"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92/2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2002"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-ast-sni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-astsni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (arbetsställe, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (individ, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2007"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, 15 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, huvudsaklig (företag, SNI 2007, 51 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (27 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level (5-siffrig, 42/41, 10, 15, 51 grupper); unit follows the table (individer, arbetsstallen, foretag); SNI 2002 B opdef says 41 groups against 42 in the sibling SNI 92 B (kept 42 as the code list holds 42 plus a 00 code)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni69"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 69, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92/2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-nast-storsta-ku2astsni2007"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, femsiffrig, KU2AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 15 grupper, KU2AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 51 grupper, KU2AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, femsiffrig, AGI2AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 15 grupper, AGI2AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, näst största förvärvskälla (SNI 2007, 51 grupper, AGI2AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, näst största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI2AstSNI2007G/U 2022- opdef text has a group-count slip, column name kept)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni69"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 69, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92/2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-tredje-storsta-ku3astsni2007"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, femsiffrig, KU3AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 15 grupper, KU3AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 51 grupper, KU3AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, femsiffrig, AGI3AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 15 grupper, AGI3AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren för statistiken, tredje största förvärvskälla (SNI 2007, 51 grupper, AGI3AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, tredje största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni69"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 69, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92/2002, femsiffrig)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92b"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002b"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2002, 42 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2002, 10 grupper)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-forvarvskalla-ku1astsni2007"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, femsiffrig, KU1AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 15 grupper, KU1AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007u"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 51 grupper, KU1AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, femsiffrig, AGI1AstSNI2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007g"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 15 grupper, AGI1AstSNI2007G)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007u"
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007, 51 grupper, AGI1AstSNI2007U)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs state SNI version and level per member; KU and AGI SNI 2007 columns share opdef (AGI1AstSNI2007G 2022-23 opdef says 51 grupper, a slip against 15 in the other occurrences)."
+
+[[statement]]
+kind = "set"
+subject = "var:operativ-verksamhetsledare-opvledare"
+fields = { "label" = "Operativ verksamhetsledare (markering för individ)" }
+evidence = "#2102 same-label cluster 'Operativ verksamhetsledare' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; OpVLedare is a 0/1 (Nej/Ja) code in individer-15plus; PersonNr_OpV sits in the foretag table and has no code list; both share one definition."
+
+[[statement]]
+kind = "set"
+subject = "var:operativ-verksamhetsledare-personnr-opv"
+fields = { "label" = "Operativ verksamhetsledare (person-id i företagstabell)" }
+evidence = "#2102 same-label cluster 'Operativ verksamhetsledare' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; OpVLedare is a 0/1 (Nej/Ja) code in individer-15plus; PersonNr_OpV sits in the foretag table and has no code list; both share one definition."
+
+[[statement]]
+kind = "set"
+subject = "var:alderspension-folkpension-atp"
+fields = { "label" = "Summa inkomst föranledd av ålderspension (SumAld)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SumAld opdefs are generic until 2000 and name folkpension/ATP only from 2000-03, so only the code is safe; SumAldP03 opdef names inkomst-, tilläggs-, premie- and garantipension in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:alderspension-inkomst-premie-garanti"
+fields = { "label" = "Summa inkomst föranledd av ålderspension (inkomst-, premie- och garantipension)" }
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av ålderspension' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SumAld opdefs are generic until 2000 and name folkpension/ATP only from 2000-03, so only the code is safe; SumAldP03 opdef names inkomst-, tilläggs-, premie- and garantipension in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-avgransning-till-1992"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning till 1992)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SyssStatG, SyssStatJ opdefs name their delimitation (to 1992, 2004); SyssStat/SyssStat11 span 1993, 2003 and 2011 delimitations with differing code lists, and SyssStat19 has no opdef, so those use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "label" = "Sysselsättningsstatus, november (SyssStat, SyssStat11)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SyssStatG, SyssStatJ opdefs name their delimitation (to 1992, 2004); SyssStat/SyssStat11 span 1993, 2003 and 2011 delimitations with differing code lists, and SyssStat19 has no opdef, so those use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-avgransning-2004"
+fields = { "label" = "Sysselsättningsstatus, november (avgränsning 2004)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SyssStatG, SyssStatJ opdefs name their delimitation (to 1992, 2004); SyssStat/SyssStat11 span 1993, 2003 and 2011 delimitations with differing code lists, and SyssStat19 has no opdef, so those use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-fran-2019"
+fields = { "label" = "Sysselsättningsstatus, november (SyssStat19)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SyssStatG, SyssStatJ opdefs name their delimitation (to 1992, 2004); SyssStat/SyssStat11 span 1993, 2003 and 2011 delimitations with differing code lists, and SyssStat19 has no opdef, so those use column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan (KU2Ssyk3)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast-2012"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan (KU2Ssyk3_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast-2012-agi"
+fields = { "label" = "Yrke på 3-siffernivå, näst största förvärvskällan (AGI2SSYK3_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan (KU1Ssyk3)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta-2012"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan (KU1Ssyk3_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta-2012-agi"
+fields = { "label" = "Yrke på 3-siffernivå, största förvärvskällan (AGI1SSYK3_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan (KU2Ssyk4)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast-2012"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan (KU2Ssyk4_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast-2012-agi"
+fields = { "label" = "Yrke på 4-siffernivå, näst största förvärvskällan (AGI2SSYK4_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, näst största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan (KU1Ssyk4)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta-2012"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan (KU1Ssyk4_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta-2012-agi"
+fields = { "label" = "Yrke på 4-siffernivå, största förvärvskällan (AGI1SSYK4_2012)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, största förvärvskällan' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No opdef or classification name appears in the evidence; the code lists differ between the pre-2014 column, the _2012 column and the AGI column (different entries), so the column codes carry the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (YSEG)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; YSEG definition says it derives from yrkeskod based on ISCO-88 (COM) with codes 01-; ESeG has codes 1.1-; no text names ESeG, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg-eseg"
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (ESeG)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; YSEG definition says it derives from yrkeskod based on ISCO-88 (COM) with codes 01-; ESeG has codes 1.1-; no text names ESeG, so the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-byrkstalln"
+fields = { "label" = "Yrkesställning (med kombinationer av anställning och företagande)" }
+evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; YrkStalln has codes 0-5; BYrkstalln opdef/codes 200-series combine anställning and företagande, from 2022."

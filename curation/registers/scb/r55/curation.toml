@@ -2776,3 +2776,39 @@ kind = "set"
 subject = "var:yrke-ssyk4-storsta"
 fields = { "label" = "Yrke, största förvärvskällan (SSYK 2012, 4-siffernivå)" }
 evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; KU1Ssyk3_2012 och KU1Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-foretag-syssreg"
+fields = { "label" = "Antal sysselsatta på företaget enligt Sysselsättningsregistret (AntalSysS)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget enligt Sysselsättningsregistret' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Both have the identical definition (huvudsakliga sysselsättningen); the 'största förvärvskälla' qualifier is not in any text, so the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-foretaget-enligt-ku1antalsyss"
+fields = { "label" = "Antal sysselsatta på företaget enligt Sysselsättningsregistret (KU1AntalSysS)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget enligt Sysselsättningsregistret' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Both have the identical definition (huvudsakliga sysselsättningen); the 'största förvärvskälla' qualifier is not in any text, so the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 7 nivåer)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Code lists: Sun2000Niva_Old and SUN2020Niva_Old have 7 levels; Sun2000Niva and SUN2020Niva have ~50 three-digit SUN codes; versions follow the column names and the SUN2020 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Code lists: Sun2000Niva_Old and SUN2020Niva_Old have 7 levels; Sun2000Niva and SUN2020Niva have ~50 three-digit SUN codes; versions follow the column names and the SUN2020 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Code lists: Sun2000Niva_Old and SUN2020Niva_Old have 7 levels; Sun2000Niva and SUN2020Niva have ~50 three-digit SUN codes; versions follow the column names and the SUN2020 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2020, 7 nivåer)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Code lists: Sun2000Niva_Old and SUN2020Niva_Old have 7 levels; Sun2000Niva and SUN2020Niva have ~50 three-digit SUN codes; versions follow the column names and the SUN2020 opdef."

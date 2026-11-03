@@ -1747,3 +1747,21 @@ kind = "set"
 subject = "var:valdistriktsnamn-2"
 fields = { "label" = "Valdistrikt (vdnamn)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, high confidence; Opdefs: name for cast votes, code for cast votes, and name for eligible voters."
+
+[[statement]]
+kind = "set"
+subject = "var:lt-valkretsnamn"
+fields = { "label" = "Regionvalkrets (namn, erhållna mandat)" }
+evidence = "#2102 same-label cluster 'Regionvalkrets' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; valkretsnamn is the name for obtained mandates (1973-2023), LT_valkretskod the code for mandates, lt_valkretsnamn the name for votes cast, per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-kod"
+fields = { "label" = "Regionvalkrets (kod, erhållna mandat)" }
+evidence = "#2102 same-label cluster 'Regionvalkrets' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; valkretsnamn is the name for obtained mandates (1973-2023), LT_valkretskod the code for mandates, lt_valkretsnamn the name for votes cast, per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-namn"
+fields = { "label" = "Regionvalkrets (namn, avgivna röster)" }
+evidence = "#2102 same-label cluster 'Regionvalkrets' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; valkretsnamn is the name for obtained mandates (1973-2023), LT_valkretskod the code for mandates, lt_valkretsnamn the name for votes cast, per opdef."

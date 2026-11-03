@@ -13757,3 +13757,63 @@ kind = "set"
 subject = "var:varulager-v8726"
 fields = { "label" = "Varulager (V8726, INK3)" }
 evidence = "#2102 same-label cluster 'Varulager' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, NE/NEA and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-2004-taxering"
+fields = { "label" = "Periodiseringsfond vid 2004 års taxering (V0344)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2004 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Identical definitions; V0344 occurs on N1, N2, N3A, register and INK3, so no single form qualifier holds and the code is used; v7344 occurs only on NE and INK3, concurrent with v0344 in 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2004-ars-taxering-v7344"
+fields = { "label" = "Periodiseringsfond vid 2004 års taxering (v7344, NE/INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2004 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Identical definitions; V0344 occurs on N1, N2, N3A, register and INK3, so no single form qualifier holds and the code is used; v7344 occurs only on NE and INK3, concurrent with v0344 in 2007."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-2005-taxering"
+fields = { "label" = "Periodiseringsfond vid 2005 års taxering (V0345)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2005 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; As 2004: identical definitions, V0345 spans N1/N2/N3A/register/INK3 so the code is the qualifier; v7345 only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2005-ars-taxering-v7345"
+fields = { "label" = "Periodiseringsfond vid 2005 års taxering (v7345, NE/INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2005 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; As 2004: identical definitions, V0345 spans N1/N2/N3A/register/INK3 so the code is the qualifier; v7345 only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-2006-taxering"
+fields = { "label" = "Periodiseringsfond vid 2006 års taxering (V0346)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2006 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; As 2004: identical definitions, V0346 spans several forms so the code is the qualifier; v7346 only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2006-ars-taxering-v7346"
+fields = { "label" = "Periodiseringsfond vid 2006 års taxering (v7346, NE/INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2006 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; As 2004: identical definitions, V0346 spans several forms so the code is the qualifier; v7346 only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2007-ars-taxering"
+fields = { "label" = "Periodiseringsfond vid 2007 års taxering (V0347)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2007 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; V0347 occurs on N2, N3A, register and INK3 (not only N2/N3A), so the code is the qualifier; v7347 occurs only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2007-ars-taxering-v7347"
+fields = { "label" = "Periodiseringsfond vid 2007 års taxering (v7347, NE/INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2007 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; V0347 occurs on N2, N3A, register and INK3 (not only N2/N3A), so the code is the qualifier; v7347 occurs only on NE and INK3."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-2008-taxering"
+fields = { "label" = "Periodiseringsfond vid 2008 års taxering (v0348, N3A)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2008 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition and period; v0348 only on N3A, v7348 only on INK3, so the form qualifiers hold."
+
+[[statement]]
+kind = "set"
+subject = "var:periodiseringsfond-vid-2008-ars-taxering-v7348"
+fields = { "label" = "Periodiseringsfond vid 2008 års taxering (v7348, INK3)" }
+evidence = "#2102 same-label cluster 'Periodiseringsfond vid 2008 års taxering' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same definition and period; v0348 only on N3A, v7348 only on INK3, so the form qualifiers hold."

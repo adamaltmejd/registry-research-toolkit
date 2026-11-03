@@ -1466,38 +1466,38 @@ evidence = "reg_meta_build/curation/registers/scb/aes.toml:6082\n\nComplete acce
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedist2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5650\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (andra aktiviteten, distans ja/nej)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5650\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD2 method type 1-3, NFEDIST2 Ja/Nej, NFEPLACE2 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfemethod2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5662\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (andra aktiviteten, metodtyp)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5662\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD2 method type 1-3, NFEDIST2 Ja/Nej, NFEPLACE2 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeplace2"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5674\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (andra aktiviteten, grad av distans)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5674\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD2 method type 1-3, NFEDIST2 Ja/Nej, NFEPLACE2 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedist1"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5686\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (första aktiviteten, distans ja/nej)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5686\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD1 method type 1-3, NFEDIST1 Ja/Nej, NFEPLACE1 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfemethod1"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5698\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (första aktiviteten, metodtyp)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5698\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD1 method type 1-3, NFEDIST1 Ja/Nej, NFEPLACE1 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeplace1"
-fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
-evidence = "reg_meta_build/curation/registers/scb/aes.toml:5710\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning (första aktiviteten, grad av distans)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5710\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json.\n\n#2102 same-label cluster 'Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same opdef and definition, but code lists differ: NFEMETHOD1 method type 1-3, NFEDIST1 Ja/Nej, NFEPLACE1 degree of distance 1-4."
 
 [[statement]]
 kind = "set"
@@ -8796,3 +8796,219 @@ kind = "set"
 subject = "var:villedelta"
 fields = { "label" = "Studiehinder (deltog inte, ville delta i utbildning)" }
 evidence = "#2102 same-label cluster 'Studiehinder' (2 variables): judged different meaning, high confidence; Opdefs: took part but wanted more education versus did not take part but wanted to."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-andra-arbetsformedlingen"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-andra-arbetsgivare"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-andra-hushallsmedlem-eller-slakting"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, hushållsmedlem eller släkting)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-andra-intervjupersonen-sjalv"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, intervjupersonen själv)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-andra-offentlig-eller-privat-sektor"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, offentlig sektor; 2022 även privat)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-forsta-arbetsformedlingen"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-forsta-arbetsgivare"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-forsta-hushallsmedlem-eller-slakting"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, hushållsmedlem eller släkting)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-forsta-intervjupersonen-sjalv"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, intervjupersonen själv)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-forsta-offentlig-eller-privat-sektor"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, offentlig sektor; 2022 även privat)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-tredje-arbetsformedlingen"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (tredje aktiviteten, Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-tredje-arbetsgivare"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (tredje aktiviteten, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-tredje-hushallsmedlem-eller-slakting"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (tredje aktiviteten, hushållsmedlem eller släkting)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-tredje-intervjupersonen-sjalv"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (tredje aktiviteten, intervjupersonen själv)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:betalare-icke-formell-tredje-offentlig-sektor"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (tredje aktiviteten, offentlig sektor)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact01-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 1, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact02-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 2, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact03-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 3, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact04-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 4, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact05-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 5, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact06-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 6, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfeact07-paidby"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (aktivitet 7, arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfepaidby1"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (första aktiviteten, minst ett betalande objekt)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "var:nfepaidby2"
+fields = { "label" = "Betalande objekt, icke-formell utbildning (andra aktiviteten, minst ett betalande objekt)" }
+evidence = "#2102 same-label cluster 'Betalande objekt, icke-formell utbildning' (24 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same payer-yes/no item per payer and activity; NFEACTnn_PAIDBY codes in both years are employer paid/not (opdef 2016: 'Betalade arbetsgivaren'), so they are labelled arbetsgivare per activity; the sector item is 'Offentlig sektor' in 2011 and 2016 and 'Offentlig eller privat sektor' only in 2022, so the earlier 'offentlig eller privat' was not true of every occurrence (NFEPAIDBY3_3 exists 2011-12 only). NFEPAIDBY1/2 are 0/1 'minst ett betalande objekt' summaries."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_02 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (för dyrt, inte råd)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_04 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (schema eller tid passade inte)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_05 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (avstånd, inga utbildningsmöjligheter nära hemmet)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_06 @2016-01-01..2016-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (saknad tillgång till dator eller internet)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_07 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (tidsbrist på grund av familjeansvar)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_09 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (andra personliga orsaker)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFTYPE_10 @2022-01-01..2022-12-31"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (ingen lämplig utbildningsaktivitet)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "var:svarighet-vid-utbildningsdeltagande-difftype-12"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (tidigare negativa upplevelser av utbildning)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "var:svarighet-vid-utbildningsdeltagande-difftype-13"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (kursen fullbokad)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "var:svarighet-vid-utbildningsdeltagande-difftype-14"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (för få registreringar)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsformedlingen"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (saknat stöd från Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsgivare"
+fields = { "label" = "Svårighet vid utbildningsdeltagande (saknat stöd från arbetsgivare)" }
+evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; One yes/no tick-box per reason, each reason named in opdef and question text in all years; DIFFTYPE_04 covers 'schema' (2011, 2022) and 'arbetstider' (2016), so the qualifier is widened to schema or tid."

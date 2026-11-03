@@ -4669,3 +4669,21 @@ kind = "set"
 subject = "var:yrkespaketkod"
 fields = { "label" = "Yrkespaket (kod)" }
 evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code, Yrkeskod_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "label" = "Kommungruppsindelning (bokstavskod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Letter-digit codes (Kommungrupp, A1-C9) vs numeric codes (KomGrupp17/23) vs klartext (Kommungrupp_text, opdef 'i klartext'); same SKR nine-group definition."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "label" = "Kommungruppsindelning (numerisk kod, KomGrupp17/23)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Letter-digit codes (Kommungrupp, A1-C9) vs numeric codes (KomGrupp17/23) vs klartext (Kommungrupp_text, opdef 'i klartext'); same SKR nine-group definition."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-text"
+fields = { "label" = "Kommungruppsindelning (klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Letter-digit codes (Kommungrupp, A1-C9) vs numeric codes (KomGrupp17/23) vs klartext (Kommungrupp_text, opdef 'i klartext'); same SKR nine-group definition."

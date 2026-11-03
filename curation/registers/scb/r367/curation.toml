@@ -9306,3 +9306,57 @@ kind = "set"
 subject = "var:utbup"
 fields = { "label" = "Utbildning_TA1990 (urvalsperson)" }
 evidence = "#2102 same-label cluster 'Utbildning_TA1990' (2 variables): judged different meaning, high confidence; Opdefs: utbms is the partner's education level, utbup the sampled person's."
+
+[[statement]]
+kind = "set"
+subject = "var:arbtim"
+fields = { "label" = "Arbetade timmar per vecka (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbtim/ARBTIMUP 'hos urvalspersonen', arbtimms/ARBTIMMS 'hos den anhöriga till urvalspersonen'. F10 (tidsstudien 2021) has only the shared definition and no opdef, so nothing says whose hours it measures; the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbtimms"
+fields = { "label" = "Arbetade timmar per vecka (anhörig till urvalspersonen)" }
+evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbtim/ARBTIMUP 'hos urvalspersonen', arbtimms/ARBTIMMS 'hos den anhöriga till urvalspersonen'. F10 (tidsstudien 2021) has only the shared definition and no opdef, so nothing says whose hours it measures; the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-per-vecka"
+fields = { "label" = "Arbetade timmar per vecka (F10)" }
+evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbtim/ARBTIMUP 'hos urvalspersonen', arbtimms/ARBTIMMS 'hos den anhöriga till urvalspersonen'. F10 (tidsstudien 2021) has only the shared definition and no opdef, so nothing says whose hours it measures; the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:arbt"
+fields = { "label" = "Heltid eller deltid (urvalsperson, arbt)" }
+evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbt/ARBTUP and heldel 'hur urvalspersonen arbetar', arbtms/ARBTMS and heldelms 'urvalspersonens partner'. arbt and heldel (and the ms pair) have identical definition and opdef in disjoint survey years, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:arbtms"
+fields = { "label" = "Heltid eller deltid (urvalspersonens partner, arbtms)" }
+evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbt/ARBTUP and heldel 'hur urvalspersonen arbetar', arbtms/ARBTMS and heldelms 'urvalspersonens partner'. arbt and heldel (and the ms pair) have identical definition and opdef in disjoint survey years, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "label" = "Heltid eller deltid (urvalsperson, heldel)" }
+evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbt/ARBTUP and heldel 'hur urvalspersonen arbetar', arbtms/ARBTMS and heldelms 'urvalspersonens partner'. arbt and heldel (and the ms pair) have identical definition and opdef in disjoint survey years, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:heldelms"
+fields = { "label" = "Heltid eller deltid (urvalspersonens partner, heldelms)" }
+evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: arbt/ARBTUP and heldel 'hur urvalspersonen arbetar', arbtms/ARBTMS and heldelms 'urvalspersonens partner'. arbt and heldel (and the ms pair) have identical definition and opdef in disjoint survey years, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-aktivitet"
+fields = { "label" = "Sysselsättning/aktivitet (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SYSSUP/syss 'Urvalspersonen', SYSSMS/syssms 'Urvalspersonens partners sysselsättning'."
+
+[[statement]]
+kind = "set"
+subject = "var:syssms"
+fields = { "label" = "Sysselsättning/aktivitet (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SYSSUP/syss 'Urvalspersonen', SYSSMS/syssms 'Urvalspersonens partners sysselsättning'."

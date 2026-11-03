@@ -7416,3 +7416,141 @@ kind = "set"
 subject = "var:yrke-vid-arbetstillstand-ssyk96-kolumn"
 fields = { "label" = "Yrke vid arbetstillstånd (SSYK 96)" }
 evidence = "#2102 same-label cluster 'Yrke vid arbetstillstånd' (3 variables): judged different meaning, medium confidence; SSYK2012 and SSYK96 are separate classification versions; the unversioned SSYK (2011-2014) has the SSYK 96 value labels (Militärer) and is treated as its predecessor column."
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsar-vecka"
+fields = { "label" = "Bearbetningsvecka (år och vecka, ÅÅÅÅVV)" }
+evidence = "#2102 same-label cluster 'Bearbetningsvecka' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BeArbArVecka/BearbArVecka give year and week (ÅÅÅÅVV); BearbVecka/BearbVecka1 give week only (VV)."
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsvecka"
+fields = { "label" = "Bearbetningsvecka (vecka, VV)" }
+evidence = "#2102 same-label cluster 'Bearbetningsvecka' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BeArbArVecka/BearbArVecka give year and week (ÅÅÅÅVV); BearbVecka/BearbVecka1 give week only (VV)."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-1990-1997"
+fields = { "label" = "Familjeställning (1990–1997)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FST90-FST97 use two-digit codes (11, 12) and FamStall three-digit (110, 120); the MIS 1999:1 reference is absent from the 1998 FamStall opdef, so 'MIS 1999:1' is dropped."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "label" = "Familjeställning (från 1998)" }
+evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; FST90-FST97 use two-digit codes (11, 12) and FamStall three-digit (110, 120); the MIS 1999:1 reference is absent from the 1998 FamStall opdef, so 'MIS 1999:1' is dropped."
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans-forsamling"
+fields = { "label" = "Flyttningsgräns (över eller inom församling, 1968–1997)" }
+evidence = "#2102 same-label cluster 'Flyttningsgräns' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Posttyp only distinguishes over/within församling (codes 3, 6); FlyttGrans has seven boundary levels in both its code-list versions."
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans"
+fields = { "label" = "Flyttningsgräns (alla gränsnivåer, från 1998)" }
+evidence = "#2102 same-label cluster 'Flyttningsgräns' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Posttyp only distinguishes over/within församling (codes 3, 6); FlyttGrans has seven boundary levels in both its code-list versions."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-prioriterad"
+fields = { "label" = "Grund för bosättning, grupperad (prioriterad grund)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs differ: GrundForBosattning is grouped from the prioritised classification, GFBGrupp_SCB from the latest; also 13 vs 14 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-senaste"
+fields = { "label" = "Grund för bosättning, grupperad (senaste grund)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs differ: GrundForBosattning is grouped from the prioritised classification, GFBGrupp_SCB from the latest; also 13 vs 14 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-efb"
+fields = { "label" = "Grund för bosättning, klassningsgruppering, efter folkbokföring (textgrupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, efter folkbokföring' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Text-group code list (2009-2011) versus 19 numeric class codes with EU/EES breakdown (2011-), same definition 'efter folkbokföring'."
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-efb"
+fields = { "label" = "Grund för bosättning, klassningsgruppering, efter folkbokföring (numeriska klassgrupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, efter folkbokföring' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Text-group code list (2009-2011) versus 19 numeric class codes with EU/EES breakdown (2011-), same definition 'efter folkbokföring'."
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-ffb"
+fields = { "label" = "Grund för bosättning, klassningsgruppering, före folkbokföring (textgrupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, före folkbokföring' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Text-group code list (2009-2011) versus 19 numeric class codes with EU/EES breakdown (2011-), same definition 'före folkbokföring'."
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-ffb"
+fields = { "label" = "Grund för bosättning, klassningsgruppering, före folkbokföring (numeriska klassgrupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, före folkbokföring' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Text-group code list (2009-2011) versus 19 numeric class codes with EU/EES breakdown (2011-), same definition 'före folkbokföring'."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "label" = "Län (vid födelsen)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:avsandlan"
+fields = { "label" = "Län (leverande länsskattemyndighet, AvSandLan)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:avslan"
+fields = { "label" = "Län (leverande länsskattemyndighet, AvsLan)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "label" = "Län (efter inrikes flytt)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "label" = "Län (vid civilståndsändring)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "label" = "Län (vid dödsfall)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "label" = "Län (vid medborgarskapsändring)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:mantlan"
+fields = { "label" = "Län (mantalsskrivningslän)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:mantlanfg"
+fields = { "label" = "Län (föregående mantalsskrivningslän)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "label" = "Län (vid invandring)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "label" = "Län (vid utvandring)" }
+evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."

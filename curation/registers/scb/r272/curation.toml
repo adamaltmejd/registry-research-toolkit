@@ -292,3 +292,21 @@ kind = "set"
 subject = "var:f9b"
 fields = { "label" = "Gemensam faktura för elnättjänst (överföring) och elförbrukning (F9b)" }
 evidence = "#2102 same-label cluster 'Gemensam faktura för elnättjänst (överföring) och elförbrukning' (3 variables): judged different meaning, low confidence; F9a (to 2011) and F09a (from 2011) look like one item renamed; F9b is a concurrent column with the same yes/no codes and no text, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f7b"
+fields = { "label" = "Anledning till byte av elleverantör (F7b)" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; F7b (2007-2011) and F07b/F07c (2011-2014) share definition and code list (Lägre pris/Miljöskäl/Annan anledning, with 9=Partiellt bortfall from 2012); F07b_txt runs concurrently with F07b, same codes and no text. F07b member also carries the spelling F07c."
+
+[[statement]]
+kind = "set"
+subject = "var:f07b"
+fields = { "label" = "Anledning till byte av elleverantör (F07b, F07c)" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; F7b (2007-2011) and F07b/F07c (2011-2014) share definition and code list (Lägre pris/Miljöskäl/Annan anledning, with 9=Partiellt bortfall from 2012); F07b_txt runs concurrently with F07b, same codes and no text. F07b member also carries the spelling F07c."
+
+[[statement]]
+kind = "set"
+subject = "var:f07b-txt"
+fields = { "label" = "Anledning till byte av elleverantör (F07b_txt)" }
+evidence = "#2102 same-label cluster 'Anledning till byte av elleverantör' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; F7b (2007-2011) and F07b/F07c (2011-2014) share definition and code list (Lägre pris/Miljöskäl/Annan anledning, with 9=Partiellt bortfall from 2012); F07b_txt runs concurrently with F07b, same codes and no text. F07b member also carries the spelling F07c."

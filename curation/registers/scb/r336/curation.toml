@@ -2746,3 +2746,15 @@ kind = "set"
 subject = "var:f18-0"
 fields = { "label" = "Handledares insats (handledning i önskad omfattning)" }
 evidence = "#2102 same-label cluster 'Handledares insats' (2 variables): judged different meaning, high confidence; Opdefs: F17_01 asks to what degree the supervisor let own interests steer the thesis topic, F18_01 whether supervision was received to the desired extent."
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-forskarniva"
+fields = { "label" = "Behörighet till utbildning på forskarnivå (Sverige, hemlandet eller annat land)" }
+evidence = "#2102 same-label cluster 'Behörighet till utbildning på forskarnivå' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same survey question text, but F13 has three answer options (Sverige, hemlandet, annat land) while F9 has two (Sverige, annat land); both in the 2013 table."
+
+[[statement]]
+kind = "set"
+subject = "var:f9"
+fields = { "label" = "Behörighet till utbildning på forskarnivå (Sverige eller annat land)" }
+evidence = "#2102 same-label cluster 'Behörighet till utbildning på forskarnivå' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same survey question text, but F13 has three answer options (Sverige, hemlandet, annat land) while F9 has two (Sverige, annat land); both in the 2013 table."

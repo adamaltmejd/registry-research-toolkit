@@ -4881,3 +4881,63 @@ kind = "set"
 subject = "var:utbildningsniva-sun-2020-komplett-3-stallig"
 fields = { "label" = "Utbildningsnivå (SUN 2020, 3 siffror)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (2 variables): judged different meaning, high confidence; Both are SUN 2020 but one is the first position (old level, 1 digit) and the other the complete three-digit code (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni69"
+fields = { "label" = "Näringsgren för företag (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four columns with different SNI-version code lists (FtgSni69 353 codes, FtgSni92 755-766, FtgSni02/07 778/822 with different texts); version qualifiers come from the column names and agree with the code lists. Note the single 2002 FtgSni02 occurrence defines the variable as 'enhetens' näringsgren."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92"
+fields = { "label" = "Näringsgren för företag (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four columns with different SNI-version code lists (FtgSni69 353 codes, FtgSni92 755-766, FtgSni02/07 778/822 with different texts); version qualifiers come from the column names and agree with the code lists. Note the single 2002 FtgSni02 occurrence defines the variable as 'enhetens' näringsgren."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni02"
+fields = { "label" = "Näringsgren för företag (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four columns with different SNI-version code lists (FtgSni69 353 codes, FtgSni92 755-766, FtgSni02/07 778/822 with different texts); version qualifiers come from the column names and agree with the code lists. Note the single 2002 FtgSni02 occurrence defines the variable as 'enhetens' näringsgren."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni07"
+fields = { "label" = "Näringsgren för företag (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four columns with different SNI-version code lists (FtgSni69 353 codes, FtgSni92 755-766, FtgSni02/07 778/822 with different texts); version qualifiers come from the column names and agree with the code lists. Note the single 2002 FtgSni02 occurrence defines the variable as 'enhetens' näringsgren."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 69)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni92-begransad"
+fields = { "label" = "Näringsgren, huvudsaklig (grov indelning, AstSni92Begr)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni92"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92-19053"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 92, FtgSni92)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-sni2002"
+fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-fad-sni2007"
+fields = { "label" = "Näringsgren, huvudsaklig (FAD, SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AstSni92Begr has 43 two-digit group codes and opdef 'Härledd variabel'; the others have full five-digit lists per SNI version. FtgSni92 (1998-2000) shares AstSni92's definition and, in 1998, its opdef 'Företagets näringsgren enligt SNI92', so 'företagets näringsgren' does not separate them; the code does."

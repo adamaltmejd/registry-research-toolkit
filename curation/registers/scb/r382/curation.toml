@@ -2972,3 +2972,57 @@ kind = "set"
 subject = "var:variabel-kod-pin"
 fields = { "label" = "Variabel, identifierande kod (PIN) (InVariableId)" }
 evidence = "#2102 same-label cluster 'Variabel, identifierande kod (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InVariableId, OutVariableId, VariableId with the same code list; no text explains the In/Out distinction, so In and Out are qualified by column code and VariableId keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "label" = "Bransch (sni92)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-branschgr"
+fields = { "label" = "Bransch (branschgr)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-sni2007"
+fields = { "label" = "Bransch (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "label" = "Branschgrupp (AktBr92)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2002"
+fields = { "label" = "Branschgrupp (branschgr, äldre indelning)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "label" = "Branschgrupp (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2007"
+fields = { "label" = "Branschgrupp (branschgr, SNI 2007)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "label" = "Branschgrupp (AktBr07)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "label" = "Branschgrupp (BGrupp)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."

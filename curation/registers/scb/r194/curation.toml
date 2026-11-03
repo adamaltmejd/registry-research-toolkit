@@ -760,3 +760,15 @@ kind = "set"
 subject = "var:lokalbidrag"
 fields = { "label" = "Statsbidrag (för lokalerna)" }
 evidence = "#2102 same-label cluster 'Statsbidrag' (2 variables): judged different meaning, high confidence; Opdefs differ: ElevBidrag is grant received for pupils, LokalBidrag for premises."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-elever-skelev"
+fields = { "label" = "Antal elever (SkElev)" }
+evidence = "#2102 same-label cluster 'Antal elever' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SkElev and ElevFgAr have identical definition 'Antal elever' and unit in the same table and period; nothing separates them, so column codes qualify."
+
+[[statement]]
+kind = "set"
+subject = "var:elevfgar"
+fields = { "label" = "Antal elever (ElevFgAr)" }
+evidence = "#2102 same-label cluster 'Antal elever' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SkElev and ElevFgAr have identical definition 'Antal elever' and unit in the same table and period; nothing separates them, so column codes qualify."

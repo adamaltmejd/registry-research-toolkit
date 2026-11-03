@@ -5350,3 +5350,27 @@ kind = "set"
 subject = "var:yrkstallnnymet"
 fields = { "label" = "Yrkesställning (ny metod)" }
 evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, medium confidence; YrkStallnNyMet (ny metod) runs concurrently with YrkStalln in 2003-2004."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Sun2000Niva_old and Sun2020Niva_old share the same seven-level code list and opdef text (both name SUN2000Niva_Old), so 'SUN 2020' is not supported for Sun2020Niva_old; Sun2020Niva's 2019-2022 opdef says 'SUN2000-nivåkoden', so 'SUN 2020' is not supported there either. Both Sun2000Niva and Sun2020Niva carry 51 three-digit codes. Codes are used for the 2020-named members."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, detaljerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Sun2000Niva_old and Sun2020Niva_old share the same seven-level code list and opdef text (both name SUN2000Niva_Old), so 'SUN 2020' is not supported for Sun2020Niva_old; Sun2020Niva's 2019-2022 opdef says 'SUN2000-nivåkoden', so 'SUN 2020' is not supported there either. Both Sun2000Niva and Sun2020Niva carry 51 three-digit codes. Codes are used for the 2020-named members."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (Sun2020Niva, detaljerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Sun2000Niva_old and Sun2020Niva_old share the same seven-level code list and opdef text (both name SUN2000Niva_Old), so 'SUN 2020' is not supported for Sun2020Niva_old; Sun2020Niva's 2019-2022 opdef says 'SUN2000-nivåkoden', so 'SUN 2020' is not supported there either. Both Sun2000Niva and Sun2020Niva carry 51 three-digit codes. Codes are used for the 2020-named members."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå (Sun2020Niva_old, grov indelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Sun2000Niva_old and Sun2020Niva_old share the same seven-level code list and opdef text (both name SUN2000Niva_Old), so 'SUN 2020' is not supported for Sun2020Niva_old; Sun2020Niva's 2019-2022 opdef says 'SUN2000-nivåkoden', so 'SUN 2020' is not supported there either. Both Sun2000Niva and Sun2020Niva carry 51 three-digit codes. Codes are used for the 2020-named members."

@@ -5282,3 +5282,15 @@ kind = "set"
 subject = "var:varrybs-i-vrybs"
 fields = { "label" = "Vårrybs (IAKS)" }
 evidence = "#2102 same-label cluster 'Vårrybs' (2 variables): judged different meaning, medium confidence; i_vrybs sits in the IAKS table iaks-arealer while Varrybs is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: po/po8 'geografisk indelning i 8 områden' and po18 'i 18 områden', with 8-code and 18-code value sets in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: po/po8 'geografisk indelning i 8 områden' and po18 'i 18 områden', with 8-code and 18-code value sets in all occurrences."

@@ -111643,3 +111643,39 @@ kind = "set"
 subject = "var:yrke-tillfalligt-arbete-sy1231"
 fields = { "label" = "Yrke tillfälligt arbete (arbete 3)" }
 evidence = "#2102 same-label cluster 'Yrke tillfälligt arbete' (3 variables): judged different meaning, high confidence; Opdefs say Arbete 1, Arbete 2 and Arbete 3; occupation codes for temporary jobs 1-3."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "label" = "Insamlingsmetod (hushåll)" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef says the variable exists in both the H-file (HB130) and the P-file (PB270) with identical value sets, so hushåll/person is supported for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod-2"
+fields = { "label" = "Insamlingsmetod (person)" }
+evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef says the variable exists in both the H-file (HB130) and the P-file (PB270) with identical value sets, so hushåll/person is supported for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "label" = "Medborgarskap, individ (BA0022)" }
+evidence = "#2102 same-label cluster 'Medborgarskap, individ' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The 'Gruppering av medborgarskapsland' opdef (BA0022) and 'i klartext' opdef (BA0025) are each present in only some occurrences (BA0025's 2002-2005 occurrences have no opdef or codes), so a text qualifier would not hold for every occurrence; column codes used."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-individ-ba0025"
+fields = { "label" = "Medborgarskap, individ (BA0025)" }
+evidence = "#2102 same-label cluster 'Medborgarskap, individ' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The 'Gruppering av medborgarskapsland' opdef (BA0022) and 'i klartext' opdef (BA0025) are each present in only some occurrences (BA0025's 2002-2005 occurrences have no opdef or codes), so a text qualifier would not hold for every occurrence; column codes used."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-1996-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Every occurrence's opdef states 'Enligt yrkeskod (SSYK) 1996' for SSYKUP_1 and 'SSYK 2012' for SSYK12UP; different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-2012-4-siffrig"
+fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012)" }
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Every occurrence's opdef states 'Enligt yrkeskod (SSYK) 1996' for SSYKUP_1 and 'SSYK 2012' for SSYK12UP; different classification versions."

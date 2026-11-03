@@ -4281,3 +4281,15 @@ kind = "set"
 subject = "var:varderingsenhetens-identitetsnummer-idve"
 fields = { "label" = "Värderingsenhetens identitetsnummer (100- och 200-serien samt produktionsmetoden)" }
 evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "label" = "Total bostadsyta (summa, typkod 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The YtaBostH/YtaBostS opdef (2013-2016) maps the field names to the 300/500 sum and the 100/200 area; YtaBostadTot continues YtaBostH in taxeringsenheter (same unit, sum of värderingsenheter in 300/500)."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-literal-ytabosts"
+fields = { "label" = "Total bostadsyta (typkod 100- och 200-serien)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The YtaBostH/YtaBostS opdef (2013-2016) maps the field names to the 300/500 sum and the 100/200 area; YtaBostadTot continues YtaBostH in taxeringsenheter (same unit, sum of värderingsenheter in 300/500)."

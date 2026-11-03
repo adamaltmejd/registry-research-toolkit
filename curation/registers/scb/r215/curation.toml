@@ -3884,8 +3884,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Av_arb_K @2021-01-01..2021-12-31 where key = 'v37409' and release = 'r18159'"
-fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
 
 [[statement]]
 kind = "set"
@@ -3896,8 +3896,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Av_arb_K @2022-01-01..2022-12-31 where key = 'v37409' and release = 'r18889'"
-fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
 
 [[statement]]
 kind = "set"
@@ -3908,8 +3908,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Av_arb_K @2023-01-01..2023-12-31 where key = 'v37409' and release = 'r19369'"
-fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
 
 [[statement]]
 kind = "set"
@@ -3920,8 +3920,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Av_arb_K @2024-01-01..2024-12-31 where key = 'v37409' and release = 'r20106'"
-fields = { "label" = "Antal arbetade timmar", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor", "definition" = "Antal arbetade timmar.", "operational_definition" = "Arbetade timmar av avlönade kvinnor,", "unit" = "Antal timmar" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
 
 [[statement]]
 kind = "set"
@@ -3932,8 +3932,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Avlon_K @2021-01-01..2021-12-31 where key = 'v6306' and release = 'r18159'"
-fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade kvinnor", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
 
 [[statement]]
 kind = "set"
@@ -3944,8 +3944,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Avlon_K @2022-01-01..2022-12-31 where key = 'v6306' and release = 'r18889'"
-fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade kvinnor", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
 
 [[statement]]
 kind = "set"
@@ -3956,8 +3956,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Avlon_K @2023-01-01..2023-12-31 where key = 'v6306' and release = 'r19369'"
-fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade kvinnor", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
 
 [[statement]]
 kind = "set"
@@ -3968,8 +3968,8 @@ evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours throug
 [[statement]]
 kind = "set"
 subject = "kostnadsenkaten: Avlon_K @2024-01-01..2024-12-31 where key = 'v6306' and release = 'r20106'"
-fields = { "label" = "Antal sysselsatta på företaget", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
-evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade kvinnor", "definition" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen.", "operational_definition" = "Avser antal avlönade kvinnor på företaget.", "unit" = "Antal personer" }
+evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
 
 [[statement]]
 kind = "set"
@@ -3980,8 +3980,8 @@ evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt 
 [[statement]]
 kind = "set"
 subject = "vattenbruk: SRodp_salt @2018-01-01..2018-12-31 where key = 'v39824' and release = 'r13664'"
-fields = { "label" = "Produktion av röding för utsättning", "definition" = "Företagets totala produktion av röding för utsättning, i kg." }
-evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt independently carries öring in 2018-2024 with the same sea-production scope and kg unit. The 2018 SRodp_salt label and definition copied öring. SCB JO1201 quality declaration 2024, pp. 4-5, distinguishes the species and stocking-fish production. Assign the complete 2018 occurrence to röding, correct its text and remove the obsolete continues edge; the emptied ledger ID is retained. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+fields = { "label" = "Produktion av röding för utsättning, havet", "definition" = "Företagets totala produktion av röding för utsättning, i kg." }
+evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt independently carries öring in 2018-2024 with the same sea-production scope and kg unit. The 2018 SRodp_salt label and definition copied öring. SCB JO1201 quality declaration 2024, pp. 4-5, distinguishes the species and stocking-fish production. Assign the complete 2018 occurrence to röding, correct its text and remove the obsolete continues edge; the emptied ledger ID is retained. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf\n\n#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SRodp_salt has the opdef 'havet' in every occurrence; SRodp has 'sötvatten' from 2016 but no water-type text in its 2015 occurrence, so it keeps only its code."
 
 [[statement]]
 kind = "set"
@@ -5318,3 +5318,291 @@ kind = "set"
 subject = "var:yta-dammar-matfisk-hav"
 fields = { "label" = "Dammar för odling av matfisk, yta, i havet" }
 evidence = "#2102 same-label cluster 'Dammar för odling av matfisk, yta' (2 variables): judged different meaning, medium confidence; MJordy_salt is the sea-water (salt or brackish) twin from 2018; the non-salt column has both havet and sötvatten opdefs, so it keeps the current label."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-kvinnor-matfisk"
+fields = { "label" = "Antal arbetade timmar, kvinnor, matfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-man-matfisk"
+fields = { "label" = "Antal arbetade timmar, män, matfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-kvinnor-rom-och-yngelverksamhet"
+fields = { "label" = "Antal arbetade timmar, kvinnor, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-kvinnor-sattfisk"
+fields = { "label" = "Antal arbetade timmar, kvinnor, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-man-rom-och-yngelverksamhet"
+fields = { "label" = "Antal arbetade timmar, män, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-man-sattfisk"
+fields = { "label" = "Antal arbetade timmar, män, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb"
+fields = { "label" = "Antal arbetade timmar, avlönad personal" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:for-tot"
+fields = { "label" = "Antal arbetade timmar, företagare" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Av_arb_K @2018-01-01..2020-12-31"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-foretagare-kvinnor"
+fields = { "label" = "Antal arbetade timmar, företagare, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-foretagare-man"
+fields = { "label" = "Antal arbetade timmar, företagare, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb-m"
+fields = { "label" = "Antal arbetade timmar, avlönad personal, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-k"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-m"
+fields = { "label" = "Antal arbetade timmar, oavlönad personal, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-k"
+fields = { "label" = "Antal arbetade timmar, totalt, kvinnor" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-m"
+fields = { "label" = "Antal arbetade timmar, totalt, män" }
+evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the breakdown per member: gender x verksamhet (matfisk, rom och yngel, sättfisk), avlönade/oavlönade/företagare, gender totals; each holds in all occurrences and units are antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-kvinnor-matfisk"
+fields = { "label" = "Antal sysselsatta på företaget, kvinnor, matfisk" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-kvinnor-rom-yngel"
+fields = { "label" = "Antal sysselsatta på företaget, kvinnor, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-kvinnor-sattfisk"
+fields = { "label" = "Antal sysselsatta på företaget, kvinnor, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-man-matfisk"
+fields = { "label" = "Antal sysselsatta på företaget, män, matfisk" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-man-rom-yngel"
+fields = { "label" = "Antal sysselsatta på företaget, män, rom- och yngelverksamhet" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-man-sattfisk"
+fields = { "label" = "Antal sysselsatta på företaget, män, sättfisk" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:a-nation"
+fields = { "label" = "Antal sysselsatta på företaget, annan nationalitet än svensk eller EU/EES" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avlonade-man-pa-foretaget"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade män" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Avlon_K @2016-01-01..2016-12-31,2018-01-01..2020-12-31"
+fields = { "label" = "Antal sysselsatta på företaget, avlönade kvinnor" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-15-24-ar"
+fields = { "label" = "Antal sysselsatta på företaget, 15-24 år" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-25-39-ar"
+fields = { "label" = "Antal sysselsatta på företaget, 25-39 år" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-40-64-ar"
+fields = { "label" = "Antal sysselsatta på företaget, 40-64 år" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-65-ar-eller-aldre"
+fields = { "label" = "Antal sysselsatta på företaget, 65 år eller äldre" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-nationalitet-ees"
+fields = { "label" = "Antal sysselsatta på företaget, nationalitet EES" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-nationalitet-eu"
+fields = { "label" = "Antal sysselsatta på företaget, nationalitet EU" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-oavlonade-kvinnor"
+fields = { "label" = "Antal sysselsatta på företaget, oavlönade kvinnor" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-oavlonade-man"
+fields = { "label" = "Antal sysselsatta på företaget, oavlönade män" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-under-15-ar"
+fields = { "label" = "Antal sysselsatta på företaget, under 15 år" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:forag"
+fields = { "label" = "Antal sysselsatta på företaget, företagare" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:grund"
+fields = { "label" = "Antal sysselsatta på företaget, grundskola som högsta avslutade utbildning" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:gym"
+fields = { "label" = "Antal sysselsatta på företaget, gymnasium som högsta avslutade utbildning" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-syss"
+fields = { "label" = "Antal sysselsatta på företaget, övriga sysselsatta (ej företagare)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:svensk"
+fields = { "label" = "Antal sysselsatta på företaget, svensk nationalitet" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:uni"
+fields = { "label" = "Antal sysselsatta på företaget, universitet eller högskola som högsta avslutade utbildning" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:eu-ees"
+fields = { "label" = "Antal sysselsatta på företaget, nationalitet EU/EES" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-k"
+fields = { "label" = "Antal sysselsatta på företaget, kvinnor totalt (vattenbruk)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-m"
+fields = { "label" = "Antal sysselsatta på företaget, män totalt (vattenbruk)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:tot-k"
+fields = { "label" = "Antal sysselsatta på företaget, kvinnor totalt (kostnadsenkäten)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:tot-m"
+fields = { "label" = "Antal sysselsatta på företaget, män totalt (kostnadsenkäten)" }
+evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give gender x verksamhet, age bands, nationality, education, avlönade/oavlönade/företagare breakdowns; the two gender totals differ by source table (vattenbruk vs kostnadsenkäten)."
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-roding-utsattning-sotvatten-kg"
+fields = { "label" = "Produktion av röding för utsättning (SRodp)" }
+evidence = "#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SRodp_salt has the opdef 'havet' in every occurrence; SRodp has 'sötvatten' from 2016 but no water-type text in its 2015 occurrence, so it keeps only its code."
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodp_salt @2019-01-01..2024-12-31"
+fields = { "label" = "Produktion av röding för utsättning, havet" }
+evidence = "#2102 same-label cluster 'Produktion av röding för utsättning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SRodp_salt has the opdef 'havet' in every occurrence; SRodp has 'sötvatten' from 2016 but no water-type text in its 2015 occurrence, so it keeps only its code."

@@ -12906,3 +12906,207 @@ kind = "set"
 subject = "var:utbnivar"
 fields = { "label" = "Tillräcklig utbildningsnivå (gymnasieavgångna, skala 2004)" }
 evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå' (7 variables): judged different meaning, medium confidence; Value sets show four answer scales (2004 scale, KY scale, scale to avancerad nivå, scale with forskarnivå) and the high-school-student items ask about the first job (F10) versus the measurement week (F21), concurrent in 2013."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-fr21c"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-fr20"
+fields = { "label" = "Arbete utomlands (Europa, utanför Europa eller nej)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-ejarbut"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f9-5"
+fields = { "label" = "Arbete utomlands (F9_5)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f08"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f08-5"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f09-5"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-f13-05"
+fields = { "label" = "Arbete utomlands (nej, har inte arbetat utomlands)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (9 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; fr20 answers Europe/outside Europe/no; the other columns hold the 'no' alternative per their code lists. F9_5 2006 has codes 1=Ja/Finns, 2=Nej (not the 'no' alternative), so it is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:arbnojd"
+fields = { "label" = "Nöjdhet med arbete (mätveckan)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete-6"
+fields = { "label" = "Nöjdhet med arbete (F26, F31)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete-5"
+fields = { "label" = "Nöjdhet med arbete (mätveckan)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-arbete-22-26-april-2013"
+fields = { "label" = "Nöjdhet med arbete (mätveckan)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete"
+fields = { "label" = "Nöjdhet med arbete (mätveckan, femgradig skala)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:f17-0"
+fields = { "label" = "Nöjdhet med arbete (möjligheter till vidareutbildning)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete-3"
+fields = { "label" = "Nöjdhet med arbete (totalt)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete-alternativ"
+fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:f11-0"
+fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:f12-0"
+fields = { "label" = "Nöjdhet med arbete (möjligheter att påverka arbetssituationen)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-arbete-2"
+fields = { "label" = "Nöjdhet med arbete (totalt)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-studera"
+fields = { "label" = "Skäl att studera (annan anledning, ja/nej)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-studera-f7-02"
+fields = { "label" = "Skäl att studera (bredda mig inom YH-utbildningens område)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-studera-f7-03"
+fields = { "label" = "Skäl att studera (teoretisk fördjupning inom YH-utbildningens område)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-studera-f7-04"
+fields = { "label" = "Skäl att studera (vill arbeta med något annat än YH-utbildningens inriktning)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-studera-alternativ"
+fields = { "label" = "Skäl att studera (svårigheter att få arbete efter YH-utbildningen)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-studera-annan-anledning"
+fields = { "label" = "Skäl att studera (annan anledning, fritext)" }
+evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name one answer alternative per column ('Av vilken anledning studerar du idag? ...'); f7 and F7_txt both say 'Annan anledning, skriv vilken', with f7 ja/nej coded and F7_txt having no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-studarb"
+fields = { "label" = "Studier istället för arbete (antal terminer)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f8"
+fields = { "label" = "Studier istället för arbete (antal terminer)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-studist"
+fields = { "label" = "Studier istället för arbete (antal terminer)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-arbete"
+fields = { "label" = "Studier istället för arbete (antal terminer)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f08"
+fields = { "label" = "Studier istället för arbete (antal terminer)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f17"
+fields = { "label" = "Studier istället för arbete (ja/nej)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f23"
+fields = { "label" = "Studier istället för arbete (ja/nej, fråga F23)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f18"
+fields = { "label" = "Studier istället för arbete (ja/nej, för att undvika arbetslöshet)" }
+evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
