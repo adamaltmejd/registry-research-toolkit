@@ -658,7 +658,7 @@ fn clip(
     clips
 }
 
-/// Add each declared key of the holding over the file's days: the key column joins
+/// Add each declared key of the holding over the days the file extracts: the key column joins
 /// once, as `carried` when the table carries its parent's copy, else `row_key`; a
 /// column a binding already orders stays `ordered`. A key on hold, uncovered or placed
 /// in two columns blocks the order. A declaration with `period_key = "column"` adds
@@ -681,12 +681,15 @@ fn keys(
         )
     })?;
     let mut columns = held.prepare(
-        "SELECT c.id, m.table_pid, m.start, m.end, m.carried, c.name
+        "SELECT c.id, m.table_pid, m.start, m.end, m.carried, c.name, m.caveat
          FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
          WHERE c.holding_id = ? AND m.variable_pid = ? ORDER BY c.ordinal, m.start",
     )?;
-    let per_source: Vec<(usize, Vec<Days>)> =
-        draft.days.iter().map(|(s, d)| (*s, d.clone())).collect();
+    // Keys are resolved over the rows the file extracts, not only the requested days:
+    // the row filter widens to the encoding's grain, and an unfiltered file extracts
+    // its whole delivery.
+    let extracted = extracted(holding, draft);
+    let per_source: Vec<usize> = draft.days.keys().copied().collect();
     for (r, requirement) in requirements.iter().enumerate() {
         let scope: Vec<Days> = match requirement["period"].as_str() {
             None => vec![(i64::MIN, i64::MAX)],
@@ -713,8 +716,8 @@ fn keys(
             .flat_map(|k| requirement[*k].as_array().into_iter().flatten())
             .filter_map(Value::as_str)
             .collect();
-        for (s, days) in &per_source {
-            let days = intersect(days, &scope);
+        for s in &per_source {
+            let days = intersect(&extracted, &scope);
             if days.is_empty() {
                 continue;
             }
@@ -741,7 +744,7 @@ fn keys(
                 continue;
             }
             for (v, variable) in variables.iter().enumerate() {
-                let found: Vec<(i64, String, Days, bool, String)> = columns
+                let found: Vec<KeyMapping> = columns
                     .query_map(rusqlite::params![holding_id, variable], |row| {
                         Ok((
                             row.get(0)?,
@@ -749,15 +752,16 @@ fn keys(
                             (row.get(2)?, row.get(3)?),
                             row.get(4)?,
                             row.get(5)?,
+                            row.get(6)?,
                         ))
                     })?
                     .collect::<rusqlite::Result<_>>()?;
                 let over: Vec<_> = found
                     .iter()
-                    .filter(|(_, _, d, _, _)| !intersect(&days, &[*d]).is_empty())
+                    .filter(|(_, _, d, ..)| !intersect(&days, &[*d]).is_empty())
                     .collect();
                 let distinct: BTreeSet<i64> = over.iter().map(|(c, ..)| *c).collect();
-                let covered = merge_days(over.iter().map(|(_, _, d, _, _)| *d).collect());
+                let covered = merge_days(over.iter().map(|(_, _, d, ..)| *d).collect());
                 let uncovered = minus(&days, &covered);
                 if distinct.len() > 1 {
                     findings.push(block(
@@ -784,7 +788,7 @@ fn keys(
                     findings.push(issue);
                     continue;
                 }
-                for (column, table, d, carried, _) in over {
+                for (column, table, d, carried, _, caveat) in over {
                     let entry = draft.columns.entry(*column).or_insert_with(|| {
                         let role = if *carried {
                             Role::Carried
@@ -802,6 +806,24 @@ fn keys(
                         .map(|f| f.4.clone())
                         .unwrap_or_default();
                     for piece in intersect(&days, &[*d]) {
+                        // A bound key reported its caveat at the binding (it stays
+                        // `ordered` above); an added key reports it at the source.
+                        if let Some(caveat) = caveat {
+                            findings.push(Issue {
+                                level: IssueLevel::Warning,
+                                code: "mapping_caveat".to_owned(),
+                                path: format!("/sources/{s}"),
+                                message: format!(
+                                    "{variable} in {table} over {}: {caveat}",
+                                    span(server, piece)
+                                ),
+                                source: Some(sources[*s].name.clone()),
+                                variable: Some((*variable).to_owned()),
+                                table: Some(table.clone()),
+                                period: Some(server.period(piece.0, piece.1)),
+                                successor_fqid: None,
+                            });
+                        }
                         entry.2.push(Ref {
                             source: sources[*s].name.clone(),
                             binding: None,
@@ -826,6 +848,29 @@ fn keys(
         }
     }
     Ok(())
+}
+
+/// A key's mapping: (column id, table, days, carried, column name, caveat).
+type KeyMapping = (i64, String, Days, bool, String, Option<String>);
+
+/// The held days a file extracts: its requested days widened to the period column's
+/// grain, or the whole delivery when it has no period column (the row filter's rule).
+fn extracted(holding: &Holding, draft: &Draft) -> Vec<Days> {
+    let union = merge_days(draft.days.values().flatten().copied().collect());
+    match &holding.period_column {
+        _ if holding.held.is_empty() => union,
+        None => holding.held.clone(),
+        Some((_, _, encoding)) => {
+            let encoding = Encoding::parse(encoding).expect("an admitted encoding");
+            intersect(
+                &union
+                    .iter()
+                    .map(|&d| widen(encoding, d))
+                    .collect::<Vec<_>>(),
+                &holding.held,
+            )
+        }
+    }
 }
 
 /// The first and last held day numbers rounded to an encoding's grain.

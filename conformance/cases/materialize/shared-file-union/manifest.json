@@ -107,6 +107,28 @@
               "spelling": "Received_Id"
             },
             {
+              "source": "a",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "Received_Id"
+            },
+            {
+              "source": "b",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            },
+            {
               "source": "b",
               "binding": null,
               "table": "demo/held",

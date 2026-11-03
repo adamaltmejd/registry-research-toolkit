@@ -1,5 +1,5 @@
 {
-  "note": "Fails if the parent's shared key or measure is also taken from the projection where the parent places it, the projection stops serving the half year the parent leaves out (dropped whole and clipped as unavailable), the projection loses its own carried key copy, or that copy is relabelled as ordered.",
+  "note": "Fails if the parent's shared key or measure is also taken from the projection where the parent places it, the projection stops serving the half year the parent leaves out (dropped whole and clipped as unavailable), the projection loses its own carried key copy, or that copy is relabelled as ordered. Also fails if a bound key's caveat is reported twice, at the binding and again at the source.",
   "project": {
     "schema_version": "5.2.0",
     "reg_meta_version": "0.71.0",

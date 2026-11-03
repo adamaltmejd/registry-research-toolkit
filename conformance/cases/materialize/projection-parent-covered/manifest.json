@@ -63,7 +63,7 @@
               "variable": "demo/projected/id",
               "period": {
                 "start": "2018-01-01",
-                "end": "2018-07-01"
+                "end": "2019-01-01"
               },
               "spelling": "Id"
             }
@@ -74,6 +74,20 @@
   ],
   "clips": [],
   "findings": [
+    {
+      "level": "warning",
+      "code": "mapping_caveat",
+      "path": "/sources/0",
+      "message": "demo/projected/id in demo/projected over [2018-01-01, 2019-01-01): Synthetic identifier caveat.",
+      "source": "p",
+      "variable": "demo/projected/id",
+      "table": "demo/projected",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+      },
+      "successor_fqid": null
+    },
     {
       "level": "info",
       "code": "rows_unfiltered",

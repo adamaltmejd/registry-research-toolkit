@@ -2068,11 +2068,14 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   days its parent does not place it; a request the parent covers selects no projection
   file.
 - Keys are the holding's `key_requirements` (entity, then time, in declaration order)
-  over the file's days, scoped by a requirement's `period`. A key column a binding
+  over the days the file extracts (the requested days widened to the encoding's grain,
+  or the whole delivery when unfiltered), scoped by a requirement's `period`; each
+  source sharing the file gets key references over those days. A key column a binding
   orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
   `binding: null` references. An active requirement with `period_key = "column"` adds
-  the physical period column once as a `row_key` with no references. A requirement on hold or uncovered is `held_key_missing`,
-  a key in two columns `held_key_ambiguous`; both block the order.
+  the physical period column once as a `row_key` with no references. A requirement on
+  hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
+  both block the order.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is
   `physical_schema_missing`. Both block, located at the file's first binding.
@@ -2081,7 +2084,7 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   `row_filter_union` (a source whose days are narrower than its shared file's union).
   Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
   warning located at the binding over the selected days (the Operator's 2026-10-19
-  warn-not-hold call).
+  warn-not-hold call); an automatically added key's caveat is located at its source.
 
 ### Logical types (N1) and metadata for local mocks
 
