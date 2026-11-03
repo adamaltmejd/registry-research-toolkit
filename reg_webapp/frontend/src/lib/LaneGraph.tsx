@@ -293,6 +293,7 @@ export function LaneGraph({
       )}
       <Legend
         coverage={coverage}
+        window={window !== null}
         succession={kinds.has("succession")}
         rename={kinds.has("rename")}
         addWindow={addWindow !== null}
@@ -580,6 +581,7 @@ function LaneName({ lane, width }: { lane: LaneModel; width?: number }) {
 }
 
 function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
+  const subId = useId();
   return (
     <div className={styles.name} style={width ? { width } : undefined}>
       {lane.href ? (
@@ -589,6 +591,9 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
           // The page's own subject (a group's focused member): said in words,
           // not only by the lane's fill.
           aria-current={lane.current ? "page" : undefined}
+          // Tab reads links only: the line under the name tells lanes of one
+          // name apart, so it describes the link.
+          aria-describedby={lane.sub ? subId : undefined}
           // The name and its line truncate; two lanes can then read alike
           // (SyssStat11, SyssStat19), so the whole of each is the hover text.
           title={lane.name}
@@ -602,6 +607,7 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
       )}
       {lane.sub && (
         <span
+          id={subId}
           className={`${styles.sub} ${lane.sub.mono ? styles.mono : ""}`}
           title={lane.sub.text}
         >
@@ -741,6 +747,7 @@ function Span({
 
 function Legend({
   coverage,
+  window,
   addWindow,
   selectable,
   succession,
@@ -751,6 +758,7 @@ function Legend({
   selected,
 }: {
   coverage: LaneCoverage | undefined;
+  window: boolean;
   addWindow: boolean;
   selectable: boolean;
   succession: boolean;
@@ -760,12 +768,18 @@ function Legend({
   changes: boolean;
   selected: boolean;
 }) {
+  // Without a coverage row (a group page) the band is the study window.
+  const bandName = coverage
+    ? coverage.bandName
+    : window
+      ? "Study window"
+      : null;
   return (
     <ul className={styles.legend} aria-hidden="true">
-      {coverage?.bandName && (
+      {bandName && (
         <li>
           <i className={styles.keyBand} />
-          {coverage.bandName}
+          {bandName}
         </li>
       )}
       {addWindow && (

@@ -1072,12 +1072,22 @@ export interface components {
             id: string;
             label: string;
         };
+        /** @description One (table, spelling) a set member has segments in. */
+        ShowSetColumn: {
+            /** @description The column's segment periods, in time order. */
+            periods: components["schemas"]["Period"][];
+            spelling: string;
+            /** @description The table's fqid. */
+            table: string;
+        };
         ShowSetFacet: {
             axis: string;
             label: string;
             value: string;
         };
         ShowSetMember: {
+            /** @description The member's columns, ordered by table then spelling. */
+            columns: components["schemas"]["ShowSetColumn"][];
             /** @description The member's coordinates in the set's axis order. */
             facets: components["schemas"]["ShowSetFacet"][];
             fqid: string;
