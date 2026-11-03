@@ -4343,12 +4343,6 @@ evidence = "#2102 same-label cluster 'Dödlighet, röding för konsumtion' (2 va
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetade-timmar"
-fields = { "label" = "Antal arbetade timmar, avlönad personal, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
 subject = "var:antal-arbetade-timmar-kvinnor-matfisk"
 fields = { "label" = "Antal arbetade timmar, kvinnor, matfisk" }
 evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
