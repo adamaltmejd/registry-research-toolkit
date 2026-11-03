@@ -267,5 +267,49 @@
       }
     ]
   },
-  "held_key_unmatched_columns": "1"
+  "held_key_unmatched_columns": "1",
+  "attested_order": {
+    "note": "reference-extension/held.csv attests demo/held/value as ReceivedOld (integer) and demo/held/id as Id over 2015..2016, before the base's 2017 start; topology.toml's Attested maps Old and declares demo/held/id as its entity key.",
+    "project": {
+      "schema_version": "5.1.0",
+      "reg_meta_version": "0.64.0",
+      "name": "Attested earlier years",
+      "sources": [
+        {
+          "name": "s",
+          "table": "demo/held",
+          "period": {"from": 2015, "to": 2016},
+          "bindings": [{"variable": "demo/held/value", "type": "numeric"}]
+        }
+      ]
+    },
+    "order": {
+      "entries": [
+        {
+          "source": "s",
+          "binding": 0,
+          "provider": "demo",
+          "register": "demo/held",
+          "table": "demo/held",
+          "variable": "demo/held/value",
+          "display_name": null,
+          "period": {"start": "2015-01-01", "end": "2017-01-01"},
+          "spelling": "ReceivedOld",
+          "type": "int",
+          "length": null,
+          "value_set": null,
+          "classification": null
+        }
+      ],
+      "row_keys": [
+        {
+          "source": "s",
+          "table": "demo/held",
+          "period": {"start": "2015-01-01", "end": "2017-01-01"},
+          "columns": [{"variable": "demo/held/id", "spelling": "Id"}]
+        }
+      ],
+      "clips": []
+    }
+  }
 }

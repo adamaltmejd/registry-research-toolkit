@@ -232,6 +232,16 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             x["physical_table"] == "AttestedMember"
             for x in member.json()["data"]["held"]
         )
+        # Fails if steward-mode order reads only base segments: the base attests
+        # demo/held/value from 2017, so 2015..2016 would be outside_availability.
+        ordered = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=expected["attested_order"]["project"]
+        )
+        assert ordered.status_code == 200, ordered.text
+        data = ordered.json()["data"]
+        assert {
+            key: data[key] for key in expected["attested_order"]["order"]
+        } == expected["attested_order"]["order"]
     finally:
         pool.close()
     # Fails if located occurrence declarations can omit all supplemental segments

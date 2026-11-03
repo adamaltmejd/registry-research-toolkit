@@ -317,7 +317,11 @@ pub fn check(
     project: &ProjectData,
 ) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
     let conn = server.catalog.connect()?;
-    if server.catalog.steward().is_some() {
+    // Steward mode reads the composed view (crates/DESIGN.md, "Three questions, three
+    // scopes"): a source whose table only the holdings DB defines is checked on that
+    // origin, so its row ids never meet base ones; row keys stay pid-keyed on `conn`.
+    let held = server.catalog.connect_holdings()?;
+    if held.is_some() {
         server.catalog.attach_holdings(&conn)?;
     }
     let mut findings = Vec::new();
@@ -326,7 +330,16 @@ pub fn check(
     let mut clips = Vec::new();
     let mut members = Vec::new();
     for (index, source) in project.sources.iter().enumerate() {
-        let checked = check_source(server, &conn, index, source)?;
+        let (origin, composed) = match &held {
+            Some(held)
+                if refs::table(&conn, &source.table).is_err()
+                    && refs::table(held, &source.table).is_ok() =>
+            {
+                (held, false)
+            }
+            _ => (&conn, held.is_some()),
+        };
+        let checked = check_source(server, origin, &conn, composed, index, source)?;
         findings.extend(checked.findings);
         entries.extend(checked.entries);
         row_keys.extend(checked.row_keys);
@@ -400,10 +413,13 @@ pub fn check(
     }))
 }
 
-/// One source: its own findings, then each binding's.
+/// One source on its table's origin `conn`: its own findings, then each binding's.
+/// Row keys read `keys`, the base connection.
 fn check_source(
     server: &Server,
     conn: &Connection,
+    keys: &Connection,
+    composed: bool,
     index: usize,
     source: &Source,
 ) -> Result<Checked, Error> {
@@ -487,6 +503,7 @@ fn check_source(
         serving: &serving,
         chain: &chain,
         requested: &requested,
+        composed,
     };
     for (b, binding) in source.bindings.iter().enumerate() {
         let outcome = window::binding(&scope, b, binding)?;
@@ -500,7 +517,7 @@ fn check_source(
     if !followed.is_empty() {
         serving = combine_serving(serving, followed);
     }
-    let (row_keys, mut keyed) = rows::row_keys(server, conn, index, source, &serving)?;
+    let (row_keys, mut keyed) = rows::row_keys(server, keys, index, source, &serving)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
