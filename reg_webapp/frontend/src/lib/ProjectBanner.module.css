@@ -169,7 +169,7 @@ a.verdict {
   top: 2px;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .banner {
     flex: 1 1 100%;
   }

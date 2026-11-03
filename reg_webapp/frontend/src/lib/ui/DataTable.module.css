@@ -73,8 +73,8 @@
   text-decoration: none;
 }
 
-/* Stacked cards below the narrow breakpoint (48rem). */
-@media (max-width: 48rem) {
+/* Stacked cards below the narrow breakpoint (60rem). */
+@media (max-width: 60rem) {
   .table,
   .table thead,
   .table tbody,

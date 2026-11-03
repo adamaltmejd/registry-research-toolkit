@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Collection,
@@ -185,7 +185,6 @@ export function BrowseTree({
   className?: string;
   config?: StewardConfig | null;
 }) {
-  const labelId = useId();
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -403,18 +402,16 @@ export function BrowseTree({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span
-          id={labelId}
-          className={config ? "visually-hidden" : "micro-label"}
-        >
-          Registers
+        <span className={config ? "visually-hidden" : "micro-label"}>
+          {/* While filtering, the label is how many registers the filter
+            leaves: a separate count wrapped the header to two lines, out of
+            line with the variables column's (#2107). */}
+          {config || matchCount === null
+            ? "Registers"
+            : matchCount === 1
+              ? "1 register"
+              : `${matchCount} registers`}
         </span>
-        {/* How many registers the filter leaves: an actionable count. */}
-        {!config && matchCount !== null && (
-          <span className={styles.matchCount}>
-            {matchCount === 1 ? "1 match" : `${matchCount} matches`}
-          </span>
-        )}
         <div className={config ? styles.controls : undefined}>
           {config && (
             <div className={styles.scope}>
@@ -469,7 +466,9 @@ export function BrowseTree({
               </StatusRow>
             )}
             <Tree
-              aria-labelledby={labelId}
+              // A fixed name: the visible label turns into the count while
+              // filtering.
+              aria-label="Registers"
               className={({ state }) => {
                 treeState.current = state;
                 return styles.tree;
