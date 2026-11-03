@@ -18,8 +18,8 @@ jobs:
     uses: ./.github/workflows/ci.yml
 
   # Post-release check of this release's DB assets: conformance against the global
-  # artifact, served by the Rust server (integration.yml). SWECOV has no artifact or
-  # deploy path until milestone E (REBUILD.md). Inherits the
+  # artifact and, when the release has it, the paired reg_meta_swecov.db.zst, served by
+  # the Rust server (integration.yml). Inherits the
   # reg_meta/v* gate via `needs: ci` (a skipped `ci` skips it), so it never fires for
   # reg_meta_build/v* releases.
   integration:
