@@ -272,13 +272,11 @@ async function browsePagesCase(page, shoot) {
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
   // Stacked cells include their CSS label prefix in the accessible name.
   // Match the value at the end while retaining the table-cell boundary.
-  const releases = main.getByRole("button", { name: "Releases", exact: true });
-  check((await releases.getAttribute("aria-expanded")) === "false", "releases must start collapsed");
-  check((await main.getByRole("cell", { name: /fam 2021$/ }).count()) === 0, "collapsed releases mounted their entries");
+  // One "Releases" heading: the panel's own, with the entries always shown.
+  check((await main.getByRole("heading", { name: "Releases", exact: true }).count()) === 1, "Releases heading is duplicated");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
   const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
-  await releases.click();
   await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
   await main.getByRole("cell", { name: /^(?:Primary )?Yes$/ }).first().waitFor();
   await code.click();
