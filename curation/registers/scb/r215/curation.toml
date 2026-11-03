@@ -4100,3 +4100,171 @@ kind = "set"
 subject = "var:tk-for"
 fields = { "description" = "Arbetskostnad för företagare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-odlingar"
+fields = { "label" = "Antal odlingar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-odlingsbassanger"
+fields = { "label" = "Antal odlingsbassänger" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-odlingsdammar"
+fields = { "label" = "Antal odlingsdammar" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-odlingskassar"
+fields = { "label" = "Antal odlingskassar" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-recirkulerande-odlingssystem"
+fields = { "label" = "Antal recirkulerande odlingssystem" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "label" = "Antal sysselsatta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetade-timmar"
+fields = { "label" = "Arbetade timmar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetskostnader"
+fields = { "label" = "Arbetskostnader" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:artangivelse-for-ovriga-odlade-arter"
+fields = { "label" = "Artangivelse för övriga odlade arter" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:dodlighet-bland-odlade-organismer"
+fields = { "label" = "Dödlighet bland odlade organismer" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forekomst-av-artvis-odling"
+fields = { "label" = "Förekomst av artvis odling" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:forsaljning-av-vattenbruksorganismer"
+fields = { "label" = "Försäljning av vattenbruksorganismer" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkop-av-fiskfoder"
+fields = { "label" = "Inköp av fiskfoder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkop-av-levande-vattenbruksorganismer"
+fields = { "label" = "Inköp av levande vattenbruksorganismer" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar"
+fields = { "label" = "Investeringar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:musselodlingens-langd"
+fields = { "label" = "Musselodlingens längd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:musselodlingens-vattenareal"
+fields = { "label" = "Musselodlingens vattenareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingsbassangers-volym"
+fields = { "label" = "Odlingsbassängers volym" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingsdammars-volym"
+fields = { "label" = "Odlingsdammars volym" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingsdammars-yta"
+fields = { "label" = "Odlingsdammars yta" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingskassars-volym"
+fields = { "label" = "Odlingskassars volym" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktion-under-referensaret"
+fields = { "label" = "Produktion under referensåret" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionens-vattenmiljo"
+fields = { "label" = "Produktionens vattenmiljö" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsmangd-i-vattenbruk"
+fields = { "label" = "Produktionsmängd i vattenbruk" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:recirkulerande-odlingssystems-volym"
+fields = { "label" = "Recirkulerande odlingssystems volym" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rymlingar-fran-odling"
+fields = { "label" = "Rymlingar från odling" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sattfiskens-anvandningsandamal"
+fields = { "label" = "Sättfiskens användningsändamål" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:verksamhetens-lan"
+fields = { "label" = "Verksamhetens län" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."

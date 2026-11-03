@@ -646,3 +646,39 @@ kind = "set"
 subject = "var:tjanstledighet"
 fields = { "tags" = ["employment"] }
 evidence = "Kodningen avser tjänstledighet från anställning.\ncatalog:valueset:12491\ncatalog:variable_text:34181:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstid"
+fields = { "label" = "Arbetstid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lon"
+fields = { "label" = "Lön" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lonepopulation"
+fields = { "label" = "Lönepopulation" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:matmanad"
+fields = { "label" = "Mätmånad" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sektor"
+fields = { "label" = "Sektor" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

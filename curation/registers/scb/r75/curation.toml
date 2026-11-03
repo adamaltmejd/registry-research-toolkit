@@ -838,3 +838,57 @@ kind = "set"
 subject = "var:vatten"
 fields = { "tags" = ["environment"] }
 evidence = "Vattenförbrukning är ett miljörelaterat resursflöde.\ncatalog:variable_text:7503:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-lagenheter"
+fields = { "label" = "Antal lägenheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elanvandning"
+fields = { "label" = "Elanvändning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:energibesparande-atgarder"
+fields = { "label" = "Energibesparande åtgärder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:graddagar"
+fields = { "label" = "Graddagar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kylanvandning"
+fields = { "label" = "Kylanvändning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-energianvandning"
+fields = { "label" = "Total energianvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmningssatt"
+fields = { "label" = "Uppvärmningssätt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varmepumpars-varmeeffekt"
+fields = { "label" = "Värmepumpars värmeeffekt" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:varmvattenforbrukning"
+fields = { "label" = "Varmvattenförbrukning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

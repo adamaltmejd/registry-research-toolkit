@@ -877,3 +877,39 @@ kind = "set"
 subject = "var:utlbakgr2"
 fields = { "tags" = ["demographics"] }
 evidence = "Bakgrundsklassificeringen är demografisk.\ncatalog:variable_text:13013:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "set:aldersavvikelse-i-skolgangen"
+fields = { "label" = "Åldersavvikelse i skolgången" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "label" = "Föräldrars utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringstidpunkt"
+fields = { "label" = "Invandringstidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "label" = "Kommuntillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "label" = "Svensk och utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."

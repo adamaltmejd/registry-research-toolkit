@@ -357,3 +357,27 @@ kind = "set"
 subject = "var:langdm"
 fields = { "description" = "Kust- och strandlängd i meter. Havs- och inlandsstrandlängd beräknas genom GIS-bearbetning av Lantmäteriets data." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en vattenmask, medan variabeln mäter kust- och strandlängd i meter.\ncatalog:variable_text:35053:17897:18262\ncatalog:variable_text:35053:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:321574:opdef_text; rel070-base/reg_meta.db:occurrence:321582:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The processing/data-source recipe occurs only in 2024, not in the 2019 occurrence. Evidence: rel070-base/reg_meta.db occurrences 321574, 321582.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 321574, 321582."
+
+[[statement]]
+kind = "set"
+subject = "set:befolkningsantal"
+fields = { "label" = "Befolkningsantal" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:geografiska-koordinater"
+fields = { "label" = "Geografiska koordinater" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:strandtyp"
+fields = { "label" = "Strandtyp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

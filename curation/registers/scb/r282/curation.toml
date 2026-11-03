@@ -648,3 +648,51 @@ kind = "set"
 subject = "var:antfolkb"
 fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAntalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadskategori"
+fields = { "label" = "Bostadskategori" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadstyp"
+fields = { "label" = "Byggnadstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:distriktstillhorighet"
+fields = { "label" = "Distriktstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forsamlingstillhorighet"
+fields = { "label" = "Församlingstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:koksforhallanden"
+fields = { "label" = "Köksförhållanden" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nybyggnadstid"
+fields = { "label" = "Nybyggnadstid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nyckelkodsomradestillhorighet"
+fields = { "label" = "Nyckelkodsområdestillhörighet" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:tatortstillhorighet"
+fields = { "label" = "Tätortstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

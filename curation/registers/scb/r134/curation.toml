@@ -544,3 +544,57 @@ kind = "set"
 subject = "var:visstid-man"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln mäter antal visstidsanställda.\ncatalog:variable_text:34932:11323:13149\ncatalog:variable_text:34932:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-foretagare"
+fields = { "label" = "Antal företagare" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-geografiska-lage"
+fields = { "label" = "Arbetsställets geografiska läge" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avgangna-anstallda"
+fields = { "label" = "Avgångna anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nyanstallda"
+fields = { "label" = "Nyanställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovrig-franvaro"
+fields = { "label" = "Övrig frånvaro" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:semesterfranvaro"
+fields = { "label" = "Semesterfrånvaro" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfranvaro"
+fields = { "label" = "Sjukfrånvaro" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utvalda-arbetsstallen"
+fields = { "label" = "Utvalda arbetsställen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

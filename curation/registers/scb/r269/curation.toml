@@ -467,3 +467,33 @@ kind = "set"
 subject = "var:personalkategori"
 fields = { "description" = "Visar individens personalkategori. De kända kategorierna kodas som 1 (arbetare) och 2 (tjänsteman eller övrig)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:42933:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The old exclusive 1-or-2 wording omits unknown-value codes found in every period. State the two known categories without excluding the documented unknown codes. Evidence: rel070-base/reg_meta.db occurrences 42933, 43308."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstid"
+fields = { "label" = "Arbetstid" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lonebelopp"
+fields = { "label" = "Lönebelopp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stratum"
+fields = { "label" = "Stratum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

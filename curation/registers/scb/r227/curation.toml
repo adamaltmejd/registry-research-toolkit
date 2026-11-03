@@ -748,3 +748,33 @@ kind = "set"
 subject = "var:varukod-kn"
 fields = { "tags" = ["business"] }
 evidence = "Varukoden klassificerar varor för företagsstatistiken.\ncatalog:variable_text:27781:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:emballagekostnader"
+fields = { "label" = "Emballagekostnader" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kopta-tjanster-och-forvaltningskostnader"
+fields = { "label" = "Köpta tjänster och förvaltningskostnader" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-ravaror-och-fornodenheter"
+fields = { "label" = "Kostnader för råvaror och förnödenheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-transportmedel"
+fields = { "label" = "Kostnader för transportmedel" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-externa-kostnader"
+fields = { "label" = "Övriga externa kostnader" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

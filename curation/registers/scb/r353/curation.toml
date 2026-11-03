@@ -529,3 +529,45 @@ kind = "set"
 subject = "elever: peorgnr @2019-10-15..2019-10-15 where key = 'v56'"
 fields = { "variable" = "orgnr" }
 evidence = "Both operational definitions specify the school principal's organisation number in the same register's pupils table, column PeOrgNr, with character type. The earlier label 'Personal/organisation number' has a broader generic definition, but the operational meaning matches 'Organisation number'. Observed periods do not overlap; coverage across gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "set:direktovergang"
+fields = { "label" = "Direktövergång" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "label" = "Föräldrars utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:integrerad-elev"
+fields = { "label" = "Integrerad elev" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "label" = "Invandringsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utlandsk-svensk-bakgrund"
+fields = { "label" = "Utländsk/svensk bakgrund" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

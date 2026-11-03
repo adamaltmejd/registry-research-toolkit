@@ -394,3 +394,69 @@ kind = "set"
 subject = "var:typomrade-stadsdelsomrade-fore-flytt"
 fields = { "tags" = ["property"] }
 evidence = "USK och G är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:44666:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsarea"
+fields = { "label" = "Bostadsarea" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fastighetsbeteckning"
+fields = { "label" = "Fastighetsbeteckning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelselan"
+fields = { "label" = "Födelselän" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forsamling-stockholm"
+fields = { "label" = "Församling Stockholm" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (proper noun)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "label" = "Län" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nybyggnadsar"
+fields = { "label" = "Nybyggnadsår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nyckelkodsomrade"
+fields = { "label" = "Nyckelkodsområde" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:typomrade"
+fields = { "label" = "Typområde" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

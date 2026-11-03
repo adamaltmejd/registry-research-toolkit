@@ -425,3 +425,15 @@ kind = "set"
 subject = "var:faxnummer"
 fields = { "description" = "Faxnummer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:utlandska-kundfordringar"
+fields = { "label" = "Utländska kundfordringar" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utlandska-leverantorsskulder"
+fields = { "label" = "Utländska leverantörsskulder" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

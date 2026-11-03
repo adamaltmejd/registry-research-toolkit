@@ -1141,3 +1141,81 @@ relation = "continues"
 object = "scb/hib/vardear-klassindelat"
 at = "2020-01-01.."
 evidence = "HIB value year: classified value year (2007-13, vs1127) -> value year in years (2020+); same concept, finer coding."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "label" = "Ägarkategori" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsyta"
+fields = { "label" = "Bostadsyta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:garage-bilplats-i-hyran"
+fields = { "label" = "Garage bilplats i hyran" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hushallsel-i-hyran"
+fields = { "label" = "Hushållsel i hyran" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hyresbelopp"
+fields = { "label" = "Hyresbelopp" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hyresforhandling"
+fields = { "label" = "Hyresförhandling" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunregion"
+fields = { "label" = "Kommunregion" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nybyggnadsar"
+fields = { "label" = "Nybyggnadsår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ombyggnad-storre-forandring"
+fields = { "label" = "Ombyggnad större förändring" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:schablonkostnad-bilplats-garage"
+fields = { "label" = "Schablonkostnad bilplats garage" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplatelseform"
+fields = { "label" = "Upplåtelseform" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmning-i-hyran"
+fields = { "label" = "Uppvärmning i hyran" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vardear"
+fields = { "label" = "Värdeår" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

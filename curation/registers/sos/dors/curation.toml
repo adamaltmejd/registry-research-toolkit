@@ -3113,3 +3113,81 @@ kind = "set"
 subject = "var:dodsorsak-position-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/dors.toml:25; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-dodsorsaker"
+fields = { "label" = "Antal dödsorsaker" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dodsalder"
+fields = { "label" = "Dödsålder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dodsplats"
+fields = { "label" = "Dödsplats" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:dodstidpunkt"
+fields = { "label" = "Dödstidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:effektueringsdatum"
+fields = { "label" = "Effektueringsdatum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsedatum"
+fields = { "label" = "Födelsedatum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:folkbokforingsomrade"
+fields = { "label" = "Folkbokföringsområde" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inlasningsdatum-avisering"
+fields = { "label" = "Inläsningsdatum avisering" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarskap"
+fields = { "label" = "Medborgarskap" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:operationsdatum"
+fields = { "label" = "Operationsdatum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skada-forgiftning"
+fields = { "label" = "Skada/förgiftning" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (slash)."
+
+[[statement]]
+kind = "set"
+subject = "set:uppgiftsgrund"
+fields = { "label" = "Uppgiftsgrund" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

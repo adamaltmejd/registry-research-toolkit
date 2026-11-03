@@ -934,3 +934,69 @@ kind = "set"
 subject = "var:hemland"
 fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard. Stadigvarande bosättning avser mer än tolv månader, oavsett medborgarskap." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:245417:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:anlaggningstyp"
+fields = { "label" = "Anläggningstyp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:baddkapacitet"
+fields = { "label" = "Bäddkapacitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:belagda-baddar"
+fields = { "label" = "Belagda bäddar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:belagda-rum"
+fields = { "label" = "Belagda rum" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:gaster-efter-resenarskategori"
+fields = { "label" = "Gäster efter resenärskategori" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:nyinskrivna-gaster"
+fields = { "label" = "Nyinskrivna gäster" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rumskapacitet"
+fields = { "label" = "Rumskapacitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stangningsorsak"
+fields = { "label" = "Stängningsorsak" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stugkapacitet"
+fields = { "label" = "Stugkapacitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tomtkapacitet"
+fields = { "label" = "Tomtkapacitet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vistelsedygn"
+fields = { "label" = "Vistelsedygn" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

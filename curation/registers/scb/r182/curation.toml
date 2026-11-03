@@ -16909,3 +16909,33 @@ kind = "set"
 subject = "var:uppskattade-utgifter-for-egen-fou-verksamhet-under-2004"
 fields = { "description" = "Uppskattade driftkostnader för egen FoU-verksamhet, i tusental kronor. Uppgiften är en prognos." }
 evidence = "Definition pass 2026-11-02: The definition specifies estimated operating expenditure, not total FoU investment and current expenditure.\nrel070-base/reg_meta.db:occurrence:135138"
+
+[[statement]]
+kind = "set"
+subject = "set:driftkostnader-for-egen-fou"
+fields = { "label" = "Driftkostnader för egen FoU" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:egen-fou-verksamhet"
+fields = { "label" = "Egen FoU-verksamhet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forskningsamnesindelning"
+fields = { "label" = "Forskningsämnesindelning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fou-arsverken"
+fields = { "label" = "FoU-årsverken" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (spot-check: hyphenated compound)."
+
+[[statement]]
+kind = "set"
+subject = "set:samlade-fou-utgifter"
+fields = { "label" = "Samlade FoU-utgifter" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation hyphen)."

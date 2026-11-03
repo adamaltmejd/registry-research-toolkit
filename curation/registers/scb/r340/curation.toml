@@ -1052,3 +1052,51 @@ relation = "continues"
 object = "scb/grundskola-betyg-ak6/antal-amnen-ej-natt"
 at = "2016-01-01.."
 evidence = "rel070-base/reg_meta.db 201226: F grades, 2015; 201280+ from 2016: subjects without A-E. Blank means no grading under Skolförordningen."
+
+[[statement]]
+kind = "set"
+subject = "set:amnesbetyg"
+fields = { "label" = "Ämnesbetyg" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-amnen-med-ej-nadda-kunskapskrav"
+fields = { "label" = "Antal ämnen med ej nådda kunskapskrav" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "label" = "Föräldrars utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "label" = "Invandringsdatum" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "label" = "Svensk och utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsamnets-sprak"
+fields = { "label" = "Undervisningsämnets språk" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

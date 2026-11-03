@@ -1117,3 +1117,63 @@ kind = "set"
 subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
 fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser svårigheter att kombinera studier och familjeliv som skäl till avbrott i en eller flera komvuxkurser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:7434\ncatalog:variable_text:39429:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390104:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-hemmavarande-barn"
+fields = { "label" = "Antal hemmavarande barn" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-under-matveckan"
+fields = { "label" = "Arbete under mätveckan" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bedomning-av-komvuxstudiernas-krav"
+fields = { "label" = "Bedömning av komvuxstudiernas krav" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:bedomning-av-komvuxutbildningen"
+fields = { "label" = "Bedömning av komvuxutbildningen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:finansieringskallor-for-komvuxstudier"
+fields = { "label" = "Finansieringskällor för komvuxstudier" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:huvudsaklig-sysselsattning"
+fields = { "label" = "Huvudsaklig sysselsättning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:komvuxstudiernas-betydelse"
+fields = { "label" = "Komvuxstudiernas betydelse" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kurser-i-komvux"
+fields = { "label" = "Kurser i komvux" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:motiv-till-komvuxstudier"
+fields = { "label" = "Motiv till komvuxstudier" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-studieavbrott"
+fields = { "label" = "Skäl till studieavbrott" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

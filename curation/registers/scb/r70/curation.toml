@@ -773,3 +773,33 @@ kind = "set"
 subject = "var:antpers"
 fields = { "description" = "Antal personer folkbokförda på fastigheten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFamiljeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "set:forsamlingstillhorighet"
+fields = { "label" = "Församlingstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:geografiska-koordinater"
+fields = { "label" = "Geografiska koordinater" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:postnummeromrade"
+fields = { "label" = "Postnummerområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:smaortstillhorighet"
+fields = { "label" = "Småortstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tatortstillhorighet"
+fields = { "label" = "Tätortstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

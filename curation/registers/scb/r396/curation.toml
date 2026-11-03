@@ -370,3 +370,9 @@ kind = "set"
 subject = "set:regso"
 fields = { "label" = "Regionala statistikområden (namn)" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/registerdata-integration.toml:17; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

@@ -719,3 +719,69 @@ kind = "set"
 subject = "var:utlager"
 fields = { "description" = "Lager vid periodens slut." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:bransledifferenser"
+fields = { "label" = "Bränsledifferenser" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:branslelager"
+fields = { "label" = "Bränslelager" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleleveranser"
+fields = { "label" = "Bränsleleveranser" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:branslepriser-i-utrikeshandeln"
+fields = { "label" = "Bränslepriser i utrikeshandeln" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:branslevolym-efter-miljoklass"
+fields = { "label" = "Bränslevolym efter miljöklass" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:imputeringsstatus"
+fields = { "label" = "Imputeringsstatus" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:land-for-branslehandel"
+fields = { "label" = "Land för bränslehandel" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mottagna-branslekvantiteter"
+fields = { "label" = "Mottagna bränslekvantiteter" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:referensar"
+fields = { "label" = "Referensår" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:referensmanad"
+fields = { "label" = "Referensmånad" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utrikeshandel-med-branslen"
+fields = { "label" = "Utrikeshandel med bränslen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
