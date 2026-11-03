@@ -35,9 +35,11 @@ per variable, using the segments' default type and agreed classification. WASM c
 the candidate before the existing project store writes its sources. Source cards author
 binding type, classification pin, removal and source period through checked candidates
 and the same sources write path. Each table supplies a coverage row over its binding
-lanes on one shared data axis. Stored periods are never narrowed on load. Succession
-lanes remain deferred. Adding starts from the variable page; register rows link there,
-and both those rows and already-bound columns show in-project state without a checkbox.
+lanes on one shared data axis. Stored periods are never narrowed on load. Variable pages
+read one hop of succession relations into read-only neighbour lanes on the same
+timeline, with arrows from predecessor to successor and names linking to their variable
+pages. Adding starts from the variable page; register rows link there, and both those
+rows and already-bound columns show in-project state without a checkbox.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail

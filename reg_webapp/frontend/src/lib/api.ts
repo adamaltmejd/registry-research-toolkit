@@ -403,6 +403,18 @@ export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogSegment = RustSchemas["Segment"];
 export type VariableEvidence = RustSchemas["VariableEvidence"];
+export type Graph = RustSchemas["Graph"];
+
+export function getGraph(
+  ref: string,
+  options: { kind: "continues"; signal?: AbortSignal },
+): Promise<Graph> {
+  return rustGet<Graph>(
+    `/graph/${encodeFqid(ref)}`,
+    new URLSearchParams({ kind: options.kind }),
+    options,
+  );
+}
 
 /** All structural segments, following the server's generation-bound cursor. */
 export async function getSegments(
