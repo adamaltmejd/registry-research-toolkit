@@ -157,10 +157,6 @@ export function getCoverage(
   return rustGet<Coverage>(`/coverage/${encodeFqid(ref)}`, undefined, options);
 }
 
-/** The headline catalog-size counts (#675) the landing page renders — slugged
- * (browse-addressable) providers, registers and variables in the read scope. */
-export type CatalogSizes = RustSchemas["Sizes"];
-
 /** `show`'s `kind`-tagged summary of a ref. */
 export type ShowNode = RustSchemas["Show"];
 
@@ -274,14 +270,6 @@ export async function validateProject(
 export type SearchPage = RustSchemas["SearchPage"];
 
 export type SearchHit = RustSchemas["SearchHit"];
-
-export type RegisterHit = Extract<SearchHit, { type: "register" }>;
-
-export type VariableHit = Extract<SearchHit, { type: "variable" }>;
-
-export type ClassificationHit = Extract<SearchHit, { type: "classification" }>;
-
-export type CodeHit = Extract<SearchHit, { type: "code" }>;
 
 /** The arm a search keeps (`?type=`); omitted, the search ranks every arm. */
 export type SearchType = NonNullable<

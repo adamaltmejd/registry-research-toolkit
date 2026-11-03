@@ -220,11 +220,6 @@ export function registerSubjectNames(
   return names;
 }
 
-/** A named catalog subject outside a register (for example a successor class). */
-export function showRead(ref: string): Read<ShowNode> {
-  return read(`show:${ref}`, () => sharedShow(ref));
-}
-
 /** Resolve display names through the same register read used by the browser. */
 export function catalogNames(
   refs: readonly string[],

@@ -22,14 +22,6 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 
-/** A node's display label — its `name` when present, else its FQID. */
-export function nodeLabel(node: {
-  fqid: string;
-  name?: string | null;
-}): string {
-  return node.name ?? node.fqid;
-}
-
 // ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so
@@ -497,25 +489,6 @@ export function windowRunLabels<
   }
   if (run !== null) out.push(runText(run));
   return out;
-}
-
-/** The "showing N of M" caption when the displayed slice is smaller than the full
- * match count (N = rendered rows, M = total before the server's per-request
- * limit), else null (don't caption a complete group). */
-export function showingOf(shown: number, total: number): string | null {
-  return shown < total ? `showing ${shown} of ${total}` : null;
-}
-
-/** The exact-dates tooltip for a window — the sentinel reads "open-ended"
- * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
-export function windowTitle(
-  validFrom: string | null,
-  validTo: string | null,
-  periodScope?: string,
-): string {
-  if (periodScope === "year_independent") return "Year-independent delivery";
-  if (validFrom === null && validTo === null) return "Delivery dates unknown";
-  return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
 }
 
 /** The calendar years a set of ISO spans delivers: the Timeline's delivered

@@ -131,7 +131,7 @@ function RoutedView({
   context,
   validation,
 }: {
-  route: Route;
+  route: Exclude<Route, { name: "project" }>;
   context: Context | null;
   validation: ValidationResultModel | null;
 }) {
@@ -162,10 +162,6 @@ function RoutedView({
           context={context}
           validation={validation}
         />
-      );
-    case "project":
-      return (
-        <StatusRow tone="info">Not ported to the current API yet</StatusRow>
       );
     case "not-found":
       return <NotFound path={route.path} />;

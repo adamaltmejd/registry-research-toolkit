@@ -53,14 +53,6 @@ export function datedIntervals(period: unknown): Interval[] | null {
   return "intervals" in days ? days.intervals : null;
 }
 
-/** Whether a `?period` wire is a period a source may hold: the year-independent
- * `_default`, or a dated period reg-core accepts (an unsorted or overlapping list
- * and an inverted range are refused). Used where a wire is written straight into
- * project_data. */
-export function periodWireValid(wire: string): boolean {
-  return !("error" in sourcePeriodIntervals(sourcePeriodFromWire(wire)));
-}
-
 /** The period that requests exactly `days`: merged, rendered, shaped back from
  * the rendered wire (each interval its coarsest token, else a range with year
  * endpoints where they fall on a year's first or last day). */
@@ -70,20 +62,6 @@ function coveragePeriod(days: readonly Interval[]): ProjectSourcePeriod {
 
 function sameIntervals(a: readonly Interval[], b: readonly Interval[]) {
   return JSON.stringify(a) === JSON.stringify(b);
-}
-
-/** Whether two periods request the same days (`2018`, `"2018"` and
- * `{from: 2018, to: 2018}` do); periods without placeable days compare as
- * written. */
-export function samePeriod(
-  a: ProjectSourcePeriod,
-  b: ProjectSourcePeriod,
-): boolean {
-  const da = datedIntervals(a);
-  const db = datedIntervals(b);
-  return da !== null && db !== null
-    ? sameIntervals(da, db)
-    : JSON.stringify(a) === JSON.stringify(b);
 }
 
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
@@ -269,16 +247,6 @@ export function yearSegmentsFromWire(
   return windows;
 }
 
-/** Whether a wire `?period` is a pure year window the year slider can hold (a
- * bare year or a uniform-year range) — the slider's representability gate. A
- * sub-annual token / `_default` / segment list / junk remains valid URL state but
- * is displayed as read-only active text instead of being authored by the slider. */
-export function yearWindowRepresentable(
-  wire: string | null | undefined,
-): boolean {
-  return yearWindowFromWire(wire) !== null;
-}
-
 /** Clamp a year window to `[min, max]` (and keep `from <= to`) — the slider's
  * bounds guard for a seed that falls outside the rendered track (an older
  * `?period` predating the current bounds). */
@@ -316,21 +284,6 @@ export function dataAxis(
   return to + AXIS_GRID > catalog[1]
     ? [from - AXIS_GRID, to]
     : [from, to + AXIS_GRID];
-}
-
-/** Clamp only a year-grain `?period` wire to `[min, max]`. Non-year-grain
- * values stay verbatim because the year slider renders them read-only instead of
- * silently rewriting richer period grammar. */
-export function clampYearPeriodWire(
-  wire: string | null | undefined,
-  min: number,
-  max: number,
-): string | null {
-  const value = wire ?? null;
-  const window = yearWindowFromWire(value);
-  return window === null
-    ? value
-    : yearWindowToWire(clampYearWindow(window, min, max));
 }
 
 /** The subject's data-availability span with INDEPENDENTLY-bounded sides (#615):
