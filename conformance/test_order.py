@@ -110,3 +110,36 @@ def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
         ] == [linking]
     finally:
         pool.close()
+
+
+def test_steward_only_slot_orders_paired_and_is_unresolved_base_only(
+    tmp_path, server_cmd, http_servers
+):
+    # Fails if steward-mode order reads only the base catalog (the slot table gives
+    # `fqid_unresolved`), if a steward-only source loses its declared row key, or
+    # if base-only order starts admitting steward definitions.
+    base, _, command = prepare_holdings(tmp_path)
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    expected = json.loads((HOLDINGS_CASE / "order-steward-slot.json").read_text())
+    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
+    try:
+        answer = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=expected["project"]
+        )
+        assert answer.status_code == 200, answer.text
+        data = answer.json()["data"]
+        assert {key: data[key] for key in expected["paired"]} == expected["paired"]
+    finally:
+        pool.close()
+    blocked = http_servers.client(artifact_env(base)).post(
+        "/api/project/order", json=expected["project"]
+    )
+    assert blocked.status_code == 422, blocked.text
+    findings = [
+        {key: value for key, value in finding.items() if value is not None}
+        for finding in blocked.json()["error"]["fields"]["findings"]
+    ]
+    assert {"findings": findings} == expected["base_only"]

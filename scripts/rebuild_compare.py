@@ -4,13 +4,20 @@
     uv run --no-project scripts/rebuild_compare.py registers <old db> <new db> <report.json> [provider...]
     uv run --no-project scripts/rebuild_compare.py orders --old-url URL --new-url URL \
         --old-db OLD_DB --new-db NEW_DB --out DIR [--seed 0] [--n 20] [--provider P ...]
+    uv run --no-project scripts/rebuild_compare.py holdings --old-db OLD_SWECOV.db \
+        --new-base reg_meta.db --new-holdings reg_meta_swecov.db --out DIR \
+        --old-census-sha256 SHA256 --new-census-path INPUT_PINS_KEY
 
 Temporary (REBUILD.md, milestone A; deleted at F). `<old db>` is a released
 `reg_meta.db`, `<new db>` a `reg-build` catalog and `<report.json>` its build report.
 For every register of the given providers (default: every provider in the new catalog)
 it compares tables, the columns each documents and their periods, the column-to-variable
 mapping, labels, value-set codes, flags and coverage, and puts each difference in one
-class. Prints Markdown: a summary per class and register, then examples.
+class. The registers/orders modes print Markdown summaries and examples. The holdings
+mode writes private census/difference reports and prints aggregate counts only.
+Its required old census digest is census_sha256 in the pinned old scope.toml;
+use .local/release-0.64.0/ev/holdings-pins.txt to locate that input revision.
+The release pins file identifies the input manifest, not the raw census digest.
 
 Registers are matched by pid: a new register's public name comes from its id ledger,
 which took it from the old slug. A register whose old catalog has only the implicit table and whose new
@@ -21,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import hashlib
 import json
 import random
 import re
@@ -39,8 +47,14 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 EXAMPLES = 8
+TIMELESS_START = -719162
+TIMELESS_END = 2932897
 # The old catalog's name for a register's one unnamed table, the new implicit table.
 OLD_IMPLICIT = "_default"
+
+
+def connect_ro(path: Path) -> sqlite3.Connection:
+    return sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
 
 
 def fold(text: str) -> str:
@@ -494,7 +508,7 @@ def new_project(db, register: str, version: str, adjustments: list, omissions: l
             }
         )
     return {
-        "schema_version": "5.1.0",
+        "schema_version": "5.2.0",
         "reg_meta_version": version,
         "name": "compare-" + register.replace("/", "-"),
         "sources": sources,
@@ -813,8 +827,8 @@ def row_differences(old, new, db, tables):
                     else (
                         table,
                         r[1],
-                        None if lo == -719162 else iso_day(lo),
-                        None if hi == 2932897 else iso_day(hi),
+                        None if lo == TIMELESS_START else iso_day(lo),
+                        None if hi == TIMELESS_END else iso_day(hi),
                         r[4],
                     )
                     for r in (left, right)
@@ -884,7 +898,10 @@ def period_days(period):
     epoch = date(1970, 1, 1)
     return tuple(
         (date.fromisoformat(value) - epoch).days if value else sentinel
-        for value, sentinel in ((period["start"], -719162), (period["end"], 2932897))
+        for value, sentinel in (
+            (period["start"], TIMELESS_START),
+            (period["end"], TIMELESS_END),
+        )
     )
 
 
@@ -1572,12 +1589,8 @@ def classification_summary(records, mappings):
 
 def orders(args) -> int:
     with (
-        closing(
-            sqlite3.connect(args.old_db.resolve().as_uri() + "?mode=ro", uri=True)
-        ) as old_db,
-        closing(
-            sqlite3.connect(args.new_db.resolve().as_uri() + "?mode=ro", uri=True)
-        ) as new_db,
+        closing(connect_ro(args.old_db)) as old_db,
+        closing(connect_ro(args.new_db)) as new_db,
     ):
         candidates = [
             pid
@@ -1824,6 +1837,750 @@ def orders(args) -> int:
     return 0
 
 
+HOLDINGS_CLASSES = {
+    "equal": "",
+    "census drift": "input",
+    "intended lookup/excluded": "design",
+    "defect": "compiler",
+    "target changed": "review",
+    "placement changed": "review",
+    "intended clipping": "design",
+    "coverage extended": "review",
+    "missing target": "#2072",
+    "held": "#2072",
+    "curation carryover": "curation",
+    "resolved": "curation",
+    "withheld carried over": "#2072",
+    "owner ambiguity": "#2072",
+    "old unknown": "",
+    "key census changed": "review",
+    "disposition changed": "review",
+}
+
+
+def holdings_span(lo, hi):
+    """Old inclusive ISO bounds, including the open upper sentinel."""
+    start, end = period_days({"start": lo, "end": hi})
+    return start, end + 1 if hi else end
+
+
+def holdings_union(spans):
+    merged = []
+    for lo, hi in sorted(set(spans)):
+        if merged and lo <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(hi, merged[-1][1]))
+        else:
+            merged.append((lo, hi))
+    return merged
+
+
+def holdings_side(disposition, locator, **fields):
+    return {
+        "disposition": disposition,
+        "locator": locator,
+        "mappings": [],
+        "keys": [],
+        "key_mappings": [],
+        "notices": [],
+        **fields,
+    }
+
+
+def old_holdings(db):
+    tables = {}
+    scopes = {
+        "intervals": "dated",
+        "year_independent": "timeless",
+        "unknown": "unknown",
+    }
+    for tid, name, scope, locator in db.execute(
+        "SELECT table_id, physical_id, scope, source_ref FROM holding_table"
+    ):
+        tables[tid] = {"name": name, **holdings_side(scopes[scope], locator)}
+    periods = defaultdict(list)
+    for tid, lo, hi in db.execute("SELECT table_id, lo, hi FROM holding_period"):
+        periods[tid].append(holdings_span(lo, hi))
+    for tid, table in tables.items():
+        if table["disposition"] == "timeless":
+            periods[tid] = [(TIMELESS_START, TIMELESS_END)]
+    columns, ids = {}, {}
+    for cid, tid, name, reason in db.execute(
+        "SELECT column_id, table_id, name, unmapped_reason FROM holding_column"
+    ):
+        table = tables[tid]
+        side = holdings_side(table["disposition"], table["locator"], reason=reason)
+        side["state"] = "old withheld" if reason else "unmapped"
+        columns[table["name"], name] = ids[cid] = side
+    target = (
+        " JOIN variable v USING (variable_id) JOIN register r ON r.register_id = v.register_id"
+        " JOIN provider p ON p.provider_id = r.provider_id"
+    )
+    for cid, tid, pid, logical, wlo, whi, mlo, mhi in db.execute(
+        "SELECT m.column_id, c.table_id, p.slug || '/' || r.slug || '/' || v.slug,"
+        " vp.slug || '/' || vr.slug || '/' || rv.slug,"
+        " m.window_lo, m.window_hi, m.member_lo, m.member_hi FROM holding_mapping m"
+        " JOIN holding_column c USING (column_id)"
+        " JOIN register_variant rv ON rv.register_variant_id = m.variant_id"
+        " JOIN register vr ON vr.register_id = rv.register_id"
+        " JOIN provider vp ON vp.provider_id = vr.provider_id" + target
+    ):
+        spans = periods[tid]
+        if wlo is not None or mlo is not None:
+            start, end = holdings_span(wlo or mlo, whi or mhi)
+            spans = [
+                (max(start, lo), min(end, hi))
+                for lo, hi in spans
+                if start < hi and lo < end
+            ]
+        ids[cid]["mappings"].extend((pid, logical, lo, hi) for lo, hi in spans)
+        ids[cid]["state"] = "mapped"
+    for cid, tid, pid, logical in db.execute(
+        "SELECT k.column_id, c.table_id, p.slug || '/' || r.slug || '/' || v.slug,"
+        " vp.slug || '/' || vr.slug || '/' || rv.slug FROM holding_key k"
+        " JOIN holding_column c USING (column_id)"
+        " JOIN register_variant rv ON rv.register_variant_id = k.variant_id"
+        " JOIN register vr ON vr.register_id = rv.register_id"
+        " JOIN provider vp ON vp.provider_id = vr.provider_id" + target
+    ):
+        ids[cid]["keys"].append(pid)
+        ids[cid]["key_mappings"].extend(
+            (pid, logical, lo, hi) for lo, hi in periods[tid]
+        )
+        if ids[cid]["state"] == "unmapped":
+            ids[cid]["state"] = "key only"
+    return {t["name"]: t for t in tables.values()}, columns
+
+
+def new_holdings(db):
+    tables, columns, ids = {}, {}, {}
+    for tid, name, disposition, locator in db.execute(
+        "SELECT id, physical_name, disposition, locator FROM holding_table"
+    ):
+        tables[tid] = {
+            "name": name,
+            "routes": [],
+            **holdings_side(disposition, locator),
+        }
+    for tid, pid in db.execute("SELECT holding_id, table_pid FROM holding_route"):
+        tables[tid]["routes"].append(pid)
+    for cid, tid, name, disposition, reason, follow_up, locator in db.execute(
+        "SELECT id, holding_id, name, disposition, reason, follow_up, locator FROM holding_column"
+    ):
+        table = tables[tid]
+        side = holdings_side(
+            table["disposition"],
+            locator,
+            state=disposition,
+            reason=reason,
+            follow_up=follow_up,
+            routes=sorted(table["routes"]),
+            column_disposition=disposition,
+        )
+        columns[table["name"], name] = ids[cid] = side
+    for cid, pid, logical, lo, hi, role, carried, locator in db.execute(
+        "SELECT column_id, variable_pid, table_pid, start, end, role, carried, locator FROM holding_mapping"
+    ):
+        side = ids[cid]
+        if role == "row_key" or carried:
+            side["keys"].append(pid)
+            side["key_mappings"].append((pid, logical, lo, hi))
+        else:
+            side["mappings"].append((pid, logical, lo, hi))
+        side.setdefault("mapping_locators", []).append(locator)
+    table_notices = defaultdict(list)
+    for (
+        tid,
+        cid,
+        code,
+        locator,
+        message,
+        lo,
+        hi,
+        requested,
+        documented,
+        admitted,
+    ) in db.execute(
+        "SELECT holding_id, column_id, code, locator, message, start, end, requested, documented, admitted FROM holding_notice ORDER BY id"
+    ):
+        notice = {
+            "code": code,
+            "column_scoped": cid is not None,
+            "locator": locator,
+            "message": message,
+            "period": holdings_iso_span(lo, hi) if lo is not None else None,
+            **{
+                key: [holdings_iso_span(a, b) for a, b in json.loads(value or "[]")]
+                for key, value in (
+                    ("requested", requested),
+                    ("documented", documented),
+                    ("admitted", admitted),
+                )
+            },
+        }
+        (ids[cid]["notices"] if cid is not None else table_notices[tid]).append(notice)
+    for cid, tid in db.execute("SELECT id, holding_id FROM holding_column"):
+        side = ids[cid]
+        side["notices"].extend(table_notices[tid])
+        if side["mappings"]:
+            side["state"] = "mapped"
+        elif side["keys"]:
+            side["state"] = "key only"
+    return {t["name"]: t for t in tables.values()}, columns
+
+
+def holdings_targets(side):
+    return sorted({pid for pid, _, _, _ in side["mappings"]})
+
+
+def holdings_reach(side, target=None, field="mappings"):
+    return holdings_union(
+        (lo, hi) for pid, _, lo, hi in side[field] if target is None or pid == target
+    )
+
+
+def holdings_iso_span(lo, hi):
+    return {
+        "start": None if lo == TIMELESS_START else iso_day(lo),
+        "end": None if hi == TIMELESS_END else iso_day(hi),
+    }
+
+
+def holdings_public(side):
+    if side is None:
+        return None
+
+    return {
+        **{
+            k: v
+            for k, v in side.items()
+            if k not in {"mappings", "keys", "key_mappings"}
+        },
+        "targets": holdings_targets(side),
+        "reach": [
+            holdings_iso_span(lo, hi)
+            for lo, hi in holdings_union(
+                (lo, hi) for _, _, lo, hi in side["mappings"] + side["key_mappings"]
+            )
+        ],
+        "orderable_reach": [
+            holdings_iso_span(lo, hi) for lo, hi in holdings_reach(side)
+        ],
+        "key_reach": [
+            holdings_iso_span(lo, hi)
+            for lo, hi in holdings_union(
+                (lo, hi) for _, _, lo, hi in side["key_mappings"]
+            )
+        ],
+        "mappings": [
+            {"target": pid, "logical_table": logical, **holdings_iso_span(lo, hi)}
+            for pid, logical, lo, hi in sorted(set(side["mappings"]))
+        ],
+        "key_mappings": [
+            {"target": pid, "logical_table": logical, **holdings_iso_span(lo, hi)}
+            for pid, logical, lo, hi in sorted(set(side["key_mappings"]))
+        ],
+        "keys": sorted(set(side["keys"])),
+        "notice_codes": sorted({n["code"] for n in side["notices"]}),
+    }
+
+
+def holdings_candidate_status(old, new, base):
+    """Target presence and overlapping routed coverage, without slug reconciliation."""
+    status = {}
+    for pid in holdings_targets(old):
+        exists = (
+            base.execute("SELECT 1 FROM variable WHERE pid = ?", (pid,)).fetchone()
+            is not None
+        )
+        routed = False
+        for table, lo, hi in base.execute(
+            "SELECT t.pid, s.start, s.end FROM segment s"
+            " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
+            " WHERE v.pid = ?",
+            (pid,),
+        ):
+            if table in new["routes"] and any(
+                lo < end and start < hi for start, end in holdings_reach(old, pid)
+            ):
+                routed = True
+                break
+        status[pid] = (
+            "routed overlap"
+            if routed
+            else "present but unrouted"
+            if exists
+            else "absent"
+        )
+    return status
+
+
+def holdings_key_equal(old, new):
+    if set(old["keys"]) != set(new["keys"]):
+        return False
+    return all(
+        not uncovered(span, holdings_reach(other, pid, "key_mappings"))
+        for side, other in ((old, new), (new, old))
+        for pid in side["keys"]
+        for span in holdings_reach(side, pid, "key_mappings")
+    )
+
+
+def holdings_placement_changed(old, new):
+    # IDs belong to separate catalogs. Compare multiplicity, never coordinate identity.
+    def counts(side):
+        tables = defaultdict(set)
+        for pid, logical, _, _ in side["mappings"] + side["key_mappings"]:
+            tables[pid].add(logical)
+        return {pid: len(found) for pid, found in tables.items()}
+
+    o, n = counts(old), counts(new)
+    return any(o[pid] != n[pid] for pid in o.keys() & n.keys())
+
+
+def holdings_clip_loss(new):
+    removed = []
+    for notice in new["notices"]:
+        if notice["code"] != "period_clipped" or not notice["column_scoped"]:
+            continue
+        # The schema has no target on a notice. Requested minus admitted proves
+        # physical loss across all of this column's targets; table notices cannot.
+        admitted = [period_days(span) for span in notice["admitted"]]
+        removed.extend(
+            piece
+            for span in notice["requested"]
+            for piece in uncovered(period_days(span), admitted)
+        )
+        if notice["period"] is not None:
+            removed.append(period_days(notice["period"]))
+    return holdings_union(removed)
+
+
+def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
+    def result(cls, reason, action="none", codes=()):
+        locators = [s["locator"] for s in (old, new) if s]
+        if old:
+            locators += [old_tables[record["table"]]["locator"]]
+        if new:
+            locators += [n["locator"] for n in new["notices"] if n["code"] in codes]
+            locators += new.get("mapping_locators", [])
+        return record | {
+            "class": cls,
+            "owner": HOLDINGS_CLASSES[cls],
+            "reason": reason,
+            "locator": sorted(set(locators)),
+            "next_action": action,
+        }
+
+    work = "Add a worklist row in the private steward repo (#2072)."
+    defect = "File against reg-build holdings with the retained locators."
+    codes = {n["code"] for n in new["notices"]} if new else set()
+    if old is None or new is None:
+        only_table = (
+            record["table"] not in old_tables or record["table"] not in new_tables
+        )
+        if old is None and only_table and new["disposition"] in {"lookup", "excluded"}:
+            return result(
+                "intended lookup/excluded",
+                "Old compiler did not emit lookup/excluded tables.",
+            )
+        reason = ("Table" if only_table else "Column") + (
+            " only in new." if old is None else " only in old."
+        )
+        if pins_equal is False:
+            return result(
+                "census drift",
+                reason + " Census pins differ.",
+                "Reconcile the census inputs.",
+            )
+        return result("defect", reason + " Census pins agree.", defect)
+    if record["kind"] == "table":
+        if old["disposition"] != new["disposition"]:
+            return result(
+                "disposition changed",
+                "Empty-table disposition differs.",
+                "Review table disposition.",
+            )
+        return result("equal", "Same empty-table disposition.")
+    if old["disposition"] == "unknown":
+        return result(
+            "old unknown",
+            f"Old scope unknown; new disposition {new['disposition']}.",
+            "Review the new disposition.",
+        )
+    if codes & {
+        "ambiguous_delivered_owners",
+        "ambiguous_catalog_segment",
+    }:
+        return result(
+            "owner ambiguity", "New ownership has blocked slices.", work, codes
+        )
+    if new["column_disposition"] == "hold" or codes & {"mapping_held", "row_key_held"}:
+        return result(
+            "withheld carried over" if old["state"] == "old withheld" else "held",
+            "New hold retains reason and follow-up, including partially held mappings.",
+            work,
+            codes,
+        )
+    if old["mappings"] and new["mappings"]:
+        removed = []
+        added = False
+        # Retired/replacement target IDs are review work, not proof of lost days.
+        # Check physical reach plus each retained target before secondary reviews.
+        shared_targets = set(holdings_targets(old)) & set(holdings_targets(new))
+        for pid in [None, *sorted(shared_targets)]:
+            o, n = holdings_reach(old, pid), holdings_reach(new, pid)
+            removed.extend(piece for span in o for piece in uncovered(span, n))
+            added |= any(uncovered(span, o) for span in n)
+        if removed:
+            loss = holdings_clip_loss(new)
+            if all(not uncovered(span, loss) for span in removed):
+                return result(
+                    "intended clipping",
+                    "Column clipping notices explain every removed target/day slice."
+                    + (" Other slices extend coverage." if added else ""),
+                    codes={"period_clipped"},
+                )
+            return result(
+                "defect",
+                "New reach is narrower without column clipping evidence covering every lost slice.",
+                defect,
+            )
+        if holdings_targets(old) != holdings_targets(new):
+            return result(
+                "target changed",
+                "Mapped target pids differ.",
+                "Check steward ledgers and slug reconciliation before calling a defect.",
+            )
+        if holdings_placement_changed(old, new):
+            return result(
+                "placement changed",
+                "Logical table multiplicity differs per target.",
+                "Review retained coordinates without joining old and new IDs.",
+            )
+        if not holdings_key_equal(old, new):
+            return result(
+                "key census changed",
+                "Key targets or per-target reach differ.",
+                "Review key requirements separately from ordered columns.",
+            )
+        if added:
+            return result(
+                "coverage extended",
+                "D coverage extends the old reach.",
+                "List for maintainer review.",
+            )
+        if old["disposition"] != new["disposition"]:
+            return result(
+                "disposition changed",
+                "Table disposition differs.",
+                "Review table disposition.",
+            )
+        return result("equal", "Same target pids and per-target reach.")
+    if old["mappings"] and "mapping_missing" in codes:
+        candidates = record["missing_target_status"]
+        if "routed overlap" in candidates.values():
+            return result(
+                "defect",
+                "Missing mapping despite an old target with overlapping routed base coverage.",
+                defect,
+                {"mapping_missing"},
+            )
+        return result(
+            "missing target",
+            "Old target is absent or has no overlapping routed base segment.",
+            work,
+            {"mapping_missing"},
+        )
+    if old["mappings"] and new["column_disposition"] == "unmap":
+        return result(
+            "curation carryover",
+            "New explicit unmap; reason retained for verification.",
+            "Verify the authored unmap reason against old curation.",
+        )
+    if old["state"] == "old withheld":
+        if new["mappings"]:
+            return result("resolved", "Old withheld column now maps.")
+        return result(
+            "withheld carried over",
+            "Old hold/unmap were indistinguishable; withholding remains unresolved.",
+            work,
+            codes,
+        )
+    if old["keys"] or new["keys"]:
+        if not old["mappings"] and not new["mappings"] and holdings_key_equal(old, new):
+            if holdings_placement_changed(old, new):
+                return result(
+                    "placement changed",
+                    "Logical key table multiplicity differs per target.",
+                    "Review retained coordinates without joining old and new IDs.",
+                )
+            if old["disposition"] != new["disposition"]:
+                return result(
+                    "disposition changed",
+                    "Table disposition differs.",
+                    "Review table disposition.",
+                )
+            return result("equal", "Same key-only target census and per-target reach.")
+        return result(
+            "key census changed",
+            "Orderable/key-only census differs.",
+            "Review key requirements separately from ordered columns.",
+        )
+    if old["state"] == "unmapped" and new["mappings"]:
+        return result(
+            "coverage extended",
+            "Previously unmapped column now maps.",
+            "List for maintainer review.",
+        )
+    if "mapping_missing" in codes:
+        return result(
+            "missing target",
+            "New column has no accepted target.",
+            work,
+            {"mapping_missing"},
+        )
+    if not old["mappings"] and not new["mappings"]:
+        if new["column_disposition"] == "unmap":
+            return result(
+                "curation carryover",
+                "New explicit unmap reason retained.",
+                "Verify the authored unmap reason.",
+            )
+        if old["disposition"] != new["disposition"]:
+            return result(
+                "disposition changed",
+                "Table disposition differs.",
+                "Review table disposition.",
+            )
+        return result("equal", "Both columns remain unmapped without withholding.")
+    return result(
+        "defect",
+        "Old orderability is lost without a hold, unmap or missing-target notice.",
+        defect,
+    )
+
+
+def holdings(args) -> int:
+    if args.out.exists():
+        raise ValueError(
+            "--out already exists; choose a fresh private report directory"
+        )
+    with (
+        closing(connect_ro(args.old_db)) as old_db,
+        closing(connect_ro(args.new_base)) as base,
+        closing(connect_ro(args.new_holdings)) as new_db,
+    ):
+        old_meta = dict(old_db.execute("SELECT key, value FROM import_manifest"))
+        new_meta = dict(new_db.execute("SELECT key, value FROM meta"))
+        base_meta = dict(base.execute("SELECT key, value FROM meta"))
+        with args.new_base.open("rb") as source:
+            digest = hashlib.file_digest(source, "sha256").hexdigest()
+        if new_meta["catalog_sha256"] != digest:
+            raise ValueError(
+                "holdings meta.catalog_sha256 does not match --new-base sha256"
+            )
+        pins = json.loads(new_meta["input_pins"])
+        if args.new_census_path not in pins:
+            raise ValueError("--new-census-path must name an existing input_pins key")
+        new_pin = pins[args.new_census_path]
+        old_pin = args.old_census_sha256
+        if not re.fullmatch("[0-9a-f]{64}", old_pin):
+            raise ValueError("old census sha256 must be 64 lowercase hex digits")
+        pins_equal = old_pin == new_pin
+        old_tables, old_columns = old_holdings(old_db)
+        new_tables, new_columns = new_holdings(new_db)
+        shared = old_columns.keys() & new_columns.keys()
+        old_only, new_only = old_columns.keys() - shared, new_columns.keys() - shared
+        near = len(
+            {(fold(t), fold(c)) for t, c in old_only}
+            & {(fold(t), fold(c)) for t, c in new_only}
+        )
+        records = []
+        missing_counts = Counter()
+        for table, column in sorted(old_columns.keys() | new_columns.keys()):
+            old, new = (
+                old_columns.get((table, column)),
+                new_columns.get((table, column)),
+            )
+            record = {
+                "kind": "column",
+                "table": table,
+                "column": column,
+                "old": holdings_public(old),
+                "new": holdings_public(new),
+            }
+            if new and any(n["code"] == "mapping_missing" for n in new["notices"]):
+                status = (
+                    holdings_candidate_status(old, new, base)
+                    if old and old["mappings"]
+                    else {}
+                )
+                record["missing_target_status"] = status
+                category = (
+                    "no old mapped target"
+                    if not status
+                    else "target present, routed overlap"
+                    if "routed overlap" in status.values()
+                    else "target present, no routed overlap"
+                    if "present but unrouted" in status.values()
+                    else "target absent"
+                )
+                missing_counts[category] += 1
+            records.append(
+                classify_holdings(record, old, new, old_tables, new_tables, pins_equal)
+            )
+        old_nonempty = {t for t, _ in old_columns}
+        new_nonempty = {t for t, _ in new_columns}
+        empty_tables = (old_tables.keys() - old_nonempty) | (
+            new_tables.keys() - new_nonempty
+        )
+        for table in sorted(empty_tables):
+            old, new = old_tables.get(table), new_tables.get(table)
+            record = {
+                "kind": "table",
+                "table": table,
+                "column": None,
+                "old": holdings_public(old),
+                "new": holdings_public(new),
+            }
+            records.append(
+                classify_holdings(record, old, new, old_tables, new_tables, pins_equal)
+            )
+        totals = Counter(r["class"] for r in records)
+        total_line = f"Totals: old {len(old_tables)} tables / {len(old_columns)} columns; new {len(new_tables)} tables / {len(new_columns)} columns; shared {len(shared)} columns; union {len(old_columns.keys() | new_columns.keys())} columns; empty-table records {len(empty_tables)}; folded near-misses {near}."
+        summary = [
+            "# Holdings census comparison",
+            "",
+            f"Old release: reg_meta/v0.64.0; schema: {old_meta.get('schema_version')}; builder: {old_meta.get('builder_commit')}; generation: {old_meta.get('generation_id')}.",
+            f"New compiler digest: {new_meta.get('compiler_digest')}; base schema: {base_meta.get('schema_version')}; generation: {base_meta.get('generation_id')}; holdings schema: {new_meta.get('schema_version')}; generation: {new_meta.get('generation_id')}.",
+            f"Old census sha256 (supplied from pinned scope): {old_pin}.",
+            f"Old input-manifest sha256 (not a census digest): {old_meta.get('holdings_manifest_sha256')}.",
+            f"New census sha256: {new_pin}; equal: {pins_equal}.",
+            f"catalog_sha256 check: passed ({digest}).",
+            "",
+            total_line,
+            "",
+            "Exact physical (table, column) join; folded near-misses are diagnostic only. Old inclusive dates become half-open days by adding one to the end. Null ISO endpoints denote open/timeless reach.",
+            "Old hold/unmap reasons are indistinguishable and treated as old withheld. Every census column is retained, including keys and unknown/lookup/excluded dispositions.",
+            "Holds and blocked ownership take precedence over clipping, including partially accepted columns. Old-withheld plus new-hold is withheld carried over. Clipping must explain every lost slice using column-scoped notice evidence. Target and key comparisons use per-target reach. Logical table multiplicity is compared without joining old and new IDs.",
+            "Empty tables have separate table records; column denominators exclude those records.",
+            "",
+            "## Artifact totals",
+            "",
+        ]
+        for key in (
+            "census_tables",
+            "census_columns",
+            "mapped_columns",
+            "unmatched_columns",
+            "storage_extra_columns",
+        ):
+            summary.append(f"- New meta.{key}: {new_meta.get(key)}")
+        summary.append(
+            f"- Old accounting counts: {old_meta.get('holdings_accounting_counts')}"
+        )
+        summary += [
+            "",
+            "## Table dispositions",
+            "",
+            "| old | new | tables |",
+            "|---|---|---:|",
+        ]
+        dispositions = Counter(
+            (
+                old_tables[t]["disposition"] if t in old_tables else "absent",
+                new_tables[t]["disposition"] if t in new_tables else "absent",
+            )
+            for t in old_tables.keys() | new_tables.keys()
+        )
+        for (old, new), count in sorted(dispositions.items()):
+            summary.append(f"| {old} | {new} | {count} |")
+        summary += [
+            "",
+            "## Classes",
+            "",
+            "| class | columns | tables | owner |",
+            "|---|---:|---:|---|",
+        ]
+        for cls, owner in HOLDINGS_CLASSES.items():
+            found = [r for r in records if r["class"] == cls]
+            summary.append(
+                f"| {cls} | {sum(r['kind'] == 'column' for r in found)} | {len({r['table'] for r in found})} | {owner} |"
+            )
+        summary += [
+            "",
+            "## Key census",
+            "",
+            "| side | key columns | key target pairs | orderable columns | mapping rows |",
+            "|---|---:|---:|---:|---:|",
+        ]
+        for side, columns in (("old", old_columns), ("new", new_columns)):
+            mapping_count = (
+                old_db.execute("SELECT count(*) FROM holding_mapping").fetchone()[0]
+                if side == "old"
+                else new_db.execute(
+                    "SELECT count(*) FROM holding_mapping WHERE role != 'row_key' AND carried = 0"
+                ).fetchone()[0]
+            )
+            summary.append(
+                f"| {side} | {sum(bool(c['keys']) for c in columns.values())} | {sum(len(set(c['keys'])) for c in columns.values())} | {sum(bool(c['mappings']) for c in columns.values())} | {mapping_count} |"
+            )
+        summary += [
+            "",
+            "## New disposition × notice",
+            "",
+            "Columns count once per code; no-notice columns remain visible. Column dispositions distinguish auto-map candidates from explicit hold/unmap.",
+            "",
+            "| table disposition | column disposition | notice | columns |",
+            "|---|---|---|---:|",
+        ]
+        breakdown = Counter(
+            (c["disposition"], c["column_disposition"], code)
+            for c in new_columns.values()
+            for code in ({n["code"] for n in c["notices"]} or {"none"})
+        )
+        for (disposition, state, code), count in sorted(breakdown.items()):
+            summary.append(f"| {disposition} | {state} | {code} | {count} |")
+        summary += [
+            "",
+            "## mapping_missing target breakdown",
+            "",
+            "| old target status | columns |",
+            "|---|---:|",
+        ]
+        summary.extend(
+            f"| {category} | {count} |"
+            for category, count in sorted(missing_counts.items())
+        )
+        for cls in HOLDINGS_CLASSES:
+            found = [r for r in records if r["class"] == cls]
+            if found:
+                summary += ["", f"## {cls}", ""]
+                for r in found[:5]:
+                    summary.append(
+                        f"- `{r['table']}` / `{r['column']}`; locators: {r['locator']}; {r['reason']} Next: {r['next_action']}"
+                    )
+        args.out.mkdir(parents=True, exist_ok=False)
+        for filename, rows in (
+            ("census.jsonl", records),
+            ("differences.jsonl", (r for r in records if r["class"] != "equal")),
+        ):
+            with (args.out / filename).open("w", encoding="utf-8") as output:
+                for record in rows:
+                    output.write(
+                        json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n"
+                    )
+        (args.out / "summary.md").write_text(
+            "\n".join(summary) + "\n", encoding="utf-8"
+        )
+    print("| class | columns | empty-table records |\n|---|---:|---:|")
+    for cls in HOLDINGS_CLASSES:
+        table_records = sum(r["kind"] == "table" and r["class"] == cls for r in records)
+        print(f"| {cls} | {totals[cls] - table_records} | {table_records} |")
+    print(total_line)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1851,6 +2608,22 @@ def main() -> int:
         "--out", type=Path, required=True, help="new directory for evidence"
     )
     order.set_defaults(run=orders)
+    holding = commands.add_parser(
+        "holdings", help="compare the private physical holdings census"
+    )
+    for flag in ("old-db", "new-base", "new-holdings", "out"):
+        holding.add_argument(f"--{flag}", type=Path, required=True)
+    holding.add_argument(
+        "--old-census-sha256",
+        required=True,
+        help="raw census digest from the pinned old scope (0.64.0 stores only the input-manifest digest)",
+    )
+    holding.add_argument(
+        "--new-census-path",
+        required=True,
+        help="exact census path key in holdings meta.input_pins",
+    )
+    holding.set_defaults(run=holdings)
     args = parser.parse_args()
     try:
         return args.run(args)

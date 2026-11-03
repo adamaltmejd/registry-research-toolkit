@@ -1,6 +1,8 @@
 /** Reader vocabulary rendered as ordinary language, shared by facts and evidence. */
 const labels: Record<string, string> = {
   unknown: "Not stated",
+  unstated: "Not stated",
+  codelist: "Code list",
   clear: "Unambiguous",
   ambiguous: "Ambiguous",
   row_key: "Row identifier",
@@ -33,6 +35,9 @@ const labels: Record<string, string> = {
   sensitive: "Sensitive",
   coded: "Coded",
   role: "Role",
+  int: "Integer",
+  bool: "Boolean",
+  datetime: "Date and time",
   state: "State",
   temporality: "Temporality",
   invariant: "Time independent",

@@ -1,0 +1,24 @@
+{
+  "findings": [
+    {
+      "level": "info",
+      "code": "rows_unfiltered",
+      "path": "/sources/0",
+      "message": "Physical table \"Owners\" has no period column, so every row of its delivery 2017..2019 is extracted",
+      "source": "a"
+    },
+    {
+      "level": "error",
+      "code": "mapping_missing",
+      "path": "/sources/0/bindings/0",
+      "message": "Distinct owners claim the physical column of demo/owners/first in demo/owners over [2018-01-01, 2019-01-01); no placement is accepted there, so the cell needs curation",
+      "source": "a",
+      "variable": "demo/owners/first",
+      "table": "demo/owners",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+      }
+    }
+  ]
+}

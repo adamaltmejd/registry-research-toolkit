@@ -74,7 +74,7 @@
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .definition {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-1);

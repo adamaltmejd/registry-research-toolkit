@@ -22,6 +22,15 @@
           {
             "fqid": "demo/bas/gross-household",
             "name": "Förvärvsinkomst, hushåll",
+            "columns": [
+              {
+                "table": "demo/bas",
+                "spelling": "gross-household",
+                "periods": [
+                  {"start": "2022-01-01", "end": "2023-01-01"}
+                ]
+              }
+            ],
             "facets": [
               {
                 "axis": "unit",
@@ -38,6 +47,15 @@
           {
             "fqid": "demo/bas/net-household",
             "name": "Disponibel inkomst, hushåll",
+            "columns": [
+              {
+                "table": "demo/bas",
+                "spelling": "net-household",
+                "periods": [
+                  {"start": "2022-01-01", "end": "2023-01-01"}
+                ]
+              }
+            ],
             "facets": [
               {
                 "axis": "unit",
@@ -54,6 +72,15 @@
           {
             "fqid": "demo/bas/gross-person",
             "name": "Förvärvsinkomst, person",
+            "columns": [
+              {
+                "table": "demo/bas",
+                "spelling": "gross-person",
+                "periods": [
+                  {"start": "2022-01-01", "end": "2023-01-01"}
+                ]
+              }
+            ],
             "facets": [
               {
                 "axis": "unit",
@@ -70,6 +97,16 @@
           {
             "fqid": "demo/bas/inkomst",
             "name": "Inkomst efter skatt",
+            "columns": [
+              {
+                "table": "demo/bas",
+                "spelling": "Inkomst",
+                "periods": [
+                  {"start": "2015-01-01", "end": "2017-01-01"},
+                  {"start": "2018-01-01", "end": "2023-01-01"}
+                ]
+              }
+            ],
             "facets": [
               {
                 "axis": "unit",

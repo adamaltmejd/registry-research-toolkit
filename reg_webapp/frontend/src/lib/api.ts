@@ -141,6 +141,52 @@ export function triggerDownload(blob: Blob, filename: string): void {
 /** The Rust server's `context`: artifact identity and catalog counts. */
 export type Context = RustSchemas["Context"];
 
+/** The presentation subset used by the SPA; the server's generic Object has no TS shape. */
+export type StewardConfig = {
+  presentation: {
+    id: string;
+    name: string;
+    long_name?: string;
+    description?: string;
+  };
+  logo: string;
+};
+
+export function stewardConfig(context: Context | null): StewardConfig | null {
+  const config: unknown = context?.steward_config;
+  if (!config || typeof config !== "object") return null;
+  const { presentation, logo } = config as Record<string, unknown>;
+  if (
+    !presentation ||
+    typeof presentation !== "object" ||
+    typeof logo !== "string"
+  )
+    return null;
+  const { id, name, long_name, description } = presentation as Record<
+    string,
+    unknown
+  >;
+  if (typeof id !== "string" || typeof name !== "string") return null;
+  return {
+    presentation: {
+      id,
+      name,
+      ...(typeof long_name === "string" ? { long_name } : {}),
+      ...(typeof description === "string" ? { description } : {}),
+    },
+    logo,
+  };
+}
+
+export type Coverage = RustSchemas["Coverage"];
+
+export function getCoverage(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<Coverage> {
+  return rustGet<Coverage>(`/coverage/${encodeFqid(ref)}`, undefined, options);
+}
+
 /** The headline catalog-size counts (#675) the landing page renders — slugged
  * (browse-addressable) providers, registers and variables in the read scope. */
 export type CatalogSizes = RustSchemas["Sizes"];
@@ -295,6 +341,7 @@ function searchGet<T>(
     type?: SearchType;
     register?: string;
     cursor?: string;
+    scope?: "steward" | "reference";
   },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
@@ -310,6 +357,7 @@ function searchGet<T>(
   if (options?.cursor !== undefined) {
     params.set("cursor", options.cursor);
   }
+  if (options?.scope !== undefined) params.set("scope", options.scope);
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
     signals.push(options.signal);
@@ -342,6 +390,7 @@ export async function search(
 }
 
 export type RegisterFacet = RustSchemas["RegisterFacet"];
+export type RegisterFacets = RustSchemas["RegisterFacets"];
 
 /** Per register, how many of its variables match `q` (#1785): every match, no
  * paging, before concept groups fold. A register without a match is absent.
@@ -350,15 +399,20 @@ export type RegisterFacet = RustSchemas["RegisterFacet"];
  * and names the register (#1828). */
 export async function searchFacets(
   q: string,
-  options?: { signal?: AbortSignal; register?: string; limit?: number },
-): Promise<RegisterFacet[]> {
+  options?: {
+    signal?: AbortSignal;
+    register?: string;
+    limit?: number;
+    scope?: "steward" | "reference";
+  },
+): Promise<RegisterFacets> {
   return (
     await searchGet<{ data: RustSchemas["RegisterFacets"] }>(
       "/search/facets",
       q,
       options,
     )
-  ).data.registers;
+  ).data;
 }
 
 /** Provider and register entries of the current catalog summary. */

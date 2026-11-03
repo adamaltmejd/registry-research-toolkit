@@ -4,11 +4,13 @@ import {
   DisclosurePanel,
   Heading,
 } from "react-aria-components";
-import type { TableShow } from "./api";
+import type { Context, TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
+import { catalogWords } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import { HeldPanels } from "./HeldPanels";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -21,27 +23,53 @@ import { useCatalogRead } from "./use_store_read";
 
 type Release = TableShow["releases"][number];
 type Population = Release["populations"][number];
-type PopulationApplication = Pick<Release, "name" | "period"> &
+type PopulationApplication = Pick<Release, "name"> &
   Pick<Population, "ref_day">;
 type PopulationGroup = Pick<Population, "name" | "definition"> & {
   releases: PopulationApplication[];
 };
 
-export function TableView({ node }: { node: TableShow }) {
+// The primary is final, then unstated, then preliminary (crates/DESIGN.md →
+// Editions), so a period's releases list in that order.
+const EDITION_RANK: Record<string, number> = {
+  final: 0,
+  unstated: 1,
+  preliminary: 2,
+};
+
+function compareReleases(a: Release, b: Release): number {
+  // An unparsed release has no period and lists last; an open start first.
+  const aStart = a.period ? (a.period.start ?? "") : "\uffff";
+  const bStart = b.period ? (b.period.start ?? "") : "\uffff";
+  return (
+    (aStart < bStart ? -1 : aStart > bStart ? 1 : 0) ||
+    (EDITION_RANK[a.edition] ?? 3) - (EDITION_RANK[b.edition] ?? 3) ||
+    svCollator.compare(a.name, b.name)
+  );
+}
+
+function releaseCount(count: number): string {
+  return count === 1 ? "1 release" : `${count} releases`;
+}
+
+export function TableView({
+  node,
+  context,
+}: {
+  node: TableShow;
+  context: Context | null;
+}) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
-  const releases = [...node.releases].sort(
-    (a, b) =>
-      svCollator.compare(a.edition, b.edition) ||
-      svCollator.compare(a.name, b.name),
-  );
+  const releases = [...node.releases].sort(compareReleases);
+  // Most providers state no edition: the column shows only where one does.
+  const editioned = releases.some((release) => release.edition !== "unstated");
   const populations = new Map<string, PopulationGroup>();
   for (const release of releases) {
     for (const population of release.populations) {
       const key = JSON.stringify([population.name, population.definition]);
       const application = {
         name: release.name,
-        period: release.period,
         ref_day: population.ref_day,
       };
       const group = populations.get(key);
@@ -64,6 +92,12 @@ export function TableView({ node }: { node: TableShow }) {
       }
     }
   }
+  // Many providers restate a population's name as its definition: the column
+  // shows only where some definition says more than the name.
+  const defined = [...populations.values()].some(
+    (population) =>
+      population.definition && population.definition !== population.name,
+  );
   return (
     <article className={styles.page}>
       <Definitions
@@ -79,13 +113,16 @@ export function TableView({ node }: { node: TableShow }) {
           ...(node.description
             ? [{ term: "Description", value: node.description }]
             : []),
-          { term: "Role", value: node.role },
-          { term: "Cadence", value: node.cadence ?? "Not stated" },
+          { term: "Role", value: catalogWords(node.role) },
+          { term: "Cadence", value: catalogWords(node.cadence) },
           { term: "Unit type", value: node.unit_type ?? "Not stated" },
           { term: "Timeless", value: node.timeless ? "Yes" : "No" },
           { term: "Implicit", value: node.implicit ? "Yes" : "No" },
         ]}
       />
+      {context?.steward_config != null && (
+        <HeldPanels fqid={node.fqid} kind="table" names={names} />
+      )}
       <Panel title="Spans">
         {node.spans.length === 0 ? (
           <EmptyState title="This table has no dated spans." />
@@ -130,60 +167,19 @@ export function TableView({ node }: { node: TableShow }) {
           <DataTable
             columns={[
               { key: "name", label: "Population" },
-              { key: "definition", label: "Definition" },
+              ...(defined
+                ? [{ key: "definition" as const, label: "Definition" }]
+                : []),
               { key: "releases", label: "Applies to" },
             ]}
             rows={[...populations.values()]}
             getRowId={(row) => JSON.stringify([row.name, row.definition])}
             renderCell={(row, column) =>
               column.key === "releases" ? (
-                <Disclosure className={styles.disclosure}>
-                  {({ isExpanded }) => (
-                    <>
-                      <Heading level={3} className={styles.disclosureHeading}>
-                        <Button
-                          slot="trigger"
-                          className={styles.disclosureButton}
-                          aria-label={`Applies to releases for ${row.name}`}
-                        >
-                          <TreeChevron />
-                          <span>Applies to releases</span>
-                        </Button>
-                      </Heading>
-                      <DisclosurePanel
-                        className={`motion-disclose ${isExpanded ? "open" : ""}`}
-                      >
-                        <div>
-                          {isExpanded && (
-                            <ul className={styles.plainList}>
-                              {row.releases.map((release) => (
-                                <li
-                                  key={JSON.stringify([
-                                    release.name,
-                                    release.ref_day,
-                                  ])}
-                                >
-                                  {release.name}:{" "}
-                                  <code>
-                                    {release.period
-                                      ? catalogPeriodLabel(release.period)
-                                      : "Not stated"}
-                                  </code>
-                                  {release.ref_day && (
-                                    <>
-                                      ; reference day:{" "}
-                                      <code>{release.ref_day}</code>
-                                    </>
-                                  )}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      </DisclosurePanel>
-                    </>
-                  )}
-                </Disclosure>
+                <PopulationReleases
+                  population={row}
+                  allReleases={releases.length}
+                />
               ) : (
                 row[column.key] || "Not stated"
               )
@@ -191,35 +187,35 @@ export function TableView({ node }: { node: TableShow }) {
           />
         )}
       </Panel>
-      <Panel title="Releases">
+      <Panel title="Releases" flush={releases.length > 0}>
         {releases.length === 0 ? (
           <EmptyState title="No releases recorded for this table." />
         ) : (
           <DataTable
             columns={[
-              { key: "edition", label: "Edition" },
               { key: "name", label: "Release" },
               { key: "period", label: "Period", mono: true },
+              ...(editioned
+                ? [{ key: "edition" as const, label: "Edition" }]
+                : []),
               { key: "primary", label: "Primary" },
-              { key: "qualifier", label: "Qualifier" },
-              { key: "parse_state", label: "Parse state" },
             ]}
             rows={releases}
             getRowId={(row) => row.name}
             renderCell={(row, column) => {
               switch (column.key) {
                 case "period":
+                  // Only an unparsed release has no period.
                   return row.period
                     ? catalogPeriodLabel(row.period)
-                    : "Not stated";
+                    : "Name not parsed";
+                case "edition":
+                  return catalogWords(row.edition);
                 case "primary":
-                  return row.primary === null
-                    ? "Not stated"
-                    : row.primary
-                      ? "Yes"
-                      : "No";
+                  // A release without a period is never the primary.
+                  return row.primary ? "Yes" : "No";
                 default:
-                  return String(row[column.key] || "Not stated");
+                  return row.name;
               }
             }}
           />
@@ -228,5 +224,81 @@ export function TableView({ node }: { node: TableShow }) {
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
     </article>
+  );
+}
+
+/** The releases a population applies to: "All releases" when it is every one
+ * on one reference day, else the one release or a disclosure listing them, with
+ * a reference day the releases share stated once. */
+function PopulationReleases({
+  population,
+  allReleases,
+}: {
+  population: PopulationGroup;
+  allReleases: number;
+}) {
+  const applied = population.releases;
+  const refDays = new Set(applied.map((release) => release.ref_day));
+  const sharedRefDay = refDays.size === 1 ? applied[0]?.ref_day : null;
+  const names = new Set(applied.map((release) => release.name));
+  const item = (release: PopulationApplication) => (
+    <>
+      {release.name}
+      {!sharedRefDay && release.ref_day && (
+        <>
+          , reference day <code>{release.ref_day}</code>
+        </>
+      )}
+    </>
+  );
+  return (
+    <>
+      {names.size === allReleases && allReleases > 1 && refDays.size === 1 ? (
+        "All releases"
+      ) : applied.length === 1 && applied[0] ? (
+        item(applied[0])
+      ) : (
+        <Disclosure className={styles.disclosure}>
+          {({ isExpanded }) => (
+            <>
+              <Heading level={3} className={styles.disclosureHeading}>
+                <Button
+                  slot="trigger"
+                  className={styles.disclosureButton}
+                  aria-label={`${releaseCount(names.size)} for ${population.name}`}
+                >
+                  <TreeChevron />
+                  <span className={styles.countTrigger}>
+                    {releaseCount(names.size)}
+                  </span>
+                </Button>
+              </Heading>
+              <DisclosurePanel
+                className={`motion-disclose ${isExpanded ? "open" : ""}`}
+              >
+                <div>
+                  {isExpanded && (
+                    <ul className={styles.plainList}>
+                      {applied.map((release) => (
+                        <li
+                          key={JSON.stringify([release.name, release.ref_day])}
+                        >
+                          {item(release)}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </DisclosurePanel>
+            </>
+          )}
+        </Disclosure>
+      )}
+      {sharedRefDay && (
+        <div>
+          Reference day <code>{sharedRefDay}</code>
+        </div>
+      )}
+    </>
   );
 }

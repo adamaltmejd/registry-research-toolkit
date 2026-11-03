@@ -65,6 +65,26 @@ fields = ["issues"]
 note = "`order` on a project the structural validator rejects; `issues` are validate's."
 
 [[code]]
+code = "project_unnamed"
+class = "usage"
+surface = "operation"
+status = 422
+fields = []
+note = """`materialize_order` on a project whose `name` is blank or whitespace only: the \
+order file's provenance names the order. The project stays a valid logical draft; \
+`order` and `validate` accept it."""
+
+[[code]]
+code = "holdings_unavailable"
+class = "usage"
+surface = "operation"
+status = 400
+fields = []
+note = """`materialize_order` on a server that serves no steward's holdings. Physical \
+files come only from holdings; the logical order is `order` (crates/DESIGN.md, \"From a \
+logical order to physical files\")."""
+
+[[code]]
 code = "not_found"
 class = "not_found"
 surface = "operation"

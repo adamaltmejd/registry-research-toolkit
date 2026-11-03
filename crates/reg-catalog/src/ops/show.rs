@@ -176,8 +176,20 @@ pub struct ShowSetAxis {
 pub struct ShowSetMember {
     fqid: String,
     name: String,
+    /// The member's columns, ordered by table then spelling.
+    columns: Vec<ShowSetColumn>,
     /// The member's coordinates in the set's axis order.
     facets: Vec<ShowSetFacet>,
+}
+
+/// One (table, spelling) a set member has segments in.
+#[derive(Serialize, ToSchema)]
+pub struct ShowSetColumn {
+    /// The table's fqid.
+    table: String,
+    spelling: String,
+    /// The column's segment periods, in time order.
+    periods: Vec<Period>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -213,7 +225,7 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "register" => register(server, &conn, &entity)?,
                 "table" => table(server, &conn, &entity)?,
                 "variable" => variable(server, &conn, &entity, evidence)?,
-                "set" => set(&conn, &entity)?,
+                "set" => set(server, &conn, &entity)?,
                 // simplify: classification summaries land with their data.
                 kind => {
                     return Err(Error::new(
@@ -507,7 +519,54 @@ fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowM
         .collect::<rusqlite::Result<_>>()?)
 }
 
-fn set(conn: &Connection, entity: &Entity) -> Result<Show, Error> {
+/// A variable's columns from its segments as `segments` reads them, one per (table,
+/// spelling); the open start sorts first.
+fn columns(
+    server: &Server,
+    segments: &mut rusqlite::Statement,
+    variable: i64,
+) -> Result<Vec<ShowSetColumn>, Error> {
+    let rows = segments
+        .query_map([variable], |row| {
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                server.period(row.get(2)?, row.get(3)?),
+            ))
+        })?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let mut columns: Vec<ShowSetColumn> = vec![];
+    for (table, spelling, period) in rows {
+        match columns.last_mut() {
+            Some(c) if c.table == table && c.spelling == spelling => c.periods.push(period),
+            _ => columns.push(ShowSetColumn {
+                table,
+                spelling,
+                periods: vec![period],
+            }),
+        }
+    }
+    Ok(columns)
+}
+
+/// Members by their facet values in axis order, then name, then fqid.
+fn by_axes(axes: &[ShowSetAxis], a: &ShowSetMember, b: &ShowSetMember) -> std::cmp::Ordering {
+    axes.iter()
+        .map(|axis| {
+            let value = |m: &ShowSetMember| {
+                m.facets
+                    .iter()
+                    .find(|f| f.axis == axis.id)
+                    .map(|f| f.value.clone())
+            };
+            value(a).cmp(&value(b))
+        })
+        .find(|order| !order.is_eq())
+        .unwrap_or_else(|| a.name.cmp(&b.name))
+        .then_with(|| a.fqid.cmp(&b.fqid))
+}
+
+fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
     let (name, description, register): (String, Option<String>, String) = conn.query_row(
         "SELECT n.body, d.body, r.pid FROM var_set s
          JOIN text n ON n.id = s.name_text
@@ -540,6 +599,7 @@ fn set(conn: &Connection, entity: &Entity) -> Result<Show, Error> {
                 ShowSetMember {
                     fqid: row.get(1)?,
                     name: row.get(2)?,
+                    columns: vec![],
                     facets: vec![],
                 },
             ))
@@ -551,7 +611,14 @@ fn set(conn: &Connection, entity: &Entity) -> Result<Show, Error> {
          JOIN text l ON l.id = f.label_text
          WHERE f.set_id = ? AND f.variable_id = ? ORDER BY a.ord",
     )?;
+    let mut segments = conn.prepare(
+        "SELECT t.pid, sp.exact, s.start, s.end FROM segment s
+         JOIN tbl t ON t.id = s.table_id
+         JOIN spelling sp ON sp.id = s.spelling_id
+         WHERE s.variable_id = ? ORDER BY t.pid, sp.exact, s.start, s.end",
+    )?;
     for (id, member) in &mut members {
+        member.columns = columns(server, &mut segments, *id)?;
         member.facets = facets
             .query_map(rusqlite::params![entity.id, *id], |row| {
                 Ok(ShowSetFacet {
@@ -562,25 +629,7 @@ fn set(conn: &Connection, entity: &Entity) -> Result<Show, Error> {
             })?
             .collect::<rusqlite::Result<_>>()?;
     }
-    members.sort_by(|(_, a), (_, b)| {
-        axes.iter()
-            .map(|axis| {
-                let a = a
-                    .facets
-                    .iter()
-                    .find(|f| f.axis == axis.id)
-                    .map(|f| &f.value);
-                let b = b
-                    .facets
-                    .iter()
-                    .find(|f| f.axis == axis.id)
-                    .map(|f| &f.value);
-                a.cmp(&b)
-            })
-            .find(|order| !order.is_eq())
-            .unwrap_or_else(|| a.name.cmp(&b.name))
-            .then_with(|| a.fqid.cmp(&b.fqid))
-    });
+    members.sort_by(|(_, a), (_, b)| by_axes(&axes, a, b));
     let tags = conn
         .prepare(
             "SELECT DISTINCT t.pid, n.body FROM var_set_member m

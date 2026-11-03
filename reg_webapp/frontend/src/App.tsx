@@ -4,6 +4,7 @@ import styles from "./App.module.css";
 import {
   type Context,
   getContext,
+  stewardConfig,
   type ValidationResultModel,
 } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
@@ -32,6 +33,23 @@ const useHref = (href: string) => href;
 
 export function App() {
   const context = useAsyncResource("context", getContext);
+  const config = stewardConfig(context.data);
+  const brand =
+    config?.presentation.long_name ??
+    config?.presentation.name ??
+    "Registry Research Toolkit";
+  const logo = config
+    ? `data:image/svg+xml,${encodeURIComponent(config.logo)}`
+    : null;
+  useEffect(() => {
+    document.title = brand;
+    if (logo === null) return;
+    const icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.href = logo;
+    document.head.append(icon);
+    return () => icon.remove();
+  }, [brand, logo]);
   const route = useRoute();
   const validation = useProjectValidation();
   const registerFqid =
@@ -67,10 +85,11 @@ export function App() {
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
-            <BrowseTree className={styles.browse} />
+            <BrowseTree className={styles.browse} config={config} />
             {registerFqid && route.name === "catalog-node" ? (
               <VariableList
                 registerFqid={registerFqid}
+                config={config}
                 selectedFqid={
                   unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
                   route.fqidPath.split("/").length > 2
@@ -118,7 +137,7 @@ function RoutedView({
 }) {
   switch (route.name) {
     case "home":
-      return <Home />;
+      return <Home config={stewardConfig(context)} />;
     case "root":
       return (
         <>

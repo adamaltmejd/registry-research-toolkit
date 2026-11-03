@@ -10,6 +10,10 @@
     "sources"
   ],
   "properties": {
+    "extract_format": {
+      "$ref": "#/$defs/ProjectExtractFormat",
+      "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+    },
     "name": {
       "type": "string"
     },
@@ -115,6 +119,14 @@
         "date",
         "datetime",
         "opaque"
+      ]
+    },
+    "ProjectExtractFormat": {
+      "type": "string",
+      "enum": [
+        "dta",
+        "parquet",
+        "csv"
       ]
     },
     "ProjectIdSubtype": {

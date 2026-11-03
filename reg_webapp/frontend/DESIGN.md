@@ -148,7 +148,7 @@ spacing:
   5: 1.5rem
   6: 2rem
   content-max: 80rem
-  breakpoint-narrow: 48rem
+  breakpoint-narrow: 60rem
   col-browse: 220px
   col-browse-max: 340px
   col-list: 200px
@@ -335,20 +335,23 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   is the deployment's long name too. Its content shares the shell's `shell-max` and
   centring, so the banner sits over the detail pane rather than at the screen's edge.
   Where the row is tight the brand wraps and the search bar shrinks before the banner
-  leaves the row. From 60rem down the name would push the banner off the row, or take a
-  row of its own, so there the brand is the steward's logo, with the full name as the
-  link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward supplies a
-  logo (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. 60rem
-  is the top bar's own fit, not a layout breakpoint. It sticks to the top of the page
-  above `breakpoint-narrow`; below it the logo and a "Search" button share a row, the
-  banner takes the next, and both scroll away with the page. The button unfolds the
-  field, which takes the row's whole width in place of the logo and the button, with
-  focus in it; it stays open while it holds text, and folds back on a blur or an Escape
-  while empty, focus returning to the button (maintainer ruling 2026-10-24). Below the
-  breakpoint every text field is set at 1rem: iOS Safari zooms the page into a focused
-  field under 16px and leaves it zoomed, cut off at the left.
-- **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
-  then the selected register's or group's variables, then the detail pane capped at
+  leaves the row. Below `breakpoint-narrow` the name would push the banner off the row,
+  or take a row of its own, so there the brand is the steward's logo, with the full name
+  as the link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward
+  supplies a logo (`stewards/<id>/logo.svg`), used in the compact header and as the
+  favicon. The bar sticks to the top of the page above `breakpoint-narrow`; below it the
+  logo and a "Search" button share a row, the banner takes the next, and both scroll
+  away with the page. The button unfolds the field, which takes the row's whole width in
+  place of the logo and the button, with focus in it; it stays open while it holds text,
+  and folds back on a blur or an Escape while empty, focus returning to the button
+  (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem:
+  iOS Safari zooms the page into a focused field under 16px and leaves it zoomed, cut
+  off at the left.
+- **Browse columns (`ColumnList`):** in paired mode, the Registers header places a
+  Select beside Collapse all, with accessible labels for the register list and scope,
+  limiting variable search matches to held or all reference variables; browsing without
+  search text stays unscoped. Registers grouped under sticky provider headers, then the
+  selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
   to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
   and centred, so a wide screen gets wider lists, not a stranded pane. The variables
@@ -373,20 +376,21 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   members are lanes on that page, not rows in the column. A browse column fills the
   viewport below the top bar and scrolls its own list. Every item and group carries its
   in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`) the columns stack, one at a time; the way back is the
-  breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its own
-  line above the trail so it reads as an action, not a path segment (#1824). Every
-  page's trail leads with it below the breakpoint (and only there: beside the columns it
-  would repeat them), and it opens the register list; while the search holds text it
-  reads "Show matching registers", since the list the search filters is off screen. Do
-  not mint new breakpoints.
+  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
+  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
+  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
+  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
+  below the breakpoint (and only there: beside the columns it would repeat them), and it
+  opens the register list; while the search holds text it reads "Show matching
+  registers", since the list the search filters is off screen. Do not mint new
+  breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
   hidden until the filter clears (#1830); with none left at all the column says so.
   Matched text is underlined in `accent` at weight 600, a register that matched only
   through its variables says so on its own line under it ("matched on 9 variables", the
-  count in `accent-ink`), the column header states how many registers match, and the
+  count in `accent-ink`), the column's label becomes the count ("12 registers"), and the
   detail pane stays put. The variables column lists the open register's matches first,
   then every other matching register's below it in the register column's order (#1828):
   each under its name as a header, in the register column's group-row type with a
@@ -415,8 +419,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
-  data) in `text-muted`. The browse columns are beside it and the project box is in the
-  top bar, so there is no link into either.
+  data) in `text-muted`, with inline emphasis and `http(s)` links. The browse columns
+  are beside it and the project box is in the top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
@@ -424,9 +428,19 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   columns, findings, then source documents. On a variable page, source and provenance
   follows the documents. Padding `spacing.5`. A variable group page carries the Group
   kind mark and a member-of line naming its register, with constant facets shown once in
-  the facets row. Members appear as a member × axis table until `LaneGraph` lanes land,
-  with axes in curated order and members in API order; only varying axes are columns,
-  and groups without varying axes use a plain list.
+  the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
+  order: a lane is titled by its varying facets in curated axis order, with the member's
+  name on the line under it, and by the name alone when no axis varies. Paired variable
+  and table pages show a Held panel grouped by physical table, with delivered column
+  chips, periods and plain-word placement details, or an EmptyState when nothing is
+  held. A caveat shared by a group's placements is a fact row, one that varies is a
+  Notes cell; neither is a tooltip, which a touch screen cannot open. A paired register
+  page shows a Held summary instead, one row per table with its held-variable count and
+  period runs, since its coverage lists every table's placements (#2110). Steward
+  documentation appears in its own panel when supplied by coverage; neither panel
+  appears while its data is loading. In steward mode a supplemental-only variable is
+  selectable for a project like a reference variable: `order` and `validate` read the
+  composed steward view (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -565,21 +579,23 @@ Time is the axis every relation is drawn on.
   dot (#1826). Adding starts from the variable page, where the coverage `LaneGraph`, add
   window and add bar show which tables and years are added.
 
-- A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
-  facet), columns as spans, and relations as arrows: solid for succession, dashed for
-  rename. A succession arrow between overlapping spans drops at the edge's effective
-  year. A lane's title joins its facet values with a comma, and its name opens the
-  variable; its line under the name is plain words, never a slug: the register when it
-  differs from the page's, or what tells two lanes of one name apart. A read-only
-  neighbour lane still shows its columns' "in project" state. A span is a checkbox for
-  the add bar, and hovering it highlights its edges. On `/project` a column's findings
-  sit across its lane, under its spans. It shares the page's axis with the `Timeline`.
-  It draws the study window's band and, over it, an add window that differs, as on the
-  variable page, with the axis years on the add window's bounds when one is drawn. Its
-  legend keys only the marks drawn: the plain chip is "Click to select" and the filled
-  one "In project"; a chip outside the window needs no key. Its add bar shows only while
-  a change is staged. On a variable page the `LaneGraph` is the `Timeline` (above).
-  Don't draw free-form node graphs; the time axis is the information.
+- A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
+  member order), columns as spans, and relations as arrows: solid for succession, dashed
+  for rename. A succession arrow between overlapping spans drops at the edge's effective
+  year. A group lane's title joins its varying facet values with a comma, falling back
+  to the variable's name, and its name opens the variable; its line under the name is
+  plain words, never a slug: the register when it differs from the page's, the
+  variable's name under a facet title, or what tells two lanes of one name apart (their
+  column names); it also describes the link. A read-only neighbour lane still shows its
+  columns' "in project" state. A span is a checkbox for the add bar, and hovering it
+  highlights its edges. On `/project` a column's findings sit across its lane, under its
+  spans. It shares the page's axis with the `Timeline`. It draws the study window's band
+  and, over it, an add window that differs, as on the variable page, with the axis years
+  on the add window's bounds when one is drawn. Its legend keys only the marks drawn:
+  the plain chip is "Click to select" and the filled one "In project"; a chip outside
+  the window needs no key. Its add bar shows only while a change is staged. On a
+  variable page the `LaneGraph` is the `Timeline` (above). Don't draw free-form node
+  graphs; the time axis is the information.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").

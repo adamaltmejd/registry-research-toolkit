@@ -1,0 +1,94 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Stata alias"
+    }
+  },
+  "files": [
+    {
+      "name": "part_b",
+      "schema": "dbo",
+      "table": "Part B",
+      "delivery": "2021",
+      "partition": "b",
+      "columns": [
+        {
+          "name": "Relative identifier as received in the delivery",
+          "stata_name": "Relative_identifier_as_re_827517",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "r",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/relative-id",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "RelativeId"
+            }
+          ]
+        },
+        {
+          "name": "Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "r",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2021-01-01",
+                "end": "2022-01-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "identifier",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/held/relative-id identifies units in demo/held over [2021-01-01, 2022-01-01)",
+      "source": "r",
+      "variable": "demo/held/relative-id",
+      "table": "demo/held",
+      "period": {
+        "start": "2021-01-01",
+        "end": "2022-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

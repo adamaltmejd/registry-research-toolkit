@@ -10,7 +10,7 @@ use serde::{Serialize, Serializer};
 
 // How much an issue blocks. The structural layer emits only errors; 3e.2's semantic
 // layer emits warnings and infos too.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(rename_all = "lowercase")]
 pub enum IssueLevel {

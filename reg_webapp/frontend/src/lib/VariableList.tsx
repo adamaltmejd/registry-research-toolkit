@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { RegisterFacet } from "./api";
+import type { RegisterFacet, StewardConfig } from "./api";
 import {
   useBrowseFilter,
   useOtherRegisterMatches,
@@ -22,47 +22,70 @@ const MORE = "more:";
 /** Other registers' flat matches, already limited and ordered by the hook. */
 function otherRegisterSections(
   facets: readonly RegisterFacet[] | null,
+  seen: Set<string>,
+  group?: string,
 ): ColumnSection[] {
-  return (facets ?? []).flatMap((facet) => {
-    if (!facet.fqid || !facet.variables) return [];
-    const name = facet.name ?? facet.fqid;
-    const items: ColumnItem[] = facet.variables.map((variable) => ({
-      id: variable.fqid,
-      name: variable.name,
-      label: `${variable.name}, in ${name}`,
-      href: catalogHref(variable.fqid),
-      inProject: 0,
-      leaves: true,
-    }));
-    const rest = facet.variable_matches - facet.variables.length;
-    if (rest > 0) {
-      items.push({
-        id: `${MORE}${facet.fqid}`,
-        name: `${rest} more in ${name}`,
-        href: catalogHref(facet.fqid),
-        inProject: 0,
-        leaves: true,
-      });
-    }
-    return [{ id: `register:${facet.fqid}`, label: name, items }];
-  });
+  return (facets ?? [])
+    .flatMap((facet) => {
+      if (!facet.fqid || !facet.variables) return [];
+      const name = facet.name ?? "Unnamed register";
+      const items: ColumnItem[] = facet.variables
+        .filter((variable) => {
+          if (seen.has(variable.fqid)) return false;
+          seen.add(variable.fqid);
+          return true;
+        })
+        .map((variable) => ({
+          id: variable.fqid,
+          name: variable.name,
+          label: `${variable.name}, in ${name}`,
+          href: catalogHref(variable.fqid),
+          inProject: 0,
+          leaves: true,
+        }));
+      const rest = facet.variable_matches - facet.variables.length;
+      if (rest > 0) {
+        items.push({
+          id: `${MORE}${group === undefined ? "reference" : "steward"}:${facet.fqid}`,
+          name: `${rest} more in ${name}`,
+          href: catalogHref(facet.fqid),
+          inProject: 0,
+          leaves: true,
+        });
+      }
+      if (items.length === 0) return [];
+      return [
+        {
+          id: `${group === undefined ? "register" : "steward-register"}:${facet.fqid}`,
+          label: name,
+          items,
+        },
+      ];
+    })
+    .map((section, index) =>
+      index === 0 && group !== undefined
+        ? { ...section, groupLabel: group }
+        : section,
+    );
 }
 
 export function VariableList({
   registerFqid,
   selectedFqid,
   className,
+  config = null,
 }: {
   registerFqid: string;
   selectedFqid: string | null;
   className?: string;
+  config?: StewardConfig | null;
 }) {
   const resource = useAsyncResource(registerFqid, (signal) =>
     sharedShow(registerFqid, signal),
   );
   const needle = useBrowseFilter();
-  const matches = useRegisterMatches(registerFqid);
-  const otherMatches = useOtherRegisterMatches(registerFqid);
+  const matches = useRegisterMatches(registerFqid, config);
+  const otherMatches = useOtherRegisterMatches(registerFqid, config);
   const node = resource.data?.kind === "register" ? resource.data : null;
   const variables = [...(node?.variables ?? [])].sort((a, b) =>
     svCollator.compare(a.name, b.name),
@@ -114,7 +137,15 @@ export function VariableList({
       ),
     [needle],
   );
-  const others = otherRegisterSections(otherMatches);
+  const seen = new Set(items.map((item) => item.id));
+  const others = [
+    ...otherRegisterSections(otherMatches?.reference ?? null, seen),
+    ...otherRegisterSections(
+      otherMatches?.steward ?? null,
+      seen,
+      config?.presentation.name,
+    ),
+  ];
   const sections = [{ id: "variables", label: null, items }, ...others];
   const ownEmpty = others.length > 0 && items.length === 0;
   return (

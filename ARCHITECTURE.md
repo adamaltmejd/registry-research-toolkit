@@ -35,10 +35,10 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 ### Data stewards
 
 Some research organizations re-license registry data from their own warehouses instead
-of each project going through SCB directly. SWECOV's hosted catalog stays on the last
-old-schema release until milestone E ([REBUILD.md](REBUILD.md) §C). The global server,
-served over MCP only (#1709), has no holdings: its `order` returns the logical order of
-a project, and nothing receives it.
+of each project going through SCB directly. SWECOV's hosted catalog is the paired
+`reg_meta_swecov.db.zst` served with the base (`--catalog swecov`; deployment is gated
+by `SWECOV_DEPLOY`). The global server, served over MCP only (#1709), has no holdings:
+its `order` returns the logical order of a project, and nothing receives it.
 
 ## What the toolkit is
 
@@ -79,7 +79,7 @@ registry-research-toolkit/
     reg-resolve/    #   per-register resolution
     reg-build/      #   link, emit and the CLI (binary: reg-build)
   curation/         # the new builder's reader config and id ledgers
-  reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
+  reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
@@ -127,7 +127,7 @@ ships as a container image built from the newest `reg_meta/v*` release's assets.
   implementation per contract".
 - **Builder and runtime are Rust.** The server and MCP tools share one validator, one
   grammar and one set of result types, and local MCP is one binary. The Python builder
-  and its tests remain until milestone F; SWECOV uses its old-schema release until E.
+  and its tests remain until milestone F.
 - **One operation set for clients.** Exposed over HTTP and MCP (hosted at
   reg-meta.vqv.uk and data.swecov.se, and local `reg-meta mcp`); there is no query CLI
   and no human-oriented output. The interface rules are in
@@ -221,9 +221,11 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   (`crates/reg-core/tests/project/corpus/load_test_200col/`), but the load-test harness
   and CI perf gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
-  `schema_version`. Contract 5.1.0 adds optional boolean `follow_successor` on variable
-  bindings; absent or false keeps the bound variable's own history. `reg-core` accepts
-  exactly its `SCHEMA_VERSION` and refuses any other with an
+  `schema_version`. Contract 5.1.0 added optional boolean `follow_successor` on variable
+  bindings; absent or false keeps the bound variable's own history. Contract 5.2.0 adds
+  optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
+  authoring default `dta`, resolved by the order file and never inserted into the
+  project. `reg-core` accepts exactly its `SCHEMA_VERSION` and refuses any other with an
   `unsupported_schema_version` issue rather than migrating it
   ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no
   migration scripts, deprecation wrappers or compatibility shims: breaking changes are
@@ -290,8 +292,8 @@ This is the complete list of boundaries a test may assert at.
    and paging depth, and compare sampled logical orders and validation against an
    artifact census. Repeated search and successful order responses must have identical
    raw bytes; HTTP and MCP orders must agree as JSON. CI runs these checks against the
-   single published catalog asset in `integration.yml`; the SWECOV integration job is
-   deleted until milestone E, and there is no separate docs asset. Published schema
+   published catalog asset in `integration.yml` and, when the release has it, the paired
+   SWECOV asset (`--catalog swecov`); there is no separate docs asset. Published schema
    drift is a release-drift failure. Pinned historical baseline acceptance, exhaustive
    representative resolution, performance and rendered checks remain separate maintainer
    work.

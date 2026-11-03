@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -21,6 +22,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 HOLDINGS_CASE = CASES / "holdings"
+SLOTS = HOLDINGS_CASE / "slot-family"
 
 
 def run(command, *, cwd=REPO):
@@ -54,7 +56,15 @@ def pin_steward(root: Path, registry: Path) -> None:
         "curation/readers/holdings.toml",
     ]
     if (root / "reference-occurrences.toml").exists():
-        roles.extend(["reference-occurrences.toml", "inputs/reference"])
+        # The classification reader's directory is pinned by file, as the compiler
+        # checks an unpinned consumed directory.
+        roles.extend(
+            [
+                "reference-occurrences.toml",
+                "inputs/reference",
+                "inputs/reference/codes/kind.csv",
+            ]
+        )
     hashes = {}
     for role in roles:
         path = root / role
@@ -165,3 +175,58 @@ def verify_refusals(tmp_path, output, base, root, variant="base"):
         assert refused.returncode == 1
         assert case["code"] in refused.stderr, refused.stderr
         assert case["location"] in refused.stderr, refused.stderr
+
+
+def splice_slot_family(root: Path) -> None:
+    """Replace Pool's single Slot2 with the documented position family 1, 2, 10."""
+    for name in ["census.csv", "storage.csv"]:
+        shutil.copyfile(SLOTS / name, root / name)
+    path = root / "holdings.toml"
+    path.write_text(
+        re.sub(
+            r'\[\[table\.column\]\]\nname = "Slot2"\n.*?(?=\[\[table\.column\]\])',
+            (SLOTS / "columns.toml").read_text(),
+            path.read_text(),
+            count=1,
+            flags=re.DOTALL,
+        )
+    )
+
+
+def prepare_materialize(directory: Path) -> tuple[Path, Path]:
+    """The materialize cases' steward: the slot family, a long header on Part B and a
+    first-half Parent amount."""
+    base, root, command = prepare_holdings(directory)
+    splice_slot_family(root)
+    extension = CASES / "materialize/fixture"
+    census = root / "census.csv"
+    census.write_text(
+        census.read_text().replace(
+            "Synthetic,Partition,Part B,Id,New,",
+            "Synthetic,Partition,Part B,Id,New,Relative identifier as received in the delivery",
+        )
+    )
+    storage = root / "storage.csv"
+    storage.write_text(
+        storage.read_text() + (extension / "long-column-storage.csv").read_text()
+    )
+    holdings = root / "holdings.toml"
+    anchor = 'locator = "fixture:partition-b"\n'
+    holdings.write_text(
+        holdings.read_text().replace(
+            anchor, anchor + "\n" + (extension / "long-column.toml").read_text(), 1
+        )
+    )
+    anchor = 'locator = "fixture:parent"\n'
+    holdings.write_text(
+        holdings.read_text().replace(
+            anchor, anchor + "\n" + (extension / "partial-parent.toml").read_text(), 1
+        )
+    )
+    pin_steward(root, directory / "stewards.toml")
+    output = directory / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    if built.returncode:
+        raise RuntimeError(built.stderr)
+    (directory / "reg_meta.db").symlink_to(base)
+    return base, output

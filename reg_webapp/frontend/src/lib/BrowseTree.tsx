@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Collection,
@@ -14,17 +14,21 @@ import {
   type RegisterChild,
   type RootChild,
   SEARCH_MIN_QUERY_LENGTH,
+  type StewardConfig,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
 import {
+  allRegisterFacets,
   browseMatches,
   browseOrder,
+  browseScope,
   useBrowseFilter,
+  useBrowseScope,
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
-import { catalogRootChildren } from "./catalog_names";
+import { catalogRootChildren, uniqueCatalogRefs } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
@@ -32,6 +36,7 @@ import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
 import columnStyles from "./ui/ColumnList.module.css";
 import { focusBrowseColumn } from "./ui/column_keys";
+import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
@@ -173,8 +178,13 @@ function browseNodes(
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
-export function BrowseTree({ className }: { className?: string }) {
-  const labelId = useId();
+export function BrowseTree({
+  className,
+  config = null,
+}: {
+  className?: string;
+  config?: StewardConfig | null;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -192,7 +202,12 @@ export function BrowseTree({ className }: { className?: string }) {
       return Object.fromEntries(
         shown.map((node, i) => [
           providers[i].fqid,
-          node.kind === "provider" ? node.registers : [],
+          node.kind === "provider"
+            ? uniqueCatalogRefs([
+                ...node.registers,
+                ...(node.steward_registers ?? []),
+              ])
+            : [],
         ]),
       );
     },
@@ -201,14 +216,17 @@ export function BrowseTree({ className }: { className?: string }) {
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
   const facetKey = useSettledFilter();
-  const facetResource = useAsyncResource(facetKey, (signal) =>
-    searchFacets(facetKey ?? "", { signal }),
+  const scope = useBrowseScope(config);
+  const facetResource = useAsyncResource(
+    facetKey === null ? null : `${scope ?? ""}\u0000${facetKey}`,
+    (signal) => searchFacets(facetKey ?? "", { signal, scope }),
   );
   const facets = new Map(
-    (facetKey === null ? [] : (facetResource.data ?? [])).flatMap((f) =>
-      f.fqid && f.variable_matches > 0
-        ? [[f.fqid, f.variable_matches] as const]
-        : [],
+    (facetKey === null ? [] : allRegisterFacets(facetResource.data)).flatMap(
+      (f) =>
+        f.fqid && f.variable_matches > 0
+          ? [[f.fqid, f.variable_matches] as const]
+          : [],
     ),
   );
   const allNodes = browseNodes(
@@ -384,27 +402,44 @@ export function BrowseTree({ className }: { className?: string }) {
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span id={labelId} className="micro-label">
-          Registers
+        <span className={config ? "visually-hidden" : "micro-label"}>
+          {/* While filtering, the label is how many registers the filter
+            leaves: a separate count wrapped the header to two lines, out of
+            line with the variables column's (#2107). */}
+          {config || matchCount === null
+            ? "Registers"
+            : matchCount === 1
+              ? "1 register"
+              : `${matchCount} registers`}
         </span>
-        {/* How many registers the filter leaves: an actionable count. */}
-        {matchCount !== null && (
-          <span className={styles.matchCount}>
-            {matchCount === 1 ? "1 match" : `${matchCount} matches`}
-          </span>
-        )}
-        {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
+        <div className={config ? styles.controls : undefined}>
+          {config && (
+            <div className={styles.scope}>
+              <Select
+                label={`Variable search scope for ${config.presentation.name}`}
+                labelHidden
+                value={scope ?? "steward"}
+                options={[
+                  { id: "steward", name: "Held matches" },
+                  { id: "reference", name: "All matches" },
+                ]}
+                onChange={browseScope.set}
+              />
+            </div>
+          )}
+          {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
-        <Button
-          variant="ghost"
-          onPress={() =>
-            onExpandedChange(
-              expandedKeys.size > 0 ? new Set() : new Set(expandable),
-            )
-          }
-        >
-          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
-        </Button>
+          <Button
+            variant="ghost"
+            onPress={() =>
+              onExpandedChange(
+                expandedKeys.size > 0 ? new Set() : new Set(expandable),
+              )
+            }
+          >
+            {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
+          </Button>
+        </div>
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>
@@ -431,7 +466,9 @@ export function BrowseTree({ className }: { className?: string }) {
               </StatusRow>
             )}
             <Tree
-              aria-labelledby={labelId}
+              // A fixed name: the visible label turns into the count while
+              // filtering.
+              aria-label="Registers"
               className={({ state }) => {
                 treeState.current = state;
                 return styles.tree;

@@ -1,0 +1,52 @@
+# Fly.io config for the reg_webapp `swecov` deployment.
+#
+# Deploy from the REPO ROOT — the Dockerfile needs the Cargo workspace as build
+# context (see reg_webapp/Dockerfile header):
+#
+#   fly deploy . --config reg_webapp/fly.swecov.toml --ha=false \
+#     --build-arg REG_META_TAG=reg_meta/vX.Y.Z \
+#     --build-arg REG_META_DB_SHA256=<reg_meta.db.zst digest> \
+#     --build-arg REG_META_HOLDINGS_SHA256=<reg_meta_swecov.db.zst digest>
+#
+# The bake fetches `reg_meta.db.zst` and `reg_meta_swecov.db.zst` from that
+# reg_meta/v* release, verifies both digests, and fails the build if the release
+# lacks either. The image serves the pair as `--catalog swecov`, with `/mcp` on
+# the public host below (crates/DESIGN.md, "Hosted MCP": SWECOV's artifact is public).
+
+app = "reg-webapp-swecov"
+primary_region = "arn" # Stockholm — the user base is Swedish register researchers.
+
+[build]
+  # Resolved relative to this file (flyctl convention), i.e. reg_webapp/Dockerfile.
+  dockerfile = "Dockerfile"
+
+[build.args]
+  REG_META_CATALOG = "swecov"
+
+[env]
+  # The hosted MCP endpoint, as fly.toml's: `/mcp` admits this `Host` besides
+  # loopback, and REG_META_EDGE_TOKEN (a Fly secret matching the edge worker's
+  # EDGE_TOKEN) rate-limits each edge client by its own address.
+  REG_META_PUBLIC_HOST = "data.swecov.se"
+  REG_META_READY_DEADLINE = "300"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  # Same always-on single-machine topology as the global catalog deployment:
+  # Cloudflare edge caching absorbs reads, while the warm page cache keeps the
+  # catalog and holdings pair responsive.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "300s"
+    method = "GET"
+    path = "/api/context"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  # 2 GB: check catalog + holdings size before deploying; the catalog alone is 1.35 GB.
+  memory = "2gb"

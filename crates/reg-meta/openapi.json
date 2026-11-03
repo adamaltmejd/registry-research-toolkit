@@ -764,6 +764,69 @@
         }
       }
     },
+    "/api/project/materialize": {
+      "post": {
+        "description": "The MONA order file of a project_data.json document on this steward's holdings: per physical table and delivery one file, with its exact columns, held row keys and row filter, the clips and the non-blocking findings; or `order_blocked` with every logical and physical finding.",
+        "operationId": "materialize_order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Manifest"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/project/order": {
       "post": {
         "description": "The logical order of a project_data.json document: per binding, each window's table, period, spelling and form, with the availability clips, the row keys and the non-blocking findings; or `order_blocked` with every finding.",
@@ -1543,6 +1606,76 @@
   },
   "components": {
     "schemas": {
+      "CatalogIdentity": {
+        "type": "object",
+        "description": "The served catalog: its release, schema and the paired generation (`meta.generation`).",
+        "required": [
+          "release",
+          "schema",
+          "generation"
+        ],
+        "properties": {
+          "generation": {
+            "type": "string"
+          },
+          "release": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ColumnRef": {
+        "type": "object",
+        "description": "A logical reference a column serves.",
+        "required": [
+          "source",
+          "binding",
+          "table",
+          "variable",
+          "period",
+          "spelling"
+        ],
+        "properties": {
+          "binding": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The binding's index in the source; null for a held key no binding orders.",
+            "minimum": 0
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The days of this reference the file holds."
+          },
+          "source": {
+            "type": "string"
+          },
+          "spelling": {
+            "type": "string",
+            "description": "The logical spelling (the catalog's form); the physical `name` wins in the file."
+          },
+          "table": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ColumnRole": {
+        "type": "string",
+        "description": "`ordered`: a binding names it; `row_key`/`carried`: a held key the file requires\n(`carried` when the table carries its parent's key copy).",
+        "enum": [
+          "ordered",
+          "row_key",
+          "carried"
+        ]
+      },
       "Context": {
         "type": "object",
         "description": "`shape.Context`.",
@@ -2048,6 +2181,15 @@
           }
         }
       },
+      "Encoding": {
+        "type": "string",
+        "enum": [
+          "date",
+          "year",
+          "yyyymm",
+          "yyyymmdd"
+        ]
+      },
       "Error": {
         "type": "object",
         "description": "The error document `{code, class, message, remediation, fields}`.",
@@ -2291,6 +2433,22 @@
           }
         }
       },
+      "HoldingsIdentity": {
+        "type": "object",
+        "required": [
+          "owner",
+          "generation"
+        ],
+        "properties": {
+          "generation": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "Issue": {
         "type": "object",
         "description": "`shape.Issue`: a project issue or an order finding, located in the project.",
@@ -2355,7 +2513,8 @@
               "null"
             ]
           }
-        }
+        },
+        "additionalProperties": false
       },
       "IssueLevel": {
         "type": "string",
@@ -2427,6 +2586,206 @@
             "description": "Per source, then by period start."
           }
         }
+      },
+      "Manifest": {
+        "type": "object",
+        "description": "The order file: per physical table and delivery, one file and its columns.",
+        "required": [
+          "version",
+          "extract_format",
+          "provenance",
+          "files",
+          "clips",
+          "findings"
+        ],
+        "properties": {
+          "clips": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManifestClip"
+            },
+            "description": "Every binding the order delivers less of than the project requests, logical\navailability and physical possession together."
+          },
+          "extract_format": {
+            "$ref": "#/components/schemas/ProjectExtractFormat",
+            "description": "The project's format, resolved to `dta` when it states none."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManifestFile"
+            },
+            "description": "By first logical appearance, then name."
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            },
+            "description": "The non-blocking findings (level `warning` or `info`)."
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Always [`MANIFEST_VERSION`].",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManifestClip": {
+        "type": "object",
+        "description": "A binding delivered over less than requested.",
+        "required": [
+          "source",
+          "binding",
+          "variable",
+          "requested",
+          "ordered"
+        ],
+        "properties": {
+          "binding": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ordered": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "requested": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "source": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManifestColumn": {
+        "type": "object",
+        "description": "One physical column, once per file, with every logical reference it serves.",
+        "required": [
+          "name",
+          "storage",
+          "role",
+          "refs"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The exact physical header."
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnRef"
+            }
+          },
+          "role": {
+            "$ref": "#/components/schemas/ColumnRole"
+          },
+          "slot": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Slot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stata_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "On a `dta` order only, when `name` is not a Stata variable name ([`stata_name`])."
+          },
+          "storage": {
+            "$ref": "#/components/schemas/Storage"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManifestFile": {
+        "type": "object",
+        "description": "One output file: one physical table in its authored delivery.",
+        "required": [
+          "name",
+          "schema",
+          "table",
+          "delivery",
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManifestColumn"
+            },
+            "description": "Ordered columns in logical request order, then the held row keys."
+          },
+          "delivery": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The authored delivery period; null for a timeless table."
+          },
+          "name": {
+            "type": "string",
+            "description": "The file's stem, a [`safe_file_name`]; the runner adds the format's extension."
+          },
+          "partition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "projection": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The projection token."
+          },
+          "row_filter": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RowFilter",
+                "description": "Absent: every row of the table."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "schema": {
+            "type": "string",
+            "description": "The exact physical schema and table."
+          },
+          "table": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManifestMode": {
+        "type": "string",
+        "enum": [
+          "steward_holdings"
+        ]
       },
       "Meta": {
         "type": "object",
@@ -2790,7 +3149,8 @@
               "null"
             ]
           }
-        }
+        },
+        "additionalProperties": false
       },
       "Population": {
         "type": "object",
@@ -2909,6 +3269,10 @@
           "sources"
         ],
         "properties": {
+          "extract_format": {
+            "$ref": "#/components/schemas/ProjectExtractFormat",
+            "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+          },
           "name": {
             "type": "string"
           },
@@ -2936,12 +3300,42 @@
         },
         "additionalProperties": false
       },
+      "ProjectExtractFormat": {
+        "type": "string",
+        "enum": [
+          "dta",
+          "parquet",
+          "csv"
+        ]
+      },
       "ProjectIdSubtype": {
         "type": "string",
         "enum": [
           "integer",
           "string"
         ]
+      },
+      "ProjectIdentity": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "project_hash",
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Never blank: an unnamed project is `project_unnamed`."
+          },
+          "project_hash": {
+            "type": "string",
+            "description": "`project::project_hash` of the document."
+          },
+          "schema_version": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "ProjectNumericSubtype": {
         "type": "string",
@@ -3075,6 +3469,41 @@
           "to": {
             "type": "integer",
             "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Provenance": {
+        "type": "object",
+        "description": "Which artifacts and which project the order binds.",
+        "required": [
+          "mode",
+          "steward",
+          "catalog",
+          "holdings",
+          "base_generation",
+          "project"
+        ],
+        "properties": {
+          "base_generation": {
+            "type": "string",
+            "description": "The reference catalog's own `generation_id`."
+          },
+          "catalog": {
+            "$ref": "#/components/schemas/CatalogIdentity"
+          },
+          "holdings": {
+            "$ref": "#/components/schemas/HoldingsIdentity"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/ManifestMode"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectIdentity"
+          },
+          "steward": {
+            "type": "string",
+            "description": "The steward whose holdings serve the order."
           }
         },
         "additionalProperties": false
@@ -3372,6 +3801,50 @@
             "description": "The register's fqid."
           }
         }
+      },
+      "RowFilter": {
+        "type": "object",
+        "description": "Keep a row whose period value lies in any range.",
+        "required": [
+          "column",
+          "encoding",
+          "ranges"
+        ],
+        "properties": {
+          "column": {
+            "type": "string"
+          },
+          "encoding": {
+            "$ref": "#/components/schemas/Encoding"
+          },
+          "ranges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RowFilterRange"
+            },
+            "description": "Sorted and disjoint."
+          }
+        },
+        "additionalProperties": false
+      },
+      "RowFilterRange": {
+        "type": "object",
+        "description": "Inclusive ISO days; an absent bound cuts no held day.",
+        "properties": {
+          "from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "RowKeyColumn": {
         "type": "object",
@@ -4274,6 +4747,31 @@
           }
         }
       },
+      "ShowSetColumn": {
+        "type": "object",
+        "description": "One (table, spelling) a set member has segments in.",
+        "required": [
+          "table",
+          "spelling",
+          "periods"
+        ],
+        "properties": {
+          "periods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            },
+            "description": "The column's segment periods, in time order."
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string",
+            "description": "The table's fqid."
+          }
+        }
+      },
       "ShowSetFacet": {
         "type": "object",
         "required": [
@@ -4298,9 +4796,17 @@
         "required": [
           "fqid",
           "name",
+          "columns",
           "facets"
         ],
         "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowSetColumn"
+            },
+            "description": "The member's columns, ordered by table then spelling."
+          },
           "facets": {
             "type": "array",
             "items": {
@@ -4408,6 +4914,29 @@
             "format": "int64"
           }
         }
+      },
+      "Slot": {
+        "type": "object",
+        "description": "Steward slot topology of a column.",
+        "required": [
+          "kind",
+          "index"
+        ],
+        "properties": {
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "index": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "SourceDefinition": {
         "type": "object",
@@ -4591,6 +5120,46 @@
             "format": "int64"
           }
         }
+      },
+      "Storage": {
+        "type": "object",
+        "description": "The expected SQL storage, checked before extraction.",
+        "required": [
+          "type",
+          "length",
+          "precision",
+          "scale"
+        ],
+        "properties": {
+          "length": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "precision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "scale": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "Subject": {
         "type": "object",

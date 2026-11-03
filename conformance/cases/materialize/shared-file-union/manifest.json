@@ -1,0 +1,186 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Shared file"
+    }
+  },
+  "files": [
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          },
+          {
+            "from": "2020-01-01"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Old",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "a",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/value",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Old"
+            }
+          ]
+        },
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "a",
+              "binding": 1,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Id"
+            },
+            {
+              "source": "b",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            },
+            {
+              "source": "b",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        },
+        {
+          "name": "Late",
+          "storage": {
+            "type": "nvarchar",
+            "length": 10,
+            "precision": null,
+            "scale": null
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "b",
+              "binding": 0,
+              "table": "demo/held",
+              "variable": "demo/held/late",
+              "period": {
+                "start": "2020-01-01",
+                "end": "2021-01-01"
+              },
+              "spelling": "Late"
+            }
+          ],
+          "slot": {
+            "kind": "year",
+            "index": "2010"
+          }
+        },
+        {
+          "name": "Year",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": []
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "identifier",
+      "path": "/sources/0/bindings/1",
+      "message": "demo/held/id identifies units in demo/held over [2017-01-01, 2018-01-01)",
+      "source": "a",
+      "variable": "demo/held/id",
+      "table": "demo/held",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    },
+    {
+      "level": "info",
+      "code": "row_filter_union",
+      "path": "/sources/0",
+      "message": "Several sources share physical table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
+      "source": "a",
+      "variable": null,
+      "table": null,
+      "period": null,
+      "successor_fqid": null
+    },
+    {
+      "level": "info",
+      "code": "row_filter_union",
+      "path": "/sources/1",
+      "message": "Several sources share physical table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
+      "source": "b",
+      "variable": null,
+      "table": null,
+      "period": null,
+      "successor_fqid": null
+    }
+  ]
+}

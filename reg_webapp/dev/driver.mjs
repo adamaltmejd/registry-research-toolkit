@@ -412,11 +412,14 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
-// Browser boundary: group links, curated axis/member order and member navigation.
-// Fails if groups lose their namespaced route, axes are sorted alphabetically,
-// facet labels become raw values, or the synthetic set ancestor becomes a link.
-// Expected names and order come from webapp-dev's authored set and member facets;
-// existing browse cases do not open a group.
+// Browser boundary: group links, member lanes and member navigation.
+// Fails if groups lose their namespaced route, members leave API (authored)
+// order, a lane title stops joining its varying facets in curated axis order
+// (unit, then measure), facet labels become raw values, the member name stops
+// telling lanes apart, or the synthetic set ancestor becomes a link.
+// Expected titles and order come from webapp-dev's authored set and member
+// facets (an unlabelled unit shows its value) in the member order the
+// show-set conformance case pins; existing browse cases do not open a group.
 async function browseGroupCase(page, shoot) {
   const main = page.getByRole("main");
   await main.getByRole("link", { name: "Inkomstmått", exact: true }).click();
@@ -424,14 +427,20 @@ async function browseGroupCase(page, shoot) {
   await settled(page);
   await main.getByRole("heading", { name: "Inkomstmått", level: 1, exact: true }).waitFor();
   await main.getByText("Inkomst före och efter skatt för personer och hushåll.", { exact: true }).waitFor();
-  const headers = await main.getByRole("columnheader").allTextContents();
-  check(JSON.stringify(headers) === JSON.stringify(["Variable", "Enhet", "Mått"]), "group axes lost their authored order");
-  await main.getByRole("row").nth(1).getByRole("link", { name: "Förvärvsinkomst, hushåll", exact: true }).waitFor();
-  await main.getByRole("cell", { name: /^(?:Mått )?Efter skatt$/ }).first().waitFor();
-  await main.locator('a[href="/catalog/demo/bas/net-household"]').waitFor();
+  const lanes = main.getByRole("list", { name: "Group members", exact: true });
+  await lanes.getByRole("link").first().waitFor();
+  const titles = await lanes.getByRole("link").allTextContents();
+  check(JSON.stringify(titles) === JSON.stringify([
+    "household, Före skatt",
+    "household, Efter skatt",
+    "person, Före skatt",
+    "person, Efter skatt",
+  ]),
+    `group lanes lost authored order or facet titles: ${JSON.stringify(titles)}`);
+  await lanes.getByText("Disponibel inkomst, hushåll", { exact: true }).waitFor();
   check(await main.locator('nav a[href="/catalog/set"]').count() === 0, "group breadcrumb links to a synthetic set ancestor");
   await shoot("browse-group");
-  await main.getByRole("link", { name: "Disponibel inkomst, hushåll", exact: true }).click();
+  await lanes.locator('a[href="/catalog/demo/bas/net-household"]').click();
   await page.waitForURL("**/catalog/demo/bas/net-household");
 }
 
@@ -785,53 +794,150 @@ async function runCase(viewport, name, body, route) {
 }
 
 mkdirSync(outDir, { recursive: true });
+// Paired catalog → browse/coverage/order UI boundary. Fails if pairing is ignored,
+// scope drops supplemental facets, filtering hides their variables, or coverage
+// placements / received row keys disappear. Names, spellings and periods are from
+// cases/holdings readable inputs and order-key-requirements.json; global cases
+// cannot exercise this boundary because their artifact has no paired catalog.
+async function stewardHeldCase(page, shoot) {
+  const brand = page.locator("header").getByRole("link", { name: "Synthetic steward", exact: true });
+  await brand.waitFor();
+  check(await page.title() === "Synthetic steward", "paired title did not use steward branding");
+  check(await page.locator('link[rel="icon"]').getAttribute("href")?.then((href) => href.startsWith("data:image/svg+xml,")), "paired favicon is missing");
+  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
+  if (narrow) await page.getByRole("link", { name: "Browse registers", exact: true }).click();
+  const scope = page.getByRole("button", { name: /Variable search scope/ });
+  await scope.waitFor();
+  check((await scope.innerText()).includes("Held matches"), "paired scope did not default to steward");
+  const search = page.getByRole("searchbox", { name: /^Search registers/ });
+  if (narrow) await page.getByRole("button", { name: /^Search registers/ }).click();
+  await search.fill("position");
+  const tree = page.getByRole("treegrid", { name: "Registers", exact: true });
+  const slots = tree.getByRole("row", { name: /^Delivery slots/ });
+  await slots.waitFor();
+  if (narrow) await slots.click();
+  if (narrow) await page.getByRole("main").getByRole("link", { name: "Second position", exact: true }).waitFor();
+  else await page.getByRole("option", { name: /Second position/ }).waitFor();
+  await settled(page);
+  await shoot("steward-filter");
+  await page.keyboard.press("Escape");
+  if (narrow) await page.getByRole("button", { name: /^Search registers/ }).click();
+  // Debouncing has no network request or aria-busy region yet. Wait for both
+  // current facet answers rather than capturing the previous query's matches.
+  const lateFacets = [undefined, "6"].map((limit) => page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return response.ok() && url.pathname === "/api/search/facets" &&
+      url.searchParams.get("q") === "Late" && !url.searchParams.has("register") &&
+      url.searchParams.get("limit") === (limit ?? null);
+  }));
+  await search.fill("Late");
+  await Promise.all(lateFacets);
+  if (narrow) await page.getByRole("link", { name: "Show matching registers", exact: true }).click();
+  const held = tree.getByRole("row", { name: /^Held reference metadata/ });
+  await held.waitFor();
+  if (narrow) await held.click();
+  if (narrow) await page.getByRole("main").getByRole("link", { name: "Late measure", exact: true }).click();
+  else await page.getByRole("option", { name: /Late measure/ }).click();
+  await page.waitForURL("**/catalog/demo/held/late");
+  const panel = page.locator("section").filter({ has: page.getByRole("heading", { name: "Held", exact: true }) });
+  await panel.getByText("Late", { exact: true }).waitFor();
+  await panel.getByText("Pool", { exact: true }).waitFor();
+  await panel.getByText("2019..2020", { exact: true }).waitFor();
+  await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });
+  await settled(page);
+  await shoot("steward-held");
+  if (narrow) await page.getByRole("link", { name: "Show matching registers", exact: true }).click();
+  await scope.click();
+  await page.getByRole("option", { name: "All matches", exact: true }).click();
+  check((await scope.innerText()).includes("All matches"), "reference scope could not be selected");
+  await open(page, "/project");
+  const fixture = JSON.parse(readFileSync(new URL("../../conformance/cases/holdings/order-key-requirements.json", import.meta.url), "utf8"));
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("main").getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({ name: "paired-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fixture.project)) });
+  await page.getByRole("main").getByRole("link", { name: "Order", exact: true }).click();
+  const rowKeys = page.locator("section").filter({ has: page.getByRole("heading", { name: "Row keys", exact: true }) });
+  await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
+  await settled(page);
+  await shoot("steward-order");
+  // Supplemental-only variables order through the composed steward view (#2068),
+  // so a project can select them like reference variables.
+  await open(page, "/catalog/steward/slots/slot2");
+  const slotColumn = page.getByRole("main").getByRole("checkbox").first();
+  await slotColumn.waitFor();
+  await slotColumn.focus();
+  await slotColumn.press("Space");
+  check(await slotColumn.isChecked(), "supplemental variable offers no project selection");
+  await page.getByRole("main").getByRole("button", { name: /^Add \d+ columns? to project$/ }).waitFor();
+  await settled(page);
+  await shoot("steward-selectable");
+  await open(page, "/catalog/demo/held/late");
+  await page.getByRole("main").getByRole("checkbox").first().waitFor();
+}
+
 const scenarios = {
+  "steward-held": {
+    fixture: "paired",
+    shots: 4,
+    route: "/catalog/demo/held",
+    run: stewardHeldCase,
+  },
   "browse-group": {
+    fixture: "webapp-dev",
     shots: 1,
     route: "/catalog/demo/bas/inkomst",
     run: browseGroupCase,
   },
   "variable-succession": {
+    fixture: "webapp-dev",
     shots: 1,
     route: "/catalog/demo/hush",
     run: variableSuccessionCase,
   },
   "linked-documents": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/catalog/demo/bas",
     run: linkedDocumentsCase,
   },
   "browse-values": {
+    fixture: "webapp-dev",
     shots: 4,
     route: "/catalog/demo/bas",
     run: browseValuesCase,
   },
   "browse-variable": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/catalog/demo/hush",
     run: browseVariableCase,
   },
   "project-pages": {
+    fixture: "webapp-dev",
     shots: 3,
     route: "/project",
     run: projectPagesCase,
   },
   "add-variable-columns": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/project",
     run: addVariableColumnsCase,
   },
   "source-cards": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/project",
     run: sourceCardsCase,
   },
   "browse-pages": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/catalog/demo/hush",
     run: browsePagesCase,
   },
   "browse-search": {
+    fixture: "webapp-dev",
     shots: 2,
     route: "/catalog/demo/bas",
     run: browseSearchCase,
@@ -843,8 +949,9 @@ for (const name of selection) {
     `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
   );
 }
-// No names = every scenario; explicit names select a focused subset.
-const names = selection.length > 0 ? selection : Object.keys(scenarios);
+// No names = the selected fixture's scenarios; explicit names select a subset.
+const fixture = process.env.REG_WEBAPP_FIXTURE ?? "webapp-dev";
+const names = selection.length > 0 ? selection : Object.keys(scenarios).filter((name) => scenarios[name].fixture === fixture);
 for (const viewport of FLOW_VIEWPORTS) {
   for (const name of names) {
     const { run, route } = scenarios[name];

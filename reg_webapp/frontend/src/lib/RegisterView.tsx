@@ -2,8 +2,10 @@ import { useMemo } from "react";
 import type { Context, RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
+import { catalogWords } from "./catalog_labels";
 import { registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import { HeldPanels } from "./HeldPanels";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
@@ -58,6 +60,9 @@ export function RegisterView({
           },
         ]}
       />
+      {context?.steward_config != null && (
+        <HeldPanels fqid={node.fqid} kind="register" names={names} />
+      )}
       <Panel title="Tables" flush={node.tables.length > 0}>
         {node.tables.length === 0 ? (
           <EmptyState title="This register lists no tables." />
@@ -84,8 +89,10 @@ export function RegisterView({
                   );
                 case "period":
                   return catalogPeriodLabel(row.period);
+                case "role":
+                  return catalogWords(row.role);
                 default:
-                  return row[column.key] ?? "Not stated";
+                  return catalogWords(row.cadence);
               }
             }}
           />

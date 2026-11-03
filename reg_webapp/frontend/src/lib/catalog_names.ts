@@ -170,8 +170,23 @@ export function sharedShow(
 export function catalogRootChildren(): Read<RootChild[]> {
   return read("root", async () => {
     const root = await getShow();
-    return root.kind === "root" ? root.providers : [];
+    return root.kind === "root"
+      ? uniqueCatalogRefs([
+          ...root.providers,
+          ...(root.steward_providers ?? []),
+        ])
+      : [];
   });
+}
+
+/** Reference and supplemental lists can name the same provider or register. */
+export function uniqueCatalogRefs<T extends { fqid: string }>(items: T[]): T[] {
+  const unique = new Map<string, T>();
+  // Callers list reference metadata first; supplemental aliases must not replace it.
+  for (const item of items) {
+    if (!unique.has(item.fqid)) unique.set(item.fqid, item);
+  }
+  return [...unique.values()];
 }
 
 /** A register's display names, shared by table headers and located findings. */

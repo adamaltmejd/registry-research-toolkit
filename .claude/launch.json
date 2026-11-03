@@ -7,6 +7,13 @@
       "runtimeArgs": ["reg_webapp/dev/dev.sh", "--fixture-db", "preview"],
       "port": 5173,
       "autoPort": true
+    },
+    {
+      "name": "reg-webapp-paired",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["reg_webapp/dev/dev.sh", "--paired-fixture", "preview"],
+      "port": 5211,
+      "autoPort": true
     }
   ]
 }
