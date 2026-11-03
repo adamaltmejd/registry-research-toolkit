@@ -17942,7 +17942,7 @@ evidence = "#2102 same-label cluster 'Näringsgren arbete för ett år sedan' (2
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-4-positioner"
-fields = { "label" = "Utbildningsinriktning (4 positioner, SUN 2000)" }
+fields = { "label" = "Utbildningsinriktning (4 positioner, SUN2000INR)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020 classification versions."
 
 [[statement]]

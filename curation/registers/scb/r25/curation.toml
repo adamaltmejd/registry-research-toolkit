@@ -25129,7 +25129,7 @@ evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, fami
 [[statement]]
 kind = "set"
 subject = "var:civi"
-fields = { "label" = "Civilstånd för inkomståret (detaljerad indelning)" }
+fields = { "label" = "Civilstånd för inkomståret (CIVI)" }
 evidence = "#2102 same-label cluster 'Civilstånd för inkomståret' (3 variables): judged different meaning, medium confidence; CIV and BCIVT share the same six categories in sequence; CIVI runs concurrently with the detailed list (sambo, partnerskap)."
 
 [[statement]]

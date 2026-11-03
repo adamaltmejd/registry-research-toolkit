@@ -2002,7 +2002,7 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): j
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-3"
-fields = { "label" = "Moderns utbildningsnivå (7 nivåer, äldre indelning)" }
+fields = { "label" = "Moderns utbildningsnivå (7 nivåer)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate 3-level grouping, older 7-level grouping, SUN 2000 detailed/grouped and SUN 2020 detailed/grouped; SunNiva_Mor and SunNiva_old_Mor carry the same 7-level opdef and are kept as one variable."
 
 [[statement]]
@@ -2080,7 +2080,7 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far"
-fields = { "label" = "Faderns utbildningsnivå (7 nivåer, äldre indelning)" }
+fields = { "label" = "Faderns utbildningsnivå (7 nivåer)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate 3-level grouping, older 7-level grouping, SUN 2000 detailed/grouped and SUN 2020 detailed/grouped; SunNiva_Far and SunNiva_old_Far carry the same 7-level opdef and are kept as one variable."
 
 [[statement]]
@@ -2104,7 +2104,7 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): 
 [[statement]]
 kind = "set"
 subject = "var:utlbakgr-alt"
-fields = { "label" = "Utländsk/svensk bakgrund (2 grupper)" }
+fields = { "label" = "Utländsk/svensk bakgrund (UTLBAKGR)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two groups (UTLBAKGR), three groups (UTL_BAKG_SV and UTLBAKGR2, same coding in disjoint periods) and four groups (UtlSvBakg)."
 
 [[statement]]

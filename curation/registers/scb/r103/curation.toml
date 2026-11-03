@@ -2522,7 +2522,7 @@ evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged differ
 [[statement]]
 kind = "set"
 subject = "var:aldersgrupp-31-december"
-fields = { "label" = "Åldersgrupp (31 december, ettårsklasser)" }
+fields = { "label" = "Åldersgrupp (31 december)" }
 evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, medium confidence; AldersGrp has coarse classes from 16-19 (opdef: femårsklasser 16-24, then tioårsklasser); RPUAldgrp is age at 31/12 in one-year classes."
 
 [[statement]]
@@ -2534,13 +2534,13 @@ evidence = "#2102 same-label cluster 'Studiemedel och studiestartsstöd' (2 vari
 [[statement]]
 kind = "set"
 subject = "var:astsnig"
-fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2002, grupperad i 10 branscher)" }
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 92/2002, grupperad i 10 branscher)" }
 evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
 
 [[statement]]
 kind = "set"
 subject = "var:astsnig07"
-fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007, grupperad i 10 branscher)" }
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007, grupperad)" }
 evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (5 variables): judged different meaning, high confidence; Opdefs separate SNI version and detail: 5-digit SNI 92/2002, 2-digit SNI 92, ten-group SNI 2002, ten-group SNI 2007, 5-digit SNI 2007."
 
 [[statement]]

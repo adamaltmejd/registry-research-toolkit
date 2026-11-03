@@ -6486,7 +6486,7 @@ evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:hw-hrs"
-fields = { "label" = "Skola: tid till läxor per vecka (grupperad)" }
+fields = { "label" = "Skola: tid till läxor per vecka (hw_hrs)" }
 evidence = "#2102 same-label cluster 'Skola: tid till läxor per vecka' (3 variables): judged different meaning, medium confidence; hw_hrs and hw_hrs2_H are the grouped hours-per-week series (the latter derived by grouping), while hw_hrs2 has no code list and is the ungrouped number of hours, concurrent with hw_hrs2_H."
 
 [[statement]]

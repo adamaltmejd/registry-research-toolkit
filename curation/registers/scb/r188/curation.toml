@@ -470,13 +470,13 @@ evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different mean
 [[statement]]
 kind = "set"
 subject = "var:sitc-sitc3"
-fields = { "label" = "SITC (huvudavdelning)" }
+fields = { "label" = "SITC (SITC3)" }
 evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 (volymutveckling) has main divisions 0-9 in its value set, SITC5 (trade tables) detailed product codes."
 
 [[statement]]
 kind = "set"
 subject = "var:sni97-5"
-fields = { "label" = "SPIN (SNI 97, 5 siffror)" }
+fields = { "label" = "SPIN (SNI 97)" }
 evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Different classification versions: SNI 97 at 5 digits (value labels 01111...) versus SPIN 2007 (01.110...), an update of SPIN 2002 per opdef."
 
 [[statement]]

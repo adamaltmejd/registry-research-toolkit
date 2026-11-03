@@ -1706,7 +1706,7 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): j
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-3"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, sex nivåer)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, SunNiva_Mor)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
 
 [[statement]]
@@ -1796,7 +1796,7 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, sex nivåer)" }
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, SunNiva_Far)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
 
 [[statement]]

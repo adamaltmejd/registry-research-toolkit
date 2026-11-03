@@ -2708,21 +2708,9 @@ evidence = "#2102 same-label cluster 'Lilla n per stratum' (2 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:pgm"
-fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
-
-[[statement]]
-kind = "set"
 subject = "var:pgrgrp"
 fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-gymnasieprogram"
-fields = { "label" = "Typ av gymnasieprogram (5 grupper, med introduktionsprogram)" }
-evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
 
 [[statement]]
 kind = "set"

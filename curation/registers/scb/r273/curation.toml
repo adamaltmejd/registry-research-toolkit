@@ -5222,13 +5222,13 @@ evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' 
 [[statement]]
 kind = "set"
 subject = "var:gfbgruppfar"
-fields = { "label" = "Grund för bosättning, grupperad, fader (äldre gruppering)" }
+fields = { "label" = "Grund för bosättning, grupperad, fader (nio grupper)" }
 evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfbgruppmor"
-fields = { "label" = "Grund för bosättning, grupperad, moder (äldre gruppering)" }
+fields = { "label" = "Grund för bosättning, grupperad, moder (nio grupper)" }
 evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
@@ -5240,7 +5240,7 @@ evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 vari
 [[statement]]
 kind = "set"
 subject = "var:grund-for-bosattning-grupperad-2"
-fields = { "label" = "Grund för bosättning, grupperad (äldre gruppering)" }
+fields = { "label" = "Grund för bosättning, grupperad (nio grupper)" }
 evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, high confidence; GFB_KlassGrupp uses the newer class groups; GFBGrupp is the older one-digit grouping with a different code list."
 
 [[statement]]

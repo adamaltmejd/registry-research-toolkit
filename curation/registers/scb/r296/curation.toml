@@ -1555,13 +1555,13 @@ evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' 
 [[statement]]
 kind = "set"
 subject = "var:kn8beskrivning"
-fields = { "label" = "Varukod enligt kombinerade nomenklaturen (8 siffror, beskrivning)" }
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (KN8, beskrivning)" }
 evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
 
 [[statement]]
 kind = "set"
 subject = "var:kn8kod-2"
-fields = { "label" = "Varukod enligt kombinerade nomenklaturen (8 siffror, kod)" }
+fields = { "label" = "Varukod enligt kombinerade nomenklaturen (KN8, kod)" }
 evidence = "#2102 same-label cluster 'Varukod enligt kombinerade nomenklaturen' (5 variables): judged different meaning, medium confidence; Four- and eight-digit KN levels and code vs name/description columns are concurrent; stat_id (2001-2013) is the KN8 code before KN8Kod (2013-)."
 
 [[statement]]

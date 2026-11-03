@@ -1535,19 +1535,19 @@ evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged diff
 [[statement]]
 kind = "set"
 subject = "var:lan"
-fields = { "label" = "Län (namn, där rösten avgivits)" }
+fields = { "label" = "Län (namn)" }
 evidence = "#2102 same-label cluster 'Län' (3 variables): judged different meaning, medium confidence; Opdefs: county name where the vote was cast, county code where the person is eligible, and a lanssnamn code column in the rostberattigade table."
 
 [[statement]]
 kind = "set"
 subject = "var:lan-2"
-fields = { "label" = "Län (kod, där personen är röstberättigad)" }
+fields = { "label" = "Län (ll)" }
 evidence = "#2102 same-label cluster 'Län' (3 variables): judged different meaning, medium confidence; Opdefs: county name where the vote was cast, county code where the person is eligible, and a lanssnamn code column in the rostberattigade table."
 
 [[statement]]
 kind = "set"
 subject = "var:landstingskod-lan"
-fields = { "label" = "Landstingskod (där röstberättigade bor)" }
+fields = { "label" = "Landstingskod (ll)" }
 evidence = "#2102 same-label cluster 'Landstingskod' (2 variables): judged different meaning, high confidence; Opdefs: county council where the vote was cast (Lk) versus where eligible voters live (ll)."
 
 [[statement]]

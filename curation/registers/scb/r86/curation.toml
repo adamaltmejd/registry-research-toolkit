@@ -12889,13 +12889,13 @@ evidence = "#2102 same-label cluster 'Skuldränta m.m.    (905)' (8 variables): 
 [[statement]]
 kind = "set"
 subject = "var:socek"
-fields = { "label" = "Socioekonomisk grupp (grupperad), hushållets kod 1-14" }
+fields = { "label" = "Socioekonomisk grupp (grupperad), hushållets kod (SOCEK1)" }
 evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (13 variables): judged different meaning, medium confidence; SOCEK1-5 are the grouped household/cohabitant codes (opdefs differ in range and subject), P2SEI..P8SEI/UPSEI are SEI codes per person."
 
 [[statement]]
 kind = "set"
 subject = "var:socek2"
-fields = { "label" = "Socioekonomisk grupp (grupperad), hushållets kod 2-14" }
+fields = { "label" = "Socioekonomisk grupp (grupperad), hushållets kod (SOCEK2)" }
 evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (13 variables): judged different meaning, medium confidence; SOCEK1-5 are the grouped household/cohabitant codes (opdefs differ in range and subject), P2SEI..P8SEI/UPSEI are SEI codes per person."
 
 [[statement]]
@@ -12907,13 +12907,13 @@ evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (13 variables): judg
 [[statement]]
 kind = "set"
 subject = "var:socek4"
-fields = { "label" = "Socioekonomisk grupp (grupperad), ev. sambos kod 0-14" }
+fields = { "label" = "Socioekonomisk grupp (grupperad), ev. sambos kod (SOCEK4)" }
 evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (13 variables): judged different meaning, medium confidence; SOCEK1-5 are the grouped household/cohabitant codes (opdefs differ in range and subject), P2SEI..P8SEI/UPSEI are SEI codes per person."
 
 [[statement]]
 kind = "set"
 subject = "var:socek5"
-fields = { "label" = "Socioekonomisk grupp (grupperad), ev. sambos kod 0, 2-14" }
+fields = { "label" = "Socioekonomisk grupp (grupperad), ev. sambos kod (SOCEK5)" }
 evidence = "#2102 same-label cluster 'Socioekonomisk grupp' (13 variables): judged different meaning, medium confidence; SOCEK1-5 are the grouped household/cohabitant codes (opdefs differ in range and subject), P2SEI..P8SEI/UPSEI are SEI codes per person."
 
 [[statement]]

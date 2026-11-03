@@ -917,7 +917,7 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "var:foraldrarnas-hogsta-utbildningsniva-grupperad"
-fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad, Sun2020Niva_Mor_Grupperad)" }
 evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
 
 [[statement]]
@@ -947,7 +947,7 @@ evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:moderns-utbildningsniva"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad, Sun2020Niva_For_Grupperad)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]

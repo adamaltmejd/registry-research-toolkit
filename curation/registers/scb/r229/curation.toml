@@ -4256,20 +4256,8 @@ evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 1, grup
 
 [[statement]]
 kind = "set"
-subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
-fields = { "label" = "Kursinnehåll för kurs/utbildning 1, grupperad (första halvåret)" }
-evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 1, grupperad' (3 variables): judged different meaning, high confidence; amne1gr uses the older subject grouping (Beteendevetenskap, Teknik...); fikod1gr and fikod6gr use the education-field grouping and are first vs second half-year items (opdefs)."
-
-[[statement]]
-kind = "set"
 subject = "var:kursinnehall-2-grupperad-andra-halvaret"
 fields = { "label" = "Kursinnehåll för kurs/utbildning 2, grupperad (andra halvåret)" }
-evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 2, grupperad' (3 variables): judged different meaning, high confidence; amne2gr uses the older subject grouping; fikod2gr and fikod7gr use the education-field grouping and are first vs second half-year items (opdefs)."
-
-[[statement]]
-kind = "set"
-subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
-fields = { "label" = "Kursinnehåll för kurs/utbildning 2, grupperad (första halvåret)" }
 evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 2, grupperad' (3 variables): judged different meaning, high confidence; amne2gr uses the older subject grouping; fikod2gr and fikod7gr use the education-field grouping and are first vs second half-year items (opdefs)."
 
 [[statement]]
@@ -4280,32 +4268,14 @@ evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 3, grup
 
 [[statement]]
 kind = "set"
-subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
-fields = { "label" = "Kursinnehåll för kurs/utbildning 3, grupperad (första halvåret)" }
-evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 3, grupperad' (3 variables): judged different meaning, high confidence; amne3gr uses the older subject grouping; fikod3gr and fikod8gr use the education-field grouping and are first vs second half-year items (opdefs)."
-
-[[statement]]
-kind = "set"
 subject = "var:kursinnehall-4-grupperad-andra-halvaret"
 fields = { "label" = "Kursinnehåll för kurs/utbildning 4, grupperad (andra halvåret)" }
 evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 4, grupperad' (3 variables): judged different meaning, high confidence; amne4gr uses the older subject grouping; fikod4gr and fikod9gr use the education-field grouping and are first vs second half-year items (opdefs)."
 
 [[statement]]
 kind = "set"
-subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
-fields = { "label" = "Kursinnehåll för kurs/utbildning 4, grupperad (första halvåret)" }
-evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 4, grupperad' (3 variables): judged different meaning, high confidence; amne4gr uses the older subject grouping; fikod4gr and fikod9gr use the education-field grouping and are first vs second half-year items (opdefs)."
-
-[[statement]]
-kind = "set"
 subject = "var:kursinnehall-5-grupperad-andra-halvaret"
 fields = { "label" = "Kursinnehåll för kurs/utbildning 5, grupperad (andra halvåret)" }
-evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 5, grupperad' (3 variables): judged different meaning, high confidence; amne5gr uses the older subject grouping; fikod5gr and fikod0gr use the education-field grouping and are first vs second half-year items (opdefs)."
-
-[[statement]]
-kind = "set"
-subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
-fields = { "label" = "Kursinnehåll för kurs/utbildning 5, grupperad (första halvåret)" }
 evidence = "#2102 same-label cluster 'Kursinnehåll för kurs/utbildning 5, grupperad' (3 variables): judged different meaning, high confidence; amne5gr uses the older subject grouping; fikod5gr and fikod0gr use the education-field grouping and are first vs second half-year items (opdefs)."
 
 [[statement]]

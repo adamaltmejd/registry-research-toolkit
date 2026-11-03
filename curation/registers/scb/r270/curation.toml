@@ -1681,7 +1681,7 @@ evidence = "#2102 same-label cluster 'Position' (5 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:poskod"
-fields = { "label" = "Position i nämnd (grupperad kod)" }
+fields = { "label" = "Position i nämnd (poskod)" }
 evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
 
 [[statement]]

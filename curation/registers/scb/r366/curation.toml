@@ -17491,12 +17491,6 @@ evidence = "#2102 same-label cluster 'Orsak till studieuppehåll' (12 variables)
 
 [[statement]]
 kind = "set"
-subject = "var:anstallningsform"
-fields = { "label" = "Anställningsform (detaljerad)" }
-evidence = "#2102 same-label cluster 'Anställningsform' (3 variables): judged different meaning, medium confidence; AnstForm has a detailed five-way list; F3 (last school-sector job) and AnsForm (last preschool job) are two-way fast/tidsbegränsad items from different surveys and populations."
-
-[[statement]]
-kind = "set"
 subject = "var:anstallningsform-ansform"
 fields = { "label" = "Anställningsform (fast eller tidsbegränsad, senaste anställning i förskolan)" }
 evidence = "#2102 same-label cluster 'Anställningsform' (3 variables): judged different meaning, medium confidence; AnstForm has a detailed five-way list; F3 (last school-sector job) and AnsForm (last preschool job) are two-way fast/tidsbegränsad items from different surveys and populations."
@@ -19442,7 +19436,7 @@ evidence = "#2102 same-label cluster 'Skolform' (3 variables): judged different 
 [[statement]]
 kind = "set"
 subject = "var:skolform-senaste-lararregistret"
-fields = { "label" = "Skolform (senaste som lärare, lärarregistret, grupperad)" }
+fields = { "label" = "Skolform (undervisningsinriktning)" }
 evidence = "#2102 same-label cluster 'Skolform' (3 variables): judged different meaning, high confidence; Opdefs: F12 current main job, F2 latest school-sector job (detailed forms), SkolForm latest school form as teacher from lärarregistret (grouped)."
 
 [[statement]]

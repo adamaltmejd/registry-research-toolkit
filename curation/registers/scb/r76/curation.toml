@@ -830,19 +830,19 @@ evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different me
 [[statement]]
 kind = "set"
 subject = "var:hustyp"
-fields = { "label" = "Hustyp (småhus, detaljerad indelning)" }
+fields = { "label" = "Hustyp (Hustyp2)" }
 evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
 
 [[statement]]
 kind = "set"
 subject = "var:hustyp-5092"
-fields = { "label" = "Hustyp (småhus, detaljerad indelning)" }
+fields = { "label" = "Hustyp (HusTyp)" }
 evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
 
 [[statement]]
 kind = "set"
 subject = "var:hustypns"
-fields = { "label" = "Hustyp (flerbostadshus, detaljerad indelning)" }
+fields = { "label" = "Hustyp (HusTypNS)" }
 evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
 
 [[statement]]
