@@ -1796,13 +1796,14 @@ integrity, form/window containment, complete storage facts for orderable columns
 roles and presence, disjointness/uniqueness of emitted placements, projection rules and
 located caveats. Competing candidate owners have already become
 `ambiguous_delivered_owners` notices with their contested placements omitted, so they do
-not violate uniqueness. Partitions authorize several explicitly disjoint locations;
-projections, carried keys and documented position families authorize duplicates only
-under their stated rules. A warning cannot license an otherwise ambiguous mapping.
-Unmatched columns are notices/worklist entries, not publication blockers; they count in
-coverage but do not order until a valid mapping exists. Excluded, lookup and
-retained-unknown tables are accounted with reasons; a lookup used as a logical codelist
-is not thereby observation data.
+not violate uniqueness; verify re-derives each blocked interval and its recorded rivals
+from source, since orders refuse by them. Partitions authorize several explicitly
+disjoint locations; projections, carried keys and documented position families authorize
+duplicates only under their stated rules. A warning cannot license an otherwise
+ambiguous mapping. Unmatched columns are notices/worklist entries, not publication
+blockers; they count in coverage but do not order until a valid mapping exists.
+Excluded, lookup and retained-unknown tables are accounted with reasons; a lookup used
+as a logical codelist is not thereby observation data.
 
 For example, `Swedbank_V15` is explicitly partition `v15` for 2020
 (`series/swedbank-v15.toml`); its label is not inferred from its name. Conversely,
