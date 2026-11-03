@@ -25,6 +25,20 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
             [&current.variable],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )?;
+        // The base hull misses held segments; the composed view extends it.
+        let end = if scope.composed {
+            let held: Option<i64> = scope.conn.query_row(
+                &format!(
+                    "SELECT MAX(end) FROM ({}) WHERE variable_id = ?1",
+                    window::segments(scope)
+                ),
+                [id],
+                |row| row.get(0),
+            )?;
+            held.map_or(end, |h| h.max(end))
+        } else {
+            end
+        };
         if !seen.insert(id) || (!first && end <= lower) {
             out.findings.push(refusal(
                 scope,
@@ -204,10 +218,11 @@ fn tables(
     let in_source = window::in_chain(scope, variable)?;
     let rows: Vec<(String, i64, i64)> = scope
         .conn
-        .prepare(
-            "SELECT t.pid, s.start, s.end FROM segment s JOIN tbl t ON t.id = s.table_id
-         WHERE s.variable_id = ? ORDER BY t.pid, s.start",
-        )?
+        .prepare(&format!(
+            "SELECT t.pid, s.start, s.end FROM ({}) s JOIN tbl t ON t.id = s.table_id
+             WHERE s.variable_id = ? ORDER BY t.pid, s.start",
+            window::segments(scope)
+        ))?
         .query_map([variable], |row| {
             Ok((row.get(0)?, row.get(1)?, row.get(2)?))
         })?

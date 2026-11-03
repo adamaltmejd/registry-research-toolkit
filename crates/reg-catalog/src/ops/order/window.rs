@@ -73,7 +73,7 @@ struct Piece {
 /// with value sets and class versions by public identity so rows never cross origins.
 /// In the composed view a base table's held segments of a base variable (a reference
 /// occurrence, never overlapping the base ones) join through their public ids.
-fn segments(scope: &Scope) -> String {
+pub(super) fn segments(scope: &Scope) -> String {
     let part = |db: &str, ids: &str, joins: &str| {
         format!(
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
@@ -528,14 +528,36 @@ fn runs(pieces: &[Piece], test: &dyn Fn(&Piece) -> bool) -> Vec<(usize, Interval
 fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let mut found = Vec::new();
-    let mut query = scope.conn.prepare(
-        "SELECT DISTINCT f.start, f.end
-         FROM finding f JOIN release r ON r.id = f.subject_id
-         WHERE f.subject_kind = 'release' AND f.code = 'F7:edition-disagreement'
-           AND f.start IS NOT NULL AND r.table_id = ?1
-           AND EXISTS (SELECT 1 FROM occurrence o WHERE o.release_id = r.id AND o.variable_id = ?2)
-         ORDER BY f.start, f.end",
-    )?;
+    let part = |db: &str, table: &str, variable: &str, joins: &str| {
+        format!(
+            "SELECT f.start, f.end
+             FROM {db}.finding f JOIN {db}.release r ON r.id = f.subject_id {joins}
+             WHERE f.subject_kind = 'release' AND f.code = 'F7:edition-disagreement'
+               AND f.start IS NOT NULL AND {table} = ?1
+               AND EXISTS (SELECT 1 FROM {db}.occurrence o {variable})"
+        )
+    };
+    let base = part(
+        "main",
+        "r.table_id",
+        "WHERE o.release_id = r.id AND o.variable_id = ?2",
+        "",
+    );
+    // The holdings database's own findings reach a base table and variable by public id.
+    let sql = if scope.composed {
+        let held = part(
+            "held",
+            "bt.id",
+            "JOIN held.variable hv ON hv.id = o.variable_id \
+             JOIN main.variable bv ON bv.pid = hv.pid \
+             WHERE o.release_id = r.id AND bv.id = ?2",
+            "JOIN held.tbl ht ON ht.id = r.table_id JOIN main.tbl bt ON bt.pid = ht.pid",
+        );
+        format!("SELECT DISTINCT start, end FROM ({base} UNION ALL {held}) ORDER BY start, end")
+    } else {
+        format!("SELECT DISTINCT start, end FROM ({base}) ORDER BY start, end")
+    };
+    let mut query = scope.conn.prepare(&sql)?;
     for (k, s) in scope.serving.iter().enumerate() {
         let here = merge(
             pieces

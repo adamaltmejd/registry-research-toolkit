@@ -415,6 +415,7 @@ pub fn check(
 
 /// One source on its table's origin `conn`: its own findings, then each binding's.
 /// Row keys read `keys`, the base connection.
+#[allow(clippy::too_many_lines)]
 fn check_source(
     server: &Server,
     conn: &Connection,
