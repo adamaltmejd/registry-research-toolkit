@@ -9606,15 +9606,27 @@ evidence = "Id innehåller ogenomskinliga källkoder och ingår i coop-familjen.
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: COOP_PRV_NAT @2020-01-01..2022-12-31 where key = 'v39101' and release = 'r18898'"
-fields = { "variable" = "innovationssamarbete-konsulter-privata-coop-prv-cn-nat" }
-evidence = "CIS2020: SWECOV's delivered CIS2020 table holds COOP_PRV_CN_NAT and COOP_PRV_CN_EU_EFTA and no COOP_PRV_NAT or COOP_PRV_EU_EFTA (holdings CIS2020). SCB's 2020 metadata spells the consultant question v39101 under COOP_PRV_NAT; that spelling belongs to v46522 (private firms) from 2020. Label and definition equal the 2016-2024 COOP_PRV_CN_NAT series; the 2020 code list lists only 1 (Ja/Finns), a subset of 0/1. A misplaced column, not a fold: assign the 2020 occurrence to the COOP_PRV_CN_NAT variable; the emptied ledger id is retained. Operator ruling 2026-11-03, maintainer delegated overnight (#2074)."
+subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: COOP_PRV_EU_EFTA @2020-01-01..2022-12-31 where key = 'v39104' and release = 'r18898'"
-fields = { "variable" = "innovationssamarbete-konsulter-privata-coop-prv-cn-eu-efta" }
-evidence = "CIS2020: SWECOV's delivered CIS2020 table holds COOP_PRV_CN_NAT and COOP_PRV_CN_EU_EFTA and no COOP_PRV_NAT or COOP_PRV_EU_EFTA (holdings CIS2020). SCB's 2020 metadata spells the consultant question v39104 under COOP_PRV_EU_EFTA; that spelling belongs to v46519 (private firms) from 2020. Label and definition equal the 2016-2024 COOP_PRV_CN_EU_EFTA series; the 2020 code list lists only 1 (Ja/Finns), a subset of 0/1. A misplaced column, not a fold: assign the 2020 occurrence to the COOP_PRV_CN_EU_EFTA variable; the emptied ledger id is retained. Operator ruling 2026-11-03, maintainer delegated overnight (#2074)."
+subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
 
 [[statement]]
 kind = "set"
