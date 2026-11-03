@@ -9,7 +9,7 @@
 # error_log.csv in its export folder. A rerun overwrites.
 #
 # Run: source("swecov_extract.R") in R on MONA, or `Rscript swecov_extract.R`.
-# The contract it reads is crates/DESIGN.md, "Order manifest"; the rationale and
+# The contract it reads is crates/DESIGN.md, "MONA order file"; the rationale and
 # the exit codes are reg_mona_runner/DESIGN.md.
 #
 # Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite, plus haven for
@@ -62,11 +62,12 @@ EXIT <- c(
   ok = 0L,
   setup = 2L, # export root, packages or database connection
   json = 3L, # the order is not JSON
-  version = 4L, # manifest version is not 2
+  version = 4L, # manifest version is not 4
   mode = 5L, # not a steward_holdings order for this steward
   manifest = 6L, # unknown field, missing or malformed field, unsafe file name
-  # table or column not found once, a period column of the wrong type, or a column
-  # the order's format cannot hold (its SQL type or, for .dta, its name)
+  # table or column not found in its schema, a column stored otherwise than the
+  # order expects, a period column of the wrong type, or a column the order's
+  # format cannot hold (its SQL type or, for .dta, its name)
   resolve = 7L,
   extract = 8L # the query or the file write failed, or a value the format cannot hold
 )
@@ -166,10 +167,17 @@ install_missing <- function(pkgs) {
 }
 
 # ---- Manifest validation --------------------------------------------------------
+#
+# The closed v4 order file (crates/reg-core/src/manifest.rs), checked here at the
+# runner's own input boundary. A field Rust writes as null is required and may be
+# null; a field Rust omits when empty is optional (absent, or null, means none).
 
 is_object <- function(x) is.list(x) && !is.null(names(x))
 is_array <- function(x) is.list(x) && is.null(names(x))
 is_string <- function(x) is.character(x) && length(x) == 1L && !is.na(x)
+is_count <- function(x) {
+  is.numeric(x) && length(x) == 1L && !is.na(x) && x >= 0 && x == round(x)
+}
 
 # `x` must be a JSON object with every `required` key and no key outside
 # `required` and `optional`.
@@ -205,6 +213,38 @@ check_string <- function(x, where) {
   x
 }
 
+# A required field that may be null, else a non-empty string.
+check_string_or_null <- function(x, where) {
+  if (!is.null(x)) check_string(x, where)
+  x
+}
+
+check_count_or_null <- function(x, where) {
+  if (!is.null(x) && !is_count(x)) {
+    refuse("manifest", where, " is not a non-negative integer or null")
+  }
+  x
+}
+
+check_array <- function(x, where) {
+  if (!is_array(x)) {
+    refuse("manifest", where, " is not an array")
+  }
+  x
+}
+
+check_enum <- function(x, where, values) {
+  if (!is_string(x) || !(x %in% values)) {
+    refuse(
+      "manifest",
+      where,
+      " is not one of ",
+      paste(values, collapse = ", ")
+    )
+  }
+  x
+}
+
 # A SQL Server identifier: at most 128 UTF-16 code units (sysname), so
 # sql_text's nvarchar(128) never truncates it into another name.
 check_name <- function(x, where) {
@@ -227,17 +267,27 @@ check_iso_day <- function(x, where) {
   x
 }
 
+# A half-open [start, end) of ISO days; null is an open end.
+check_period <- function(p, where) {
+  check_object(p, where, c("start", "end"))
+  for (k in c("start", "end")) {
+    if (!is.null(p[[k]])) check_iso_day(p[[k]], paste0(where, ".", k))
+  }
+  p
+}
+
+check_periods <- function(x, where) {
+  check_array(x, where)
+  for (i in seq_along(x)) {
+    check_period(x[[i]], sprintf("%s[%d]", where, i - 1L))
+  }
+  x
+}
+
 check_filter <- function(f, where) {
   check_object(f, where, c("column", "encoding", "ranges"))
   check_name(f$column, paste0(where, ".column"))
-  if (!is_string(f$encoding) || !(f$encoding %in% ENCODINGS)) {
-    refuse(
-      "manifest",
-      where,
-      ".encoding is not one of ",
-      paste(ENCODINGS, collapse = ", ")
-    )
-  }
+  check_enum(f$encoding, paste0(where, ".encoding"), ENCODINGS)
   if (!is_array(f$ranges) || !length(f$ranges)) {
     refuse("manifest", where, ".ranges is not a non-empty array")
   }
@@ -259,72 +309,220 @@ check_filter <- function(f, where) {
   f
 }
 
-check_entry <- function(e, where) {
+check_ref <- function(r, where) {
   check_object(
-    e,
+    r,
     where,
-    c("source", "logical", "requested_period", "physical"),
-    c("key", "filter")
+    c("source", "binding", "table", "variable", "period", "spelling")
   )
-  check_string(e$source, paste0(where, ".source"))
-  check_string(e$requested_period, paste0(where, ".requested_period"))
-  if (!is.null(e$key) && !isTRUE(e$key)) {
-    refuse("manifest", where, ".key is present but not true")
+  for (k in c("source", "table", "variable", "spelling")) {
+    check_string(r[[k]], paste0(where, ".", k))
   }
-  lg <- e$logical
-  check_object(
-    lg,
-    paste0(where, ".logical"),
-    c("provider", "register", "variant", "variable", "representation")
-  )
-  for (k in names(lg)) {
-    check_string(lg[[k]], paste0(where, ".logical.", k))
-  }
-  ph <- e$physical
-  check_object(
-    ph,
-    paste0(where, ".physical"),
-    c("file", "edition", "table", "column"),
-    c("partition", "projection", "member", "stata_name")
-  )
-  check_string(ph$file, paste0(where, ".physical.file"))
-  check_string(ph$edition, paste0(where, ".physical.edition"))
-  check_name(ph$table, paste0(where, ".physical.table"))
-  check_name(ph$column, paste0(where, ".physical.column"))
-  for (k in c("partition", "projection", "stata_name")) {
-    if (!is.null(ph[[k]])) check_string(ph[[k]], paste0(where, ".physical.", k))
-  }
-  if (!is.null(ph$member)) {
-    m <- ph$member
-    check_object(
-      m,
-      paste0(where, ".physical.member"),
-      character(),
-      c("position", "year", "month")
-    )
-    if (length(m) != 1L) {
-      refuse("manifest", where, ".physical.member must have exactly one field")
-    }
-  }
-  if (!is.null(e$filter)) {
-    check_filter(e$filter, paste0(where, ".filter"))
-  }
-  e
+  check_count_or_null(r$binding, paste0(where, ".binding"))
+  check_period(r$period, paste0(where, ".period"))
+  r
 }
 
-# The whole manifest, in the order of the stable exit codes: version, then mode,
-# then shape.
+check_column <- function(col, where, format) {
+  check_object(
+    col,
+    where,
+    c("name", "storage", "role", "refs"),
+    c("stata_name", "slot")
+  )
+  check_name(col$name, paste0(where, ".name"))
+  if (!is.null(col$stata_name)) {
+    check_string(col$stata_name, paste0(where, ".stata_name"))
+    if (format != "dta") {
+      refuse("manifest", where, ".stata_name is set on a .", format, " order")
+    }
+    # Only a name .dta cannot hold is renamed, so an alias never takes the name
+    # of a column written under its own.
+    if (stata_name_ok(col$name)) {
+      refuse(
+        "manifest",
+        where,
+        ".stata_name renames column ",
+        col$name,
+        ", which is a Stata variable name"
+      )
+    }
+  }
+  s <- col$storage
+  check_object(
+    s,
+    paste0(where, ".storage"),
+    c("type", "length", "precision", "scale")
+  )
+  # The drift check needs a type to compare: an order without one cannot be
+  # held against the server's.
+  check_string(s$type, paste0(where, ".storage.type"))
+  check_count_or_null(s$precision, paste0(where, ".storage.precision"))
+  check_count_or_null(s$scale, paste0(where, ".storage.scale"))
+  # -1 is SQL Server's max.
+  is_max <- is.numeric(s$length) &&
+    length(s$length) == 1L &&
+    !is.na(s$length) &&
+    s$length == -1
+  if (!is_max) {
+    check_count_or_null(s$length, paste0(where, ".storage.length"))
+  }
+  check_enum(col$role, paste0(where, ".role"), c("ordered", "row_key", "carried"))
+  check_array(col$refs, paste0(where, ".refs"))
+  for (i in seq_along(col$refs)) {
+    check_ref(col$refs[[i]], sprintf("%s.refs[%d]", where, i - 1L))
+  }
+  if (!is.null(col$slot)) {
+    at <- paste0(where, ".slot")
+    check_object(col$slot, at, c("kind", "index"), "family")
+    check_string(col$slot$kind, paste0(at, ".kind"))
+    check_string(col$slot$index, paste0(at, ".index"))
+    if (!is.null(col$slot$family)) {
+      check_string(col$slot$family, paste0(at, ".family"))
+    }
+  }
+  col
+}
+
+# A file stem the runner can write: slug spelling (no path separator, drive or
+# parent reference), at most 128 UTF-16 units, and not the stem of a Windows
+# device name, which would swallow the data, nor of the run's own logs, case
+# ignored (safe_file_name in crates/reg-core/src/manifest.rs).
+check_file_name <- function(x, where) {
+  check_name(x, where)
+  if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", x)) {
+    refuse("manifest", where, " ", x, " is not slug spelling")
+  }
+  device <- c(
+    "con",
+    "prn",
+    "aux",
+    "nul",
+    paste0(c("com", "lpt"), rep(1:9, each = 2))
+  )
+  stem <- tolower(sub("\\..*$", "", x))
+  if (stem %in% c(device, "run_log", "error_log")) {
+    refuse("manifest", where, " ", x, " is reserved")
+  }
+  x
+}
+
+check_file <- function(f, where, format) {
+  check_object(
+    f,
+    where,
+    c("name", "schema", "table", "delivery", "columns"),
+    c("partition", "projection", "row_filter")
+  )
+  check_file_name(f$name, paste0(where, ".name"))
+  check_name(f$schema, paste0(where, ".schema"))
+  check_name(f$table, paste0(where, ".table"))
+  check_string_or_null(f$delivery, paste0(where, ".delivery"))
+  for (k in c("partition", "projection")) {
+    if (!is.null(f[[k]])) check_string(f[[k]], paste0(where, ".", k))
+  }
+  if (!is.null(f$partition) && !is.null(f$projection)) {
+    refuse("manifest", where, " has both a partition and a projection")
+  }
+  if (!is.null(f$row_filter)) {
+    check_filter(f$row_filter, paste0(where, ".row_filter"))
+  }
+  if (!is_array(f$columns) || !length(f$columns)) {
+    refuse("manifest", where, ".columns is not a non-empty array")
+  }
+  for (i in seq_along(f$columns)) {
+    check_column(f$columns[[i]], sprintf("%s.columns[%d]", where, i - 1L), format)
+  }
+  columns <- vapply(f$columns, `[[`, "", "name")
+  twice <- unique(columns[duplicated(columns)])
+  if (length(twice)) {
+    refuse(
+      "manifest",
+      where,
+      " lists column ",
+      paste(twice, collapse = ", "),
+      " twice"
+    )
+  }
+  # Case-sensitive, as Stata's variable names are.
+  written <- vapply(
+    f$columns,
+    function(col) if (is.null(col$stata_name)) col$name else col$stata_name,
+    ""
+  )
+  clash <- unique(written[duplicated(written)])
+  if (length(clash)) {
+    refuse(
+      "manifest",
+      where,
+      " would hold two columns named ",
+      paste(clash, collapse = ", ")
+    )
+  }
+  f
+}
+
+check_clip <- function(clip, where) {
+  check_object(
+    clip,
+    where,
+    c("source", "binding", "variable", "requested", "ordered")
+  )
+  check_string(clip$source, paste0(where, ".source"))
+  check_string(clip$variable, paste0(where, ".variable"))
+  if (!is_count(clip$binding)) {
+    refuse("manifest", where, ".binding is not a non-negative integer")
+  }
+  check_periods(clip$requested, paste0(where, ".requested"))
+  check_periods(clip$ordered, paste0(where, ".ordered"))
+  clip
+}
+
+check_issue <- function(issue, where) {
+  check_object(
+    issue,
+    where,
+    c(
+      "level",
+      "code",
+      "path",
+      "message",
+      "source",
+      "variable",
+      "table",
+      "period",
+      "successor_fqid"
+    )
+  )
+  check_enum(issue$level, paste0(where, ".level"), c("error", "warning", "info"))
+  check_string(issue$code, paste0(where, ".code"))
+  check_string(issue$message, paste0(where, ".message"))
+  # An empty path points at the whole project.
+  if (!is_string(issue$path)) {
+    refuse("manifest", where, ".path is not a string")
+  }
+  for (k in c("source", "variable", "table", "successor_fqid")) {
+    check_string_or_null(issue[[k]], paste0(where, ".", k))
+  }
+  if (!is.null(issue$period)) {
+    check_period(issue$period, paste0(where, ".period"))
+  }
+  issue
+}
+
+# The whole manifest, in the order of the stable exit codes: version, then mode
+# and steward, then shape.
 check_manifest <- function(doc) {
   if (!is_object(doc)) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 3)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 4)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 3"
+      " is not supported; this runner reads version 4"
     )
   }
   p <- doc$provenance
@@ -346,162 +544,65 @@ check_manifest <- function(doc) {
   check_object(
     doc,
     "the manifest",
-    c("version", "extract_format", "provenance", "entries", "clips")
+    c("version", "extract_format", "provenance", "files", "clips", "findings")
   )
-  if (!is_string(doc$extract_format) || !(doc$extract_format %in% FORMATS)) {
-    refuse(
-      "manifest",
-      "extract_format is not one of ",
-      paste(FORMATS, collapse = ", ")
-    )
-  }
-  provenance_fields <- c(
-    "mode",
-    "steward",
-    "project_name",
-    "project_schema_version",
-    "project_reg_meta_version",
-    "project_hash",
-    "catalog_schema_version",
-    "catalog_generation_id",
-    "artifact_kind"
+  format <- check_enum(doc$extract_format, "extract_format", FORMATS)
+  check_object(
+    p,
+    "provenance",
+    c("mode", "steward", "catalog", "holdings", "base_generation", "project")
   )
-  check_object(p, "provenance", provenance_fields)
-  for (k in provenance_fields) {
-    check_string(p[[k]], paste0("provenance.", k))
-  }
-  if (!is_array(doc$clips)) {
-    refuse("manifest", "clips is not an array")
-  }
-  for (i in seq_along(doc$clips)) {
-    at <- sprintf("clips[%d]", i - 1L)
-    clip <- doc$clips[[i]]
-    check_object(
-      clip,
-      at,
-      c("source", "variable", "requested_period", "ordered_period")
-    )
-    for (k in names(clip)) {
-      check_string(clip[[k]], paste0(at, ".", k))
+  identity <- list(
+    catalog = c("release", "schema", "generation"),
+    holdings = c("owner", "generation"),
+    project = c("schema_version", "project_hash", "name")
+  )
+  for (part in names(identity)) {
+    at <- paste0("provenance.", part)
+    check_object(p[[part]], at, identity[[part]])
+    for (k in identity[[part]]) {
+      check_string(p[[part]][[k]], paste0(at, ".", k))
     }
   }
-  if (!is_array(doc$entries) || !length(doc$entries)) {
-    refuse("manifest", "entries is not a non-empty array")
+  check_string(p$base_generation, "provenance.base_generation")
+  check_array(doc$clips, "clips")
+  for (i in seq_along(doc$clips)) {
+    check_clip(doc$clips[[i]], sprintf("clips[%d]", i - 1L))
   }
-  for (i in seq_along(doc$entries)) {
-    check_entry(doc$entries[[i]], sprintf("entries[%d]", i - 1L))
+  check_array(doc$findings, "findings")
+  for (i in seq_along(doc$findings)) {
+    check_issue(doc$findings[[i]], sprintf("findings[%d]", i - 1L))
+  }
+  if (!is_array(doc$files) || !length(doc$files)) {
+    refuse("manifest", "files is not a non-empty array")
+  }
+  for (i in seq_along(doc$files)) {
+    check_file(doc$files[[i]], sprintf("files[%d]", i - 1L), format)
   }
   doc
 }
 
 # ---- Output files -----------------------------------------------------------------
 
-# One file per physical table and table edition, whatever variant binds it, named
-# by the manifest's physical.file with the format's extension (crates/DESIGN.md,
-# "Extraction keeps delivery topology"). Columns are the distinct physical columns
-# in entry order; every entry of a file carries the same name and the same filter
-# or none.
-plan_files <- function(entries, format) {
-  files <- list()
-  for (i in seq_along(entries)) {
-    e <- entries[[i]]
-    ph <- e$physical
-    if (length(c(ph$partition, ph$projection)) > 1L) {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        ".physical has both a partition and a projection"
-      )
-    }
-    id <- paste(ph$table, ph$edition, sep = "\r")
-    f <- files[[id]]
-    if (is.null(f)) {
-      # Slug spelling only: no path separator, drive or parent reference.
-      if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", ph$file)) {
-        refuse(
-          "manifest",
-          "output file name ",
-          ph$file,
-          " is not slug spelling"
-        )
-      }
-      f <- list(
-        name = paste0(ph$file, ".", format),
-        file = ph$file,
-        table = ph$table,
-        columns = character(),
-        names = character(),
-        filter = e$filter,
-        first = i
-      )
-    } else if (!identical(f$file, ph$file)) {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        ".physical.file differs from its table's (",
-        f$name,
-        ")"
-      )
-    } else if (!identical(f$filter, e$filter)) {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        " has a row filter that differs from its file's (",
-        f$name,
-        ")"
-      )
-    }
-    # The name the column is written under: its .dta alias, or its own name.
-    name <- if (is.null(ph$stata_name)) ph$column else ph$stata_name
-    if (!is.null(ph$stata_name) && format != "dta") {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        ".physical.stata_name is set on a .",
-        format,
-        " order"
-      )
-    }
-    # Only a name .dta cannot hold is renamed, so an alias never takes the name
-    # of a column written under its own.
-    if (!is.null(ph$stata_name) && stata_name_ok(ph$column)) {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        ".physical.stata_name renames column ",
-        ph$column,
-        ", which is a Stata variable name"
-      )
-    }
-    j <- match(ph$column, f$columns)
-    if (is.na(j)) {
-      f$columns <- c(f$columns, ph$column)
-      f$names <- c(f$names, name)
-    } else if (!identical(f$names[j], name)) {
-      refuse(
-        "manifest",
-        sprintf("entries[%d]", i - 1L),
-        ".physical.stata_name differs from another entry's for column ",
-        ph$column,
-        " of ",
-        f$name
-      )
-    }
-    files[[id]] <- f
-  }
-  for (f in files) {
-    # Case-sensitive, as Stata's variable names are.
-    clash <- unique(f$names[duplicated(f$names)])
-    if (length(clash)) {
-      refuse(
-        "manifest",
-        f$name,
-        " would hold two columns named ",
-        paste(clash, collapse = ", ")
-      )
-    }
-  }
-  names(files) <- NULL
+# One output file per manifest file, named by its stem and the format's extension
+# (crates/DESIGN.md, "MONA order file"), its columns in manifest order, each
+# written under its .dta alias or its own name.
+plan_files <- function(manifest_files, format) {
+  files <- lapply(manifest_files, function(f) {
+    list(
+      name = paste0(f$name, ".", format),
+      schema = f$schema,
+      table = f$table,
+      columns = vapply(f$columns, `[[`, "", "name"),
+      names = vapply(
+        f$columns,
+        function(col) if (is.null(col$stata_name)) col$name else col$stata_name,
+        ""
+      ),
+      storage = lapply(f$columns, `[[`, "storage"),
+      filter = f$row_filter
+    )
+  })
   # Case-insensitive: MONA's Windows file system would let one file overwrite
   # another that differs only in case.
   file_names <- tolower(vapply(files, `[[`, "", "name"))
@@ -511,26 +612,6 @@ plan_files <- function(entries, format) {
       "manifest",
       "two output files share the name ",
       paste(clash, collapse = ", ")
-    )
-  }
-  # The runner's own logs, and Windows device names (whatever the extension),
-  # which would swallow the file's data.
-  device <- c(
-    "con",
-    "prn",
-    "aux",
-    "nul",
-    paste0(c("com", "lpt"), rep(1:9, each = 2))
-  )
-  taken <- file_names %in%
-    c("run_log.csv", "error_log.csv") |
-    sub("\\..*$", "", file_names) %in% device
-  if (any(taken)) {
-    refuse(
-      "manifest",
-      "output file name ",
-      paste(file_names[taken], collapse = ", "),
-      " is reserved"
     )
   }
   files
@@ -625,41 +706,30 @@ sqlstate <- function(e) {
   )
 }
 
-# The schema holding `table`, as its id: exactly one, matched byte-exact.
-resolve_schema <- function(con, table) {
+# The order's table in its named schema: exactly one, both names matched
+# byte-exact.
+resolve_table <- function(con, schema, table) {
   hits <- query(
     con,
     paste0(
-      "SELECT CAST(SCHEMA_ID(TABLE_SCHEMA) AS int) AS schema_id, TABLE_SCHEMA AS schema_name ",
-      "FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ",
+      "SELECT TABLE_NAME AS table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ",
+      sql_text(schema),
+      " COLLATE Latin1_General_BIN2 AND TABLE_NAME = ",
       sql_text(table),
       " COLLATE Latin1_General_BIN2"
     ),
-    paste0("looking up table ", table)
+    paste0("looking up table ", schema, ".", table)
   )
   if (nrow(hits) != 1L) {
-    refuse(
-      "resolve",
-      "table ",
-      table,
-      if (nrow(hits)) {
-        paste0(
-          " exists in more than one schema (",
-          paste(sort(hits$schema_name), collapse = ", "),
-          ")"
-        )
-      } else {
-        " does not exist"
-      }
-    )
+    refuse("resolve", "table ", schema, ".", table, " does not exist")
   }
-  hits$schema_id[[1]]
+  invisible()
 }
 
 # Each of `columns` on the resolved table: its DATA_TYPE,
 # CHARACTER_MAXIMUM_LENGTH (-1 for max), NUMERIC_PRECISION and NUMERIC_SCALE. A
 # missing column is refused.
-resolve_columns <- function(con, schema_id, table, columns) {
+resolve_columns <- function(con, schema, table, columns) {
   values <- paste0(
     "(",
     seq_along(columns),
@@ -676,9 +746,9 @@ resolve_columns <- function(con, schema_id, table, columns) {
       "CAST(c.NUMERIC_PRECISION AS int) AS precision, ",
       "CAST(c.NUMERIC_SCALE AS int) AS scale FROM (VALUES ",
       values,
-      ") AS v(i, n) LEFT JOIN INFORMATION_SCHEMA.COLUMNS AS c ON c.TABLE_SCHEMA = SCHEMA_NAME(",
-      as.integer(schema_id),
-      ") AND c.TABLE_NAME = ",
+      ") AS v(i, n) LEFT JOIN INFORMATION_SCHEMA.COLUMNS AS c ON c.TABLE_SCHEMA = ",
+      sql_text(schema),
+      " COLLATE Latin1_General_BIN2 AND c.TABLE_NAME = ",
       sql_text(table),
       " COLLATE Latin1_General_BIN2 AND c.COLUMN_NAME = v.n COLLATE Latin1_General_BIN2 ",
       "ORDER BY v.i"
@@ -691,6 +761,8 @@ resolve_columns <- function(con, schema_id, table, columns) {
     refuse(
       "resolve",
       "table ",
+      schema,
+      ".",
       table,
       " has no column ",
       paste(missing, collapse = ", ")
@@ -704,12 +776,64 @@ resolve_columns <- function(con, schema_id, table, columns) {
   )
 }
 
+# Refuse, before any row is read, a column whose storage on the server differs
+# from the storage the order expects: type, length, precision and scale exactly,
+# a JSON null being SQL NULL and -1 max. A drifted column is not coerced: the
+# order was made against other holdings. The refusal names metadata, never a
+# value. The row-filter column has no expected storage; period_key checks it.
+check_storage <- function(file, types) {
+  spell <- function(type, length, precision, scale) {
+    shown <- function(x) if (is.null(x) || is.na(x)) "null" else format(x)
+    paste0(
+      type,
+      " (length ",
+      shown(length),
+      ", precision ",
+      shown(precision),
+      ", scale ",
+      shown(scale),
+      ")"
+    )
+  }
+  same <- function(want, got) {
+    if (is.null(want)) is.na(got) else !is.na(got) && want == got
+  }
+  for (j in seq_along(file$columns)) {
+    s <- file$storage[[j]]
+    ok <- identical(s$type, types$type[j]) &&
+      same(s$length, types$max_length[j]) &&
+      same(s$precision, types$precision[j]) &&
+      same(s$scale, types$scale[j])
+    if (!ok) {
+      refuse(
+        "resolve",
+        file$name,
+        ": column ",
+        file$columns[j],
+        " of ",
+        file$schema,
+        ".",
+        file$table,
+        " is stored as ",
+        spell(
+          types$type[j],
+          types$max_length[j],
+          types$precision[j],
+          types$scale[j]
+        ),
+        " but the order expects ",
+        spell(s$type, s$length, s$precision, s$scale)
+      )
+    }
+  }
+}
+
 # Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
 # rule (stricter than ReadStat, which writes any non-ASCII name), which
-# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats, so every name a
-# dta order writes (a column's own, or its stata_name) passes this backstop. 1 to 32 characters; a letter (\p{L}) or _
-# first, then letters, ASCII digits and _; not a reserved word, nor str and a
-# digit.
+# is_stata_name in crates/reg-core/src/manifest.rs repeats, so every name a
+# dta order writes (a column's own, or its stata_name) passes this backstop. 1
+# to 32 characters; a letter (\p{L}) or _ first, then letters, ASCII digits and
+# _; not a reserved word, nor str and a digit.
 stata_name_ok <- function(name) {
   reserved <- c(
     "_all",
@@ -852,7 +976,7 @@ bound <- function(day, encoding) {
 # One batch per file: the SELECT is assembled server-side from QUOTENAME()d
 # identifiers and run by sp_executesql with the filter bounds as parameters,
 # bound from R.
-select_batch <- function(file, schema_id, types) {
+select_batch <- function(file, types) {
   quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
   # A template's fixed text as N'...' literals around the quoted column at each
   # @col; the templates are this script's constants, never manifest text.
@@ -875,9 +999,9 @@ select_batch <- function(file, schema_id, types) {
   select <- paste0(
     "N'SELECT ' + ",
     paste(selected, collapse = " + N', ' + "),
-    " + N' FROM ' + QUOTENAME(SCHEMA_NAME(",
-    as.integer(schema_id),
-    ")) + N'.' + ",
+    " + N' FROM ' + ",
+    quoted(file$schema),
+    " + N'.' + ",
     quoted(file$table)
   )
   declared <- character()
@@ -1210,8 +1334,8 @@ dta_writer <- function(path, columns, types, names) {
 
 WRITERS <- list(parquet = parquet_writer, csv = csv_writer)
 
-extract_file <- function(con, file, schema_id, types, format, out) {
-  batch <- select_batch(file, schema_id, types)
+extract_file <- function(con, file, types, format, out) {
+  batch <- select_batch(file, types)
   n <- length(file$columns)
   path <- file.path(out, file$name)
   column_types <- lapply(types, `[`, seq_len(n))
@@ -1287,7 +1411,7 @@ connection <- function(db) {
 extract_order <- function(path, out, db) {
   doc <- check_manifest(read_order(path))
   format <- doc$extract_format
-  files <- plan_files(doc$entries, format)
+  files <- plan_files(doc$files, format)
   pkg <- FORMAT_PACKAGES[[format]]
   if (!is.na(pkg) && !nzchar(system.file(package = pkg))) {
     install_missing(pkg)
@@ -1303,16 +1427,18 @@ extract_order <- function(path, out, db) {
     )
   }
   con <- connection(db)
-  # Resolve every file before writing any, so a missing table fails fast.
+  # Resolve every file before writing any, so a missing table or a drifted
+  # column fails fast.
   resolved <- lapply(files, function(f) {
-    schema_id <- resolve_schema(con, f$table)
+    resolve_table(con, f$schema, f$table)
     # The filter column last, so select_batch finds its type there.
     types <- resolve_columns(
       con,
-      schema_id,
+      f$schema,
       f$table,
       c(f$columns, f$filter$column)
     )
+    check_storage(f, types)
     if (!is.null(f$filter)) {
       period_key(
         f$filter$encoding,
@@ -1322,7 +1448,7 @@ extract_order <- function(path, out, db) {
       )
     }
     check_format(f, types, format)
-    list(schema_id = schema_id, types = types)
+    types
   })
   log <- data.frame(
     file = character(),
@@ -1332,14 +1458,7 @@ extract_order <- function(path, out, db) {
   )
   for (i in order(vapply(files, `[[`, "", "name"), method = "radix")) {
     f <- files[[i]]
-    rows <- extract_file(
-      con,
-      f,
-      resolved[[i]]$schema_id,
-      resolved[[i]]$types,
-      format,
-      out
-    )
+    rows <- extract_file(con, f, resolved[[i]], format, out)
     say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
     log[nrow(log) + 1L, ] <- list(
       f$name,

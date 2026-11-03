@@ -1,0 +1,4 @@
+file,rows,columns,filter
+part_a.dta,2,2,""
+part_b.dta,2,2,""
+pool.dta,2,3,Year (year): 2020-01-01..

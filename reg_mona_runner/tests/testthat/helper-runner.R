@@ -6,14 +6,39 @@ runner_dir <- normalizePath(file.path(testthat::test_path(), "..", ".."))
 repo_dir <- dirname(runner_dir)
 cases_dir <- file.path(runner_dir, "tests", "cases")
 
-# A case's order: its own order.json, else the conformance order golden of the
-# same name (the manifest the Rust materializer writes, unchanged).
-case_order <- function(case) {
+materialize_dir <- file.path(repo_dir, "conformance", "cases", "materialize")
+
+# A materialize golden as the order file the server writes: the golden omits the
+# provenance ids that vary per artifact (conformance/test_materialize.py strips
+# them), so they are filled with placeholders of their shape, and the steward is
+# `steward` (the goldens' own is the fixture's).
+golden_order <- function(case, steward = "swecov") {
+  doc <- jsonlite::read_json(file.path(materialize_dir, case, "manifest.json"))
+  id <- strrep("0", 64L)
+  p <- doc$provenance
+  p$steward <- steward
+  p$catalog$generation <- id
+  p$holdings$generation <- id
+  p$base_generation <- id
+  p$project$project_hash <- id
+  doc$provenance <- p
+  path <- tempfile(paste0(case, "-"), fileext = ".json")
+  writeLines(
+    jsonlite::toJSON(doc, auto_unbox = TRUE, null = "null", pretty = TRUE),
+    path,
+    useBytes = TRUE
+  )
+  path
+}
+
+# A case's order: its own order.json, else the materialize golden of the same
+# name.
+case_order <- function(case, steward = "swecov") {
   own <- file.path(cases_dir, case, "order.json")
   if (file.exists(own)) {
     return(own)
   }
-  file.path(repo_dir, "conformance", "cases", "order", case, "order.json")
+  golden_order(case, steward)
 }
 
 # A fresh export root whose orders/ holds `orders`: name -> order file path, or
@@ -67,8 +92,8 @@ expect_refused <- function(base, name, code) {
   expect_true(file.exists(file.path(base, "orders", paste0(name, ".json"))))
 }
 
-# A compact rewrite of an order golden with one change applied.
-order_text <- function(case, change) {
-  doc <- jsonlite::read_json(case_order(case))
+# A compact rewrite of a case's order with one change applied.
+order_text <- function(case, change, steward = "swecov") {
+  doc <- jsonlite::read_json(case_order(case, steward))
   as.character(jsonlite::toJSON(change(doc), auto_unbox = TRUE, null = "null"))
 }

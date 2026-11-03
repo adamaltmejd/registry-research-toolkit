@@ -1,0 +1,2 @@
+file,rows,columns,filter
+pool.dta,4,4,Year (year): ..2017-12-31 OR 2020-01-01..

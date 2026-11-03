@@ -114,17 +114,21 @@ test_that("orders extract their files from SQL Server", {
   }
   db <- load_fixture()
   extracted <- c(
-    # Year filters on an int column: one range, two open-ended ranges joined by
-    # OR (one file from two sources), an open upper bound, and no filter.
-    "row-filter",
-    "row-filter-disjoint",
-    "row-filter-open-ended",
-    "row-filter-whole-table",
-    # File naming and topology: partition and projection placement, a held key
-    # column, CSV quoting, one table serving two variants as two files.
-    "partitions",
-    "projections",
-    "column-windows",
+    # The materialize goldens, as the server writes them, over the fixture's
+    # steward tables: year filters on an int column, two ranges joined by OR
+    # around a gap, an open bound on either side, and none (every row, the NULL
+    # year too).
+    "pooled-disjoint-periods",
+    "key-only",
+    "shared-file-union",
+    "shared-file-whole-delivery",
+    # Topology: partition members as their own files beside a filtered pool, a
+    # projection carrying its parent's key, and a .dta column that is no Stata
+    # variable name, written under the order's alias and labelled with its full
+    # name.
+    "partition-members",
+    "projection-key-placement",
+    "dta-stata-alias",
     # Compact JSON; non-ASCII varchar text and an 18-digit decimal id that a
     # double would round; yyyymm on int, yyyymmdd on float in schema P1105 with
     # non-ASCII names, year on varchar with an unparseable value, date on
@@ -134,34 +138,54 @@ test_that("orders extract their files from SQL Server", {
     # One case per extract format over one table of every mapped SQL type: a
     # leading-zero code, a pre-1960 day, a 12-digit bigint id, an 18-digit and a
     # scaled decimal, a NULL row and an empty string keep their values and take
-    # the format's storage type.
+    # the format's storage type. types-csv's table is timeless (delivery null).
     "types-dta",
-    # A .dta order of columns that are not Stata variable names: each is written
-    # under the order's alias, labelled with its full name.
-    "stata-names",
     "types-parquet",
     "types-csv"
   )
   refused <- c(
+    # A table that exists, but in another schema than the order names.
     `missing-table` = 7L,
-    `ambiguous-table` = 7L,
+    # A column whose storage drifted from the order's: refused before any row
+    # is read, never coerced.
+    `storage-drift` = 7L,
     # A .dta order of a bigint id no double holds: refused, never rounded.
     `inexact-dta` = 8L,
     `broken-view` = 8L
   )
-  base <- export_root(stats::setNames(
-    lapply(c(extracted, names(refused)), case_order),
-    c(extracted, names(refused))
-  ))
+  on_disk <- setdiff(c(extracted, names(refused)), "storage-drift")
+  base <- export_root(
+    stats::setNames(lapply(on_disk, case_order), on_disk),
+    text = list(
+      `storage-drift` = order_text("shared-file-whole-delivery", function(doc) {
+        doc$files[[1]]$columns[[2]]$storage$length <- 20L
+        doc
+      })
+    )
+  )
   run <- run_runner(base, db)
-  # The first failing order in name order (ambiguous-table) sets the exit code.
-  expect_identical(run$status, 7L)
+  # The first failing order in name order (broken-view) sets the exit code.
+  expect_identical(run$status, 8L)
   for (case in extracted) {
     expect_export(base, case)
   }
   for (case in names(refused)) {
     expect_refused(base, case, refused[[case]])
   }
+  # The drift refusal names the file, the column and both storages, never a
+  # value.
+  drift <- utils::read.csv(file.path(
+    export_dir(base, "storage-drift"),
+    "error_log.csv"
+  ))
+  expect_identical(
+    drift$message,
+    paste0(
+      "pool.dta: column Late of dbo.Pool is stored as nvarchar (length 10, ",
+      "precision null, scale null) but the order expects nvarchar (length 20, ",
+      "precision null, scale null)"
+    )
+  )
   # The driver's message is withheld: it can quote a row value.
   broken <- utils::read.csv(file.path(
     export_dir(base, "broken-view"),

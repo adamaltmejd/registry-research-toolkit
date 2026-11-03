@@ -7,7 +7,8 @@ its generation ids and project hash, or `expected.json`, the findings that block
 Every case runs on one steward artifact: the holdings fixture with the documented slot
 family, a long Part B header and a first-half Parent amount (`prepare_materialize`). Write the expectation from the
 project and the fixture source before serving it; a disagreement is a server bug or a
-wrong expectation, never a golden to save.
+wrong expectation, never a golden to save. The MONA runner's R suite extracts these
+goldens too (`reg_mona_runner/tests`), so a changed golden can change its expected files.
 """
 
 from __future__ import annotations

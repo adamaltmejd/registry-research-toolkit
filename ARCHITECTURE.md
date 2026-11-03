@@ -79,7 +79,7 @@ registry-research-toolkit/
     reg-resolve/    #   per-register resolution
     reg-build/      #   link, emit and the CLI (binary: reg-build)
   curation/         # the new builder's reader config and id ledgers
-  reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
+  reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
