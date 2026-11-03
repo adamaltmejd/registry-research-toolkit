@@ -134,6 +134,10 @@ export function RegisterView({
                           className={rowStyles.checkbox}
                           aria-label={`Add ${variable.name}`}
                           isSelected={add.selected.has(variable.fqid)}
+                          aria-busy={
+                            (add.selected.has(variable.fqid) && !columns) ||
+                            undefined
+                          }
                           onChange={(checked) => add.toggle(variable, checked)}
                         >
                           <span className={rowStyles.tick} aria-hidden="true">

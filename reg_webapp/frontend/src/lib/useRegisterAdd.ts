@@ -67,8 +67,8 @@ export function useRegisterAdd({
   const selected = new Set(eligible.map((variable) => variable.fqid));
   const pending =
     eligible.find((variable) => !cache.has(variable.fqid)) ?? null;
-  // Read only ticked rows, through the shared cancellable resource. A queue keeps
-  // a second tick from restarting the first row's request.
+  // Read ticked rows one at a time through the shared cancellable resource.
+  // Changing the next pending row aborts the previous request.
   useAsyncResource(pending?.fqid ?? null, async (signal) => {
     if (!pending) return null;
     try {
