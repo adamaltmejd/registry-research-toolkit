@@ -1,2 +1,0 @@
-file,rows,columns,filter
-pool.dta,3,4,Year (year): ..2017-12-31 OR 2019-01-01..2019-12-31
