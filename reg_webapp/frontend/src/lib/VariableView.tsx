@@ -26,12 +26,14 @@ import {
 import { catalogWords, yesNo } from "./catalog_labels";
 import {
   loadRegister,
+  referenceRegisterRead,
   registerRead,
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import { HeldPanels } from "./HeldPanels";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button as ActionButton } from "./ui/Button";
@@ -136,6 +138,10 @@ export function VariableView({
     (signal) => loadRegister(node.register, signal),
   );
   const register = registerResource.data;
+  const referenceRegister = useCatalogRead(
+    referenceRegisterRead,
+    context?.steward_config != null ? node.register : null,
+  );
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
@@ -202,6 +208,10 @@ export function VariableView({
     succession: graph.data,
     neighbourColumns,
     successionError,
+    // simplify: steward-only registers are read-only until Release B composes order/validate.
+    allowAdd:
+      context !== null &&
+      (context.steward_config == null || referenceRegister.value === true),
   });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
@@ -309,6 +319,9 @@ export function VariableView({
           <p className={styles.prose}>{node.source_definition.text}</p>
         </Panel>
       ) : null}
+      {context?.steward_config != null && (
+        <HeldPanels fqid={node.fqid} kind="variable" names={names} />
+      )}
       <Panel title="Tables">
         {node.tables.length ? (
           <ul className={`${styles.plainList} ${variableStyles.listGap}`}>

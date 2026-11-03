@@ -48,6 +48,7 @@ export function useVariableCoverage({
   succession = null,
   neighbourColumns = new Map(),
   successionError = null,
+  allowAdd = true,
 }: {
   node: VariableShow;
   segments: readonly CatalogSegment[];
@@ -58,6 +59,7 @@ export function useVariableCoverage({
   succession?: Graph | null;
   neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
   successionError?: string | null;
+  allowAdd?: boolean;
 }) {
   const { draft } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
@@ -115,6 +117,7 @@ export function useVariableCoverage({
     axis,
     catalogBounds: [bounds.min, bounds.max],
     selected,
+    readOnly: !allowAdd,
   });
   const neighbours = successionLanes({
     focusSpans: spans,
@@ -159,7 +162,7 @@ export function useVariableCoverage({
     );
   const add = () => {
     const current = projectStore.draft;
-    if (!current || picked.length === 0) return;
+    if (!allowAdd || !current || picked.length === 0) return;
     try {
       if (!tables)
         throw new Error(
@@ -185,7 +188,7 @@ export function useVariableCoverage({
               <span className="visually-hidden">Coverage </span>
               <span>{runs.map(yearWindowLabel).join(", ")}</span>
             </span>
-            {differs && (
+            {allowAdd && differs && (
               <Button
                 variant="ghost"
                 onPress={() => {
@@ -199,12 +202,14 @@ export function useVariableCoverage({
           </span>
         }
       >
-        <span className="visually-hidden">
-          Add window {yearWindowLabel(active)}.
-          {outside.length > 0
-            ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`
-            : ""}
-        </span>
+        {allowAdd && (
+          <span className="visually-hidden">
+            Add window {yearWindowLabel(active)}.
+            {outside.length > 0
+              ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`
+              : ""}
+          </span>
+        )}
         <LaneGraph
           label="Variable columns"
           lanes={[
@@ -223,7 +228,9 @@ export function useVariableCoverage({
           edges={neighbours.edges}
           axis={axis}
           window={study ? [study.from, study.to] : null}
-          addWindow={differs || !study ? [active.from, active.to] : null}
+          addWindow={
+            allowAdd && (differs || !study) ? [active.from, active.to] : null
+          }
           coverage={{
             covered: available,
             years,
@@ -231,7 +238,7 @@ export function useVariableCoverage({
             bandName: study ? "Study window" : null,
           }}
           overlay={
-            available ? (
+            allowAdd && available ? (
               <PeriodThumbs
                 axis={axis}
                 selection={active}
@@ -243,30 +250,34 @@ export function useVariableCoverage({
             ) : undefined
           }
           isDisabled={!tables}
-          onToggle={(id) => {
-            setSelected((previous) => {
-              const next = new Set(previous);
-              if (next.has(id)) next.delete(id);
-              else next.add(id);
-              return next;
-            });
-            setAdded(false);
-            setError(null);
-          }}
+          onToggle={
+            allowAdd
+              ? (id) => {
+                  setSelected((previous) => {
+                    const next = new Set(previous);
+                    if (next.has(id)) next.delete(id);
+                    else next.add(id);
+                    return next;
+                  });
+                  setAdded(false);
+                  setError(null);
+                }
+              : undefined
+          }
         />
         {successionError && (
           <StatusRow tone="error" live="alert">
             {successionError} Reload the page to try again.
           </StatusRow>
         )}
-        {!draft && (
+        {allowAdd && !draft && (
           <p className={styles.hint}>
             Create or open a project to select columns.
           </p>
         )}
       </Panel>
     ),
-    addBar: (
+    addBar: allowAdd && (
       <>
         <StatusRow
           tone={
