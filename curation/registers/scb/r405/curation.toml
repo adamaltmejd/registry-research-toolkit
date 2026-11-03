@@ -6410,3 +6410,489 @@ kind = "set"
 subject = "set:veckopeng"
 fields = { "label" = "Veckopeng" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alcohol3"
+fields = { "label" = "Hälsa: druckit alkohol (alcohol3)" }
+evidence = "#2102 same-label cluster 'Hälsa: druckit alkohol' (5 variables): judged different meaning, high confidence; alcohol2, alcohol3 and alcohol4_H are the combined question over time while alcohol4A (ja/nej) and alcohol4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:alcohol4-h"
+fields = { "label" = "Hälsa: druckit alkohol (alcohol4_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: druckit alkohol' (5 variables): judged different meaning, high confidence; alcohol2, alcohol3 and alcohol4_H are the combined question over time while alcohol4A (ja/nej) and alcohol4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:alcohol4a"
+fields = { "label" = "Hälsa: druckit alkohol (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: druckit alkohol' (5 variables): judged different meaning, high confidence; alcohol2, alcohol3 and alcohol4_H are the combined question over time while alcohol4A (ja/nej) and alcohol4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:alcohol4b"
+fields = { "label" = "Hälsa: druckit alkohol (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: druckit alkohol' (5 variables): judged different meaning, high confidence; alcohol2, alcohol3 and alcohol4_H are the combined question over time while alcohol4A (ja/nej) and alcohol4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:badsleep"
+fields = { "label" = "Hälsa: sover dåligt (badsleep)" }
+evidence = "#2102 same-label cluster 'Hälsa: sover dåligt' (5 variables): judged different meaning, high confidence; badsleep, badsleep2 and badsleep3_H are the combined question over time while badsleep3A (ja/nej) and badsleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:badsleep2"
+fields = { "label" = "Hälsa: sover dåligt (badsleep2)" }
+evidence = "#2102 same-label cluster 'Hälsa: sover dåligt' (5 variables): judged different meaning, high confidence; badsleep, badsleep2 and badsleep3_H are the combined question over time while badsleep3A (ja/nej) and badsleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:badsleep3-h"
+fields = { "label" = "Hälsa: sover dåligt (badsleep3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: sover dåligt' (5 variables): judged different meaning, high confidence; badsleep, badsleep2 and badsleep3_H are the combined question over time while badsleep3A (ja/nej) and badsleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:badsleep3a"
+fields = { "label" = "Hälsa: sover dåligt (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: sover dåligt' (5 variables): judged different meaning, high confidence; badsleep, badsleep2 and badsleep3_H are the combined question over time while badsleep3A (ja/nej) and badsleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:badsleep3b"
+fields = { "label" = "Hälsa: sover dåligt (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: sover dåligt' (5 variables): judged different meaning, high confidence; badsleep, badsleep2 and badsleep3_H are the combined question over time while badsleep3A (ja/nej) and badsleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfa"
+fields = { "label" = "Hälsa: hoppat över frukosten (breakfa)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfa2"
+fields = { "label" = "Hälsa: hoppat över frukosten (breakfa2)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfa3-h"
+fields = { "label" = "Hälsa: hoppat över frukosten (breakfa3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfa3a"
+fields = { "label" = "Hälsa: hoppat över frukosten (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfa3b"
+fields = { "label" = "Hälsa: hoppat över frukosten (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:breakfas"
+fields = { "label" = "Hälsa: hoppat över frukosten (ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över frukosten' (6 variables): judged different meaning, medium confidence; breakfas (2008-2012) is a ja/nej version, breakfa, breakfa2 and breakfa3_H are the frequency question over time, and breakfa3A/B are the split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:cash4a-19198"
+fields = { "label" = "Ekonomi: ha råd med 200 kr till i morgon (själv)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ha råd med 200 kr till i morgon' (2 variables): judged different meaning, high confidence; Opdefs: cash4a asks whether the child can afford 200 kr, cash4b is the follow-up on whether the parents can contribute, asked only after a no."
+
+[[statement]]
+kind = "set"
+subject = "var:cash4b"
+fields = { "label" = "Ekonomi: ha råd med 200 kr till i morgon (föräldrar kan bidra)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ha råd med 200 kr till i morgon' (2 variables): judged different meaning, high confidence; Opdefs: cash4a asks whether the child can afford 200 kr, cash4b is the follow-up on whether the parents can contribute, asked only after a no."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-rad-att-kopa-nagot-kompisar-har"
+fields = { "label" = "Ekonomi: ej råd att köpa något kompisar har (mon_buy)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att köpa något kompisar har' (4 variables): judged different meaning, high confidence; mon_buy and mon_buy2_H are the combined question over time while mon_buy2a (ja/nej) and mon_buy2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-rad-att-kopa-som-jamnariga-ja-nej"
+fields = { "label" = "Ekonomi: ej råd att köpa något kompisar har (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att köpa något kompisar har' (4 variables): judged different meaning, high confidence; mon_buy and mon_buy2_H are the combined question over time while mon_buy2a (ja/nej) and mon_buy2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:head"
+fields = { "label" = "Hälsa: huvudvärk (head)" }
+evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged different meaning, high confidence; head, head2 and head3_H are the combined question over time while head3A (ja/nej) and head3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:head2"
+fields = { "label" = "Hälsa: huvudvärk (head2)" }
+evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged different meaning, high confidence; head, head2 and head3_H are the combined question over time while head3A (ja/nej) and head3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:head3-h"
+fields = { "label" = "Hälsa: huvudvärk (head3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged different meaning, high confidence; head, head2 and head3_H are the combined question over time while head3A (ja/nej) and head3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:head3a"
+fields = { "label" = "Hälsa: huvudvärk (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged different meaning, high confidence; head, head2 and head3_H are the combined question over time while head3A (ja/nej) and head3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:head3b"
+fields = { "label" = "Hälsa: huvudvärk (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: huvudvärk' (5 variables): judged different meaning, high confidence; head, head2 and head3_H are the combined question over time while head3A (ja/nej) and head3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:hw-hrs"
+fields = { "label" = "Skola: tid till läxor per vecka (hw_hrs)" }
+evidence = "#2102 same-label cluster 'Skola: tid till läxor per vecka' (3 variables): judged different meaning, medium confidence; hw_hrs and hw_hrs2_H are the grouped hours-per-week series (the latter derived by grouping), while hw_hrs2 has no code list and is the ungrouped number of hours, concurrent with hw_hrs2_H."
+
+[[statement]]
+kind = "set"
+subject = "var:hw-hrs2"
+fields = { "label" = "Skola: tid till läxor per vecka (antal timmar)" }
+evidence = "#2102 same-label cluster 'Skola: tid till läxor per vecka' (3 variables): judged different meaning, medium confidence; hw_hrs and hw_hrs2_H are the grouped hours-per-week series (the latter derived by grouping), while hw_hrs2 has no code list and is the ungrouped number of hours, concurrent with hw_hrs2_H."
+
+[[statement]]
+kind = "set"
+subject = "var:hw-hrs2-h"
+fields = { "label" = "Skola: tid till läxor per vecka (grupperad)" }
+evidence = "#2102 same-label cluster 'Skola: tid till läxor per vecka' (3 variables): judged different meaning, medium confidence; hw_hrs and hw_hrs2_H are the grouped hours-per-week series (the latter derived by grouping), while hw_hrs2 has no code list and is the ungrouped number of hours, concurrent with hw_hrs2_H."
+
+[[statement]]
+kind = "set"
+subject = "var:lunch"
+fields = { "label" = "Hälsa: hoppat över lunchen (lunch)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över lunchen' (5 variables): judged different meaning, high confidence; lunch, lunch2 and lunch3_H are the combined question over time while lunch3A (ja/nej) and lunch3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:lunch2"
+fields = { "label" = "Hälsa: hoppat över lunchen (lunch2)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över lunchen' (5 variables): judged different meaning, high confidence; lunch, lunch2 and lunch3_H are the combined question over time while lunch3A (ja/nej) and lunch3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:lunch3-h"
+fields = { "label" = "Hälsa: hoppat över lunchen (lunch3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över lunchen' (5 variables): judged different meaning, high confidence; lunch, lunch2 and lunch3_H are the combined question over time while lunch3A (ja/nej) and lunch3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:lunch3a"
+fields = { "label" = "Hälsa: hoppat över lunchen (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över lunchen' (5 variables): judged different meaning, high confidence; lunch, lunch2 and lunch3_H are the combined question over time while lunch3A (ja/nej) and lunch3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:lunch3b"
+fields = { "label" = "Hälsa: hoppat över lunchen (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: hoppat över lunchen' (5 variables): judged different meaning, high confidence; lunch, lunch2 and lunch3_H are the combined question over time while lunch3A (ja/nej) and lunch3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-buy2-h"
+fields = { "label" = "Ekonomi: ej råd att köpa något kompisar har (mon_buy2_H)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att köpa något kompisar har' (4 variables): judged different meaning, high confidence; mon_buy and mon_buy2_H are the combined question over time while mon_buy2a (ja/nej) and mon_buy2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-buy2b"
+fields = { "label" = "Ekonomi: ej råd att köpa något kompisar har (delfråga B: en eller flera gånger)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att köpa något kompisar har' (4 variables): judged different meaning, high confidence; mon_buy and mon_buy2_H are the combined question over time while mon_buy2a (ja/nej) and mon_buy2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-foll"
+fields = { "label" = "Ekonomi: ej råd att följa med kompisar (mon_foll)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att följa med kompisar' (4 variables): judged different meaning, high confidence; mon_foll and mon_foll2_H are the combined question over time while mon_foll2a (ja/nej) and mon_foll2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-foll2-h"
+fields = { "label" = "Ekonomi: ej råd att följa med kompisar (mon_foll2_H)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att följa med kompisar' (4 variables): judged different meaning, high confidence; mon_foll and mon_foll2_H are the combined question over time while mon_foll2a (ja/nej) and mon_foll2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-foll2a"
+fields = { "label" = "Ekonomi: ej råd att följa med kompisar (delfråga A)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att följa med kompisar' (4 variables): judged different meaning, high confidence; mon_foll and mon_foll2_H are the combined question over time while mon_foll2a (ja/nej) and mon_foll2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:mon-foll2b"
+fields = { "label" = "Ekonomi: ej råd att följa med kompisar (delfråga B)" }
+evidence = "#2102 same-label cluster 'Ekonomi: ej råd att följa med kompisar' (4 variables): judged different meaning, high confidence; mon_foll and mon_foll2_H are the combined question over time while mon_foll2a (ja/nej) and mon_foll2b (en eller flera gånger) are the split sub-questions in 2016-2020."
+
+[[statement]]
+kind = "set"
+subject = "var:room"
+fields = { "label" = "Ekonomi: eget rum (ja/nej)" }
+evidence = "#2102 same-label cluster 'Ekonomi: eget rum' (4 variables): judged different meaning, medium confidence; room is the plain ja/nej question, room_alt and room_alt2 are the question for children living alternately with both parents (code list changed in 2016), and room_H is derived from both."
+
+[[statement]]
+kind = "set"
+subject = "var:room-alt"
+fields = { "label" = "Ekonomi: eget rum (barn som bor växelvis, hos mamma respektive pappa)" }
+evidence = "#2102 same-label cluster 'Ekonomi: eget rum' (4 variables): judged different meaning, medium confidence; room is the plain ja/nej question, room_alt and room_alt2 are the question for children living alternately with both parents (code list changed in 2016), and room_H is derived from both."
+
+[[statement]]
+kind = "set"
+subject = "var:room-alt2"
+fields = { "label" = "Ekonomi: eget rum (barn som bor växelvis)" }
+evidence = "#2102 same-label cluster 'Ekonomi: eget rum' (4 variables): judged different meaning, medium confidence; room is the plain ja/nej question, room_alt and room_alt2 are the question for children living alternately with both parents (code list changed in 2016), and room_H is derived from both."
+
+[[statement]]
+kind = "set"
+subject = "var:room-h"
+fields = { "label" = "Ekonomi: eget rum (härledd, ja/nej)" }
+evidence = "#2102 same-label cluster 'Ekonomi: eget rum' (4 variables): judged different meaning, medium confidence; room is the plain ja/nej question, room_alt and room_alt2 are the question for children living alternately with both parents (code list changed in 2016), and room_H is derived from both."
+
+[[statement]]
+kind = "set"
+subject = "var:shirk3"
+fields = { "label" = "Skola: skolkat (shirk3)" }
+evidence = "#2102 same-label cluster 'Skola: skolkat' (5 variables): judged different meaning, high confidence; shirk2, shirk3 and shirk4_H are the combined question over time while shirk4A (ja/nej) and shirk4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:shirk4-h"
+fields = { "label" = "Skola: skolkat (shirk4_H)" }
+evidence = "#2102 same-label cluster 'Skola: skolkat' (5 variables): judged different meaning, high confidence; shirk2, shirk3 and shirk4_H are the combined question over time while shirk4A (ja/nej) and shirk4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:shirk4a"
+fields = { "label" = "Skola: skolkat (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Skola: skolkat' (5 variables): judged different meaning, high confidence; shirk2, shirk3 and shirk4_H are the combined question over time while shirk4A (ja/nej) and shirk4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:shirk4b"
+fields = { "label" = "Skola: skolkat (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Skola: skolkat' (5 variables): judged different meaning, high confidence; shirk2, shirk3 and shirk4_H are the combined question over time while shirk4A (ja/nej) and shirk4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:sleep"
+fields = { "label" = "Hälsa: svårt att somna (sleep)" }
+evidence = "#2102 same-label cluster 'Hälsa: svårt att somna' (5 variables): judged different meaning, high confidence; sleep, sleep2 and sleep3_H are the combined question over time while sleep3A (ja/nej) and sleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:sleep2"
+fields = { "label" = "Hälsa: svårt att somna (sleep2)" }
+evidence = "#2102 same-label cluster 'Hälsa: svårt att somna' (5 variables): judged different meaning, high confidence; sleep, sleep2 and sleep3_H are the combined question over time while sleep3A (ja/nej) and sleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:sleep3-h"
+fields = { "label" = "Hälsa: svårt att somna (sleep3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: svårt att somna' (5 variables): judged different meaning, high confidence; sleep, sleep2 and sleep3_H are the combined question over time while sleep3A (ja/nej) and sleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:sleep3a"
+fields = { "label" = "Hälsa: svårt att somna (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: svårt att somna' (5 variables): judged different meaning, high confidence; sleep, sleep2 and sleep3_H are the combined question over time while sleep3A (ja/nej) and sleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:sleep3b"
+fields = { "label" = "Hälsa: svårt att somna (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: svårt att somna' (5 variables): judged different meaning, high confidence; sleep, sleep2 and sleep3_H are the combined question over time while sleep3A (ja/nej) and sleep3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:smoke2"
+fields = { "label" = "Hälsa: har rökt (smoke2)" }
+evidence = "#2102 same-label cluster 'Hälsa: har rökt' (5 variables): judged different meaning, high confidence; smoke2, smoke3 and smoke4_H are the combined question over time while smoke4A (ja/nej) and smoke4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:smoke3"
+fields = { "label" = "Hälsa: har rökt (smoke3)" }
+evidence = "#2102 same-label cluster 'Hälsa: har rökt' (5 variables): judged different meaning, high confidence; smoke2, smoke3 and smoke4_H are the combined question over time while smoke4A (ja/nej) and smoke4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:smoke4-h"
+fields = { "label" = "Hälsa: har rökt (smoke4_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: har rökt' (5 variables): judged different meaning, high confidence; smoke2, smoke3 and smoke4_H are the combined question over time while smoke4A (ja/nej) and smoke4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:smoke4a"
+fields = { "label" = "Hälsa: har rökt (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: har rökt' (5 variables): judged different meaning, high confidence; smoke2, smoke3 and smoke4_H are the combined question over time while smoke4A (ja/nej) and smoke4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:smoke4b"
+fields = { "label" = "Hälsa: har rökt (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: har rökt' (5 variables): judged different meaning, high confidence; smoke2, smoke3 and smoke4_H are the combined question over time while smoke4A (ja/nej) and smoke4B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stom"
+fields = { "label" = "Hälsa: ont i magen (stom)" }
+evidence = "#2102 same-label cluster 'Hälsa: ont i magen' (5 variables): judged different meaning, high confidence; stom, stom2 and stom3_H are the combined question over time while stom3A (ja/nej) and stom3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stom2"
+fields = { "label" = "Hälsa: ont i magen (stom2)" }
+evidence = "#2102 same-label cluster 'Hälsa: ont i magen' (5 variables): judged different meaning, high confidence; stom, stom2 and stom3_H are the combined question over time while stom3A (ja/nej) and stom3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stom3-h"
+fields = { "label" = "Hälsa: ont i magen (stom3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: ont i magen' (5 variables): judged different meaning, high confidence; stom, stom2 and stom3_H are the combined question over time while stom3A (ja/nej) and stom3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stom3a"
+fields = { "label" = "Hälsa: ont i magen (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: ont i magen' (5 variables): judged different meaning, high confidence; stom, stom2 and stom3_H are the combined question over time while stom3A (ja/nej) and stom3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stom3b"
+fields = { "label" = "Hälsa: ont i magen (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: ont i magen' (5 variables): judged different meaning, high confidence; stom, stom2 and stom3_H are the combined question over time while stom3A (ja/nej) and stom3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stress"
+fields = { "label" = "Hälsa: känt mig stressad (stress)" }
+evidence = "#2102 same-label cluster 'Hälsa: känt mig stressad' (5 variables): judged different meaning, high confidence; stress, stress2 and stress3_H are the combined question over time while stress3A (ja/nej) and stress3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stress2"
+fields = { "label" = "Hälsa: känt mig stressad (stress2)" }
+evidence = "#2102 same-label cluster 'Hälsa: känt mig stressad' (5 variables): judged different meaning, high confidence; stress, stress2 and stress3_H are the combined question over time while stress3A (ja/nej) and stress3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stress3-h"
+fields = { "label" = "Hälsa: känt mig stressad (stress3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: känt mig stressad' (5 variables): judged different meaning, high confidence; stress, stress2 and stress3_H are the combined question over time while stress3A (ja/nej) and stress3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stress3a"
+fields = { "label" = "Hälsa: känt mig stressad (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: känt mig stressad' (5 variables): judged different meaning, high confidence; stress, stress2 and stress3_H are the combined question over time while stress3A (ja/nej) and stress3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:stress3b"
+fields = { "label" = "Hälsa: känt mig stressad (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: känt mig stressad' (5 variables): judged different meaning, high confidence; stress, stress2 and stress3_H are the combined question over time while stress3A (ja/nej) and stress3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:tired"
+fields = { "label" = "Hälsa: trött i skolan (tired)" }
+evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): judged different meaning, high confidence; tired, tired2 and tired3_H are the combined question over time while tired3A (ja/nej) and tired3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:tired2"
+fields = { "label" = "Hälsa: trött i skolan (tired2)" }
+evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): judged different meaning, high confidence; tired, tired2 and tired3_H are the combined question over time while tired3A (ja/nej) and tired3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:tired3-h"
+fields = { "label" = "Hälsa: trött i skolan (tired3_H)" }
+evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): judged different meaning, high confidence; tired, tired2 and tired3_H are the combined question over time while tired3A (ja/nej) and tired3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:tired3a"
+fields = { "label" = "Hälsa: trött i skolan (delfråga A: ja/nej)" }
+evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): judged different meaning, high confidence; tired, tired2 and tired3_H are the combined question over time while tired3A (ja/nej) and tired3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:tired3b"
+fields = { "label" = "Hälsa: trött i skolan (delfråga B: hur ofta)" }
+evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): judged different meaning, high confidence; tired, tired2 and tired3_H are the combined question over time while tired3A (ja/nej) and tired3B (hur ofta) are split sub-questions from 2016."
+
+[[statement]]
+kind = "set"
+subject = "var:work2"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (work2)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:work2a"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga A: ja/nej, work2a)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:work2b"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga B: hur ofta, work2b)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:work3-h"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (work3_H)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:work3a"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga A: ja/nej, work3a)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:work3b"
+fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga B: hur ofta, work3b)" }
+evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work, work2 and work3_H are the combined question over time (the latter two derived from A and B), while the A (ja/nej) and B (hur ofta) sub-questions are separate concurrent columns from 2015."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-rasterna"
+fields = { "label" = "Trygghet: rasterna (ja/nej)" }
+evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_brea has ja/nej (0/1) codes up to 2016, sec_brea2 the graded 1-3 scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-rasterna-grad"
+fields = { "label" = "Trygghet: rasterna (graderad)" }
+evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_brea has ja/nej (0/1) codes up to 2016, sec_brea2 the graded 1-3 scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-i-bostadsomradet-dagtid"
+fields = { "label" = "Trygghet:i bostadsområdet dagtid (ja/nej)" }
+evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_day has ja/nej (0/1) codes up to 2016, sec_day2 the graded scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:trygghet-i-bostadsomradet-dagtid-grad"
+fields = { "label" = "Trygghet:i bostadsområdet dagtid (graderad)" }
+evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_day has ja/nej (0/1) codes up to 2016, sec_day2 the graded scale from 2016, with different question wording per the definition."

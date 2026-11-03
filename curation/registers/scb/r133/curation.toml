@@ -514,3 +514,15 @@ kind = "set"
 subject = "set:omsattning"
 fields = { "label" = "Omsättning" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-antal-ae"
+fields = { "label" = "Antal arbetsställen (summering per bransch och kommun, antal_ae)" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: antal_ae is a summed count of workplaces in branch-by-municipality tables, aeantje counts the workplaces that the legal unit has in the workplace table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen"
+fields = { "label" = "Antal arbetsställen (som den juridiska enheten har, aeantje)" }
+evidence = "#2102 same-label cluster 'Antal arbetsställen' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: antal_ae is a summed count of workplaces in branch-by-municipality tables, aeantje counts the workplaces that the legal unit has in the workplace table."

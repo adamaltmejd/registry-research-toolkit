@@ -748,3 +748,39 @@ kind = "set"
 subject = "set:undervisningskostnader"
 fields = { "label" = "Undervisningskostnader" }
 evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:elevbidrag"
+fields = { "label" = "Statsbidrag (för eleverna)" }
+evidence = "#2102 same-label cluster 'Statsbidrag' (2 variables): judged different meaning, high confidence; Opdefs differ: ElevBidrag is grant received for pupils, LokalBidrag for premises."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalbidrag"
+fields = { "label" = "Statsbidrag (för lokalerna)" }
+evidence = "#2102 same-label cluster 'Statsbidrag' (2 variables): judged different meaning, high confidence; Opdefs differ: ElevBidrag is grant received for pupils, LokalBidrag for premises."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-elever-skelev"
+fields = { "label" = "Antal elever (SkElev)" }
+evidence = "#2102 same-label cluster 'Antal elever' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SkElev and ElevFgAr have identical definition 'Antal elever' and unit in the same table and period; nothing separates them, so column codes qualify."
+
+[[statement]]
+kind = "set"
+subject = "var:elevfgar"
+fields = { "label" = "Antal elever (ElevFgAr)" }
+evidence = "#2102 same-label cluster 'Antal elever' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SkElev and ElevFgAr have identical definition 'Antal elever' and unit in the same table and period; nothing separates them, so column codes qualify."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform"
+fields = { "label" = "Särskoleform (SarForm)" }
+evidence = "#2102 same-label cluster 'Särskoleform' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SarForm (2013-2016) and SForm (2015-2016) have identical definition and codes in one table and overlap in 2015; nothing separates them, so each keeps its spelling (SarForm/Sarform are one column)."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform-sform"
+fields = { "label" = "Särskoleform (SForm)" }
+evidence = "#2102 same-label cluster 'Särskoleform' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SarForm (2013-2016) and SForm (2015-2016) have identical definition and codes in one table and overlap in 2015; nothing separates them, so each keeps its spelling (SarForm/Sarform are one column)."

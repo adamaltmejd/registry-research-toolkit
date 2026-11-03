@@ -1111,3 +1111,57 @@ kind = "set"
 subject = "set:varmesystem"
 fields = { "label" = "Värmesystem" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agarekat"
+fields = { "label" = "Ägarkategori (med allmännyttiga företag och annan ägare, AgareKat)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (3 variables): judged different meaning, medium confidence; AgareKat and Agarkategori share a code list with Allmännyttiga företag and Annan ägare in adjacent periods; AgarKat has Kommunägda företag and Fysiska personer instead."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-2187"
+fields = { "label" = "Ägarkategori (med allmännyttiga företag och annan ägare, Agarkategori)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (3 variables): judged different meaning, medium confidence; AgareKat and Agarkategori share a code list with Allmännyttiga företag and Annan ägare in adjacent periods; AgarKat has Kommunägda företag and Fysiska personer instead."
+
+[[statement]]
+kind = "set"
+subject = "var:antlgh"
+fields = { "label" = "Antal lägenheter totalt (rivning, AntLgh)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (4 variables): judged different meaning, medium confidence; TotLgh is the net total in the ombyggnad table (tillkommande minus borttagna, opdef); AntLgh and TotAntLgh follow each other in the rivning table; PaborjadeLgh (påbörjade, decoded from the name) runs beside TotAntLgh."
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp-2299"
+fields = { "label" = "Lägenhetstyp (numerisk kod, Lagenhetstyp)" }
+evidence = "#2102 same-label cluster 'Lägenhetstyp' (3 variables): judged different meaning, high confidence; LghKod and Lagenhetstyp share a numeric code list (1-10) in adjacent periods; LghTyp uses R/RK codes by number of rooms and kitchen."
+
+[[statement]]
+kind = "set"
+subject = "var:lghkod"
+fields = { "label" = "Lägenhetstyp (numerisk kod, LghKod)" }
+evidence = "#2102 same-label cluster 'Lägenhetstyp' (3 variables): judged different meaning, high confidence; LghKod and Lagenhetstyp share a numeric code list (1-10) in adjacent periods; LghTyp uses R/RK codes by number of rooms and kitchen."
+
+[[statement]]
+kind = "set"
+subject = "var:lghtyp"
+fields = { "label" = "Lägenhetstyp (rum och kök, R/RK-kod)" }
+evidence = "#2102 same-label cluster 'Lägenhetstyp' (3 variables): judged different meaning, high confidence; LghKod and Lagenhetstyp share a numeric code list (1-10) in adjacent periods; LghTyp uses R/RK codes by number of rooms and kitchen."
+
+[[statement]]
+kind = "set"
+subject = "var:paborjadelgh"
+fields = { "label" = "Antal lägenheter totalt (påbörjade lägenheter, rivning)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (4 variables): judged different meaning, medium confidence; TotLgh is the net total in the ombyggnad table (tillkommande minus borttagna, opdef); AntLgh and TotAntLgh follow each other in the rivning table; PaborjadeLgh (påbörjade, decoded from the name) runs beside TotAntLgh."
+
+[[statement]]
+kind = "set"
+subject = "var:totantlgh"
+fields = { "label" = "Antal lägenheter totalt (rivning, TotAntLgh)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (4 variables): judged different meaning, medium confidence; TotLgh is the net total in the ombyggnad table (tillkommande minus borttagna, opdef); AntLgh and TotAntLgh follow each other in the rivning table; PaborjadeLgh (påbörjade, decoded from the name) runs beside TotAntLgh."
+
+[[statement]]
+kind = "set"
+subject = "var:totlgh"
+fields = { "label" = "Antal lägenheter totalt (netto, ombyggnad)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (4 variables): judged different meaning, medium confidence; TotLgh is the net total in the ombyggnad table (tillkommande minus borttagna, opdef); AntLgh and TotAntLgh follow each other in the rivning table; PaborjadeLgh (påbörjade, decoded from the name) runs beside TotAntLgh."

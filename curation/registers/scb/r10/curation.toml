@@ -4916,3 +4916,609 @@ kind = "set"
 subject = "set:varveteareal"
 fields = { "label" = "Vårveteareal" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-havre-i-havre"
+fields = { "label" = "Aktuell areal havre (IAKS)" }
+evidence = "#2102 same-label cluster 'Aktuell areal havre' (2 variables): judged different meaning, medium confidence; i_havre sits in the IAKS table iaks-arealer (stödansökan) while Havre is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-slattervall-i-slatt"
+fields = { "label" = "Aktuell areal slåttervall (IAKS)" }
+evidence = "#2102 same-label cluster 'Aktuell areal slåttervall' (2 variables): judged different meaning, medium confidence; i_slatt sits in the IAKS table iaks-arealer while Slattervall is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn"
+fields = { "label" = "Aktuell areal vårkorn (IAKS)" }
+evidence = "#2102 same-label cluster 'Aktuell areal vårkorn' (2 variables): judged different meaning, medium confidence; i_vkorn sits in the IAKS table iaks-arealer while Varkorn is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-i-andrav"
+fields = { "label" = "Andra växtslag (areal i hektar, IAKS)" }
+evidence = "#2102 same-label cluster 'Andra växtslag (areal i hektar)' (3 variables): judged different meaning, medium confidence; andravaxt (arealer, to 1998) continues as AndraVaxtslag (uppdragsregistret); i_andrav sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-obrukad-mark"
+fields = { "label" = "Annan obrukad mark (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Annan obrukad mark (areal i ha)' (2 variables): judged different meaning, medium confidence; i_obruk sits in the IAKS table iaks-arealer while AnnanObrukad is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agda-fastigheter"
+fields = { "label" = "Antal fastigheter (ägda)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter' (2 variables): judged different meaning, high confidence; Opdefs: AntAgdFast counts ägda and AntArrFast arrenderade fastigheter, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arrenderade-fastigheter"
+fields = { "label" = "Antal fastigheter (arrenderade)" }
+evidence = "#2102 same-label cluster 'Antal fastigheter' (2 variables): judged different meaning, high confidence; Opdefs: AntAgdFast counts ägda and AntArrFast arrenderade fastigheter, concurrent in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-groda-1"
+fields = { "label" = "Areal av grödan (gröda 1)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-hostraps"
+fields = { "label" = "Höstraps (IAKS)" }
+evidence = "#2102 same-label cluster 'Höstraps' (2 variables): judged different meaning, medium confidence; i_hraps sits in the IAKS table iaks-arealer while Hostraps is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-oljelin"
+fields = { "label" = "Oljelin (IAKS)" }
+evidence = "#2102 same-label cluster 'Oljelin' (2 variables): judged different meaning, medium confidence; i_oljlin sits in the IAKS table iaks-arealer while Oljelin is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-rag"
+fields = { "label" = "Råg (IAKS)" }
+evidence = "#2102 same-label cluster 'Råg' (2 variables): judged different meaning, medium confidence; i_rag sits in the IAKS table iaks-arealer while Rag is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varraps"
+fields = { "label" = "Vårraps (IAKS)" }
+evidence = "#2102 same-label cluster 'Vårraps' (2 variables): judged different meaning, medium confidence; i_vraps sits in the IAKS table iaks-arealer while Varraps is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varvete"
+fields = { "label" = "Vårvete (IAKS)" }
+evidence = "#2102 same-label cluster 'Vårvete' (2 variables): judged different meaning, medium confidence; i_vvete sits in the IAKS table iaks-arealer while Varvete is in uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:areal10"
+fields = { "label" = "Areal av grödan (gröda 10)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal11"
+fields = { "label" = "Areal av grödan (gröda 11)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal12"
+fields = { "label" = "Areal av grödan (gröda 12)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal13"
+fields = { "label" = "Areal av grödan (gröda 13)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal14"
+fields = { "label" = "Areal av grödan (gröda 14)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal15"
+fields = { "label" = "Areal av grödan (gröda 15)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal16"
+fields = { "label" = "Areal av grödan (gröda 16)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal17"
+fields = { "label" = "Areal av grödan (gröda 17)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal18"
+fields = { "label" = "Areal av grödan (gröda 18)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal19"
+fields = { "label" = "Areal av grödan (gröda 19)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal2"
+fields = { "label" = "Areal av grödan (gröda 2)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal20"
+fields = { "label" = "Areal av grödan (gröda 20)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal3"
+fields = { "label" = "Areal av grödan (gröda 3)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal4"
+fields = { "label" = "Areal av grödan (gröda 4)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal5"
+fields = { "label" = "Areal av grödan (gröda 5)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal6"
+fields = { "label" = "Areal av grödan (gröda 6)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal7"
+fields = { "label" = "Areal av grödan (gröda 7)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal8"
+fields = { "label" = "Areal av grödan (gröda 8)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:areal9"
+fields = { "label" = "Areal av grödan (gröda 9)" }
+evidence = "#2102 same-label cluster 'Areal av grödan' (21 variables): judged different meaning, high confidence; Opdefs: areal1-areal20 are the areas for gröda 1 to 20, twenty concurrent numbered columns in the 1989-1990 arealer table; AREAL is the single-column form from 1999."
+
+[[statement]]
+kind = "set"
+subject = "var:astat-akermark"
+fields = { "label" = "Areal åkermark (storleksklass, 2 ha-gräns)" }
+evidence = "#2102 same-label cluster 'Areal åkermark' (3 variables): judged different meaning, medium confidence; aker and i_aker are the arable area from different sources (arealer/uppdragsregistret and the IAKS table); Astat is a size class with a 2 ha limit (value set), not an area."
+
+[[statement]]
+kind = "set"
+subject = "var:betesvall-i-betva"
+fields = { "label" = "Betesvall (IAKS)" }
+evidence = "#2102 same-label cluster 'Betesvall' (2 variables): judged different meaning, medium confidence; i_betva sits in the IAKS table iaks-arealer while Betesvall is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:blandsad-i-bland"
+fields = { "label" = "Blandsäd (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Blandsäd (areal i ha)' (2 variables): judged different meaning, medium confidence; i_bland sits in the IAKS table iaks-arealer while Blandsad is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-i-bruna"
+fields = { "label" = "Bruna bönor (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Bruna bönor (areal i ha)' (3 variables): judged different meaning, medium confidence; brunbonor and Brunabonor are consecutive spellings of one column; i_bruna sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:energiskog-i-energi"
+fields = { "label" = "Energiskog (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Energiskog (areal i ha)' (2 variables): judged different meaning, medium confidence; i_energi sits in the IAKS table iaks-arealer while Energiskog is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoder-i-gronfo"
+fields = { "label" = "Grönfoder (IAKS)" }
+evidence = "#2102 same-label cluster 'Grönfoder' (2 variables): judged different meaning, medium confidence; i_gronfo sits in the IAKS table iaks-arealer while Gronfoder is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:hostkorn-i-hkorn"
+fields = { "label" = "Höstkorn (IAKS)" }
+evidence = "#2102 same-label cluster 'Höstkorn' (2 variables): judged different meaning, medium confidence; i_hkorn sits in the IAKS table iaks-arealer while Hostkorn is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs-i-hrybs"
+fields = { "label" = "Höstrybs (IAKS)" }
+evidence = "#2102 same-label cluster 'Höstrybs' (2 variables): judged different meaning, medium confidence; i_hrybs sits in the IAKS table iaks-arealer while Hostrybs is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:hostvete-i-hvete"
+fields = { "label" = "Höstvete (IAKS)" }
+evidence = "#2102 same-label cluster 'Höstvete' (2 variables): judged different meaning, medium confidence; i_hvete sits in the IAKS table iaks-arealer while Hostvete is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:i-aker"
+fields = { "label" = "Areal åkermark (IAKS)" }
+evidence = "#2102 same-label cluster 'Areal åkermark' (3 variables): judged different meaning, medium confidence; aker and i_aker are the arable area from different sources (arealer/uppdragsregistret and the IAKS table); Astat is a size class with a 2 ha limit (value set), not an area."
+
+[[statement]]
+kind = "set"
+subject = "var:i-tradg"
+fields = { "label" = "Trädgård (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Trädgård (areal i ha)' (3 variables): judged different meaning, high confidence; Tradgard is the area, Tkod the type of trädgårdsodling (description and value set), i_tradg the area from the IAKS table."
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter"
+fields = { "label" = "Konservärter (areal i ha, Konservarter)" }
+evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-i-konser"
+fields = { "label" = "Konservärter (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-konsarter"
+fields = { "label" = "Konservärter (areal i ha, konsarter)" }
+evidence = "#2102 same-label cluster 'Konservärter (areal i ha)' (3 variables): judged different meaning, medium confidence; konsarter and Konservarter are two spellings of one column in uppdragsregistret; i_konser sits in the IAKS table and is a different source."
+
+[[statement]]
+kind = "set"
+subject = "var:matpotatis-i-matpot"
+fields = { "label" = "Matpotatis (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Matpotatis (areal i ha)' (2 variables): judged different meaning, medium confidence; i_matpot sits in the IAKS table iaks-arealer while Matpotatis is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:nykalla"
+fields = { "label" = "Källa (nykalla)" }
+evidence = "#2102 same-label cluster 'Källa' (2 variables): judged different meaning, low confidence; kalla and nykalla are concurrent in foretag with different code lists (20 vs 7 value sets); the shared opdefs do not say which text belongs to which, so nykalla is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ragvete-i-ragvet"
+fields = { "label" = "Rågvete (areal i ha, IAKS)" }
+evidence = "#2102 same-label cluster 'Rågvete (areal i ha)' (2 variables): judged different meaning, medium confidence; i_ragvet sits in the IAKS table iaks-arealer while Ragvete is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "label" = "Regionkod (region)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-ragvete"
+fields = { "label" = "Regionkod (ragvete)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod"
+fields = { "label" = "Regionkod (Regkod)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod2000"
+fields = { "label" = "Regionkod (regkod2000)" }
+evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:sockerbetor-i-socbet"
+fields = { "label" = "Sockerbetor (areal i hektar, IAKS)" }
+evidence = "#2102 same-label cluster 'Sockerbetor (areal i hektar)' (2 variables): judged different meaning, medium confidence; i_socbet sits in the IAKS table iaks-arealer while Sockerbetor is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:standardtimmar-hela-jordbruket-ny-typologi"
+fields = { "label" = "Standardtimmar hela jordbruket (ny typologi)" }
+evidence = "#2102 same-label cluster 'Standardtimmar hela jordbruket' (2 variables): judged different meaning, high confidence; Opdef: jtim_ny is a new calculation of standardtimmar under the new typology with new normtal; Jtim spans 1999-2026."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr"
+fields = { "label" = "Stödområde (aktuell indelning)" }
+evidence = "#2102 same-label cluster 'Stödområde' (3 variables): judged different meaning, high confidence; Opdefs: stodomr is the aktuella stödområdet, stodomr2014 and stodomr2015 the regional divisions for the years 2014 and 2015, with different value sets (Område 10:a only in 2015)."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2014"
+fields = { "label" = "Stödområde (indelning för 2014)" }
+evidence = "#2102 same-label cluster 'Stödområde' (3 variables): judged different meaning, high confidence; Opdefs: stodomr is the aktuella stödområdet, stodomr2014 and stodomr2015 the regional divisions for the years 2014 and 2015, with different value sets (Område 10:a only in 2015)."
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2015"
+fields = { "label" = "Stödområde (indelning för 2015)" }
+evidence = "#2102 same-label cluster 'Stödområde' (3 variables): judged different meaning, high confidence; Opdefs: stodomr is the aktuella stödområdet, stodomr2014 and stodomr2015 the regional divisions for the years 2014 and 2015, with different value sets (Område 10:a only in 2015)."
+
+[[statement]]
+kind = "set"
+subject = "var:trada-i-trada"
+fields = { "label" = "Träda (areal i hektar, IAKS)" }
+evidence = "#2102 same-label cluster 'Träda (areal i hektar)' (2 variables): judged different meaning, medium confidence; i_trada sits in the IAKS table iaks-arealer while Trada is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:tradgard-odlingstyp"
+fields = { "label" = "Trädgård (typ av trädgårdsodling)" }
+evidence = "#2102 same-label cluster 'Trädgård (areal i ha)' (3 variables): judged different meaning, high confidence; Tradgard is the area, Tkod the type of trädgårdsodling (description and value set), i_tradg the area from the IAKS table."
+
+[[statement]]
+kind = "set"
+subject = "var:varrybs-i-vrybs"
+fields = { "label" = "Vårrybs (IAKS)" }
+evidence = "#2102 same-label cluster 'Vårrybs' (2 variables): judged different meaning, medium confidence; i_vrybs sits in the IAKS table iaks-arealer while Varrybs is in arealer and uppdragsregistret; a different source over the overlapping 1999-2000."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: po/po8 'geografisk indelning i 8 områden' and po18 'i 18 områden', with 8-code and 18-code value sets in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: po/po8 'geografisk indelning i 8 områden' and po18 'i 18 områden', with 8-code and 18-code value sets in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "label" = "C/O-adress (Adr2)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adr1"
+fields = { "label" = "C/O-adress (Adr1)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress1"
+fields = { "label" = "C/O-adress (adress1)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress2"
+fields = { "label" = "C/O-adress (adress2)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition and opdef ('C/O-adress för brukaren') are identical for all four; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress"
+fields = { "label" = "Gatuadress (adress)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "label" = "Gatuadress (Adr1)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adr2"
+fields = { "label" = "Gatuadress (Adr2)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress2"
+fields = { "label" = "Gatuadress (adress2)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress1"
+fields = { "label" = "Gatuadress (adress1)" }
+evidence = "#2102 same-label cluster 'Gatuadress' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Definition ('Företagets gatuadress') and opdef ('Gatu- eller boxadress') are identical for all five; the line number is only in the column spelling, so 'adressrad' is dropped and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:underkod"
+fields = { "label" = "Undergröda (kod)" }
+evidence = "#2102 same-label cluster 'Undergröda' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; underkod has an 80-code list in both occurrences; undergroda has no code list and no opdef, so it keeps the bare label."
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "label" = "Gröda (gröda 1)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda10"
+fields = { "label" = "Gröda (gröda 10)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda11"
+fields = { "label" = "Gröda (gröda 11)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda12"
+fields = { "label" = "Gröda (gröda 12)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda13"
+fields = { "label" = "Gröda (gröda 13)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda14"
+fields = { "label" = "Gröda (gröda 14)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda15"
+fields = { "label" = "Gröda (gröda 15)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda16"
+fields = { "label" = "Gröda (gröda 16)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda17"
+fields = { "label" = "Gröda (gröda 17)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda18"
+fields = { "label" = "Gröda (gröda 18)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda19"
+fields = { "label" = "Gröda (gröda 19)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda2"
+fields = { "label" = "Gröda (gröda 2)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda20"
+fields = { "label" = "Gröda (gröda 20)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda3"
+fields = { "label" = "Gröda (gröda 3)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda4"
+fields = { "label" = "Gröda (gröda 4)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda5"
+fields = { "label" = "Gröda (gröda 5)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda6"
+fields = { "label" = "Gröda (gröda 6)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda7"
+fields = { "label" = "Gröda (gröda 7)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda8"
+fields = { "label" = "Gröda (gröda 8)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:groda9"
+fields = { "label" = "Gröda (gröda 9)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:tfid"
+fields = { "label" = "Gröda (trädgårdsgröda, TFid)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:tradid"
+fields = { "label" = "Gröda (trädgårdsgröda, TRADID)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "label" = "Gröda (trädgårdsgröda, grodid)" }
+evidence = "#2102 same-label cluster 'Gröda' (23 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; groda1-groda20 have opdefs 'Gröda 1'..'Gröda 20' (confirmed per column); TFid, TRADID and grodid are in the trädgård tables with the same crop codes and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:kundnr-2"
+fields = { "label" = "Kundnummer (kundnr1)" }
+evidence = "#2102 same-label cluster 'Kundnummer' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; kundnr1 has no opdef; kundnr2 and kundnr (iaks-brukare) share the opdef 'Kundnummer på företaget'; kundnr later says the customer number used when applying for Jordbruksverket support."
+
+[[statement]]
+kind = "set"
+subject = "var:kundnr2"
+fields = { "label" = "Kundnummer (kundnr2)" }
+evidence = "#2102 same-label cluster 'Kundnummer' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; kundnr1 has no opdef; kundnr2 and kundnr (iaks-brukare) share the opdef 'Kundnummer på företaget'; kundnr later says the customer number used when applying for Jordbruksverket support."
+
+[[statement]]
+kind = "set"
+subject = "var:sumfriland"
+fields = { "label" = "Totala frilandssareal i hektar (Sumfriland)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-frilandssareal"
+fields = { "label" = "Totala frilandssareal i hektar (tradgard)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:friland"
+fields = { "label" = "Totala frilandssareal i hektar (friland)" }
+evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."

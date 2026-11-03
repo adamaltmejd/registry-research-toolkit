@@ -20,7 +20,7 @@
 
 /* Below the narrow breakpoint the field it opens under takes the top bar's
    width, and the palette takes the field's. */
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .popover {
     width: var(--trigger-width);
   }

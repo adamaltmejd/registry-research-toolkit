@@ -256,3 +256,33 @@ kind = "set"
 subject = "var:stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln anger stratum vid urval.\ncatalog:variable_text:45853:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallsmangd"
+fields = { "label" = "Bränsleförbrukning (avfallsmängd)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (2 variables): judged different meaning, high confidence; Opdefs: Bransle is consumed fuel per quarter, Avfallsmangd consumed waste per quarter."
+
+[[statement]]
+kind = "set"
+subject = "var:avfallstyp"
+fields = { "label" = "Bränsleslag (avfallstyp)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (2 variables): judged different meaning, high confidence; Opdefs and code lists: Brslag has wood-fuel and peat categories, Avfallstyp household, business and import waste."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad"
+fields = { "label" = "Total kostnad för förbrukat bränsle (avfall, inköpskostnad)" }
+evidence = "#2102 same-label cluster 'Total kostnad för förbrukat bränsle' (2 variables): judged different meaning, medium confidence; Kostnad (from 2014) is the fuel cost; Inkopskostnad (from 2021, opdef) is the cost of consumed waste."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-anst"
+fields = { "label" = "Adress (PoAnst)" }
+evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, low confidence; Adress and PoAnst are concurrent columns in one table; no source text says what PoAnst holds, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningens-namn"
+fields = { "label" = "Anläggningens namn (ArbNamn)" }
+evidence = "#2102 same-label cluster 'Anläggningens namn' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ArbNamn and Anl have the same definition and the same opdef (Kvartalsvis bränslestatistik, 'Avser industri' in 2018-2019) and coexist in one table; 'arbetsställets namn' appears in no opdef, so ArbNamn is labelled by its code."

@@ -24,11 +24,11 @@
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken};
-use crate::project::{ColumnType, IdSubtype, NumericSubtype};
+use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
-const PROJECT_OPTIONAL: [&str; 2] = ["panels", "window"];
+const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
 const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
 const BINDING_KEYS: [&str; 9] = [
     "variable",
@@ -431,6 +431,20 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
                 format!("{field} must be a string"),
             );
         }
+    }
+    optional_string(root, "extract_format", "", "extract_format", issues);
+    if let Some(format) = get(root, "extract_format").and_then(Value::as_str)
+        && ExtractFormat::parse(format).is_none()
+    {
+        issues.error(
+            "invalid_enum_value",
+            "/extract_format".into(),
+            format!(
+                "extract_format must be one of {}; got {}",
+                allowed(ExtractFormat::ALL.iter().map(|v| v.as_str())),
+                q(format)
+            ),
+        );
     }
 }
 

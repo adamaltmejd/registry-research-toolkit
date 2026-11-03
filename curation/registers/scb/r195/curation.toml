@@ -149,56 +149,56 @@ evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2015-01-01..2015-12-31 where key = 'v8152' and release = 'r12641'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2016-01-01..2016-12-31 where key = 'v8152' and release = 'r12793'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2017-01-01..2017-12-31 where key = 'v8152' and release = 'r12969'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2018-01-01..2018-12-31 where key = 'v8152' and release = 'r12970'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2019-01-01..2019-12-31 where key = 'v8152' and release = 'r13382'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2020-01-01..2020-12-31 where key = 'v8152' and release = 'r14524'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2021-01-01..2021-12-31 where key = 'v8152' and release = 'r16440'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2022-01-01..2022-12-31 where key = 'v8152' and release = 'r18253'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: fallangd @2023-01-01..2023-12-31 where key = 'v8152' and release = 'r18751'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar (fallangd)", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days.\n\n#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
 
 [[statement]]
 kind = "assert"
@@ -341,56 +341,56 @@ evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy ex
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2015-01-01..2015-12-31 where key = 'v49' and release = 'r12641'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2016-01-01..2016-12-31 where key = 'v49' and release = 'r12793'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2017-01-01..2017-12-31 where key = 'v49' and release = 'r12969'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2018-01-01..2018-12-31 where key = 'v49' and release = 'r12970'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2019-01-01..2019-12-31 where key = 'v49' and release = 'r13382'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2020-01-01..2020-12-31 where key = 'v49' and release = 'r14524'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2021-01-01..2021-12-31 where key = 'v49' and release = 'r16440'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2022-01-01..2022-12-31 where key = 'v49' and release = 'r18253'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2023-01-01..2023-12-31 where key = 'v49' and release = 'r18751'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only).\n\n#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
 
 [[statement]]
 kind = "set"
@@ -1710,3 +1710,303 @@ kind = "set"
 subject = "set:urvalsstratum"
 fields = { "label" = "Urvalsstratum" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
+fields = { "label" = "Antal objekt per stratum enligt Företagsdatabasen (FDB) (storanks)" }
+evidence = "#2102 same-label cluster 'Antal objekt per stratum enligt Företagsdatabasen (FDB)' (2 variables): judged different meaning, low confidence; storanks (2006-2007) runs concurrently with StoraN and no text explains the difference; qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-nsvarrfv"
+fields = { "label" = "Antal svarande objekt (nsvarrfv)" }
+evidence = "#2102 same-label cluster 'Antal svarande objekt' (2 variables): judged different meaning, low confidence; nsvarrfv (2006-2007) runs concurrently with nsvar and no text explains the difference; qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-matmanad"
+fields = { "label" = "Referensmånad (matmanad)" }
+evidence = "#2102 same-label cluster 'Referensmånad' (2 variables): judged different meaning, low confidence; manad and matmanad are concurrent with the same month list and no text separates them; matmanad is qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2006-01-01..2011-03-31"
+fields = { "label" = "Antal sjukdagar (fallangd)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-fallgrupp"
+fields = { "label" = "Antal sjukdagar (fallgrp)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-kalender"
+fields = { "label" = "Antal sjukdagar (kaldag)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-delantdagar"
+fields = { "label" = "Antal sjukdagar (deldagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-helantdagar"
+fields = { "label" = "Antal sjukdagar (heldagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdag"
+fields = { "label" = "Antal sjukdagar (glappdagar, GLAPPANTDAG)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdagar"
+fields = { "label" = "Antal sjukdagar (glappdagar, GlappAntDagar)" }
+evidence = "#2102 same-label cluster 'Antal sjukdagar' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Only deldagar, heldagar and glappdagar are named by an opdef in every occurrence; fallangd and fallgrp have no opdef and kaldag's opdef says kalenderdagar only from 2011 (earlier 'uppräknad till kvartalssiffra' or none), so those three take their code."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "label" = "Aktuellt antal anställda (arbetsställe, AnstAE)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-anstje"
+fields = { "label" = "Aktuellt antal anställda (anstJe)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa"
+fields = { "label" = "Aktuellt antal anställda (arbetsställe, SyssA)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98"
+fields = { "label" = "Aktuellt antal anställda (arbetsställe, syssa98)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98u"
+fields = { "label" = "Aktuellt antal anställda (arbetsställe, syssa98u)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf"
+fields = { "label" = "Aktuellt antal anställda (SYSSF)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf98"
+fields = { "label" = "Aktuellt antal anställda (syssf98)" }
+evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The opdef unit changes inside a column: anstJe, syssf98 and SYSSF say 'juridiska enhetens samtliga arbetsställen' in 2006-2009, 'arbetsstället' in 2009-2011, and SYSSF 'företaget' from 2011, so only AnstAE, SyssA, syssa98 and syssa98u (always 'arbetsstället') keep a unit qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-astlan"
+fields = { "label" = "Län (astlan)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan"
+fields = { "label" = "Län (lan)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98"
+fields = { "label" = "Län (lan98)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98t"
+fields = { "label" = "Län (lan98t)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98u"
+fields = { "label" = "Län (lan98u)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lanf"
+fields = { "label" = "Län (lanf)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2011-04-01..2011-12-31"
+fields = { "label" = "Län (individens bostads- eller arbetslän, Ksjulan)" }
+evidence = "#2102 same-label cluster 'Län' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Six columns have the same definition and value set with no distinguishing text; Ksjulan alone has an opdef (bostadslän, overwritten by arbetslän) in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98"
+fields = { "label" = "Näringsgren (bgr98)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98n"
+fields = { "label" = "Näringsgren (bgr98n)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98t"
+fields = { "label" = "Näringsgren (bgr98t)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98u"
+fields = { "label" = "Näringsgren (bgr98u)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98x"
+fields = { "label" = "Näringsgren (bgr98x)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ng1"
+fields = { "label" = "Näringsgren (NG1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1"
+fields = { "label" = "Näringsgren (NgGr1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2"
+fields = { "label" = "Näringsgren (NgGr2)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1"
+fields = { "label" = "Näringsgren (NGS1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni1"
+fields = { "label" = "Näringsgren (Sni1)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2"
+fields = { "label" = "Näringsgren (Sni2)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snia"
+fields = { "label" = "Näringsgren (SniA)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1-2002"
+fields = { "label" = "Näringsgren (NgS1_2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (NG1_2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1-2002"
+fields = { "label" = "Näringsgren (NgGr1_2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2-2002"
+fields = { "label" = "Näringsgren (nggr2_2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-grupperad-2009"
+fields = { "label" = "Näringsgren (lgrp)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snigrupp"
+fields = { "label" = "Näringsgren (snigrupp)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2siffer"
+fields = { "label" = "Näringsgren (2-siffernivå, bransch)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-rams"
+fields = { "label" = "Näringsgren (individens anställnings-SNI enligt RAMS)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-strata"
+fields = { "label" = "Stratumbeteckning objekt (strata)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition; only stratam's opdef (4 digits, optional 5th digit for month in the quarter) differs, and 'A-/B-strata' appears in no text I may use, so stratam takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-stratum"
+fields = { "label" = "Stratumbeteckning objekt (stratum)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition; only stratam's opdef (4 digits, optional 5th digit for month in the quarter) differs, and 'A-/B-strata' appears in no text I may use, so stratam takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "label" = "Stratumbeteckning objekt (StrataKS)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition; only stratam's opdef (4 digits, optional 5th digit for month in the quarter) differs, and 'A-/B-strata' appears in no text I may use, so stratam takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:stratam"
+fields = { "label" = "Stratumbeteckning objekt (stratam)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition; only stratam's opdef (4 digits, optional 5th digit for month in the quarter) differs, and 'A-/B-strata' appears in no text I may use, so stratam takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanks"
+fields = { "label" = "Urvalsstorlek per stratum (lillanks)" }
+evidence = "#2102 same-label cluster 'Urvalsstorlek per stratum' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; lillanks and lillanrfv have no opdef and run concurrently in sjukfranvaro-sjukloneperioden; Lillan has opdef 'Antalet utvalda objekt i ett stratum'."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanrfv"
+fields = { "label" = "Urvalsstorlek per stratum (lillanrfv)" }
+evidence = "#2102 same-label cluster 'Urvalsstorlek per stratum' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; lillanks and lillanrfv have no opdef and run concurrently in sjukfranvaro-sjukloneperioden; Lillan has opdef 'Antalet utvalda objekt i ett stratum'."

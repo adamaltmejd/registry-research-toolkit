@@ -16,7 +16,6 @@ struct StoredColumn {
     slot_family: Option<String>,
     slot_kind: Option<String>,
     slot_index: Option<String>,
-    locator: String,
 }
 
 /// Compare artifact coordinates with the independently re-read, admitted sources.
@@ -25,20 +24,28 @@ struct StoredColumn {
 fn sources(
     db: &Connection,
     root: &Path,
-) -> Result<(input::Topology, reg_readers::holdings::ReadOutput), String> {
+) -> Result<
+    (
+        input::Topology,
+        reg_readers::holdings::ReadOutput,
+        BTreeSet<references::Occurrence>,
+    ),
+    String,
+> {
     let pin = input::Pin {
         repo: meta(db, "steward_repo")?,
         commit: meta(db, "steward_commit")?,
         config: meta(db, "steward_config")?,
     };
     let config = input::admit(root, &pin, &meta(db, "owner_id")?)?;
-    if references::read(root, &config)? != references::stored(db)? {
+    let declarations = references::read(root, &config)?;
+    if references::keys(&declarations) != references::stored(db)? {
         return Err("holdings_reference_occurrence_source_mismatch".into());
     }
-    let recorded: BTreeMap<String, String> = serde_json::from_str(&meta(db, "input_pins")?)
-        .map_err(|_| "holdings_meta_invalid: input_pins")?;
-    if recorded != config.pins {
-        return Err("holdings_source_pin_mismatch: input_pins differ from pinned config".into());
+    if meta(db, "input_manifest_sha256")? != input::manifest_digest(&config.pins) {
+        return Err(
+            "holdings_source_pin_mismatch: input manifest differs from pinned config".into(),
+        );
     }
     let census = reg_readers::holdings::read(
         &input::path(root, &config.inputs.census)?,
@@ -199,7 +206,7 @@ fn sources(
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
             EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
               OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0) AND ?2)
-            ,c.slot_family,c.slot_kind,c.slot_index,c.locator
+            ,c.slot_family,c.slot_kind,c.slot_index
             FROM holding_column c WHERE c.holding_id=?1",
             )
             .map_err(|e| e.to_string())?;
@@ -217,7 +224,6 @@ fn sources(
                         slot_family: r.get(7)?,
                         slot_kind: r.get(8)?,
                         slot_index: r.get(9)?,
-                        locator: r.get(10)?,
                     },
                 ))
             })
@@ -241,7 +247,6 @@ fn sources(
                 || stored.slot_kind.as_deref() != authored.and_then(|c| c.slot_kind.as_deref())
                 || stored.slot_index
                     != authored.and_then(|c| c.slot_index.as_ref().map(ToString::to_string))
-                || authored.is_some_and(|c| stored.locator != c.locator)
             {
                 return Err(format!("{location}: holdings_slot_source_mismatch"));
             }
@@ -285,11 +290,16 @@ fn sources(
             return Err(format!("census:{key}: holdings_source_accounting_mismatch"));
         }
     }
-    Ok((topology, census))
+    Ok((topology, census, declarations))
 }
 
-pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), String> {
-    let allowed = references::admitted(holdings, base)?;
+pub(super) fn distinct(
+    holdings: &Connection,
+    base: &Connection,
+    declarations: &BTreeSet<references::Occurrence>,
+) -> Result<(), String> {
+    let mut allowed = references::admitted(holdings, base, declarations)?;
+    allowed.extend(references::overlays(holdings, base)?);
     {
         let sql = "SELECT pid FROM ident WHERE kind!='provider' UNION SELECT pid FROM var_set UNION SELECT pid FROM ident_retired";
         let mut query = base.prepare(sql).map_err(|e| e.to_string())?;
@@ -350,7 +360,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
     if meta(&db, "owner_kind")? != "steward" || !reg_core::is_slug(&meta(&db, "owner_id")?) {
         return Err("holdings_owner_invalid".into());
     }
-    let (topology, census) = sources(&db, root)?;
+    let (topology, census, declarations) = sources(&db, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?
@@ -367,6 +377,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         "semantic_generation",
         "semantic_sha256",
         "compiler_digest",
+        "input_manifest_sha256",
     ] {
         let value = meta(&db, key)?;
         if value.len() != 64 || !value.bytes().all(|b| b.is_ascii_hexdigit()) {
@@ -374,7 +385,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         }
     }
     crate::verify::semantic(&db)?;
-    distinct(&db, &base)?;
+    distinct(&db, &base, &declarations)?;
     external_relations(&db, &base)?;
     no_rows(
         &db,
@@ -463,7 +474,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             return Err("holdings_table_route_unresolved".into());
         }
     }
-    let mut query=db.prepare("SELECT m.table_pid,m.variable_pid,m.start,m.end,m.role,m.carried,h.id,h.disposition,m.window,m.caveat,m.locator
+    let mut query=db.prepare("SELECT m.table_pid,m.variable_pid,m.start,m.end,m.role,m.carried,h.id,h.disposition,m.window,m.caveat
       FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id ORDER BY m.id")
       .map_err(|e|e.to_string())?;
     let mut rows = query.query([]).map_err(|e| e.to_string())?;
@@ -477,7 +488,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
         let disposition: String = row.get(7).map_err(|e| e.to_string())?;
         let window: Option<String> = row.get(8).map_err(|e| e.to_string())?;
         let caveat: Option<String> = row.get(9).map_err(|e| e.to_string())?;
-        let locator: String = row.get(10).map_err(|e| e.to_string())?;
         let candidates = index
             .get(&(table.clone(), variable))
             .ok_or("stale_declared_mapping_target")?;
@@ -502,7 +512,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             .collect::<Result<Vec<_>, _>>()
             .map_err(|e| e.to_string())?;
         if !compile::covered(&[(start, end)], &periods)
-            || locator.trim().is_empty()
             || caveat.is_some_and(|c| c.trim().is_empty())
             || window
                 .map(|w| compile::periods(&w).map(|w| !compile::covered(&[(start, end)], &w)))
@@ -510,7 +519,8 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
                 .unwrap_or(false)
         {
             return Err(
-                "inventory_window_invalid: mapping escapes file/window or lacks evidence".into(),
+                "inventory_window_invalid: mapping escapes file/window or has a blank caveat"
+                    .into(),
             );
         }
     }

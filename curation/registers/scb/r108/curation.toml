@@ -2657,3 +2657,105 @@ kind = "set"
 subject = "set:val-av-amnesomrade"
 fields = { "label" = "Val av ämnesområde" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
+fields = { "label" = "Gymnasieprogram, grupperat (5 grupper, med introduktionsprogram)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fyra-grupper-2009-10"
+fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat"
+fields = { "label" = "Gymnasieprogram, grupperat (3 programtyper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
+fields = { "label" = "Gymnasieprogram, grupperat (5 grupper, med yrkesprogram)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
+fields = { "label" = "Vikt (experimenturval och ordinarie urval)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-alla"
+fields = { "label" = "Vikt (alla, sex hjälpvariabler)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-nya"
+fields = { "label" = "Vikt (nya enkäten)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nya"
+fields = { "label" = "Lilla n per stratum (nya enkäten, grupp N)" }
+evidence = "#2102 same-label cluster 'Lilla n per stratum' (2 variables): judged different meaning, medium confidence; Opdefs: Lillan counts individuals in the sample per stratum, Lillan_Nya only those who got the new questionnaire (group N)."
+
+[[statement]]
+kind = "set"
+subject = "var:pgrgrp"
+fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-program"
+fields = { "label" = "Typ av gymnasieprogram (programkod)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-typpgm"
+fields = { "label" = "Typ av gymnasieprogram (3 programtyper)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:typpgr"
+fields = { "label" = "Typ av gymnasieprogram (2 programtyper)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
+
+[[statement]]
+kind = "set"
+subject = "var:wk-ord"
+fields = { "label" = "Vikt (ordinarie urval)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "label" = "Gymnasieprogram (årskurs 3)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Pgm opdefs say årskurs 3; Pgm_Ga says årskurs 2 läsåret 2002/03; Program's 2013 opdef instead describes year 3 or else the year-2 programme and its 2007 opdef cites 2005/06, so only the code holds for Program; utbild is a single 2011/12 occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-arskurs-2-lasaret-2002-03"
+fields = { "label" = "Gymnasieprogram (årskurs 2, läsåret 2002/03)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Pgm opdefs say årskurs 3; Pgm_Ga says årskurs 2 läsåret 2002/03; Program's 2013 opdef instead describes year 3 or else the year-2 programme and its 2007 opdef cites 2005/06, so only the code holds for Program; utbild is a single 2011/12 occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-program"
+fields = { "label" = "Gymnasieprogram (Program)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Pgm opdefs say årskurs 3; Pgm_Ga says årskurs 2 läsåret 2002/03; Program's 2013 opdef instead describes year 3 or else the year-2 programme and its 2007 opdef cites 2005/06, so only the code holds for Program; utbild is a single 2011/12 occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:utbild"
+fields = { "label" = "Gymnasieprogram (utbild)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Pgm opdefs say årskurs 3; Pgm_Ga says årskurs 2 läsåret 2002/03; Program's 2013 opdef instead describes year 3 or else the year-2 programme and its 2007 opdef cites 2005/06, so only the code holds for Program; utbild is a single 2011/12 occurrence."

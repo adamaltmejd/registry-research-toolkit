@@ -460,3 +460,39 @@ kind = "set"
 subject = "set:varukvantitet"
 fields = { "label" = "Varukvantitet" }
 evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:sitc"
+fields = { "label" = "SITC (detaljerad varukod)" }
+evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 (volymutveckling) has main divisions 0-9 in its value set, SITC5 (trade tables) detailed product codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sitc-sitc3"
+fields = { "label" = "SITC (SITC3)" }
+evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 (volymutveckling) has main divisions 0-9 in its value set, SITC5 (trade tables) detailed product codes."
+
+[[statement]]
+kind = "set"
+subject = "var:sni97-5"
+fields = { "label" = "SPIN (SNI 97)" }
+evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Different classification versions: SNI 97 at 5 digits (value labels 01111...) versus SPIN 2007 (01.110...), an update of SPIN 2002 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:spin"
+fields = { "label" = "SPIN (SPIN 2007)" }
+evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Different classification versions: SNI 97 at 5 digits (value labels 01111...) versus SPIN 2007 (01.110...), an update of SPIN 2002 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4"
+fields = { "label" = "Varugrupp SITC rev3/rev4 (5-siffernivå, SITC5)" }
+evidence = "#2102 same-label cluster 'Varugrupp SITC rev3/rev4' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SITC5 holds 5-digit codes (2970) in the trade tables; SITC3 in volymutveckling holds 3-digit codes (262) from 2018, so the granularity differs."
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4-sitc3"
+fields = { "label" = "Varugrupp SITC rev3/rev4 (volymutveckling, SITC3)" }
+evidence = "#2102 same-label cluster 'Varugrupp SITC rev3/rev4' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SITC5 holds 5-digit codes (2970) in the trade tables; SITC3 in volymutveckling holds 3-digit codes (262) from 2018, so the granularity differs."

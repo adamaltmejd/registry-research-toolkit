@@ -184,62 +184,62 @@ caveat = "SCB documents no column emp2010 on Innovationsverksamhet i företag. T
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INITPS @2010-01-01..2012-12-31 where key = 'v28056' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11911\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad av företaget)", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11911\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INOTHPS @2010-01-01..2012-12-31 where key = 'v28056' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11931\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad av andra)", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11931\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INTOPS @2010-01-01..2012-12-31 where key = 'v28056' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11961\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad tillsammans med andra)", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11961\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INITGD @2010-01-01..2012-12-31 where key = 'v28054' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11981\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av företaget)", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11981\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INOTHGD @2010-01-01..2012-12-31 where key = 'v28054' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11921\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av andra)", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11921\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INTOGD @2010-01-01..2012-12-31 where key = 'v28054' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11951\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11951\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INITSV @2010-01-01..2012-12-31 where key = 'v28055' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11991\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av företaget)", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11991\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INOTHSV @2010-01-01..2012-12-31 where key = 'v28055' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11941\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av andra)", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11941\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INTOSV @2010-01-01..2012-12-31 where key = 'v28055' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11971\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad tillsammans med andra)", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11971\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: PBNOCT @2010-01-01..2012-12-31 where key = 'v30131' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal", "definition" = "anger om företaget genomfört några innovationsaktiviteter som en del av en avtal för att tillhandahålla varor eller tjänster till en offentlig organisation. inkludera aktiviteter för produktinnovation, processinnovation, organisatorisk innovation och innovation inom marknadsföring", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:12001\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal (innovation ej krävd i upphandlingsavtal)", "definition" = "anger om företaget genomfört några innovationsaktiviteter som en del av en avtal för att tillhandahålla varor eller tjänster till en offentlig organisation. inkludera aktiviteter för produktinnovation, processinnovation, organisatorisk innovation och innovation inom marknadsföring", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:12001\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions.\n\n#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
 
 [[statement]]
 kind = "assert"
@@ -394,20 +394,20 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:593\n\
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INADGD @2010-01-01..2012-12-31 where key = 'v28054' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:656\n\nSWECOV holds INADGD in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (anpassad av företaget)", "definition" = "Vem utvecklade företagets Varuinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:656\n\nSWECOV holds INADGD in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INADPS @2010-01-01..2012-12-31 where key = 'v28056' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:665\n\nSWECOV holds INADPS in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (anpassad av företaget)", "definition" = "Vem som utvecklade företagets processinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:665\n\nSWECOV holds INADPS in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016.\n\n#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: INADSV @2010-01-01..2012-12-31 where key = 'v28055' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:674\n\nSWECOV holds INADSV in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (anpassad av företaget)", "definition" = "Vem utvecklade företagets tjänsteinnovationer", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:674\n\nSWECOV holds INADSV in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016.\n\n#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "assert"
@@ -436,8 +436,8 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:755\n\
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: PBINCT @2010-01-01..2012-12-31 where key = 'v30131' and release = 'r5168'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal", "definition" = "anger om företaget genomfört några innovationsaktiviteter som en del av en avtal för att tillhandahålla varor eller tjänster till en offentlig organisation. inkludera aktiviteter för produktinnovation, processinnovation, organisatorisk innovation och innovation inom marknadsföring", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:764\n\nSWECOV holds PBINCT in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal (innovation krävd i upphandlingsavtal)", "definition" = "anger om företaget genomfört några innovationsaktiviteter som en del av en avtal för att tillhandahålla varor eller tjänster till en offentlig organisation. inkludera aktiviteter för produktinnovation, processinnovation, organisatorisk innovation och innovation inom marknadsföring", "type" = "char", "length" = 200, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:764\n\nSWECOV holds PBINCT in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 with a blank Kolumnnamn on the variable's rows in 2010 - 2012; its named rows are in 2014 - 2016.\n\n#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
 
 [[statement]]
 kind = "assert"
@@ -14368,3 +14368,453 @@ kind = "set"
 subject = "set:varumarkesskydd"
 fields = { "label" = "Varumärkesskydd" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-emp2022"
+fields = { "label" = "Antal anställda (EMP2022)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (2 variables): judged different meaning, low confidence; EMP and EMP2022 are concurrent 2020-2023 with the same opdef; no text explains the year tag."
+
+[[statement]]
+kind = "set"
+subject = "var:logistikinnovation-annat-hinder"
+fields = { "label" = "Logistikinnovationer - Hinder (annat hinder)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:logistikinnovation-ekonomiskt-hinder"
+fields = { "label" = "Logistikinnovationer - Hinder (ekonomiskt hinder)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:logistikinnovation-rattsligt-hinder"
+fields = { "label" = "Logistikinnovationer - Hinder (rättsligt hinder)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:logistikinnovation-tekniskt-hinder"
+fields = { "label" = "Logistikinnovationer - Hinder (tekniskt hinder)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:logistikinnovation-utebliven-huvudorsak"
+fields = { "label" = "Logistikinnovationer - Hinder (LG)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: PBNOCT @2014-01-01..2016-12-31"
+fields = { "label" = "Typ av avtal (innovation ej krävd i upphandlingsavtal)" }
+evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: PBINCT @2014-01-01..2016-12-31"
+fields = { "label" = "Typ av avtal (innovation krävd i upphandlingsavtal)" }
+evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktivitet-i-upphandlingsavtal"
+fields = { "label" = "Typ av avtal (innovationsaktivitet i upphandlingsavtal)" }
+evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-koncernforetag-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (koncernföretag, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-koncernforetag-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (koncernföretag, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-koncernforetag-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (koncernföretag, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-koncernforetag-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (koncernföretag, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-koncernforetag-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (koncernföretag, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konkurrenter-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konkurrenter, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konkurrenter-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konkurrenter, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konkurrenter-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konkurrenter, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konkurrenter-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konkurrenter, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konkurrenter-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konkurrenter, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konsulter-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konsulter, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konsulter-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konsulter, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konsulter-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konsulter, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konsulter-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konsulter, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-konsulter-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (konsulter, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-leverantorer-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (leverantörer, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-leverantorer-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (leverantörer, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-leverantorer-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (leverantörer, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-leverantorer-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (leverantörer, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-leverantorer-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (leverantörer, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-offentlig-forskning-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (offentlig forskning, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-offentlig-forskning-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (offentlig forskning, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-offentlig-forskning-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (offentlig forskning, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-offentlig-forskning-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (offentlig forskning, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-offentlig-forskning-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (offentlig forskning, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-universitet-platskolumn-2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (universitet, plats 2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-universitet-platskolumn-3"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (universitet, plats 3)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-universitet-platskolumn-4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (universitet, plats 4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-universitet-platskolumn-5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (universitet, plats 5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:cis2002-samarbete-universitet-sverige"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (universitet, Sverige)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co311"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO311)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co312"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO312)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co313"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO313)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co314"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO314)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co315"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO315)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co321"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO321)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co322"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO322)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co323"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO323)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co324"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO324)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co325"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO325)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co81"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO81)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co82"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO82)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co83"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO83)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co84"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO84)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-co85"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CO85)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona1"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA1)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona2"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA2)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona31"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA31)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona32"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA32)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona4"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA4)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona5"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA5)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona6"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA6)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona7"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA7)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-samarbetspartner-geografiskt-fordelat-cona8"
+fields = { "label" = "Typ av samarbetspartner geografiskt fördelat (CONA8)" }
+evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt fördelat' (54 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Definition and geography code list are identical for all 54; partner type and place slot come from the SCB-titled pid names (cis2002-samarbete-..., platskolumn-N). CO31x, CO32x and CO8x have no title text, so the 'plats N' decoding is replaced by the full column code."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INADPS @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av processinnovation (anpassad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INOTHPS @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av processinnovation (utvecklad av andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INITPS @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av processinnovation (utvecklad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INTOPS @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av processinnovation (utvecklad tillsammans med andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INADSV @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, tjänster (anpassad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INOTHSV @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INITSV @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INTOSV @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad tillsammans med andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INADGD @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (anpassad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INOTHGD @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INITGD @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av företaget)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: INTOGD @2014-01-01..2016-12-31"
+fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)" }
+evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."

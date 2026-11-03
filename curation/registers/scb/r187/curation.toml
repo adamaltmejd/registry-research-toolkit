@@ -1100,3 +1100,99 @@ kind = "set"
 subject = "set:urvalsstorlek"
 fields = { "label" = "Urvalsstorlek" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ateranskhandelsvaror"
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde, AteranskHandelsvaror)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:ateranskins"
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde, AteranskINS)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:fft0-ater"
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde, FFT0_Ater)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:ins0-ater"
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde, INS0_Ater)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde"
+fields = { "label" = "Produktionsvärde (ProdVarde)" }
+evidence = "#2102 same-label cluster 'Produktionsvärde' (2 variables): judged different meaning, low confidence; ProdVarde and ProdVardeT run concurrently in one table 1998-2000 with no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:prodvardet"
+fields = { "label" = "Produktionsvärde (ProdVardeT)" }
+evidence = "#2102 same-label cluster 'Produktionsvärde' (2 variables): judged different meaning, low confidence; ProdVarde and ProdVardeT run concurrently in one table 1998-2000 with no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-verksamhetsenheten-aktanst"
+fields = { "label" = "Antal anställda på verksamhetsenheten (AktAnst)" }
+evidence = "#2102 same-label cluster 'Antal anställda på verksamhetsenheten' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktAnst and AL2UndEjU share definition and are concurrent; nothing in the text tells them apart, so code qualifies the second."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-verksamhetsenheten-al2undeju"
+fields = { "label" = "Antal anställda på verksamhetsenheten (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Antal anställda på verksamhetsenheten' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktAnst and AL2UndEjU share definition and are concurrent; nothing in the text tells them apart, so code qualifies the second."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "label" = "Branschgrupp (AktBr92)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "label" = "Branschgrupp (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "label" = "Branschgrupp (AktBr07)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "label" = "Branschgrupp (femställig kod, BGrupp)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "label" = "Näringsgren (AktSni92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktSni92 opdefs say SNI 2007 in some occurrences and SNI 2002 in others, and AL2UndEjU says SNI 2007 then SNI 2002, so a version qualifier is not true of all; AktSni07 and CU_BranschText both say SNI 2007 with the same 821-code list, so they are told apart by code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "label" = "Näringsgren (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktSni92 opdefs say SNI 2007 in some occurrences and SNI 2002 in others, and AL2UndEjU says SNI 2007 then SNI 2002, so a version qualifier is not true of all; AktSni07 and CU_BranschText both say SNI 2007 with the same 821-code list, so they are told apart by code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "label" = "Näringsgren (SNI 2007, AktSni07)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktSni92 opdefs say SNI 2007 in some occurrences and SNI 2002 in others, and AL2UndEjU says SNI 2007 then SNI 2002, so a version qualifier is not true of all; AktSni07 and CU_BranschText both say SNI 2007 with the same 821-code list, so they are told apart by code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "label" = "Näringsgren (SNI 2007, CU_BranschText)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktSni92 opdefs say SNI 2007 in some occurrences and SNI 2002 in others, and AL2UndEjU says SNI 2007 then SNI 2002, so a version qualifier is not true of all; AktSni07 and CU_BranschText both say SNI 2007 with the same 821-code list, so they are told apart by code."

@@ -132,15 +132,15 @@ dependency.
 **Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
 fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
 digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
-arm64 and Linux x86_64 with SHA-256 checksums, and one catalog asset, `reg_meta.db.zst`,
-documents included. There is no separate docs asset; SWECOV's asset is not produced
-until milestone E. The binaries serve local HTTP or MCP; the catalog is downloaded with
-`curl` and `zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use
-hosted MCP; a local Windows binary is added only if it builds and runs without special
-effort. The `microdata-tools-se` plugin declares one hosted MCP server whose URL is a
-user setting: the global catalog by default, a hosted steward catalog
-(`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the agent's
-MCP configuration by hand.
+arm64 and Linux x86_64 with SHA-256 checksums, and two DB assets, `reg_meta.db.zst`
+(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
+holdings pin the base's `catalog_sha256`). There is no separate docs asset. The binaries
+serve local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no
+PyPI package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows
+binary is added only if it builds and runs without special effort. The
+`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
+the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
+instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
 
 ## The catalog builder
 
@@ -1087,7 +1087,7 @@ it is posted to `validate` or `order`. Holdings return in milestone E.
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 5.1.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 5.2.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -1171,7 +1171,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "5.1.0",
+    "project": {"name": "income-panel", "schema_version": "5.2.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1211,7 +1211,7 @@ and `sun2000niva`.
        "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
     ]
   },
-  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1239,7 +1239,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1319,17 +1319,17 @@ commit pin before e-holdings. Its access controls must protect the private input
 public metadata definitions do not authorize publishing private source files.
 
 The toolkit contains only generic compilation/serving code and a steward pin registry,
-`curation/stewards.toml`: each steward id selects `repo`, exact `commit` and relative
-`config` path. The dedicated repo's `steward.toml` declares owner id, scope,
-presentation paths, reader/input roles, semantic curation root and series root. Use
-`scope.toml`, `branding/` (`steward.json`, logo), `series/`, `curation/registers/`
-(normal ledgers and statements, including slots), `curation/readers/`, and `inputs/`
-(census, storage export, provider source TOML/converted transcription CSV, inventory and
-legacy slug evidence). Pin selected delivery-document evidence there too, retaining
-originals privately. Reuse the catalog input-pin discipline: verify the supplied
-checkout against the exact commit and declared paths/hashes; no implicit latest branch
-or neighbouring inputs. The compiled holdings file carries presentation/config data
-needed at runtime; serving never checks out that repo or parses its TOML.
+`stewards.toml`: each steward id selects `repo`, exact `commit` and relative `config`
+path. The dedicated repo's `steward.toml` declares owner id, scope, presentation paths,
+reader/input roles, semantic curation root and series root. Use `scope.toml`,
+`branding/` (`steward.json`, logo), `series/`, `curation/registers/` (normal ledgers and
+statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+export, provider source TOML/converted transcription CSV, inventory and legacy slug
+evidence). Pin selected delivery-document evidence there too, retaining originals
+privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
+the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
+inputs. The compiled holdings file carries presentation/config data needed at runtime;
+serving never checks out that repo or parses its TOML.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,
@@ -1515,11 +1515,13 @@ The generic compiler does the following against the exact catalog/semantic-view 
    coordinate; it yields two valid placements, not two rival variables. Different
    variable ids claiming the same folded column in one routed table/window remain
    `ambiguous_delivered_owners`: a publish-time notice/worklist row with no orderable
-   placement over the contested interval (Operator F2). Do not select by longest
-   coverage, first id or label. Uncontested intervals remain independently eligible.
-   Explicit `select_owner` names an evidence-backed variable per column/table/window; it
-   cannot clear an ambiguous catalog segment. Partition/projection and duplicate
-   placement checks still apply after owner grouping.
+   placement over the contested interval (Operator F2). The notice records its rival
+   `(table_pid, variable_pid)` pairs (`holding_notice_candidate`), so the contested cell
+   stays linked to its variables even where no placement of them survives. Do not select
+   by longest coverage, first id or label. Uncontested intervals remain independently
+   eligible. Explicit `select_owner` names an evidence-backed variable per
+   column/table/window; it cannot clear an ambiguous catalog segment.
+   Partition/projection and duplicate placement checks still apply after owner grouping.
 5. Emit keys `(table_pid, variable_pid, interval)` pointing to the literal physical
    column. An unmatched or empty-intersection column is retained with a
    `mapping_missing` notice and worklist row, without an orderable mapping. It does
@@ -1571,14 +1573,14 @@ disagreement auto-corrects provider types.
 ### Compiled facts and publication
 
 `reg-build holdings --base <published-db> --steward <id> --steward-repo <checkout> --out <file>`
-is the separate stage. The id selects the toolkit's `curation/stewards.toml` pin; the
-supplied checkout must match it, and its config supplies all input/curation paths. It
-verifies the catalog, reads it without modifying or copying it, and emits only the
-holdings layer (maintainer 2026-10-29). The base's entities, row ids, documents and
-search indexes stay in the catalog file. Holdings inputs and stored cross-file mappings
-use public ids; integer ids are local to each database and never joined across files
-without their database origin. Do not import schema-v3's obsolete programme id ranges or
-`UNION ALL` of unqualified row ids.
+is the separate stage. The id selects the toolkit's `stewards.toml` pin; the supplied
+checkout must match it, and its config supplies all input/curation paths. It verifies
+the catalog, reads it without modifying or copying it, and emits only the holdings layer
+(maintainer 2026-10-29). The base's entities, row ids, documents and search indexes stay
+in the catalog file. Holdings inputs and stored cross-file mappings use public ids;
+integer ids are local to each database and never joined across files without their
+database origin. Do not import schema-v3's obsolete programme id ranges or `UNION ALL`
+of unqualified row ids.
 `reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
 the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
 admits the clean steward checkout against the repository, commit, config and input pins
@@ -1587,10 +1589,10 @@ export. Every census table and exact physical column must be present, with no ex
 coordinates; offered columns must match the source schema, table type, storage type,
 length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
 Physical mappings must equal the complete admitted explicit mappings or automatic
-spelling matches: interval unions grouped by table, variable, role, carried flag,
-caveat, authored window and evidence locator. Verification derives these expectations
-from the admitted sources independently of compiler candidates and placements, including
-shared projection keys. Missing coverage or changed attributes refuse with located
+spelling matches: interval unions grouped by table, variable, role, carried flag, caveat
+and authored window. Verification derives these expectations from the admitted sources
+independently of compiler candidates and placements, including shared projection keys.
+Missing coverage or changed attributes refuse with located
 `holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
 artifact table/column ids without printing private physical identifiers.
 
@@ -1699,39 +1701,57 @@ existing reference segments. Both endpoints must exist, but the base may omit th
 membership: an evidenced, nonempty steward occurrence can supply the received table's
 missing key without inventing global validity. An empty supplemental occurrence still
 refuses (`holdings_reference_occurrence_empty`), even if the base lacks membership. Only
-the explicit variables, tables and their parent registers may share public identities;
-other collisions still refuse. These declarations are occurrence bindings, not aliases,
-derivations or copied reference rows. The verifier compares them with the pinned input.
-Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+the explicit variables, tables and their parent registers may share public identities,
+plus overlays: a steward register under the same provider, or a table in the same
+register with the same timelessness, may reuse the reference id to add steward-minted
+variables and tables to it (#2134). Readers keep the reference row and merge only the
+steward's distinct contents. Variable collisions without a declaration still refuse
+(`holdings_semantic_collision`). These declarations are occurrence bindings, not
+aliases, derivations or copied reference rows. The verifier compares them with the
+pinned input. Holdings schema 2 adds `holding_reference_occurrence`; older holdings are
+recompiled.
 
-Reference `coverage` spans retain their original meaning. In selected steward mode,
-`coverage.steward_occurrences` exposes these canonical variables' attested supplemental
-periods, documentary label/definition, logical type/coding/value set and local source
-locators, beside accepted physical `held` intervals. Variable holdings include these
-steward-attested memberships even when the global member list omits them. This keeps the
-provenance and scope explicit without widening or copying global semantics. Logical
-order consumption of these occurrences remains e-order work.
+Reference `coverage` spans retain their original meaning. In selected steward mode, the
+attested periods reach readers only as accepted physical `held` intervals; variable
+holdings include these steward-attested memberships even when the global member list
+omits them. The occurrences' own text and locators are not served: a release carries
+catalog items, never steward working files or census row references (maintainer
+2026-11-03), and the per-occurrence listing repeated what `held` already shows.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
 schema. `meta` records owner kind/id, holdings generation, catalog generation and file
-digest, plus input/curation/compiler pins. Admission checks both schemas exactly and the
-pairing pins; it does not accept another generation because the public ids happen to
-resolve.
+digest, the steward pin, the input-manifest digest and the compiler digest. Admission
+checks both schemas exactly and the pairing pins; it does not accept another generation
+because the public ids happen to resolve.
 
 Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
 recompiled. Family declarations and their evidence remain steward input facts, with no
 register or physical-table naming rules in the compiler.
 
+Holdings schema 5 adds `holding_notice_candidate` (#2123) and drops background data from
+the published pair (#2113): the `locator` columns of `holding_table`, `holding_column`,
+`holding_mapping` and `holding_notice`,
+`holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. Both stay
+steward input: a locator on every decision locates compiler and verifier refusals, and
+the evidence on every reference occurrence records its review in the steward repo. The
+supplemental semantic part keeps the catalog schema but emits no `occurrence_locator`
+rows, since its source rows are steward working files. `meta.input_manifest_sha256` (one
+digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
+`steward_commit` and `steward_config` stay because `reg-build verify --steward-repo`
+needs them to admit the pinned checkout and recompute that digest. Build provenance for
+review lives in the `--report` JSON under `steward`: repo, commit, config and every
+input pin. That report is private release evidence.
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
-  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-  | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
-  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                          |
-  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                   |
+  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                   |
+  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
 reviewed from received-row evidence. The pinned physical `[[table.key]]` declarations
@@ -1792,9 +1812,8 @@ household amounts are child-only data, not claims that the parent holds them.
 
 Index mappings by logical table, variable and start/end and columns by holding/name.
 Coverage is computed from indexed facts, not stored guesses about future UI summaries.
-Include source digests and the accepted census accounting in `meta`/`input`; publish no
-raw private locators that expose confidential document paths. Published locators use
-input-role ids and safe relative metadata locations.
+Include the input-manifest digest and the accepted census accounting in `meta`; publish
+no steward locators or per-file pins (schema 5).
 
 `reg-build verify` is the sole publication validator. It checks exact census accounting
 (one disposition per table; every physical column represented), stored disposition and
@@ -1803,13 +1822,14 @@ integrity, form/window containment, complete storage facts for orderable columns
 roles and presence, disjointness/uniqueness of emitted placements, projection rules and
 located caveats. Competing candidate owners have already become
 `ambiguous_delivered_owners` notices with their contested placements omitted, so they do
-not violate uniqueness. Partitions authorize several explicitly disjoint locations;
-projections, carried keys and documented position families authorize duplicates only
-under their stated rules. A warning cannot license an otherwise ambiguous mapping.
-Unmatched columns are notices/worklist entries, not publication blockers; they count in
-coverage but do not order until a valid mapping exists. Excluded, lookup and
-retained-unknown tables are accounted with reasons; a lookup used as a logical codelist
-is not thereby observation data.
+not violate uniqueness; verify re-derives each blocked interval and its recorded rivals
+from source, since orders refuse by them. Partitions authorize several explicitly
+disjoint locations; projections, carried keys and documented position families authorize
+duplicates only under their stated rules. A warning cannot license an otherwise
+ambiguous mapping. Unmatched columns are notices/worklist entries, not publication
+blockers; they count in coverage but do not order until a valid mapping exists.
+Excluded, lookup and retained-unknown tables are accounted with reasons; a lookup used
+as a logical codelist is not thereby observation data.
 
 For example, `Swedbank_V15` is explicitly partition `v15` for 2020
 (`series/swedbank-v15.toml`); its label is not inferred from its name. Conversely,
@@ -1849,11 +1869,9 @@ promised (the runner deliberately has no `ORDER BY`).
 `materialize_order` is `POST /api/project/materialize`, exposed on the existing coarse
 `order` MCP tool. The hosted request is only `project`; the serving steward and pinned
 holdings pair come from startup configuration, with no request owner override. Add
-optional `extract_format = dta|parquet|csv` to the next minor project schema (5.2.0),
-defaulting to `dta` in order authoring. Today's `project.rs::SCHEMA_VERSION` admits
-5.1.0 exactly. E changes `SCHEMA_VERSION` and closed-field validation to admit 5.2.0
-exactly, with optional `extract_format`; every other version is
-`unsupported_schema_version`. Update examples and fixtures together; older projects are
+optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
+5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
+5.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -1882,10 +1900,11 @@ binds artifact identity to the result. It first calls the logical check, then in
 each resulting table/variable/form interval with accepted holdings windows. Partial
 possession is an explicit physical clip and wholly unheld selections block. A
 publish-time `ambiguous_delivered_owners` notice has no accepted contested placement; a
-request for that cell therefore blocks as `mapping_missing`, not a second runtime
-holdings-rival resolution. Catalog ambiguity remains blocking even if only one rival is
-held. Physical findings never disappear into the logical `validate.ok` result. The
-separate physical operation reports its own success/refusal.
+request for a variable among its recorded rivals therefore blocks over that interval as
+`mapping_missing`, not a second runtime holdings-rival resolution. Catalog ambiguity
+remains blocking even if only one rival is held. Physical findings never disappear into
+the logical `validate.ok` result. The separate physical operation reports its own
+success/refusal.
 
 Select all explicit partition members needed for the requested interval. Projection
 duplicates use the parent's serving placement for an ordered shared key and retain the
@@ -2051,6 +2070,57 @@ The file carries metadata only. Agents never run on MONA. Extract files and runn
 stay on MONA. Only aggregates passing the separate fixed disclosure policy and human
 review can leave ([export-gate design](../reg_export_gate/DESIGN.md), "Trust boundaries"
 and "MONA mode"). An order is neither disclosure approval nor an export receipt.
+
+**Materialization rules (e-order, 2026-11-03).** `reg_core::manifest` holds the types,
+`safe_file_name` and `stata_name`; `Issue` and the result `Period` moved to
+`reg_core::issue` so the manifest owns its findings type. The cases are
+`conformance/cases/materialize/`.
+
+- `version` is the integer `4`; the runner refuses v3. Absent `extract_format` resolves
+  to `dta` in the manifest only; the project and its hash are untouched. `stata_name` is
+  the v3 rule byte for byte, emitted only on a `dta` order.
+- Provenance: `catalog.generation` is the served pair (`meta.generation`),
+  `base_generation` the reference catalog's `generation_id`, `holdings.generation` the
+  holdings file's.
+- Precedence: `holdings_unavailable` (no holdings served; usage, HTTP 400) before
+  `project_invalid`, then `project_unnamed` (usage, 422; `order` still accepts the
+  draft), then the logical `order_blocked`, then the physical one. A physical
+  `order_blocked` carries the logical non-blocking findings too.
+- Gaps are judged per binding over all its entries. A requested day no accepted
+  placement holds is a `coverage_gap` warning plus a clip when the binding holds some
+  day, and `mapping_missing` (error) when it holds none. A day a routing table delivers
+  but only a column `window` leaves out is `column_window_unavailable` under the same
+  partial-vs-whole rule. A day of an `ambiguous_delivered_owners` notice that names the
+  variable among its rivals is `mapping_missing` even when the rest is held. A clip is
+  the binding's own: its requested days are the logical clip recorded under the project
+  binding's variable, so a `follow_successor` binding whose entries name only successors
+  still reports the days lost between hops.
+- A partition member is selected when it places a requested entry; a sibling without
+  that column is no gap. A projection serves a (table, variable) only over the requested
+  days its parent does not place it; a request the parent covers selects no projection
+  file.
+- Keys are the holding's `key_requirements` (entity, then time, in declaration order)
+  over the days the file extracts (the requested days widened to the encoding's grain,
+  or the whole delivery when unfiltered), scoped by a requirement's `period`; each
+  source sharing the file gets key references over those days. A key column a binding
+  orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
+  `binding: null` references. A source whose binding orders the key column keeps only
+  that binding's reference; every other source sharing the file still gets its
+  `binding: null` key references. An active requirement with `period_key = "column"`
+  adds the physical period column once as a `row_key` with no references. A requirement
+  on hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
+  both block the order.
+- A stored `file_name` failing `safe_file_name` or colliding with another file's when
+  case is ignored is `file_name_unsafe`; a NULL `schema_name` is
+  `physical_schema_missing`. Both block, located at the file's first binding.
+  `reg-build holdings` already refuses such a name at publication
+  (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
+- Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
+  than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
+  `row_filter_union` (a source whose days are narrower than its shared file's union).
+  Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
+  warning located at the binding over the selected days (the Operator's 2026-10-19
+  warn-not-hold call); an automatically added key's caveat is located at its source.
 
 ### Logical types (N1) and metadata for local mocks
 
@@ -2246,6 +2316,19 @@ the order check's findings ("The logical order"). A failing project is a result,
 error. A structural failure skips the catalog layer, so a rejected document costs no
 catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
 
+### Project document 5.2.0
+
+`schema_version` `5.2.0` adds the optional top-level `extract_format`, one of `dta`,
+`parquet` or `csv`: the file format of the order's extract files, one per project. It is
+a string; an explicit `null` is `invalid_field_type`, any other string is
+`invalid_enum_value`, both at `/extract_format`. Absent means the authoring default
+`dta`. The order file resolves that default ("From a logical order to physical files");
+it is never written into the project, so the project hash covers only what the
+researcher wrote (an absent field hashes as `null`, like every absent optional).
+
+Nothing else changes. The field tables and rules of 5.1.0 below hold for 5.2.0, except
+that `extract_format` is a known top-level key.
+
 ### Project document 5.1.0
 
 `schema_version` `5.1.0` adds optional boolean `follow_successor` to variable bindings
@@ -2259,7 +2342,7 @@ Top level:
   | Field            | 5.1.0     | Why                                                                                                                                                                                                       |
   | ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `steward`        | removed   | Its readers go (the serving catalog's name, `steward_mismatch`, the holdings checks). The holdings layer (E) decides how a project names its steward or holdings. A field nothing checks would be a shim. |
-  | `extract_format` | removed   | A file format is physical. It returns with the order file in E.                                                                                                                                           |
+  | `extract_format` | removed   | A file format is physical. It returns in 5.2.0 as an optional field resolved into the order file.                                                                                                         |
   | the rest         | unchanged | `schema_version`, `reg_meta_version`, `name`, `sources`, `panels`, `window`.                                                                                                                              |
 
 Source:
@@ -2328,7 +2411,7 @@ the key `invalid_field_type` rules. Changed:
 
   | Rule                                                         | 5.1.0                                                                                             |
   | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                             |
+  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field` (`extract_format` is optional from 5.2.0)   |
   | source keys                                                  | `name`, `table`, `period`, `bindings`; `edition` and `qualifier` are `unexpected_field`           |
   | `invalid_fqid` on the source                                 | `table` is a 2- or 3-part public id, provider not `class`                                         |
   | `fqid_table_mismatch` (was `fqid_register_variant_mismatch`) | the binding's `<provider>/<register>` equals the table's first two parts                          |
@@ -2546,9 +2629,9 @@ and not FQID kinds.
 - **Contract version.** `CONTRACT_VERSION` versions the operation set and its JSON
   shapes, and `meta` reports it on every response.
 - **Releases** are tagged per package (`reg_meta/vX.Y.Z`); each release carries the
-  single `reg_meta.db.zst` catalog asset (documents included) and the binaries. SWECOV's
-  asset is not produced until E. `project_data.json` records the catalog release it was
-  written against in that tag form.
+  `reg_meta.db.zst` catalog asset (documents included), the paired SWECOV holdings asset
+  `reg_meta_swecov.db.zst` and the binaries. `project_data.json` records the catalog
+  release it was written against in that tag form.
 - **Determinism.** The same request on the same artifact returns the same bytes: stable
   ordering with a unique final tie-breaker, sorted JSON keys where the contract says so,
   no timing in `meta`, cursors bound to the generation.

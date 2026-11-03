@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "held: ReceivedOld"
+fields.classification = "class/received/v1"
+evidence = "The earlier delivery codes the measure with this edition."

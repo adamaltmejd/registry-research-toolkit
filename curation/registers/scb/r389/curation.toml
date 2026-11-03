@@ -700,3 +700,111 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp-31-12"
+fields = { "label" = "Ålder 31/12 (grupperad)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; Alder is age in years; AldersGrupp is a six-band grouping (value set)."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2000niva"
+fields = { "label" = "Typ av gymnasieprogram (SUN 2000-nivå)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (3 variables): judged different meaning, high confidence; Gymnasiebakgrund holds program type; the SUN2000Niva and SUN2020Niva columns hold SUN level codes of different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebakgrund-sun2020niva"
+fields = { "label" = "Typ av gymnasieprogram (SUN 2020-nivå)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (3 variables): judged different meaning, high confidence; Gymnasiebakgrund holds program type; the SUN2000Niva and SUN2020Niva columns hold SUN level codes of different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-grupp"
+fields = { "label" = "Studiernas omfattning (grupperad)" }
+evidence = "#2102 same-label cluster 'Studiernas omfattning' (2 variables): judged different meaning, high confidence; Omfattning_grupp is the grouped version (opdef: antal veckor eller kort utbildning) concurrent with Omfattning."
+
+[[statement]]
+kind = "set"
+subject = "var:studerande-justerad"
+fields = { "label" = "Studerande inom aktuell utbildningsform (justerad)" }
+evidence = "#2102 same-label cluster 'Studerande inom aktuell utbildningsform' (2 variables): judged different meaning, high confidence; Opdefs: Studerande_justerad is adjusted for inhopp, avbrott, uppehåll and tidig examen; Studerande is the ojusterade uppgifter."
+
+[[statement]]
+kind = "set"
+subject = "var:studerande-utbildningsform"
+fields = { "label" = "Studerande inom aktuell utbildningsform (ojusterad)" }
+evidence = "#2102 same-label cluster 'Studerande inom aktuell utbildningsform' (2 variables): judged different meaning, high confidence; Opdefs: Studerande_justerad is adjusted for inhopp, avbrott, uppehåll and tidig examen; Studerande is the ojusterade uppgifter."
+
+[[statement]]
+kind = "set"
+subject = "var:studietakt-grupp"
+fields = { "label" = "Studietakt (grupperad)" }
+evidence = "#2102 same-label cluster 'Studietakt' (2 variables): judged different meaning, high confidence; Studietakt_grupp is the grouped version, concurrent with Studietakt in the same table."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN2000Inr vs SUN2020Inr: different classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN2000Inr vs SUN2020Inr: different classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN2020Niva)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå (grov indelning, SUN2020Niva_OLD)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020, each as a detailed three-digit level and a seven-value aggregate (_OLD); the two _OLD aggregates share a code list but derive from different SUN versions."
+
+[[statement]]
+kind = "set"
+subject = "var:suninriktning-kod"
+fields = { "label" = "Inriktning för utbildningen (SUN-inriktning)" }
+evidence = "#2102 same-label cluster 'Inriktning för utbildningen' (2 variables): judged different meaning, medium confidence; SUNinriktning_kod and Utbildningsinriktning_kod are concurrent columns with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-kod"
+fields = { "label" = "Inriktning för utbildningen (utbildningsinriktning)" }
+evidence = "#2102 same-label cluster 'Inriktning för utbildningen' (2 variables): judged different meaning, medium confidence; SUNinriktning_kod and Utbildningsinriktning_kod are concurrent columns with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-gruppering-kkv"
+fields = { "label" = "Födelseland, världsdel/landgrupp (landgrupp)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "label" = "Födelseland, världsdel/landgrupp (FodelseLand_Varldsdel)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel-flergen"
+fields = { "label" = "Födelseland, världsdel/landgrupp (FodelseLand_Varldsdel_Flergen)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The gruppering_KKV code list (Sverige, Norden, EU28, Övriga) supports 'landgrupp'; the Varldsdel columns have only the opdef 'Gruppering av länder' and no code list, so 'världsdel' is unsupported and the code is used."

@@ -14,7 +14,6 @@ CREATE TABLE holding_table (
  period_column_id INTEGER REFERENCES holding_column(id),
  period_encoding TEXT CHECK(period_encoding IN ('date','year','yyyymm','yyyymmdd')),
  reason TEXT,
- locator TEXT NOT NULL,
  CHECK((disposition = 'dated') = (delivery IS NOT NULL)),
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
@@ -47,7 +46,6 @@ CREATE TABLE holding_column (
  disposition TEXT NOT NULL CHECK(disposition IN ('candidate','hold','unmap')),
  reason TEXT,
  follow_up TEXT,
- locator TEXT NOT NULL,
  UNIQUE(holding_id,name),
  UNIQUE(holding_id,ordinal),
  CHECK((slot_kind IS NULL) = (slot_index IS NULL)),
@@ -65,7 +63,6 @@ CREATE TABLE holding_mapping (
  carried INTEGER NOT NULL CHECK(carried IN (0,1)),
  caveat TEXT,
  window TEXT,
- locator TEXT NOT NULL,
  CHECK(start < end),
  UNIQUE(column_id,table_pid,variable_pid,start,end)
 ) STRICT;
@@ -82,8 +79,15 @@ CREATE TABLE holding_notice (
  documented TEXT,
  admitted TEXT,
  message TEXT NOT NULL,
- locator TEXT NOT NULL,
  CHECK((start IS NULL) = (end IS NULL)),
  CHECK(start IS NULL OR start < end)
 ) STRICT;
 CREATE INDEX holding_notice_column ON holding_notice(column_id,code);
+-- The rival (table, variable) owners a blocked placement notice leaves unplaced.
+CREATE TABLE holding_notice_candidate (
+ notice_id INTEGER NOT NULL REFERENCES holding_notice(id),
+ table_pid TEXT NOT NULL,
+ variable_pid TEXT NOT NULL,
+ PRIMARY KEY(notice_id,table_pid,variable_pid)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX holding_notice_candidate_logical ON holding_notice_candidate(table_pid,variable_pid);

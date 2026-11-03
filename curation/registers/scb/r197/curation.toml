@@ -2114,3 +2114,309 @@ kind = "set"
 subject = "set:vatten-och-avloppskostnader"
 fields = { "label" = "Vatten- och avloppskostnader" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "label" = "Fastighetsskatt (V4090)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (2 variables): judged different meaning, low confidence; V4090 and V4091 are concurrent in the privatägda table with the same opdef; no text says how V4091 differs."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-v4091"
+fields = { "label" = "Fastighetsskatt (V4091)" }
+evidence = "#2102 same-label cluster 'Fastighetsskatt' (2 variables): judged different meaning, low confidence; V4090 and V4091 are concurrent in the privatägda table with the same opdef; no text says how V4091 differs."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal"
+fields = { "label" = "Garage- och bilplatser, antal (BILF)" }
+evidence = "#2102 same-label cluster 'Garage- och bilplatser, antal' (4 variables): judged different meaning, low confidence; BILF and GARF (allmännyttiga), A40 and A41 (private) are concurrent pairs in their tables with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-a41"
+fields = { "label" = "Garage- och bilplatser, antal (A41)" }
+evidence = "#2102 same-label cluster 'Garage- och bilplatser, antal' (4 variables): judged different meaning, low confidence; BILF and GARF (allmännyttiga), A40 and A41 (private) are concurrent pairs in their tables with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-garf"
+fields = { "label" = "Garage- och bilplatser, antal (GARF)" }
+evidence = "#2102 same-label cluster 'Garage- och bilplatser, antal' (4 variables): judged different meaning, low confidence; BILF and GARF (allmännyttiga), A40 and A41 (private) are concurrent pairs in their tables with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-och-bilplatser-antal-a40"
+fields = { "label" = "Garage- och bilplatser, antal (A40)" }
+evidence = "#2102 same-label cluster 'Garage- och bilplatser, antal' (4 variables): judged different meaning, low confidence; BILF and GARF (allmännyttiga), A40 and A41 (private) are concurrent pairs in their tables with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-efter-avdrag-summa-v1120"
+fields = { "label" = "Intäkter efter avdrag Summa (V1120)" }
+evidence = "#2102 same-label cluster 'Intäkter efter avdrag Summa' (2 variables): judged different meaning, low confidence; V1110 and V1120 are concurrent in the privatägda table; V1110 opdef is 'Summa intäkter netto', V1120 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader"
+fields = { "label" = "Intäktsreduktioner Bostäder (HBBO)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1050"
+fields = { "label" = "Intäktsreduktioner Bostäder (V1050)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1070"
+fields = { "label" = "Intäktsreduktioner Bostäder (V1070)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1080"
+fields = { "label" = "Intäktsreduktioner Bostäder (V1080)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa"
+fields = { "label" = "Intäktsreduktioner Summa (V1120)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Summa' (2 variables): judged different meaning, low confidence; V1120 and V1110 coexist in the privatägda table 2010-2012 with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa-v1110"
+fields = { "label" = "Intäktsreduktioner Summa (V1110)" }
+evidence = "#2102 same-label cluster 'Intäktsreduktioner Summa' (2 variables): judged different meaning, low confidence; V1120 and V1110 coexist in the privatägda table 2010-2012 with no text on the difference; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a20"
+fields = { "label" = "Lokaler, antal, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Lokaler, antal' (3 variables): judged different meaning, medium confidence; LOKF is an average of the number of premises on 1 Jan and 31 Dec for allmännyttiga companies, A20 the association's total, A21 an extra privatägda column with LOA-h wording."
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a21"
+fields = { "label" = "Lokaler, antal (A21)" }
+evidence = "#2102 same-label cluster 'Lokaler, antal' (3 variables): judged different meaning, medium confidence; LOKF is an average of the number of premises on 1 Jan and 31 Dec for allmännyttiga companies, A20 the association's total, A21 an extra privatägda column with LOA-h wording."
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-lokf"
+fields = { "label" = "Lokaler, antal, allmännyttiga bostadsföretag" }
+evidence = "#2102 same-label cluster 'Lokaler, antal' (3 variables): judged different meaning, medium confidence; LOKF is an average of the number of premises on 1 Jan and 31 Dec for allmännyttiga companies, A20 the association's total, A21 an extra privatägda column with LOA-h wording."
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-faeaar"
+fields = { "label" = "Nybyggnadsår (FAEAAR)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, low confidence; NybyggAr and FAEAAR are concurrent columns in the same tables from 2012 with no text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-nybyggar"
+fields = { "label" = "Nybyggnadsår (NybyggAr)" }
+evidence = "#2102 same-label cluster 'Nybyggnadsår' (2 variables): judged different meaning, low confidence; NybyggAr and FAEAAR are concurrent columns in the same tables from 2012 with no text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "label" = "Total bostadsyta, allmännyttiga bostadsföretag (genomsnitt under året)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (3 variables): judged different meaning, medium confidence; BOYF is the average of 1 Jan and 31 Dec for allmännyttiga companies, Y10 the association's/assessment unit's total, Y11 an extra privatägda column."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y10"
+fields = { "label" = "Total bostadsyta, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (3 variables): judged different meaning, medium confidence; BOYF is the average of 1 Jan and 31 Dec for allmännyttiga companies, Y10 the association's/assessment unit's total, Y11 an extra privatägda column."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y11"
+fields = { "label" = "Total bostadsyta (Y11)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (3 variables): judged different meaning, medium confidence; BOYF is the average of 1 Jan and 31 Dec for allmännyttiga companies, Y10 the association's/assessment unit's total, Y11 an extra privatägda column."
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "label" = "Värdeår (VardeAr)" }
+evidence = "#2102 same-label cluster 'Värdeår' (2 variables): judged different meaning, low confidence; VardeAr and VAEAAR are concurrent columns in the same tables from 2012 with no text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-vaeaar"
+fields = { "label" = "Värdeår (VAEAAR)" }
+evidence = "#2102 same-label cluster 'Värdeår' (2 variables): judged different meaning, low confidence; VardeAr and VAEAAR are concurrent columns in the same tables from 2012 with no text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "label" = "Antal lägenheter totalt, allmännyttiga bostadsföretag (BOSF)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BOSF is in the allmännyttiga table, A10's opdef says 'Föreningens totala antal' (bostadsrättsföreningar and privatägda); the 'genomsnitt' text is missing from one BOSF occurrence so it is dropped; A11, A91, A92 have no text beyond the privatägda table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a10"
+fields = { "label" = "Antal lägenheter totalt, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BOSF is in the allmännyttiga table, A10's opdef says 'Föreningens totala antal' (bostadsrättsföreningar and privatägda); the 'genomsnitt' text is missing from one BOSF occurrence so it is dropped; A11, A91, A92 have no text beyond the privatägda table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a11"
+fields = { "label" = "Antal lägenheter totalt (A11)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BOSF is in the allmännyttiga table, A10's opdef says 'Föreningens totala antal' (bostadsrättsföreningar and privatägda); the 'genomsnitt' text is missing from one BOSF occurrence so it is dropped; A11, A91, A92 have no text beyond the privatägda table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a91"
+fields = { "label" = "Antal lägenheter totalt (A91)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BOSF is in the allmännyttiga table, A10's opdef says 'Föreningens totala antal' (bostadsrättsföreningar and privatägda); the 'genomsnitt' text is missing from one BOSF occurrence so it is dropped; A11, A91, A92 have no text beyond the privatägda table."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a92"
+fields = { "label" = "Antal lägenheter totalt (A92)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BOSF is in the allmännyttiga table, A10's opdef says 'Föreningens totala antal' (bostadsrättsföreningar and privatägda); the 'genomsnitt' text is missing from one BOSF occurrence so it is dropped; A11, A91, A92 have no text beyond the privatägda table."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-kostnader-belopp"
+fields = { "label" = "Hushållsel, kostnader (belopp)" }
+evidence = "#2102 same-label cluster 'Hushållsel, kostnader' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Both are V4081: 2012 and 2015 occurrences are amounts (opdef: kostnader för hushållsel som ingår i redovisade driftkostnader), 2013 occurrences have Ja/Nej codes with the opdef question 'Ingår kostnader för hushållsel i redovisad uppgift på fastighetsel?'."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-ingar-i-fastighetselkostnader"
+fields = { "label" = "Hushållsel, kostnader (ja/nej: ingår i fastighetselkostnader)" }
+evidence = "#2102 same-label cluster 'Hushållsel, kostnader' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Both are V4081: 2012 and 2015 occurrences are amounts (opdef: kostnader för hushållsel som ingår i redovisade driftkostnader), 2013 occurrences have Ja/Nej codes with the opdef question 'Ingår kostnader för hushållsel i redovisad uppgift på fastighetsel?'."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-loyf"
+fields = { "label" = "Total lokalyta, allmännyttiga bostadsföretag (LOYF)" }
+evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y20"
+fields = { "label" = "Total lokalyta, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-toyf"
+fields = { "label" = "Total lokalyta (TOYF)" }
+evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y21"
+fields = { "label" = "Total lokalyta (Y21)" }
+evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4081"
+fields = { "label" = "Hushållsel, intäkter (V4081)" }
+evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4080"
+fields = { "label" = "Hushållsel, intäkter (V4080)" }
+evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1140"
+fields = { "label" = "Hushållsel, intäkter (V1140)" }
+evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1141"
+fields = { "label" = "Hushållsel, intäkter (V1141)" }
+evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga"
+fields = { "label" = "Intäkter Övriga, allmännyttiga bostadsföretag (OVINT)" }
+evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-v1040"
+fields = { "label" = "Intäkter Övriga, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-ovvint"
+fields = { "label" = "Intäkter Övriga, allmännyttiga bostadsföretag (OVVINT)" }
+evidence = "#2102 same-label cluster 'Intäkter Övriga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OVINT and OVVINT are in the allmännyttiga table with identical definition and opdefs; V1040 is in the bostadsrättsföreningar and privatägda tables."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion"
+fields = { "label" = "Kommunregion, allmännyttiga bostadsföretag" }
+evidence = "#2102 same-label cluster 'Kommunregion' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; REGION (allmännyttiga) and RegKlass (bostadsrättsföreningar, privatägda) have the same five-region opdef and codes; RegKod appears in all three tables with the same code list and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regklass"
+fields = { "label" = "Kommunregion, bostadsrättsföreningar och privatägda flerbostadshus" }
+evidence = "#2102 same-label cluster 'Kommunregion' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; REGION (allmännyttiga) and RegKlass (bostadsrättsföreningar, privatägda) have the same five-region opdef and codes; RegKod appears in all three tables with the same code list and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regkod"
+fields = { "label" = "Kommunregion (RegKod)" }
+evidence = "#2102 same-label cluster 'Kommunregion' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; REGION (allmännyttiga) and RegKlass (bostadsrättsföreningar, privatägda) have the same five-region opdef and codes; RegKod appears in all three tables with the same code list and no further text."
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-a91-2"
+fields = { "label" = "Totalyta (A91, Y91)" }
+evidence = "#2102 same-label cluster 'Totalyta' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; A91/Y91 and Y92 (privatägda) have the same 'bostadsyta plus lokalyta' opdef and run concurrently; TOYF is in the allmännyttiga table with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-toyf"
+fields = { "label" = "Totalyta (TOYF)" }
+evidence = "#2102 same-label cluster 'Totalyta' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; A91/Y91 and Y92 (privatägda) have the same 'bostadsyta plus lokalyta' opdef and run concurrently; TOYF is in the allmännyttiga table with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-y92"
+fields = { "label" = "Totalyta (Y92)" }
+evidence = "#2102 same-label cluster 'Totalyta' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; A91/Y91 and Y92 (privatägda) have the same 'bostadsyta plus lokalyta' opdef and run concurrently; TOYF is in the allmännyttiga table with no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (KomId)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-komkod"
+fields = { "label" = "Kommun (KomKod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommkod"
+fields = { "label" = "Kommun (KommKod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommunnamn"
+fields = { "label" = "Kommun (Kommunnamn)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."

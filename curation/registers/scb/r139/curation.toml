@@ -997,3 +997,105 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "label" = "Näringsgren" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-elprod"
+fields = { "label" = "Bränsleförbrukning elprod (industri)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl sits in the heating-plant table and BrEl in the industry table; two surveys with the same wording."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-elprod-elel"
+fields = { "label" = "Bränsleförbrukning elprod (värmeverk)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl sits in the heating-plant table and BrEl in the industry table; two surveys with the same wording."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet"
+fields = { "label" = "Identitet (SCBid)" }
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-koppling-industrins-energianvandning"
+fields = { "label" = "Identitet (koppling till industrins energianvändning)" }
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
+subject = "var:idnr"
+fields = { "label" = "Identitet (IdNr)" }
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
+subject = "var:import-19494"
+fields = { "label" = "Importerad kvantitet (Import)" }
+evidence = "#2102 same-label cluster 'Importerad kvantitet' (2 variables): judged different meaning, low confidence; Import and Kvant are concurrent columns in both tables with identical opdefs; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kvant"
+fields = { "label" = "Importerad kvantitet (Kvant)" }
+evidence = "#2102 same-label cluster 'Importerad kvantitet' (2 variables): judged different meaning, low confidence; Import and Kvant are concurrent columns in both tables with identical opdefs; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:land-for-import-export"
+fields = { "label" = "Land för import/export (kod)" }
+evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid is the country code (opdef: Landkod), LNamn the country name (opdef: Landnamn)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2002, Ng)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
+
+[[statement]]
+kind = "set"
+subject = "var:ng2002"
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2002, Ng2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-namn"
+fields = { "label" = "Bränsleslag (BrSlag)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:text1"
+fields = { "label" = "Bränsleslag (Text1)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "label" = "Bränsleslag (tvåsifferkod)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-text"
+fields = { "label" = "Bränsleslag (Text)" }
+evidence = "#2102 same-label cluster 'Bränsleslag' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Bid is the two-digit fuel code per opdef in all occurrences; BrSlag, Text1 and Text are all described as name text in some years (klartext, detaljerad, kortform differ by year), so only the column code is true of every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-text"
+fields = { "label" = "Bränsleslaget i klartext (Text)" }
+evidence = "#2102 same-label cluster 'Bränsleslaget i klartext' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BrSlag and Text are both 'Anger benämning på bränslet' with no documented difference; Text in this member spans 2005-2020, so the spelling is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "label" = "Bränsleslaget i klartext (BrSlag)" }
+evidence = "#2102 same-label cluster 'Bränsleslaget i klartext' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BrSlag and Text are both 'Anger benämning på bränslet' with no documented difference; Text in this member spans 2005-2020, so the spelling is the qualifier."

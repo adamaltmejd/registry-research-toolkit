@@ -814,3 +814,75 @@ kind = "set"
 subject = "set:upplatelseform"
 fields = { "label" = "Upplåtelseform" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-antlghbt"
+fields = { "label" = "Antal lägenheter totalt (AntLghBT)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (2 variables): judged different meaning, low confidence; AntLgh and AntLghBT coexist in 2004-2009; AntLghBT has no opdef, definition or value set, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:huskat"
+fields = { "label" = "Hustyp (småhus eller flerbostadshus)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "label" = "Hustyp (Hustyp2)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp-5092"
+fields = { "label" = "Hustyp (HusTyp)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustypns"
+fields = { "label" = "Hustyp (HusTypNS)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "label" = "Upplåtelseform (UpplatelseForm)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform"
+fields = { "label" = "Upplåtelseform (Upplatform)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform2"
+fields = { "label" = "Upplåtelseform (UpplatForm2)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:datpabba"
+fields = { "label" = "Datum för byggnationens påbörjan (DatPabBA)" }
+evidence = "#2102 same-label cluster 'Datum för byggnationens påbörjan' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share definition and unit. Only ArManPabEg's and ArManPabFaktisk's 2020- occurrences have an opdef ('Egentligt datum' / 'beräknade påbörjan', the latter at odds with its name); DatPabBA and DatPabEg have none, so 'egentligt' and 'beräknad' do not hold for every occurrence and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:datpabeg"
+fields = { "label" = "Datum för byggnationens påbörjan (DatPabEg)" }
+evidence = "#2102 same-label cluster 'Datum för byggnationens påbörjan' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share definition and unit. Only ArManPabEg's and ArManPabFaktisk's 2020- occurrences have an opdef ('Egentligt datum' / 'beräknade påbörjan', the latter at odds with its name); DatPabBA and DatPabEg have none, so 'egentligt' and 'beräknad' do not hold for every occurrence and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabeg"
+fields = { "label" = "Datum för byggnationens påbörjan (ArManPabEg)" }
+evidence = "#2102 same-label cluster 'Datum för byggnationens påbörjan' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share definition and unit. Only ArManPabEg's and ArManPabFaktisk's 2020- occurrences have an opdef ('Egentligt datum' / 'beräknade påbörjan', the latter at odds with its name); DatPabBA and DatPabEg have none, so 'egentligt' and 'beräknad' do not hold for every occurrence and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabfaktisk"
+fields = { "label" = "Datum för byggnationens påbörjan (ArManPabFaktisk)" }
+evidence = "#2102 same-label cluster 'Datum för byggnationens påbörjan' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share definition and unit. Only ArManPabEg's and ArManPabFaktisk's 2020- occurrences have an opdef ('Egentligt datum' / 'beräknade påbörjan', the latter at odds with its name); DatPabBA and DatPabEg have none, so 'egentligt' and 'beräknad' do not hold for every occurrence and the codes are used."

@@ -785,3 +785,45 @@ kind = "set"
 subject = "set:utrikeshandel-med-branslen"
 fields = { "label" = "Utrikeshandel med bränslen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:densitet-imp"
+fields = { "label" = "Imputerad (densitet)" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (Densitet, Vikt, Volym) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-imp"
+fields = { "label" = "Imputerad (vikt)" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (Densitet, Vikt, Volym) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:volym-imp"
+fields = { "label" = "Imputerad (volym)" }
+evidence = "#2102 same-label cluster 'Imputerad' (3 variables): judged different meaning, high confidence; Three concurrent imputation flags, each for a different source variable (Densitet, Vikt, Volym) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:svinn"
+fields = { "label" = "Differenspost (SVINN)" }
+evidence = "#2102 same-label cluster 'Differenspost' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdefs; units differ (SVINN kubikmeter and kubikmeter/ton, Differens_Procent Procent, Differens ton, Kvot Kvot); Differens and Kvot are concurrent 2024-26, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:differens-procent"
+fields = { "label" = "Differenspost (Differens_Procent, procent)" }
+evidence = "#2102 same-label cluster 'Differenspost' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdefs; units differ (SVINN kubikmeter and kubikmeter/ton, Differens_Procent Procent, Differens ton, Kvot Kvot); Differens and Kvot are concurrent 2024-26, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:differens"
+fields = { "label" = "Differenspost (Differens)" }
+evidence = "#2102 same-label cluster 'Differenspost' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdefs; units differ (SVINN kubikmeter and kubikmeter/ton, Differens_Procent Procent, Differens ton, Kvot Kvot); Differens and Kvot are concurrent 2024-26, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:kvot"
+fields = { "label" = "Differenspost (Kvot)" }
+evidence = "#2102 same-label cluster 'Differenspost' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdefs; units differ (SVINN kubikmeter and kubikmeter/ton, Differens_Procent Procent, Differens ton, Kvot Kvot); Differens and Kvot are concurrent 2024-26, so codes are used."

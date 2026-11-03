@@ -9,7 +9,7 @@ import type { CatalogPeriod, VariableEvidence, VariableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogWords, yesNo } from "./catalog_labels";
-import { catalogPeriodLabel } from "./catalog_period";
+import { catalogPeriodLabel, periodText } from "./catalog_period";
 import { renderIntervals } from "./reg_core";
 import { ColumnChip } from "./ui/ColumnChip";
 import { EmptyState } from "./ui/EmptyState";
@@ -145,7 +145,7 @@ function statementValue(
       value.length === 2 &&
       value.every((endpoint) => typeof endpoint === "string")
     ) {
-      return renderIntervals([[value[0], value[1]]]);
+      return periodText(renderIntervals([[value[0], value[1]]]));
     }
     const members =
       statement.field === "tags"

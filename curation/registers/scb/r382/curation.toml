@@ -2744,3 +2744,339 @@ kind = "set"
 subject = "set:variabelklass"
 fields = { "label" = "Variabelklass" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-abosum"
+fields = { "label" = "År (AboSum)" }
+evidence = "#2102 same-label cluster 'År' (3 variables): judged different meaning, medium confidence; Ar/ar is the calendar year (opdef: referensår för undersökningen); AboSum and AgeOvanU (2009-2011) are other year-valued columns with no text, qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ageovanu"
+fields = { "label" = "År (AgeOvanU)" }
+evidence = "#2102 same-label cluster 'År' (3 variables): judged different meaning, medium confidence; Ar/ar is the calendar year (opdef: referensår för undersökningen); AboSum and AgeOvanU (2009-2011) are other year-valued columns with no text, qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes, in adjacent periods."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren-2"
+fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes, in adjacent periods."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 01, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid01mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 01, moms)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 02, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 02, moms)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 03, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 03, moms)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid04bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 04, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid05bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 05, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid06bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 06, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid07bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 07, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid08bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 08, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid09bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 09, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid10bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 10, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid11bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 11, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid12bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 12, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 13, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13mr-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 13, moms)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid22bl-imputed"
+fields = { "label" = "Imputerat värde, flagga (PIN) (variabelklass 22, blankett)" }
+evidence = "#2102 same-label cluster 'Imputerat värde, flagga (PIN)' (18 variables): judged different meaning, medium confidence; Eighteen concurrent imputation flags, one per variable class ClassIdNN with suffix BL (blankett, direktinsamlad) or MR (moms, härledd från momsuppgifter), per the definitions of the turnover columns of the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:inclassid"
+fields = { "label" = "Variabelklass, identifierande kod (PIN) (InClassId)" }
+evidence = "#2102 same-label cluster 'Variabelklass, identifierande kod (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InClassId, OutClassId, ClassId with the same code list; no text explains the In/Out distinction, so In and Out are qualified by column code and ClassId keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:inmarketname"
+fields = { "label" = "Marknad (PIN) (InMarketName)" }
+evidence = "#2102 same-label cluster 'Marknad (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InMarketName, MarketName, OutMarketName in the same tables; no text explains the In/Out distinction, so In and Out are qualified by column code and MarketName keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:invariablename"
+fields = { "label" = "Variabel, benämning (PIN) (InVariableName)" }
+evidence = "#2102 same-label cluster 'Variabel, benämning (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InVariableName, OutVariableName, VariableName in the same tables; no text explains the In/Out distinction, so In and Out are qualified by column code and VariableName keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "label" = "Näringsgren (AktSni92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "label" = "Näringsgren (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "label" = "Näringsgren (branschtext)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; AktSni92 holds SNI 92 codes (its opdef says SNI 2007, contradicting the codes), sni2007 and AktSni07 are SNI 2007, AL2UndEjU's opdef says SNI 2002, and CU_BranschText is a concurrent text column in 2019-21."
+
+[[statement]]
+kind = "set"
+subject = "var:outclassid"
+fields = { "label" = "Variabelklass, identifierande kod (PIN) (OutClassId)" }
+evidence = "#2102 same-label cluster 'Variabelklass, identifierande kod (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InClassId, OutClassId, ClassId with the same code list; no text explains the In/Out distinction, so In and Out are qualified by column code and ClassId keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:outmarketname"
+fields = { "label" = "Marknad (PIN) (OutMarketName)" }
+evidence = "#2102 same-label cluster 'Marknad (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InMarketName, MarketName, OutMarketName in the same tables; no text explains the In/Out distinction, so In and Out are qualified by column code and MarketName keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:outvariableid"
+fields = { "label" = "Variabel, identifierande kod (PIN) (OutVariableId)" }
+evidence = "#2102 same-label cluster 'Variabel, identifierande kod (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InVariableId, OutVariableId, VariableId with the same code list; no text explains the In/Out distinction, so In and Out are qualified by column code and VariableId keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:outvariablename"
+fields = { "label" = "Variabel, benämning (PIN) (OutVariableName)" }
+evidence = "#2102 same-label cluster 'Variabel, benämning (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InVariableName, OutVariableName, VariableName in the same tables; no text explains the In/Out distinction, so In and Out are qualified by column code and VariableName keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-abosum"
+fields = { "label" = "Urvalsår (AboSum)" }
+evidence = "#2102 same-label cluster 'Urvalsår' (5 variables): judged different meaning, medium confidence; UAr and urvalsar are the same variable in different tables; AboSum, AgeOvanU and AL2UndU (2009-2011) are other year-valued columns with no text, qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-ageovanu"
+fields = { "label" = "Urvalsår (AgeOvanU)" }
+evidence = "#2102 same-label cluster 'Urvalsår' (5 variables): judged different meaning, medium confidence; UAr and urvalsar are the same variable in different tables; AboSum, AgeOvanU and AL2UndU (2009-2011) are other year-valued columns with no text, qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-al2undu"
+fields = { "label" = "Urvalsår (AL2UndU)" }
+evidence = "#2102 same-label cluster 'Urvalsår' (5 variables): judged different meaning, medium confidence; UAr and urvalsar are the same variable in different tables; AboSum, AgeOvanU and AL2UndU (2009-2011) are other year-valued columns with no text, qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:variabel-kod-pin"
+fields = { "label" = "Variabel, identifierande kod (PIN) (InVariableId)" }
+evidence = "#2102 same-label cluster 'Variabel, identifierande kod (PIN)' (3 variables): judged different meaning, low confidence; Three concurrent columns InVariableId, OutVariableId, VariableId with the same code list; no text explains the In/Out distinction, so In and Out are qualified by column code and VariableId keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "label" = "Bransch (sni92)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-branschgr"
+fields = { "label" = "Bransch (branschgr)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-sni2007"
+fields = { "label" = "Bransch (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sni92 and Sni2007 hold different code lists in the same table (777 five-digit vs 821 NACE-style codes; the Sni2007 opdef says 'ny branschindelning enligt sni2007'); 'SNI 92' for sni92 rests only on the column name, so the code is used. branschgr (2009-2011) has the same dotted code list and period as Sni2007 and no text."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "label" = "Branschgrupp (AktBr92)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2002"
+fields = { "label" = "Branschgrupp (branschgr, äldre indelning)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "label" = "Branschgrupp (AL2UndEjU)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2007"
+fields = { "label" = "Branschgrupp (branschgr, SNI 2007)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "label" = "Branschgrupp (AktBr07)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "label" = "Branschgrupp (BGrupp)" }
+evidence = "#2102 same-label cluster 'Branschgrupp' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different code lists: AktBr92 (53 codes), branschgr 2006-2009 (105 five-digit codes), branschgr 2009-2015 (140 codes), AktBr07 (45 three-digit codes), BGrupp (42 five-digit codes), AL2UndEjU (no codes). No text names a classification version except the omsattning-tjanstesektorn-tom2014 Sni2007 opdef (new indelning from 2009-04), so versions are kept only for branschgr and the others use the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-classid13bl-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, blankett (PIN) (ClassId13BL_Imputed)" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, blankett (PIN)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition, opdef and unit (KSEK, 'direktinsamlad'); the only difference is the column spelling, and no text says what _Imputed means, so the code qualifies it."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
+fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, moms (PIN) (ClassId13MR_Imputed)" }
+evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, moms (PIN)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition, opdef (härledd från momsuppgifter) and unit; only the column spelling differs and no text explains _Imputed, so the code qualifies it."
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (InSubsetName)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-outsubsetname"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (OutSubsetName)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:variabeldelmangd-benamning-pin-subsetid"
+fields = { "label" = "Variabeldelmängd, benämning (PIN) (SubsetId)" }
+evidence = "#2102 same-label cluster 'Variabeldelmängd, benämning (PIN)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All four share one definition/opdef ('variabeldelmängd som kan summeras ...') and are concurrent in the same tables; nothing says how they differ, so column codes separate them. 'kod' for SubsetId is not stated anywhere."
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson"
+fields = { "label" = "E-postadress kontaktperson (epost)" }
+evidence = "#2102 same-label cluster 'E-postadress kontaktperson' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; epost and epostuppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson-2"
+fields = { "label" = "E-postadress kontaktperson (epostuppg)" }
+evidence = "#2102 same-label cluster 'E-postadress kontaktperson' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; epost and epostuppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-mobilnr"
+fields = { "label" = "Kontaktpersonens mobiltelefonnummer (mobil)" }
+evidence = "#2102 same-label cluster 'Kontaktpersonens mobiltelefonnummer' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; mobil and mobiluppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:mobiluppg"
+fields = { "label" = "Kontaktpersonens mobiltelefonnummer (mobiluppg)" }
+evidence = "#2102 same-label cluster 'Kontaktpersonens mobiltelefonnummer' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; mobil and mobiluppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."

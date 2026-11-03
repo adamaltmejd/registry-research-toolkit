@@ -1,4 +1,4 @@
-/** Safe inline emphasis tokenizer. Returns text, never HTML. */
+/** Safe inline emphasis and link tokenizer. Returns text, never HTML. */
 
 export type Emphasis = "strong" | "em";
 
@@ -6,6 +6,8 @@ export interface InlineSegment {
   text: string;
   /** The emphasis to render, or `null` for plain text. */
   emphasis: Emphasis | null;
+  /** An `http(s)` link target; any other scheme stays literal text. */
+  href?: string;
 }
 
 // Markdown escapes only ASCII punctuation. Consume an escape as one token before
@@ -17,13 +19,17 @@ const UNESCAPE = new RegExp(String.raw`\\(${PUNCTUATION})`, "gu");
 // escaped closing marker as a delimiter after consuming only its backslash.
 const STAR_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^*\\])+?`;
 const UNDERSCORE_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^_\\])+?`;
+// `[text](https://…)`: the text holds no bracket and no nested span, the target
+// no whitespace or parenthesis.
+const LINK_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^\[\]\\])+?`;
+const LINK = String.raw`\[(${LINK_TEXT})\]\((https?:\/\/[^\s()]+)\)`;
 const SPAN = new RegExp(
-  String.raw`(${ESCAPE})|\*\*(${STAR_TEXT})\*\*|\*(${STAR_TEXT})\*|(?<![\p{L}\p{N}])_(${UNDERSCORE_TEXT})_(?![\p{L}\p{N}])`,
+  String.raw`(${ESCAPE})|${LINK}|\*\*(${STAR_TEXT})\*\*|\*(${STAR_TEXT})\*|(?<![\p{L}\p{N}])_(${UNDERSCORE_TEXT})_(?![\p{L}\p{N}])`,
   "gu",
 );
 
 /**
- * Pair non-nested emphasis left to right. Unbalanced markers and intra-word
+ * Pair non-nested emphasis and links left to right. Unbalanced markers and intra-word
  * underscores stay literal; backslashes before non-punctuation survive unchanged.
  */
 export function parseInlineMarkdown(input: string): InlineSegment[] {
@@ -40,19 +46,26 @@ export function parseInlineMarkdown(input: string): InlineSegment[] {
         emphasis: null,
       });
     }
-    const [escaped, strong, emStar, emUnderscore] = [
+    const [escaped, linkText, href, strong, emStar, emUnderscore] = [
       match[1],
       match[2],
       match[3],
       match[4],
+      match[5],
+      match[6],
     ];
     segments.push({
-      text: (escaped ?? strong ?? emStar ?? emUnderscore).replace(
+      text: (escaped ?? linkText ?? strong ?? emStar ?? emUnderscore).replace(
         UNESCAPE,
         "$1",
       ),
       emphasis:
-        escaped !== undefined ? null : strong !== undefined ? "strong" : "em",
+        escaped !== undefined || linkText !== undefined
+          ? null
+          : strong !== undefined
+            ? "strong"
+            : "em",
+      ...(href !== undefined ? { href } : {}),
     });
     lastIndex = SPAN.lastIndex;
   }

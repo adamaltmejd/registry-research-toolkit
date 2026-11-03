@@ -267,5 +267,118 @@
       }
     ]
   },
-  "held_key_unmatched_columns": "1"
+  "held_key_unmatched_columns": "1",
+  "attested_order": {
+    "note": "reference-extension/held.csv attests demo/held/value as ReceivedOld (integer, codes 1=First;2=Second) and demo/held/id as Id over 2015..2016, before the base's 2017 start; topology.toml's Attested maps Old and declares demo/held/id as its entity key. classifications.toml defines class/received/v1 only in the steward repository, over the same two codes, and curation.toml binds it to ReceivedOld; the base has no such class version, so the binding pins a held-only id.",
+    "project": {
+      "schema_version": "5.2.0",
+      "reg_meta_version": "0.64.0",
+      "name": "Attested earlier years",
+      "sources": [
+        {
+          "name": "s",
+          "table": "demo/held",
+          "period": {"from": 2015, "to": 2016},
+          "bindings": [
+            {
+              "variable": "demo/held/value",
+              "type": "numeric",
+              "classification": "class/received/v1"
+            }
+          ]
+        }
+      ]
+    },
+    "order": {
+      "entries": [
+        {
+          "source": "s",
+          "binding": 0,
+          "provider": "demo",
+          "register": "demo/held",
+          "table": "demo/held",
+          "variable": "demo/held/value",
+          "display_name": null,
+          "period": {"start": "2015-01-01", "end": "2017-01-01"},
+          "spelling": "ReceivedOld",
+          "type": "int",
+          "length": null,
+          "value_set": {
+            "hash": "a59303823d8dcad4eadf3098f87d0adfb752dfcb097fba316d51f989508f053e",
+            "n_items": 2
+          },
+          "classification": "class/received/v1"
+        }
+      ],
+      "row_keys": [
+        {
+          "source": "s",
+          "table": "demo/held",
+          "period": {"start": "2015-01-01", "end": "2017-01-01"},
+          "columns": [{"variable": "demo/held/id", "spelling": "Id"}]
+        }
+      ],
+      "clips": []
+    }
+  },
+  "steward_minted": {
+    "note": "reference-extension mints, inside the reference register demo/projected (no reference occurrence names it), the variables steward-slot and received-key (projected.csv, 2014) and the table grid with grid-id and cells (tables.csv, projected.csv, 2015..2016); the base defines child-id, amount and status there. topology.toml's AttestedSlot holds Slot on the reference table demo/projected with ReceivedKey as its entity key; AttestedGrid holds the grid table. The reference register keeps its own rows and gains the steward's, sorted by public id.",
+    "register_tables": [
+      "demo/projected",
+      "demo/projected/grid"
+    ],
+    "register_variables": [
+      "demo/projected/amount",
+      "demo/projected/cells",
+      "demo/projected/child-id",
+      "demo/projected/grid-id",
+      "demo/projected/id",
+      "demo/projected/received-key",
+      "demo/projected/status",
+      "demo/projected/steward-slot"
+    ],
+    "project": {
+      "schema_version": "5.2.0",
+      "reg_meta_version": "0.64.0",
+      "name": "Steward-minted slot",
+      "sources": [
+        {
+          "name": "s",
+          "table": "demo/projected",
+          "period": {
+            "from": 2014,
+            "to": 2014
+          },
+          "bindings": [
+            {
+              "variable": "demo/projected/steward-slot",
+              "type": "numeric"
+            }
+          ]
+        }
+      ]
+    },
+    "files": [
+      {
+        "table": "AttestedSlot",
+        "delivery": "2014",
+        "columns": [
+          {
+            "name": "Slot",
+            "role": "ordered",
+            "variable": "demo/projected/steward-slot"
+          },
+          {
+            "name": "ReceivedKey",
+            "role": "row_key",
+            "variable": "demo/projected/received-key"
+          }
+        ]
+      }
+    ]
+  },
+  "contested_rivals": [
+    ["Shared", "demo/owners", "demo/owners/first"],
+    ["Shared", "demo/owners", "demo/owners/second"]
+  ]
 }

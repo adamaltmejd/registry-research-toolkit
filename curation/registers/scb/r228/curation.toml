@@ -2648,3 +2648,33 @@ kind = "set"
 subject = "set:utlandsfastigheternas-varde"
 fields = { "label" = "Utlandsfastigheternas värde" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (hushållsföreståndare)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; BALDZ is the age of the household head (household table); BALD is the individual's age."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "label" = "Ålder 31/12 (individ)" }
+evidence = "#2102 same-label cluster 'Ålder 31/12' (2 variables): judged different meaning, high confidence; BALDZ is the age of the household head (household table); BALD is the individual's age."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (hushållsföreståndare)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; BKONZ is the sex of the household head (household table); BKON is the individual's sex (individual table)."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "label" = "Kön (individ)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; BKONZ is the sex of the household head (household table); BKON is the individual's sex (individual table)."
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran"
+fields = { "label" = "Obligationer, fordran (FKUORMV)" }
+evidence = "#2102 same-label cluster 'Obligationer, fordran' (3 variables): judged different meaning, medium confidence; FKUVP and FKUVPR are consecutive with identical opdefs (same variable over time); FKUORMV overlaps FKUVPR in the household table and no source says how it differs."

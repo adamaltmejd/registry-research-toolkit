@@ -760,3 +760,165 @@ kind = "set"
 subject = "set:import-av-el"
 fields = { "label" = "Import av el" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-3"
+fields = { "label" = "Gasturbinkraft (elområde 3)" }
+evidence = "#2102 same-label cluster 'Gasturbinkraft' (2 variables): judged different meaning, high confidence; One column per elområde (3 and 4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-4"
+fields = { "label" = "Gasturbinkraft (elområde 4)" }
+evidence = "#2102 same-label cluster 'Gasturbinkraft' (2 variables): judged different meaning, high confidence; One column per elområde (3 and 4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-1"
+fields = { "label" = "Vattenkraft (inkl. pumpkraft), netto (elområde 1)" }
+evidence = "#2102 same-label cluster 'Vattenkraft (inkl. pumpkraft), netto' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-2"
+fields = { "label" = "Vattenkraft (inkl. pumpkraft), netto (elområde 2)" }
+evidence = "#2102 same-label cluster 'Vattenkraft (inkl. pumpkraft), netto' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-3"
+fields = { "label" = "Vattenkraft (inkl. pumpkraft), netto (elområde 3)" }
+evidence = "#2102 same-label cluster 'Vattenkraft (inkl. pumpkraft), netto' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-4"
+fields = { "label" = "Vattenkraft (inkl. pumpkraft), netto (elområde 4)" }
+evidence = "#2102 same-label cluster 'Vattenkraft (inkl. pumpkraft), netto' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-3"
+fields = { "label" = "Kondenskraft (elområde 3)" }
+evidence = "#2102 same-label cluster 'Kondenskraft' (2 variables): judged different meaning, high confidence; One column per elområde (3 and 4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-4"
+fields = { "label" = "Kondenskraft (elområde 4)" }
+evidence = "#2102 same-label cluster 'Kondenskraft' (2 variables): judged different meaning, high confidence; One column per elområde (3 and 4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-1"
+fields = { "label" = "Mottryck, kraftvärmeverk (elområde 1)" }
+evidence = "#2102 same-label cluster 'Mottryck, kraftvärmeverk' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-2"
+fields = { "label" = "Mottryck, kraftvärmeverk (elområde 2)" }
+evidence = "#2102 same-label cluster 'Mottryck, kraftvärmeverk' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-3"
+fields = { "label" = "Mottryck, kraftvärmeverk (elområde 3)" }
+evidence = "#2102 same-label cluster 'Mottryck, kraftvärmeverk' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-4"
+fields = { "label" = "Mottryck, kraftvärmeverk (elområde 4)" }
+evidence = "#2102 same-label cluster 'Mottryck, kraftvärmeverk' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-1"
+fields = { "label" = "Mottryck, industriellt (elområde 1)" }
+evidence = "#2102 same-label cluster 'Mottryck, industriellt' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-2"
+fields = { "label" = "Mottryck, industriellt (elområde 2)" }
+evidence = "#2102 same-label cluster 'Mottryck, industriellt' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-3"
+fields = { "label" = "Mottryck, industriellt (elområde 3)" }
+evidence = "#2102 same-label cluster 'Mottryck, industriellt' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-4"
+fields = { "label" = "Mottryck, industriellt (elområde 4)" }
+evidence = "#2102 same-label cluster 'Mottryck, industriellt' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "label" = "Näringsgren för arbetsställe (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): judged different meaning, medium confidence; Ng opdef says SNI enligt standard 2002, Ng2007 says standard 2007; they run concurrently 2011-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "label" = "Näringsgren för arbetsställe (Ng)" }
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): judged different meaning, medium confidence; Ng opdef says SNI enligt standard 2002, Ng2007 says standard 2007; they run concurrently 2011-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-producteo"
+fields = { "label" = "Redovisningsmånad Månatlig elstatistik (ProductEO)" }
+evidence = "#2102 same-label cluster 'Redovisningsmånad Månatlig elstatistik' (2 variables): judged different meaning, low confidence; Period (2006-26) and ProductEO (2023-26) are concurrent columns; no text says what ProductEO is, so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-1"
+fields = { "label" = "Solkraft (nätansluten) (elområde 1)" }
+evidence = "#2102 same-label cluster 'Solkraft (nätansluten)' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-2"
+fields = { "label" = "Solkraft (nätansluten) (elområde 2)" }
+evidence = "#2102 same-label cluster 'Solkraft (nätansluten)' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-3"
+fields = { "label" = "Solkraft (nätansluten) (elområde 3)" }
+evidence = "#2102 same-label cluster 'Solkraft (nätansluten)' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-4"
+fields = { "label" = "Solkraft (nätansluten) (elområde 4)" }
+evidence = "#2102 same-label cluster 'Solkraft (nätansluten)' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-1"
+fields = { "label" = "Vindkraft (elområde 1)" }
+evidence = "#2102 same-label cluster 'Vindkraft' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-2"
+fields = { "label" = "Vindkraft (elområde 2)" }
+evidence = "#2102 same-label cluster 'Vindkraft' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-3"
+fields = { "label" = "Vindkraft (elområde 3)" }
+evidence = "#2102 same-label cluster 'Vindkraft' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-4"
+fields = { "label" = "Vindkraft (elområde 4)" }
+evidence = "#2102 same-label cluster 'Vindkraft' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."

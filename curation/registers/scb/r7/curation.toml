@@ -4203,3 +4203,105 @@ kind = "set"
 subject = "set:wc-standard"
 fields = { "label" = "WC-standard" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (ombyggnad)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (tillbyggnad)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor"
+fields = { "label" = "H-nivåfaktor (bostäder)" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; Shared opdef: NivaFaktBost comes from NivaBH (bostäder) and NivaFaktLokal from NivaLH (lokaler)."
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-literal-nivafaktlokal"
+fields = { "label" = "H-nivåfaktor (lokaler)" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; Shared opdef: NivaFaktBost comes from NivaBH (bostäder) and NivaFaktLokal from NivaLH (lokaler)."
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskod-literal-typhyraovriglok"
+fields = { "label" = "Hyreskod (övriga lokaler)" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, medium confidence; Column names separate övriga lokaler (TypHyraOvrigLok) from övriga bostäder (TypHyraOvrigBost), concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-for-vardeomradet-literal-idvobost"
+fields = { "label" = "Identitetsnummer för värdeområdet (bostad, typkod 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
+fields = { "label" = "Identitetsnummer för värdeområdet (lokal)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
+
+[[statement]]
+kind = "set"
+subject = "var:idvo"
+fields = { "label" = "Identitetsnummer för värdeområdet (typkod 100- och 200-serien)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-literal-sni2002"
+fields = { "label" = "Näringsgren (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, medium confidence; SNI2002 is explicitly the SNI 2002 coding and is concurrent with SNI in 2008-2010."
+
+[[statement]]
+kind = "set"
+subject = "var:typhyraovrigbost"
+fields = { "label" = "Hyreskod (övriga bostäder)" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, medium confidence; Column names separate övriga lokaler (TypHyraOvrigLok) from övriga bostäder (TypHyraOvrigBost), concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idavkast"
+fields = { "label" = "Värderingsenhetens identitetsnummer (avkastningsmetoden, 400- och 600-serien)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idhyrbygg"
+fields = { "label" = "Värderingsenhetens identitetsnummer (hyreshusbyggnader, 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idve"
+fields = { "label" = "Värderingsenhetens identitetsnummer (100- och 200-serien samt produktionsmetoden)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "label" = "Total bostadsyta (summa, typkod 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The YtaBostH/YtaBostS opdef (2013-2016) maps the field names to the 300/500 sum and the 100/200 area; YtaBostadTot continues YtaBostH in taxeringsenheter (same unit, sum of värderingsenheter in 300/500)."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-literal-ytabosts"
+fields = { "label" = "Total bostadsyta (typkod 100- och 200-serien)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The YtaBostH/YtaBostS opdef (2013-2016) maps the field names to the 300/500 sum and the 100/200 area; YtaBostadTot continues YtaBostH in taxeringsenheter (same unit, sum of värderingsenheter in 300/500)."
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta"
+fields = { "label" = "Total byggnadsyta (SumYtaTot)" }
+evidence = "#2102 same-label cluster 'Total byggnadsyta' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The 2013+ opdefs state SumYtaTot sums areas for typkod 400/600 and YtaByggTot sums bostads- och lokalyta for typkod 300/500; both columns exist concurrently in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta-literal-ytabyggtot"
+fields = { "label" = "Total byggnadsyta (YtaByggTot)" }
+evidence = "#2102 same-label cluster 'Total byggnadsyta' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; The 2013+ opdefs state SumYtaTot sums areas for typkod 400/600 and YtaByggTot sums bostads- och lokalyta for typkod 300/500; both columns exist concurrently in fastigheter."

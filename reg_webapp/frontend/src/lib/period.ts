@@ -10,6 +10,7 @@
  * stays here is view state and year-integer arithmetic over reg-core's answers.
  */
 
+import { periodText } from "./catalog_period";
 import type {
   ProjectPeriodSegment,
   ProjectSourcePeriod,
@@ -497,12 +498,7 @@ export function yearWindowLabel(window: ProjectStudyWindow): string {
  * wire is reg-core's. */
 export function periodLabel(period: unknown): string | null {
   const wire = sourcePeriodToWire(period);
-  return wire === null
-    ? null
-    : wire
-        .split(",")
-        .map((segment) => segment.replace("..", "–"))
-        .join(", ");
+  return wire === null ? null : periodText(wire);
 }
 
 /** How a source period sits against the project's common study window:

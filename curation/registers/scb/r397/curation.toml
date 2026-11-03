@@ -527,3 +527,39 @@ kind = "set"
 subject = "set:svensk-och-utlandsk-bakgrund"
 fields = { "label" = "Svensk och utländsk bakgrund" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4"
+fields = { "label" = "Ämnesområde (4-siffernivå)" }
+evidence = "#2102 same-label cluster 'Ämnesområde' (2 variables): judged different meaning, medium confidence; Opdefs: Amne_4_5_unik is subject area at 4- and 5-digit level with unique codes; Amne_4 is at 4-digit level."
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4-5-unik"
+fields = { "label" = "Ämnesområde (4- och 5-siffernivå, unik kod)" }
+evidence = "#2102 same-label cluster 'Ämnesområde' (2 variables): judged different meaning, medium confidence; Opdefs: Amne_4_5_unik is subject area at 4- and 5-digit level with unique codes; Amne_4 is at 4-digit level."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (folkbokföring)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: Kommun is the municipality where the person is registered; LanKom is where the activity took place, with a year-prefixed county/municipality code."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "label" = "Kommun (där verksamheten ägt rum)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: Kommun is the municipality where the person is registered; LanKom is where the activity took place, with a year-prefixed county/municipality code."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-personnr-scb"
+fields = { "label" = "Personnummer (PersonNr_SCB)" }
+evidence = "#2102 same-label cluster 'Personnummer' (2 variables): judged different meaning, low confidence; PersonNr_SCB occurs only in the 2012 table beside PersonNr elsewhere; nothing says how the _SCB column differs, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-kon-pnr"
+fields = { "label" = "Kön (Kon_PNR)" }
+evidence = "#2102 same-label cluster 'Kön' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the opdef 'Härlett från personnummer' and codes 1=Man, 2=Kvinna, so 'från personnummer' does not separate them; Kon in deltagare also has missing/unknown codes. Kon_PNR (2012-2020, stuv-2012) is followed by Kon (2020-, stuv-2020)."

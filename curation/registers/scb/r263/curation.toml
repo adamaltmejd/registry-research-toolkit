@@ -118,3 +118,33 @@ kind = "set"
 subject = "var:produktgruppsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variable_text:6207:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivnsv"
+fields = { "label" = "Delkostnadsslag (BeskrivnSV)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalvariant"
+fields = { "label" = "Produkttyp (lokal variant)" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; ProdKod is a code set by SCB with a value set; LokalVariant describes the product measured at the company and has no value set."
+
+[[statement]]
+kind = "set"
+subject = "var:namnsv"
+fields = { "label" = "Delkostnadsslag (NamnSV)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpkod"
+fields = { "label" = "Delkostnadsslag (produktgruppskod)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
+
+[[statement]]
+kind = "set"
+subject = "var:prodkod"
+fields = { "label" = "Produkttyp (kod)" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; ProdKod is a code set by SCB with a value set; LokalVariant describes the product measured at the company and has no value set."

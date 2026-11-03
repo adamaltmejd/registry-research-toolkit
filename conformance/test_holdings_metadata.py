@@ -45,6 +45,16 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
             "tables": 1,
             "variables": 2,
         }
+        # Fails if `held` resolves placements through one origin only: demo/*
+        # tables are reference tables, steward/slots a steward-only register.
+        providers = client.get("/api/catalog").json()["data"]["providers"]
+        assert {p["fqid"]: p["held"] for p in providers} == {
+            "demo": True,
+            "steward": True,
+        }
+        for provider in ["demo", "steward"]:
+            shown = client.get(f"/api/catalog/{provider}").json()["data"]
+            assert all(r["held"] for r in shown["registers"]), shown
         extra = client.get("/api/catalog/steward/slots/slot2")
         assert extra.status_code == 200
         assert extra.json()["data"]["name"] == "Second position"
@@ -133,6 +143,7 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         "earlier.csv",
         "held.csv",
         "owners.csv",
+        "projected.csv",
     ]:
         shutil.copyfile(case / name, source / name)
     ledger = root / "curation/registers/demo/held/ids.toml"
@@ -144,20 +155,35 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     owner_ledger = ledger.parent.parent / "owners/ids.toml"
     owner_ledger.parent.mkdir()
     shutil.copyfile(case / "owners-ids.toml", owner_ledger)
+    projected_ledger = ledger.parent.parent / "projected/ids.toml"
+    projected_ledger.parent.mkdir()
+    shutil.copyfile(case / "projected-ids.toml", projected_ledger)
+    shutil.copyfile(
+        case / "projected-curation.toml", projected_ledger.parent / "curation.toml"
+    )
+    # A class version defined only here, bound to the attested earlier occurrence.
+    (source / "codes").mkdir()
+    shutil.copyfile(case / "kind.csv", source / "codes/kind.csv")
+    curation = root / "curation"
+    shutil.copyfile(case / "classifications.toml", curation / "classifications.toml")
+    shutil.copyfile(
+        case / "classification-csv.toml", curation / "readers/classification-csv.toml"
+    )
+    shutil.copyfile(case / "curation.toml", ledger.parent / "curation.toml")
     shutil.copyfile(
         case / "reference-occurrences.toml", root / "reference-occurrences.toml"
     )
     with (root / "curation/inputs.toml").open("a") as f:
         f.write(
-            '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n'
+            '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n\n[[input]]\nname = "reference-codes"\nreader = "classification-csv"\npath = "inputs/reference/codes"\n'
         )
     with (root / "census.csv").open("a") as f:
         f.write(
-            "Synthetic,Attested,Attested,Old,Id,,,,,,,\nSynthetic,AttestedMember,AttestedMember,Id,,,,,,,,\n"
+            "Synthetic,Attested,Attested,Old,Id,,,,,,,\nSynthetic,AttestedSlot,AttestedSlot,ReceivedKey,Slot,,,,,,,\nSynthetic,AttestedMember,AttestedMember,Id,,,,,,,,\nSynthetic,AttestedGrid,AttestedGrid,GridId,Cells,,,,,,,\n"
         )
     with (root / "storage.csv").open("a") as f:
         f.write(
-            "dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\ndbo,AttestedMember,BASE TABLE,Id,int,,10,0,1\n"
+            "dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\ndbo,AttestedSlot,BASE TABLE,ReceivedKey,int,,10,0,1\ndbo,AttestedSlot,BASE TABLE,Slot,int,,10,0,2\ndbo,AttestedMember,BASE TABLE,Id,int,,10,0,1\ndbo,AttestedGrid,BASE TABLE,GridId,int,,10,0,1\ndbo,AttestedGrid,BASE TABLE,Cells,int,,10,0,2\n"
         )
     with (root / "holdings.toml").open("a") as f:
         f.write((case / "topology.toml").read_text())
@@ -211,16 +237,6 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]
         assert data["period"] == {"start": "2017-01-01", "end": "2022-01-01"}
-        (occurrence,) = data["steward_occurrences"]
-        assert occurrence["table"] == "demo/held"
-        assert occurrence["variable"] == "demo/held/value"
-        assert occurrence["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
-        assert occurrence["sources"] == [
-            {
-                "input": "reference-extension",
-                "locator": "inputs/reference/held.csv:row=2",
-            }
-        ]
         assert any(
             x["physical_table"] == "Attested"
             and x["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
@@ -232,6 +248,62 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             x["physical_table"] == "AttestedMember"
             for x in member.json()["data"]["held"]
         )
+        # Fails if steward-mode order reads only base segments: the base attests
+        # demo/held/value from 2017, so 2015..2016 would be outside_availability.
+        # The binding pins the class version only the attested occurrence carries;
+        # it fails if that pin, resolved in the base alone, blocks with
+        # fqid_unresolved.
+        ordered = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=expected["attested_order"]["project"]
+        )
+        assert ordered.status_code == 200, ordered.text
+        data = ordered.json()["data"]
+        assert {
+            key: data[key] for key in expected["attested_order"]["order"]
+        } == expected["attested_order"]["order"]
+        # Fails if a reference register's summary omits the tables and variables the
+        # steward defines inside it (reg-catalog `show` reading only the base), or if
+        # steward-mode order refuses a steward-only variable on a reference table
+        # (`fqid_unresolved`: the composed view keyed segments by base ids only).
+        minted = expected["steward_minted"]
+        register = pool.client(artifact_env(output)).get("/api/catalog/demo/projected")
+        assert register.status_code == 200, register.text
+        data = register.json()["data"]
+        assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
+        assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
+        files = pool.client(artifact_env(output)).post(
+            "/api/project/materialize", json=minted["project"]
+        )
+        assert files.status_code == 200, files.text
+        assert [
+            {
+                "table": f["table"],
+                "delivery": f["delivery"],
+                "columns": [
+                    {"name": c["name"], "role": c["role"], "variable": r["variable"]}
+                    for c in f["columns"]
+                    for r in c["refs"]
+                ],
+            }
+            for f in files.json()["data"]["files"]
+        ] == minted["files"]
+        # Fails if a steward-stated successor of a steward-only variable on a
+        # reference table is silently not followed (ordering clips instead): the
+        # 2015 successor falls inside the requested 2014..2016.
+        follow = json.loads(json.dumps(minted["project"]))
+        follow["sources"][0]["period"]["to"] = 2016
+        follow["sources"][0]["bindings"][0]["follow_successor"] = True
+        order = pool.client(artifact_env(output)).post(
+            "/api/project/order", json=follow
+        )
+        assert order.status_code == 422, order.text
+        assert [
+            (f["code"], f["variable"], f["successor_fqid"])
+            for f in order.json()["error"]["fields"]["findings"]
+            if f["level"] == "error"
+        ] == [
+            ("variable_replaced", "demo/projected/steward-slot", "demo/projected/cells")
+        ]
     finally:
         pool.close()
     # Fails if located occurrence declarations can omit all supplemental segments
@@ -279,9 +351,8 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     owner_ledger.write_text(ledger_original)
     # The same declaration may add occurrence years, never overwrite a base year.
     source_file = source / "held.csv"
-    source_file.write_text(
-        source_file.read_text().replace("2016-12-31", "2017-12-31", 1)
-    )
+    held_original = source_file.read_text()
+    source_file.write_text(held_original.replace("2016-12-31", "2017-12-31", 1))
     locked = run(
         [
             REG_BUILD,
@@ -302,3 +373,67 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         "synthetic-delivery:row=2: holdings_reference_occurrence_overlap"
         in refused.stderr
     )
+    source_file.write_text(held_original)
+    # Fails if an overlay register admits its implicit table without comparing
+    # timelessness: undated steward rows held timeless make demo/projected timeless,
+    # while the reference table is dated.
+    projected_source = source / "projected.csv"
+    projected_original = projected_source.read_text()
+    projected_source.write_text(
+        projected_original.replace("2014-01-01,2014-12-31", ",")
+    )
+    topology = root / "holdings.toml"
+    topology_original = topology.read_text()
+    dated_slot = (
+        'physical_name = "AttestedSlot"\ndisposition = "dated"\ndelivery = "2014"'
+    )
+    assert dated_slot in topology_original
+    topology.write_text(
+        topology_original.replace(
+            dated_slot, 'physical_name = "AttestedSlot"\ndisposition = "timeless"'
+        )
+    )
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    timeless = run([*command, "--out", tmp_path / "timeless.db"])
+    assert timeless.returncode != 0
+    assert "holdings_semantic_collision" in timeless.stderr
+    projected_source.write_text(projected_original)
+    topology.write_text(topology_original)
+    # Fails if an overlay register also admits an undeclared variable id: a steward
+    # variable may join a reference register, never take one of its variable ids.
+    with projected_source.open("a") as f:
+        f.write(
+            ",Amount,Steward amount,,integer,,,,false,false,2014-01-01,2014-12-31\n"
+        )
+    with projected_ledger.open("a") as f:
+        f.write('amount = ["Amount"]\n')
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    collided = run([*command, "--out", tmp_path / "collision.db"])
+    assert collided.returncode != 0
+    assert "holdings_semantic_collision" in collided.stderr

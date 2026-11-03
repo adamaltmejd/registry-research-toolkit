@@ -57,8 +57,7 @@
   min-width: 0;
 }
 
-/* The routed page grows through the pane, so the footer stays at its foot. It
-   stays `overflow: visible`: anything else would make it the scrollport of every
+/* The routed page grows through the pane. It stays `overflow: visible`: anything else would make it the scrollport of every
    sticky descendant (Y-97). */
 .routed {
   flex: 1 0 auto;
@@ -70,18 +69,10 @@
   color: var(--text-muted);
 }
 
-.vintage {
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: var(--text-micro);
-  text-align: center;
-}
-
-/* Below the narrow breakpoint (48rem, DESIGN.md → spacing.breakpoint-narrow) the
+/* Below the narrow breakpoint (60rem, DESIGN.md → spacing.breakpoint-narrow) the
    columns stack one at a time: the catalog root shows the list, every other page
    its detail, with the breadcrumb's first crumb as the way back to the list. */
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .body {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -97,11 +88,11 @@
   .detail {
     padding: var(--space-4);
   }
-  /* On the list the pane keeps only its footer, so the page keeps its `main`
-     landmark and the citation. */
+  /* On the list the pane keeps only the root's visually hidden h1, so the page
+     keeps its `main` landmark and its heading. */
   .body[data-narrow-shows="detail"] .browse,
   .body[data-narrow-shows="browse"] .crumbs,
-  .body[data-narrow-shows="browse"] .routed {
+  .body[data-narrow-shows="browse"] .rootPrompt {
     display: none;
   }
 }

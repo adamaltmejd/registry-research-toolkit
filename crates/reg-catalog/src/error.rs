@@ -55,6 +55,10 @@ codes! {
         "Pass a next_cursor from the same request, or restart without cursor.";
     ProjectInvalid "project_invalid" "usage" 422 0 ["issues"]
         "Fix the listed issues; validate reports them.";
+    ProjectUnnamed "project_unnamed" "usage" 422 0 []
+        "Name the project; the order file's provenance carries its name.";
+    HoldingsUnavailable "holdings_unavailable" "usage" 400 0 []
+        "Materialize on a server that serves a steward's holdings; this one serves the reference catalog only, whose logical order is `order`.";
     NotFound "not_found" "not_found" 404 0 ["ref"]
         "Search for the entity and use its FQID.";
     RetiredRef "retired_ref" "not_found" 404 0 ["ref", "kind", "retired_in", "reason"]

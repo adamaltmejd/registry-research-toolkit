@@ -6652,3 +6652,147 @@ kind = "set"
 subject = "set:utrikes-fodelse"
 fields = { "label" = "Utrikes födelse" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-1"
+fields = { "label" = "Ålder sökande (äldste av sökande 1 och 2)" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Definitionerna skiljer: äldste av sökande 1 och 2, äldste respektive yngste sökande/medsökande."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-aldst"
+fields = { "label" = "Ålder sökande (äldste sökande/medsökande)" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Definitionerna skiljer: äldste av sökande 1 och 2, äldste respektive yngste sökande/medsökande."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande-yngst"
+fields = { "label" = "Ålder sökande (yngste sökande/medsökande)" }
+evidence = "#2102 same-label cluster 'Ålder sökande' (3 variables): judged different meaning, medium confidence; Definitionerna skiljer: äldste av sökande 1 och 2, äldste respektive yngste sökande/medsökande."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-april-sok1"
+fields = { "label" = "Den äldstes hinder, april (SOK1HINDER04)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, april' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER04 och SOK1HINDER04 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-augusti-sok1"
+fields = { "label" = "Den äldstes hinder, augusti (SOK1HINDER08)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, augusti' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER08 och SOK1HINDER08 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-december-sok1"
+fields = { "label" = "Den äldstes hinder, december (SOK1HINDER12)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, december' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER12 och SOK1HINDER12 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-februari-sok1"
+fields = { "label" = "Den äldstes hinder, februari (SOK1HINDER02)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, februari' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER02 och SOK1HINDER02 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-januari-sok1"
+fields = { "label" = "Den äldstes hinder, januari (SOK1HINDER01)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, januari' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER01 och SOK1HINDER01 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juli-sok1"
+fields = { "label" = "Den äldstes hinder, juli (SOK1HINDER07)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, juli' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER07 och SOK1HINDER07 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juni-sok1"
+fields = { "label" = "Den äldstes hinder, juni (SOK1HINDER06)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, juni' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER06 och SOK1HINDER06 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-maj-sok1"
+fields = { "label" = "Den äldstes hinder, maj (SOK1HINDER05)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, maj' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER05 och SOK1HINDER05 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-mars-sok1"
+fields = { "label" = "Den äldstes hinder, mars (SOK1HINDER03)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, mars' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER03 och SOK1HINDER03 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-november-sok1"
+fields = { "label" = "Den äldstes hinder, november (SOK1HINDER11)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, november' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER11 och SOK1HINDER11 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-oktober-sok1"
+fields = { "label" = "Den äldstes hinder, oktober (SOK1HINDER10)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, oktober' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER10 och SOK1HINDER10 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-september-sok1"
+fields = { "label" = "Den äldstes hinder, september (SOK1HINDER09)" }
+evidence = "#2102 same-label cluster 'Den äldstes hinder, september' (2 variables): judged different meaning, low confidence; SOKALDSTHINDER09 och SOK1HINDER09 är samtidiga kolumner i ekb-ar med nästan identiska definitioner; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar"
+fields = { "label" = "Antal barn 16-17 år (månadstabell)" }
+evidence = "#2102 same-label cluster 'Antal barn 16-17 år' (2 variables): judged different meaning, medium confidence; Samtidiga kolumner i olika tabeller (månads- respektive årstabell); månadsdefinitionen anger sökande 3-7 i hushållet, årsdefinitionen saknar precisering."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar-2"
+fields = { "label" = "Antal barn 16-17 år (årstabell)" }
+evidence = "#2102 same-label cluster 'Antal barn 16-17 år' (2 variables): judged different meaning, medium confidence; Samtidiga kolumner i olika tabeller (månads- respektive årstabell); månadsdefinitionen anger sökande 3-7 i hushållet, årsdefinitionen saknar precisering."
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-ar-exkl-introduktionsersattning"
+fields = { "label" = "Totalt belopp under året, exkl. introduktionsersättning" }
+evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: EKBTOTALBELOPP exkluderar och TOTALBELOPP inkluderar introduktionsersättning."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "label" = "Födelsedatum (numeriskt)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samtidiga kolumner i samma tabeller; N-suffixet anger numeriskt format (pid: numerisk)."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-aldsta-sokande"
+fields = { "label" = "Personnummer äldsta sökande (PERSONNR_ALDST)" }
+evidence = "#2102 same-label cluster 'Personnummer äldsta sökande' (2 variables): judged different meaning, low confidence; PERSONNR_ALDST och SOKALDSTPNR har samma definition och löper samtidigt i ekb-ar; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-aldsta-sokande-2"
+fields = { "label" = "Personnummer äldsta sökande (SOKALDSTPNR)" }
+evidence = "#2102 same-label cluster 'Personnummer äldsta sökande' (2 variables): judged different meaning, low confidence; PERSONNR_ALDST och SOKALDSTPNR har samma definition och löper samtidigt i ekb-ar; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-yngsta-sokande"
+fields = { "label" = "Personnummer yngsta sökande (PERSONNR_YNGST)" }
+evidence = "#2102 same-label cluster 'Personnummer yngsta sökande' (2 variables): judged different meaning, low confidence; PERSONNR_YNGST och SOKYNGSTPNR har samma definition och löper samtidigt i ekb-ar; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-yngsta-sokande-2"
+fields = { "label" = "Personnummer yngsta sökande (SOKYNGSTPNR)" }
+evidence = "#2102 same-label cluster 'Personnummer yngsta sökande' (2 variables): judged different meaning, low confidence; PERSONNR_YNGST och SOKYNGSTPNR har samma definition och löper samtidigt i ekb-ar; ingen källtext anger skillnaden, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:totalbelopp"
+fields = { "label" = "Totalt belopp under året, inkl. introduktionsersättning" }
+evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: EKBTOTALBELOPP exkluderar och TOTALBELOPP inkluderar introduktionsersättning."

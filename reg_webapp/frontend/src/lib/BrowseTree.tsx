@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Collection,
@@ -28,7 +28,7 @@ import {
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
-import { catalogRootChildren, uniqueCatalogRefs } from "./catalog_names";
+import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
@@ -148,18 +148,31 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
+/** With `heldOnly` (a steward deployment's default scope), the providers and
+ * registers the steward holds anything in, plus the current page's register
+ * and provider (`current`), so a page opened by link keeps its row; the rest
+ * stay reachable through the palette, links and the "All matches" scope. */
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
+  heldOnly: boolean,
+  current: string | null,
 ): BrowseNode[] {
-  return root.map((child) => ({
+  const pinned = new Set(
+    current === null ? [] : [current, current.split("/")[0]],
+  );
+  const kept = <T extends { fqid: string; held?: boolean }>(items: T[]) =>
+    heldOnly
+      ? items.filter((item) => item.held !== false || pinned.has(item.fqid))
+      : items;
+  return kept(root).map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
     children:
       registers === null
         ? null
-        : (registers[child.fqid] ?? []).map((register) => ({
+        : kept(registers[child.fqid] ?? []).map((register) => ({
             id: register.fqid,
             name: register.name ?? register.fqid,
             href: catalogHref(register.fqid),
@@ -185,7 +198,6 @@ export function BrowseTree({
   className?: string;
   config?: StewardConfig | null;
 }) {
-  const labelId = useId();
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -203,12 +215,7 @@ export function BrowseTree({
       return Object.fromEntries(
         shown.map((node, i) => [
           providers[i].fqid,
-          node.kind === "provider"
-            ? uniqueCatalogRefs([
-                ...node.registers,
-                ...(node.steward_registers ?? []),
-              ])
-            : [],
+          node.kind === "provider" ? node.registers : [],
         ]),
       );
     },
@@ -230,9 +237,13 @@ export function BrowseTree({
           : [],
     ),
   );
+  const current = currentRow(route);
+  const currentKey = current?.key ?? null;
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
+    scope === "steward",
+    currentKey,
   );
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.
@@ -279,8 +290,6 @@ export function BrowseTree({
     return () => browseOrder.set([]);
   }, [order]);
 
-  const current = currentRow(route);
-  const currentKey = current?.key ?? null;
   const hrefs = new Map(
     allNodes.flatMap((node) => [
       [node.id, node.href] as const,
@@ -403,18 +412,16 @@ export function BrowseTree({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span
-          id={labelId}
-          className={config ? "visually-hidden" : "micro-label"}
-        >
-          Registers
+        <span className={config ? "visually-hidden" : "micro-label"}>
+          {/* While filtering, the label is how many registers the filter
+            leaves: a separate count wrapped the header to two lines, out of
+            line with the variables column's (#2107). */}
+          {config || matchCount === null
+            ? "Registers"
+            : matchCount === 1
+              ? "1 register"
+              : `${matchCount} registers`}
         </span>
-        {/* How many registers the filter leaves: an actionable count. */}
-        {!config && matchCount !== null && (
-          <span className={styles.matchCount}>
-            {matchCount === 1 ? "1 match" : `${matchCount} matches`}
-          </span>
-        )}
         <div className={config ? styles.controls : undefined}>
           {config && (
             <div className={styles.scope}>
@@ -469,7 +476,9 @@ export function BrowseTree({
               </StatusRow>
             )}
             <Tree
-              aria-labelledby={labelId}
+              // A fixed name: the visible label turns into the count while
+              // filtering.
+              aria-label="Registers"
               className={({ state }) => {
                 treeState.current = state;
                 return styles.tree;

@@ -17,6 +17,7 @@
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
 //! succession and the panel for a panel finding.
 
+mod materialize;
 mod rows;
 mod successor;
 mod window;
@@ -24,7 +25,7 @@ mod window;
 use std::collections::BTreeSet;
 
 use reg_core::project::{ProjectData, Source, StudyWindow};
-use reg_core::{Interval, IssueLevel, ValidationIssue, merge, overlap};
+use reg_core::{Interval, IssueLevel, merge, overlap};
 use rusqlite::Connection;
 use serde::Serialize;
 use utoipa::ToSchema;
@@ -59,6 +60,19 @@ pub const OPERATIONS: &[Operation] = &[
         run: order,
         result: component::<LogicalOrder>,
     },
+    Operation {
+        name: "materialize_order",
+        paths: &["/api/project/materialize"],
+        tool: Some("order"),
+        description: "The MONA order file of a project_data.json document on this steward's \
+            holdings: per physical table and delivery one file, with its exact columns, \
+            held row keys and row filter, the clips and the non-blocking findings; or \
+            `order_blocked` with every logical and physical finding.",
+        params: &[Param::required("project", Type::Project)],
+        cache: Cache::Revalidate,
+        run: materialize::materialize,
+        result: component::<reg_core::manifest::Manifest>,
+    },
 ];
 
 /// `validate`'s result: `ok` exactly when no issue is an `error`.
@@ -92,7 +106,16 @@ fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
 /// The logical order, `project_invalid` with the structural issues, or `order_blocked`
 /// with every finding.
 fn order(server: &Server, params: &Params) -> Result<Value, Error> {
-    let project = reg_core::project::check(&project(params)?).map_err(|result| {
+    let project = structural(&project(params)?)?;
+    match check(server, &project)? {
+        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
+        Err(findings) => Err(blocked(findings)),
+    }
+}
+
+/// The structurally valid project, or `project_invalid` with its issues.
+fn structural(value: &Value) -> Result<ProjectData, Error> {
+    reg_core::project::check(value).map_err(|result| {
         let issues: Vec<Issue> = result.issues.into_iter().map(Issue::from).collect();
         Error::new(
             Code::ProjectInvalid,
@@ -102,73 +125,19 @@ fn order(server: &Server, params: &Params) -> Result<Value, Error> {
             ),
             vec![serde_json::to_value(issues).expect("issues serialize")],
         )
-    })?;
-    match check(server, &project)? {
-        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
-        Err(findings) => Err(Error::new(
-            Code::OrderBlocked,
-            format!("The order is blocked by {} findings.", findings.len()),
-            vec![serde_json::to_value(findings).expect("findings serialize")],
-        )),
-    }
+    })
 }
 
-/// `shape.Issue`: a project issue or an order finding, located in the project.
-#[derive(Clone, Serialize, ToSchema)]
-pub struct Issue {
-    level: IssueLevel,
-    code: String,
-    /// An RFC 6901 pointer into the project; empty for the whole document.
-    path: String,
-    message: String,
-    /// The project source's name.
-    #[schema(required = true)]
-    source: Option<String>,
-    #[schema(required = true)]
-    variable: Option<String>,
-    #[schema(required = true)]
-    table: Option<String>,
-    #[schema(required = true)]
-    period: Option<Period>,
-    /// The successor a `variable_replaced` finding names, or the successor table of an
-    /// undated succession (`table_succession_undated`).
-    #[schema(required = true)]
-    successor_fqid: Option<String>,
+/// `order_blocked` with every finding.
+fn blocked(findings: Vec<Issue>) -> Error {
+    Error::new(
+        Code::OrderBlocked,
+        format!("The order is blocked by {} findings.", findings.len()),
+        vec![serde_json::to_value(findings).expect("findings serialize")],
+    )
 }
 
-impl Issue {
-    /// Whether the issue blocks: an `error`.
-    #[must_use]
-    pub fn blocks(&self) -> bool {
-        self.level == IssueLevel::Error
-    }
-
-    /// The ordering within one anchor (a source, a binding, a panel): code, then period
-    /// start.
-    fn key(&self) -> (String, Option<String>) {
-        (
-            self.code.clone(),
-            self.period.as_ref().and_then(|p| p.start.clone()),
-        )
-    }
-}
-
-/// A structural issue, whose located fields are `null`.
-impl From<ValidationIssue> for Issue {
-    fn from(issue: ValidationIssue) -> Self {
-        Self {
-            level: issue.level,
-            code: issue.code.to_owned(),
-            path: issue.path,
-            message: issue.message,
-            source: None,
-            variable: None,
-            table: None,
-            period: None,
-            successor_fqid: issue.successor_fqid,
-        }
-    }
-}
+pub use reg_core::issue::Issue;
 
 /// `shape.LogicalOrder` (crates/DESIGN.md, "The logical order").
 #[derive(Serialize, ToSchema)]
@@ -317,7 +286,11 @@ pub fn check(
     project: &ProjectData,
 ) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
     let conn = server.catalog.connect()?;
-    if server.catalog.steward().is_some() {
+    // Steward mode reads the composed view (crates/DESIGN.md, "Three questions, three
+    // scopes"): a source whose table only the holdings DB defines is checked on that
+    // origin, so its row ids never meet base ones; row keys stay pid-keyed on `conn`.
+    let held = server.catalog.connect_holdings()?;
+    if held.is_some() {
         server.catalog.attach_holdings(&conn)?;
     }
     let mut findings = Vec::new();
@@ -326,7 +299,16 @@ pub fn check(
     let mut clips = Vec::new();
     let mut members = Vec::new();
     for (index, source) in project.sources.iter().enumerate() {
-        let checked = check_source(server, &conn, index, source)?;
+        let (origin, composed) = match &held {
+            Some(held)
+                if refs::table(&conn, &source.table).is_err()
+                    && refs::table(held, &source.table).is_ok() =>
+            {
+                (held, false)
+            }
+            _ => (&conn, held.is_some()),
+        };
+        let checked = check_source(server, origin, &conn, composed, index, source)?;
         findings.extend(checked.findings);
         entries.extend(checked.entries);
         row_keys.extend(checked.row_keys);
@@ -400,10 +382,14 @@ pub fn check(
     }))
 }
 
-/// One source: its own findings, then each binding's.
+/// One source on its table's origin `conn`: its own findings, then each binding's.
+/// Row keys read `keys`, the base connection.
+#[allow(clippy::too_many_lines)]
 fn check_source(
     server: &Server,
     conn: &Connection,
+    keys: &Connection,
+    composed: bool,
     index: usize,
     source: &Source,
 ) -> Result<Checked, Error> {
@@ -450,7 +436,16 @@ fn check_source(
         own.sort_by_key(Issue::key);
         checked.findings = own;
         for (b, binding) in source.bindings.iter().enumerate() {
-            let mut found = window::refs(conn, index, b, source, binding, table_pid.as_deref())?.1;
+            let mut found = window::refs(
+                conn,
+                composed,
+                index,
+                b,
+                source,
+                binding,
+                table_pid.as_deref(),
+            )?
+            .1;
             found.sort_by_key(Issue::key);
             checked.findings.extend(found);
         }
@@ -487,6 +482,7 @@ fn check_source(
         serving: &serving,
         chain: &chain,
         requested: &requested,
+        composed,
     };
     for (b, binding) in source.bindings.iter().enumerate() {
         let outcome = window::binding(&scope, b, binding)?;
@@ -500,7 +496,7 @@ fn check_source(
     if !followed.is_empty() {
         serving = combine_serving(serving, followed);
     }
-    let (row_keys, mut keyed) = rows::row_keys(server, conn, index, source, &serving)?;
+    let (row_keys, mut keyed) = rows::row_keys(server, keys, index, source, &serving)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);

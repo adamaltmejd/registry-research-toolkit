@@ -3544,3 +3544,15 @@ kind = "set"
 subject = "set:utskrivningssatt"
 fields = { "label" = "Utskrivningssätt" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-sm"
+fields = { "label" = "Graviditetslängd i dagar utöver veckor (sista mensdatum)" }
+evidence = "#2102 same-label cluster 'Graviditetslängd i dagar utöver veckor' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: GRDSM utgår från sista mensdatum, GRDUL från ultraljud."
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-ul"
+fields = { "label" = "Graviditetslängd i dagar utöver veckor (ultraljud)" }
+evidence = "#2102 same-label cluster 'Graviditetslängd i dagar utöver veckor' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: GRDSM utgår från sista mensdatum, GRDUL från ultraljud."

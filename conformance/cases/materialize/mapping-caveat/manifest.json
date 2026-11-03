@@ -1,0 +1,112 @@
+{
+  "version": 4,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "6"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "5.2.0",
+      "name": "Mapping caveat"
+    }
+  },
+  "files": [
+    {
+      "name": "pool",
+      "schema": "dbo",
+      "table": "Pool",
+      "delivery": "2017..2020",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Code",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "s",
+              "binding": 0,
+              "table": "steward/slots",
+              "variable": "steward/slots/code",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Code"
+            }
+          ]
+        },
+        {
+          "name": "Received_Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "s",
+              "binding": null,
+              "table": "demo/held",
+              "variable": "demo/held/id",
+              "period": {
+                "start": "2017-01-01",
+                "end": "2018-01-01"
+              },
+              "spelling": "Received_Id"
+            }
+          ]
+        },
+        {
+          "name": "Year",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": []
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "warning",
+      "code": "mapping_caveat",
+      "path": "/sources/0/bindings/0",
+      "message": "steward/slots/code in steward/slots over [2017-01-01, 2018-01-01): Earlier delivery uses the explicitly transcribed supplemental coding.",
+      "source": "s",
+      "variable": "steward/slots/code",
+      "table": "steward/slots",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

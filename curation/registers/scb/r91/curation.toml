@@ -640,3 +640,15 @@ kind = "set"
 subject = "set:styrkod"
 fields = { "label" = "Styrkod" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2007"
+fields = { "label" = "Näringsgren (SNI 2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."

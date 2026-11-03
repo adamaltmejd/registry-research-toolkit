@@ -9,7 +9,7 @@ describe("catalog period labels", () => {
     [{ start: "2020-01-01", end: null }, "From 2020"],
     [{ start: null, end: "2021-01-01" }, "Through 2020"],
     [{ start: "2020-02-01", end: "2020-03-01" }, "2020-02"],
-    [{ start: "2019-01-01", end: "2021-01-01" }, "2019..2020"],
+    [{ start: "2019-01-01", end: "2021-01-01" }, "2019–2020"],
     [{ start: null, end: "2020-03-01" }, "Through 2020-02-29"],
     [{ start: "2020-02-29", end: null }, "From 2020-02-29"],
     [{ start: null, end: null }, "Unbounded"],

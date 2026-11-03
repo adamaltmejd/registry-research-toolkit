@@ -6,7 +6,9 @@
         --old-db OLD_DB --new-db NEW_DB --out DIR [--seed 0] [--n 20] [--provider P ...]
     uv run --no-project scripts/rebuild_compare.py holdings --old-db OLD_SWECOV.db \
         --new-base reg_meta.db --new-holdings reg_meta_swecov.db --out DIR \
-        --old-census-sha256 SHA256 --new-census-path INPUT_PINS_KEY
+        --old-census-sha256 SHA256 --new-census-sha256 SHA256
+    uv run --no-project scripts/rebuild_compare.py rebuilt --old-db OLD_SWECOV.db \
+        --new-db NEW_SWECOV.db [--out DIR]
 
 Temporary (REBUILD.md, milestone A; deleted at F). `<old db>` is a released
 `reg_meta.db`, `<new db>` a `reg-build` catalog and `<report.json>` its build report.
@@ -18,6 +20,8 @@ mode writes private census/difference reports and prints aggregate counts only.
 Its required old census digest is census_sha256 in the pinned old scope.toml;
 use .local/release-0.64.0/ev/holdings-pins.txt to locate that input revision.
 The release pins file identifies the input manifest, not the raw census digest.
+The new census digest is the census pin in the holdings build report's
+`steward.input_pins`; the published holdings DB carries no per-file pins or locators.
 
 Registers are matched by pid: a new register's public name comes from its id ledger,
 which took it from the old slug. A register whose old catalog has only the implicit table and whose new
@@ -42,6 +46,7 @@ from datetime import date, timedelta
 from functools import partial
 from itertools import pairwise
 from pathlib import Path
+from typing import Any
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -49,6 +54,7 @@ from urllib.request import Request, urlopen
 EXAMPLES = 8
 TIMELESS_START = -719162
 TIMELESS_END = 2932897
+REBUILT_ROWS = 30
 # The old catalog's name for a register's one unnamed table, the new implicit table.
 OLD_IMPLICIT = "_default"
 
@@ -508,7 +514,7 @@ def new_project(db, register: str, version: str, adjustments: list, omissions: l
             }
         )
     return {
-        "schema_version": "5.1.0",
+        "schema_version": "5.2.0",
         "reg_meta_version": version,
         "name": "compare-" + register.replace("/", "-"),
         "sources": sources,
@@ -1874,10 +1880,9 @@ def holdings_union(spans):
     return merged
 
 
-def holdings_side(disposition, locator, **fields):
+def holdings_side(disposition, **fields):
     return {
         "disposition": disposition,
-        "locator": locator,
         "mappings": [],
         "keys": [],
         "key_mappings": [],
@@ -1896,7 +1901,7 @@ def old_holdings(db):
     for tid, name, scope, locator in db.execute(
         "SELECT table_id, physical_id, scope, source_ref FROM holding_table"
     ):
-        tables[tid] = {"name": name, **holdings_side(scopes[scope], locator)}
+        tables[tid] = {"name": name, **holdings_side(scopes[scope], locator=locator)}
     periods = defaultdict(list)
     for tid, lo, hi in db.execute("SELECT table_id, lo, hi FROM holding_period"):
         periods[tid].append(holdings_span(lo, hi))
@@ -1908,7 +1913,9 @@ def old_holdings(db):
         "SELECT column_id, table_id, name, unmapped_reason FROM holding_column"
     ):
         table = tables[tid]
-        side = holdings_side(table["disposition"], table["locator"], reason=reason)
+        side = holdings_side(
+            table["disposition"], locator=table["locator"], reason=reason
+        )
         side["state"] = "old withheld" if reason else "unmapped"
         columns[table["name"], name] = ids[cid] = side
     target = (
@@ -1953,23 +1960,22 @@ def old_holdings(db):
 
 def new_holdings(db):
     tables, columns, ids = {}, {}, {}
-    for tid, name, disposition, locator in db.execute(
-        "SELECT id, physical_name, disposition, locator FROM holding_table"
+    for tid, name, disposition in db.execute(
+        "SELECT id, physical_name, disposition FROM holding_table"
     ):
         tables[tid] = {
             "name": name,
             "routes": [],
-            **holdings_side(disposition, locator),
+            **holdings_side(disposition),
         }
     for tid, pid in db.execute("SELECT holding_id, table_pid FROM holding_route"):
         tables[tid]["routes"].append(pid)
-    for cid, tid, name, disposition, reason, follow_up, locator in db.execute(
-        "SELECT id, holding_id, name, disposition, reason, follow_up, locator FROM holding_column"
+    for cid, tid, name, disposition, reason, follow_up in db.execute(
+        "SELECT id, holding_id, name, disposition, reason, follow_up FROM holding_column"
     ):
         table = tables[tid]
         side = holdings_side(
             table["disposition"],
-            locator,
             state=disposition,
             reason=reason,
             follow_up=follow_up,
@@ -1977,8 +1983,8 @@ def new_holdings(db):
             column_disposition=disposition,
         )
         columns[table["name"], name] = ids[cid] = side
-    for cid, pid, logical, lo, hi, role, carried, locator in db.execute(
-        "SELECT column_id, variable_pid, table_pid, start, end, role, carried, locator FROM holding_mapping"
+    for cid, pid, logical, lo, hi, role, carried in db.execute(
+        "SELECT column_id, variable_pid, table_pid, start, end, role, carried FROM holding_mapping"
     ):
         side = ids[cid]
         if role == "row_key" or carried:
@@ -1986,13 +1992,11 @@ def new_holdings(db):
             side["key_mappings"].append((pid, logical, lo, hi))
         else:
             side["mappings"].append((pid, logical, lo, hi))
-        side.setdefault("mapping_locators", []).append(locator)
     table_notices = defaultdict(list)
     for (
         tid,
         cid,
         code,
-        locator,
         message,
         lo,
         hi,
@@ -2000,12 +2004,11 @@ def new_holdings(db):
         documented,
         admitted,
     ) in db.execute(
-        "SELECT holding_id, column_id, code, locator, message, start, end, requested, documented, admitted FROM holding_notice ORDER BY id"
+        "SELECT holding_id, column_id, code, message, start, end, requested, documented, admitted FROM holding_notice ORDER BY id"
     ):
         notice = {
             "code": code,
             "column_scoped": cid is not None,
-            "locator": locator,
             "message": message,
             "period": holdings_iso_span(lo, hi) if lo is not None else None,
             **{
@@ -2156,13 +2159,11 @@ def holdings_clip_loss(new):
 
 
 def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
-    def result(cls, reason, action="none", codes=()):
-        locators = [s["locator"] for s in (old, new) if s]
-        if old:
-            locators += [old_tables[record["table"]]["locator"]]
-        if new:
-            locators += [n["locator"] for n in new["notices"] if n["code"] in codes]
-            locators += new.get("mapping_locators", [])
+    def result(cls, reason, action="none"):
+        # Only the old artifact carries locators; the new one names table and column.
+        locators = (
+            [old["locator"], old_tables[record["table"]]["locator"]] if old else []
+        )
         return record | {
             "class": cls,
             "owner": HOLDINGS_CLASSES[cls],
@@ -2172,7 +2173,7 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
         }
 
     work = "Add a worklist row in the private steward repo (#2072)."
-    defect = "File against reg-build holdings with the retained locators."
+    defect = "File against reg-build holdings with the table, column and old locators."
     codes = {n["code"] for n in new["notices"]} if new else set()
     if old is None or new is None:
         only_table = (
@@ -2211,15 +2212,12 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
         "ambiguous_delivered_owners",
         "ambiguous_catalog_segment",
     }:
-        return result(
-            "owner ambiguity", "New ownership has blocked slices.", work, codes
-        )
+        return result("owner ambiguity", "New ownership has blocked slices.", work)
     if new["column_disposition"] == "hold" or codes & {"mapping_held", "row_key_held"}:
         return result(
             "withheld carried over" if old["state"] == "old withheld" else "held",
             "New hold retains reason and follow-up, including partially held mappings.",
             work,
-            codes,
         )
     if old["mappings"] and new["mappings"]:
         removed = []
@@ -2238,7 +2236,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
                     "intended clipping",
                     "Column clipping notices explain every removed target/day slice."
                     + (" Other slices extend coverage." if added else ""),
-                    codes={"period_clipped"},
                 )
             return result(
                 "defect",
@@ -2283,13 +2280,11 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
                 "defect",
                 "Missing mapping despite an old target with overlapping routed base coverage.",
                 defect,
-                {"mapping_missing"},
             )
         return result(
             "missing target",
             "Old target is absent or has no overlapping routed base segment.",
             work,
-            {"mapping_missing"},
         )
     if old["mappings"] and new["column_disposition"] == "unmap":
         return result(
@@ -2304,7 +2299,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
             "withheld carried over",
             "Old hold/unmap were indistinguishable; withholding remains unresolved.",
             work,
-            codes,
         )
     if old["keys"] or new["keys"]:
         if not old["mappings"] and not new["mappings"] and holdings_key_equal(old, new):
@@ -2337,7 +2331,6 @@ def classify_holdings(record, old, new, old_tables, new_tables, pins_equal):
             "missing target",
             "New column has no accepted target.",
             work,
-            {"mapping_missing"},
         )
     if not old["mappings"] and not new["mappings"]:
         if new["column_disposition"] == "unmap":
@@ -2379,13 +2372,9 @@ def holdings(args) -> int:
             raise ValueError(
                 "holdings meta.catalog_sha256 does not match --new-base sha256"
             )
-        pins = json.loads(new_meta["input_pins"])
-        if args.new_census_path not in pins:
-            raise ValueError("--new-census-path must name an existing input_pins key")
-        new_pin = pins[args.new_census_path]
-        old_pin = args.old_census_sha256
-        if not re.fullmatch("[0-9a-f]{64}", old_pin):
-            raise ValueError("old census sha256 must be 64 lowercase hex digits")
+        new_pin, old_pin = args.new_census_sha256, args.old_census_sha256
+        if not all(re.fullmatch("[0-9a-f]{64}", pin) for pin in (old_pin, new_pin)):
+            raise ValueError("census sha256 values must be 64 lowercase hex digits")
         pins_equal = old_pin == new_pin
         old_tables, old_columns = old_holdings(old_db)
         new_tables, new_columns = new_holdings(new_db)
@@ -2581,6 +2570,336 @@ def holdings(args) -> int:
     return 0
 
 
+# Reader-visible text by kind, as SQL returning (stable key, resolved body). Text ids
+# renumber between builds, so bodies are compared, never ids.
+REBUILT_TEXT = {
+    "occurrence definition": (
+        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''),"
+        " d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id"
+        " JOIN text d ON d.id = o.definition_text"
+    ),
+    "variable label": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text"
+    ),
+    "variable definition": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.definition_text"
+    ),
+    "variable description": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.description_text"
+    ),
+    "table description": (
+        "SELECT t.pid, x.body FROM tbl t JOIN text x ON x.id = t.description_text"
+    ),
+    "register description": (
+        "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text"
+    ),
+    "mapping caveat": (
+        "SELECT t.physical_name || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid"
+        " || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m"
+        " JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id"
+        " WHERE m.caveat IS NOT NULL"
+    ),
+}
+# Finding subjects by kind, as SQL returning (id, key that survives a rebuild).
+REBUILT_SUBJECTS = {
+    "register": "SELECT id, pid FROM register",
+    "table": "SELECT id, pid FROM tbl",
+    "release": "SELECT r.id, t.pid || '/' || r.source_key FROM release r JOIN tbl t ON t.id = r.table_id",
+    "variable": "SELECT id, pid FROM variable",
+    "segment": (
+        "SELECT s.id, v.pid || '@' || t.pid || '@' || s.start FROM segment s"
+        " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
+    ),
+    "occurrence": (
+        "SELECT o.id, t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') FROM occurrence o"
+        " JOIN tbl t ON t.id = o.table_id"
+    ),
+    "valueset": "SELECT id, hash FROM valueset",
+    "set": "SELECT id, pid FROM var_set",
+    "class_version": "SELECT id, pid FROM class_version",
+}
+_SUBJECT = " UNION ALL ".join(
+    f"SELECT '{kind}', * FROM ({sql})" for kind, sql in REBUILT_SUBJECTS.items()
+)
+# A statement is keyed by its file, kind and the stable keys of what it won (overrides,
+# relations, acks), not by its hash: the hash covers the whole statement, so a non-text
+# edit would read as removed and added text, and file and kind alone merge statements.
+REBUILT_TEXT["statement"] = (
+    f"WITH subject(kind, id, key) AS ({_SUBJECT}),"
+    " target(sid, t) AS ("
+    "SELECT o.statement_id, o.subject_kind || ':' || ifnull(k.key, o.subject_id) || '.' || o.field"
+    " FROM override o LEFT JOIN subject k ON k.kind = o.subject_kind AND k.id = o.subject_id"
+    " WHERE o.statement_id IS NOT NULL"
+    " UNION SELECT r.statement_id, r.kind || ' ' || ifnull(a.key, r.subject_id) || ' -> ' || ifnull(b.key, r.object_id)"
+    " FROM relation r LEFT JOIN subject a ON a.kind = r.subject_kind AND a.id = r.subject_id"
+    " LEFT JOIN subject b ON b.kind = r.object_kind AND b.id = r.object_id"
+    " WHERE r.statement_id IS NOT NULL"
+    " UNION SELECT f.ack_statement_id, 'ack ' || f.code || ' ' || ifnull(k.key, f.subject_id)"
+    " FROM finding f LEFT JOIN subject k ON k.kind = f.subject_kind AND k.id = f.subject_id"
+    " WHERE f.ack_statement_id IS NOT NULL)"
+    " SELECT s.file || ' ' || s.kind || ' ' || ifnull((SELECT group_concat(t, '; ')"
+    " FROM (SELECT t FROM target WHERE sid = s.id ORDER BY t)), ''),"
+    " json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
+    " LEFT JOIN text e ON e.id = s.evidence_text LEFT JOIN text c ON c.id = s.caveat_text"
+)
+
+
+def rebuilt_schema(db) -> tuple[int, str | None]:
+    row = db.execute("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
+    return db.execute("PRAGMA user_version").fetchone()[0], row and row[0]
+
+
+def rebuilt_placements(db):
+    """(physical table, column) -> (disposition, {(table_pid, variable_pid, start, end)})."""
+    columns = {
+        cid: (table, name, disposition)
+        for cid, table, name, disposition in db.execute(
+            "SELECT c.id, t.physical_name, c.name, c.disposition FROM holding_column c"
+            " JOIN holding_table t ON t.id = c.holding_id"
+        )
+    }
+    placed = defaultdict(set)
+    for cid, *mapping in db.execute(
+        "SELECT column_id, table_pid, variable_pid, start, end FROM holding_mapping"
+    ):
+        placed[cid].add(tuple(mapping))
+    return {
+        (table, name): (disposition, placed[cid])
+        for cid, (table, name, disposition) in columns.items()
+    }
+
+
+def rebuilt_status(disposition, placement) -> str:
+    if placement:
+        return "placed"
+    return "held" if disposition in ("hold", "unmap") else "unplaced"
+
+
+def rebuilt_text(db, sql):
+    found = defaultdict(set)
+    for key, body in db.execute(sql):
+        found[key].add(body)
+    return found
+
+
+def rebuilt_findings(db):
+    subjects = {
+        (kind, ident): key
+        for kind, sql in REBUILT_SUBJECTS.items()
+        for ident, key in db.execute(sql)
+    }
+    return Counter(
+        (code, f"{kind}:{subjects[kind, ident]}", (lo, hi))
+        for code, kind, ident, lo, hi in db.execute(
+            "SELECT code, subject_kind, subject_id, start, end FROM finding"
+        )
+    )
+
+
+def rebuilt_notices(db):
+    return Counter(
+        (code, f"{table}/{column or ''}", (lo, hi))
+        for code, table, column, lo, hi in db.execute(
+            "SELECT n.code, t.physical_name, c.name, n.start, n.end FROM holding_notice n"
+            " JOIN holding_table t ON t.id = n.holding_id"
+            " LEFT JOIN holding_column c ON c.id = n.column_id"
+        )
+    )
+
+
+def rebuilt_delta(old, new):
+    """Per-code counts and the (code, subject, period) multiset differences."""
+    added, removed = new - old, old - new
+    by_code = {
+        code: {
+            "old": sum(n for k, n in old.items() if k[0] == code),
+            "new": sum(n for k, n in new.items() if k[0] == code),
+            "added": sum(n for k, n in added.items() if k[0] == code),
+            "removed": sum(n for k, n in removed.items() if k[0] == code),
+        }
+        for code in sorted({k[0] for k in old | new})
+    }
+    return by_code, added, removed
+
+
+def rebuilt_delta_lines(title, note, delta):
+    by_code, added, removed = delta
+    return [
+        "",
+        f"## {title}",
+        "",
+        f"{note} Compared by (code, subject, period): {sum(added.values())} added, {sum(removed.values())} removed.",
+        "",
+        "| code | old | new | added | removed |",
+        "|---|---:|---:|---:|---:|",
+        *(
+            f"| {code} | {n['old']} | {n['new']} | {n['added']} | {n['removed']} |"
+            for code, n in by_code.items()
+            if n["added"] or n["removed"]
+        ),
+        *(["| none | | | | |"] if not (added or removed) else []),
+    ]
+
+
+def rebuilt(args) -> int:
+    if args.out and args.out.exists():
+        raise ValueError("--out already exists; choose a fresh report directory")
+    with (
+        closing(connect_ro(args.old_db)) as old_db,
+        closing(connect_ro(args.new_db)) as new_db,
+    ):
+        old_schema, new_schema = rebuilt_schema(old_db), rebuilt_schema(new_db)
+        if old_schema != new_schema:
+            raise ValueError(
+                "holdings schema mismatch: (user_version, schema_version) "
+                f"old {old_schema}, new {new_schema}"
+            )
+        meta = {
+            side: dict(db.execute("SELECT key, value FROM meta"))
+            for side, db in (("old", old_db), ("new", new_db))
+        }
+        old, new = rebuilt_placements(old_db), rebuilt_placements(new_db)
+        totals = {
+            side: Counter(rebuilt_status(*value) for value in placements.values())
+            for side, placements in (("old", old), ("new", new))
+        }
+        changed = {
+            key: (old[key][1], new[key][1])
+            for key in sorted(old.keys() & new.keys())
+            if old[key][1] != new[key][1]
+        }
+        # Unplaced columns moving between held and unplaced keep empty mapping sets.
+        status_changes = {
+            key: (rebuilt_status(*old[key]), rebuilt_status(*new[key]))
+            for key in sorted(old.keys() & new.keys())
+            if key not in changed
+            and rebuilt_status(*old[key]) != rebuilt_status(*new[key])
+        }
+        interval_only = sum(
+            {m[:2] for m in before} == {m[:2] for m in after}
+            for before, after in changed.values()
+        )
+        moves = Counter(
+            (
+                ", ".join(sorted({m[0] for m in before})) or "(none)",
+                ", ".join(sorted({m[0] for m in after})) or "(none)",
+            )
+            for before, after in changed.values()
+        )
+        texts: dict[str, dict[str, Any]] = {}
+        for kind, sql in REBUILT_TEXT.items():
+            before, after = rebuilt_text(old_db, sql), rebuilt_text(new_db, sql)
+            texts[kind] = {
+                "old": len(before),
+                "new": len(after),
+                "changed": {
+                    key: {"old": sorted(before[key]), "new": sorted(after[key])}
+                    for key in before.keys() & after.keys()
+                    if before[key] != after[key]
+                },
+                "added": {
+                    key: sorted(after[key]) for key in after.keys() - before.keys()
+                },
+                "removed": {
+                    key: sorted(before[key]) for key in before.keys() - after.keys()
+                },
+            }
+        findings = rebuilt_delta(rebuilt_findings(old_db), rebuilt_findings(new_db))
+        notices = rebuilt_delta(rebuilt_notices(old_db), rebuilt_notices(new_db))
+    summary = [
+        "# Rebuilt holdings comparison",
+        "",
+        f"Schema: user_version {old_schema[0]}, schema_version {old_schema[1]} on both sides.",
+        *(
+            f"{side.capitalize()}: generation {m.get('generation_id')}; steward {m.get('steward_commit')}; compiler {m.get('compiler_digest')}."
+            for side, m in meta.items()
+        ),
+        "",
+        "## Census placement",
+        "",
+        "Placed: at least one holding_mapping row. Held: hold/unmap disposition, no mapping. Unplaced: candidate (no hold/unmap), no mapping; a superset of the meta key unmatched_columns, which counts only candidates whose authored mapping found no owner.",
+        "",
+        "| side | columns | placed | held | unplaced |",
+        "|---|---:|---:|---:|---:|",
+        *(
+            f"| {side} | {sum(c.values())} | {c['placed']} | {c['held']} | {c['unplaced']} |"
+            for side, c in totals.items()
+        ),
+        "",
+        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)} (validity interval only: {interval_only}); held/unplaced status changed: {len(status_changes)} ({', '.join(f'{b} → {a}: {n}' for (b, a), n in sorted(Counter(status_changes.values()).items())) or 'none'}); only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
+        "",
+        "## Changed placements",
+        "",
+        "A placement is (table_pid, variable_pid, start, end); an interval-only change keeps its table_pid on both sides.",
+        "",
+        "| old table_pid | new table_pid | columns |",
+        "|---|---|---:|",
+        *(
+            f"| {before} | {after} | {count} |"
+            for (before, after), count in moves.most_common(REBUILT_ROWS)
+        ),
+    ]
+    if len(moves) > REBUILT_ROWS:
+        summary.append(f"| … {len(moves) - REBUILT_ROWS} more groups | | |")
+    if not moves:
+        summary.append("| none | | |")
+    summary += [
+        "",
+        "## Reader-visible text",
+        "",
+        "| kind | old | new | changed | added | removed |",
+        "|---|---:|---:|---:|---:|---:|",
+        *(
+            f"| {kind} | {t['old']} | {t['new']} | {len(t['changed'])} | {len(t['added'])} | {len(t['removed'])} |"
+            for kind, t in texts.items()
+        ),
+        *rebuilt_delta_lines("Findings", "Semantic findings.", findings),
+        *rebuilt_delta_lines(
+            "Holdings notices",
+            "Subject: physical table/column.",
+            notices,
+        ),
+    ]
+    if args.out:
+        args.out.mkdir(parents=True, exist_ok=False)
+        details = {
+            "schema": list(old_schema),
+            "meta": meta,
+            "placement_totals": totals,
+            "placement_moves": [
+                {"old": before, "new": after, "columns": count}
+                for (before, after), count in moves.most_common()
+            ],
+            "placement_changes": [
+                {"table": table, "column": column, "old": sorted(b), "new": sorted(a)}
+                for (table, column), (b, a) in sorted(changed.items())
+            ],
+            "status_changes": [
+                {"table": table, "column": column, "old": b, "new": a}
+                for (table, column), (b, a) in status_changes.items()
+            ],
+            "text": texts,
+            **{
+                f"{name}{suffix}": value
+                for name, (by_code, added, removed) in (
+                    ("findings", findings),
+                    ("notices", notices),
+                )
+                for suffix, value in (
+                    ("", by_code),
+                    ("_added", sorted(map(list, added), key=repr)),
+                    ("_removed", sorted(map(list, removed), key=repr)),
+                )
+            },
+        }
+        (args.out / "rebuilt.json").write_text(
+            json.dumps(details, ensure_ascii=False, indent=1, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    print("\n".join(summary))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -2619,11 +2938,20 @@ def main() -> int:
         help="raw census digest from the pinned old scope (0.64.0 stores only the input-manifest digest)",
     )
     holding.add_argument(
-        "--new-census-path",
+        "--new-census-sha256",
         required=True,
-        help="exact census path key in holdings meta.input_pins",
+        help="census pin from the holdings build report's steward.input_pins",
     )
     holding.set_defaults(run=holdings)
+    rebuilt_cmd = commands.add_parser(
+        "rebuilt", help="compare two rebuilt holdings DBs (release step 8g)"
+    )
+    for flag in ("old-db", "new-db"):
+        rebuilt_cmd.add_argument(f"--{flag}", type=Path, required=True)
+    rebuilt_cmd.add_argument(
+        "--out", type=Path, help="new directory for rebuilt.json with the details"
+    )
+    rebuilt_cmd.set_defaults(run=rebuilt)
     args = parser.parse_args()
     try:
         return args.run(args)

@@ -1,10 +1,11 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
-`swecov_extract.R` turns order manifests into extract files inside MONA. It is the first
-reader of the order manifest, whose v3 contract is frozen in
-[../crates/DESIGN.md](../crates/DESIGN.md) ("Order manifest"). A SWECOV data manager
-runs it by hand; no agent and no network reach MONA, so the script is one self-contained
-file that gets uploaded with the orders. Run steps are in [README.md](README.md).
+`swecov_extract.R` turns order files into extract files inside MONA. It reads the MONA
+order file (version 4) that `materialize_order` writes, whose contract is
+[../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
+`crates/reg-core/src/manifest.rs`. A SWECOV data manager runs it by hand; no agent and
+no network reach MONA, so the script is one self-contained file that gets uploaded with
+the orders. Run steps are in [README.md](README.md).
 
 ## Shape
 
@@ -44,27 +45,33 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. Each object is closed, so an unknown field anywhere is a
-   refusal (the v3 freeze relies on this). `extract_format` is required: the runner has
-   no default format.
-2. Plan the files: one per physical table and table edition, whatever variants bind it,
-   named `<physical.file>.<format>` (the catalog names the file after the table,
-   [../crates/DESIGN.md](../crates/DESIGN.md), "Extraction keeps delivery topology"). A
-   file's columns are its entries' distinct physical columns in manifest order (ordered
-   entries first, then held keys). Every entry of a file must carry the same name and
-   the same filter. A name outside slug spelling is refused, so a manifest cannot name a
-   path; so are two files whose names differ only in case (MONA's file system would let
-   one overwrite the other), a file named like the run's own logs, and a Windows device
-   name (`nul`, `con`, ...), which would swallow the data. A table or column name is at
-   most 128 UTF-16 units, SQL Server's `sysname`.
-3. Resolve every file before writing any: its table's schema from
-   `INFORMATION_SCHEMA.TABLES` (exactly one hit; the holdings put 17 views in schema
-   `P1105` and the rest in `dbo`, with no name in both), then each column and the period
-   column's `DATA_TYPE` (and each column's precision and scale). Names match
-   byte-exactly (`Latin1_General_BIN2`). A column the format cannot hold is refused
-   here, before any row is read: for `.dta` and `.parquet` a SQL type outside the
-   mapping below, for `.dta` a name it is written under that is not a Stata variable
-   name (the order gives every such column a `stata_name`, so this is a backstop) or a
-   full name longer than a variable label holds (80 characters).
+   refusal. A field the order file writes as null is required and may be null (a
+   timeless file's `delivery`, a storage `length`); a field it omits when empty is
+   optional. `extract_format` is required: the runner has no default format. A column
+   without an expected storage `type` is refused, since the storage check below needs
+   one.
+2. Plan the files: one per manifest file, named `<name>.<format>` (the catalog names the
+   file after the physical table, [../crates/DESIGN.md](../crates/DESIGN.md), "MONA
+   order file"), its columns in manifest order (ordered columns first, then held keys).
+   A name outside slug spelling is refused, so a manifest cannot name a path; so are two
+   files whose names differ only in case (MONA's file system would let one overwrite the
+   other), a stem of the run's own logs, and a Windows device name (`nul`, `con`, ...),
+   which would swallow the data. So is a file listing a column twice, or naming both a
+   partition and a projection. A schema, table or column name is at most 128 UTF-16
+   units, SQL Server's `sysname`.
+3. Resolve every file before writing any: its table in the schema the order names, from
+   `INFORMATION_SCHEMA.TABLES` (exactly one hit), then each column and the period
+   column's `DATA_TYPE`, length, precision and scale. Names match byte-exactly
+   (`Latin1_General_BIN2`). Each column's storage must equal the order's expected
+   storage exactly: type, length, precision and scale, a null being SQL `NULL` and -1
+   `max`. A drifted column is refused, naming the file, the column and both storages,
+   never a value: the order was made against other holdings, and a drift is not
+   permission to coerce. The row-filter column has no expected storage; its type is
+   checked against the encoding (below). A column the format cannot hold is refused here
+   too, before any row is read: for `.dta` and `.parquet` a SQL type outside the mapping
+   below, for `.dta` a name it is written under that is not a Stata variable name (the
+   order gives every such column a `stata_name`, so this is a backstop) or a full name
+   longer than a variable label holds (80 characters).
 4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
    order's one format (below), then write `run_log.csv` (file, rows, columns, filter;
    the file name's extension is the format).
@@ -152,20 +159,19 @@ Choices behind the table:
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and
   strL for text over 2045 bytes. A column whose name is not a Stata variable name is
-  written under the entry's `physical.stata_name`, the order's alias
-  ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), with its full name as
-  the variable label. Every entry of a file names a column under one alias, only a
-  column that is not a Stata variable name has one, and no two columns of a file share a
-  name, or the order is refused (exit 6). `%tc` holds milliseconds, so a `datetime2`'s
-  finer digits are dropped; Parquet keeps microseconds, dropping `datetime2(7)`'s 100 ns
-  digit; CSV already writes whole seconds.
+  written under the column's `stata_name`, the order's alias
+  ([../crates/DESIGN.md](../crates/DESIGN.md), "MONA order file"), with its full name as
+  the variable label. Only a column that is not a Stata variable name has an alias, and
+  no two columns of a file are written under one name, or the order is refused (exit 6).
+  `%tc` holds milliseconds, so a `datetime2`'s finer digits are dropped; Parquet keeps
+  microseconds, dropping `datetime2(7)`'s 100 ns digit; CSV already writes whole
+  seconds.
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
   chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).
 
-The type table is pinned by one case per format in the SQL Server suite (below); the
-`.dta` oracle reads each column's Stata display format back, so a long (`%12.0g`) and a
-double (`%20.0g`) differ. A refusal case pins the 2^53 bound.
+The type table is verified by the manual run on MONA (see Tests); a long (`%12.0g`) and
+a double (`%20.0g`) differ in the `.dta` display format.
 
 ## No row values in logs
 
@@ -184,29 +190,25 @@ that wrote it, are the control on what is extracted.
 
 Stable; the process exits with the code of the first order, in name order, that failed.
 
-  | Code | Meaning                                                                                                                                       |
-  | ---- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 0    | every order extracted (or no orders)                                                                                                          |
-  | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                              |
-  | 3    | the order is not JSON                                                                                                                         |
-  | 4    | `version` is not 3                                                                                                                            |
-  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                                       |
-  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name                                                                     |
-  | 7    | a table in no schema or several, a missing column, a wrong period type, a column the format cannot hold (SQL type, or a `.dta` name or label) |
-  | 8    | a query or a file write failed, or a value the format cannot hold exactly                                                                     |
+  | Code | Meaning                                                                                                                                         |
+  | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 0    | every order extracted (or no orders)                                                                                                            |
+  | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                                |
+  | 3    | the order is not JSON                                                                                                                           |
+  | 4    | `version` is not 4                                                                                                                              |
+  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                                         |
+  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name, a null storage type                                                  |
+  | 7    | a table not in its schema, a missing column, storage drift, a wrong period type, a column the format cannot hold (SQL type, `.dta` name, label) |
+  | 8    | a query or a file write failed, or a value the format cannot hold exactly                                                                       |
 
 ## Tests
 
 Process-level, run by hand
 (`Rscript -e 'testthat::test_dir("reg_mona_runner/tests/testthat")'`; neither the gate
-nor CI runs it): the script runs under `Rscript` against an export root, and tests read
-the exit code, the extracted files and logs. Locally (no SQL Server) one case per
-refusal code that fires before the database (2 to 6). Against a SQL Server
-(`SWECOV_TEST_CONNECTION`) that loads `tests/mssql/fixture.sql`, and one run extracts
-the conformance order goldens that cover filters and file topology plus the runner's own
-manifests (`tests/cases/*/order.json`: every encoding and delivery type, schema `P1105`,
-non-ASCII names, compact JSON, and `types-dta`, `types-parquet` and `types-csv` over one
-table of every mapped SQL type) and the refusals 7 and 8. Expected CSVs under
-`tests/cases/*/expected/` are the fixture rows passed through each order by hand; a
-`.dta` or `.parquet` file's oracle is `<file>.json`, its column types and rows as text,
-read back with haven or arrow by the test, not the runner.
+nor CI runs it): the script runs under `Rscript` against an export root with no
+database, and tests read the exit code and the error log. The suite has one case per
+refusal code that fires before the database (2 to 6) and needs no SQL Server.
+
+Extraction is not in the automated suite: no test requires a SQL Server. It is verified
+by a manual run on MONA with real code and real orders, covering the formats, the
+filters and file topology, and refusals 7 and 8.

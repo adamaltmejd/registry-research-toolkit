@@ -530,3 +530,33 @@ kind = "set"
 subject = "land-och-vattenarealer: sp_geometry @2026-01-01..2026-12-31 where key = 'v39461'"
 fields = { "variable" = "geometri" }
 evidence = "Land and water areas SP_Geometry: labelled 'Totalareal land och vatten' in km2 (2020-23) but the 2020 operational text is 'Lantmäteriets nedladdningstjänst ... polygoner', and from 2024 it is the geometry datatype. The column holds the polygon geometry throughout; the 2020-23 label is wrong, so this is one variable, not a successor."
+
+[[statement]]
+kind = "set"
+subject = "var:objekt-id"
+fields = { "label" = "Objekt-ID (heltalslöpnummer, OBJECTID)" }
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; Opdefs: OBJECTID is an integer identity number; UUID is a unique id per object and reference year, concurrent from 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:objekt-referensar-lopnummer"
+fields = { "label" = "Objekt-ID (UUID)" }
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; Opdefs: OBJECTID is an integer identity number; UUID is a unique id per object and reference year, concurrent from 2024."
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "label" = "Regionala statistikområden (RegSO), kod" }
+evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (2 variables): judged different meaning, medium confidence; RegSOkod holds the RegSO codes with names as value labels; RegSO has no value set or text, so only the code column is qualified."
+
+[[statement]]
+kind = "set"
+subject = "var:sjonamn"
+fields = { "label" = "De fyra största insjöarna (sjönamn)" }
+evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name; storasjo is a 0/1 marker (value set) that the object belongs to one of the four largest lakes (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:storasjo"
+fields = { "label" = "De fyra största insjöarna (ja/nej-markering)" }
+evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name; storasjo is a 0/1 marker (value set) that the object belongs to one of the four largest lakes (opdef)."

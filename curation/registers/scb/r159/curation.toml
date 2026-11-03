@@ -205,3 +205,27 @@ kind = "set"
 subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the municipality code, KOMMUNNAMN its name."
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN holds the county code, LANNAMN its name (description)."
+
+[[statement]]
+kind = "set"
+subject = "var:uuid"
+fields = { "label" = "Objekt-ID (UUID)" }
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, medium confidence; OBJECTID (running number) and UUID are concurrent identifier columns with different periods; opdef is shared."
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "label" = "Tätort (tätortskod)" }
+evidence = "#2102 same-label cluster 'Tätort' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TATORTSKOD has a code list of tätortskoder (e.g. 0115TB101=Brottby) while TATORT has none; opdefs are otherwise identical (Registret Tätorter YYYY), so 'tätortskod' holds for every TATORTSKOD occurrence."

@@ -1,0 +1,10 @@
+# Steward pin registry: each steward id selects its dedicated repository, an exact commit
+# and the relative path of its config. No branch, no implicit latest. The holdings
+# compiler verifies the supplied checkout and every consumed input against this pin.
+# It sits outside curation/ so a re-pin does not move the base catalog's curation_digest
+# (and generation), which the steward lock binds.
+
+[swecov]
+repo = "git@github.com:adamaltmejd/swecov-steward.git"
+commit = "6a1238cb0a63bd080eb333282236ec48b3fed92c"
+config = "steward.toml"

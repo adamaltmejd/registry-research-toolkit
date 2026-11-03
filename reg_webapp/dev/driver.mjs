@@ -263,11 +263,21 @@ async function browsePagesCase(page, shoot) {
   await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
   await page.waitForURL("**/catalog/demo/hush");
   await settled(page);
-  const tables = main.locator("section").filter({ has: page.getByRole("heading", { name: "Tables", exact: true }) });
-  await tables.getByRole("link", { name: "Individer", exact: true }).waitFor();
+  // The tables are chips over the variable list (maintainer 2026-11-03), not
+  // links: selecting one narrows the list, never the page.
+  const tables = main.getByRole("group", { name: "Tables", exact: true });
+  await tables.getByRole("checkbox", { name: /^Individer \d/ }).waitFor();
+  const variables = main.getByRole("list", { name: "Variables", exact: true }).getByRole("listitem");
+  const all = await variables.count();
+  // RAC's input is visually hidden inside the chip's label: press the label.
+  const familyName = { name: /^Familjer \d/ };
+  const family = tables.getByRole("checkbox", familyName);
+  await tables.locator("label").filter({ has: page.getByRole("checkbox", familyName) }).click();
+  check(await family.isChecked(), "the table chip did not select");
+  await main.getByText(new RegExp(`^\\d+ of ${all} shown$`)).waitFor();
+  check((await variables.count()) < all, "a table chip did not narrow the variable list");
   await shoot("browse-register");
-  await tables.getByRole("link", { name: "Familjer", exact: true }).click();
-  await page.waitForURL("**/catalog/demo/hush/fam");
+  await open(page, "/catalog/demo/hush/fam");
   await settled(page);
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
   // Stacked cells include their CSS label prefix in the accessible name.
@@ -842,7 +852,7 @@ async function stewardHeldCase(page, shoot) {
   const panel = page.locator("section").filter({ has: page.getByRole("heading", { name: "Held", exact: true }) });
   await panel.getByText("Late", { exact: true }).waitFor();
   await panel.getByText("Pool", { exact: true }).waitFor();
-  await panel.getByText("2019..2020", { exact: true }).waitFor();
+  await panel.getByText("2019–2020", { exact: true }).waitFor();
   await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });
   await settled(page);
   await shoot("steward-held");
@@ -860,13 +870,17 @@ async function stewardHeldCase(page, shoot) {
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
   await settled(page);
   await shoot("steward-order");
-  // A project must not make supplemental-only metadata selectable before the
-  // order server supports the composed catalog. Reference variables stay usable.
+  // Supplemental-only variables order through the composed steward view (#2068),
+  // so a project can select them like reference variables.
   await open(page, "/catalog/steward/slots/slot2");
+  const slotColumn = page.getByRole("main").getByRole("checkbox").first();
+  await slotColumn.waitFor();
+  await slotColumn.focus();
+  await slotColumn.press("Space");
+  check(await slotColumn.isChecked(), "supplemental variable offers no project selection");
+  await page.getByRole("main").getByRole("button", { name: /^Add \d+ columns? to project$/ }).waitFor();
   await settled(page);
-  check(await page.getByRole("main").getByRole("checkbox").count() === 0, "supplemental variable offers project selection");
-  check(await page.getByRole("button", { name: /^Add .* to project/ }).count() === 0, "supplemental variable offers an add bar");
-  await shoot("steward-readonly");
+  await shoot("steward-selectable");
   await open(page, "/catalog/demo/held/late");
   await page.getByRole("main").getByRole("checkbox").first().waitFor();
 }

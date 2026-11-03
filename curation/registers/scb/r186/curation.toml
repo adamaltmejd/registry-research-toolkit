@@ -696,3 +696,51 @@ kind = "set"
 subject = "set:yrke"
 fields = { "label" = "Yrke" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-3"
+fields = { "label" = "Yrkesuppgift (SSYK 2012, 3 siffror)" }
+evidence = "#2102 same-label cluster 'Yrkesuppgift' (2 variables): judged different meaning, high confidence; Opdefs: three-digit code derived from the four-digit SSYK 2012 code vs the four-digit code."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-4"
+fields = { "label" = "Yrkesuppgift (SSYK 2012, 4 siffror)" }
+evidence = "#2102 same-label cluster 'Yrkesuppgift' (2 variables): judged different meaning, high confidence; Opdefs: three-digit code derived from the four-digit SSYK 2012 code vs the four-digit code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000, fyrsiffrig)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 four-digit code list vs a one-digit field code per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, tresiffrig)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Opdefs and periods separate SUN 2000 three-digit, an old-SUN one-digit grouping, the one-digit utbnv grouping and SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "label" = "Utbildningsnivå (SUN 2000, ensiffrig enligt gamla SUN)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Opdefs and periods separate SUN 2000 three-digit, an old-SUN one-digit grouping, the one-digit utbnv grouping and SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Opdefs and periods separate SUN 2000 three-digit, an old-SUN one-digit grouping, the one-digit utbnv grouping and SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "label" = "Utbildningsinriktning (ensiffrig)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (2 variables): judged different meaning, high confidence; SUN 2000 four-digit code list vs a one-digit field code per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (ensiffrig, grupperad)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Opdefs and periods separate SUN 2000 three-digit, an old-SUN one-digit grouping, the one-digit utbnv grouping and SUN 2020."

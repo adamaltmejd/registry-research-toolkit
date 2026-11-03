@@ -2005,3 +2005,177 @@ kind = "set"
 subject = "set:vald-utbildning"
 fields = { "label" = "Vald utbildning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lasta-allmanna-studieforberedande-kurser-komvux"
+fields = { "label" = "Antal kurser i Komvux, allmänna och studieförberedande kurser" }
+evidence = "#2102 same-label cluster 'Antal kurser i Komvux' (2 variables): judged different meaning, high confidence; Opdefs: general/university-preparatory courses vs vocational courses."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lasta-yrkesinriktade-kurser-komvux"
+fields = { "label" = "Antal kurser i Komvux, yrkesinriktade kurser" }
+evidence = "#2102 same-label cluster 'Antal kurser i Komvux' (2 variables): judged different meaning, high confidence; Opdefs: general/university-preparatory courses vs vocational courses."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-poang-allmanna-gymnasiala-komvux"
+fields = { "label" = "Poängomfattning, avklarade poäng allmänna gymnasiala kurser" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-poang-allmanna-komvux"
+fields = { "label" = "Poängomfattning, avklarade poäng allmänna kurser (nuvarande beräkning)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-poang-yrkesinriktade-gymnasiala-komvux"
+fields = { "label" = "Poängomfattning, avklarade poäng yrkesinriktade gymnasiala kurser" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-poang-yrkesinriktade-komvux"
+fields = { "label" = "Poängomfattning, avklarade poäng yrkesinriktade kurser (nuvarande beräkning)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
+fields = { "label" = "Poängomfattning, huvudsaklig kursinriktning (nuvarande beräkning)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-kursinriktning-komvux-tidigare-berakning"
+fields = { "label" = "Poängomfattning, huvudsaklig kursinriktning (tidigare beräkning)" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:poangkat"
+fields = { "label" = "Poängomfattning, poängkategori" }
+evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, high confidence; Opdefs separate general vs vocational points, gymnasial-only (old, unused) vs current calculation, and the course-focus classifications under current and earlier calculation; PoangKat is a points category."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000grp"
+fields = { "label" = "Utbildningsgrupp (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Opdefs: older SUN grouping, SUN2000 (~100 groups), SUN2020 (~100 groups) and SUN2020 detailed (~130 groups) are different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020grp"
+fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Opdefs: older SUN grouping, SUN2000 (~100 groups), SUN2020 (~100 groups) and SUN2020 detailed (~130 groups) are different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:sungrp"
+fields = { "label" = "Utbildningsgrupp (äldre SUN-version)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Opdefs: older SUN grouping, SUN2000 (~100 groups), SUN2020 (~100 groups) and SUN2020 detailed (~130 groups) are different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningstimmar"
+fields = { "label" = "Undervisningstimmar, allmänna och studieförberedande kurser" }
+evidence = "#2102 same-label cluster 'Undervisningstimmar' (2 variables): judged different meaning, high confidence; Opdefs: teaching hours for general/preparatory courses vs vocational courses."
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningstimmar-yrkesinriktade-kurser-komvux"
+fields = { "label" = "Undervisningstimmar, yrkesinriktade kurser" }
+evidence = "#2102 same-label cluster 'Undervisningstimmar' (2 variables): judged different meaning, high confidence; Opdefs: teaching hours for general/preparatory courses vs vocational courses."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-sun2020-detaljerad"
+fields = { "label" = "Utbildningsgrupp (SUN 2020, detaljerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Opdefs: older SUN grouping, SUN2000 (~100 groups), SUN2020 (~100 groups) and SUN2020 detailed (~130 groups) are different classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:vald-ny"
+fields = { "label" = "Vald utbildning (ny regel för specialistläkare)" }
+evidence = "#2102 same-label cluster 'Vald utbildning' (2 variables): judged different meaning, high confidence; Vald_ny opdef: a variant selection rule that picks the latest license for specialist physicians; runs concurrently with Vald."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs/code lists: SUN2020Inr and SUN2000Inr are 4-character SUN inriktning codes of the named versions; SUNInr is the first digit of the SUN code (11 codes); ISCED_F_2013 uses ISCED-F codes; YfieldMax is the inriktning with most points among vocational courses (Komvux)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-yrkeskurser-flest-avklarade-poang"
+fields = { "label" = "Utbildningsinriktning (yrkeskurser med flest avklarade poäng)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs/code lists: SUN2020Inr and SUN2000Inr are 4-character SUN inriktning codes of the named versions; SUNInr is the first digit of the SUN code (11 codes); ISCED_F_2013 uses ISCED-F codes; YfieldMax is the inriktning with most points among vocational courses (Komvux)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun-forsta-siffran-16-74-ar"
+fields = { "label" = "Utbildningsinriktning (SUN, första siffran)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs/code lists: SUN2020Inr and SUN2000Inr are 4-character SUN inriktning codes of the named versions; SUNInr is the first digit of the SUN code (11 codes); ISCED_F_2013 uses ISCED-F codes; YfieldMax is the inriktning with most points among vocational courses (Komvux)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs/code lists: SUN2020Inr and SUN2000Inr are 4-character SUN inriktning codes of the named versions; SUNInr is the first digit of the SUN code (11 codes); ISCED_F_2013 uses ISCED-F codes; YfieldMax is the inriktning with most points among vocational courses (Komvux)."
+
+[[statement]]
+kind = "set"
+subject = "var:isced-f-2013"
+fields = { "label" = "Utbildningsinriktning (ISCED-F 2013)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs/code lists: SUN2020Inr and SUN2000Inr are 4-character SUN inriktning codes of the named versions; SUNInr is the first digit of the SUN code (11 codes); ISCED_F_2013 uses ISCED-F codes; YfieldMax is the inriktning with most points among vocational courses (Komvux)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-forra-aret-tre-grupper"
+fields = { "label" = "Utbildningsnivå (föregående år, tre grupper)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:sungrov"
+fields = { "label" = "Utbildningsnivå (äldre SUN-version, grov indelning)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "label" = "Utbildningsnivå (SUNNiva)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-det"
+fields = { "label" = "Utbildningsnivå (SUN 2000, sju grupper)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:isced2011niva"
+fields = { "label" = "Utbildningsnivå (ISCED 2011)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-det"
+fields = { "label" = "Utbildningsnivå (SUN 2020, sju grupper)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."

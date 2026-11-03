@@ -1862,3 +1862,183 @@ kind = "set"
 subject = "set:utjamningsar"
 fields = { "label" = "Utjämningsår" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-3-29625"
+fields = { "label" = "Antal barn 1-5 år, år t-2 (1-3 år)" }
+evidence = "#2102 same-label cluster 'Antal barn 1-5 år, år t-2' (2 variables): judged different meaning, medium confidence; Ant1_3 and Ant4_5 are concurrent counts for different age ranges; the shared label spans both."
+
+[[statement]]
+kind = "set"
+subject = "var:ant4-5"
+fields = { "label" = "Antal barn 1-5 år, år t-2 (4-5 år)" }
+evidence = "#2102 same-label cluster 'Antal barn 1-5 år, år t-2' (2 variables): judged different meaning, medium confidence; Ant1_3 and Ant4_5 are concurrent counts for different age ranges; the shared label spans both."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar"
+fields = { "label" = "Antal barn 6-12 år (7-12 år)" }
+evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, medium confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar-ant6"
+fields = { "label" = "Antal barn 6-12 år (6 år)" }
+evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, medium confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both."
+
+[[statement]]
+kind = "set"
+subject = "var:forvdoda-29649"
+fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (ForvDoda)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för ohälsa, kr/inv' (2 variables): judged different meaning, medium confidence; ForvDoda (förväntade döda) and ObsDoda (observerade döda) are different concurrent columns under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-namn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; kommun holds the municipality code (value set); namn is a separate column in the lss-utjamning table, by its name the municipality name."
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "label" = "Tillägg/avdrag för institutionsboende i glesbygd, kr/inv (landareal)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för institutionsboende i glesbygd, kr/inv' (2 variables): judged different meaning, medium confidence; LandAreal and Tatortsgrad10 are different concurrent columns (land area, degree of urbanisation) under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:obsdoda"
+fields = { "label" = "Tillägg/avdrag för ohälsa, kr/inv (observerat antal döda)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för ohälsa, kr/inv' (2 variables): judged different meaning, medium confidence; ForvDoda (förväntade döda) and ObsDoda (observerade döda) are different concurrent columns under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad10"
+fields = { "label" = "Tillägg/avdrag för institutionsboende i glesbygd, kr/inv (tätortsgrad, Tatortsgrad10)" }
+evidence = "#2102 same-label cluster 'Tillägg/avdrag för institutionsboende i glesbygd, kr/inv' (2 variables): judged different meaning, medium confidence; LandAreal and Tatortsgrad10 are different concurrent columns (land area, degree of urbanisation) under one component label."
+
+[[statement]]
+kind = "set"
+subject = "var:utfallavg"
+fields = { "label" = "LSS-utjämningsavgift, kr per inv" }
+evidence = "#2102 same-label cluster 'LSS-utjämningsbidrag eller -avgift, kr per inv' (4 variables): judged different meaning, medium confidence; UtfallBid (bidrag) and UtfallAvg (avgift) are separate concurrent columns per opdefs; UtjBerBidAvgKrinv and Utfall (opdef: avgift/bidrag) are the combined value before and after."
+
+[[statement]]
+kind = "set"
+subject = "var:utfallbid"
+fields = { "label" = "LSS-utjämningsbidrag, kr per inv" }
+evidence = "#2102 same-label cluster 'LSS-utjämningsbidrag eller -avgift, kr per inv' (4 variables): judged different meaning, medium confidence; UtfallBid (bidrag) and UtfallAvg (avgift) are separate concurrent columns per opdefs; UtjBerBidAvgKrinv and Utfall (opdef: avgift/bidrag) are the combined value before and after."
+
+[[statement]]
+kind = "set"
+subject = "var:ba"
+fields = { "label" = "Gymnasieprogram, Bygg- och anläggningsprogrammet (BA)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:bf"
+fields = { "label" = "Gymnasieprogram, Barn- och fritidsprogrammet (BF)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:ee"
+fields = { "label" = "Gymnasieprogram, El- och energiprogrammet (EE)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:ek"
+fields = { "label" = "Gymnasieprogram, Ekonomiprogrammet (EK)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:es"
+fields = { "label" = "Gymnasieprogram, Estetiska programmet (ES)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:ft"
+fields = { "label" = "Gymnasieprogram, Fordons- och transportprogrammet (FT)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:ha"
+fields = { "label" = "Gymnasieprogram, Handels- och administrationsprogrammet (HA)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:ht"
+fields = { "label" = "Gymnasieprogram, Hotell- och turismprogrammet (HT)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:hu"
+fields = { "label" = "Gymnasieprogram, Humanistiska programmet (HU)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:hv"
+fields = { "label" = "Gymnasieprogram, Hantverksprogrammet (HV)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:im"
+fields = { "label" = "Gymnasieprogram, Introduktionsprogram (IM)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:in"
+fields = { "label" = "Gymnasieprogram, Industritekniska programmet (IN)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:na"
+fields = { "label" = "Gymnasieprogram, Naturvetenskapsprogrammet (NA)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:nb"
+fields = { "label" = "Gymnasieprogram, Naturbruksprogrammet (NB)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:rl"
+fields = { "label" = "Gymnasieprogram, Restaurang- och livsmedelsprogrammet (RL)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:sa"
+fields = { "label" = "Gymnasieprogram, Samhällsvetenskapsprogrammet (SA)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:te"
+fields = { "label" = "Gymnasieprogram, Teknikprogrammet (TE)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:vf"
+fields = { "label" = "Gymnasieprogram, VVS- och fastighetsprogrammet (VF)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "var:vo"
+fields = { "label" = "Gymnasieprogram, Vård- och omsorgsprogrammet (VO)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."

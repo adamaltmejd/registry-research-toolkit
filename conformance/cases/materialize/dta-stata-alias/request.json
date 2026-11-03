@@ -1,0 +1,21 @@
+{
+  "note": "Fails if an absent extract_format does not resolve to dta, or a header that is no Stata name lacks the v3 alias (first 25 characters made safe, _ and 6 hex digits of its SHA-256), or a valid name gets one.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Stata alias",
+    "sources": [
+      {
+        "name": "r",
+        "table": "demo/held",
+        "period": 2021,
+        "bindings": [
+          {
+            "variable": "demo/held/relative-id",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -640,3 +640,195 @@ kind = "set"
 subject = "set:vallskord-fran-andra-akerarealer"
 fields = { "label" = "Vallskörd från andra åkerarealer" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-hektarskord-andra-skorden"
+fields = { "label" = "Andraskörd slåttervall (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Andraskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd (per slåttervallsareal) versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-totalskord-andra-skorden"
+fields = { "label" = "Andraskörd slåttervall (totalskörd)" }
+evidence = "#2102 same-label cluster 'Andraskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd (per slåttervallsareal) versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-andra-skorden"
+fields = { "label" = "Areal bete (andra skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-fjarde-skorden"
+fields = { "label" = "Areal bete (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-tredje-skorden"
+fields = { "label" = "Areal bete (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Areal bete' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-andra-skorden"
+fields = { "label" = "Areal slåttervall delskörd (andra skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; Opdefs differ: area where the first, second, third and fourth harvest was taken."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-fjarde-skorden"
+fields = { "label" = "Areal slåttervall delskörd (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; Opdefs differ: area where the first, second, third and fourth harvest was taken."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-forsta-skorden"
+fields = { "label" = "Areal slåttervall delskörd (första skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; Opdefs differ: area where the first, second, third and fourth harvest was taken."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-tredje-skorden"
+fields = { "label" = "Areal slåttervall delskörd (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Areal slåttervall delskörd' (4 variables): judged different meaning, high confidence; Opdefs differ: area where the first, second, third and fourth harvest was taken."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam"
+fields = { "label" = "Total vallareal (enligt SAM)" }
+evidence = "#2102 same-label cluster 'Total vallareal' (2 variables): judged different meaning, high confidence; Opdefs differ: ArealEnlSam is total vallareal according to SAM, EvAndradAreal is according to the farmer."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-andra-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (andra skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-fjarde-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (fjärde skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-tredje-skorden"
+fields = { "label" = "Återväxt tillvaratas ej (tredje skörden)" }
+evidence = "#2102 same-label cluster 'Återväxt tillvaratas ej' (3 variables): judged different meaning, medium confidence; Three columns for the second, third and fourth harvest (column names); the opdefs partly repeat each other, so the item number comes from the column name."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal"
+fields = { "label" = "Total vallareal (enligt lantbrukaren, eventuellt ändrad)" }
+evidence = "#2102 same-label cluster 'Total vallareal' (2 variables): judged different meaning, high confidence; Opdefs differ: ArealEnlSam is total vallareal according to SAM, EvAndradAreal is according to the farmer."
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-hektarskord-fjarde-skorden"
+fields = { "label" = "Fjärdeskörd slåttervall (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Fjärdeskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-totalskord-fjarde-skorden"
+fields = { "label" = "Fjärdeskörd slåttervall (totalskörd)" }
+evidence = "#2102 same-label cluster 'Fjärdeskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-hektarskord-forsta-skorden"
+fields = { "label" = "Förstaskörd slåttervall (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Förstaskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-totalskord-forsta-skorden"
+fields = { "label" = "Förstaskörd slåttervall (totalskörd)" }
+evidence = "#2102 same-label cluster 'Förstaskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:hektarskord-franandra"
+fields = { "label" = "Skörd av vall från andra åkerarealer (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Skörd av vall från andra åkerarealer' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:telefon1"
+fields = { "label" = "Telefonnummer (nummer 1)" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs name telefonnummer 1 and 2 to the farm; telefon1 and telefon2 are concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:telefon2"
+fields = { "label" = "Telefonnummer (nummer 2)" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs name telefonnummer 1 and 2 to the farm; telefon1 and telefon2 are concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-andra-skorden"
+fields = { "label" = "Torrsubstanshalt, andra skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-fjarde-skorden"
+fields = { "label" = "Torrsubstanshalt, fjärde skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-forsta-skorden"
+fields = { "label" = "Torrsubstanshalt, första skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-tredje-skorden"
+fields = { "label" = "Torrsubstanshalt, tredje skörden" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:totalskord-franandra"
+fields = { "label" = "Skörd av vall från andra åkerarealer (totalskörd)" }
+evidence = "#2102 same-label cluster 'Skörd av vall från andra åkerarealer' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-hektarskord-tredje-skorden"
+fields = { "label" = "Tredjeskörd slåttervall (hektarskörd)" }
+evidence = "#2102 same-label cluster 'Tredjeskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-totalskord-tredje-skorden"
+fields = { "label" = "Tredjeskörd slåttervall (totalskörd)" }
+evidence = "#2102 same-label cluster 'Tredjeskörd slåttervall' (2 variables): judged different meaning, high confidence; Opdefs differ: hektarskörd versus totalskörd."
+
+[[statement]]
+kind = "set"
+subject = "var:tshalt-franandra"
+fields = { "label" = "Torrsubstanshalt, gräs från andra arealer än slåttervall" }
+evidence = "#2102 same-label cluster 'Torrsubstanshalt' (5 variables): judged different meaning, high confidence; Opdefs differ: dry-matter content for the first, second, third and fourth harvest, and for grass from other areas (2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "label" = "Produktionsområde (8 områden, OrdPo8)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden, Po8)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."

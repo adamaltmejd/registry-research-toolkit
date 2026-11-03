@@ -6394,3 +6394,2367 @@ kind = "set"
 subject = "set:vattenhalt-i-karn-och-froskord"
 fields = { "label" = "Vattenhalt i kärn- och fröskörd" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-1"
+fields = { "label" = "Höstkorn (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-12"
+fields = { "label" = "Blandsäd strå (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-2"
+fields = { "label" = "Korn (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Korn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset (opdefs name vårkorn)."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-20"
+fields = { "label" = "Höstraps (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-21"
+fields = { "label" = "Vårraps (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Vårraps' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-22"
+fields = { "label" = "Höstrybs (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-23"
+fields = { "label" = "Vårrybs (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Vårrybs' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-29"
+fields = { "label" = "Vårrågvete (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-3"
+fields = { "label" = "Havre (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Havre' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-30"
+fields = { "label" = "Ärter, ej konservärter (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Ärter, ej konservärter' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-32"
+fields = { "label" = "Åkerbönor (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-4"
+fields = { "label" = "Höstvete (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-40"
+fields = { "label" = "Oljelin (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Oljelin' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-5"
+fields = { "label" = "Vårvete (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Vårvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-501"
+fields = { "label" = "Blandsäd balj/strå (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Blandsäd balj/strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-7"
+fields = { "label" = "Höstrågvete (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-8"
+fields = { "label" = "Råg (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Råg' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-80"
+fields = { "label" = "Grönfoder (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Grönfoder' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-9"
+fields = { "label" = "Majs (areal enligt SAM)" }
+evidence = "#2102 same-label cluster 'Majs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-1"
+fields = { "label" = "Höstkorn (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-12"
+fields = { "label" = "Blandsäd strå (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-2"
+fields = { "label" = "Korn (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Korn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset (opdefs name vårkorn)."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-20"
+fields = { "label" = "Höstraps (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-21"
+fields = { "label" = "Vårraps (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårraps' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-22"
+fields = { "label" = "Höstrybs (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-23"
+fields = { "label" = "Vårrybs (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrybs' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-29"
+fields = { "label" = "Vårrågvete (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-3"
+fields = { "label" = "Havre (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Havre' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-30"
+fields = { "label" = "Ärter, ej konservärter (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Ärter, ej konservärter' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-32"
+fields = { "label" = "Åkerbönor (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-4"
+fields = { "label" = "Höstvete (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-40"
+fields = { "label" = "Oljelin (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Oljelin' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-5"
+fields = { "label" = "Vårvete (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-501"
+fields = { "label" = "Blandsäd balj/strå (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd balj/strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-7"
+fields = { "label" = "Höstrågvete (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-8"
+fields = { "label" = "Råg (areal enligt SAM, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Råg' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-80"
+fields = { "label" = "Grönfoder (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Grönfoder' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam-dar-9"
+fields = { "label" = "Majs (areal enligt SAM, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Majs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-1"
+fields = { "label" = "Höstkorn (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-12"
+fields = { "label" = "Blandsäd strå (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-16"
+fields = { "label" = "Stråsäd till grönfoder (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Stråsäd till grönfoder' (2 variables): judged different meaning, high confidence; Ändrad SAM-areal vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-2"
+fields = { "label" = "Korn (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Korn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset (opdefs name vårkorn)."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-20"
+fields = { "label" = "Höstraps (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-21"
+fields = { "label" = "Vårraps (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Vårraps' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-22"
+fields = { "label" = "Höstrybs (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-23"
+fields = { "label" = "Vårrybs (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Vårrybs' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-29"
+fields = { "label" = "Vårrågvete (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-3"
+fields = { "label" = "Havre (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Havre' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-30"
+fields = { "label" = "Ärter, ej konservärter (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Ärter, ej konservärter' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-32"
+fields = { "label" = "Åkerbönor (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-4"
+fields = { "label" = "Höstvete (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-40"
+fields = { "label" = "Oljelin (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Oljelin' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-5"
+fields = { "label" = "Vårvete (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Vårvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-501"
+fields = { "label" = "Blandsäd balj/strå (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Blandsäd balj/strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-7"
+fields = { "label" = "Höstrågvete (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-8"
+fields = { "label" = "Råg (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Råg' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-80"
+fields = { "label" = "Grönfoder (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Grönfoder' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-9"
+fields = { "label" = "Majs (eventuellt ändrad areal)" }
+evidence = "#2102 same-label cluster 'Majs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-1"
+fields = { "label" = "Höstkorn (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-12"
+fields = { "label" = "Blandsäd strå (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-16"
+fields = { "label" = "Stråsäd till grönfoder (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Stråsäd till grönfoder' (2 variables): judged different meaning, high confidence; Ändrad SAM-areal vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-2"
+fields = { "label" = "Korn (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Korn' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset (opdefs name vårkorn)."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-20"
+fields = { "label" = "Höstraps (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-21"
+fields = { "label" = "Vårraps (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårraps' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-22"
+fields = { "label" = "Höstrybs (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-23"
+fields = { "label" = "Vårrybs (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrybs' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-29"
+fields = { "label" = "Vårrågvete (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-3"
+fields = { "label" = "Havre (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Havre' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-30"
+fields = { "label" = "Ärter, ej konservärter (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Ärter, ej konservärter' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-32"
+fields = { "label" = "Åkerbönor (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-4"
+fields = { "label" = "Höstvete (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-40"
+fields = { "label" = "Oljelin (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Oljelin' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-5"
+fields = { "label" = "Vårvete (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårvete' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-501"
+fields = { "label" = "Blandsäd balj/strå (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd balj/strå' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-7"
+fields = { "label" = "Höstrågvete (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-8"
+fields = { "label" = "Råg (eventuellt ändrad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Råg' (4 variables): judged different meaning, high confidence; Opdefs distinguish areal enligt SAM from eventuellt ändrad areal, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-80"
+fields = { "label" = "Grönfoder (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Grönfoder' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal-dar-9"
+fields = { "label" = "Majs (eventuellt ändrad areal, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Majs' (4 variables): judged different meaning, high confidence; Opdefs differ: area according to SAM versus area adjusted by the farmer, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-1"
+fields = { "label" = "Höstkorn skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstkorn skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-12"
+fields = { "label" = "Blandsäd strå skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-16"
+fields = { "label" = "Stråsäd till grönfoder skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Stråsäd till grönfoder skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-2"
+fields = { "label" = "Vårkorn skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårkorn skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-20"
+fields = { "label" = "Höstraps skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstraps skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-21"
+fields = { "label" = "Vårraps skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårraps skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-22"
+fields = { "label" = "Höstrybs skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrybs skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-23"
+fields = { "label" = "Vårrybs skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrybs skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-29"
+fields = { "label" = "Vårrågvete skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrågvete skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-3"
+fields = { "label" = "Havre skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Havre skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-30"
+fields = { "label" = "Ärter (ej konserv) skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Ärter (ej konserv) skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-32"
+fields = { "label" = "Åkerbönor skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Åkerbönor skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-4"
+fields = { "label" = "Höstvete skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstvete skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-40"
+fields = { "label" = "Oljelin skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Oljelin skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-5"
+fields = { "label" = "Vårvete skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårvete skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-501"
+fields = { "label" = "Blandsäd baljväxer och stråsäd skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd baljväxer och stråsäd skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-7"
+fields = { "label" = "Höstrågvete skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrågvete skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-8"
+fields = { "label" = "Råg skörd av grönfoder per hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Råg skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-80"
+fields = { "label" = "Grödkod 80 skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Grödkod 80 skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-9"
+fields = { "label" = "Majs skörd av grönfoder per hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Majs skörd av grönfoder per hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-1"
+fields = { "label" = "Obärgad areal höstkorn (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-12"
+fields = { "label" = "Obärgad areal blandsäd strå (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-2"
+fields = { "label" = "Obärgad areal vårkorn (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-20"
+fields = { "label" = "Obärgad areal höstraps (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-21"
+fields = { "label" = "Obärgad areal vårraps (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-22"
+fields = { "label" = "Obärgad areal höstrybs (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-23"
+fields = { "label" = "Obärgad areal vårrybs (grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-29"
+fields = { "label" = "Obärgad areal vårrågvete (grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-3"
+fields = { "label" = "Obärgad areal havre (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal havre' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-30"
+fields = { "label" = "Obärgad areal ärter (ej konserv) (grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal ärter (ej konserv)' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-32"
+fields = { "label" = "Obärgad areal åkerbönor (grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-4"
+fields = { "label" = "Obärgad areal höstvete (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-40"
+fields = { "label" = "Obärgad areal oljelin (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-5"
+fields = { "label" = "Obärgad areal vårvete (grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-501"
+fields = { "label" = "Obärgad areal blandsäd baljväxer och stråsäd (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd baljväxer och stråsäd' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-7"
+fields = { "label" = "Obärgad areal höstrågvete (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-8"
+fields = { "label" = "Obärgad areal råg (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal råg' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-9"
+fields = { "label" = "Obärgad areal majs (till grönfoder)" }
+evidence = "#2102 same-label cluster 'Obärgad areal majs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset (KarnfroObargadAreal_Dar_9 is the member with pid obargad-areal-majs)."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar"
+fields = { "label" = "Obärgad areal oljelin (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-1"
+fields = { "label" = "Obärgad areal höstkorn (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-12"
+fields = { "label" = "Obärgad areal blandsäd strå (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-2"
+fields = { "label" = "Obärgad areal vårkorn (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-20"
+fields = { "label" = "Obärgad areal höstraps (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-21"
+fields = { "label" = "Obärgad areal vårraps (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-22"
+fields = { "label" = "Obärgad areal höstrybs (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-23"
+fields = { "label" = "Obärgad areal vårrybs (grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-29"
+fields = { "label" = "Obärgad areal vårrågvete (grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-3"
+fields = { "label" = "Obärgad areal havre (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal havre' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-30"
+fields = { "label" = "Obärgad areal ärter (ej konserv) (grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal ärter (ej konserv)' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-32"
+fields = { "label" = "Obärgad areal åkerbönor (grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-4"
+fields = { "label" = "Obärgad areal höstvete (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-5"
+fields = { "label" = "Obärgad areal vårvete (grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-501"
+fields = { "label" = "Obärgad areal blandsäd baljväxer och stråsäd (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd baljväxer och stråsäd' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-7"
+fields = { "label" = "Obärgad areal höstrågvete (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-8"
+fields = { "label" = "Obärgad areal råg (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal råg' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-80"
+fields = { "label" = "Obärgad areal grödkod 80 grönfoder (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal grödkod 80 grönfoder' (2 variables): judged different meaning, high confidence; The second column is the 'därav ekologisk' subset of the first (opdef; its opdef text mentions tröskning but the column is the grönfoder one)."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-9"
+fields = { "label" = "Obärgad areal majs (till grönfoder, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal majs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset (KarnfroObargadAreal_Dar_9 is the member with pid obargad-areal-majs)."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-1"
+fields = { "label" = "Skördad grönfoderareal höstkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal höstkorn' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-12"
+fields = { "label" = "Skördad grönfoderareal blandsäd strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal blandsäd strå' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-16"
+fields = { "label" = "Skördad grönfoderareal stråsäd till grönfoder (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal stråsäd till grönfoder' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-2"
+fields = { "label" = "Skördad grönfoderareal vårkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal vårkorn' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-20"
+fields = { "label" = "Skördad grönfoderareal höstraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal höstraps' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-21"
+fields = { "label" = "Skördad grönfoderareal vårraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal vårraps' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-22"
+fields = { "label" = "Skördad grönfoderareal höstrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal höstrybs' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-23"
+fields = { "label" = "Skördad grönfoderareal vårrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal vårrybs' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-29"
+fields = { "label" = "Skördad grönfoderareal vårrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal vårrågvete' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-3"
+fields = { "label" = "Skördad grönfoderareal havre (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal havre' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-30"
+fields = { "label" = "Skördad grönfoderareal ärter (ej konserv) (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal ärter (ej konserv)' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-32"
+fields = { "label" = "Skördad grönfoderareal åkerbönor (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal åkerbönor' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-4"
+fields = { "label" = "Skördad grönfoderareal höstvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal höstvete' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-40"
+fields = { "label" = "Skördad grönfoderareal oljelin (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal oljelin' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-5"
+fields = { "label" = "Skördad grönfoderareal vårvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal vårvete' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-501"
+fields = { "label" = "Skördad grönfoderareal blandsäd balj/strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal blandsäd balj/strå' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-7"
+fields = { "label" = "Skördad grönfoderareal höstrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal höstrågvete' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-8"
+fields = { "label" = "Skördad grönfoderareal råg (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal råg' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-80"
+fields = { "label" = "Skördad grönfoderareal grödkod 80 grönfoder (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal grödkod 80 grönfoder' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderskordadareal-dar-9"
+fields = { "label" = "Skördad grönfoderareal majs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad grönfoderareal majs' (2 variables): judged different meaning, high confidence; Total area vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-23"
+fields = { "label" = "Total skörd grönfoder vårrybs" }
+evidence = "#2102 same-label cluster 'Total skörd gröndfoder vårrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef; typo gröndfoder corrected."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-1"
+fields = { "label" = "Total skörd grönfoder höstkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder höstkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-12"
+fields = { "label" = "Total skörd grönfoder blandsäd strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder blandsäd strå' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-16"
+fields = { "label" = "Total skörd grönfoder stråsäd till grönfoder (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder stråsäd till grönfoder' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-2"
+fields = { "label" = "Total skörd grönfoder vårkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder vårkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-20"
+fields = { "label" = "Total skörd grönfoder höstraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder höstraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-21"
+fields = { "label" = "Total skörd grönfoder vårraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder vårraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-22"
+fields = { "label" = "Total skörd grönfoder höstrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder höstrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-23"
+fields = { "label" = "Total skörd grönfoder vårrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd gröndfoder vårrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef; typo gröndfoder corrected."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-29"
+fields = { "label" = "Total skörd grönfoder vårrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder vårrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-3"
+fields = { "label" = "Total skörd grönfoder havre (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder havre' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-30"
+fields = { "label" = "Total skörd grönfoder ärter (ej konserv) (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder ärter (ej konserv)' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-32"
+fields = { "label" = "Total skörd grönfoder åkerbönor (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder åkerbönor' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-4"
+fields = { "label" = "Total skörd grönfoder höstvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder höstvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-40"
+fields = { "label" = "Total skörd grönfoder oljelin (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder oljelin' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-5"
+fields = { "label" = "Total skörd grönfoder vårvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder vårvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-501"
+fields = { "label" = "Total skörd grönfoder blandsäd balj/strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder blandsäd balj/strå' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-7"
+fields = { "label" = "Total skörd grönfoder höstrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder höstrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-8"
+fields = { "label" = "Total skörd grönfoder råg (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder råg' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-80"
+fields = { "label" = "Total skörd grönfoder grödkod 80 (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder grödkod 80' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertotalskord-dar-9"
+fields = { "label" = "Total skörd grönfoder majs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd grönfoder majs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstkorn)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-12"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder blandsäd strå)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-16"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder stråsäd till grönfoder)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-2"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårkorn)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-20"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstraps)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-21"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårraps)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-22"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstrybs)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-23"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårrybs)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-29"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårrågvete)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-3"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder havre)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-30"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder ärter, ej konserv)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-32"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder åkerbönor)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-4"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstvete)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-40"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder oljelin)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-5"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårvete)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-501"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder blandsäd balj/strå)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-7"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstrågvete)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-8"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder råg)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-80"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder grödkod 80)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-9"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder majs)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-12"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder blandsäd strå, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-16"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder stråsäd till grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-2"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-20"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-21"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-22"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-23"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-29"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-3"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder havre, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-30"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder ärter, ej konserv, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-32"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder åkerbönor, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-4"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-40"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder oljelin, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-5"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder vårvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-501"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder blandsäd balj/strå, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-7"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder höstrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-8"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder råg, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-80"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder grödkod 80, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfodertshalt-dar-9"
+fields = { "label" = "TS-halt för uppgiven skörd (grönfoder majs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'TS-halt för uppgiven skörd' (40 variables): judged different meaning, high confidence; One TS-halt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs-hektarskord"
+fields = { "label" = "Höstrybs skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrybs skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: KarnfroHektarskord_Dar_22 is the 'därav ekologisk' subset of KarnfroHektarskord_22."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-1"
+fields = { "label" = "Höstkorn skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstkorn skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-12"
+fields = { "label" = "Blandsäd strå skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd strå skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-2"
+fields = { "label" = "Vårkorn skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårkorn skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-20"
+fields = { "label" = "Höstraps skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstraps skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-21"
+fields = { "label" = "Vårraps skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårraps skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-23"
+fields = { "label" = "Vårrybs skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrybs skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-29"
+fields = { "label" = "Vårrågvete skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårrågvete skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-3"
+fields = { "label" = "Havre skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Havre skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-30"
+fields = { "label" = "Ärter (ej konserv) skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Ärter (ej konserv) skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-32"
+fields = { "label" = "Åkerbönor skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Åkerbönor skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-4"
+fields = { "label" = "Höstvete skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstvete skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-40"
+fields = { "label" = "Oljelin skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Oljelin skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-5"
+fields = { "label" = "Vårvete skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vårvete skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-501"
+fields = { "label" = "Blandsäd baljväxter och stråsäd skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Blandsäd baljväxter och stråsäd skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-7"
+fields = { "label" = "Höstrågvete skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höstrågvete skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-8"
+fields = { "label" = "Råg skörd per tröskad hektar (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Råg skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Total yield vs its därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrohektarskord-dar-9"
+fields = { "label" = "Majs skörd per tröskad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Majs skörd per tröskad hektar' (2 variables): judged different meaning, high confidence; Opdef: the second column is the 'därav ekologisk' subset of the first."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-1"
+fields = { "label" = "Obärgad areal höstkorn (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-12"
+fields = { "label" = "Obärgad areal blandsäd strå (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-2"
+fields = { "label" = "Obärgad areal vårkorn (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-20"
+fields = { "label" = "Obärgad areal höstraps (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-21"
+fields = { "label" = "Obärgad areal vårraps (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-22"
+fields = { "label" = "Obärgad areal höstrybs (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-23"
+fields = { "label" = "Obärgad areal vårrybs (tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-29"
+fields = { "label" = "Obärgad areal vårrågvete (tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-3"
+fields = { "label" = "Obärgad areal havre (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal havre' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-30"
+fields = { "label" = "Obärgad areal ärter (ej konserv) (tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal ärter (ej konserv)' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-32"
+fields = { "label" = "Obärgad areal åkerbönor (tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-4"
+fields = { "label" = "Obärgad areal höstvete (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-40"
+fields = { "label" = "Obärgad areal oljelin (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-5"
+fields = { "label" = "Obärgad areal vårvete (tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-501"
+fields = { "label" = "Obärgad areal blandsäd baljväxer och stråsäd (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd baljväxer och stråsäd' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-7"
+fields = { "label" = "Obärgad areal höstrågvete (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-8"
+fields = { "label" = "Obärgad areal råg (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal råg' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-9"
+fields = { "label" = "Obärgad areal majs (för tröskning)" }
+evidence = "#2102 same-label cluster 'Obärgad areal majs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset (KarnfroObargadAreal_Dar_9 is the member with pid obargad-areal-majs)."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-1"
+fields = { "label" = "Obärgad areal höstkorn (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-12"
+fields = { "label" = "Obärgad areal blandsäd strå (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd strå' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-2"
+fields = { "label" = "Obärgad areal vårkorn (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårkorn' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-20"
+fields = { "label" = "Obärgad areal höstraps (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-21"
+fields = { "label" = "Obärgad areal vårraps (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårraps' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-22"
+fields = { "label" = "Obärgad areal höstrybs (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrybs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-23"
+fields = { "label" = "Obärgad areal vårrybs (tröskning, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-29"
+fields = { "label" = "Obärgad areal vårrågvete (tröskning, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrågvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-3"
+fields = { "label" = "Obärgad areal havre (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal havre' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-30"
+fields = { "label" = "Obärgad areal ärter (ej konserv) (tröskning, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal ärter (ej konserv)' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-32"
+fields = { "label" = "Obärgad areal åkerbönor (tröskning, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal åkerbönor' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-4"
+fields = { "label" = "Obärgad areal höstvete (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-40"
+fields = { "label" = "Obärgad areal oljelin (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-5"
+fields = { "label" = "Obärgad areal vårvete (tröskning, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårvete' (4 variables): judged different meaning, high confidence; Opdefs separate grönfoder from tröskning, each with a därav ekologisk subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-501"
+fields = { "label" = "Obärgad areal blandsäd baljväxer och stråsäd (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal blandsäd baljväxer och stråsäd' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-7"
+fields = { "label" = "Obärgad areal höstrågvete (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal höstrågvete' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-8"
+fields = { "label" = "Obärgad areal råg (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal råg' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-1"
+fields = { "label" = "Total skörd höstkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd höstkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-12"
+fields = { "label" = "Total skörd blandsäd strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd blandsäd strå' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-2"
+fields = { "label" = "Total skörd vårkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd vårkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-20"
+fields = { "label" = "Total skörd höstraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd höstraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-21"
+fields = { "label" = "Total skörd vårraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd vårraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-22"
+fields = { "label" = "Total skörd Höstrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd Höstrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-23"
+fields = { "label" = "Total skörd vårrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd vårrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-29"
+fields = { "label" = "Total skörd vårrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd vårrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-3"
+fields = { "label" = "Total skörd havre (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd havre' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-30"
+fields = { "label" = "Total skörd ärter (ej konserv) (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd ärter (ej konserv)' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-32"
+fields = { "label" = "Total skörd åkerbönor (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd åkerbönor' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-4"
+fields = { "label" = "Total skörd höstvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd höstvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-40"
+fields = { "label" = "Total skörd oljelin (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd oljelin' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-5"
+fields = { "label" = "Total skörd vårvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd vårvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-501"
+fields = { "label" = "Total skörd baljväxter och stråsäd (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd baljväxter och stråsäd' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-7"
+fields = { "label" = "Total skörd höstrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd höstrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-8"
+fields = { "label" = "Total skörd råg (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd råg' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrototalskord-dar-9"
+fields = { "label" = "Total skörd Majs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total skörd Majs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-1"
+fields = { "label" = "Tröskad areal höstkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-12"
+fields = { "label" = "Tröskad areal blandsäd strå (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal blandsäd strå' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-2"
+fields = { "label" = "Tröskad areal vårkorn (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal vårkorn' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-20"
+fields = { "label" = "Tröskad areal höstraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-21"
+fields = { "label" = "Tröskad areal vårraps (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal vårraps' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-29"
+fields = { "label" = "Tröskad areal vårrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal vårrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-3"
+fields = { "label" = "Tröskad areal havre (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal havre' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-30"
+fields = { "label" = "Tröskad areal ärter (ej konserv) (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal ärter (ej konserv)' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-32"
+fields = { "label" = "Tröskad areal åkerbönor (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal åkerbönor' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-4"
+fields = { "label" = "Tröskad areal höstvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-40"
+fields = { "label" = "Tröskad areal oljelin (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal oljelin' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-5"
+fields = { "label" = "Tröskad areal vårvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal vårvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-501"
+fields = { "label" = "Tröskad areal blandsäd baljväxter och stråsäd (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal blandsäd baljväxter och stråsäd' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-7"
+fields = { "label" = "Tröskad areal höstrågvete (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstrågvete' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-8"
+fields = { "label" = "Tröskad areal råg (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal råg' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstkorn)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-12"
+fields = { "label" = "Vattenhalt för uppgiven skörd (blandsäd strå)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-2"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårkorn)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-20"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstraps)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-21"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårraps)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-22"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstrybs)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-23"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårrybs)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-29"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårrågvete)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-3"
+fields = { "label" = "Vattenhalt för uppgiven skörd (havre)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-30"
+fields = { "label" = "Vattenhalt för uppgiven skörd (ärter, ej konserv)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-32"
+fields = { "label" = "Vattenhalt för uppgiven skörd (åkerbönor)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-4"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstvete)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-40"
+fields = { "label" = "Vattenhalt för uppgiven skörd (oljelin)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-5"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårvete)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-501"
+fields = { "label" = "Vattenhalt för uppgiven skörd (blandsäd baljväxter och stråsäd)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-7"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstrågvete)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-8"
+fields = { "label" = "Vattenhalt för uppgiven skörd (råg)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-9"
+fields = { "label" = "Vattenhalt för uppgiven skörd (majs)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-12"
+fields = { "label" = "Vattenhalt för uppgiven skörd (blandsäd strå, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-2"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-20"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-21"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-22"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-23"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-29"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-3"
+fields = { "label" = "Vattenhalt för uppgiven skörd (havre, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-30"
+fields = { "label" = "Vattenhalt för uppgiven skörd (ärter, ej konserv, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-32"
+fields = { "label" = "Vattenhalt för uppgiven skörd (åkerbönor, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-4"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-40"
+fields = { "label" = "Vattenhalt för uppgiven skörd (oljelin, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-5"
+fields = { "label" = "Vattenhalt för uppgiven skörd (vårvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-501"
+fields = { "label" = "Vattenhalt för uppgiven skörd (blandsäd baljväxter och stråsäd, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-7"
+fields = { "label" = "Vattenhalt för uppgiven skörd (höstrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-8"
+fields = { "label" = "Vattenhalt för uppgiven skörd (råg, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrovattenhalt-dar-9"
+fields = { "label" = "Vattenhalt för uppgiven skörd (majs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Vattenhalt för uppgiven skörd' (36 variables): judged different meaning, high confidence; One vattenhalt column per crop (opdef and column suffix give the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (där odlingsarealen är belägen, används vid skattningarna)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs differ: lan is the län of the cultivated area used in estimation, OrdLan the län of the brukningscentrum."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-brukningscentrum"
+fields = { "label" = "Län (brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs differ: lan is the län of the cultivated area used in estimation, OrdLan the län of the brukningscentrum."
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-majs"
+fields = { "label" = "Obärgad areal majs (för tröskning, därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal majs' (4 variables): judged different meaning, high confidence; Opdefs differ: unharvested area for grönfoder versus for tröskning, each with a 'därav ekologisk' subset (KarnfroObargadAreal_Dar_9 is the member with pid obargad-areal-majs)."
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-oljelin-gronfoderobargadareal-dar-21"
+fields = { "label" = "Obärgad areal oljelin (GronfoderObargadAreal_Dar_21)" }
+evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-varrybs"
+fields = { "label" = "Obärgad areal vårrybs (tröskad areal, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall"
+fields = { "label" = "Partiellt bortfall av gröda (höstkorn)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-12"
+fields = { "label" = "Partiellt bortfall av gröda (blandsäd strå)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-16"
+fields = { "label" = "Partiellt bortfall av gröda (stråsäd till grönfoder)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-2"
+fields = { "label" = "Partiellt bortfall av gröda (vårkorn)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-20"
+fields = { "label" = "Partiellt bortfall av gröda (höstraps)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-21"
+fields = { "label" = "Partiellt bortfall av gröda (vårraps)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-22"
+fields = { "label" = "Partiellt bortfall av gröda (höstrybs)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-23"
+fields = { "label" = "Partiellt bortfall av gröda (vårrybs)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-29"
+fields = { "label" = "Partiellt bortfall av gröda (vårrågvete)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-3"
+fields = { "label" = "Partiellt bortfall av gröda (havre)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-30"
+fields = { "label" = "Partiellt bortfall av gröda (ärter, ej konserv)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-32"
+fields = { "label" = "Partiellt bortfall av gröda (åkerbönor)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-4"
+fields = { "label" = "Partiellt bortfall av gröda (höstvete)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-40"
+fields = { "label" = "Partiellt bortfall av gröda (oljelin)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-5"
+fields = { "label" = "Partiellt bortfall av gröda (vårvete)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-501"
+fields = { "label" = "Partiellt bortfall av gröda (blandsäd balj/strå)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-7"
+fields = { "label" = "Partiellt bortfall av gröda (höstrågvete)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-8"
+fields = { "label" = "Partiellt bortfall av gröda (råg)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-9"
+fields = { "label" = "Partiellt bortfall av gröda (majs)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar"
+fields = { "label" = "Partiellt bortfall av gröda (höstkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-12"
+fields = { "label" = "Partiellt bortfall av gröda (blandsäd strå, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-16"
+fields = { "label" = "Partiellt bortfall av gröda (stråsäd till grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-2"
+fields = { "label" = "Partiellt bortfall av gröda (vårkorn, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-20"
+fields = { "label" = "Partiellt bortfall av gröda (höstraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-21"
+fields = { "label" = "Partiellt bortfall av gröda (vårraps, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-22"
+fields = { "label" = "Partiellt bortfall av gröda (höstrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-23"
+fields = { "label" = "Partiellt bortfall av gröda (vårrybs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-29"
+fields = { "label" = "Partiellt bortfall av gröda (vårrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-3"
+fields = { "label" = "Partiellt bortfall av gröda (havre, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-30"
+fields = { "label" = "Partiellt bortfall av gröda (ärter, ej konserv, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-32"
+fields = { "label" = "Partiellt bortfall av gröda (åkerbönor, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-4"
+fields = { "label" = "Partiellt bortfall av gröda (höstvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-40"
+fields = { "label" = "Partiellt bortfall av gröda (oljelin, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-5"
+fields = { "label" = "Partiellt bortfall av gröda (vårvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-501"
+fields = { "label" = "Partiellt bortfall av gröda (blandsäd balj/strå, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-7"
+fields = { "label" = "Partiellt bortfall av gröda (höstrågvete, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-8"
+fields = { "label" = "Partiellt bortfall av gröda (råg, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-80"
+fields = { "label" = "Partiellt bortfall av gröda (grödkod 80 grönfoder, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-9"
+fields = { "label" = "Partiellt bortfall av gröda (majs, varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
+
+[[statement]]
+kind = "set"
+subject = "var:po"
+fields = { "label" = "Produktionsområde (8 områden, där arealen finns)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "label" = "Produktionsområde (8 områden, där arealen finns)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18-omraden"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-omraden-brukningscentrum"
+fields = { "label" = "Produktionsområde (8 områden, brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "label" = "Skördeområde (brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (2 variables): judged different meaning, medium confidence; Two concurrent columns in one table with the same codes; opdefs say brukningscentrums skördeområde vs the area the land lies in used for estimates."
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade-areal-skattning"
+fields = { "label" = "Skördeområde (där arealen finns)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (2 variables): judged different meaning, medium confidence; Two concurrent columns in one table with the same codes; opdefs say brukningscentrums skördeområde vs the area the land lies in used for estimates."
+
+[[statement]]
+kind = "set"
+subject = "var:troskad-areal-varrybs"
+fields = { "label" = "Tröskad areal vårrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal vårrybs' (2 variables): judged different meaning, high confidence; Total vs därav ekologisk subset per opdef (KarnfroTroskadAreal_Dar_23)."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-22"
+fields = { "label" = "Tröskad areal höstrybs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_22 has opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroHektarskord_Dar_22 (2021-2022) has the same opdef under a yield-named column, so its code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:troskad-areal-hostrybs"
+fields = { "label" = "Tröskad areal höstrybs (varav ekologisk, KarnfroHektarskord_Dar_22)" }
+evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_22 has opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroHektarskord_Dar_22 (2021-2022) has the same opdef under a yield-named column, so its code is kept."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-9"
+fields = { "label" = "Tröskad areal majs (KarnfroTroskadAreal_9)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:karnfrotroskadareal-dar-9"
+fields = { "label" = "Tröskad areal majs (varav ekologisk)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:troskad-areal-majs"
+fields = { "label" = "Tröskad areal majs (varav ekologisk, KarnfroObargadAreal_Dar_9)" }
+evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."

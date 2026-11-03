@@ -711,7 +711,8 @@ unmatched) on draft #2052; whether it merges is the maintainer's call. Steps 4â€
 exit below are not started and live in issues: e-order #2068, e-compare and e-release
 #2070, e-runner #2069, e-types #2071, the held and unmatched columns #2072, and the SPA
 #2066 (with #2067). F's SWECOV deletions wait on #2068, #2069 and #2070; SWECOV is
-served at 0.64.0 from the old stack until then.
+served at 0.64.0 from the old stack until then. e-runner (#2069): the MONA runner reads
+the v4 order file and checks storage drift; its SQL Server suite runs by hand.
 
 - **Design first, for the maintainer's review.** The design covers:
   - steward and project holdings, and the three questions holdings answer: what is in my
@@ -749,8 +750,8 @@ served at 0.64.0 from the old stack until then.
      and protect private inputs. The toolkit keeps only generic code and pin/config
      selection. F deletes leftovers after the move is verified; *Status:* done. Private
      repository `adamaltmejd/swecov-steward` at `755ce7aa5`: byte-identical copies with
-     `MOVED.md` provenance, pinned in `curation/stewards.toml`. Nothing reads the pin
-     until e-holdings;
+     `MOVED.md` provenance, pinned in `stewards.toml`. Nothing reads the pin until
+     e-holdings;
   3. **e-holdings:** inputs and schema/reader/compiler together from the pinned steward
      repo: one-shot TOML â†’ pinned transcription CSV; reconcile slugs, reviewed and
      auto-mapped targets, including the 27 supplemental providers; add steward slots,

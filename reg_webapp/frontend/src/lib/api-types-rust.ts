@@ -224,6 +224,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/project/materialize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The MONA order file of a project_data.json document on this steward's holdings: per physical table and delivery one file, with its exact columns, held row keys and row filter, the clips and the non-blocking findings; or `order_blocked` with every logical and physical finding. */
+        post: operations["materialize_order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/project/order": {
         parameters: {
             query?: never;
@@ -364,6 +381,30 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description The served catalog: its release, schema and the paired generation (`meta.generation`). */
+        CatalogIdentity: {
+            generation: string;
+            release: string;
+            schema: string;
+        };
+        /** @description A logical reference a column serves. */
+        ColumnRef: {
+            /** @description The binding's index in the source; null for a held key no binding orders. */
+            binding: number | null;
+            /** @description The days of this reference the file holds. */
+            period: components["schemas"]["Period"];
+            source: string;
+            /** @description The logical spelling (the catalog's form); the physical `name` wins in the file. */
+            spelling: string;
+            table: string;
+            variable: string;
+        };
+        /**
+         * @description `ordered`: a binding names it; `row_key`/`carried`: a held key the file requires
+         *     (`carried` when the table carries its parent's key copy).
+         * @enum {string}
+         */
+        ColumnRole: "ordered" | "row_key" | "carried";
         /** @description `shape.Context`. */
         Context: {
             catalog_version: string;
@@ -389,11 +430,6 @@ export interface components {
             kind: string;
             /** @description The entity's hull. */
             period: components["schemas"]["Period"];
-            /**
-             * @description Same canonical variable, documented in additional steward-attested periods.
-             *     Reference spans above retain the global catalog's meaning.
-             */
-            steward_occurrences?: components["schemas"]["StewardOccurrence"][] | null;
             tables: components["schemas"]["CoverageTable"][];
         };
         CoverageColumn: {
@@ -499,6 +535,8 @@ export interface components {
             /** Format: int64 */
             page: number;
         };
+        /** @enum {string} */
+        Encoding: "date" | "year" | "yyyymm" | "yyyymmdd";
         /** @description The error document `{code, class, message, remediation, fields}`. */
         Error: {
             class: string;
@@ -567,6 +605,10 @@ export interface components {
             table: string;
             variable: string;
         };
+        HoldingsIdentity: {
+            generation: string;
+            owner: string;
+        };
         /** @description `shape.Issue`: a project issue or an order finding, located in the project. */
         Issue: {
             code: string;
@@ -604,6 +646,63 @@ export interface components {
             /** @description Per source, then by period start. */
             row_keys: components["schemas"]["OrderRowKeys"][];
         };
+        /** @description The order file: per physical table and delivery, one file and its columns. */
+        Manifest: {
+            /**
+             * @description Every binding the order delivers less of than the project requests, logical
+             *     availability and physical possession together.
+             */
+            clips: components["schemas"]["ManifestClip"][];
+            /** @description The project's format, resolved to `dta` when it states none. */
+            extract_format: components["schemas"]["ProjectExtractFormat"];
+            /** @description By first logical appearance, then name. */
+            files: components["schemas"]["ManifestFile"][];
+            /** @description The non-blocking findings (level `warning` or `info`). */
+            findings: components["schemas"]["Issue"][];
+            provenance: components["schemas"]["Provenance"];
+            /**
+             * Format: int32
+             * @description Always [`MANIFEST_VERSION`].
+             */
+            version: number;
+        };
+        /** @description A binding delivered over less than requested. */
+        ManifestClip: {
+            binding: number;
+            ordered: components["schemas"]["Period"][];
+            requested: components["schemas"]["Period"][];
+            source: string;
+            variable: string;
+        };
+        /** @description One physical column, once per file, with every logical reference it serves. */
+        ManifestColumn: {
+            /** @description The exact physical header. */
+            name: string;
+            refs: components["schemas"]["ColumnRef"][];
+            role: components["schemas"]["ColumnRole"];
+            slot?: components["schemas"]["Slot"] | null;
+            /** @description On a `dta` order only, when `name` is not a Stata variable name ([`stata_name`]). */
+            stata_name?: string | null;
+            storage: components["schemas"]["Storage"];
+        };
+        /** @description One output file: one physical table in its authored delivery. */
+        ManifestFile: {
+            /** @description Ordered columns in logical request order, then the held row keys. */
+            columns: components["schemas"]["ManifestColumn"][];
+            /** @description The authored delivery period; null for a timeless table. */
+            delivery: string | null;
+            /** @description The file's stem, a [`safe_file_name`]; the runner adds the format's extension. */
+            name: string;
+            partition?: string | null;
+            /** @description The projection token. */
+            projection?: string | null;
+            row_filter?: components["schemas"]["RowFilter"] | null;
+            /** @description The exact physical schema and table. */
+            schema: string;
+            table: string;
+        };
+        /** @enum {string} */
+        ManifestMode: "steward_holdings";
         /** @description The response `meta` (`shape.Meta`). */
         Meta: {
             catalog_version: string;
@@ -726,6 +825,12 @@ export interface components {
         ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
+            /**
+             * @description The extract file format. Absent means the order authoring default, `dta`, which
+             *     the order file resolves; it is never inserted here. An explicit `null` is
+             *     `invalid_field_type`.
+             */
+            extract_format?: components["schemas"]["ProjectExtractFormat"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
@@ -734,7 +839,16 @@ export interface components {
             window?: components["schemas"]["ProjectStudyWindow"];
         };
         /** @enum {string} */
+        ProjectExtractFormat: "dta" | "parquet" | "csv";
+        /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
+        ProjectIdentity: {
+            /** @description Never blank: an unnamed project is `project_unnamed`. */
+            name: string;
+            /** @description `project::project_hash` of the document. */
+            project_hash: string;
+            schema_version: string;
+        };
         /** @enum {string} */
         ProjectNumericSubtype: "integer" | "double";
         /** @description A panel over sources. */
@@ -778,6 +892,17 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /** @description Which artifacts and which project the order binds. */
+        Provenance: {
+            /** @description The reference catalog's own `generation_id`. */
+            base_generation: string;
+            catalog: components["schemas"]["CatalogIdentity"];
+            holdings: components["schemas"]["HoldingsIdentity"];
+            mode: components["schemas"]["ManifestMode"];
+            project: components["schemas"]["ProjectIdentity"];
+            /** @description The steward whose holdings serve the order. */
+            steward: string;
         };
         /** @description One provider text, with its coverage and every contributing source occurrence. */
         ProviderText: {
@@ -861,6 +986,18 @@ export interface components {
             name: string;
             /** @description The register's fqid. */
             register: string;
+        };
+        /** @description Keep a row whose period value lies in any range. */
+        RowFilter: {
+            column: string;
+            encoding: components["schemas"]["Encoding"];
+            /** @description Sorted and disjoint. */
+            ranges: components["schemas"]["RowFilterRange"][];
+        };
+        /** @description Inclusive ISO days; an absent bound cuts no held day. */
+        RowFilterRange: {
+            from?: string | null;
+            to?: string | null;
         };
         /** @description A row-key column: its variable and the spelling it is delivered under. */
         RowKeyColumn: {
@@ -986,14 +1123,13 @@ export interface components {
             /** @enum {string} */
             kind: "root";
             providers: components["schemas"]["ShowProviderRef"][];
-            steward_providers?: components["schemas"]["ShowProviderRef"][] | null;
         } | {
             fqid: string;
             /** @enum {string} */
             kind: "provider";
             name: string;
+            /** @description In steward mode, the steward's own registers too. */
             registers: components["schemas"]["ShowRegisterRef"][];
-            steward_registers?: components["schemas"]["ShowRegisterRef"][] | null;
         } | {
             description: string | null;
             fqid: string;
@@ -1060,10 +1196,14 @@ export interface components {
         };
         ShowProviderRef: {
             fqid: string;
+            /** @description In steward mode, whether the steward holds any of its registers. */
+            held?: boolean;
             name: string;
         };
         ShowRegisterRef: {
             fqid: string;
+            /** @description In steward mode, whether the steward holds any of its tables. */
+            held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
         };
@@ -1114,6 +1254,8 @@ export interface components {
             fqid: string;
             name: string;
             period: components["schemas"]["Period"];
+            /** @description The fqids of the register's tables the variable has segments in. */
+            tables: string[];
         };
         /** @description Every provider, register, table (implicit ones included) and variable. */
         Sizes: {
@@ -1125,6 +1267,12 @@ export interface components {
             tables: number;
             /** Format: int64 */
             variables: number;
+        };
+        /** @description Steward slot topology of a column. */
+        Slot: {
+            family?: string | null;
+            index: string;
+            kind: string;
         };
         /** @description Latest provider text, used only when no curated description exists. */
         SourceDefinition: {
@@ -1144,24 +1292,6 @@ export interface components {
             owner: string;
             schema_version: string;
         };
-        /**
-         * @description A source occurrence in the steward's supplemental semantics. Its identity
-         *     declaration and ordinary transcription locators both remain available.
-         */
-        StewardOccurrence: {
-            coded: string;
-            definition: string | null;
-            evidence: string;
-            label: string | null;
-            locator: string;
-            period: components["schemas"]["Period"];
-            sources: components["schemas"]["Locator"][];
-            spelling: string;
-            table: string;
-            type: string | null;
-            value_set: components["schemas"]["ValueSetRef"] | null;
-            variable: string;
-        };
         StewardRegisterFacets: {
             owner: string;
             registers: components["schemas"]["RegisterFacet"][];
@@ -1176,6 +1306,16 @@ export interface components {
             owner: string;
             /** Format: int64 */
             total: number;
+        };
+        /** @description The expected SQL storage, checked before extraction. */
+        Storage: {
+            /** Format: int64 */
+            length: number | null;
+            /** Format: int64 */
+            precision: number | null;
+            /** Format: int64 */
+            scale: number | null;
+            type: string | null;
         };
         /** @description `shape.Subject`: what a finding is about, by natural key. */
         Subject: {
@@ -1628,6 +1768,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Graph"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    materialize_order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Manifest"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

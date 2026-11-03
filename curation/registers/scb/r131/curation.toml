@@ -798,3 +798,111 @@ kind = "set"
 subject = "set:urvalsar"
 fields = { "label" = "Urvalsår" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp"
+fields = { "label" = "Blankettyp (kvartalsomsättning tjänstesektorn)" }
+evidence = "#2102 same-label cluster 'Blankettyp' (2 variables): judged different meaning, high confidence; Different surveys with different form-type value sets: lagerstatistik versus kvartalsomsättning tjänstesektorn."
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp-svalt"
+fields = { "label" = "Blankettyp (lagerstatistik)" }
+evidence = "#2102 same-label cluster 'Blankettyp' (2 variables): judged different meaning, high confidence; Different surveys with different form-type value sets: lagerstatistik versus kvartalsomsättning tjänstesektorn."
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "label" = "Bransch (Ng1)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng1, NgS1 and sni92 share definition, opdef (Härledd från SNI) and a 643-code list; nothing in the text says SNI 92, so sni92 takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "label" = "Bransch (NgS1)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng1, NgS1 and sni92 share definition, opdef (Härledd från SNI) and a 643-code list; nothing in the text says SNI 92, so sni92 takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "label" = "Bransch (sni92)" }
+evidence = "#2102 same-label cluster 'Bransch' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng1, NgS1 and sni92 share definition, opdef (Härledd från SNI) and a 643-code list; nothing in the text says SNI 92, so sni92 takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "label" = "Kommun (kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both columns have the same definition and the same 290-code list; no text says what KommunSate means, so both take their column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsate"
+fields = { "label" = "Kommun (KommunSate)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both columns have the same definition and the same 290-code list; no text says what KommunSate means, so both take their column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-1"
+fields = { "label" = "Moms (Period_1)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-2"
+fields = { "label" = "Moms (Period_2)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-3"
+fields = { "label" = "Moms (Period_3)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-1"
+fields = { "label" = "Moms (Period_X_1)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-2"
+fields = { "label" = "Moms (Period_X_2)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-3"
+fields = { "label" = "Moms (Period_X_3)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:omsmoms"
+fields = { "label" = "Moms (omsmoms)" }
+evidence = "#2102 same-label cluster 'Moms' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All seven columns share one definition (momsuppgifter från Skatteverket) and have no opdef; nothing says what the period numbers or the X variants mean, so each takes its column spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:sgrupp"
+fields = { "label" = "Storleksgrupp (Sgrupp)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The lagervärde opdef exists only in lagerstatistik (2015-2022); storleksgr in kvartalsomsattning-tjanstesektorn has none, so the qualifier is dropped and the code used."
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgr"
+fields = { "label" = "Storleksgrupp (storleksgr)" }
+evidence = "#2102 same-label cluster 'Storleksgrupp' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The lagervärde opdef exists only in lagerstatistik (2015-2022); storleksgr in kvartalsomsattning-tjanstesektorn has none, so the qualifier is dropped and the code used."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nsvar"
+fields = { "label" = "LillaN (lagerstatistik)" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; nsvar (lagerstatistik) and Lillan (kvartalsomsättning-tjänstesektorn) are the sample-weight factor for different surveys, with opdefs per stratum and per size group respectively."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "label" = "LillaN (kvartalsomsättning, tjänstesektorn)" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; nsvar (lagerstatistik) and Lillan (kvartalsomsättning-tjänstesektorn) are the sample-weight factor for different surveys, with opdefs per stratum and per size group respectively."

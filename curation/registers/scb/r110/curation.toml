@@ -1618,3 +1618,135 @@ kind = "set"
 subject = "set:vardering-av-utbildning"
 fields = { "label" = "Värdering av utbildning" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:f10a"
+fields = { "label" = "Huvudsaklig sysselsättning (från avslutad högskoleutbildning till flytt till Sverige)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Opdefs: F12 is during mätveckan, F10a is from finished higher education until moving to Sweden, F11a is in Sweden after finished higher education; F13 (2004) has no text and keeps its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f10b"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (före flytt till Sverige)" }
+evidence = "#2102 same-label cluster 'Överensstämmelse mellan utbildning och arbete' (2 variables): judged different meaning, high confidence; Opdefs: F10b covers the work between finished education and moving to Sweden, F11b the work mainly held in Sweden."
+
+[[statement]]
+kind = "set"
+subject = "var:f11a"
+fields = { "label" = "Huvudsaklig sysselsättning (i Sverige efter avslutad högskoleutbildning)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Opdefs: F12 is during mätveckan, F10a is from finished higher education until moving to Sweden, F11a is in Sweden after finished higher education; F13 (2004) has no text and keeps its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f11b"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (i Sverige)" }
+evidence = "#2102 same-label cluster 'Överensstämmelse mellan utbildning och arbete' (2 variables): judged different meaning, high confidence; Opdefs: F10b covers the work between finished education and moving to Sweden, F11b the work mainly held in Sweden."
+
+[[statement]]
+kind = "set"
+subject = "var:f13"
+fields = { "label" = "Huvudsaklig sysselsättning (F13)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Opdefs: F12 is during mätveckan, F10a is from finished higher education until moving to Sweden, F11a is in Sweden after finished higher education; F13 (2004) has no text and keeps its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av yrkeserfarenhet (F24A_SV)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av yrkeserfarenhet' (4 variables): judged different meaning, medium confidence; F24A_SV and F24A_UT are concurrent 2009-10 columns with different scales and no text; F21_1 (2004) and F24a (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av yrkeserfarenhet (F24A_UT)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av yrkeserfarenhet' (4 variables): judged different meaning, medium confidence; F24A_SV and F24A_UT are concurrent 2009-10 columns with different scales and no text; F21_1 (2004) and F24a (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av referenser från arbetsgivare (F24B_SV)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av referenser från arbetsgivare' (4 variables): judged different meaning, medium confidence; F24B_SV and F24B_UT are concurrent 2009-10 columns with different scales and no text; F21_2 (2004) and F24b (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av referenser från arbetsgivare (F24B_UT)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av referenser från arbetsgivare' (4 variables): judged different meaning, medium confidence; F24B_SV and F24B_UT are concurrent 2009-10 columns with different scales and no text; F21_2 (2004) and F24b (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-sv"
+fields = { "label" = "Svårt att få arbete pga avsaknad av kontakter (F24C_SV)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av kontakter' (4 variables): judged different meaning, medium confidence; F24C_SV and F24C_UT are concurrent 2009-10 columns with different scales and no text; F21_3 (2004) and F24c (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-ut"
+fields = { "label" = "Svårt att få arbete pga avsaknad av kontakter (F24C_UT)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga avsaknad av kontakter' (4 variables): judged different meaning, medium confidence; F24C_SV and F24C_UT are concurrent 2009-10 columns with different scales and no text; F21_3 (2004) and F24c (2015-19) are the same item in different waves (the 2015-19 scale is coded in the opposite direction)."
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-sv"
+fields = { "label" = "Svårt att få arbete då utbildning svår att bedöma (F24D_SV)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete då utbildning svår att bedöma' (4 variables): judged different meaning, medium confidence; F24D_SV and F24D_UT are concurrent 2009-10 columns with different scales and no text; F24e (2015-16) and f24f (2018-19) have identical opdefs and codes in adjacent waves and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-ut"
+fields = { "label" = "Svårt att få arbete då utbildning svår att bedöma (F24D_UT)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete då utbildning svår att bedöma' (4 variables): judged different meaning, medium confidence; F24D_SV and F24D_UT are concurrent 2009-10 columns with different scales and no text; F24e (2015-16) and f24f (2018-19) have identical opdefs and codes in adjacent waves and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:f24f-ut"
+fields = { "label" = "Svårt att få arbete pga ålder (F24F_UT)" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga ålder' (4 variables): judged different meaning, medium confidence; Opdefs: F24d (2018-19) is age, but F24f (2015-16) and F24g (2018-19) are ursprung/härkomst, so the current label is wrong for them; F24F_UT (2009-10, 3-point scale) has no text beyond the cluster definition."
+
+[[statement]]
+kind = "set"
+subject = "var:f24g"
+fields = { "label" = "Svårt att få arbete pga ursprung/härkomst" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga ålder' (4 variables): judged different meaning, medium confidence; Opdefs: F24d (2018-19) is age, but F24f (2015-16) and F24g (2018-19) are ursprung/härkomst, so the current label is wrong for them; F24F_UT (2009-10, 3-point scale) has no text beyond the cluster definition."
+
+[[statement]]
+kind = "set"
+subject = "var:f27"
+fields = { "label" = "Grund för bosättning (asylskäl, ja/nej)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is a yes/no on asylum grounds, F28 the reason for moving (family, work, studies, other), gfbgrp the grund grouped into six groups."
+
+[[statement]]
+kind = "set"
+subject = "var:f28"
+fields = { "label" = "Grund för bosättning (orsak till flytt till Sverige)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is a yes/no on asylum grounds, F28 the reason for moving (family, work, studies, other), gfbgrp the grund grouped into six groups."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-sex-grupper"
+fields = { "label" = "Grund för bosättning (grupperad i sex grupper)" }
+evidence = "#2102 same-label cluster 'Grund för bosättning' (3 variables): judged different meaning, high confidence; F27 is a yes/no on asylum grounds, F28 the reason for moving (family, work, studies, other), gfbgrp the grund grouped into six groups."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-matveckan"
+fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Opdefs: F12 is during mätveckan, F10a is from finished higher education until moving to Sweden, F11a is in Sweden after finished higher education; F13 (2004) has no text and keeps its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-sv"
+fields = { "label" = "Kalibreringsvikt (kalvikt_SV)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; kalvikt_SV and kalvikt_UF are concurrent weights with no text saying what SV and UF denote."
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-uf"
+fields = { "label" = "Kalibreringsvikt (kalvikt_UF)" }
+evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, medium confidence; kalvikt_SV and kalvikt_UF are concurrent weights with no text saying what SV and UF denote."
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-alder"
+fields = { "label" = "Svårt att få arbete pga ursprung/härkomst" }
+evidence = "#2102 same-label cluster 'Svårt att få arbete pga ålder' (4 variables): judged different meaning, medium confidence; Opdefs: F24d (2018-19) is age, but F24f (2015-16) and F24g (2018-19) are ursprung/härkomst, so the current label is wrong for them; F24F_UT (2009-10, 3-point scale) has no text beyond the cluster definition."

@@ -2,3 +2,4 @@ register,name,description,from,to
 held,Held,Additional attested years,,
 owners,Interval-local rival owners,,,
 earlier,Earlier metadata,Shifts supplemental local ids independently of the reference catalog,,
+projected,Projection reference,Steward-defined variables and a table inside a reference register with no reference occurrence,,

@@ -10032,3 +10032,585 @@ kind = "set"
 subject = "var:anlaggningstyp"
 fields = { "tags" = ["energy"] }
 evidence = "Facility type belongs to the electricity-network-company table (r2, r16), supporting the register's dominant energy theme (r1, r18) without inferring particular type codes.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:28538\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:29677\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:absorptionskylmaskiner"
+fields = { "label" = "Absorptionskylmaskiner (installerad effekt)" }
+evidence = "#2102 same-label cluster 'Absorptionskylmaskiner' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:absorptionskylmaskiner-prod"
+fields = { "label" = "Absorptionskylmaskiner (producerad mängd)" }
+evidence = "#2102 same-label cluster 'Absorptionskylmaskiner' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:antaggr"
+fields = { "label" = "Antal aggregat (antaggr)" }
+evidence = "#2102 same-label cluster 'Antal aggregat' (3 variables): judged different meaning, low confidence; Concurrent columns with one shared opdef; nothing in the data says what suffixes 1 and 2 denote, so raw codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aggregat-antaggr1"
+fields = { "label" = "Antal aggregat (antaggr1)" }
+evidence = "#2102 same-label cluster 'Antal aggregat' (3 variables): judged different meaning, low confidence; Concurrent columns with one shared opdef; nothing in the data says what suffixes 1 and 2 denote, so raw codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aggregat-antaggr2"
+fields = { "label" = "Antal aggregat (antaggr2)" }
+evidence = "#2102 same-label cluster 'Antal aggregat' (3 variables): judged different meaning, low confidence; Concurrent columns with one shared opdef; nothing in the data says what suffixes 1 and 2 denote, so raw codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:br-prod"
+fields = { "label" = "Producerad värme (bränslebaserad, enbart värme)" }
+evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Descriptions and opdefs name five production sources: fuel-only heat, cogeneration, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:br-varmeff"
+fields = { "label" = "Värmeeffekt (bränslebaserad, enbart värme)" }
+evidence = "#2102 same-label cluster 'Värmeeffekt' (5 variables): judged different meaning, high confidence; The opdef legend names five heat sources: fuel-only heat, cogeneration with electricity, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-transporter-brkod"
+fields = { "label" = "Bränsleförbrukning för egna transporter (bränsleslag)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning för egna transporter' (3 variables): judged different meaning, high confidence; Opdefs: brkod is the fuel type, kvant the quantity, tkr the cost in thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-transporter-kvant"
+fields = { "label" = "Bränsleförbrukning för egna transporter (kvantitet)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning för egna transporter' (3 variables): judged different meaning, high confidence; Opdefs: brkod is the fuel type, kvant the quantity, tkr the cost in thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-transporter-tkr"
+fields = { "label" = "Bränsleförbrukning för egna transporter (tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning för egna transporter' (3 variables): judged different meaning, high confidence; Opdefs: brkod is the fuel type, kvant the quantity, tkr the cost in thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-slutlig-forbrukning-av-el-mwh"
+fields = { "label" = "Egen slutlig förbrukning av el (MWh)" }
+evidence = "#2102 same-label cluster 'Egen slutlig förbrukning av el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-slutlig-forbrukning-av-el-radnr"
+fields = { "label" = "Egen slutlig förbrukning av el (radnummer)" }
+evidence = "#2102 same-label cluster 'Egen slutlig förbrukning av el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:egen-slutlig-forbrukning-av-el-tkr"
+fields = { "label" = "Egen slutlig förbrukning av el (tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Egen slutlig förbrukning av el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:el-prod"
+fields = { "label" = "Producerad värme (kraftvärme)" }
+evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Descriptions and opdefs name five production sources: fuel-only heat, cogeneration, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:el-varmeff"
+fields = { "label" = "Värmeeffekt (kraftvärme)" }
+evidence = "#2102 same-label cluster 'Värmeeffekt' (5 variables): judged different meaning, high confidence; The opdef legend names five heat sources: fuel-only heat, cogeneration with electricity, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-elpanna"
+fields = { "label" = "Elförbrukning vid produktion av värme (elpannedrift)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-sum"
+fields = { "label" = "Elförbrukning vid produktion av värme (totalt)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-sumvel"
+fields = { "label" = "Elförbrukning vid produktion av värme (totalt, elforb_sumvel)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-sumvnat"
+fields = { "label" = "Elförbrukning vid produktion av värme (totalt, elforb_sumvnat)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-varmev"
+fields = { "label" = "Elförbrukning vid produktion av värme (värmeverksdrift)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-vpump"
+fields = { "label" = "Elförbrukning vid produktion av värme (värmepumpsdrift)" }
+evidence = "#2102 same-label cluster 'Elförbrukning vid produktion av värme' (6 variables): judged different meaning, medium confidence; Opdefs name electric boiler, heating plant, heat pump and total; the total columns elforb_sum, sumvel and sumvnat all carry the same meaning."
+
+[[statement]]
+kind = "set"
+subject = "var:forsald-el-mwh"
+fields = { "label" = "Försåld el (MWh)" }
+evidence = "#2102 same-label cluster 'Försåld el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the sales value."
+
+[[statement]]
+kind = "set"
+subject = "var:forsald-el-radnr"
+fields = { "label" = "Försåld el (radnummer)" }
+evidence = "#2102 same-label cluster 'Försåld el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the sales value."
+
+[[statement]]
+kind = "set"
+subject = "var:forsald-el-tkr"
+fields = { "label" = "Försåld el (värde, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Försåld el' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the sales value."
+
+[[statement]]
+kind = "set"
+subject = "var:frikyla"
+fields = { "label" = "Frikyla (installerad effekt)" }
+evidence = "#2102 same-label cluster 'Frikyla' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:frikyla-prod"
+fields = { "label" = "Frikyla (producerad mängd)" }
+evidence = "#2102 same-label cluster 'Frikyla' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:kompressorkylmaskin"
+fields = { "label" = "Kompressorkylmaskin (installerad effekt)" }
+evidence = "#2102 same-label cluster 'Kompressorkylmaskin' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:kompressorkylmaskin-prod"
+fields = { "label" = "Kompressorkylmaskin (producerad mängd)" }
+evidence = "#2102 same-label cluster 'Kompressorkylmaskin' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:panna-prod"
+fields = { "label" = "Producerad värme (elpanna)" }
+evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Descriptions and opdefs name five production sources: fuel-only heat, cogeneration, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:panna-varmeff"
+fields = { "label" = "Värmeeffekt (elpanna)" }
+evidence = "#2102 same-label cluster 'Värmeeffekt' (5 variables): judged different meaning, high confidence; The opdef legend names five heat sources: fuel-only heat, cogeneration with electricity, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:postnummer-gatuadr"
+fields = { "label" = "Postnummer (GatuAdr)" }
+evidence = "#2102 same-label cluster 'Postnummer' (3 variables): judged different meaning, low confidence; Three concurrent source columns (company postnr, GatuAdr, padr); opdefs for postnr and padr are identical and do not say how they differ, so GatuAdr and padr get raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postnummer-padr"
+fields = { "label" = "Postnummer (padr)" }
+evidence = "#2102 same-label cluster 'Postnummer' (3 variables): judged different meaning, low confidence; Three concurrent source columns (company postnr, GatuAdr, padr); opdefs for postnr and padr are identical and do not say how they differ, so GatuAdr and padr get raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:pump-prod"
+fields = { "label" = "Producerad värme (värmepump)" }
+evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Descriptions and opdefs name five production sources: fuel-only heat, cogeneration, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:pump-varmeff"
+fields = { "label" = "Värmeeffekt (värmepump)" }
+evidence = "#2102 same-label cluster 'Värmeeffekt' (5 variables): judged different meaning, high confidence; The opdef legend names five heat sources: fuel-only heat, cogeneration with electricity, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:rok-prod"
+fields = { "label" = "Producerad värme (rökgaskondensering)" }
+evidence = "#2102 same-label cluster 'Producerad värme' (5 variables): judged different meaning, high confidence; Descriptions and opdefs name five production sources: fuel-only heat, cogeneration, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:rok-varmeff"
+fields = { "label" = "Värmeeffekt (rökgaskondensering)" }
+evidence = "#2102 same-label cluster 'Värmeeffekt' (5 variables): judged different meaning, high confidence; The opdef legend names five heat sources: fuel-only heat, cogeneration with electricity, electric boiler, heat pump and flue-gas condensation."
+
+[[statement]]
+kind = "set"
+subject = "var:sorptiv-kyla"
+fields = { "label" = "Sorptiv kyla (installerad effekt)" }
+evidence = "#2102 same-label cluster 'Sorptiv kyla' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:sorptiv-kyla-prod"
+fields = { "label" = "Sorptiv kyla (producerad mängd)" }
+evidence = "#2102 same-label cluster 'Sorptiv kyla' (2 variables): judged different meaning, high confidence; Opdefs give installed capacity (maxnetto) versus produced quantity (prod)."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-vid-el-radnr"
+fields = { "label" = "Sysselsättning vid elproduktion och elförsäljning (radnummer)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid elproduktion och elförsäljning' (2 variables): judged different meaning, high confidence; Opdefs: radnr is the row number, tkr the wage cost in thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-vid-el-tkr"
+fields = { "label" = "Sysselsättning vid elproduktion och elförsäljning (lönekostnader, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Sysselsättning vid elproduktion och elförsäljning' (2 variables): judged different meaning, high confidence; Opdefs: radnr is the row number, tkr the wage cost in thousand SEK."
+
+[[statement]]
+kind = "set"
+subject = "var:tillforsel-av-el-brutto-mwh"
+fields = { "label" = "Tillförsel av el brutto (MWh)" }
+evidence = "#2102 same-label cluster 'Tillförsel av el brutto' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the purchase value."
+
+[[statement]]
+kind = "set"
+subject = "var:tillforsel-av-el-brutto-radnr"
+fields = { "label" = "Tillförsel av el brutto (radnummer)" }
+evidence = "#2102 same-label cluster 'Tillförsel av el brutto' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the purchase value."
+
+[[statement]]
+kind = "set"
+subject = "var:tillforsel-av-el-brutto-tkr"
+fields = { "label" = "Tillförsel av el brutto (inköpsvärde, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Tillförsel av el brutto' (3 variables): judged different meaning, high confidence; Opdefs: mwh is the quantity, radnr the row number, tkr the purchase value."
+
+[[statement]]
+kind = "set"
+subject = "var:el-enb"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (enbart elproduktion)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:el-inkvarde"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (inköpsvärde, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:el-kraftv"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (kraftvärmeproduktion)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:el-vvarde"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (värmevärde, el_vvarde)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukning-bransle-elproduktion"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (värmevärde, varme_vvarde)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:varme-kraftv"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (enbart värmeproduktion)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukning-bransle-el"
+fields = { "label" = "Förbrukning av bränsle för produktion av el (bränsleslag)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle för produktion av el' (7 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: el_enb enbart el, el_kraftv enbart kraftvärme, varme_kraftv enbart värme, el_inkvarde inköpsvärde (KSEK), bransleslag fuel type; el_vvarde and varme_vvarde both have opdef 'Värmevärde' with nothing separating them, so the code is used instead of a decoded prefix."
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-lokaluppvarmning-transport-kvant"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (kvantitet)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Kvantitet, radnr Radnummer (row code list), tkr inköpskostnad in KSEK."
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-lokaluppvarmning-transport-radnr"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (radnummer)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Kvantitet, radnr Radnummer (row code list), tkr inköpskostnad in KSEK."
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-lokaluppvarmning-transport-tkr"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter (inköpskostnad, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Kvantitet, radnr Radnummer (row code list), tkr inköpskostnad in KSEK."
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-fjarrvarme-drivmedel-kvant"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (kvantitet)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Förbrukning av bränsle (quantity), radnr Radnummer för bränsle, tkr Inköpskostnad (KSEK)."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukning-bransle-drivmedel-od-radnr"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (radnummer)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Förbrukning av bränsle (quantity), radnr Radnummer för bränsle, tkr Inköpskostnad (KSEK)."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukning-bransle-drivmedel-od-tkr"
+fields = { "label" = "Förbrukning av bränsle, fjärrvärme och drivmedel o.d. (inköpskostnad, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Förbrukning av bränsle, fjärrvärme och drivmedel o.d.' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: kvant Förbrukning av bränsle (quantity), radnr Radnummer för bränsle, tkr Inköpskostnad (KSEK)."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrkyla"
+fields = { "label" = "Leveranser av fjärrkyla (antal abonnemang)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang, mwh delivered fjärrkyla in MWh, radnr row number for the recipient (code list of recipient groups)."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrkyla-mwh"
+fields = { "label" = "Leveranser av fjärrkyla (MWh)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang, mwh delivered fjärrkyla in MWh, radnr row number for the recipient (code list of recipient groups)."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrkyla-radnr"
+fields = { "label" = "Leveranser av fjärrkyla (radnummer)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrkyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang, mwh delivered fjärrkyla in MWh, radnr row number for the recipient (code list of recipient groups)."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme"
+fields = { "label" = "Leveranser av fjärrvärme (antal abonnemang)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., antlgh Antal bostadslägenheter den 31 dec., mwh MWh, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme-antlgh"
+fields = { "label" = "Leveranser av fjärrvärme (antal bostadslägenheter)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., antlgh Antal bostadslägenheter den 31 dec., mwh MWh, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme-mwh"
+fields = { "label" = "Leveranser av fjärrvärme (MWh)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., antlgh Antal bostadslägenheter den 31 dec., mwh MWh, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme-radnr"
+fields = { "label" = "Leveranser av fjärrvärme (radnummer)" }
+evidence = "#2102 same-label cluster 'Leveranser av fjärrvärme' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., antlgh Antal bostadslägenheter den 31 dec., mwh MWh, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fardig-varme"
+fields = { "label" = "Leveranser av färdig värme (antal abonnemang)" }
+evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., mwh MWh delivered, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fardig-varme-mwh"
+fields = { "label" = "Leveranser av färdig värme (MWh)" }
+evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., mwh MWh delivered, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fardig-varme-radnr"
+fields = { "label" = "Leveranser av färdig värme (radnummer)" }
+evidence = "#2102 same-label cluster 'Leveranser av färdig värme' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; antab Antal abonnemang den 31 dec., mwh MWh delivered, radnr row number for the recipient."
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-mwh"
+fields = { "label" = "Mottagen värmemängd (förluster fram till leveranspunkten, MWh)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:lev-mwh"
+fields = { "label" = "Mottagen värmemängd (från annan leverantör, MWh)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:mot-mwh"
+fields = { "label" = "Mottagen värmemängd (mottagen, MWh)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:mottagen-varmemangd"
+fields = { "label" = "Mottagen värmemängd (från annan fjärrvärmeproducent, MWh)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:mottagen-varmemangd-radnr"
+fields = { "label" = "Mottagen värmemängd (radnummer)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:total-mwh"
+fields = { "label" = "Mottagen värmemängd (totalt, MWh)" }
+evidence = "#2102 same-label cluster 'Mottagen värmemängd' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: forlust_mwh värmeförlust fram till leveranspunkten, lev_mwh från annan leverantör, mot_mwh mottagen värmemängd, fjarr_mwh från annan fjärrvärmeproducent / mottagen fjärrvärmemängd, total_mwh totala värmeleveranser, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-hogspanning"
+fields = { "label" = "Vissa rörelseintäkter (högspänning, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; tkr_hsp högspänning, tkr_lsp lågspänning, tkr total amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-lagspanning"
+fields = { "label" = "Vissa rörelseintäkter (lågspänning, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; tkr_hsp högspänning, tkr_lsp lågspänning, tkr total amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelseintakter-radnr"
+fields = { "label" = "Vissa rörelseintäkter (radnummer)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; tkr_hsp högspänning, tkr_lsp lågspänning, tkr total amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelseintakter-tkr"
+fields = { "label" = "Vissa rörelseintäkter (tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; tkr_hsp högspänning, tkr_lsp lågspänning, tkr total amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-el-varme-kyla"
+fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla (MWh)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number; same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-el-varme-kyla-radnr"
+fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla (radnummer)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number; same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-el-varme-kyla-tkr"
+fields = { "label" = "Vissa rörelseintäkter samt försäljning av el och värme/kyla (belopp, tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelseintäkter samt försäljning av el och värme/kyla' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number; same table and period."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-mwh"
+fields = { "label" = "Vissa rörelsekostnader (MWh)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-radnr"
+fields = { "label" = "Vissa rörelsekostnader (radnummer)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-tkr"
+fields = { "label" = "Vissa rörelsekostnader (tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr amount in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelsekostnader-inkopt-el-radnr"
+fields = { "label" = "Vissa rörelsekostnader samt inköpt el (radnummer)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr costs in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:rorelsekostnader-inkopt-el-tkr"
+fields = { "label" = "Vissa rörelsekostnader samt inköpt el (tusentals kronor)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr costs in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
+fields = { "label" = "Vissa rörelsekostnader samt inköpt el (MWh)" }
+evidence = "#2102 same-label cluster 'Vissa rörelsekostnader samt inköpt el' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; mwh in MWh, tkr costs in KSEK, radnr row number."
+
+[[statement]]
+kind = "set"
+subject = "var:padr"
+fields = { "label" = "Postadress (padr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, AttAdr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-2"
+fields = { "label" = "Postadress (GatuAdr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:gadr"
+fields = { "label" = "Postadress (uppgiftslämnarens gatuadress, gadr)" }
+evidence = "#2102 same-label cluster 'Postadress' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AttAdr and gadr share opdef 'Gatuadress till uppgiftslämnaren'; padr and GatuAdr (company address, 'Företagets Gatuadress, och postnummer, postort' from 2018) have no stable opdef difference, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-slutlig-forbrukare-naringsgren-sni-2007"
+fields = { "label" = "Överförd el till slutlig förbrukare (n2radn)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-till-slutlig-forbrukare-n2radtext"
+fields = { "label" = "Överförd el till slutlig förbrukare (n2radtext)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:overford-el-till-slutlig-forbrukare-radn"
+fields = { "label" = "Överförd el till slutlig förbrukare (radn)" }
+evidence = "#2102 same-label cluster 'Överförd el till slutlig förbrukare' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three columns share the opdef about SNI 2007 row groupings and have no documented difference, so the column codes n2radn, n2radtext and radn are the qualifiers; radn and n2radn are concurrent 2009-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-maxnettoopt"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (optimalt bränsle)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-maxnetto"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (vid huvudbränsle)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-max-netto-knr"
+fields = { "label" = "Sammanlagd generatoreffekt max netto (KNr)" }
+evidence = "#2102 same-label cluster 'Sammanlagd generatoreffekt max netto' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; maxnettoopt opdef is 'Värmekraftstationer, optimalt bränsle' and maxnethuv1 is defined as 'Maxnetto vid huvudbränsle' in the opdef; maxnetto itself covers hydro/wind per table; KNr carries the maxnethuv1 opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoprod"
+fields = { "label" = "Elproduktion brutto (bruttoprod)" }
+evidence = "#2102 same-label cluster 'Elproduktion brutto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In elproducerande-industriforetag both columns exist concurrently with different opdefs: bruttoprod is split by plant type (hydro, wind) while elprodbrutto is gross production including plant own consumption."
+
+[[statement]]
+kind = "set"
+subject = "var:elprodbrutto"
+fields = { "label" = "Elproduktion brutto (elprodbrutto)" }
+evidence = "#2102 same-label cluster 'Elproduktion brutto' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; In elproducerande-industriforetag both columns exist concurrently with different opdefs: bruttoprod is split by plant type (hydro, wind) while elprodbrutto is gross production including plant own consumption."

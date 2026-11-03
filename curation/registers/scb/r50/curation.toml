@@ -889,3 +889,15 @@ kind = "set"
 subject = "set:storlek-efter-antal-anstallda"
 fields = { "label" = "Storlek efter antal anställda" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:manadsforman"
+fields = { "label" = "Förmån (månadsförmåner)" }
+evidence = "#2102 same-label cluster 'Förmån' (2 variables): judged different meaning, medium confidence; Two concurrent columns, MFormaner and SumFormaner; no text beyond the shared definition."
+
+[[statement]]
+kind = "set"
+subject = "var:sumforman"
+fields = { "label" = "Förmån (summa förmåner)" }
+evidence = "#2102 same-label cluster 'Förmån' (2 variables): judged different meaning, medium confidence; Two concurrent columns, MFormaner and SumFormaner; no text beyond the shared definition."

@@ -381,3 +381,27 @@ kind = "set"
 subject = "set:strandtyp"
 fields = { "label" = "Strandtyp" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the kommunkod, KOMMUNNAMN the kommunnamn (opdef: kommunkod och kommunnamn i två olika kolumner)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the kommunkod, KOMMUNNAMN the kommunnamn (opdef: kommunkod och kommunnamn i två olika kolumner)."
+
+[[statement]]
+kind = "set"
+subject = "var:befadr"
+fields = { "label" = "Antal personer (adresskoordinater)" }
+evidence = "#2102 same-label cluster 'Antal personer' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef of BefAdr counts persons per address coordinate (Lantmäteriets adressregister) and BefFast per fastighetskoordinat (fastighetsregister)."
+
+[[statement]]
+kind = "set"
+subject = "var:beffast"
+fields = { "label" = "Antal personer (fastighetskoordinater)" }
+evidence = "#2102 same-label cluster 'Antal personer' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef of BefAdr counts persons per address coordinate (Lantmäteriets adressregister) and BefFast per fastighetskoordinat (fastighetsregister)."

@@ -15,17 +15,17 @@
     "location": "census:row=10"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,locator) SELECT id,'Invented',10,'int','candidate','fixture:invented' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Not documented','fixture:invented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='census_columns'",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='census_columns'",
     "code": "holdings_census_column_extra",
     "location": "column=10"
   },
   {
-    "sql": "INSERT INTO holding_table(physical_name,file_name,disposition,reason,locator) VALUES('Invented','invented','lookup','Not in census','fixture:invented'); UPDATE meta SET value='10' WHERE key='census_tables'",
+    "sql": "INSERT INTO holding_table(physical_name,file_name,disposition,reason) VALUES('Invented','invented','lookup','Not in census'); UPDATE meta SET value='10' WHERE key='census_tables'",
     "code": "holdings_census_table_extra",
     "location": "holdings:table="
   },
   {
-    "sql": "DELETE FROM holding_mapping WHERE variable_pid='demo/held/id' AND column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool'); INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT c.holding_id,c.id,'mapping_missing','Required key withheld','fixture:missing-required-key' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Received_Id'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='unmatched_columns';",
+    "sql": "DELETE FROM holding_mapping WHERE variable_pid='demo/held/id' AND column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool'); INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT c.holding_id,c.id,'mapping_missing','Required key withheld' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Received_Id'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='unmatched_columns';",
     "code": "holdings_key_missing",
     "location": "key=demo/held/id:"
   },
@@ -40,7 +40,7 @@
     "location": "census:row=3"
   },
   {
-    "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,locator) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,'row_key',1,'fixture:competing-key-copy' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
+    "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,'row_key',1 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
     "code": "holdings_key_ambiguous",
     "location": "key=demo/held/id:"
   },
@@ -60,13 +60,13 @@
     "location": "holdings:table=1:"
   },
   {
-    "sql": "DELETE FROM holding_mapping WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Parent' AND c.name='Id'); INSERT INTO holding_notice(holding_id,column_id,code,message,locator) SELECT holding_id,id,'mapping_missing','Withheld parent key','fixture:withheld-parent-key' FROM holding_column WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Parent') AND name='Id'",
+    "sql": "DELETE FROM holding_mapping WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Parent' AND c.name='Id'); INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Withheld parent key' FROM holding_column WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Parent') AND name='Id'",
     "code": "holdings_projection_key_missing",
     "location": "parent=5:key=demo/projected/id:"
   },
   {
     "variant": "held-key",
-    "sql": "UPDATE holding_column SET disposition='candidate',reason=NULL,follow_up=NULL WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Pool') AND name='Received_Id'; INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,locator) SELECT c.id,'demo/held','demo/held/id',p.start,p.end,'row_key',0,'fixture:mapping-beside-held-key' FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_period p ON p.holding_id=h.id WHERE h.physical_name='Pool' AND c.name='Received_Id'",
+    "sql": "UPDATE holding_column SET disposition='candidate',reason=NULL,follow_up=NULL WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Pool') AND name='Received_Id'; INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',p.start,p.end,'row_key',0 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_period p ON p.holding_id=h.id WHERE h.physical_name='Pool' AND c.name='Received_Id'",
     "code": "holdings_held_key_mapping",
     "location": "holdings:table=8:"
   },
@@ -95,5 +95,10 @@
     "sql": "UPDATE holding_mapping SET caveat=NULL WHERE variable_pid='steward/slots/code'",
     "code": "holdings_mapping_source_mismatch",
     "location": "census:row=3:column=7"
+  },
+  {
+    "sql": "DELETE FROM holding_notice_candidate WHERE variable_pid='demo/owners/second'",
+    "code": "holdings_contested_source_mismatch",
+    "location": "census:row=2:column=1"
   }
 ]

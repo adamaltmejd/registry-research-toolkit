@@ -2116,3 +2116,483 @@ kind = "set"
 subject = "set:urval"
 fields = { "label" = "Urval" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-inkop-av-mark"
+fields = { "label" = "Investeringar, inköp av mark (v022)" }
+evidence = "#2102 same-label cluster 'Investeringar, inköp av mark' (4 variables): judged different meaning, low confidence; v022, v024 and v029 are concurrent columns with the same definition and BKelinst has no text; nothing says how they differ, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-inkop-av-mark-bkelinst"
+fields = { "label" = "Investeringar, inköp av mark (BKelinst)" }
+evidence = "#2102 same-label cluster 'Investeringar, inköp av mark' (4 variables): judged different meaning, low confidence; v022, v024 and v029 are concurrent columns with the same definition and BKelinst has no text; nothing says how they differ, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-inkop-av-mark-v024"
+fields = { "label" = "Investeringar, inköp av mark (v024)" }
+evidence = "#2102 same-label cluster 'Investeringar, inköp av mark' (4 variables): judged different meaning, low confidence; v022, v024 and v029 are concurrent columns with the same definition and BKelinst has no text; nothing says how they differ, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-inkop-av-mark-v029"
+fields = { "label" = "Investeringar, inköp av mark (v029)" }
+evidence = "#2102 same-label cluster 'Investeringar, inköp av mark' (4 variables): judged different meaning, low confidence; v022, v024 and v029 are concurrent columns with the same definition and BKelinst has no text; nothing says how they differ, so qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-anlaggningar"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v101)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader"
+fields = { "label" = "Investeringar, planerade, bostäder (v102)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-bkbyggm"
+fields = { "label" = "Investeringar, planerade, bostäder (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-v202"
+fields = { "label" = "Investeringar, planerade, bostäder (v202)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-v302"
+fields = { "label" = "Investeringar, planerade, bostäder (v302)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-v402"
+fields = { "label" = "Investeringar, planerade, bostäder (v402)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-v502"
+fields = { "label" = "Investeringar, planerade, bostäder (v502)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-bostader-v602"
+fields = { "label" = "Investeringar, planerade, bostäder (v602)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, bostäder' (7 variables): judged different meaning, low confidence; Six concurrent columns v102..v602 share a per-quarter definition but nothing documents what the leading digit means (six values cannot be the quarters of one year), and BKbyggm has no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v111)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-bkbyggm"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v211"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v211)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v311"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v311)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v411"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v411)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v511"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v511)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-maskiner-inventarier-v611"
+fields = { "label" = "Investeringar, planerade, maskiner, inventarier (v611)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, maskiner, inventarier' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; no source text says what the leading digit means, so the raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-ombyggnad"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v103)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-bkbyggm"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-v203"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v203)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-v303"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v303)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-v403"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v403)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-v503"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v503)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ny-till-och-ombyggnad-v603"
+fields = { "label" = "Investeringar, planerade, ny, till- och ombyggnad (v603)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, ny, till- och ombyggnad' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-bkbyggm"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-v201"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v201)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-v301"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v301)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-v401"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v401)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-v501"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v501)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-ovriga-anlaggningar-v601"
+fields = { "label" = "Investeringar, planerade, övriga anläggningar (v601)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, övriga anläggningar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-bkbyggm"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v212"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v212)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v312"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v312)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v412"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v412)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v512"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v512)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v612"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v612)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-bkbyggm"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-v213"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v213)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-v313"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v313)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-v413"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v413)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-v513"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v513)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bussar-v613"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v613)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-bkbyggm"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-v215"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v215)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-v315"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v315)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-v415"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v415)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-v515"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v515)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-flygplan-v615"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v615)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-bkbyggm"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-v216"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v216)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-v316"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v316)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-v416"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v416)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-v516"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v516)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-ovrigt-v616"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v616)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-bkbyggm"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-v214"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v214)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-v314"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v314)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-v414"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v414)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-v514"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v514)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-rullande-v614"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v614)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-underhall"
+fields = { "label" = "Investeringar, underhåll (v040)" }
+evidence = "#2102 same-label cluster 'Investeringar, underhåll' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-underhall-bkelinst"
+fields = { "label" = "Investeringar, underhåll (BKelinst)" }
+evidence = "#2102 same-label cluster 'Investeringar, underhåll' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-underhall-v041"
+fields = { "label" = "Investeringar, underhåll (v041)" }
+evidence = "#2102 same-label cluster 'Investeringar, underhåll' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-fastigheter"
+fields = { "label" = "Investeringar, verkställda, inköp fastigheter (v021)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, inköp fastigheter' (4 variables): judged different meaning, medium confidence; Four concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-inkop-fastigheter-bkelinst"
+fields = { "label" = "Investeringar, verkställda, inköp fastigheter (BKelinst)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, inköp fastigheter' (4 variables): judged different meaning, medium confidence; Four concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-inkop-fastigheter-v023"
+fields = { "label" = "Investeringar, verkställda, inköp fastigheter (v023)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, inköp fastigheter' (4 variables): judged different meaning, medium confidence; Four concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-inkop-fastigheter-v028"
+fields = { "label" = "Investeringar, verkställda, inköp fastigheter (v028)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, inköp fastigheter' (4 variables): judged different meaning, medium confidence; Four concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-ovrigt"
+fields = { "label" = "Investeringar, verkställda, övrigt (v026)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, övrigt' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-ovrigt-bkelinst"
+fields = { "label" = "Investeringar, verkställda, övrigt (BKelinst)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, övrigt' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-verkstallda-ovrigt-v027"
+fields = { "label" = "Investeringar, verkställda, övrigt (v027)" }
+evidence = "#2102 same-label cluster 'Investeringar, verkställda, övrigt' (3 variables): judged different meaning, medium confidence; Three concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-bilar"
+fields = { "label" = "Investeringar, planerade, transportmedel, bilar (v112)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bilar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-bussar"
+fields = { "label" = "Investeringar, planerade, transportmedel, bussar (v113)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, bussar' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-flygplan"
+fields = { "label" = "Investeringar, planerade, transportmedel, flygplan (v115)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, flygplan' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-ovrigt"
+fields = { "label" = "Investeringar, planerade, transportmedel, övrigt (v116)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, övrigt' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-rullande"
+fields = { "label" = "Investeringar, planerade, transportmedel, rullande spårbunden materiel (v114)" }
+evidence = "#2102 same-label cluster 'Investeringar, planerade, transportmedel, rullande spårbunden materiel' (7 variables): judged different meaning, medium confidence; Seven concurrent columns in one table with the same definition; nothing documents what separates them, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsenhetens-identitetsnummer-bkbyggm"
+fields = { "label" = "Verksamhetsenhetens identitetsnummer (BKbyggm)" }
+evidence = "#2102 same-label cluster 'Verksamhetsenhetens identitetsnummer' (4 variables): judged different meaning, medium confidence; ForegVENr is the previous unit number, a separate column from VENr; BKbyggm and BKelinst have no documented meaning and take raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsenhetens-identitetsnummer-bkelinst"
+fields = { "label" = "Verksamhetsenhetens identitetsnummer (BKelinst)" }
+evidence = "#2102 same-label cluster 'Verksamhetsenhetens identitetsnummer' (4 variables): judged different meaning, medium confidence; ForegVENr is the previous unit number, a separate column from VENr; BKbyggm and BKelinst have no documented meaning and take raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsenhetens-identitetsnummer-foregvenr"
+fields = { "label" = "Verksamhetsenhetens identitetsnummer (föregående)" }
+evidence = "#2102 same-label cluster 'Verksamhetsenhetens identitetsnummer' (4 variables): judged different meaning, medium confidence; ForegVENr is the previous unit number, a separate column from VENr; BKbyggm and BKelinst have no documented meaning and take raw codes."

@@ -32,7 +32,7 @@
 /* "Browse registers" is the way back to the register list where the columns stack; above
    the breakpoint the list is on screen, so the crumb and the separator after it
    go. */
-@media (min-width: 48.0625rem) {
+@media (min-width: 60.0625rem) {
   .narrowOnly {
     display: none;
   }

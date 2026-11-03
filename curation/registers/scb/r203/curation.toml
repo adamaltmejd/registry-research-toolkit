@@ -160,3 +160,39 @@ kind = "set"
 subject = "var:verksamhet"
 fields = { "tags" = ["energy"] }
 evidence = "Variabeln mäter energianvändning i verksamheten.\ncatalog:occurrence:56161\ncatalog:variable_text:7657:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:energi"
+fields = { "label" = "Total energianvändning (total MWh per bränsle)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-tank"
+fields = { "label" = "Total energianvändning (inköpt via tankstation)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:med-bio"
+fields = { "label" = "Total energianvändning (med bioinblandning)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning"
+fields = { "label" = "Total energianvändning (byggnader)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:transporter"
+fields = { "label" = "Total energianvändning (transporter)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet"
+fields = { "label" = "Total energianvändning (verksamhet)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."

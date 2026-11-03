@@ -4,6 +4,7 @@ use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -250,6 +251,16 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, Strin
         &config.inputs.readers_root,
     );
     Ok(config)
+}
+
+/// One digest over the pinned input list, so the artifact names its inputs without
+/// carrying their paths. The per-file pins stay in the build report.
+pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
+    let mut hasher = Sha256::new();
+    for (path, sha) in pins {
+        hasher.update(format!("{path}\t{sha}\n"));
+    }
+    reg_frame::hex(&hasher.finalize())
 }
 
 fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), String> {

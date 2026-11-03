@@ -16939,3 +16939,441 @@ kind = "set"
 subject = "set:samlade-fou-utgifter"
 fields = { "label" = "Samlade FoU-utgifter" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-administration-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; Opdefs: F35 is the individual's answer, F35upp the answer multiplied by the uppräkningsfaktor; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-annan-verksamhet-f37upp"
+fields = { "label" = "Andel av arbetstid som ägnades åt annan verksamhet (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt annan verksamhet' (2 variables): judged different meaning, high confidence; Opdefs: F37 is the individual's answer, F37upp the answer multiplied by the uppräkningsfaktor."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-f31bupp"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel' (4 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share by pattern of sibling opdefs; Upphandling (2005-06) and OBS_VALUE (2023+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-for-fou-f31bupp"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; Opdefs: F31b is the individual's answer, F31bupp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-obs-value-2"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; Opdefs: F31b is the individual's answer, F31bupp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-obs-value-3"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel' (4 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share by pattern of sibling opdefs; Upphandling (2005-06) and OBS_VALUE (2023+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-att-ansoka-om-upphandling"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel (Upphandling)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel' (4 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share by pattern of sibling opdefs; Upphandling (2005-06) and OBS_VALUE (2023+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-expert-och-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; Opdefs: F36 is the individual's answer, F36upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-f32upp"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå' (4 variables): judged different meaning, medium confidence; Opdefs: F32 is the individual's answer, F32upp the scaled-up answer; Upphandling (2005-06) and OBS_VALUE (2021+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-f33upp"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs: F33 is the individual's answer, F33upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-obs-value-2"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå' (4 variables): judged different meaning, medium confidence; Opdefs: F32 is the individual's answer, F32upp the scaled-up answer; Upphandling (2005-06) and OBS_VALUE (2021+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-obs-value-3"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs: F33 is the individual's answer, F33upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-undervisning-upphandling"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå (Upphandling)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå' (4 variables): judged different meaning, medium confidence; Opdefs: F32 is the individual's answer, F32upp the scaled-up answer; Upphandling (2005-06) and OBS_VALUE (2021+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:andel-av-arbetstid-som-agnades-at-utbildning-obs-value"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (OBS_VALUE)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; Opdefs: F34 is the individual's answer, F34upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningskategori"
+fields = { "label" = "Anställningskategori (kod)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstkattext"
+fields = { "label" = "Anställningskategori (text)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-administration"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; Opdefs: F35 is the individual's answer, F35upp the answer multiplied by the uppräkningsfaktor; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-ansoka-medel"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel' (4 variables): judged different meaning, medium confidence; F31b individual share vs F31bupp scaled-up share by pattern of sibling opdefs; Upphandling (2005-06) and OBS_VALUE (2023+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-ansoka-medel-fou"
+fields = { "label" = "Andel av arbetstid som ägnades åt att ansöka om medel för FoU (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt att ansöka om medel för FoU' (3 variables): judged different meaning, medium confidence; Opdefs: F31b is the individual's answer, F31bupp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-doktorandkurser"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; Opdefs: F34 is the individual's answer, F34upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-expertuppdrag"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; Opdefs: F36 is the individual's answer, F36upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-forskarutbildning"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på forskarutbildningsnivå' (3 variables): judged different meaning, medium confidence; Opdefs: F33 is the individual's answer, F33upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-under-en-genomsnittlig-arbetsvecka-vid-universitet-hogskolan-f2upp"
+fields = { "label" = "Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan (uppräknad)" }
+evidence = "#2102 same-label cluster 'Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan' (2 variables): judged different meaning, high confidence; Opdefs: F2 is the individual's answer, F2upp the answer multiplied by the uppräkningsfaktor."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-undervisning-grund"
+fields = { "label" = "Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt undervisning på grund- och avancerad nivå' (4 variables): judged different meaning, medium confidence; Opdefs: F32 is the individual's answer, F32upp the scaled-up answer; Upphandling (2005-06) and OBS_VALUE (2021+) are undescribed and qualified with their column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-i-uoh-obs-value"
+fields = { "label" = "Arbetstidens fördelning i UoH (värde)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, medium confidence; Long-format table columns: OBS_VALUE the value, VARCD the variable code (value set of variable codes), VARNAME the variable name; the OBS_VALUE opdef repeats the VARCD text and is treated as a copy artefact."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-uoh-varcd"
+fields = { "label" = "Arbetstidens fördelning i UoH (variabelkod)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, medium confidence; Long-format table columns: OBS_VALUE the value, VARCD the variable code (value set of variable codes), VARNAME the variable name; the OBS_VALUE opdef repeats the VARCD text and is treated as a copy artefact."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidens-fordelning-uoh-varname"
+fields = { "label" = "Arbetstidens fördelning i UoH (variabelnamn)" }
+evidence = "#2102 same-label cluster 'Arbetstidens fördelning i UoH' (3 variables): judged different meaning, medium confidence; Long-format table columns: OBS_VALUE the value, VARCD the variable code (value set of variable codes), VARNAME the variable name; the OBS_VALUE opdef repeats the VARCD text and is treated as a copy artefact."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-b-grupp"
+fields = { "label" = "Branschgrupper (b-grupp)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-ngsredo"
+fields = { "label" = "Branschgrupper (NgSredo)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-sni92fouftg"
+fields = { "label" = "Branschgrupper (SNI92FOUFTG)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-sni92fouftgtj"
+fields = { "label" = "Branschgrupper (SNI92FOUFTGTJ)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-text"
+fields = { "label" = "Branschgrupper (text)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper-typkod"
+fields = { "label" = "Branschgrupper (typkod)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:branschtyp"
+fields = { "label" = "Branschgrupper (branschtyp)" }
+evidence = "#2102 same-label cluster 'Branschgrupper' (7 variables): judged different meaning, low confidence; Seven concurrent columns in one table; no source text describes them, so they are qualified with their column names."
+
+[[statement]]
+kind = "set"
+subject = "var:employ-title"
+fields = { "label" = "Tjänstebenämning (text)" }
+evidence = "#2102 same-label cluster 'Tjänstebenämning' (2 variables): judged different meaning, high confidence; EMPLOY_CODE holds the code, EMPLOY_TITLE the title text."
+
+[[statement]]
+kind = "set"
+subject = "var:f2"
+fields = { "label" = "Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan (individuppgift)" }
+evidence = "#2102 same-label cluster 'Arbetstid under en genomsnittlig arbetsvecka vid universitet/högskolan' (2 variables): judged different meaning, high confidence; Opdefs: F2 is the individual's answer, F2upp the answer multiplied by the uppräkningsfaktor."
+
+[[statement]]
+kind = "set"
+subject = "var:field1"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:field1-text"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:field3"
+fields = { "label" = "Forskningsämnesgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:field3-text"
+fields = { "label" = "Forskningsämnesgrupp (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:ford1"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:ford1-text"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3"
+fields = { "label" = "Forskningsämnesgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3-text"
+fields = { "label" = "Forskningsämnesgrupp (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:forskamneomrtext"
+fields = { "label" = "Forskningsämnesområde (text)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne"
+fields = { "label" = "Forskningsämne (forskningsämnesgrupp, tresiffrig)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (2 variables): judged different meaning, high confidence; StAmne holds three-digit forskningsämnesgrupper (101..), ForskAmneOmr one-digit forskningsämnesområden (opdef: ensiffernivå)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamne-forskamneomr"
+fields = { "label" = "Forskningsämne (forskningsämnesområde, ensiffrig)" }
+evidence = "#2102 same-label cluster 'Forskningsämne' (2 variables): judged different meaning, high confidence; StAmne holds three-digit forskningsämnesgrupper (101..), ForskAmneOmr one-digit forskningsämnesområden (opdef: ensiffernivå)."
+
+[[statement]]
+kind = "set"
+subject = "var:forskningsamnesomrade"
+fields = { "label" = "Forskningsämnesområde (kod)" }
+evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
+
+[[statement]]
+kind = "set"
+subject = "var:individandel-annan-verksamhetstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt annan verksamhet (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt annan verksamhet' (2 variables): judged different meaning, high confidence; Opdefs: F37 is the individual's answer, F37upp the answer multiplied by the uppräkningsfaktor."
+
+[[statement]]
+kind = "set"
+subject = "var:individandel-fou-tid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt forskning och utveckling (individandel)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt forskning och utveckling' (2 variables): judged different meaning, high confidence; Opdefs: F31 is the individual's answer, F31upp the scaled-up answer."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet"
+fields = { "label" = "Internationell mobilitet (värde)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE (opdef: observerat värde), VARCD (variable code), VARNAME (variable name)."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet-varcd"
+fields = { "label" = "Internationell mobilitet (variabelkod)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE (opdef: observerat värde), VARCD (variable code), VARNAME (variable name)."
+
+[[statement]]
+kind = "set"
+subject = "var:internationell-mobilitet-varname"
+fields = { "label" = "Internationell mobilitet (variabelnamn)" }
+evidence = "#2102 same-label cluster 'Internationell mobilitet' (3 variables): judged different meaning, high confidence; Long-format table columns: OBS_VALUE (opdef: observerat värde), VARCD (variable code), VARNAME (variable name)."
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "label" = "Kod för produktgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Kod för produktgrupp' (2 variables): judged different meaning, medium confidence; kod and prodgrp are concurrent columns in one table with the same definition and no code list; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-produktgrupp-prodgrp"
+fields = { "label" = "Kod för produktgrupp (prodgrp)" }
+evidence = "#2102 same-label cluster 'Kod för produktgrupp' (2 variables): judged different meaning, medium confidence; kod and prodgrp are concurrent columns in one table with the same definition and no code list; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (länskod)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has länskoder (01, 03, ...), MUN_CODE municipality codes, COUNTRY NUTS län codes (SE110 ...), SEAT NUTS codes for the säte in a different table."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-country"
+fields = { "label" = "Län (NUTS-kod)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has länskoder (01, 03, ...), MUN_CODE municipality codes, COUNTRY NUTS län codes (SE110 ...), SEAT NUTS codes for the säte in a different table."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-mun-code"
+fields = { "label" = "Län (kommunkod)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has länskoder (01, 03, ...), MUN_CODE municipality codes, COUNTRY NUTS län codes (SE110 ...), SEAT NUTS codes for the säte in a different table."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-seat"
+fields = { "label" = "Län (NUTS-kod för säte)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Value sets differ: Lan has länskoder (01, 03, ...), MUN_CODE municipality codes, COUNTRY NUTS län codes (SE110 ...), SEAT NUTS codes for the säte in a different table."
+
+[[statement]]
+kind = "set"
+subject = "var:occup-cat"
+fields = { "label" = "Anställningskategori (text)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
+
+[[statement]]
+kind = "set"
+subject = "var:occup-code"
+fields = { "label" = "Anställningskategori (kod)" }
+evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-10-siffror-orgnr"
+fields = { "label" = "Organisationsnummer 10 siffror (orgnr)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 10 siffror' (2 variables): judged different meaning, medium confidence; orgnr and Orgnr11 are concurrent columns in one table with the same definition; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-10"
+fields = { "label" = "Organisationsnummer 10 siffror (Orgnr11)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 10 siffror' (2 variables): judged different meaning, medium confidence; orgnr and Orgnr11 are concurrent columns in one table with the same definition; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstebenamning"
+fields = { "label" = "Tjänstebenämning (kod)" }
+evidence = "#2102 same-label cluster 'Tjänstebenämning' (2 variables): judged different meaning, high confidence; EMPLOY_CODE holds the code, EMPLOY_TITLE the title text."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-administrationstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; Opdefs: F35 is the individual's answer, F35upp the answer multiplied by the uppräkningsfaktor; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-egen-forskarutbildningstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbildning/kurser inom den egna forskarutbildningen' (3 variables): judged different meaning, medium confidence; Opdefs: F34 is the individual's answer, F34upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-expert-fortroendeuppdragstid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt expert- och förtroendeuppdrag inom ramen för anställningen/befattningen' (3 variables): judged different meaning, medium confidence; Opdefs: F36 is the individual's answer, F36upp the scaled-up answer; OBS_VALUE (2023+) has no description."
+
+[[statement]]
+kind = "set"
+subject = "var:uppraknad-andel-fou-tid-av-arbetstid"
+fields = { "label" = "Andel av arbetstid som ägnades åt forskning och utveckling (uppräknad)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt forskning och utveckling' (2 variables): judged different meaning, high confidence; Opdefs: F31 is the individual's answer, F31upp the scaled-up answer."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsvikt-viktu"
+fields = { "label" = "urvalsvikt (viktU)" }
+evidence = "#2102 same-label cluster 'urvalsvikt' (2 variables): judged different meaning, medium confidence; urvalsvikt and viktU are concurrent columns in one table with the same definition; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou"
+fields = { "label" = "Utgifter för egen FoU (koncerner)" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (2 variables): judged different meaning, medium confidence; v201 is from the Swedish and international groups survey (opdef: land per Land variable); OBS_VALUE is the value column of the PNP and UoH economy tables (opdef: total expenses), i.e. different populations."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou-obs-value"
+fields = { "label" = "Utgifter för egen FoU (PNP, UoH-ekonomi)" }
+evidence = "#2102 same-label cluster 'Utgifter för egen FoU' (2 variables): judged different meaning, medium confidence; v201 is from the Swedish and international groups survey (opdef: land per Land variable); OBS_VALUE is the value column of the PNP and UoH economy tables (opdef: total expenses), i.e. different populations."
+
+[[statement]]
+kind = "set"
+subject = "var:organisationsnummer-12-siffror-orgnr-2003"
+fields = { "label" = "Organisationsnummer 12 siffror (OrgNr 2003)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 12 siffror' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNr/SCBID occurrences all share the CFAR definition, but only SCBID (svenska-internationella-koncerner) has an opdef (moderbolag), so 'moderbolag' is not true of every occurrence; spellings are the qualifier. OrgNr 2003 has the same definition and no opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-12"
+fields = { "label" = "Organisationsnummer 12 siffror (PeOrgNr, SCBID)" }
+evidence = "#2102 same-label cluster 'Organisationsnummer 12 siffror' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNr/SCBID occurrences all share the CFAR definition, but only SCBID (svenska-internationella-koncerner) has an opdef (moderbolag), so 'moderbolag' is not true of every occurrence; spellings are the qualifier. OrgNr 2003 has the same definition and no opdef."

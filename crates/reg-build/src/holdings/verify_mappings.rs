@@ -7,6 +7,8 @@ use super::{compile, input};
 
 type Span = (i64, i64);
 type Mappings = BTreeMap<Attributes, Vec<Span>>;
+/// Blocked spans by (notice code, rival table, rival variable).
+type Contested = BTreeMap<(String, String, String), Vec<Span>>;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Attributes {
@@ -16,7 +18,6 @@ struct Attributes {
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
-    locator: String,
 }
 
 struct Claim {
@@ -131,7 +132,6 @@ fn claims(
                     mapping.carried,
                     mapping.caveat.clone(),
                     mapping.delivery.clone(),
-                    &mapping.locator,
                 ));
             }
         }
@@ -143,7 +143,7 @@ fn claims(
                 reg_core::fold_identity(&s.spelling) == spelling
                     && s.timeless == (table.disposition == "timeless")
             }) {
-                claims.push(claim(segment, &spans, false, None, None, &table.locator));
+                claims.push(claim(segment, &spans, false, None, None));
             }
         }
     }
@@ -157,7 +157,6 @@ fn claim(
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
-    locator: &str,
 ) -> Claim {
     Claim {
         attributes: Attributes {
@@ -167,7 +166,6 @@ fn claim(
             carried,
             caveat,
             window,
-            locator: locator.to_owned(),
         },
         spans: compile::overlap(wanted, &[(segment.start, segment.end)]),
         ambiguous: segment.state == "ambiguous",
@@ -178,7 +176,7 @@ fn expected(
     claims: &[Claim],
     table: &input::Table,
     tables: &BTreeMap<&str, &input::Table>,
-) -> Result<Mappings, String> {
+) -> Result<(Mappings, Contested), String> {
     let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
     for claim in claims {
         routes
@@ -187,6 +185,7 @@ fn expected(
             .push(claim);
     }
     let mut expected = Mappings::new();
+    let mut contested = Contested::new();
     for claims in routes.values() {
         let mut cuts: Vec<_> = claims
             .iter()
@@ -205,10 +204,26 @@ fn expected(
             };
             // Preserve every rival, including ambiguous semantic segments, until
             // ownership is decided for this logical table and interval.
-            if active
+            let rivals = active
                 .iter()
-                .any(|c| c.ambiguous || c.attributes.variable != first.attributes.variable)
-            {
+                .any(|c| c.attributes.variable != first.attributes.variable);
+            if rivals || active.iter().any(|c| c.ambiguous) {
+                // Each blocked interval records every rival, which orders refuse.
+                let code = if rivals {
+                    "ambiguous_delivered_owners"
+                } else {
+                    "ambiguous_catalog_segment"
+                };
+                for c in &active {
+                    contested
+                        .entry((
+                            code.to_owned(),
+                            c.attributes.table.clone(),
+                            c.attributes.variable.clone(),
+                        ))
+                        .or_default()
+                        .push(span);
+                }
                 continue;
             }
             if active.iter().any(|c| {
@@ -225,7 +240,7 @@ fn expected(
             expected.entry(attributes).or_default().push(span);
         }
     }
-    Ok(expected)
+    Ok((expected, contested))
 }
 
 pub(super) fn verify(
@@ -241,17 +256,28 @@ pub(super) fn verify(
         .iter()
         .map(|t| (t.physical_name.as_str(), t))
         .collect();
-    let mut query = db.prepare(
-        "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.locator,m.start,m.end
+    let mut query = db
+        .prepare(
+            "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.start,m.end
          FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2"
-    ).map_err(|e| e.to_string())?;
+         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2",
+        )
+        .map_err(|e| e.to_string())?;
+    let mut rivals = db
+        .prepare(
+            "SELECT n.code,r.table_pid,r.variable_pid,n.start,n.end
+         FROM holding_notice_candidate r JOIN holding_notice n ON n.id=r.notice_id
+         JOIN holding_column c ON c.id=n.column_id JOIN holding_table h ON h.id=c.holding_id
+         WHERE h.physical_name=?1 AND c.name=?2",
+        )
+        .map_err(|e| e.to_string())?;
     for table in &census.tables {
         let authored = tables[table.name.as_str()];
         for column in &table.columns {
             let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
-            let mut compare = || -> Result<bool, String> {
-                let mut expected = expected(&claims(authored, column, &index)?, authored, &tables)?;
+            let mut compare = || -> Result<Option<&str>, String> {
+                let (mut expected, mut contested) =
+                    expected(&claims(authored, column, &index)?, authored, &tables)?;
                 let mut stored = Mappings::new();
                 let rows = query
                     .query_map(rusqlite::params![table.name, column.name], |r| {
@@ -263,9 +289,8 @@ pub(super) fn verify(
                                 carried: r.get(3)?,
                                 caveat: r.get(4)?,
                                 window: r.get(5)?,
-                                locator: r.get(6)?,
                             },
-                            (r.get(7)?, r.get(8)?),
+                            (r.get(6)?, r.get(7)?),
                         ))
                     })
                     .map_err(|e| e.to_string())?;
@@ -278,12 +303,30 @@ pub(super) fn verify(
                         *spans = compile::merge(std::mem::take(spans));
                     }
                 }
-                Ok(stored == expected)
+                if stored != expected {
+                    return Ok(Some(
+                        "holdings_mapping_source_mismatch: complete intervals or admitted attributes differ",
+                    ));
+                }
+                let mut recorded = Contested::new();
+                let rows = rivals
+                    .query_map(rusqlite::params![table.name, column.name], |r| {
+                        Ok(((r.get(0)?, r.get(1)?, r.get(2)?), (r.get(3)?, r.get(4)?)))
+                    })
+                    .map_err(|e| e.to_string())?;
+                for row in rows {
+                    let (key, span) = row.map_err(|e| e.to_string())?;
+                    recorded.entry(key).or_default().push(span);
+                }
+                for spans in recorded.values_mut().chain(contested.values_mut()) {
+                    *spans = compile::merge(std::mem::take(spans));
+                }
+                Ok((recorded != contested).then_some(
+                    "holdings_contested_source_mismatch: blocked intervals or their recorded rivals differ",
+                ))
             };
-            if !compare().map_err(|e| format!("{location}: {e}"))? {
-                return Err(format!(
-                    "{location}: holdings_mapping_source_mismatch: complete intervals or admitted attributes differ"
-                ));
+            if let Some(code) = compare().map_err(|e| format!("{location}: {e}"))? {
+                return Err(format!("{location}: {code}"));
             }
         }
     }

@@ -1290,3 +1290,417 @@ kind = "set"
 subject = "set:tillganglighet-vid-fritidsfiske"
 fields = { "label" = "Tillgänglighet vid fritidsfiske" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-16-ar-hushall-fritidsfiskat"
+fields = { "label" = "Barn under 16 år som fritidsfiskat (antal)" }
+evidence = "#2102 same-label cluster 'Barn under 16 år som fritidsfiskat' (2 variables): judged different meaning, high confidence; Opdefs: F13b is the number of children, F13a whether any exist."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-burar-tinor-fiskat-med-tertial"
+fields = { "label" = "Antal burar/tinor (fiskat med)" }
+evidence = "#2102 same-label cluster 'Antal burar/tinor' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-burar-tinor-forlorade-i-vattnet-tertial"
+fields = { "label" = "Antal burar/tinor (förlorade i vattnet)" }
+evidence = "#2102 same-label cluster 'Antal burar/tinor' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-burar-tinor-kopta-tertial"
+fields = { "label" = "Antal burar/tinor (köpta)" }
+evidence = "#2102 same-label cluster 'Antal burar/tinor' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-burar-tinor-slangda-tertial"
+fields = { "label" = "Antal burar/tinor (slängda)" }
+evidence = "#2102 same-label cluster 'Antal burar/tinor' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-ifjol"
+fields = { "label" = "Fiskat ifjol (antal fiskedagar, F1b)" }
+evidence = "#2102 same-label cluster 'Fiskat ifjol' (3 variables): judged different meaning, high confidence; F1b continues as F01 (same day-interval code list); F1a is a separate Nej/ja question."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-meter-fiskenat-fiskat-med"
+fields = { "label" = "Antal meter fiskenät (fiskat med)" }
+evidence = "#2102 same-label cluster 'Antal meter fiskenät' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-meter-fiskenat-forlorat-vattnet"
+fields = { "label" = "Antal meter fiskenät (förlorat i vattnet)" }
+evidence = "#2102 same-label cluster 'Antal meter fiskenät' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-meter-fiskenat-kopt"
+fields = { "label" = "Antal meter fiskenät (köpt)" }
+evidence = "#2102 same-label cluster 'Antal meter fiskenät' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:aux-civil"
+fields = { "label" = "Civilstånd (grupperad)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, high confidence; Aux_civil has two groups per its opdef; CIVIL has the detailed civil-status codes."
+
+[[statement]]
+kind = "set"
+subject = "var:aux-region"
+fields = { "label" = "Boenderegion (indelning i regioner)" }
+evidence = "#2102 same-label cluster 'Boenderegion' (2 variables): judged different meaning, high confidence; Opdefs: Aux_region divides into several regions, InlandKust into inland or coast."
+
+[[statement]]
+kind = "set"
+subject = "var:betydelse-mojlighet-behalla-fangad-fisk"
+fields = { "label" = "Möjligheten att behålla fångad fisk (betydelse)" }
+evidence = "#2102 same-label cluster 'Möjligheten att behålla fångad fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17c) vs uppfyllelse (F18c)."
+
+[[statement]]
+kind = "set"
+subject = "var:betydelse-mojlighet-fanga-fisk"
+fields = { "label" = "Möjligheten att fånga fisk (betydelse)" }
+evidence = "#2102 same-label cluster 'Möjligheten att fånga fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17a) vs uppfyllelse (F18a)."
+
+[[statement]]
+kind = "set"
+subject = "var:betydelse-mojlighet-fanga-stor-fisk"
+fields = { "label" = "Möjlighet att fånga stor fisk (betydelse)" }
+evidence = "#2102 same-label cluster 'Möjlighet att fånga stor fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17b) vs uppfyllelse (F18b)."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "label" = "Civilstånd (detaljerad)" }
+evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, high confidence; Aux_civil has two groups per its opdef; CIVIL has the detailed civil-status codes."
+
+[[statement]]
+kind = "set"
+subject = "var:collectionunitname"
+fields = { "label" = "Identitet (per urvalsperson och omgång)" }
+evidence = "#2102 same-label cluster 'Identitet' (2 variables): judged different meaning, high confidence; Opdefs: lopnr is unique per sampled person, collectionunitname per person and round."
+
+[[statement]]
+kind = "set"
+subject = "var:ejbat"
+fields = { "label" = "Fiskat från båt (hade inte fiskedagar från båt)" }
+evidence = "#2102 same-label cluster 'Fiskat från båt' (3 variables): judged different meaning, high confidence; Opdefs: inte fiskat från båt, privat båt, turbåt."
+
+[[statement]]
+kind = "set"
+subject = "var:ensam-fiskeplatsen-betydelse"
+fields = { "label" = "Att vara ensam på fiskeplatsen (betydelse)" }
+evidence = "#2102 same-label cluster 'Att vara ensam på fiskeplatsen' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17f) vs uppfyllelse (F18f), different answer scales."
+
+[[statement]]
+kind = "set"
+subject = "var:ensam-fiskeplatsen-uppfyllelse"
+fields = { "label" = "Att vara ensam på fiskeplatsen (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Att vara ensam på fiskeplatsen' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17f) vs uppfyllelse (F18f), different answer scales."
+
+[[statement]]
+kind = "set"
+subject = "var:f01"
+fields = { "label" = "Fiskat ifjol (antal fiskedagar, F01)" }
+evidence = "#2102 same-label cluster 'Fiskat ifjol' (3 variables): judged different meaning, high confidence; F1b continues as F01 (same day-interval code list); F1a is a separate Nej/ja question."
+
+[[statement]]
+kind = "set"
+subject = "var:f02a"
+fields = { "label" = "Fiskat januari-april (ja/nej)" }
+evidence = "#2102 same-label cluster 'Fiskat januari-april' (2 variables): judged different meaning, high confidence; Opdefs: F02 is the day-interval question for round januari-april, F02a the yes/no for the other rounds."
+
+[[statement]]
+kind = "set"
+subject = "var:f17-3"
+fields = { "label" = "Antal meter fiskenät (slängt)" }
+evidence = "#2102 same-label cluster 'Antal meter fiskenät' (4 variables): judged different meaning, high confidence; Opdefs: fiskat med, förlorat i vattnet, köpt, slängt."
+
+[[statement]]
+kind = "set"
+subject = "var:f1a"
+fields = { "label" = "Fiskat ifjol (ja/nej)" }
+evidence = "#2102 same-label cluster 'Fiskat ifjol' (3 variables): judged different meaning, high confidence; F1b continues as F01 (same day-interval code list); F1a is a separate Nej/ja question."
+
+[[statement]]
+kind = "set"
+subject = "var:f2a"
+fields = { "label" = "Fiskat (F2a)" }
+evidence = "#2102 same-label cluster 'Fiskat' (3 variables): judged different meaning, low confidence; F2a, F2c and F2e are three concurrent Nej/ja questions with a shared opdef that does not say how the letters differ."
+
+[[statement]]
+kind = "set"
+subject = "var:f2c"
+fields = { "label" = "Fiskat (F2c)" }
+evidence = "#2102 same-label cluster 'Fiskat' (3 variables): judged different meaning, low confidence; F2a, F2c and F2e are three concurrent Nej/ja questions with a shared opdef that does not say how the letters differ."
+
+[[statement]]
+kind = "set"
+subject = "var:f2e"
+fields = { "label" = "Fiskat (F2e)" }
+evidence = "#2102 same-label cluster 'Fiskat' (3 variables): judged different meaning, low confidence; F2a, F2c and F2e are three concurrent Nej/ja questions with a shared opdef that does not say how the letters differ."
+
+[[statement]]
+kind = "set"
+subject = "var:finns-barn-under-16-ar-hushall-fritidsfiskat"
+fields = { "label" = "Barn under 16 år som fritidsfiskat (ja/nej)" }
+evidence = "#2102 same-label cluster 'Barn under 16 år som fritidsfiskat' (2 variables): judged different meaning, high confidence; Opdefs: F13b is the number of children, F13a whether any exist."
+
+[[statement]]
+kind = "set"
+subject = "var:fiskat-januari-april-enkatomgang-januari-april"
+fields = { "label" = "Fiskat januari-april (antal dagar, omgång januari-april)" }
+evidence = "#2102 same-label cluster 'Fiskat januari-april' (2 variables): judged different meaning, high confidence; Opdefs: F02 is the day-interval question for round januari-april, F02a the yes/no for the other rounds."
+
+[[statement]]
+kind = "set"
+subject = "var:information-fiskeregler-betydelse"
+fields = { "label" = "Information om fiskeregler (betydelse)" }
+evidence = "#2102 same-label cluster 'Information om fiskeregler' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17g) vs uppfyllelse (F18g)."
+
+[[statement]]
+kind = "set"
+subject = "var:information-fiskeregler-uppfyllelse"
+fields = { "label" = "Information om fiskeregler (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Information om fiskeregler' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17g) vs uppfyllelse (F18g)."
+
+[[statement]]
+kind = "set"
+subject = "var:inlandkust"
+fields = { "label" = "Boenderegion (inland eller kust)" }
+evidence = "#2102 same-label cluster 'Boenderegion' (2 variables): judged different meaning, high confidence; Opdefs: Aux_region divides into several regions, InlandKust into inland or coast."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-annan-anledning"
+fields = { "label" = "Inte fiskat (annan anledning)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-ekonomiska-skal"
+fields = { "label" = "Inte fiskat (ekonomiska skäl)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-fiskar-andra-lander-an-sverige"
+fields = { "label" = "Inte fiskat (fiskar i andra länder än Sverige)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-fiskar-andra-tider-aret"
+fields = { "label" = "Inte fiskat (fiskar andra tider på året)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-for-liten-mojlighet-fa-fisk"
+fields = { "label" = "Inte fiskat (för liten möjlighet att få fisk)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-halsoskal"
+fields = { "label" = "Inte fiskat (hälsoskäl)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-inte-intresserad-fiske"
+fields = { "label" = "Inte fiskat (inte intresserad av fiske)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-saknar-information-var-fiska-regler"
+fields = { "label" = "Inte fiskat (saknar information om var man får fiska eller vilka regler som gäller)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:inte-fiskat-tidsbrist"
+fields = { "label" = "Inte fiskat (tidsbrist)" }
+evidence = "#2102 same-label cluster 'Inte fiskat' (9 variables): judged different meaning, high confidence; Opdefs name nine different reasons for not fishing."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-fas1"
+fields = { "label" = "Lilla n (fas 1)" }
+evidence = "#2102 same-label cluster 'Lilla n' (2 variables): judged different meaning, high confidence; Opdefs: fas 1 (first time in the survey) vs fas 2 (panel group)."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-fas2"
+fields = { "label" = "Lilla n (fas 2)" }
+evidence = "#2102 same-label cluster 'Lilla n' (2 variables): judged different meaning, high confidence; Opdefs: fas 1 (first time in the survey) vs fas 2 (panel group)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields = { "label" = "Identitet (per urvalsperson)" }
+evidence = "#2102 same-label cluster 'Identitet' (2 variables): judged different meaning, high confidence; Opdefs: lopnr is unique per sampled person, collectionunitname per person and round."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-behalla-fangad-fisk-uppfyllelse"
+fields = { "label" = "Möjligheten att behålla fångad fisk (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Möjligheten att behålla fångad fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17c) vs uppfyllelse (F18c)."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-fanga-fisk-uppfyllelse"
+fields = { "label" = "Möjligheten att fånga fisk (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Möjligheten att fånga fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17a) vs uppfyllelse (F18a)."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-fanga-stor-fisk-uppfyllelse"
+fields = { "label" = "Möjlighet att fånga stor fisk (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Möjlighet att fånga stor fisk' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17b) vs uppfyllelse (F18b)."
+
+[[statement]]
+kind = "set"
+subject = "var:naturupplevelse-fritidsfiske-betydelse"
+fields = { "label" = "Naturupplevelse vid fritidsfiske (betydelse)" }
+evidence = "#2102 same-label cluster 'Naturupplevelse vid fritidsfiske' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17d) vs uppfyllelse (F18d)."
+
+[[statement]]
+kind = "set"
+subject = "var:naturupplevelse-fritidsfiske-uppfyllelse"
+fields = { "label" = "Naturupplevelse vid fritidsfiske (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Naturupplevelse vid fritidsfiske' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17d) vs uppfyllelse (F18d)."
+
+[[statement]]
+kind = "set"
+subject = "var:omgang"
+fields = { "label" = "Enkätomgång (aktuell omgång)" }
+evidence = "#2102 same-label cluster 'Enkätomgång' (2 variables): judged different meaning, high confidence; Opdefs: omgang is the current round, startomgang the first round the person was in the sample."
+
+[[statement]]
+kind = "set"
+subject = "var:pris-fiskekort-betydelse"
+fields = { "label" = "Pris på fiskekort (betydelse)" }
+evidence = "#2102 same-label cluster 'Pris på fiskekort' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17h) vs uppfyllelse (F18h)."
+
+[[statement]]
+kind = "set"
+subject = "var:pris-fiskekort-uppfyllelse"
+fields = { "label" = "Pris på fiskekort (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Pris på fiskekort' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17h) vs uppfyllelse (F18h)."
+
+[[statement]]
+kind = "set"
+subject = "var:privatbat"
+fields = { "label" = "Fiskat från båt (privat båt)" }
+evidence = "#2102 same-label cluster 'Fiskat från båt' (3 variables): judged different meaning, high confidence; Opdefs: inte fiskat från båt, privat båt, turbåt."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "label" = "Sammanräknad förvärvsinkomst (grupperad)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; Aux_ink is grouped into four income classes per its opdef; CSFVI is the amount."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-aret-innan-referensaret"
+fields = { "label" = "Sammanräknad förvärvsinkomst (belopp)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; Aux_ink is grouped into four income classes per its opdef; CSFVI is the amount."
+
+[[statement]]
+kind = "set"
+subject = "var:startomgang"
+fields = { "label" = "Enkätomgång (första omgång i urvalet)" }
+evidence = "#2102 same-label cluster 'Enkätomgång' (2 variables): judged different meaning, high confidence; Opdefs: omgang is the current round, startomgang the first round the person was in the sample."
+
+[[statement]]
+kind = "set"
+subject = "var:storan-fas1"
+fields = { "label" = "Stora N (fas 1)" }
+evidence = "#2102 same-label cluster 'Stora N' (2 variables): judged different meaning, high confidence; Opdefs: fas 1 vs fas 2."
+
+[[statement]]
+kind = "set"
+subject = "var:storan-fas2"
+fields = { "label" = "Stora N (fas 2)" }
+evidence = "#2102 same-label cluster 'Stora N' (2 variables): judged different meaning, high confidence; Opdefs: fas 1 vs fas 2."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-fas1"
+fields = { "label" = "Stratumbeteckning objekt (fas 1)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (2 variables): judged different meaning, high confidence; Opdefs: stratum for fas 1 (first draw) vs fas 2 (persons answering several times)."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-fas2"
+fields = { "label" = "Stratumbeteckning objekt (fas 2)" }
+evidence = "#2102 same-label cluster 'Stratumbeteckning objekt' (2 variables): judged different meaning, high confidence; Opdefs: stratum for fas 1 (first draw) vs fas 2 (persons answering several times)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillganglighet-fritidsfiske-betydelse"
+fields = { "label" = "Tillgänglighet vid fritidsfiske (betydelse)" }
+evidence = "#2102 same-label cluster 'Tillgänglighet vid fritidsfiske' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17e) vs uppfyllelse (F18e)."
+
+[[statement]]
+kind = "set"
+subject = "var:tillganglighet-fritidsfiske-uppfyllelse"
+fields = { "label" = "Tillgänglighet vid fritidsfiske (uppfyllelse)" }
+evidence = "#2102 same-label cluster 'Tillgänglighet vid fritidsfiske' (2 variables): judged different meaning, high confidence; Opdefs: betydelse (F17e) vs uppfyllelse (F18e)."
+
+[[statement]]
+kind = "set"
+subject = "var:turbat"
+fields = { "label" = "Fiskat från båt (turbåt)" }
+evidence = "#2102 same-label cluster 'Fiskat från båt' (3 variables): judged different meaning, high confidence; Opdefs: inte fiskat från båt, privat båt, turbåt."
+
+[[statement]]
+kind = "set"
+subject = "var:f2b"
+fields = { "label" = "Antal fiskedagar (F2b)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f2d"
+fields = { "label" = "Antal fiskedagar (f2d)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f2f"
+fields = { "label" = "Antal fiskedagar (F2f)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-april-augusti-december"
+fields = { "label" = "Antal fiskedagar (F03b_04, april i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-februari-juni-oktober"
+fields = { "label" = "Antal fiskedagar (F03b_02, februari i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedagar-mars-juli-november"
+fields = { "label" = "Antal fiskedagar (F03b_03, mars i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:f03b-0"
+fields = { "label" = "Antal fiskedagar (F03b_01, januari i omgången januari-april)" }
+evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."

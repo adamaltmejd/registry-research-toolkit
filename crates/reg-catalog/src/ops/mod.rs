@@ -85,41 +85,8 @@ impl Server {
     }
 }
 
-/// `shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.
-#[derive(Clone, Serialize, ToSchema)]
-pub struct Period {
-    #[schema(required = true)]
-    start: Option<String>,
-    #[schema(required = true)]
-    end: Option<String>,
-}
-
-impl Period {
-    /// The period of the day numbers `[start, end)`; an end equal to its `open`
-    /// sentinel (`meta` `open_start`, `open_end`) is `null`.
-    #[must_use]
-    pub(crate) fn new(open: (i64, i64), start: i64, end: i64) -> Self {
-        Self {
-            start: (start != open.0).then(|| iso_day(start)),
-            end: (end != open.1).then(|| iso_day(end)),
-        }
-    }
-}
-
-/// The ISO date of a catalog day number (days from 1970-01-01): the inverse of
-/// `reg_core::iso_day_number`, Howard Hinnant's `civil_from_days`.
-fn iso_day(day: i64) -> String {
-    let z = day + 719_468;
-    let era = z.div_euclid(146_097);
-    let doe = z - era * 146_097;
-    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2) / 153;
-    let d = doy - (153 * mp + 2) / 5 + 1;
-    let m = if mp < 10 { mp + 3 } else { mp - 9 };
-    let y = yoe + era * 400 + i64::from(m <= 2);
-    format!("{y:04}-{m:02}-{d:02}")
-}
+pub use reg_core::issue::Period;
+use reg_core::issue::iso_day;
 
 /// A parameter: a query parameter, or a path parameter when the route names it as
 /// `{name}`.

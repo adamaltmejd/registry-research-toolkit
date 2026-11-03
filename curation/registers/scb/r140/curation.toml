@@ -628,3 +628,51 @@ kind = "set"
 subject = "set:vattenforbrukning"
 fields = { "label" = "Vattenförbrukning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (kod)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; lan holds the county code list, länsnamn the name as a concurrent column."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lansnamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; lan holds the county code list, länsnamn the name as a concurrent column."
+
+[[statement]]
+kind = "set"
+subject = "var:vpberg"
+fields = { "label" = "Använt uppvärmningssätt av bergvärmepump (VpBerg)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av bergvärmepump' (2 variables): judged different meaning, low confidence; VpBerg and vpumpberg coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vpfran"
+fields = { "label" = "Använt uppvärmningssätt av frånluftsvärmepump (VpFran)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av frånluftsvärmepump' (2 variables): judged different meaning, low confidence; VpFran and vpumpfran coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vpumpberg"
+fields = { "label" = "Använt uppvärmningssätt av bergvärmepump (vpumpberg)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av bergvärmepump' (2 variables): judged different meaning, low confidence; VpBerg and vpumpberg coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vpumpfran"
+fields = { "label" = "Använt uppvärmningssätt av frånluftsvärmepump (vpumpfran)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av frånluftsvärmepump' (2 variables): judged different meaning, low confidence; VpFran and vpumpfran coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vpumpute"
+fields = { "label" = "Använt uppvärmningssätt av utevärmepump (vpumpute)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av utevärmepump' (2 variables): judged different meaning, low confidence; vpumpute and VpUte coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:vpute"
+fields = { "label" = "Använt uppvärmningssätt av utevärmepump (VpUte)" }
+evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av utevärmepump' (2 variables): judged different meaning, low confidence; vpumpute and VpUte coexist in one table with the same definition and no opdef; raw column codes."

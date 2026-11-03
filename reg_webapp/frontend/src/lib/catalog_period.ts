@@ -9,6 +9,16 @@ export function catalogLastDate(period: CatalogPeriod): string | null {
   return last.toISOString().slice(0, 10);
 }
 
+/** A reg-core period spelling for reading: each range with an en dash, the
+ * segments comma-spaced (`2005–2008, 2012`). Presentation only; the wire with
+ * `..` stays reg-core's. */
+export function periodText(wire: string): string {
+  return wire
+    .split(",")
+    .map((segment) => segment.replace("..", "–"))
+    .join(", ");
+}
+
 export function catalogPeriodLabel(period: CatalogPeriod): string {
   if (period.start === null && period.end === null) return "Unbounded";
   const end = catalogLastDate(period);
@@ -16,7 +26,7 @@ export function catalogPeriodLabel(period: CatalogPeriod): string {
     return `From ${period.start?.endsWith("-01-01") ? period.start.slice(0, 4) : period.start}`;
   if (period.start === null)
     return `Through ${end.endsWith("-12-31") ? end.slice(0, 4) : end}`;
-  return renderIntervals([[period.start, end]]);
+  return periodText(renderIntervals([[period.start, end]]));
 }
 
 /** Project periods use the same inclusive renderer as catalog periods. */
@@ -25,7 +35,7 @@ export function sourcePeriodLabel(period: unknown): string | null {
   if ("error" in parsed) return null;
   return parsed.intervals === null
     ? "Unbounded"
-    : renderIntervals(parsed.intervals);
+    : periodText(renderIntervals(parsed.intervals));
 }
 
 /** Coalesce half-open segment periods before displaying coverage runs. */

@@ -1939,32 +1939,32 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6894\n\nExa
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: DIALUP @2008-01-01..2008-12-31 where key = 'v17651' and release = '2008'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: DIALUP @2009-01-01..2009-12-31 where key = 'v17651' and release = '2009'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: DIALUP @2010-01-01..2010-12-31 where key = 'v17651' and release = '2010'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: DIALUP @2011-01-01..2011-12-31 where key = 'v17651' and release = '2011'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: DIALUP @2012-01-01..2012-12-31 where key = 'v17651' and release = '2012'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
 
 [[statement]]
 kind = "assert"
@@ -2155,50 +2155,50 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7024\n\nExa
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: BBOTH @2008-01-01..2008-12-31 where key = 'v17653' and release = '2008'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: BBOTH @2009-01-01..2009-12-31 where key = 'v17653' and release = '2009'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: BBOTH @2010-01-01..2010-12-31 where key = 'v17653' and release = '2010'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: BBOTH @2011-01-01..2011-12-31 where key = 'v17653' and release = '2011'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: BBOTH @2012-01-01..2012-12-31 where key = 'v17653' and release = '2012'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: MOBOTH @2010-01-01..2010-12-31 where key = 'v17652' and release = '2010'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet (företag)", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder mobil anslutning via GSM-nätet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (MOBOTH) vs befolkningens-it-anvandning (MPHNAR1); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: MOBOTH @2011-01-01..2011-12-31 where key = 'v17652' and release = '2011'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet (företag)", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder mobil anslutning via GSM-nätet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (MOBOTH) vs befolkningens-it-anvandning (MPHNAR1); same definition."
 
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: MOBOTH @2012-01-01..2012-12-31 where key = 'v17652' and release = '2012'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet (företag)", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying.\n\n#2102 same-label cluster 'Använder mobil anslutning via GSM-nätet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (MOBOTH) vs befolkningens-it-anvandning (MPHNAR1); same definition."
 
 [[statement]]
 kind = "assert"
@@ -19955,3 +19955,147 @@ kind = "set"
 subject = "set:yrke-i-huvudsysslan"
 fields = { "label" = "Yrke i huvudsysslan" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:koper-fillagring-som-molntjanst-cc-pay"
+fields = { "label" = "Köper fillagring som molntjänst (privatperson)" }
+evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."
+
+[[statement]]
+kind = "set"
+subject = "var:koper-fillagring-som-molntjanst-cc-pfil"
+fields = { "label" = "Köper fillagring som molntjänst (företag)" }
+evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (kod)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lannamn"
+fields = { "label" = "Län (namn)" }
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
+
+[[statement]]
+kind = "set"
+subject = "var:lart-datorer-internet-annat-satt-klartext"
+fields = { "label" = "Lärt om datorer och internet på annat sätt (fritext)" }
+evidence = "#2102 same-label cluster 'Lärt om datorer och internet på annat sätt' (2 variables): judged different meaning, high confidence; DatF5G is the coded answer, DatF5Gtxt the free-text specification (opdef: anges i klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:temp36-text"
+fields = { "label" = "Företaget använde AI för annat (fritext)" }
+evidence = "#2102 same-label cluster 'Företaget använde AI för annat' (2 variables): judged different meaning, high confidence; temp36 is the coded answer, temp36_text the free-text specification."
+
+[[statement]]
+kind = "set"
+subject = "var:temp46-text"
+fields = { "label" = "AI: Hinder: Annat (fritext)" }
+evidence = "#2102 same-label cluster 'AI: Hinder: Annat' (2 variables): judged different meaning, high confidence; temp46 is the coded answer, temp46_text the free-text specification."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: BBOTH @2013-01-01..2013-12-31"
+fields = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (företag)" }
+evidence = "#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-annan-fast-bredbandsanslutning-till-internet-bbwfx"
+fields = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk (privatperson)" }
+evidence = "#2102 same-label cluster 'Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (BBOTH) vs befolkningens-it-anvandning (BBWFX); same definition."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: MOBOTH @2013-01-01..2014-12-31"
+fields = { "label" = "Använder mobil anslutning via GSM-nätet (företag)" }
+evidence = "#2102 same-label cluster 'Använder mobil anslutning via GSM-nätet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (MOBOTH) vs befolkningens-it-anvandning (MPHNAR1); same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-mobil-anslutning-via-gsm-natet-mphnar1"
+fields = { "label" = "Använder mobil anslutning via GSM-nätet (privatperson)" }
+evidence = "#2102 same-label cluster 'Använder mobil anslutning via GSM-nätet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (MOBOTH) vs befolkningens-it-anvandning (MPHNAR1); same definition."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-mobiltelefon-med-3g-4g-for-datc4a"
+fields = { "label" = "Använder mobiltelefon med 3G,4G för internetuppkoppling (personer)" }
+evidence = "#2102 same-label cluster 'Använder mobiltelefon med 3G,4G för internetuppkoppling' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Person survey (befolkningens-it-anvandning, DatC4A) vs company survey (it-anvandning-i-foretag, EMPMD1PCT, unit Procent); same definition text."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-mobiltelefon-med-3g-4g-for-empmd1pct"
+fields = { "label" = "Använder mobiltelefon med 3G,4G för internetuppkoppling (företag)" }
+evidence = "#2102 same-label cluster 'Använder mobiltelefon med 3G,4G för internetuppkoppling' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Person survey (befolkningens-it-anvandning, DatC4A) vs company survey (it-anvandning-i-foretag, EMPMD1PCT, unit Procent); same definition text."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: DIALUP @2013-01-01..2013-12-31"
+fields = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)" }
+evidence = "#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-traditionellt-modem-eller-isdn-for-dialup1"
+fields = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (privatperson)" }
+evidence = "#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
+
+[[statement]]
+kind = "set"
+subject = "var:datd2f"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (DatD2F)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:gov12rtx-oth"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (GOV12RTX_OTH)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:d2g"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (C2g/D2g)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:c2f"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (C2f)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:c2ftxt"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (C2ftxt)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:c2h"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (C2h)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same question text in all members; coding is 1/2/8/9 (DatD2F to C2f 2018-19) then 0/1 (C2F 2019 on, C2h). Qualifiers must hold for every spelling the pid carries, and nothing in the text says C2ftxt is free text, so it takes its code."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad"
+fields = { "label" = "Sysselsättningstyp skapad (Sy, Sy2, H8, H8X2txt)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad-h8x1"
+fields = { "label" = "Sysselsättningstyp skapad (H8X1)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp-skapad-h9txt"
+fields = { "label" = "Sysselsättningstyp skapad (H9txt)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."

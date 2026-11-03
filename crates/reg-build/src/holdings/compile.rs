@@ -170,14 +170,13 @@ fn notice(
     spans: Option<Span>,
     detail: (&[Span], &[Span], &[Span]),
     message: &str,
-    locator: &str,
-) -> Result<(), String> {
-    db.execute("INSERT INTO holding_notice(holding_id,column_id,code,start,end,requested,documented,admitted,message,locator)
-      VALUES(?,?,?,?,?,?,?,?,?,?)",params![holding,column,code,spans.map(|s|s.0),spans.map(|s|s.1),
+) -> Result<i64, String> {
+    db.execute("INSERT INTO holding_notice(holding_id,column_id,code,start,end,requested,documented,admitted,message)
+      VALUES(?,?,?,?,?,?,?,?,?)",params![holding,column,code,spans.map(|s|s.0),spans.map(|s|s.1),
       serde_json::to_string(detail.0).map_err(|e|e.to_string())?,serde_json::to_string(detail.1).map_err(|e|e.to_string())?,
-      serde_json::to_string(detail.2).map_err(|e|e.to_string())?,message,locator])
+      serde_json::to_string(detail.2).map_err(|e|e.to_string())?,message])
       .map_err(|e|e.to_string())?;
-    Ok(())
+    Ok(db.last_insert_rowid())
 }
 
 #[derive(Clone)]
@@ -187,7 +186,6 @@ pub(super) struct Candidate {
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
-    locator: String,
 }
 
 pub(super) fn candidates(
@@ -257,7 +255,6 @@ pub(super) fn candidates(
                         carried: mapping.carried,
                         caveat: mapping.caveat.clone(),
                         window: mapping.delivery.clone(),
-                        locator: mapping.locator.clone(),
                     });
                 }
             }
@@ -282,7 +279,6 @@ pub(super) fn candidates(
                         carried: false,
                         caveat: None,
                         window: None,
-                        locator: table.locator.clone(),
                     });
                 }
             }
@@ -293,7 +289,13 @@ pub(super) fn candidates(
 
 pub(super) enum Placement<'a> {
     Accepted(Span, &'a Candidate),
-    Blocked(Span, &'static str, &'static str),
+    /// The rivals left unplaced, as distinct (table, variable) pairs.
+    Blocked(
+        Span,
+        &'static str,
+        &'static str,
+        BTreeSet<(&'a str, &'a str)>,
+    ),
 }
 
 /// Apply interval-local ownership for emission.
@@ -322,10 +324,13 @@ pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, Strin
             if active.is_empty() {
                 continue;
             }
-            let owners: BTreeSet<_> = active.iter().map(|c| &c.segment.variable).collect();
-            if owners.len() > 1 {
+            let rivals: BTreeSet<_> = active
+                .iter()
+                .map(|c| (c.segment.table.as_str(), c.segment.variable.as_str()))
+                .collect();
+            if rivals.len() > 1 {
                 placements.push(Placement::Blocked(span, "ambiguous_delivered_owners",
-                    "Distinct documented owners claim this physical column over the contested interval"));
+                    "Distinct documented owners claim this physical column over the contested interval", rivals));
                 continue;
             }
             if active.iter().any(|c| c.segment.state == "ambiguous") {
@@ -333,6 +338,7 @@ pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, Strin
                     span,
                     "ambiguous_catalog_segment",
                     "Catalog ambiguity cannot be cleared by a physical owner choice",
+                    rivals,
                 ));
                 continue;
             }
@@ -361,7 +367,6 @@ fn placements(
     column: i64,
     candidates: &[Candidate],
     owed: &[Span],
-    locator: &str,
     keys: &[input::RowKey],
 ) -> Result<Vec<Segment>, String> {
     if let Some(key) = keys.iter().find(|key| key.hold.is_some()) {
@@ -378,7 +383,6 @@ fn placements(
             None,
             (owed, &[], &[]),
             key.hold.as_deref().expect("held key"),
-            &key.locator,
         )?;
         return Ok(Vec::new());
     }
@@ -388,9 +392,9 @@ fn placements(
     for placement in plan(candidates)? {
         let (span, c) = match placement {
             Placement::Accepted(span, c) => (span, c),
-            Placement::Blocked(span, code, message) => {
+            Placement::Blocked(span, code, message, rivals) => {
                 documented.push(span);
-                notice(
+                let id = notice(
                     db,
                     holding,
                     Some(column),
@@ -398,15 +402,21 @@ fn placements(
                     Some(span),
                     (&[], &[], &[]),
                     message,
-                    locator,
                 )?;
+                for (table, variable) in rivals {
+                    db.execute(
+                        "INSERT INTO holding_notice_candidate VALUES(?,?,?)",
+                        params![id, table, variable],
+                    )
+                    .map_err(|e| e.to_string())?;
+                }
                 continue;
             }
         };
         documented.push(span);
-        db.execute("INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,caveat,window,locator)
-              VALUES(?,?,?,?,?,?,?,?,?,?)",params![column,c.segment.table,c.segment.variable,span.0,span.1,c.segment.role,
-              c.carried,c.caveat,c.window,c.locator]).map_err(|_|"inventory_cell_conflict: duplicate placement".to_owned())?;
+        db.execute("INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried,caveat,window)
+              VALUES(?,?,?,?,?,?,?,?,?)",params![column,c.segment.table,c.segment.variable,span.0,span.1,c.segment.role,
+              c.carried,c.caveat,c.window]).map_err(|_|"inventory_cell_conflict: duplicate placement".to_owned())?;
         if c.segment.state == "preliminary" {
             notice(
                 db,
@@ -416,7 +426,6 @@ fn placements(
                 Some(span),
                 (&[], &[], &[]),
                 "Documented coverage is preliminary",
-                &c.locator,
             )?;
         }
         if let Some(caveat) = &c.caveat {
@@ -428,7 +437,6 @@ fn placements(
                 Some(span),
                 (&[], &[], &[]),
                 caveat,
-                &c.locator,
             )?;
         }
         admitted.push(span);
@@ -444,7 +452,6 @@ fn placements(
             None,
             (owed, &merge(documented), &[]),
             "No accepted semantic placement; retained in the coverage denominator",
-            locator,
         )?;
     } else if !covered(owed, &admitted) {
         notice(
@@ -455,7 +462,6 @@ fn placements(
             None,
             (owed, &merge(documented), &admitted),
             "Physical reach intersects documented orderable coverage",
-            locator,
         )?;
     }
     Ok(accepted)
@@ -467,7 +473,6 @@ fn storage_findings(
     column: i64,
     storage: &census::Storage,
     segments: &[Segment],
-    locator: &str,
 ) -> Result<(), String> {
     let physical = storage.data_type.to_ascii_lowercase();
     let storage_family = match physical.as_str() {
@@ -521,7 +526,6 @@ fn storage_findings(
             None,
             (&[], &[], &[]),
             "Storage facts need review against adopted catalog typing",
-            locator,
         )?;
     }
     Ok(())
@@ -591,6 +595,7 @@ pub(super) fn write(
     let mut mapped = 0usize;
     let mut unmatched = 0usize;
     let mut next_column = 1i64;
+    let mut file_names = BTreeMap::<String, String>::new();
     // Parents and row-period columns reference rows filled later in this transaction.
     tx.execute_batch("PRAGMA defer_foreign_keys=ON;")
         .map_err(|e| e.to_string())?;
@@ -638,13 +643,25 @@ pub(super) fn write(
                 .or_else(|| (schema.len() == 1).then(|| *schema.first().expect("one schema")));
             let table_type = (kinds.len() == 1).then(|| *kinds.first().expect("one kind"));
             let file_name = reg_resolve::slugify(&table.name).replace('-', "_");
-            if file_name.is_empty() {
-                return Err("holdings_filename_invalid: empty slug".into());
+            // The runner's rules (reg_core::manifest), applied at publication so a
+            // name it would refuse never reaches an order. Slugs are lowercase, so a
+            // case-insensitive collision is an exact one here.
+            reg_core::manifest::safe_file_name(&file_name).map_err(|reason| {
+                format!(
+                    "holdings_filename_invalid: locator={}: file name {file_name:?} is {reason}",
+                    authored.locator
+                )
+            })?;
+            if let Some(other) = file_names.insert(file_name.clone(), table.name.clone()) {
+                return Err(format!(
+                    "holdings_filename_invalid: locator={}: file name {file_name:?} is also physical table {other:?}'s",
+                    authored.locator
+                ));
             }
             tx.execute("INSERT INTO holding_table(id,physical_name,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
-          projection_token,period_encoding,reason,locator) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,schema_name,table_type,
+          projection_token,period_encoding,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,schema_name,table_type,
           file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,authored.partition,projection,authored.projection_token,
-          Option::<String>::None,authored.reason,authored.locator]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
+          Option::<String>::None,authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
                 tx.execute(
                     "INSERT INTO holding_period VALUES(?,?,?)",
@@ -709,8 +726,6 @@ pub(super) fn write(
                             "inventory_cell_conflict: hold/unmap cannot carry mappings".into()
                         );
                     }
-                    let locator =
-                        decision.map_or(authored.locator.as_str(), |c| c.locator.as_str());
                     let eligible: Vec<_> = column
                         .storage
                         .iter()
@@ -725,7 +740,7 @@ pub(super) fn write(
                         "candidate"
                     };
                     tx.execute(
-                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         params![
                             cid,
                             id,
@@ -741,7 +756,6 @@ pub(super) fn write(
                             disposition,
                             hold.or(unmap),
                             decision.and_then(|c| c.follow_up.as_deref()),
-                            locator
                         ],
                     )
                     .map_err(|_| {
@@ -784,7 +798,6 @@ pub(super) fn write(
                                     "{reason} Follow-up: {}",
                                     mapping.follow_up.as_deref().expect("validated follow-up")
                                 ),
-                                &mapping.locator,
                             )?;
                         } else if mapping.follow_up.is_some() {
                             return Err(
@@ -796,8 +809,7 @@ pub(super) fn write(
                         return Ok(());
                     }
                     let candidates = candidates(authored, column, decision, &owed, &index)?;
-                    let accepted =
-                        placements(&tx, id, cid, &candidates, &owed, locator, &authored.key)?;
+                    let accepted = placements(&tx, id, cid, &candidates, &owed, &authored.key)?;
                     if accepted.is_empty() && authored.key.iter().any(|key| key.hold.is_some()) {
                         return Ok(());
                     }
@@ -811,7 +823,6 @@ pub(super) fn write(
                             None,
                             (&[], &[], &[]),
                             "Storage column has no accepted semantic owner",
-                            locator,
                         )?;
                     } else {
                         if schema_name.is_none() || table_type.is_none() {
@@ -823,7 +834,7 @@ pub(super) fn write(
                 } else {
                     "holdings_storage_ambiguous: orderable column needs exactly one storage fact"
                 })?;
-                        storage_findings(&tx, id, cid, storage, &accepted, locator)?;
+                        storage_findings(&tx, id, cid, storage, &accepted)?;
                     }
                     Ok(())
                 })();

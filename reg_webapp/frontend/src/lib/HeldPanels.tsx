@@ -1,9 +1,7 @@
-import { Button, Tooltip, TooltipTrigger } from "react-aria-components";
 import { type Coverage, getCoverage } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogWords } from "./catalog_labels";
 import { catalogPeriodLabel } from "./catalog_period";
-import findingStyles from "./Finding.module.css";
 import styles from "./HeldPanels.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -14,22 +12,6 @@ import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
 type Placement = NonNullable<Coverage["held"]>[number];
-
-function Caveat({ text }: { text: string }) {
-  return (
-    <TooltipTrigger delay={600}>
-      <Button className={findingStyles.titleButton}>Caveat</Button>
-      <Tooltip
-        className={({ isEntering, isExiting }) =>
-          `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
-        }
-        style={{ zIndex: "var(--z-popover)" }}
-      >
-        {text}
-      </Tooltip>
-    </TooltipTrigger>
-  );
-}
 
 function HeldGroup({
   physicalTable,
@@ -47,18 +29,24 @@ function HeldGroup({
   const sameCarried = rows.every((row) => row.carried === first.carried);
   const sameCaveat = rows.every((row) => row.caveat === first.caveat);
   const notesVary = !sameCarried || !sameCaveat;
+  // Facts every placement shares, stated once. A caveat is text, not a
+  // tooltip: a tooltip opens on hover or focus only, so a touch screen never
+  // showed it (#2110).
+  const facts = [
+    ...(sameRole ? [{ label: "Role", value: catalogWords(first.role) }] : []),
+    ...(sameCarried && first.carried
+      ? [{ label: "Carried forward", value: "Yes" }]
+      : []),
+    ...(sameCaveat && first.caveat
+      ? [{ label: "Caveat", value: first.caveat }]
+      : []),
+  ];
   return (
     <section className={styles.group}>
       <h3 className={`micro-label ${styles.heading}`}>
         <code>{physicalTable}</code>
       </h3>
-      {sameRole && (
-        <KeyValue rows={[{ label: "Role", value: catalogWords(first.role) }]} />
-      )}
-      {sameCarried && first.carried && (
-        <KeyValue rows={[{ label: "Carried forward", value: "Yes" }]} />
-      )}
-      {sameCaveat && first.caveat && <Caveat text={first.caveat} />}
+      {facts.length > 0 && <KeyValue rows={facts} />}
       <DataTable
         columns={[
           ...(showVariable
@@ -93,7 +81,7 @@ function HeldGroup({
               return (
                 <span className={styles.notes}>
                   {!sameCarried && row.carried && <span>Carried forward</span>}
-                  {!sameCaveat && row.caveat && <Caveat text={row.caveat} />}
+                  {!sameCaveat && row.caveat && <span>{row.caveat}</span>}
                 </span>
               );
           }
@@ -126,7 +114,6 @@ export function HeldPanels({
       </StatusRow>
     );
   const held = resource.data?.held;
-  const occurrences = resource.data?.steward_occurrences;
   const groups = new Map<string, Placement[]>();
   for (const row of held ?? []) {
     const group = groups.get(row.physical_table);
@@ -152,34 +139,6 @@ export function HeldPanels({
               ))}
             </div>
           )}
-        </Panel>
-      )}
-      {!!occurrences?.length && (
-        <Panel title="Steward documentation">
-          <div className={styles.groups}>
-            {occurrences.map((row) => (
-              <section className={styles.group} key={JSON.stringify(row)}>
-                <h3 className={`micro-label ${styles.heading}`}>
-                  <ColumnChip name={row.spelling} />
-                </h3>
-                <KeyValue
-                  rows={[
-                    { label: "Label", value: row.label ?? "Not stated" },
-                    {
-                      label: "Period",
-                      value: catalogPeriodLabel(row.period),
-                      mono: true,
-                    },
-                    { label: "Type", value: catalogWords(row.type) },
-                    {
-                      label: "Definition",
-                      value: row.definition ?? "Not stated",
-                    },
-                  ]}
-                />
-              </section>
-            ))}
-          </div>
         </Panel>
       )}
     </>

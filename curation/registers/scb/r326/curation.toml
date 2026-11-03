@@ -768,3 +768,135 @@ kind = "set"
 subject = "set:utbildningsstart"
 fields = { "label" = "Utbildningsstart" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "label" = "Kommun (folkbokföringskommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: HKom is the kommun där eleven är folkbokförd; Kommun is the kommunkod för studieorten."
+
+[[statement]]
+kind = "set"
+subject = "var:fullfoljt-efter"
+fields = { "label" = "Fullföljt utbildning (efter referensåret)" }
+evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judged different meaning, medium confidence; FullF and Fullfoljt_Under share the opdef (fullföljt under referensåret) and adjacent periods; Fullfoljt_Efter is fullföljs efter referensåret; Resultat is a three-value outcome."
+
+[[statement]]
+kind = "set"
+subject = "var:fullfoljt-under"
+fields = { "label" = "Fullföljt utbildning (Fullfoljt_Under)" }
+evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judged different meaning, medium confidence; FullF and Fullfoljt_Under share the opdef (fullföljt under referensåret) and adjacent periods; Fullfoljt_Efter is fullföljs efter referensåret; Resultat is a three-value outcome."
+
+[[statement]]
+kind = "set"
+subject = "var:fullfoljt-utbildning"
+fields = { "label" = "Fullföljt utbildning (under referensåret)" }
+evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judged different meaning, medium confidence; FullF and Fullfoljt_Under share the opdef (fullföljt under referensåret) and adjacent periods; Fullfoljt_Efter is fullföljs efter referensåret; Resultat is a three-value outcome."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod"
+fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, 4-ställig kod)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod-kodad"
+fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, 1-ställig kod)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorinamn"
+fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, namn)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (studieort)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: HKom is the kommun där eleven är folkbokförd; Kommun is the kommunkod för studieorten."
+
+[[statement]]
+kind = "set"
+subject = "var:resultat"
+fields = { "label" = "Fullföljt utbildning (resultat: fullföljt, pågående, ej fullföljt)" }
+evidence = "#2102 same-label cluster 'Fullföljt utbildning' (4 variables): judged different meaning, medium confidence; FullF and Fullfoljt_Under share the opdef (fullföljt under referensåret) and adjacent periods; Fullfoljt_Efter is fullföljs efter referensåret; Resultat is a three-value outcome."
+
+[[statement]]
+kind = "set"
+subject = "var:skola"
+fields = { "label" = "Skola (namn)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; SkolKod is the school code (opdef) and Namn the school name (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "label" = "Skola (kod)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; SkolKod is the school code (opdef) and Namn the school name (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag"
+fields = { "label" = "Studieväg (kod)" }
+evidence = "#2102 same-label cluster 'Studieväg' (2 variables): judged different meaning, high confidence; StvKod is the studieväg code, StvNamn the name in clear text (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-namn"
+fields = { "label" = "Studieväg (namn)" }
+evidence = "#2102 same-label cluster 'Studieväg' (2 variables): judged different meaning, high confidence; StvKod is the studieväg code, StvNamn the name in clear text (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-1-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grov nivå)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2000Niva_1_Mor is the grov one-digit level, _3_Mor the three-digit level; different code lists, concurrent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-3-mor"
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2000Niva_1_Mor is the grov one-digit level, _3_Mor the three-digit level; different code lists, concurrent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, grov nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN2000Niva_1 is the grov one-digit level, _3 the three-digit level; Sun2000Niva in 2012-2015 has the same opdef and code list as _3 and continues it."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-1-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grov nivå)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2000Niva_1 is the grov (one-digit) level per its opdef, _3 the three-digit level; different code lists, concurrent."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-3"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 3-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN2000Niva_1 is the grov one-digit level, _3 the three-digit level; Sun2000Niva in 2012-2015 has the same opdef and code list as _3 and continues it."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-3-far"
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (2 variables): judged different meaning, high confidence; SUN2000Niva_1 is the grov (one-digit) level per its opdef, _3 the three-digit level; different code lists, concurrent."
+
+[[statement]]
+kind = "set"
+subject = "var:suninr-ku"
+fields = { "label" = "Inriktning för pågående utbildning (SUN-inriktning)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (SUN 2000, 3-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN2000Niva_1 is the grov one-digit level, _3 the three-digit level; Sun2000Niva in 2012-2015 has the same opdef and code list as _3 and continues it."
+
+[[statement]]
+kind = "set"
+subject = "var:utbkat"
+fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, 1-ställig kod)" }
+evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."

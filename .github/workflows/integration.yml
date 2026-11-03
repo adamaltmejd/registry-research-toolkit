@@ -1,11 +1,14 @@
 name: Artifact conformance
 
 # Server-side home for the release-asset-dependent checks: conformance against the
-# published global DB asset, served by the Rust server. They need a published release
-# asset matching the current schema, so this workflow deliberately does NOT run on
-# push/PR — a red X on unrelated work when a release is merely owed would be noise.
-# Until the v4 switch release exists, the newest release is old-schema and this
-# workflow fails at server admission, like the deploy guard in container-build.yml.
+# published global DB asset and, when the release has one, the paired SWECOV holdings
+# asset, served by the Rust server. They need a published release asset matching the
+# current schema, so this workflow deliberately does NOT run on push/PR — a red X on
+# unrelated work when a release is merely owed would be noise. A release whose newest
+# asset is schema-incompatible fails at server admission, like the deploy guard in
+# container-build.yml. The paired asset is optional here until the first paired
+# release exists (a missing one is a notice); once it does, a malformed or duplicated
+# one fails the job.
 on:
   # Weekly drift catch (GitHub Releases availability). Off the top of the hour —
   # GitHub delays/drops crons scheduled at :00 under load.
@@ -21,7 +24,7 @@ jobs:
   artifact-conformance:
     name: Artifact conformance
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: read
     steps:
@@ -53,11 +56,10 @@ jobs:
       # or duplicated asset, a malformed or mismatched digest, a schema-incompatible
       # DB or a nonpublishable manifest all fail before conformance. There is
       # deliberately no fallback to an older asset or synthetic data.
-      - name: Provision the selected release DB
+      - name: Provision the selected release DBs
         id: release-db
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ASSET: reg_meta.db.zst
           TRIGGER_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
         run: |
           set -euo pipefail
@@ -68,33 +70,51 @@ jobs:
           fi
           [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the artifact from"; exit 1; }
           echo "DB source release: $tag"
-          digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
-            | jq -r --arg name "$ASSET" '[.assets[] | select(.name == $name) | .digest]
-                  | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
-          if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
-            echo "::error::release $tag has no single sha256-digested $ASSET asset"
-            exit 1
-          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
           db_dir="$RUNNER_TEMP/global-db"
           mkdir -p "$db_dir"
-          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
-            --pattern "$ASSET" --dir "$db_dir"
-          zst="$db_dir/$ASSET"
-          actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
-          if [ "$actual" != "$digest" ]; then
-            echo "::error::$ASSET digest mismatch: $actual != $digest"
-            exit 1
+          assets=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets)
+          # provision ASSET DB PORT [serve args]: verify the digest GitHub recorded
+          # (a single asset with a sha256 digest) BEFORE decompressing, then admit.
+          provision() {
+            local asset=$1 db=$2 port=$3 digest zst actual pid
+            shift 3
+            digest=$(printf '%s' "$assets" \
+              | jq -r --arg name "$asset" '[.assets[] | select(.name == $name) | .digest]
+                    | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
+            if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
+              echo "::error::release $tag has no single sha256-digested $asset asset"
+              exit 1
+            fi
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$asset" --dir "$db_dir"
+            zst="$db_dir/$asset"
+            actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
+            if [ "$actual" != "$digest" ]; then
+              echo "::error::$asset digest mismatch: $actual != $digest"
+              exit 1
+            fi
+            zstd -q -d --rm "$zst" -o "$db_dir/$db"
+            target/debug/reg-meta serve --db "$db_dir" --port "$port" "$@" &
+            pid=$!
+            # The refusal's error document is on the server's stderr.
+            until curl -fs -o /dev/null "http://127.0.0.1:$port/api/context"; do
+              kill -0 "$pid" 2>/dev/null || { echo "::error::$asset refused at server admission"; exit 1; }
+              sleep 1
+            done
+            kill "$pid"
+          }
+          provision reg_meta.db.zst reg_meta.db 18000
+          # The pair is optional until the first paired release; once the release has
+          # the asset it must be exactly one, digested and admitted with the base.
+          present=false
+          if [ "$(printf '%s' "$assets" | jq '[.assets[] | select(.name == "reg_meta_swecov.db.zst")] | length')" = 0 ]; then
+            echo "::notice::release $tag has no reg_meta_swecov.db.zst; paired conformance skipped"
+          else
+            provision reg_meta_swecov.db.zst reg_meta_swecov.db 18001 --catalog swecov
+            present=true
           fi
-          zstd -q -d --rm "$zst" -o "$db_dir/reg_meta.db"
-          target/debug/reg-meta serve --db "$db_dir" --port 18000 &
-          pid=$!
-          # The refusal's error document is on the server's stderr.
-          until curl -fs -o /dev/null http://127.0.0.1:18000/api/context; do
-            kill -0 "$pid" 2>/dev/null || { echo "::error::$ASSET refused at server admission"; exit 1; }
-            sleep 1
-          done
-          kill "$pid"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
+          echo "present=$present" >> "$GITHUB_OUTPUT"
       # Schema drift against a published asset is a release-drift failure.
       # Search runs against the Rust server (`--server-cmd`). `-m release` runs
       # only the checks on the downloaded artifact: the fixture-bound corpus
@@ -104,3 +124,11 @@ jobs:
           uv run python -m pytest conformance -m release --run-release \
             --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
             --server-cmd='target/debug/reg-meta serve --db {db} --port {port} --write-limit 100000' -q
+      # The same checks with the server admitting the pair (`--catalog swecov`):
+      # `reg_meta_swecov.db` beside `reg_meta.db` in the same directory.
+      - name: Run artifact conformance against the paired SWECOV DB
+        if: steps.release-db.outputs.present == 'true'
+        run: |
+          uv run python -m pytest conformance -m release --run-release \
+            --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
+            --server-cmd='target/debug/reg-meta serve --db {db} --port {port} --write-limit 100000 --catalog swecov' -q

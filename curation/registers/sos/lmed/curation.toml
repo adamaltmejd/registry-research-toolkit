@@ -1451,3 +1451,9 @@ kind = "set"
 subject = "set:varubenamning"
 fields = { "label" = "Varubenämning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "label" = "Födelsedatum (numeriskt)" }
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samtidiga kolumner i samma tabell; N-suffixet anger numeriskt format (pid: numerisk)."

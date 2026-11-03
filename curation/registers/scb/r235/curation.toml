@@ -2184,3 +2184,183 @@ kind = "set"
 subject = "set:vindanpassat-skyddsavstand"
 fields = { "label" = "Vindanpassat skyddsavstånd" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomrade"
+fields = { "label" = "Användningsområde växtskyddsmedel (kod)" }
+evidence = "#2102 same-label cluster 'Användningsområde växtskyddsmedel' (2 variables): judged different meaning, high confidence; Samma tabell: en kodad kolumn med värdeförråd och en textkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomradetext"
+fields = { "label" = "Användningsområde växtskyddsmedel (klartext)" }
+evidence = "#2102 same-label cluster 'Användningsområde växtskyddsmedel' (2 variables): judged different meaning, high confidence; Samma tabell: en kodad kolumn med värdeförråd och en textkolumn."
+
+[[statement]]
+kind = "set"
+subject = "var:bandspruta"
+fields = { "label" = "Bandspruta, har använts" }
+evidence = "#2102 same-label cluster 'Bandspruta' (2 variables): judged different meaning, high confidence; Opdefs: Bandspruta är ja/nej-flaggan, BandsprutaBredd anger bandens bredd i cm."
+
+[[statement]]
+kind = "set"
+subject = "var:bandsprutabredd"
+fields = { "label" = "Bandspruta, bandens bredd (cm)" }
+evidence = "#2102 same-label cluster 'Bandspruta' (2 variables): judged different meaning, high confidence; Opdefs: Bandspruta är ja/nej-flaggan, BandsprutaBredd anger bandens bredd i cm."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "label" = "Bortfallskod, objektsbortfall (kod)" }
+evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (2 variables): judged different meaning, high confidence; Kodad kolumn med värdeförråd och textkolumn (opdef: klartext) i samma tabell."
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskodtext"
+fields = { "label" = "Bortfallskod, objektsbortfall (klartext)" }
+evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (2 variables): judged different meaning, high confidence; Kodad kolumn med värdeförråd och textkolumn (opdef: klartext) i samma tabell."
+
+[[statement]]
+kind = "set"
+subject = "var:dos"
+fields = { "label" = "Dos växtskyddsmedel (kg, g, l, ml eller st per hektar)" }
+evidence = "#2102 same-label cluster 'Dos växtskyddsmedel' (2 variables): judged different meaning, medium confidence; Samtidiga kolumner från 2017; opdef för Dos anger enhet per hektar för växtskyddsmedel, för DosPerHektar står dos av glyfosatmedel."
+
+[[statement]]
+kind = "set"
+subject = "var:dos-vaxtskyddsmedel"
+fields = { "label" = "Dos växtskyddsmedel, glyfosatmedel" }
+evidence = "#2102 same-label cluster 'Dos växtskyddsmedel' (2 variables): judged different meaning, medium confidence; Samtidiga kolumner från 2017; opdef för Dos anger enhet per hektar för växtskyddsmedel, för DosPerHektar står dos av glyfosatmedel."
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgroda"
+fields = { "label" = "Grödor i Lantbrukssystemet, fruktodling (kod)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgrodatext"
+fields = { "label" = "Grödor i Lantbrukssystemet, fruktodling (klartext)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-fanggroda"
+fields = { "label" = "Glyfosatmedel användningsområde, fånggröda" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-stubb"
+fields = { "label" = "Glyfosatmedel användningsområde, stubb" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-trada"
+fields = { "label" = "Glyfosatmedel användningsområde, träda" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-vallbrott"
+fields = { "label" = "Glyfosatmedel användningsområde, vallbrott" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "label" = "Glyfosatmedel användningsområde, i gröda före sådd eller mellan sådd och uppkomst" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "label" = "Grödor i Lantbrukssystemet (kod)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "label" = "Grödor i Lantbrukssystemet (klartext)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgroda"
+fields = { "label" = "Grödor i Lantbrukssystemet, grönsaksodling (kod)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgrodatext"
+fields = { "label" = "Grödor i Lantbrukssystemet, grönsaksodling (klartext)" }
+evidence = "#2102 same-label cluster 'Grödor i Lantbrukssystemet' (6 variables): judged different meaning, high confidence; Tre grödgrupper (allmän, fruktodling, grönsaksodling), var och en med kod- och textkolumn enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "label" = "LillaN, utvalda i stratumet" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): judged different meaning, medium confidence; Definitionen anger antal utvalda företag i stratumet, opdef för LillaN_Svar antal svarande i stratumet; samtidiga kolumner från 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-svar-alt"
+fields = { "label" = "LillaN, svarande i stratumet" }
+evidence = "#2102 same-label cluster 'LillaN' (2 variables): judged different meaning, medium confidence; Definitionen anger antal utvalda företag i stratumet, opdef för LillaN_Svar antal svarande i stratumet; samtidiga kolumner från 2017."
+
+[[statement]]
+kind = "set"
+subject = "var:markejakermark"
+fields = { "label" = "Glyfosatmedel användningsområde, mark som inte är åkermark" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:peribearb"
+fields = { "label" = "Glyfosatmedel användningsområde, hösten mellan bearbetning och höstsådd" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:perisadd"
+fields = { "label" = "Glyfosatmedel användningsområde, våren mellan sådd och uppkomst" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:postskord"
+fields = { "label" = "Glyfosatmedel användningsområde, hösten i obearbetad stubb" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:prevarsadd"
+fields = { "label" = "Glyfosatmedel användningsområde, våren före vårsådd" }
+evidence = "#2102 same-label cluster 'Glyfosatmedel användningsområde' (10 variables): judged different meaning, high confidence; Tio samtidiga ja/nej-kolumner vars opdefs anger olika användningsområde eller tidpunkt."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18-omraden"
+fields = { "label" = "Produktionsområde (18 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, high confidence; Po8 delar in Sverige i 8 och Po18 i 18 produktionsområden enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-omraden"
+fields = { "label" = "Produktionsområde (8 områden)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, high confidence; Po8 delar in Sverige i 8 och Po18 i 18 produktionsområden enligt opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-id"
+fields = { "label" = "Växtskyddsmedel (id)" }
+evidence = "#2102 same-label cluster 'Växtskyddsmedel' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef for VaxtskyddsmedelId: id number in Lantbrukssystemet for all preparations; VaxtskyddsmedelNamn carries the name."
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-namn"
+fields = { "label" = "Växtskyddsmedel (namn)" }
+evidence = "#2102 same-label cluster 'Växtskyddsmedel' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef for VaxtskyddsmedelId: id number in Lantbrukssystemet for all preparations; VaxtskyddsmedelNamn carries the name."

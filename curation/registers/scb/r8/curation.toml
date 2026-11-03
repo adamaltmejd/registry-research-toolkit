@@ -3274,3 +3274,663 @@ kind = "set"
 subject = "set:yrkesmassig-trafik"
 fields = { "label" = "Yrkesmässig trafik" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { "label" = "Ägarkategori (agkat)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-2"
+fields = { "label" = "Ägarkategori (föregående ägare)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-3"
+fields = { "label" = "Ägarkategori (agkat_3)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:agarnummer-agnr"
+fields = { "label" = "Ägarnummer (agnr)" }
+evidence = "#2102 same-label cluster 'Ägarnummer' (4 variables): judged different meaning, medium confidence; Opdefs: AGNR is the owner, AGNR_2 the previous owner, AGNR_3 the owner before that; AgNr_old (1980-1985) also says owner and is concurrent with AGNR, so it is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:agarnummer-agnr-2"
+fields = { "label" = "Ägarnummer (föregående ägare)" }
+evidence = "#2102 same-label cluster 'Ägarnummer' (4 variables): judged different meaning, medium confidence; Opdefs: AGNR is the owner, AGNR_2 the previous owner, AGNR_3 the owner before that; AgNr_old (1980-1985) also says owner and is concurrent with AGNR, so it is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:agarnummer-agnr-3"
+fields = { "label" = "Ägarnummer (nästföregående ägare)" }
+evidence = "#2102 same-label cluster 'Ägarnummer' (4 variables): judged different meaning, medium confidence; Opdefs: AGNR is the owner, AGNR_2 the previous owner, AGNR_3 the owner before that; AgNr_old (1980-1985) also says owner and is concurrent with AGNR, so it is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:agarnummer-agnr-old"
+fields = { "label" = "Ägarnummer (ägare, AgNr_old)" }
+evidence = "#2102 same-label cluster 'Ägarnummer' (4 variables): judged different meaning, medium confidence; Opdefs: AGNR is the owner, AGNR_2 the previous owner, AGNR_3 the owner before that; AgNr_old (1980-1985) also says owner and is concurrent with AGNR, so it is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:agkat-ag"
+fields = { "label" = "Ägarkategori (administrativ ägare)" }
+evidence = "#2102 same-label cluster 'Ägarkategori' (4 variables): judged different meaning, high confidence; Opdefs: AGKAT is the owner, AGKAT_2 the previous owner, AGKAT_3 the owner before that, AgKat_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 1, BrForbr)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-brforbr2"
+fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-literal-brforbr3"
+fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-viktad"
+fields = { "label" = "Bränsleförbrukning (NEDC, viktad)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-liter-per-100-km-drivmedel-1"
+fields = { "label" = "Bränsleförbrukning WLTP (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv2"
+fields = { "label" = "Bränsleförbrukning WLTP (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv3"
+fields = { "label" = "Bränsleförbrukning WLTP (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-liter-per-100-km-drivmedel-1"
+fields = { "label" = "Bränsleförbrukning WLTP viktad (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv2"
+fields = { "label" = "Bränsleförbrukning WLTP viktad (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv3"
+fields = { "label" = "Bränsleförbrukning WLTP viktad (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP consumption for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:branslemangd-per-korstracka-blandad-nedc-drivmedel-1"
+fields = { "label" = "Bränsleförbrukning (NEDC, drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Bränsleförbrukning' (5 variables): judged different meaning, medium confidence; Opdefs: BrForbr (personbilar, to 2008) and BrForbr1 (from 2008-12) both describe NEDC consumption for drivmedel 1 and share a label; BrForbr2 and BrForbr3 are drivmedel 2 and 3; BrForbrViktad is the weighted figure."
+
+[[statement]]
+kind = "set"
+subject = "var:buller"
+fields = { "label" = "Fordonets bullernivå (buller)" }
+evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:co2varde"
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde1)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
+
+[[statement]]
+kind = "set"
+subject = "var:co2vardeviktad"
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2vardeviktad)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
+
+[[statement]]
+kind = "set"
+subject = "var:co2vikblwltpdriv"
+fields = { "label" = "Koldioxidutsläpp WLTP viktad (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:datovl"
+fields = { "label" = "Datum för ägarbyte (datovl1)" }
+evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:datovlagare"
+fields = { "label" = "Datum för ägarbyte (administrativ ägare)" }
+evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-datovl-3"
+fields = { "label" = "Datum för ägarbyte (datovl_3)" }
+evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-literal-datovl-2-472a8fd9"
+fields = { "label" = "Datum för ägarbyte (datovl_2)" }
+evidence = "#2102 same-label cluster 'Datum för ägarbyte' (4 variables): judged different meaning, medium confidence; Opdefs: DatOvl1 refers to the owner, DatOvl_2 to the previous owner, DatOvl_3 to the owner before that, DatOvlAgare to the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-literal-energik-wltp-driv2"
+fields = { "label" = "Elenergiförbrukning WLTP (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Elenergiförbrukning WLTP' (2 variables): judged different meaning, high confidence; Opdefs: EnergiK_WLTP_driv1 and _driv2 hold WLTP electric energy consumption for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-viktad-literal-energik-vikt-wltp-driv2"
+fields = { "label" = "Elenergiförbrukning WLTP viktad (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Elenergiförbrukning WLTP viktad' (2 variables): judged different meaning, high confidence; Opdefs: EnergiK_Vikt_WLTP_driv1 and _driv2 hold weighted WLTP electric energy consumption for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:energik-vikt-wltp-driv"
+fields = { "label" = "Elenergiförbrukning WLTP viktad (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Elenergiförbrukning WLTP viktad' (2 variables): judged different meaning, high confidence; Opdefs: EnergiK_Vikt_WLTP_driv1 and _driv2 hold weighted WLTP electric energy consumption for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:energik-wltp-driv"
+fields = { "label" = "Elenergiförbrukning WLTP (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Elenergiförbrukning WLTP' (2 variables): judged different meaning, high confidence; Opdefs: EnergiK_WLTP_driv1 and _driv2 hold WLTP electric energy consumption for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller2"
+fields = { "label" = "Fordonets bullernivå (buller2)" }
+evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller3"
+fields = { "label" = "Fordonets bullernivå (buller3)" }
+evidence = "#2102 same-label cluster 'Fordonets bullernivå' (3 variables): judged different meaning, medium confidence; Opdefs name drivmedel 1, 2 and 3 for Buller, Buller2 and Buller3 (merged opdefs are partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori"
+fields = { "label" = "Fordonskategori (EU-kategori, fkateu)" }
+evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged different meaning, medium confidence; Hjul (to 2008) and FKatEU (from 2008) share the EU category code list over adjacent periods and get the same label; FSlag has a different value set (personbil, lastbil, buss, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-fslag"
+fields = { "label" = "Fordonskategori (fordonsslag)" }
+evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged different meaning, medium confidence; Hjul (to 2008) and FKatEU (from 2008) share the EU category code list over adjacent periods and get the same label; FSlag has a different value set (personbil, lastbil, buss, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-hjul"
+fields = { "label" = "Fordonskategori (EU-kategori, hjul)" }
+evidence = "#2102 same-label cluster 'Fordonskategori' (3 variables): judged different meaning, medium confidence; Hjul (to 2008) and FKatEU (from 2008) share the EU category code list over adjacent periods and get the same label; FSlag has a different value set (personbil, lastbil, buss, ...)."
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-2"
+fields = { "label" = "Fysisk/juridisk ägare (föregående ägare)" }
+evidence = "#2102 same-label cluster 'Fysisk/juridisk ägare' (4 variables): judged different meaning, high confidence; Opdefs: FysJur is the owner, FysJur_2 the previous owner, FysJur_3 the owner before that, FysJur_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-3"
+fields = { "label" = "Fysisk/juridisk ägare (nästföregående ägare)" }
+evidence = "#2102 same-label cluster 'Fysisk/juridisk ägare' (4 variables): judged different meaning, high confidence; Opdefs: FysJur is the owner, FysJur_2 the previous owner, FysJur_3 the owner before that, FysJur_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur"
+fields = { "label" = "Fysisk/juridisk ägare (ägare)" }
+evidence = "#2102 same-label cluster 'Fysisk/juridisk ägare' (4 variables): judged different meaning, high confidence; Opdefs: FysJur is the owner, FysJur_2 the previous owner, FysJur_3 the owner before that, FysJur_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur-ag"
+fields = { "label" = "Fysisk/juridisk ägare (administrativ ägare)" }
+evidence = "#2102 same-label cluster 'Fysisk/juridisk ägare' (4 variables): judged different meaning, high confidence; Opdefs: FysJur is the owner, FysJur_2 the previous owner, FysJur_3 the owner before that, FysJur_Ag the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:inst-ag"
+fields = { "label" = "Institutionell kod (administrativ ägare)" }
+evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod"
+fields = { "label" = "Institutionell kod (inst)" }
+evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-2"
+fields = { "label" = "Institutionell kod (inst_2)" }
+evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-3"
+fields = { "label" = "Institutionell kod (inst_3)" }
+evidence = "#2102 same-label cluster 'Institutionell kod' (4 variables): judged different meaning, medium confidence; Opdefs: INST is the owner, INST_2 the previous owner, INST_3 the owner before that, INST_Ag the administrative owner (with a separate sector code list)."
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "label" = "Karosserikod (kaross)" }
+evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-2"
+fields = { "label" = "Karosserikod (karosserikod1)" }
+evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-kaross2"
+fields = { "label" = "Karosserikod (kaross2)" }
+evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-karosserikod2"
+fields = { "label" = "Karosserikod (karosserikod2)" }
+evidence = "#2102 same-label cluster 'Karosserikod' (4 variables): judged different meaning, medium confidence; Shared opdefs name a main and a complementary karosserikod; KAROSS to 2012 and Karosserikod1 from 2012 (and Kaross2 to 2012 and Karosserikod2 from 2012) are renames over adjacent periods and share labels."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-blandad-wltp-gram-per-km-drivmedel-1"
+fields = { "label" = "Koldioxidutsläpp WLTP (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-gram-per-km-drivmedel-1"
+fields = { "label" = "Koldioxidutsläpp landsväg NEDC (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp landsväg NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC road CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv2"
+fields = { "label" = "Koldioxidutsläpp landsväg NEDC (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp landsväg NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC road CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv3"
+fields = { "label" = "Koldioxidutsläpp landsväg NEDC (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp landsväg NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC road CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde2"
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde2)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde3"
+fields = { "label" = "Koldioxidutsläpp (NEDC, co2varde3)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp' (4 variables): judged different meaning, medium confidence; Opdefs: CO2Varde1/2/3 are NEDC emissions for drivmedel 1, 2 and 3 (merged opdefs partly contradictory), CO2VardeViktad is the weighted NEDC value."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-gram-per-km-drivmedel-1"
+fields = { "label" = "Koldioxidutsläpp stad NEDC (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp stad NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC city CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv2"
+fields = { "label" = "Koldioxidutsläpp stad NEDC (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp stad NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC city CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv3"
+fields = { "label" = "Koldioxidutsläpp stad NEDC (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp stad NEDC' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold NEDC city CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv2"
+fields = { "label" = "Koldioxidutsläpp WLTP (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv3"
+fields = { "label" = "Koldioxidutsläpp WLTP (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv2"
+fields = { "label" = "Koldioxidutsläpp WLTP viktad (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv3"
+fields = { "label" = "Koldioxidutsläpp WLTP viktad (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Koldioxidutsläpp WLTP viktad' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold weighted WLTP CO2 for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-kolvateutslapp-massa-per-km-eller-kwh-drivmedel-1"
+fields = { "label" = "Kväveoxid- och kolväteutsläpp (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Kväveoxid- och kolväteutsläpp' (2 variables): judged different meaning, high confidence; Opdefs: NoxHCdrivm1 and NoxHCdrivm2 hold NOxHC for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-och-kolvateutslapp-literal-noxhcdrivm2"
+fields = { "label" = "Kväveoxid- och kolväteutsläpp (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Kväveoxid- och kolväteutsläpp' (2 variables): judged different meaning, high confidence; Opdefs: NoxHCdrivm1 and NoxHCdrivm2 hold NOxHC for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-nox4drivm2"
+fields = { "label" = "Kväveoxidutsläpp (NOx (4), drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp' (4 variables): judged different meaning, high confidence; Opdefs: Noxdrivm1/2 are NOx under directives 70/220 and 715/2007, Nox4drivm1/2 are NOx (4) under directive 595/2009, each for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-noxdrivm2"
+fields = { "label" = "Kväveoxidutsläpp (NOx, drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp' (4 variables): judged different meaning, high confidence; Opdefs: Noxdrivm1/2 are NOx under directives 70/220 and 715/2007, Nox4drivm1/2 are NOx (4) under directive 595/2009, each for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv2"
+fields = { "label" = "Kväveoxidutsläpp WLTP (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP NOx for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv3"
+fields = { "label" = "Kväveoxidutsläpp WLTP (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP NOx for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt"
+fields = { "label" = "Motorstyrka (drivmedel 1, EFFEKT)" }
+evidence = "#2102 same-label cluster 'Motorstyrka' (4 variables): judged different meaning, medium confidence; Opdefs: Effekt1/2/3 are kW for drivmedel 1, 2, 3 (merged opdefs partly contradictory); EFFEKT also says drivmedel 1 and is concurrent with Effekt1 in the same tables, so those two are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt1"
+fields = { "label" = "Motorstyrka (drivmedel 1, Effekt1)" }
+evidence = "#2102 same-label cluster 'Motorstyrka' (4 variables): judged different meaning, medium confidence; Opdefs: Effekt1/2/3 are kW for drivmedel 1, 2, 3 (merged opdefs partly contradictory); EFFEKT also says drivmedel 1 and is concurrent with Effekt1 in the same tables, so those two are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt2"
+fields = { "label" = "Motorstyrka (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Motorstyrka' (4 variables): judged different meaning, medium confidence; Opdefs: Effekt1/2/3 are kW for drivmedel 1, 2, 3 (merged opdefs partly contradictory); EFFEKT also says drivmedel 1 and is concurrent with Effekt1 in the same tables, so those two are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt3"
+fields = { "label" = "Motorstyrka (drivmedel 3)" }
+evidence = "#2102 same-label cluster 'Motorstyrka' (4 variables): judged different meaning, medium confidence; Opdefs: Effekt1/2/3 are kW for drivmedel 1, 2, 3 (merged opdefs partly contradictory); EFFEKT also says drivmedel 1 and is concurrent with Effekt1 in the same tables, so those two are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (sni2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-foregaende"
+fields = { "label" = "Näringsgren (sni2002_2)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-nastforegaende"
+fields = { "label" = "Näringsgren (SNI 2002, nästföregående ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "label" = "Näringsgren (sni2007)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-administrativ"
+fields = { "label" = "Näringsgren (SNI 2007, administrativ ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-foregaende"
+fields = { "label" = "Näringsgren (SNI 2007, föregående ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-nastforegaende"
+fields = { "label" = "Näringsgren (sni2007_3)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92"
+fields = { "label" = "Näringsgren (SNI 69/92/2002, ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-foregaende"
+fields = { "label" = "Näringsgren (SNI 1992, föregående ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-nastforegaende"
+fields = { "label" = "Näringsgren (SNI 1992, nästföregående ägare)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (10 variables): judged different meaning, medium confidence; Column names and opdefs give three SNI versions (1992, 2002, 2007), each for the owner, previous owner (_2) and the owner before that (_3), plus SNI2007_Ag for the administrative owner."
+
+[[statement]]
+kind = "set"
+subject = "var:nox4drivm"
+fields = { "label" = "Kväveoxidutsläpp (NOx (4), drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp' (4 variables): judged different meaning, high confidence; Opdefs: Noxdrivm1/2 are NOx under directives 70/220 and 715/2007, Nox4drivm1/2 are NOx (4) under directive 595/2009, each for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:noxdrivm"
+fields = { "label" = "Kväveoxidutsläpp (NOx, drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp' (4 variables): judged different meaning, high confidence; Opdefs: Noxdrivm1/2 are NOx under directives 70/220 and 715/2007, Nox4drivm1/2 are NOx (4) under directive 595/2009, each for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:noxwltpdriv"
+fields = { "label" = "Kväveoxidutsläpp WLTP (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Kväveoxidutsläpp WLTP' (3 variables): judged different meaning, high confidence; Opdefs: the three columns hold WLTP NOx for drivmedel 1, 2 and 3."
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-driv"
+fields = { "label" = "Räckvidd WLTP (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Räckvidd WLTP' (2 variables): judged different meaning, high confidence; Opdefs: Rackvidd_WLTP_driv1 and _driv2 hold WLTP range for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-literal-rackvidd-wltp-driv2"
+fields = { "label" = "Räckvidd WLTP (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Räckvidd WLTP' (2 variables): judged different meaning, high confidence; Opdefs: Rackvidd_WLTP_driv1 and _driv2 hold WLTP range for drivmedel 1 and 2."
+
+[[statement]]
+kind = "set"
+subject = "var:statkod"
+fields = { "label" = "Fordonsmodell (statkod)" }
+evidence = "#2102 same-label cluster 'Fordonsmodell' (2 variables): judged different meaning, medium confidence; STATKOD (bussar, lastbilar, motorcyklar, övriga fordonsslag) and TOPKOD (personbilar) are different model code lists for different vehicle types."
+
+[[statement]]
+kind = "set"
+subject = "var:tankvol"
+fields = { "label" = "Tankvolym (tankvol)" }
+evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different meaning, medium confidence; Opdefs: TankVol, TankVol2, TankVol3 are tank volume for drivmedel 1, 2, 3 (merged opdefs partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol2"
+fields = { "label" = "Tankvolym (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different meaning, medium confidence; Opdefs: TankVol, TankVol2, TankVol3 are tank volume for drivmedel 1, 2, 3 (merged opdefs partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol3"
+fields = { "label" = "Tankvolym (tankvol3)" }
+evidence = "#2102 same-label cluster 'Tankvolym' (3 variables): judged different meaning, medium confidence; Opdefs: TankVol, TankVol2, TankVol3 are tank volume for drivmedel 1, 2, 3 (merged opdefs partly contradictory), consistent with the numbered suffix."
+
+[[statement]]
+kind = "set"
+subject = "var:topkod"
+fields = { "label" = "Fordonsmodell (personbilar)" }
+evidence = "#2102 same-label cluster 'Fordonsmodell' (2 variables): judged different meaning, medium confidence; STATKOD (bussar, lastbilar, motorcyklar, övriga fordonsslag) and TOPKOD (personbilar) are different model code lists for different vehicle types."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "label" = "Drivmedel (Drivm, Drivm1)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-drivm2"
+fields = { "label" = "Drivmedel (Drivm2)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-literal-drivm3"
+fields = { "label" = "Drivmedel (Drivm3)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
+fields = { "label" = "Drivmedel (officiell statistik, terrängskotrar)" }
+evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs for Drivm1/Drivm2/Drivm3 contradict the column names in some occurrences (Drivm1 'Det tredje drivmedlet' 2010-2016, Drivm2 'huvudsakliga' 2010-2016, Drivm3 'Det andra'), so 'drivmedel 1/2/3' does not hold for every occurrence; codes are used. The terrängskotrar column's opdef 'enligt den officiella statistiken' and its own code list hold."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning-avrors"
+fields = { "label" = "Fordonets benämning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets benämning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-handelsbeteckning-avrors"
+fields = { "label" = "Fordonets handelsbeteckning (AvrOrs)" }
+evidence = "#2102 same-label cluster 'Fordonets handelsbeteckning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh-2"
+fields = { "label" = "Effektnorm (EffektEnh1)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh2"
+fields = { "label" = "Effektnorm (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh3"
+fields = { "label" = "Effektnorm (EffektEnh3)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effekt3"
+fields = { "label" = "Effektnorm (drivmedel 1, Effekt3)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh"
+fields = { "label" = "Effektnorm (drivmedel 1, EffektEnh)" }
+evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde2"
+fields = { "label" = "Partikelvärde (drivmedel 2)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partvarde"
+fields = { "label" = "Partikelvärde (drivmedel 1)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde3"
+fields = { "label" = "Partikelvärde (PartVarde3)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm3"
+fields = { "label" = "Partikelvärde (PartVardeEnhDrivm3)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:part4drivm"
+fields = { "label" = "Partikelvärde (Part4drivm1)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-part4drivm2"
+fields = { "label" = "Partikelvärde (Part4drivm2)" }
+evidence = "#2102 same-label cluster 'Partikelvärde' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PartVarde1 and PartVarde2 say drivmedel 1 / 2 in every occurrence; PartVarde3, Part4drivm1 and Part4drivm2 each have occurrences whose opdef names another drivmedel (and Part massa (4) is not in all of them), so they take their codes; PartVardeEnhDrivm3 has no text."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppl1"
+fields = { "label" = "Koppling (KOPPL1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppling1"
+fields = { "label" = "Koppling (Koppling1)" }
+evidence = "#2102 same-label cluster 'Koppling' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Same codes and tables, no opdef; KOPPL1/Koppl1 and Koppling1 overlap 2000-2003 in slapvagnar and lastbilar, so only the code separates them."

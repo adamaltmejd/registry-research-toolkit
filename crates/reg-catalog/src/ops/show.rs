@@ -1,5 +1,7 @@
 //! `show`: the summary of any ref; no ref is the catalog root.
 
+use std::collections::{BTreeMap, BTreeSet};
+
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
@@ -35,17 +37,13 @@ pub const OPERATIONS: &[Operation] = &[Operation {
 #[derive(Serialize, ToSchema)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Show {
-    Root {
-        providers: Vec<ShowProviderRef>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        steward_providers: Option<Vec<ShowProviderRef>>,
-    },
+    /// In steward mode, the steward's own providers too.
+    Root { providers: Vec<ShowProviderRef> },
     Provider {
         fqid: String,
         name: String,
+        /// In steward mode, the steward's own registers too.
         registers: Vec<ShowRegisterRef>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        steward_registers: Option<Vec<ShowRegisterRef>>,
     },
     Register {
         fqid: String,
@@ -119,6 +117,10 @@ pub enum Show {
 pub struct ShowProviderRef {
     fqid: String,
     name: String,
+    /// In steward mode, whether the steward holds any of its registers.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    held: Option<bool>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -126,6 +128,10 @@ pub struct ShowRegisterRef {
     fqid: String,
     name: String,
     period: Period,
+    /// In steward mode, whether the steward holds any of its tables.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    held: Option<bool>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -133,6 +139,8 @@ pub struct ShowVariableRef {
     fqid: String,
     name: String,
     period: Period,
+    /// The fqids of the register's tables the variable has segments in.
+    tables: Vec<String>,
 }
 
 /// A register's table; the implicit one has the register's fqid.
@@ -207,16 +215,21 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     let evidence = flag(params, "evidence")?;
     let shown = match params.get("ref") {
         None => {
-            let mut shown = root(&conn)?;
-            if let Some(extra) = server.catalog.connect_holdings()?
-                && let Show::Root { providers, .. } = root(&extra)?
-                && let Show::Root {
-                    steward_providers, ..
-                } = &mut shown
-            {
-                *steward_providers = Some(providers);
+            let mut providers = provider_refs(&conn)?;
+            if let Some(extra) = server.catalog.connect_holdings()? {
+                let held = Held::read(&conn, &extra)?;
+                let known: BTreeSet<_> = providers.iter().map(|p| p.fqid.clone()).collect();
+                providers.extend(
+                    provider_refs(&extra)?
+                        .into_iter()
+                        .filter(|p| !known.contains(&p.fqid)),
+                );
+                providers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+                for p in &mut providers {
+                    p.held = Some(held.providers.contains(&p.fqid));
+                }
             }
-            shown
+            Show::Root { providers }
         }
         Some(value) => {
             let entity = refs::resolve(&conn, value)?;
@@ -240,8 +253,44 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     Ok(serde_json::to_value(shown).expect("Show serializes"))
 }
 
-fn root(conn: &Connection) -> Result<Show, Error> {
-    let providers = conn
+/// Steward mode: the registers and providers with an accepted placement. A
+/// placement names its table by public id, in either origin.
+struct Held {
+    registers: BTreeSet<String>,
+    providers: BTreeSet<String>,
+}
+
+impl Held {
+    // simplify: recomputed per request (~1k table ids); cache on the server if the
+    // root or provider summaries show up in latency.
+    fn read(base: &Connection, extra: &Connection) -> Result<Self, Error> {
+        let tables: String = extra.query_row(
+            "SELECT json_group_array(DISTINCT table_pid) FROM holding_mapping",
+            [],
+            |r| r.get(0),
+        )?;
+        let mut held = Self {
+            registers: BTreeSet::new(),
+            providers: BTreeSet::new(),
+        };
+        for conn in [base, extra] {
+            let mut query = conn.prepare(
+                "SELECT DISTINCT r.pid, p.pid FROM json_each(?) j
+                 JOIN tbl t ON t.pid = j.value JOIN register r ON r.id = t.register_id
+                 JOIN provider p ON p.id = r.provider_id",
+            )?;
+            for row in query.query_map([&tables], |r| Ok((r.get(0)?, r.get(1)?)))? {
+                let (register, provider) = row?;
+                held.registers.insert(register);
+                held.providers.insert(provider);
+            }
+        }
+        Ok(held)
+    }
+}
+
+fn provider_refs(conn: &Connection) -> Result<Vec<ShowProviderRef>, Error> {
+    Ok(conn
         .prepare(
             "SELECT p.pid, n.body FROM provider p JOIN text n ON n.id = p.name_text
              ORDER BY p.pid",
@@ -250,13 +299,32 @@ fn root(conn: &Connection) -> Result<Show, Error> {
             Ok(ShowProviderRef {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
+                held: None,
             })
         })?
-        .collect::<rusqlite::Result<_>>()?;
-    Ok(Show::Root {
-        providers,
-        steward_providers: None,
-    })
+        .collect::<rusqlite::Result<_>>()?)
+}
+
+fn register_refs(
+    server: &Server,
+    conn: &Connection,
+    provider: &str,
+) -> Result<Vec<ShowRegisterRef>, Error> {
+    Ok(conn
+        .prepare(
+            "SELECT r.pid, n.body, r.start, r.end FROM register r
+             JOIN provider p ON p.id = r.provider_id JOIN text n ON n.id = r.name_text
+             WHERE p.pid = ? ORDER BY r.pid",
+        )?
+        .query_map([provider], |row| {
+            Ok(ShowRegisterRef {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+                period: server.period(row.get(2)?, row.get(3)?),
+                held: None,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?)
 }
 
 fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
@@ -265,55 +333,27 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         [entity.id],
         |row| row.get(0),
     )?;
-    let registers = conn
-        .prepare(
-            "SELECT r.pid, n.body, r.start, r.end
-             FROM register r JOIN text n ON n.id = r.name_text
-             WHERE r.provider_id = ? ORDER BY r.pid",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowRegisterRef {
-                fqid: row.get(0)?,
-                name: row.get(1)?,
-                period: server.period(row.get(2)?, row.get(3)?),
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let base = server.catalog.connect()?;
-    let is_base_provider: bool = base.query_row(
-        "SELECT EXISTS(SELECT 1 FROM provider WHERE pid = ?)",
-        [&entity.pid],
-        |r| r.get(0),
-    )?;
-    let supplemental = if is_base_provider {
-        server.catalog.connect_holdings()?
-    } else {
-        None
-    };
+    let mut registers = register_refs(server, conn, &entity.pid)?;
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        let base = server.catalog.connect()?;
+        // A register in both origins is a steward overlay of the reference one: the
+        // reference row carries its official name (the overlay's is its slug).
+        let known: BTreeSet<_> = registers.iter().map(|r| r.fqid.clone()).collect();
+        registers.extend(
+            register_refs(server, &extra, &entity.pid)?
+                .into_iter()
+                .filter(|r| !known.contains(&r.fqid)),
+        );
+        registers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        let held = Held::read(&base, &extra)?;
+        for r in &mut registers {
+            r.held = Some(held.registers.contains(&r.fqid));
+        }
+    }
     Ok(Show::Provider {
         fqid: entity.pid.clone(),
         name,
         registers,
-        steward_registers: supplemental
-            .map(|extra| {
-                let mut query = extra.prepare(
-                    "SELECT r.pid, n.body, r.start, r.end FROM register r
-                 JOIN provider p ON p.id = r.provider_id JOIN text n ON n.id = r.name_text
-                 WHERE p.pid = ? ORDER BY r.pid",
-                )?;
-                Ok::<_, Error>(
-                    query
-                        .query_map([&entity.pid], |r| {
-                            Ok(ShowRegisterRef {
-                                fqid: r.get(0)?,
-                                name: r.get(1)?,
-                                period: server.period(r.get(2)?, r.get(3)?),
-                            })
-                        })?
-                        .collect::<rusqlite::Result<Vec<_>>>()?,
-                )
-            })
-            .transpose()?,
     })
 }
 
@@ -326,41 +366,22 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         [entity.id],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
     )?;
-    let tables = conn
-        .prepare(
-            "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
-                    t.start, t.end
-             FROM tbl t JOIN text n ON n.id = t.name_text
-               LEFT JOIN unit_type u ON u.id = t.unit_type_id
-             WHERE t.register_id = ? ORDER BY t.pid",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowTable {
-                fqid: row.get(0)?,
-                name: row.get(1)?,
-                role: row.get(2)?,
-                implicit: row.get(3)?,
-                timeless: row.get(4)?,
-                unit_type: row.get(5)?,
-                cadence: row.get(6)?,
-                period: server.period(row.get(7)?, row.get(8)?),
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let variables = conn
-        .prepare(
-            "SELECT v.pid, l.body, v.start, v.end
-             FROM variable v JOIN text l ON l.id = v.label_text
-             WHERE v.register_id = ? ORDER BY v.pid",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowVariableRef {
-                fqid: row.get(0)?,
-                name: row.get(1)?,
-                period: server.period(row.get(2)?, row.get(3)?),
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+    let (mut tables, mut variables) = contents(server, conn, &entity.pid)?;
+    // Steward mode: tables and variables the steward defines inside a reference
+    // register join it; a pid both origins define keeps the reference row.
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        let (held_tables, held_variables) = contents(server, &extra, &entity.pid)?;
+        let known: BTreeSet<_> = tables.iter().map(|t| t.fqid.clone()).collect();
+        tables.extend(held_tables.into_iter().filter(|t| !known.contains(&t.fqid)));
+        tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        let known: BTreeSet<_> = variables.iter().map(|v| v.fqid.clone()).collect();
+        variables.extend(
+            held_variables
+                .into_iter()
+                .filter(|v| !known.contains(&v.fqid)),
+        );
+        variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+    }
     let unplaced = conn
         .prepare(
             "SELECT DISTINCT n.body
@@ -379,6 +400,67 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         variables,
         unplaced,
     })
+}
+
+/// A register's tables and variables in one origin, by the register's public id.
+fn contents(
+    server: &Server,
+    conn: &Connection,
+    register: &str,
+) -> Result<(Vec<ShowTable>, Vec<ShowVariableRef>), Error> {
+    let tables = conn
+        .prepare(
+            "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
+                    t.start, t.end
+             FROM tbl t JOIN register r ON r.id = t.register_id
+               JOIN text n ON n.id = t.name_text
+               LEFT JOIN unit_type u ON u.id = t.unit_type_id
+             WHERE r.pid = ? ORDER BY t.pid",
+        )?
+        .query_map([register], |row| {
+            Ok(ShowTable {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+                role: row.get(2)?,
+                implicit: row.get(3)?,
+                timeless: row.get(4)?,
+                unit_type: row.get(5)?,
+                cadence: row.get(6)?,
+                period: server.period(row.get(7)?, row.get(8)?),
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for row in conn
+        .prepare(
+            "SELECT DISTINCT v.pid, t.pid FROM segment s
+             JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id
+             JOIN register r ON r.id = v.register_id
+             WHERE r.pid = ? ORDER BY v.pid, t.pid",
+        )?
+        .query_map([register], |row| Ok((row.get(0)?, row.get(1)?)))?
+    {
+        let (variable, table) = row?;
+        members.entry(variable).or_default().push(table);
+    }
+    let variables = conn
+        .prepare(
+            "SELECT v.pid, l.body, v.start, v.end
+             FROM variable v JOIN register r ON r.id = v.register_id
+               JOIN text l ON l.id = v.label_text
+             WHERE r.pid = ? ORDER BY v.pid",
+        )?
+        .query_map([register], |row| {
+            let fqid: String = row.get(0)?;
+            Ok(ShowVariableRef {
+                tables: members.remove(&fqid).unwrap_or_default(),
+                fqid,
+                name: row.get(1)?,
+                period: server.period(row.get(2)?, row.get(3)?),
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok((tables, variables))
 }
 
 fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {

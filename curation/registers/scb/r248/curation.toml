@@ -2576,3 +2576,669 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:flandlan"
+fields = { "label" = "Födelseland RTB (länskod, FlandLan)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn has country names; FlandLan (1997-1998) has county codes in its value set and FlandLan_klartext the names, a different geography under the same opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:flandlan-klartext"
+fields = { "label" = "Födelseland RTB (län i klartext, FlandLan_klartext)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn has country names; FlandLan (1997-1998) has county codes in its value set and FlandLan_klartext the names, a different geography under the same opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:komgrupp23"
+fields = { "label" = "Kommungruppsindelning (2023 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-id"
+fields = { "label" = "Kommunalförbund (kod, GyFId)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-id-2"
+fields = { "label" = "Kommunalförbund (kod, KFID)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-namn"
+fields = { "label" = "Kommunalförbund (namn, GyFNamn)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-namn-2"
+fields = { "label" = "Kommunalförbund (namn, KFNAMN)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "label" = "Kommungruppsindelning (2017 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-text"
+fields = { "label" = "Kommungruppsindelning (klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
+
+[[statement]]
+kind = "set"
+subject = "var:provbet"
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (sammanvägt provbetyg)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-betyg-hor"
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov hörförståelse)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-betyg-las"
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov läsförståelse)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-betyg-skrift"
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov skriftlig produktion)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-betyg-tal"
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov muntlig interaktion och produktion)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-poang-hor"
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov hörförståelse)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-poang-las"
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov läsförståelse)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-poang-skrift"
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov skriftlig produktion)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-prov-poang-tal"
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov muntlig interaktion och produktion)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
+
+[[statement]]
+kind = "set"
+subject = "var:skola-skolenhetskod"
+fields = { "label" = "Skola (skolenhetskod)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit skolenhet codes) are different code systems that overlap in 2013-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "label" = "Skola (skolkod)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit skolenhet codes) are different code systems that overlap in 2013-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "label" = "Kommun för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "label" = "Län för skola/skolenhet (kod)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text"
+fields = { "label" = "Län för skola/skolenhet (klartext)" }
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "label" = "Utbildningsnivå (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2020niva"
+fields = { "label" = "Utbildningsnivå (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2020niva-2"
+fields = { "label" = "Utbildningsnivå (SUN 2020, 2-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2010-01-01..2010-06-30 where key = 'v36' and release = 'r12910'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2011-01-01..2011-06-30 where key = 'v36' and release = 'r12909'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2012-01-01..2012-06-30 where key = 'v36' and release = 'r12908'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2012-07-01..2012-12-31 where key = 'v36' and release = 'r12917'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2013-01-01..2013-06-30 where key = 'v36' and release = 'r12907'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2013-07-01..2013-12-31 where key = 'v36' and release = 'r12916'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2014-01-01..2014-06-30 where key = 'v36' and release = 'r12906'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2015-01-01..2015-06-30 where key = 'v36' and release = 'r6245'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2015-07-01..2015-12-31 where key = 'v36' and release = 'r7483'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2016-01-01..2016-06-30 where key = 'v36' and release = 'r9937'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2016-01-01..2016-12-31 where key = 'v36' and release = 'r11223'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2016-07-01..2016-12-31 where key = 'v36' and release = 'r11222'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2017-01-01..2017-12-31 where key = 'v36' and release = 'r11858'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2017-07-01..2017-12-31 where key = 'v36' and release = 'r11857'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2018-01-01..2018-12-31 where key = 'v36' and release = 'r13316'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: HemKommun @2018-07-01..2018-12-31 where key = 'v36' and release = 'r13315'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1996-07-01..1996-12-31 where key = 'v36' and release = 'r14055'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1997-01-01..1997-06-30 where key = 'v36' and release = 'r14068'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1997-07-01..1997-12-31 where key = 'v36' and release = 'r14054'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1998-01-01..1998-06-30 where key = 'v36' and release = 'r14067'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1998-07-01..1998-12-31 where key = 'v36' and release = 'r14053'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1999-01-01..1999-06-30 where key = 'v36' and release = 'r14066'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @1999-07-01..1999-12-31 where key = 'v36' and release = 'r14052'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2000-01-01..2000-06-30 where key = 'v36' and release = 'r14065'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2000-07-01..2000-12-31 where key = 'v36' and release = 'r14051'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2001-01-01..2001-06-30 where key = 'v36' and release = 'r14064'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2001-07-01..2001-12-31 where key = 'v36' and release = 'r14050'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2002-01-01..2002-06-30 where key = 'v36' and release = 'r14063'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2002-07-01..2002-12-31 where key = 'v36' and release = 'r14049'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2003-01-01..2003-06-30 where key = 'v36' and release = 'r14062'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2003-07-01..2003-12-31 where key = 'v36' and release = 'r14048'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2004-01-01..2004-06-30 where key = 'v36' and release = 'r14061'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2004-07-01..2004-12-31 where key = 'v36' and release = 'r14047'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2005-01-01..2005-06-30 where key = 'v36' and release = 'r14060'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2005-07-01..2005-12-31 where key = 'v36' and release = 'r14046'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2006-01-01..2006-06-30 where key = 'v36' and release = 'r14059'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2006-07-01..2006-12-31 where key = 'v36' and release = 'r14045'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2007-01-01..2007-06-30 where key = 'v36' and release = 'r14058'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2007-07-01..2007-12-31 where key = 'v36' and release = 'r14044'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2008-01-01..2008-06-30 where key = 'v36' and release = 'r14057'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2008-07-01..2008-12-31 where key = 'v36' and release = 'r14043'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2009-01-01..2009-06-30 where key = 'v36' and release = 'r12911'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2009-07-01..2009-12-31 where key = 'v36' and release = 'r12920'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2010-01-01..2010-12-31 where key = 'v36' and release = 'r4341'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2010-07-01..2010-12-31 where key = 'v36' and release = 'r12919'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2011-01-01..2011-12-31 where key = 'v36' and release = 'r4555'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2011-07-01..2011-12-31 where key = 'v36' and release = 'r12918'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2012-01-01..2012-12-31 where key = 'v36' and release = 'r4886'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2014-07-01..2014-12-31 where key = 'v36' and release = 'r12913'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2020-01-01..2020-06-30 where key = 'v36' and release = 'r15715'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2020-01-01..2020-12-31 where key = 'v36' and release = 'r16518'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2020-07-01..2020-12-31 where key = 'v36' and release = 'r16517'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2021-01-01..2021-06-30 where key = 'v36' and release = 'r18186'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2021-01-01..2021-12-31 where key = 'v36' and release = 'r18332'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2021-07-01..2021-12-31 where key = 'v36' and release = 'r18331'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2022-01-01..2022-06-30 where key = 'v36' and release = 'r19657'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2022-01-01..2022-12-31 where key = 'v36' and release = 'r19460'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2022-07-01..2022-12-31 where key = 'v36' and release = 'r19727'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2023-01-01..2023-06-30 where key = 'v36' and release = 'r19744'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2023-01-01..2023-12-31 where key = 'v36' and release = 'r19467'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2023-07-01..2023-12-31 where key = 'v36' and release = 'r19767'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2024-01-01..2024-06-30 where key = 'v36' and release = 'r20009'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2024-01-01..2024-12-31 where key = 'v36' and release = 'r20011'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Hemkommun @2024-07-01..2024-12-31 where key = 'v36' and release = 'r20010'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1993-07-01..1994-06-30 where key = 'v36' and release = 'r14084'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1994-07-01..1995-06-30 where key = 'v36' and release = 'r14083'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1995-07-01..1996-06-30 where key = 'v36' and release = 'r14082'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1996-07-01..1997-06-30 where key = 'v36' and release = 'r14081'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1997-07-01..1998-06-30 where key = 'v36' and release = 'r14080'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1998-07-01..1999-06-30 where key = 'v36' and release = 'r14079'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @1999-07-01..2000-06-30 where key = 'v36' and release = 'r14078'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2000-07-01..2001-06-30 where key = 'v36' and release = 'r14077'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2001-07-01..2002-06-30 where key = 'v36' and release = 'r14076'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2002-07-01..2003-06-30 where key = 'v36' and release = 'r14075'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2003-07-01..2004-06-30 where key = 'v36' and release = 'r14074'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2004-07-01..2005-06-30 where key = 'v36' and release = 'r14073'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2005-07-01..2006-06-30 where key = 'v36' and release = 'r14072'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2006-07-01..2007-06-30 where key = 'v36' and release = 'r14071'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2007-07-01..2008-06-30 where key = 'v36' and release = 'r14070'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun @2008-07-01..2009-06-30 where key = 'v36' and release = 'r14069'"
+fields = { "label" = "Kommun (hemkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhet-kommun"
+fields = { "label" = "Kommun (skolkommun, SkolKommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (skolkommun, Kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "label" = "Kommun (skolkommun, SKOM)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:hkommun"
+fields = { "label" = "Kommun (hemkommun, HKommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
