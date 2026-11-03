@@ -180,7 +180,9 @@ async function browseSearchCase(page, shoot) {
   await search.press("Enter");
   await page.getByRole("menu").waitFor();
   check(
-    (await page.getByRole("searchbox").count()) === 1,
+    // Detail panels have their own filters; the shell and portalled palette
+    // still share exactly one field. Fails if the palette adds a second one.
+    (await page.getByRole("searchbox").evaluateAll((fields) => fields.filter((field) => !field.closest("main")).length)) === 1,
     "the open palette renders a search field of its own",
   );
   // Past the popover's entry fade, so the shot shows it opaque.
@@ -511,6 +513,25 @@ async function browseValuesCase(page, shoot) {
 }
 
 
+// Fails if linked documents disappear, parsed text cannot expand inline, or a PDF
+// routes through the deleted hash page. Expected text was read from the fixture
+// server's /api/docs/doc endpoint; titles and source presence are fixture data.
+async function linkedDocumentsCase(page, shoot) {
+  const panel = page.getByRole("heading", { name: "Source documents", exact: true }).locator("..");
+  await panel.getByRole("button", { name: "Beskrivning av Basregistret", exact: true }).click();
+  await panel.getByText("Basregistret innehåller en post per person och år.", { exact: true }).waitFor();
+  await settled(page);
+  await shoot("linked-documents-parsed");
+  await open(page, "/catalog/demo/hush");
+  await settled(page);
+  const pdfPanel = page.getByRole("heading", { name: "Source documents", exact: true }).locator("..");
+  const pdf = pdfPanel.getByRole("link", { name: "Bilaga", exact: true });
+  check(/^\/api\/docs\/file\/[0-9a-f]{64}$/.test(await pdf.getAttribute("href")), "PDF must link to its inline file endpoint");
+  check((await pdfPanel.getByRole("link").count()) === 1, "PDF without a source URL must not invent a source link");
+  await shoot("linked-documents-pdf");
+}
+
+
 /** Whether no palette menu is mounted, given a moment to leave. */
 async function menuGone(page) {
   try {
@@ -550,6 +571,11 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 const scenarios = {
+  "linked-documents": {
+    shots: 2,
+    route: "/catalog/demo/bas",
+    run: linkedDocumentsCase,
+  },
   "browse-values": {
     shots: 4,
     route: "/catalog/demo/bas",

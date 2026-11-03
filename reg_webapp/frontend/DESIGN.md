@@ -685,6 +685,16 @@ not grow new visual language meanwhile.
   is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in
   `text-muted`. Actions are right-aligned, Cancel first and the destructive one last as
   a `danger` Button. A click on the scrim does not answer it.
+- **Source documents:** register, table and variable pages show linked documents after
+  findings. Omit the panel for an empty list or unavailable documentation. Group
+  sections by source URL; several sections share a collapsed disclosure labelled by the
+  linked URL, ellipsized with its full text on hover, without a count or an invented
+  title. Parsed sections expand inline on first request, with emphasis and paragraphs
+  rendered as safe text; pipe tables stay text lines. PDFs link to the inline file
+  endpoint. Kind, licence and size are plain words; subjects use catalog names, never
+  hashes or FQIDs. A missing source URL adds no link or placeholder. Only register pages
+  filter section titles, with a count only while filtering. Documents never have hash
+  routes.
 - **Empty and loading states:** `EmptyState` is a centred, muted message: a title at the
   `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
   Button that names the next action ("Browse registers"). The title states what is

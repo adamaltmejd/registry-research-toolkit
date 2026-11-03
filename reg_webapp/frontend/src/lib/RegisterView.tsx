@@ -1,7 +1,9 @@
 import type { RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
+import { registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
+import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
@@ -9,6 +11,7 @@ import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 
 export function RegisterView({ node }: { node: RegisterShow }) {
+  const names = registerSubjectNames(node);
   return (
     <article className={styles.page}>
       <Definitions
@@ -95,7 +98,8 @@ export function RegisterView({ node }: { node: RegisterShow }) {
           </ul>
         </Panel>
       )}
-      <ScopedDataWarnings fqid={node.fqid} register={node} />
+      <ScopedDataWarnings fqid={node.fqid} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} filterable />
     </article>
   );
 }

@@ -249,12 +249,6 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       return [browserRoot, { label: "class" }, { label: route.key }];
     case "project":
       return [browserRoot, { label: "Project", word: true }];
-    case "doc":
-      return [
-        browserRoot,
-        { label: "Docs", word: true },
-        { label: route.identifier },
-      ];
     default:
       // not-found
       return [browserRoot];

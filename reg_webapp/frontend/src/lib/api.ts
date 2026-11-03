@@ -476,3 +476,41 @@ export function getValues(
   }
   return rustGet<ValueItemsPage>("/values", query, options);
 }
+
+// ── Linked source documents ──────────────────────────────────────────────
+export type RelatedDocument = RustSchemas["RelatedDocument"];
+export type DocDetail = RustSchemas["DocDetail"];
+
+export async function getRelatedDocuments(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<RelatedDocument[]> {
+  try {
+    return await rustGet<RelatedDocument[]>(
+      `/docs/related/${encodeFqid(ref)}`,
+      undefined,
+      options,
+    );
+  } catch (error) {
+    if (error instanceof ApiError) {
+      const body = error.body as { error?: { code?: unknown } } | null;
+      if (body?.error?.code === "docs_unavailable") return [];
+    }
+    throw error;
+  }
+}
+
+export function getDoc(
+  doc: string,
+  options?: { signal?: AbortSignal },
+): Promise<DocDetail> {
+  return rustGet<DocDetail>(
+    `/docs/doc/${encodeURIComponent(doc)}`,
+    undefined,
+    options,
+  );
+}
+
+export function docFileHref(doc: string): string {
+  return `${API_BASE}/docs/file/${encodeURIComponent(doc)}`;
+}

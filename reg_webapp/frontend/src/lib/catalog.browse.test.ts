@@ -146,7 +146,6 @@ describe("routeBreadcrumbs", () => {
       { name: "group", provider: "scb", register: "lisa", key: "ink" },
       { name: "class-group", key: "sun" },
       { name: "project" },
-      { name: "doc", identifier: "x" },
     ];
     for (const route of variants) {
       const trail = routeBreadcrumbs(route);

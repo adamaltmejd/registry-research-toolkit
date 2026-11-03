@@ -23,6 +23,7 @@ import { catalogWords, yesNo } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
@@ -304,7 +305,8 @@ export function VariableView({ node }: { node: VariableShow }) {
         )}
       </Panel>
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
-      <ScopedDataWarnings fqid={node.fqid} register={register ?? undefined} />
+      <ScopedDataWarnings fqid={node.fqid} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} />
       <Disclosure
         className={styles.disclosure}
         onExpandedChange={(expanded) => {
