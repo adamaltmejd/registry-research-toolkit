@@ -282,10 +282,11 @@ fields = { "tags" = ["geography"] }
 evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln anger geografiska områden.\ncatalog:variable_text:41389:9862:18262"
 
 [[statement]]
-kind = "set"
+kind = "link"
 subject = "var:regionala-statistikomraden-omradesnamn"
-fields = { "sets" = ["regso"] }
-evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
+relation = "label_of"
+object = "scb/registerdata-integration/regionala-statistikomraden-kod-registerdata-integration"
+evidence = "#2074 (from #1790): a code and its name column are a pair, not members of one set. The RegSO column (1997-2019) gives the area name of the RegSO code in regso_varde over the same years; both describe source variable v41253."
 
 [[statement]]
 kind = "set"
@@ -294,10 +295,11 @@ fields = { "tags" = ["geography"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
 
 [[statement]]
-kind = "set"
+kind = "link"
 subject = "var:regionala-statistikomraden-kommun-omradesnamn"
-fields = { "sets" = ["regso"] }
-evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41392:10227:18262\ncatalog:variable_text:41392:9862:10227"
+relation = "label_of"
+object = "scb/registerdata-integration/regionala-statistikomraden-kod-registerdata-integration"
+evidence = "#2074 (from #1790): a code and its name column are a pair, not members of one set. regso_namn (1997-2019) gives the municipality and area name of the RegSO code in regso_varde over the same years; both describe source variable v41253."
 
 [[statement]]
 kind = "set"
@@ -368,8 +370,8 @@ evidence = "Vistelsetid i Sverige beskriver bosättning och hör till migration.
 [[statement]]
 kind = "set"
 subject = "set:regso"
-fields = { "label" = "Regionala statistikområden (namn)" }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/registerdata-integration.toml:17; existing set membership and current id ledger determine the targets."
+fields = { "label" = "Regionala statistikområden (kod)" }
+evidence = "#2074 (from #1790): the set now holds only the two RegSO code formats; the name columns link to their code by label_of."
 
 [[statement]]
 kind = "set"
