@@ -2573,11 +2573,18 @@ def holdings(args) -> int:
 # Reader-visible text by kind, as SQL returning (stable key, resolved body). Text ids
 # renumber between builds, so bodies are compared, never ids.
 REBUILT_TEXT = {
-    "occurrence definition": (
+    f"occurrence {name}": (
         "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''),"
         " d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id"
-        " JOIN text d ON d.id = o.definition_text"
-    ),
+        f" JOIN text d ON d.id = o.{column}_text"
+    )
+    for name, column in (
+        ("label", "label"),
+        ("definition", "definition"),
+        ("operational definition", "opdef"),
+        ("unit", "unit"),
+    )
+} | {
     "variable label": (
         "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text"
     ),
