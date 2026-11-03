@@ -439,10 +439,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   and table pages show a Held panel grouped by physical table, with delivered column
   chips, periods and plain-word placement details, or an EmptyState when nothing is
   held. A caveat shared by a group's placements is a fact row, one that varies is a
-  Notes cell; neither is a tooltip, which a touch screen cannot open. A paired register
-  page shows a Held summary instead, one row per table with its held-variable count and
-  period runs, since its coverage lists every table's placements (#2110). Neither
-  appears while its data is loading. In steward mode a supplemental-only variable is
+  Notes cell; neither is a tooltip, which a touch screen cannot open. A register page
+  has no tables table and no Held summary: its tables are FilterChips over the variable
+  list, each with its period, a lens with OR within the selection, offered only when two
+  or more tables deliver variables (the archived variant chips, maintainer 2026-11-03).
+  A Tables definition row links every table's page by name. The Held panel does not
+  appear while its data is loading. In steward mode a supplemental-only variable is
   selectable for a project like a reference variable: `order` and `validate` read the
   composed steward view (crates/DESIGN.md, "Three questions, three scopes").
 
@@ -459,6 +461,11 @@ variables") are left out.
 ## Time
 
 Time is the axis every relation is drawn on.
+
+- A **period as text** reads with an en dash for a range (`1990–2023`), its segments
+  comma-spaced, and an open bound as "From 2019" or "Through 2023"; the `..` wire
+  spelling (`1990..2023`) appears only where the page shows the project file's own value
+  (maintainer 2026-11-03).
 
 - The **study window** is the project's period, set in the project banner (which is the
   period picker). Most researchers pick one, from a start year to the latest data, and

@@ -217,7 +217,7 @@ export function plainIssueText(
         return catalogPeriodLabel({
           start: bound(start),
           end: bound(end),
-        }).replace("..", "–");
+        });
       },
     )
     .replace(/(?<![\d.-])(\d{4})\.\.(\d{4})(?![\d.-])/g, "$1–$2");
