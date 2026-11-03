@@ -436,8 +436,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   held. A caveat shared by a group's placements is a fact row, one that varies is a
   Notes cell; neither is a tooltip, which a touch screen cannot open. A paired register
   page shows a Held summary instead, one row per table with its held-variable count and
-  period runs, since its coverage lists every table's placements (#2110). Steward
-  documentation appears in its own panel when supplied by coverage; neither panel
+  period runs, since its coverage lists every table's placements (#2110). Neither
   appears while its data is loading. In steward mode a supplemental-only variable is
   selectable for a project like a reference variable: `order` and `validate` read the
   composed steward view (crates/DESIGN.md, "Three questions, three scopes").
