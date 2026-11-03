@@ -1,4 +1,4 @@
-/** Safe inline emphasis tokenizer restored from the archived SPA. Returns text, never HTML. */
+/** Safe inline emphasis tokenizer. Returns text, never HTML. */
 
 export type Emphasis = "strong" | "em";
 
@@ -8,27 +8,23 @@ export interface InlineSegment {
   emphasis: Emphasis | null;
 }
 
-// Match an emphasis span OR a `**` opener that has no closer downgrades to text:
-//   **x**  → strong   (non-greedy, at least one char between the delimiters)
-//   *x*    → em
-//   _x_    → em        (only when the `_` pair is NOT flanked by word chars)
-// `[^*]` / `[^_]` inner classes keep the pairing non-nested and left-to-right and
-// stop a `*` span from swallowing a `**` delimiter. An unmatched marker simply
-// doesn't match the pattern and falls through to the literal text run.
-// The `_` arm carries CommonMark flanking guards — a preceding/following letter or
-// number (`u` flag → å/ä/ö count) disqualifies the marker, so intra-word `_` in
-// snake_case identifiers stays literal. The guards are zero-width, so `[^_]` (and
-// `[^*]`) behave identically under `u`.
-const SPAN =
-  /\*\*([^*]+?)\*\*|\*([^*]+?)\*|(?<![\p{L}\p{N}])_([^_]+?)_(?![\p{L}\p{N}])/gu;
+// Markdown escapes only ASCII punctuation. Consume an escape as one token before
+// looking for emphasis, so escaped delimiters cannot open or close a span.
+const PUNCTUATION = String.raw`[\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]`;
+const ESCAPE = String.raw`\\${PUNCTUATION}`;
+const UNESCAPE = new RegExp(String.raw`\\(${PUNCTUATION})`, "gu");
+// The plain arm excludes backslashes: otherwise backtracking could reinterpret an
+// escaped closing marker as a delimiter after consuming only its backslash.
+const STAR_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^*\\])+?`;
+const UNDERSCORE_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^_\\])+?`;
+const SPAN = new RegExp(
+  String.raw`(${ESCAPE})|\*\*(${STAR_TEXT})\*\*|\*(${STAR_TEXT})\*|(?<![\p{L}\p{N}])_(${UNDERSCORE_TEXT})_(?![\p{L}\p{N}])`,
+  "gu",
+);
 
 /**
- * Split a raw snippet into ordered emphasis segments. Empty input → `[]`;
- * marker-free input → a single plain segment. A matched span's delimiters are
- * dropped (the marker is presentation, replaced by the element); everything else —
- * literal runs, special chars, and ORPHAN/unbalanced markers — survives verbatim in
- * a segment's `text` (so the input is reproduced minus only the paired delimiters,
- * and the auto-escape boundary stays intact).
+ * Pair non-nested emphasis left to right. Unbalanced markers and intra-word
+ * underscores stay literal; backslashes before non-punctuation survive unchanged.
  */
 export function parseInlineMarkdown(input: string): InlineSegment[] {
   if (!input) return [];
@@ -44,16 +40,20 @@ export function parseInlineMarkdown(input: string): InlineSegment[] {
         emphasis: null,
       });
     }
-    // Group 1 = `**strong**`; groups 2/3 = `*em*` / `_em_`.
-    const [strong, emStar, emUnderscore] = [match[1], match[2], match[3]];
-    if (strong !== undefined) {
-      segments.push({ text: strong, emphasis: "strong" });
-    } else {
-      segments.push({
-        text: (emStar ?? emUnderscore) as string,
-        emphasis: "em",
-      });
-    }
+    const [escaped, strong, emStar, emUnderscore] = [
+      match[1],
+      match[2],
+      match[3],
+      match[4],
+    ];
+    segments.push({
+      text: (escaped ?? strong ?? emStar ?? emUnderscore).replace(
+        UNESCAPE,
+        "$1",
+      ),
+      emphasis:
+        escaped !== undefined ? null : strong !== undefined ? "strong" : "em",
+    });
     lastIndex = SPAN.lastIndex;
   }
 

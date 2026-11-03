@@ -518,7 +518,12 @@ async function browseValuesCase(page, shoot) {
 // server's /api/docs/doc endpoint; titles and source presence are fixture data.
 async function linkedDocumentsCase(page, shoot) {
   const panel = page.getByRole("heading", { name: "Source documents", exact: true }).locator("..");
-  await panel.getByRole("button", { name: "Beskrivning av Basregistret", exact: true }).click();
+  // Fails if filtering leaves a matching section hidden in a collapsed container.
+  // The expected title comes from the webapp-dev source frame.
+  await panel.getByRole("searchbox", { name: "Filter source documents" }).fill("Beskrivning");
+  const section = panel.getByRole("button", { name: "Beskrivning av Basregistret", exact: true });
+  await section.waitFor({ state: "visible" });
+  await section.click();
   await panel.getByText("Basregistret innehåller en post per person och år.", { exact: true }).waitFor();
   await settled(page);
   await shoot("linked-documents-parsed");

@@ -35,7 +35,17 @@ function bytesLabel(bytes: number): string {
 type Names = ReadonlyMap<string, string>;
 
 /* oxlint-disable react/no-array-index-key -- Immutable document text has no paragraph or segment ids. */
-function DocumentBody({ doc, names }: { doc: string; names: Names }) {
+function DocumentBody({
+  doc,
+  title,
+  names,
+  pageFqid,
+}: {
+  doc: string;
+  title: string;
+  names: Names;
+  pageFqid: string;
+}) {
   const resource = useAsyncResource(doc, (signal) => getDoc(doc, { signal }));
   if (resource.data == null && !resource.error)
     return (
@@ -52,27 +62,31 @@ function DocumentBody({ doc, names }: { doc: string; names: Names }) {
     );
   const subjects = new Map(
     (resource.data?.subjects ?? []).flatMap((subject) => {
-      const name = subject.kind !== "value_set" && names.get(subject.fqid);
+      const name =
+        subject.kind !== "value_set" &&
+        subject.fqid !== pageFqid &&
+        names.get(subject.fqid);
       return name ? [[subject.fqid, name] as const] : [];
     }),
   );
+  const paragraphs = (resource.data?.body ?? "")
+    .split(/\n\s*\n/u)
+    .filter(Boolean);
+  if (paragraphs[0]?.trim() === title.trim()) paragraphs.shift();
   return (
     <div className={styles.body}>
-      {(resource.data?.body ?? "")
-        .split(/\n\s*\n/u)
-        .filter(Boolean)
-        .map((paragraph, index) => (
-          // Paragraphs and inline segments have no independent identity in the source text.
-          <p className={styles.paragraph} key={index}>
-            {parseInlineMarkdown(paragraph).map((segment, part) => {
-              const text = segment.text.replace(/\\(.)/gu, "$1");
-              if (segment.emphasis === "strong")
-                return <strong key={part}>{text}</strong>;
-              if (segment.emphasis === "em") return <em key={part}>{text}</em>;
-              return text;
-            })}
-          </p>
-        ))}
+      {paragraphs.map((paragraph, index) => (
+        // Paragraphs and inline segments have no independent identity in the source text.
+        <p className={styles.paragraph} key={index}>
+          {parseInlineMarkdown(paragraph).map((segment, part) => {
+            const text = segment.text;
+            if (segment.emphasis === "strong")
+              return <strong key={part}>{text}</strong>;
+            if (segment.emphasis === "em") return <em key={part}>{text}</em>;
+            return text;
+          })}
+        </p>
+      ))}
       {subjects.size > 0 && (
         <div>
           <p className={styles.meta}>About</p>
@@ -95,16 +109,20 @@ function DocumentRow({
   document,
   names,
   sourceLink,
+  pageFqid,
 }: {
   document: RelatedDocument;
   names: Names;
   sourceLink: boolean;
+  pageFqid: string;
 }) {
   const [requested, setRequested] = useState(false);
   const meta = (
     <p className={styles.meta}>
-      {document.kind === "parsed" ? "Parsed text" : "PDF"},{" "}
-      {bytesLabel(document.bytes)}; {catalogWords(document.licence)}
+      {document.kind === "parsed"
+        ? "Parsed text"
+        : `PDF, ${bytesLabel(document.bytes)}`}
+      ; {catalogWords(document.licence)}
     </p>
   );
   const source = sourceLink && document.url && (
@@ -113,7 +131,7 @@ function DocumentRow({
       href={document.url}
       title={document.url}
     >
-      {document.url}
+      Source
     </a>
   );
   if (document.kind === "pdf")
@@ -139,13 +157,20 @@ function DocumentRow({
               <span>{document.title}</span>
             </Button>
           </Heading>
-          {meta}
+          {sourceLink && meta}
           {source}
           <DisclosurePanel
             className={`motion-disclose ${isExpanded ? "open" : ""}`}
           >
             <div>
-              {requested && <DocumentBody doc={document.doc} names={names} />}
+              {requested && (
+                <DocumentBody
+                  doc={document.doc}
+                  title={document.title}
+                  names={names}
+                  pageFqid={pageFqid}
+                />
+              )}
             </div>
           </DisclosurePanel>
         </>
@@ -158,56 +183,59 @@ function DocumentGroup({
   url,
   documents,
   names,
-  grouped,
+  pageFqid,
+  filtering,
+  licences,
 }: {
-  grouped: boolean;
-  url: string | null;
+  url: string;
   documents: RelatedDocument[];
   names: Names;
+  pageFqid: string;
+  filtering: boolean;
+  licences: string[];
 }) {
-  const [requested, setRequested] = useState(false);
-  const rows = (
-    <ul className={pageStyles.plainList}>
-      {documents.map((document) => (
-        <li key={document.doc}>
-          <DocumentRow
-            document={document}
-            names={names}
-            sourceLink={!grouped}
-          />
-        </li>
-      ))}
-    </ul>
-  );
-  if (!url || !grouped) return rows;
+  const [expanded, setExpanded] = useState(false);
   return (
     <Disclosure
       className={pageStyles.disclosure}
-      onExpandedChange={(expanded) => {
-        if (expanded) setRequested(true);
+      isExpanded={filtering || expanded}
+      onExpandedChange={(open) => {
+        if (!filtering) setExpanded(open);
       }}
     >
       {({ isExpanded }) => (
         <>
-          <Heading
-            level={3}
-            className={`${pageStyles.disclosureHeading} ${styles.groupHeading}`}
-          >
-            <Button
-              slot="trigger"
-              className={`${pageStyles.disclosureButton} ${styles.groupTrigger}`}
-              aria-label={`Documents from ${url}`}
-            >
+          <Heading level={3} className={pageStyles.disclosureHeading}>
+            <Button slot="trigger" className={pageStyles.disclosureButton}>
               <TreeChevron />
+              <span className={styles.groupLabel} title={url}>
+                {url}
+              </span>
             </Button>
-            <a className={`link ${styles.source}`} href={url} title={url}>
-              {url}
-            </a>
           </Heading>
+          <p className={styles.meta}>
+            Parsed text; {licences.map(catalogWords).join(", ")}
+          </p>
+          <a className={`link ${styles.source}`} href={url} title={url}>
+            Source
+          </a>
           <DisclosurePanel
             className={`motion-disclose ${isExpanded ? "open" : ""}`}
           >
-            <div>{requested && rows}</div>
+            <div>
+              <ul className={pageStyles.plainList}>
+                {documents.map((document) => (
+                  <li key={document.doc}>
+                    <DocumentRow
+                      document={document}
+                      names={names}
+                      pageFqid={pageFqid}
+                      sourceLink={false}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </DisclosurePanel>
         </>
       )}
@@ -233,31 +261,31 @@ export function RelatedDocumentsPanel({
       (resource.data ?? []).map((document) => [document.doc, document]),
     ).values(),
   ];
+  const canFilter =
+    filterable && documents.some((document) => document.kind === "parsed");
+  const query = canFilter ? filter : "";
   const filtered = documents.filter((document) =>
-    matchesFilter(filter, document.title),
+    matchesFilter(query, document.title),
   );
-  const groups = new Map<string | null, RelatedDocument[]>();
-  // Keep the original grouping while filtering, so a lone match retains its source heading.
+  const groups = new Map<string, RelatedDocument[]>();
+  // Keep original parsed-document groups while filtering, including a lone match.
   for (const document of documents) {
+    if (document.kind !== "parsed" || !document.url) continue;
     const group = groups.get(document.url) ?? [];
     group.push(document);
     groups.set(document.url, group);
   }
-  if (resource.data?.length === 0) return null;
+  if (!resource.error && !resource.data?.length) return null;
   return (
     <Panel title="Source documents">
-      {resource.data == null && !resource.error ? (
-        <div aria-busy="true">
-          <Skeleton count={2} />
-        </div>
-      ) : resource.error ? (
+      {resource.error ? (
         <StatusRow tone="error" live="alert">
           The source documents did not load ({resource.error}). Reload the page
           to try again.
         </StatusRow>
       ) : (
         <div className={styles.content}>
-          {filterable && (
+          {canFilter && (
             <FilterInput
               value={filter}
               onChange={setFilter}
@@ -273,18 +301,40 @@ export function RelatedDocumentsPanel({
               description="Try a different section title."
             />
           ) : (
-            [...groups].map(([url, group]) => {
-              const matches = group.filter((document) =>
-                matchesFilter(filter, document.title),
-              );
+            documents.map((document) => {
+              const group =
+                document.kind === "parsed" && document.url
+                  ? groups.get(document.url)
+                  : undefined;
+              if (group && group.length > 1) {
+                if (document.doc !== group[0].doc) return null;
+                const matches = group.filter((section) =>
+                  matchesFilter(query, section.title),
+                );
+                return (
+                  matches.length > 0 && (
+                    <DocumentGroup
+                      key={document.doc}
+                      url={document.url as string}
+                      documents={matches}
+                      names={names}
+                      pageFqid={fqid}
+                      filtering={query.trim() !== ""}
+                      licences={[
+                        ...new Set(group.map((section) => section.licence)),
+                      ]}
+                    />
+                  )
+                );
+              }
               return (
-                matches.length > 0 && (
-                  <DocumentGroup
-                    key={url ?? "no-source"}
-                    url={url}
-                    grouped={url !== null && group.length > 1}
-                    documents={matches}
+                matchesFilter(query, document.title) && (
+                  <DocumentRow
+                    key={document.doc}
+                    document={document}
                     names={names}
+                    pageFqid={fqid}
+                    sourceLink
                   />
                 )
               );

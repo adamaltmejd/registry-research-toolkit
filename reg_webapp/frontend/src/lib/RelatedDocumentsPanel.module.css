@@ -10,6 +10,7 @@
   padding: var(--space-3) 0;
 }
 .row {
+  align-items: flex-start;
   padding: var(--space-2) 0;
   border-top: 1px solid var(--border);
   overflow-wrap: anywhere;
@@ -25,23 +26,16 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.groupHeading {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-.groupTrigger {
-  width: auto;
-  flex-shrink: 0;
-}
-.source {
-  display: block;
+.groupLabel {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.source {
+  display: inline-block;
+  align-self: flex-start;
   font-size: var(--text-sm);
   font-weight: var(--body-weight);
 }
