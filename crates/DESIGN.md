@@ -1719,9 +1719,9 @@ register or physical-table naming rules in the compiler.
 Holdings schema 5 adds `holding_notice_candidate` (#2123) and drops background data from
 the published pair (#2113): the `locator` columns of `holding_table`, `holding_column`,
 `holding_mapping` and `holding_notice`,
-`holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. The steward
-still authors a locator on every decision and evidence on every reference occurrence;
-they locate compiler and verifier refusals and stay in the steward repo. The
+`holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. Both stay
+steward input: a locator on every decision locates compiler and verifier refusals, and
+the evidence on every reference occurrence records its review in the steward repo. The
 supplemental semantic part keeps the catalog schema but emits no `occurrence_locator`
 rows, since its source rows are steward working files. `meta.input_manifest_sha256` (one
 digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
