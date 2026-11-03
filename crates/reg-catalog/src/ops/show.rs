@@ -366,55 +366,22 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         [entity.id],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
     )?;
-    let tables = conn
-        .prepare(
-            "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
-                    t.start, t.end
-             FROM tbl t JOIN text n ON n.id = t.name_text
-               LEFT JOIN unit_type u ON u.id = t.unit_type_id
-             WHERE t.register_id = ? ORDER BY t.pid",
-        )?
-        .query_map([entity.id], |row| {
-            Ok(ShowTable {
-                fqid: row.get(0)?,
-                name: row.get(1)?,
-                role: row.get(2)?,
-                implicit: row.get(3)?,
-                timeless: row.get(4)?,
-                unit_type: row.get(5)?,
-                cadence: row.get(6)?,
-                period: server.period(row.get(7)?, row.get(8)?),
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
-    for row in conn
-        .prepare(
-            "SELECT DISTINCT v.pid, t.pid FROM segment s
-             JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id
-             WHERE v.register_id = ? ORDER BY v.pid, t.pid",
-        )?
-        .query_map([entity.id], |row| Ok((row.get(0)?, row.get(1)?)))?
-    {
-        let (variable, table) = row?;
-        members.entry(variable).or_default().push(table);
+    let (mut tables, mut variables) = contents(server, conn, &entity.pid)?;
+    // Steward mode: tables and variables the steward defines inside a reference
+    // register join it; a pid both origins define keeps the reference row.
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        let (held_tables, held_variables) = contents(server, &extra, &entity.pid)?;
+        let known: BTreeSet<_> = tables.iter().map(|t| t.fqid.clone()).collect();
+        tables.extend(held_tables.into_iter().filter(|t| !known.contains(&t.fqid)));
+        tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        let known: BTreeSet<_> = variables.iter().map(|v| v.fqid.clone()).collect();
+        variables.extend(
+            held_variables
+                .into_iter()
+                .filter(|v| !known.contains(&v.fqid)),
+        );
+        variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
     }
-    let variables = conn
-        .prepare(
-            "SELECT v.pid, l.body, v.start, v.end
-             FROM variable v JOIN text l ON l.id = v.label_text
-             WHERE v.register_id = ? ORDER BY v.pid",
-        )?
-        .query_map([entity.id], |row| {
-            let fqid: String = row.get(0)?;
-            Ok(ShowVariableRef {
-                tables: members.remove(&fqid).unwrap_or_default(),
-                fqid,
-                name: row.get(1)?,
-                period: server.period(row.get(2)?, row.get(3)?),
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
     let unplaced = conn
         .prepare(
             "SELECT DISTINCT n.body
@@ -433,6 +400,67 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         variables,
         unplaced,
     })
+}
+
+/// A register's tables and variables in one origin, by the register's public id.
+fn contents(
+    server: &Server,
+    conn: &Connection,
+    register: &str,
+) -> Result<(Vec<ShowTable>, Vec<ShowVariableRef>), Error> {
+    let tables = conn
+        .prepare(
+            "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
+                    t.start, t.end
+             FROM tbl t JOIN register r ON r.id = t.register_id
+               JOIN text n ON n.id = t.name_text
+               LEFT JOIN unit_type u ON u.id = t.unit_type_id
+             WHERE r.pid = ? ORDER BY t.pid",
+        )?
+        .query_map([register], |row| {
+            Ok(ShowTable {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+                role: row.get(2)?,
+                implicit: row.get(3)?,
+                timeless: row.get(4)?,
+                unit_type: row.get(5)?,
+                cadence: row.get(6)?,
+                period: server.period(row.get(7)?, row.get(8)?),
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for row in conn
+        .prepare(
+            "SELECT DISTINCT v.pid, t.pid FROM segment s
+             JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id
+             JOIN register r ON r.id = v.register_id
+             WHERE r.pid = ? ORDER BY v.pid, t.pid",
+        )?
+        .query_map([register], |row| Ok((row.get(0)?, row.get(1)?)))?
+    {
+        let (variable, table) = row?;
+        members.entry(variable).or_default().push(table);
+    }
+    let variables = conn
+        .prepare(
+            "SELECT v.pid, l.body, v.start, v.end
+             FROM variable v JOIN register r ON r.id = v.register_id
+               JOIN text l ON l.id = v.label_text
+             WHERE r.pid = ? ORDER BY v.pid",
+        )?
+        .query_map([register], |row| {
+            let fqid: String = row.get(0)?;
+            Ok(ShowVariableRef {
+                tables: members.remove(&fqid).unwrap_or_default(),
+                fqid,
+                name: row.get(1)?,
+                period: server.period(row.get(2)?, row.get(3)?),
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok((tables, variables))
 }
 
 fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {

@@ -321,6 +321,62 @@
       "clips": []
     }
   },
+  "steward_minted": {
+    "note": "reference-extension mints, inside the reference register demo/projected (no reference occurrence names it), the variables steward-slot and received-key (projected.csv, 2014) and the table grid with grid-id and cells (tables.csv, projected.csv, 2015..2016); the base defines child-id, amount and status there. topology.toml's AttestedSlot holds Slot on the reference table demo/projected with ReceivedKey as its entity key; AttestedGrid holds the grid table. The reference register keeps its own rows and gains the steward's, sorted by public id.",
+    "register_tables": [
+      "demo/projected",
+      "demo/projected/grid"
+    ],
+    "register_variables": [
+      "demo/projected/amount",
+      "demo/projected/cells",
+      "demo/projected/child-id",
+      "demo/projected/grid-id",
+      "demo/projected/id",
+      "demo/projected/received-key",
+      "demo/projected/status",
+      "demo/projected/steward-slot"
+    ],
+    "project": {
+      "schema_version": "5.2.0",
+      "reg_meta_version": "0.64.0",
+      "name": "Steward-minted slot",
+      "sources": [
+        {
+          "name": "s",
+          "table": "demo/projected",
+          "period": {
+            "from": 2014,
+            "to": 2014
+          },
+          "bindings": [
+            {
+              "variable": "demo/projected/steward-slot",
+              "type": "numeric"
+            }
+          ]
+        }
+      ]
+    },
+    "files": [
+      {
+        "table": "AttestedSlot",
+        "delivery": "2014",
+        "columns": [
+          {
+            "name": "Slot",
+            "role": "ordered",
+            "variable": "demo/projected/steward-slot"
+          },
+          {
+            "name": "ReceivedKey",
+            "role": "row_key",
+            "variable": "demo/projected/received-key"
+          }
+        ]
+      }
+    ]
+  },
   "contested_rivals": [
     ["Shared", "demo/owners", "demo/owners/first"],
     ["Shared", "demo/owners", "demo/owners/second"]

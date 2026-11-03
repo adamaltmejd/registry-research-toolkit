@@ -27,3 +27,39 @@ locator = "synthetic-census:row=12"
 [[table.key]]
 entity = ["demo/owners/id"]
 locator = "synthetic-delivery:new-membership"
+
+[[table]]
+physical_name = "AttestedGrid"
+disposition = "dated"
+delivery = "2015..2016"
+table_pids = ["demo/projected/grid"]
+locator = "synthetic-census:row=13"
+[[table.column]]
+name = "Cells"
+locator = "synthetic-delivery:row=6"
+[[table.column.mapping]]
+table_pid = "demo/projected/grid"
+variable_pid = "demo/projected/cells"
+locator = "synthetic-delivery:row=6"
+[[table.key]]
+entity = ["demo/projected/grid-id"]
+time = []
+locator = "synthetic-delivery:row=5"
+
+[[table]]
+physical_name = "AttestedSlot"
+disposition = "dated"
+delivery = "2014"
+table_pids = ["demo/projected"]
+locator = "synthetic-census:row=14"
+[[table.column]]
+name = "Slot"
+locator = "synthetic-delivery:row=4"
+[[table.column.mapping]]
+table_pid = "demo/projected"
+variable_pid = "demo/projected/steward-slot"
+locator = "synthetic-delivery:row=4"
+[[table.key]]
+entity = ["demo/projected/received-key"]
+time = []
+locator = "synthetic-delivery:row=7"

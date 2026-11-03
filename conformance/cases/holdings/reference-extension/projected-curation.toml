@@ -1,0 +1,7 @@
+[[statement]]
+kind = "link"
+subject = "var:cells"
+relation = "continues"
+object = "var:steward-slot"
+at = "2015-01-01"
+evidence = "Synthetic: the grid cell count takes over from the steward slot in 2015."

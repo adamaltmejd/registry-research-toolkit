@@ -298,7 +298,8 @@ pub(super) fn distinct(
     base: &Connection,
     declarations: &BTreeSet<references::Occurrence>,
 ) -> Result<(), String> {
-    let allowed = references::admitted(holdings, base, declarations)?;
+    let mut allowed = references::admitted(holdings, base, declarations)?;
+    allowed.extend(references::overlays(holdings, base)?);
     {
         let sql = "SELECT pid FROM ident WHERE kind!='provider' UNION SELECT pid FROM var_set UNION SELECT pid FROM ident_retired";
         let mut query = base.prepare(sql).map_err(|e| e.to_string())?;
