@@ -152,7 +152,7 @@ docs asset and no copying an asset from an older release.
 Variables used below (absolute paths, as in 8a):
 
 ```sh
-steward=/absolute/path/to/swecov-steward-checkout   # a fresh clone, see 8d
+steward=/absolute/path/to/swecov-steward-checkout   # a new path: 8d clones into it
 prev=/absolute/path/to/previous-release-dir          # reg_meta.db, decompressed (8b)
 ```
 
