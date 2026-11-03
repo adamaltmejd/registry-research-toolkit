@@ -15,6 +15,7 @@ import re
 import shlex
 import subprocess
 import tomllib
+from contextlib import closing
 from urllib.parse import unquote
 
 import pytest
@@ -273,9 +274,10 @@ def test_burst_is_rate_limited(server_cmd, tmp_path):
     # would share one bucket). A server of its own: a drained bucket would
     # refuse the other MCP cases from this address. It runs at the production default:
     # the suite's template raises `--write-limit` so its own cases are not refused.
-    pool = ServerPool(re.sub(r" --write-limit \S+", "", server_cmd), tmp_path)
     env = artifact_env(cached_case_artifact(READER))
-    try:
+    with closing(
+        ServerPool(re.sub(r" --write-limit \S+", "", server_cmd), tmp_path)
+    ) as pool:
         client = pool.client(env | {"REG_META_EDGE_TOKEN": "edge-secret"})
 
         def tools_list(address, token):
@@ -305,8 +307,6 @@ def test_burst_is_rate_limited(server_cmd, tmp_path):
         response = drain(lambda n: f"2001:db8::{n + 1:x}", "edge-secret")
         assert response.status_code == 429
         assert tools_list("2001:db8:0:1::1", "edge-secret").status_code == 200
-    finally:
-        pool.close()
 
 
 def test_stdio_session(request, http_servers):

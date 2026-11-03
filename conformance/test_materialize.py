@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import re
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
@@ -34,11 +35,8 @@ ROUTE = "/api/project/materialize"
 def steward(tmp_path_factory, server_cmd):
     directory = tmp_path_factory.mktemp("materialize")
     _, output = prepare_materialize(directory)
-    pool = ServerPool(server_cmd + " --catalog fixture", directory)
-    try:
+    with closing(ServerPool(server_cmd + " --catalog fixture", directory)) as pool:
         yield pool.client(artifact_env(output))
-    finally:
-        pool.close()
 
 
 @pytest.mark.parametrize(

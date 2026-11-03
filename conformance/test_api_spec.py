@@ -9,15 +9,12 @@ from __future__ import annotations
 
 import json
 import tomllib
-from pathlib import Path
 
 import pytest
 from http_cases import fixture_source
-from reader_artifacts import fixture_source as reader_fixture_source
+from reader_artifacts import CASES, REPO, fixture_source as reader_fixture_source
 
-ROOT = Path(__file__).resolve().parents[1]
-API = ROOT / "conformance/api"
-CASES = ROOT / "conformance/cases"
+API = REPO / "conformance/api"
 
 OPS = {
     op["name"]: op

@@ -16,12 +16,10 @@ import subprocess
 import time
 import tomllib
 from contextlib import closing, suppress
-from pathlib import Path
 
 import httpx2
-from reader_artifacts import build_reader_artifact, cached_reader_artifact
+from reader_artifacts import CASES, REPO, build_reader_artifact, cached_reader_artifact
 
-CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
 # The line `reg-meta serve` prints on stderr once bound.
 LISTENING = re.compile(rb"^listening on \S+:(\d+)\n", re.MULTILINE)
@@ -148,7 +146,7 @@ def assert_startup_refusal(request, refusal, servers, tmp_path):
 def _assert_refused(servers, db, refusal):
     completed = subprocess.run(
         servers.argv(db, 0),
-        cwd=CASES.parents[1],
+        cwd=REPO,
         stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
@@ -283,7 +281,7 @@ class ServerPool:
         with log.open("wb") as output:
             process = subprocess.Popen(
                 argv,
-                cwd=CASES.parents[1],
+                cwd=REPO,
                 env=os.environ | env,
                 stdin=subprocess.DEVNULL,
                 stdout=output,

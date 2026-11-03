@@ -6,10 +6,9 @@ import json
 import shutil
 import sqlite3
 import subprocess
-from pathlib import Path
 
 import pytest
-from reader_artifacts import REG_BUILD, REPO
+from reader_artifacts import CASES, REG_BUILD, REPO
 
 
 @pytest.mark.parametrize("scenario", ["undeclared", "nonmember"])
@@ -18,8 +17,8 @@ def test_set_facets_refuse_invalid_membership(scenario, tmp_path):
     # HTTP show-set case covers the allowed twin with two ordered axes. Existing
     # membership cases have no facets; authored fixture TOML and refusal codes
     # below supply the oracle. Lock must locate the offending variable statement.
-    fixture = Path(__file__).parent / "cases/fixtures/webapp-dev"
-    case = Path(__file__).parent / "cases/lock/set-facets"
+    fixture = CASES / "fixtures/webapp-dev"
+    case = CASES / "lock/set-facets"
     expected = json.loads((case / "expected.json").read_text())[scenario]
     curation = tmp_path / "curation"
     shutil.copytree(fixture / "curation", curation)
@@ -66,7 +65,7 @@ def test_assignments_refuse_concurrent_folds_at_lock(tmp_path):
     # Regression: assignment resolution accepts concurrent different folds in one
     # table, leaving only artifact verify to reject the resulting segment. The
     # one-day overlap must refuse beside nonconcurrent and cross-table allowed twins.
-    case = Path(__file__).parent / "cases/lock/concurrent-fold-assignment"
+    case = CASES / "lock/concurrent-fold-assignment"
     expected = json.loads((case / "expected.json").read_text())
     curation = tmp_path / "curation"
     shutil.copytree(case / "curation", curation)
@@ -105,7 +104,7 @@ def test_inherited_identity_uses_remaining_ledger_anchors(tmp_path):
     # also identify the year after its day. Untouched X/Y keep their default ids
     # despite a spanning anchor and later single-group anchors: an unrelated Z
     # assignment must not rename X from a to b. Fixture source/ledger are the oracle.
-    case = Path(__file__).parent / "cases/lock/ledger-inheritance"
+    case = CASES / "lock/ledger-inheritance"
     expected = json.loads((case / "expected.json").read_text())
     curation = tmp_path / "curation"
     shutil.copytree(case / "curation", curation)
@@ -421,8 +420,8 @@ def test_description_has_one_variable_owner(scenario, tmp_path):
     # Regression: accept occurrence-owned descriptions or overwrite conflicting var:
     # descriptions. The valid HTTP/MCP descriptions fixture is the allowed twin;
     # its source history remains independently described by occurrence definitions.
-    case = Path(__file__).parent / "cases/lock/variable-description"
-    fixture = Path(__file__).parent / "cases/fixtures/descriptions"
+    case = CASES / "lock/variable-description"
+    fixture = CASES / "fixtures/descriptions"
     expected = json.loads((case / "expected.json").read_text())[scenario]
     curation = tmp_path / "curation"
     shutil.copytree(fixture / "curation", curation)
