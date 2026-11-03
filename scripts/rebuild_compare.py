@@ -2592,6 +2592,12 @@ REBUILT_TEXT = {
     "register description": (
         "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text"
     ),
+    "mapping caveat": (
+        "SELECT t.physical_name || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid"
+        " || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m"
+        " JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id"
+        " WHERE m.caveat IS NOT NULL"
+    ),
 }
 # Finding subjects by kind, as SQL returning (id, key that survives a rebuild).
 REBUILT_SUBJECTS = {
@@ -2761,6 +2767,13 @@ def rebuilt(args) -> int:
             for key in sorted(old.keys() & new.keys())
             if old[key][1] != new[key][1]
         }
+        # Unplaced columns moving between held and unplaced keep empty mapping sets.
+        status_changes = {
+            key: (rebuilt_status(*old[key]), rebuilt_status(*new[key]))
+            for key in sorted(old.keys() & new.keys())
+            if key not in changed
+            and rebuilt_status(*old[key]) != rebuilt_status(*new[key])
+        }
         interval_only = sum(
             {m[:2] for m in before} == {m[:2] for m in after}
             for before, after in changed.values()
@@ -2812,7 +2825,7 @@ def rebuilt(args) -> int:
             for side, c in totals.items()
         ),
         "",
-        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)} (validity interval only: {interval_only}); only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
+        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)} (validity interval only: {interval_only}); held/unplaced status changed: {len(status_changes)} ({', '.join(f'{b} → {a}: {n}' for (b, a), n in sorted(Counter(status_changes.values()).items())) or 'none'}); only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
         "",
         "## Changed placements",
         "",
@@ -2859,6 +2872,10 @@ def rebuilt(args) -> int:
             "placement_changes": [
                 {"table": table, "column": column, "old": sorted(b), "new": sorted(a)}
                 for (table, column), (b, a) in sorted(changed.items())
+            ],
+            "status_changes": [
+                {"table": table, "column": column, "old": b, "new": a}
+                for (table, column), (b, a) in status_changes.items()
             ],
             "text": texts,
             **{
