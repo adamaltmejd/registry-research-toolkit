@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-"""holdings_scope_check — a holdings DB carries only what the catalog serves.
+"""holdings_scope_check — a holdings DB carries only what the builder declares.
 
-    uv run --no-project scripts/holdings_scope_check.py <reg_meta_swecov.db> <base reg_meta.db> <toolkit checkout>
+    uv run --no-project scripts/holdings_scope_check.py <reg_meta_swecov.db> <toolkit checkout>
 
 The SWECOV catalog is public (maintainer 2026-11-03), so the paired holdings asset has no
 disclosure review. What a release must not carry is background data: steward-repo notes,
 raw census or storage exports, inventory working files. This check enforces that
-mechanically. Every table, column and meta key of the holdings DB must be
+mechanically against the builder's own DDL, which the checkout supplies:
 
-- served: a word in crates/reg-catalog/src or crates/reg-meta/src, an FTS shadow table of
-  a served table, or part of the base catalog's schema (the base release is judged on its
-  own); or
-- designated: listed below, the holdings physical topology the order materializer reads
-  (crates/DESIGN.md, Holdings, "MONA order file") and the provenance meta keys.
+- Schema: every table (FTS shadow tables included) and column must equal what executing
+  crates/reg-build/src/schema.sql, holdings/relations.sql, holdings/schema.sql and the
+  inline holding_reference_occurrence DDL (holdings/references.rs) yields in SQLite. An
+  extra or missing table or column fails. holding_relation is optional: the builder
+  emits it only when the steward declares external relations.
+- Meta: every key must be in META_KEYS below.
+- Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a raw
+  payload in an allowed column is caught.
 
-Holdings-specific text values must also stay under a size bound; a raw payload is larger.
-Both DBs are opened read-only. Output is one summary line and the failing items' names,
+The DB is opened read-only. Output is one summary line and the failing items' names,
 never row contents. Exit 1 on any failure.
 """
 
@@ -26,142 +28,149 @@ import sqlite3
 import sys
 from pathlib import Path
 
-# Tables the order materializer reads, not yet read by crates/ (it is built later).
-DESIGNATED_TABLES = {
-    "holding_period",  # the periods a physical table covers: row-filter ranges
-    "holding_route",  # physical table -> catalog table: which tables an order may select
-    "holding_notice",  # coverage and delivery findings the order carries as `findings`
-}
-DESIGNATED_COLUMNS = {
-    # file naming, schema and partitioning of a physical table
-    "holding_table.file_name",  # order file name (physical-table filenames)
-    "holding_table.schema_name",  # exact physical schema in the order file
-    "holding_table.table_type",  # table vs view, for the runner's query
-    "holding_table.partition",  # partition selector of a split table
-    "holding_table.projection_of",  # source table of a projection
-    "holding_table.projection_token",  # projection selector
-    "holding_table.period_column_id",  # column carrying the period
-    "holding_table.period_encoding",  # how that column encodes the period (row_filter)
-    # per-column storage metadata and steward slot topology
-    "holding_column.storage_type",  # expected storage metadata
-    "holding_column.precision",  # expected storage metadata
-    "holding_column.scale",  # expected storage metadata
-    "holding_column.slot_family",  # steward slot topology
-    "holding_column.slot_kind",  # steward slot topology
-    "holding_column.slot_index",  # steward slot topology
-    "holding_column.follow_up",  # steward follow-up note shown on the column
-}
-DESIGNATED_META = {
-    "input_pins",  # revision and digest of every pinned input
-    "steward_repo",  # provenance: steward repository
-    "steward_commit",  # provenance: steward commit
-    "compiler_digest",  # provenance: compiler build
-    "semantic_generation",  # provenance: semantic generation
-    "semantic_sha256",  # provenance: semantic digest
-    "census_tables",  # aggregate count
-    "census_columns",  # aggregate count
-    "mapped_columns",  # aggregate count
-    "unmatched_columns",  # aggregate count
-    "storage_extra_columns",  # aggregate count
+BUILD_SRC = "crates/reg-build/src"
+OPTIONAL_TABLES = {"holding_relation"}
+
+# Every meta key a holdings DB carries: the base catalog's keys plus the steward's.
+META_KEYS = {
+    "schema_version",  # base: schema version
+    "builder_version",  # base: builder provenance
+    "catalog_version",  # base: release label
+    "generation_id",  # base: content digest
+    "curation_digest",  # base: curation digest
+    "sqlite_version",  # base: SQLite that built the file
+    "period_grammar",  # base: period grammar the reader parses
+    "delivery_name_grammar",  # base: delivery-name grammar
+    "open_start",  # base: open-interval sentinel
+    "open_end",  # base: open-interval sentinel
+    "semantic_schema_version",  # holdings: schema of the semantic build
+    "semantic_generation",  # holdings: provenance of the semantic build
+    "semantic_sha256",  # holdings: digest of the semantic build
+    "catalog_generation",  # holdings: the paired base catalog
+    "catalog_sha256",  # holdings: the paired base catalog
+    "owner_kind",  # holdings: owner of the file
+    "owner_id",  # holdings: owner of the file
+    "steward_repo",  # holdings: provenance, steward repository
+    "steward_commit",  # holdings: provenance, steward commit
+    "steward_config",  # holdings: provenance, steward config path
+    "compiler_digest",  # holdings: provenance, compiler build
+    "input_pins",  # holdings: revision and digest of every pinned input
+    "steward",  # holdings: steward presentation, shown in the SPA
+    "scope",  # holdings: the steward's public scope document
+    "logo",  # holdings: steward logo, shown in the SPA
+    "census_tables",  # holdings: aggregate count
+    "census_columns",  # holdings: aggregate count
+    "mapped_columns",  # holdings: aggregate count
+    "unmatched_columns",  # holdings: aggregate count
+    "storage_extra_columns",  # holdings: aggregate count
 }
 
-# Size bounds in bytes, from the 0.71.0 preview DB's maxima (text columns 630, other meta
-# values 1755 for `logo`) with margin. A raw export is larger than any of these.
-TEXT_BOUND = 2048  # holdings-specific text columns
-META_BOUND = 4096  # holdings-specific meta values
+# Size bounds in bytes, set from the 0.71.0 preview DB's maxima with margin: no ordinary
+# TEXT column exceeds 918; a raw export is larger than any of these.
+DEFAULT_BOUND = 2048
+BOUNDS = {
+    # FTS5 index pages (preview max 4 053), page size 4 096 by default.
+    "doc_fts_data.block": 16_384,
+    "search_data.block": 16_384,
+    "search_description_data.block": 16_384,
+}
+PER_KEY = "meta.value"  # bounded per key, below
+
+META_BOUND = 4096  # preview max 1 755 (`logo`)
 META_BOUNDS = {
-    "input_pins": 400_000,  # one entry per pinned input file (preview 291 474)
+    # one entry per pinned input file (preview 291 474); #2113 will tighten this.
+    "input_pins": 400_000,
     "scope": 120_000,  # the steward's public scope document (preview 81 974)
 }
 
-SHADOW_SUFFIXES = ("_data", "_idx", "_docsize", "_config", "_content")
-SERVED_SRC = ("crates/reg-catalog/src", "crates/reg-meta/src")
 
-
-def connect_ro(path: Path) -> sqlite3.Connection:
-    return sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
-
-
-def tables_of(con: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
-    names = [
-        r[0]
-        for r in con.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-        )
-    ]
-    return {
-        t: [(c[1], c[2].upper()) for c in con.execute(f'PRAGMA table_info("{t}")')]
-        for t in names
+def schema_of(
+    con: sqlite3.Connection,
+) -> tuple[dict[str, set[tuple[str, str]]], set[str]]:
+    """Tables with their (column, type) sets, and the names of the virtual tables."""
+    rows = con.execute(
+        "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+    ).fetchall()
+    cols = {
+        t: {(c[1], c[2].upper()) for c in con.execute(f'PRAGMA table_xinfo("{t}")')}
+        for t, _ in rows
     }
+    return cols, {t for t, sql in rows if sql.startswith("CREATE VIRTUAL")}
+
+
+def expected_schema(checkout: Path) -> dict[str, set[tuple[str, str]]]:
+    src = checkout / BUILD_SRC
+    # holding_reference_occurrence is created from a Rust string, not a .sql file.
+    inline = re.search(
+        r'"(CREATE TABLE holding_reference_occurrence .*?;)"',
+        (src / "holdings/references.rs").read_text(),
+        re.DOTALL,
+    )
+    if inline is None:
+        sys.exit("holding_reference_occurrence DDL not found in holdings/references.rs")
+    ddl = [
+        (src / "schema.sql").read_text(),
+        (src / "holdings/relations.sql").read_text(),
+        (src / "holdings/schema.sql").read_text(),
+        inline.group(1),
+    ]
+    con = sqlite3.connect(":memory:")
+    con.executescript("\n".join(ddl))
+    return schema_of(con)[0]
 
 
 def main() -> int:
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 3:
         print(__doc__, file=sys.stderr)
         return 2
-    holdings, base, checkout = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
-    text = "\n".join(
-        p.read_text() for d in SERVED_SRC for p in (checkout / d).rglob("*.rs")
-    )
-    words = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", text))
-    hcon, bcon = connect_ro(holdings), connect_ro(base)
-    h_schema, b_schema = tables_of(hcon), tables_of(bcon)
-    b_meta = {r[0] for r in bcon.execute("SELECT key FROM meta")}
-    h_meta = {
-        r[0]: r[1]
-        for r in hcon.execute("SELECT key, length(CAST(value AS BLOB)) FROM meta")
-    }
+    holdings, checkout = Path(sys.argv[1]), Path(sys.argv[2])
+    con = sqlite3.connect(holdings.resolve().as_uri() + "?mode=ro", uri=True)
+    want = expected_schema(checkout)
+    have, virtual = schema_of(con)
 
-    def shadow_of_served(t: str) -> bool:
-        stem = next((t[: -len(s)] for s in SHADOW_SUFFIXES if t.endswith(s)), None)
-        return stem in words and stem in h_schema
-
-    bad_t, bad_c, bad_m, too_big = [], [], [], []
-    for t, cols in h_schema.items():
-        if shadow_of_served(t):
+    extra_t = sorted(set(have) - set(want))
+    missing_t = sorted(set(want) - set(have) - OPTIONAL_TABLES)
+    extra_c, missing_c, too_big = [], [], []
+    for t in sorted(set(have) & set(want)):
+        extra_c += [f"{t}.{c} {ty}" for c, ty in sorted(have[t] - want[t])]
+        missing_c += [f"{t}.{c} {ty}" for c, ty in sorted(want[t] - have[t])]
+    for t, cols in sorted(have.items()):
+        if t in virtual:  # their rows live in the shadow tables, checked below
             continue
-        if t not in b_schema and t not in words and t not in DESIGNATED_TABLES:
-            bad_t.append(t)
-            continue
-        inherited = {c for c, _ in b_schema.get(t, [])}
-        for c, ty in cols:
-            if c in inherited:
+        for c, ty in sorted(cols):
+            if ty not in ("TEXT", "BLOB", "") or f"{t}.{c}" == PER_KEY:
                 continue
-            if c not in words and f"{t}.{c}" not in DESIGNATED_COLUMNS:
-                bad_c.append(f"{t}.{c}")
-            if ty == "TEXT":
-                n = (
-                    hcon.execute(
-                        f'SELECT max(length(CAST("{c}" AS BLOB))) FROM "{t}"'
-                    ).fetchone()[0]
-                    or 0
-                )
-                if n > TEXT_BOUND:
-                    too_big.append(f"{t}.{c} ({n} > {TEXT_BOUND} bytes)")
-    for k, n in h_meta.items():
-        if (
-            k not in b_meta
-            and k not in words
-            and f'"{k}"' not in text
-            and k not in DESIGNATED_META
-        ):
-            bad_m.append(k)
+            bound = BOUNDS.get(f"{t}.{c}", DEFAULT_BOUND)
+            n = con.execute(
+                f'SELECT max(length(CAST("{c}" AS BLOB))) FROM "{t}"'
+            ).fetchone()[0]
+            if (n or 0) > bound:
+                too_big.append(f"{t}.{c} ({n} > {bound} bytes)")
+
+    meta = (
+        con.execute("SELECT key, length(CAST(value AS BLOB)) FROM meta").fetchall()
+        if "meta" in have
+        else []
+    )
+    bad_m = sorted(k for k, _ in meta if k not in META_KEYS)
+    for k, n in meta:
         bound = META_BOUNDS.get(k, META_BOUND)
-        if k not in b_meta and n > bound:
+        if n > bound:
             too_big.append(f"meta.{k} ({n} > {bound} bytes)")
 
     items = [
-        ("unserved table", bad_t),
-        ("unserved column", bad_c),
-        ("unserved meta key", bad_m),
+        ("extra table", extra_t),
+        ("missing table", missing_t),
+        ("extra column", extra_c),
+        ("missing column", missing_c),
+        ("unknown meta key", bad_m),
         ("oversize value", too_big),
     ]
     failing = sum(len(v) for _, v in items)
-    n_cols = sum(len(c) for c in h_schema.values())
     print(
-        f"scope check {'FAIL' if failing else 'ok'}: tables={len(h_schema)} columns={n_cols} "
-        f"meta_keys={len(h_meta)} unserved_tables={len(bad_t)} unserved_columns={len(bad_c)} "
-        f"unserved_meta_keys={len(bad_m)} oversize_values={len(too_big)}"
+        f"scope check {'FAIL' if failing else 'ok'}: tables={len(have)} "
+        f"columns={sum(len(c) for c in have.values())} meta_keys={len(meta)} "
+        + " ".join(f"{label.replace(' ', '_')}s={len(v)}" for label, v in items)
     )
     for label, names in items:
         for name in sorted(names):

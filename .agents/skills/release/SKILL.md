@@ -317,21 +317,21 @@ The maintainer reads that summary for go/no-go; its counts go in the release not
 The SWECOV catalog is public (maintainer 2026-11-03), so there is no disclosure review.
 The release must carry only what the catalog serves, never background data: steward
 repository notes, raw census or storage exports, inventory working files.
-`holdings_scope_check.py` fails when a table, column or meta key of the holdings DB is
-neither read by the Rust reader, inherited from the base schema nor on its designated
-list (the order materializer's holdings topology and provenance keys), or when a
-holdings-specific value exceeds its size bound. Run it against this release checkout and
+`holdings_scope_check.py` fails when the holdings DB's schema differs from the schema
+the builder declares (every table, FTS shadow tables included, and every column must
+match, none extra or missing), when a meta key is not on the script's allowlist, or when
+a text or blob value exceeds its size bound. Run it against this release checkout and
 record its one-line result in the release notes:
 
 ```sh
 uv run --no-project scripts/holdings_scope_check.py "$evidence/catalog/reg_meta_swecov.db" \
-  "$evidence/catalog/reg_meta.db" "$PWD" | tee "$evidence/scope-check.txt"
+  "$PWD" | tee "$evidence/scope-check.txt"
 ```
 
 A failure stops the release. Fix the build or, when the item belongs in the paired
-catalog, add it to the script's designated list in a reviewed PR; then rebuild from 8d.
-Then re-check `$base_sha` against the local base file (it must be unchanged since 8a)
-and proceed.
+catalog, add its meta key or size bound to the script in a reviewed PR; then rebuild
+from 8d. Then re-check `$base_sha` against the local base file (it must be unchanged
+since 8a) and proceed.
 
 #### 8i. Compress, checksum and upload both assets to the draft
 
