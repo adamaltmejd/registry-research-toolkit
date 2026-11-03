@@ -1,10 +1,9 @@
 # Drives swecov_extract.R as the data manager does, as a process: an export root
 # with orders/ in, exit code, CSVs and logs out. The only overrides are the
-# script's process boundaries (export root and database connection).
+# script's process boundary (the export root); no database connection is given.
 
 runner_dir <- normalizePath(file.path(testthat::test_path(), "..", ".."))
 repo_dir <- dirname(runner_dir)
-cases_dir <- file.path(runner_dir, "tests", "cases")
 
 materialize_dir <- file.path(repo_dir, "conformance", "cases", "materialize")
 
@@ -31,16 +30,6 @@ golden_order <- function(case, steward = "swecov") {
   path
 }
 
-# A case's order: its own order.json, else the materialize golden of the same
-# name.
-case_order <- function(case, steward = "swecov") {
-  own <- file.path(cases_dir, case, "order.json")
-  if (file.exists(own)) {
-    return(own)
-  }
-  golden_order(case, steward)
-}
-
 # A fresh export root whose orders/ holds `orders`: name -> order file path, or
 # name -> raw text.
 export_root <- function(orders = list(), text = list()) {
@@ -58,7 +47,7 @@ export_root <- function(orders = list(), text = list()) {
   base
 }
 
-run_runner <- function(base, connection = "") {
+run_runner <- function(base) {
   output <- tempfile("runner-", fileext = ".log")
   status <- system2(
     file.path(R.home("bin"), "Rscript"),
@@ -66,7 +55,7 @@ run_runner <- function(base, connection = "") {
     # system2 pastes env into a shell command: quote the values.
     env = c(
       paste0("SWECOV_EXTRACT_BASE=", shQuote(base)),
-      paste0("SWECOV_EXTRACT_CONNECTION=", shQuote(connection))
+      "SWECOV_EXTRACT_CONNECTION="
     ),
     stdout = output,
     stderr = output
@@ -94,6 +83,6 @@ expect_refused <- function(base, name, code) {
 
 # A compact rewrite of a case's order with one change applied.
 order_text <- function(case, change, steward = "swecov") {
-  doc <- jsonlite::read_json(case_order(case, steward))
+  doc <- jsonlite::read_json(golden_order(case, steward))
   as.character(jsonlite::toJSON(change(doc), auto_unbox = TRUE, null = "null"))
 }

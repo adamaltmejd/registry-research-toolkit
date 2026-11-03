@@ -72,6 +72,12 @@ The script never prints or logs row values: only file names, counts and the orde
 fields. A database error is reported by its code, not its message. The extract files
 contain microdata: they stay in MONA like any other project data.
 
+## Tests
+
+The automated suite (testthat, run by hand) covers only the refusals and validation that
+fire before the database, and needs no database. Extraction itself is verified by a
+manual run on MONA with real code.
+
 ## Other stewards
 
 The steward-specific settings (steward id, export root, database connection) are in the
