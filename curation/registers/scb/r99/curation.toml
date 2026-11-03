@@ -574,3 +574,45 @@ kind = "set"
 subject = "var:utbnamn"
 fields = { "tags" = ["education"] }
 evidence = "Benämningen hör tillsammans med koden till utbildningsgruppen.\ncatalog:variable_text:3379:18993:19723\ncatalog:variable_text:3380:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arbetsstallen-i-urvalsdesignen"
+fields = { "label" = "Antal arbetsställen i urvalsdesignen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:framtida-antal-anstallda"
+fields = { "label" = "Framtida antal anställda" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nyanstalld-personal"
+fields = { "label" = "Nyanställd personal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sokt-personal"
+fields = { "label" = "Sökt personal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsatt-personal"
+fields = { "label" = "Sysselsatt personal" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:tillgang-pa-sokande"
+fields = { "label" = "Tillgång på sökande" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsgrupp"
+fields = { "label" = "Utbildningsgrupp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

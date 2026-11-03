@@ -815,3 +815,69 @@ kind = "set"
 subject = "var:total-kyrkoavgiftssats"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:34235\ncatalog:variable_text:34235:13514:15340\ncatalog:variable_text:34235:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:folkmangd"
+fields = { "label" = "Folkmängd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:landareal"
+fields = { "label" = "Landareal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:landstingsskattesats"
+fields = { "label" = "Landstingsskattesats" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:preliminara-skattemedel"
+fields = { "label" = "Preliminära skattemedel" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:primarkommunal-skattesats"
+fields = { "label" = "Primärkommunal skattesats" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:region-landsting"
+fields = { "label" = "Region/landsting" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skatteinkomster"
+fields = { "label" = "Skatteinkomster" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skattekraft"
+fields = { "label" = "Skattekraft" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skatteunderlag"
+fields = { "label" = "Skatteunderlag" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:slutavrakning"
+fields = { "label" = "Slutavräkning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-kommunal-skattesats"
+fields = { "label" = "Total kommunal skattesats" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

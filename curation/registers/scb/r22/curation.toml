@@ -990,3 +990,51 @@ kind = "set"
 subject = "var:socialbidrag-i-december"
 fields = { "description" = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i december månad." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger november, medan etikett och källkolumn anger december.\ncatalog:occurrence-locators:variable:7311\ncatalog:variable_text:7311:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn-i-bistandshushallet"
+fields = { "label" = "Antal barn i biståndshushållet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bistandsmanader"
+fields = { "label" = "Biståndsmånader" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:flyktingstatus"
+fields = { "label" = "Flyktingstatus" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseplats"
+fields = { "label" = "Födelseplats" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:introduktionsersattningsbelopp"
+fields = { "label" = "Introduktionsersättningsbelopp" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "label" = "Län" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:socialbidragsbelopp"
+fields = { "label" = "Socialbidragsbelopp" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

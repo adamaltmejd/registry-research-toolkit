@@ -424,3 +424,33 @@ kind = "set"
 subject = "var:utbildningsatgard-vux"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger utbildningsåtgärd; koderna inom SSV saknar förklaring i källan.\ncatalog:valueset:3162\ncatalog:variable_text:44171:10408:11869"
+
+[[statement]]
+kind = "set"
+subject = "set:skolans-geografiska-lage"
+fields = { "label" = "Skolans geografiska läge" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:studieomfattning-i-poang"
+fields = { "label" = "Studieomfattning i poäng" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-utbildningsanordnare"
+fields = { "label" = "Typ av utbildningsanordnare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsatgard"
+fields = { "label" = "Utbildningsåtgärd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "label" = "Utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

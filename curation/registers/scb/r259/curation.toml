@@ -564,3 +564,45 @@ kind = "set"
 subject = "var:datautrustning-utg"
 fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:ai-baserade-andelar-av-it-utgifter"
+fields = { "label" = "AI-baserade andelar av IT-utgifter" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:egen-personals-arbete-med-programvaruutveckling"
+fields = { "label" = "Egen personals arbete med programvaruutveckling" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kop-av-molntjanster"
+fields = { "label" = "Köp av molntjänster" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:marknadsforingsutgifter"
+fields = { "label" = "Marknadsföringsutgifter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utgifter-for-data-och-telekommunikationsutrustning"
+fields = { "label" = "Utgifter för data- och telekommunikationsutrustning" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:utgifter-for-it-tjanster"
+fields = { "label" = "Utgifter för IT-tjänster" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:utgifter-for-programvara"
+fields = { "label" = "Utgifter för programvara" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

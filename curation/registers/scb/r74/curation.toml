@@ -1036,3 +1036,81 @@ kind = "set"
 subject = "var:vent"
 fields = { "tags" = ["housing"] }
 evidence = "Ventilation är en byggnadsegenskap.\ncatalog:variable_text:7637:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:biobransleanvandning"
+fields = { "label" = "Biobränsleanvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:biutrymmesyta"
+fields = { "label" = "Biutrymmesyta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsyta"
+fields = { "label" = "Bostadsyta" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadens-ibruktagandear"
+fields = { "label" = "Byggnadens ibruktagandeår" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:byte-av-uppvarmningssatt"
+fields = { "label" = "Byte av uppvärmningssätt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elanvandning"
+fields = { "label" = "Elanvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:energianvandning"
+fields = { "label" = "Energianvändning" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:energibesparande-atgarder"
+fields = { "label" = "Energibesparande åtgärder" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:oljeanvandning"
+fields = { "label" = "Oljeanvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmningssatt"
+fields = { "label" = "Uppvärmningssätt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varmepumpens-installationsar"
+fields = { "label" = "Värmepumpens installationsår" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:varmepumpens-varmeeffekt"
+fields = { "label" = "Värmepumpens värmeeffekt" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

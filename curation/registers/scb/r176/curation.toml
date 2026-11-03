@@ -1402,3 +1402,45 @@ kind = "set"
 subject = "var:wil-uppr"
 fields = { "tags" = ["methods"] }
 evidence = "Källan anger ett uppräkningstal för Willys.\ncatalog:occurrence:381039\ncatalog:variable_text:38341:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:konsumtionsklassificering-coicop"
+fields = { "label" = "Konsumtionsklassificering COICOP" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (abbreviation)."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktklassificering-nationalrakenskaper"
+fields = { "label" = "Produktklassificering nationalräkenskaper" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:redovisningsperiod"
+fields = { "label" = "Redovisningsperiod" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsfaktor"
+fields = { "label" = "Uppräkningsfaktor" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varuklassificering-kpi"
+fields = { "label" = "Varuklassificering KPI" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (abbreviation)."

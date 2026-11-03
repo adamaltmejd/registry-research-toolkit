@@ -1320,3 +1320,87 @@ kind = "set"
 subject = "var:vilken-postort-har-redovisningsenheten-postort"
 fields = { "sets" = ["postort"] }
 evidence = "The definition explicitly asks for the reporting unit's postal locality (r56), included by r58 and also measured by the partner in r55.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32145\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32253\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32254\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-naringsgren"
+fields = { "label" = "Arbetsställets näringsgren" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleanvandning"
+fields = { "label" = "Bränsleanvändning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:branslepris"
+fields = { "label" = "Bränslepris" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleslag"
+fields = { "label" = "Bränsleslag" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:branslets-varmevarde"
+fields = { "label" = "Bränslets värmevärde" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elanvandning"
+fields = { "label" = "Elanvändning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkopsvarde-av-el"
+fields = { "label" = "Inköpsvärde av el" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:inkopsvarde-av-inkopt-kvantitet"
+fields = { "label" = "Inköpsvärde av inköpt kvantitet" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:inkopt-kvantitet"
+fields = { "label" = "Inköpt kvantitet" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:postnummer"
+fields = { "label" = "Postnummer" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:postort"
+fields = { "label" = "Postort" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-panneffekt"
+fields = { "label" = "Total panneffekt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:varde-av-el-och-transportbransleforbrukning"
+fields = { "label" = "Värde av el och transportbränsleförbrukning" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

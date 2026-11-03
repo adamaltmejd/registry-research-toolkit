@@ -484,3 +484,33 @@ kind = "set"
 subject = "var:utgaende-moms-25-m10"
 fields = { "tags" = ["taxation"] }
 evidence = "Beloppet är utgående moms vid 25 procents skattesats.\ncatalog:variable_text:41424:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arbetsstallen"
+fields = { "label" = "Antal arbetsställen" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mervardesskatt"
+fields = { "label" = "Mervärdesskatt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattning"
+fields = { "label" = "Omsättning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

@@ -790,3 +790,63 @@ kind = "set"
 subject = "var:urvalskod"
 fields = { "tags" = ["methods"] }
 evidence = "Koden beskriver urvalet.\ncatalog:valueset:667\ncatalog:variable_text:36128:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetade-timmar"
+fields = { "label" = "Arbetade timmar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avlonade-timmar"
+fields = { "label" = "Avlönade timmar" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foretagsstorleksklass"
+fields = { "label" = "Foretagsstorleksklass" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:heltidstjanster"
+fields = { "label" = "Heltidstjänster" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:loner"
+fields = { "label" = "Löner" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naturaformaner"
+fields = { "label" = "Naturaförmåner" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-arbetskraftskostnader"
+fields = { "label" = "Övriga arbetskraftskostnader" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sociala-avgifter"
+fields = { "label" = "Sociala avgifter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

@@ -2566,3 +2566,171 @@ kind = "set"
 subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
 fields = { "tags" = ["income"] }
 evidence = "Other financing is a residual personal-support source (r11, r14). Employment and grant siblings (r32, r34) support income without assuming the unspecified financing is either source.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:512117\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2877\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54604\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54606"
+
+[[statement]]
+kind = "set"
+subject = "set:andel-avklarade-forskarstudier"
+fields = { "label" = "Andel avklarade forskarstudier" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anledningar-att-inte-stanna-i-sverige"
+fields = { "label" = "Anledningar att inte stanna i Sverige" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anledningar-att-stanna-i-sverige"
+fields = { "label" = "Anledningar att stanna i Sverige" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ansokningssatt-till-forskarutbildning"
+fields = { "label" = "Ansökningssätt till forskarutbildning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:avsikt-att-stanna-i-sverige"
+fields = { "label" = "Avsikt att stanna i Sverige" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:behorighet-till-forskarutbildning"
+fields = { "label" = "Behörighet till forskarutbildning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:erbjudande-om-forskarutbildning-i-annat-land"
+fields = { "label" = "Erbjudande om forskarutbildning i annat land" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:familjemedlemmars-flyttning-till-sverige"
+fields = { "label" = "Familjemedlemmars flyttning till Sverige" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-hogsta-utbildningsniva"
+fields = { "label" = "Föräldrars högsta utbildningsnivå" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:forsorjningsformer-under-forskarstudier"
+fields = { "label" = "Försörjningsformer under forskarstudier" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:handledares-insatser"
+fields = { "label" = "Handledares insatser" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:handledningstimmar"
+fields = { "label" = "Handledningstimmar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hemmaboende-barn"
+fields = { "label" = "Hemmaboende barn" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hindrande-brister-i-handledningen"
+fields = { "label" = "Hindrande brister i handledningen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:huvudsakligt-motiv-till-forskarutbildning"
+fields = { "label" = "Huvudsakligt motiv till forskarutbildning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarland"
+fields = { "label" = "Medborgarland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-paverka-institutionens-verksamhet"
+fields = { "label" = "Möjlighet att påverka institutionens verksamhet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-forskarutbildningens-start"
+fields = { "label" = "Nöjdhet med forskarutbildningens start" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-val-av-sverige"
+fields = { "label" = "Orsaker till val av Sverige" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overvagande-att-byta-handledare"
+fields = { "label" = "Övervägande att byta handledare" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sammanboende-med-partner"
+fields = { "label" = "Sammanboende med partner" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sprakkunskaper"
+fields = { "label" = "Språkkunskaper" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stress-med-negativa-konsekvenser"
+fields = { "label" = "Stress med negativa konsekvenser" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:tydlighet-i-krav-pa-doktoranden"
+fields = { "label" = "Tydlighet i krav på doktoranden" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-diskriminering"
+fields = { "label" = "Upplevd diskriminering" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-ekonomisk-tillracklighet"
+fields = { "label" = "Upplevd ekonomisk tillräcklighet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-tidsatgang-for-forskarstudier"
+fields = { "label" = "Upplevd tidsåtgång för forskarstudier" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:utlandsstudier-inom-forskarutbildningen"
+fields = { "label" = "Utlandsstudier inom forskarutbildningen" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

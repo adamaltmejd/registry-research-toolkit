@@ -2052,3 +2052,135 @@ kind = "set"
 subject = "var:vaxtskyddsmedelsnamn"
 fields = { "description" = "Glyfosatmedlens namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar förkortning och stavning utan att ändra betydelsen.\ncatalog:occurrence:515681"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sprutningstillfallen"
+fields = { "label" = "Antal sprutningstillfällen" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:behandlad-areal"
+fields = { "label" = "Behandlad areal" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bortfallsorsak"
+fields = { "label" = "Bortfallsorsak" }
+evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (trailing period)."
+
+[[statement]]
+kind = "set"
+subject = "set:ekologisk-odling"
+fields = { "label" = "Ekologisk odling" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:glyfosatmedelsanvandning"
+fields = { "label" = "Glyfosatmedelsanvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:glyfosatmedlens-anvandningsomrade"
+fields = { "label" = "Glyfosatmedlens användningsområde" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:markanpassat-skyddsavstand"
+fields = { "label" = "Markanpassat skyddsavstånd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlad-groda"
+fields = { "label" = "Odlad gröda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingsareal"
+fields = { "label" = "Odlingsareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:personlig-skyddsutrustning"
+fields = { "label" = "Personlig skyddsutrustning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:radgivning-och-beslutsstod-for-vaxtskydd"
+fields = { "label" = "Rådgivning och beslutsstöd för växtskydd" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:spill-och-lackage"
+fields = { "label" = "Spill och läckage" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:sprutningens-utforare"
+fields = { "label" = "Sprutningens utförare" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:spruttyp"
+fields = { "label" = "Spruttyp" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:stra-forkortning"
+fields = { "label" = "Stråförkortning" }
+evidence = "#2100 group name: named from the members' labels and definitions (step 3: members' compound)."
+
+[[statement]]
+kind = "set"
+subject = "set:undersoknings-och-urvalstillhorighet"
+fields = { "label" = "Undersöknings- och urvalstillhörighet" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (suspended hyphen)."
+
+[[statement]]
+kind = "set"
+subject = "set:vaxtskyddsmedelsanvandning"
+fields = { "label" = "Växtskyddsmedelsanvändning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vaxtskyddsmedelsdos"
+fields = { "label" = "Växtskyddsmedelsdos" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:vaxtskyddsmedlens-anvandningsomrade"
+fields = { "label" = "Växtskyddsmedlens användningsområde" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:vaxtskyddspreparat"
+fields = { "label" = "Växtskyddspreparat" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:vindanpassat-skyddsavstand"
+fields = { "label" = "Vindanpassat skyddsavstånd" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

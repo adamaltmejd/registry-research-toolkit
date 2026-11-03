@@ -983,3 +983,63 @@ kind = "set"
 subject = "var:termin-for-kursen"
 fields = { "description" = "Antal terminer som kursen läses över. Vilken kurs som avses anges i variabeln Kurs." }
 evidence = "Definition pass 2026-11-02: The operational definition and unit Antal establish a duration count, not a calendar term.\nrel070-base/reg_meta.db:occurrence:214714\nrel070-base/reg_meta.db:occurrence:214748\nrel070-base/reg_meta.db:occurrence:214783\nrel070-base/reg_meta.db:occurrence:214827\nrel070-base/reg_meta.db:occurrence:214878\nrel070-base/reg_meta.db:occurrence:214922\nrel070-base/reg_meta.db:occurrence:214967\nrel070-base/reg_meta.db:occurrence:215006\nrel070-base/reg_meta.db:occurrence:215046\nrel070-base/reg_meta.db:occurrence:215090\nrel070-base/reg_meta.db:occurrence:215134\nrel070-base/reg_meta.db:occurrence:215178\nrel070-base/reg_meta.db:occurrence:215222\nrel070-base/reg_meta.db:occurrence:215266"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringstidpunkt"
+fields = { "label" = "Invandringstidpunkt" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:nationella-prov-betyg"
+fields = { "label" = "Nationella prov betyg" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:nationella-prov-resultatpoang"
+fields = { "label" = "Nationella prov resultatpoäng" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:poang-per-betygsniva"
+fields = { "label" = "Poäng per betygsnivå" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:provversion"
+fields = { "label" = "Provversion" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:studietimmar"
+fields = { "label" = "Studietimmar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:studievag-i-gymnasieskolan"
+fields = { "label" = "Studieväg i gymnasieskolan" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "label" = "Svensk och utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "label" = "Utbildningsnivå" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

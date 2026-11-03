@@ -694,3 +694,69 @@ kind = "set"
 subject = "var:windeo-elomrade-4"
 fields = { "tags" = ["energy"] }
 evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39263:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-naringsgren"
+fields = { "label" = "Arbetsställets näringsgren" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elleverantorsbyten"
+fields = { "label" = "Elleverantörsbyten" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-gasturbinkraft"
+fields = { "label" = "Elproduktion med gasturbinkraft" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-industriellt-mottryck"
+fields = { "label" = "Elproduktion med industriellt mottryck" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-kondenskraft"
+fields = { "label" = "Elproduktion med kondenskraft" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-kraftvarme-for-fjarrvarme"
+fields = { "label" = "Elproduktion med kraftvärme för fjärrvärme" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-solkraft"
+fields = { "label" = "Elproduktion med solkraft" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-vattenkraft"
+fields = { "label" = "Elproduktion med vattenkraft" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-vindkraft"
+fields = { "label" = "Elproduktion med vindkraft" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
+
+[[statement]]
+kind = "set"
+subject = "set:export-av-el"
+fields = { "label" = "Export av el" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:import-av-el"
+fields = { "label" = "Import av el" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

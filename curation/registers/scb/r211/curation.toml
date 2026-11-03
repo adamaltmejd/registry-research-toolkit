@@ -586,3 +586,57 @@ kind = "set"
 subject = "var:tshalt-franandra"
 fields = { "tags" = ["agriculture"] }
 evidence = "Variabeln mäter torrsubstanshalt i skörd från andra arealer.\ncatalog:variable_text:42205:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:betesareal"
+fields = { "label" = "Betesareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:odlingsform-vid-skattning"
+fields = { "label" = "Odlingsform vid skattning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:outnyttjad-vallareal"
+fields = { "label" = "Outnyttjad vallareal" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "label" = "Produktionsområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skord-av-slattervall"
+fields = { "label" = "Skörd av slåttervall" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:slattervallareal"
+fields = { "label" = "Slåttervallareal" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:torrsubstanshalt"
+fields = { "label" = "Torrsubstanshalt" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:total-vallareal"
+fields = { "label" = "Total vallareal" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:vallskord-fran-andra-akerarealer"
+fields = { "label" = "Vallskörd från andra åkerarealer" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."

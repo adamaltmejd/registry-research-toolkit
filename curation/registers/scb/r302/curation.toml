@@ -754,3 +754,45 @@ kind = "set"
 subject = "var:nytta-utbildning-privatliv-fritid"
 fields = { "sets" = ["upplevd-nytta-av-utbildningen"] }
 evidence = "Private-life/leisure educational benefit is documented in r10 and r15, with explicit benefit responses in r12; work benefit provides a supported group partner (r6).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26087\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26175"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsfaktorers-betydelse"
+fields = { "label" = "Arbetsfaktorers betydelse" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsortens-overensstammelse-med-tidigare-ort"
+fields = { "label" = "Arbetsortens överensstämmelse med tidigare ort" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bedomning-av-avslutad-utbildning"
+fields = { "label" = "Bedömning av avslutad utbildning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:huvudsaklig-sysselsattning"
+fields = { "label" = "Huvudsaklig sysselsättning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:overensstammelse-mellan-arbete-och-utbildning"
+fields = { "label" = "Överensstämmelse mellan arbete och utbildning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-arbete-utanfor-utbildningsomradet"
+fields = { "label" = "Skäl till arbete utanför utbildningsområdet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-nytta-av-utbildningen"
+fields = { "label" = "Upplevd nytta av utbildningen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

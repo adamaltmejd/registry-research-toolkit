@@ -826,3 +826,63 @@ kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "sets" = ["kostnadsersattningar"] }
 evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'ersättning för resor till och från Sverige' and the variable is on the 4-item candidate list; the 'förmån' wording does not make it a förmånsvärde.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:30\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1380"
+
+[[statement]]
+kind = "set"
+subject = "set:avdragen-inkomstskatt"
+fields = { "label" = "Avdragen inkomstskatt" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bilforman"
+fields = { "label" = "Bilförmån" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsforman"
+fields = { "label" = "Bostadsförmån" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:drivmedelsforman"
+fields = { "label" = "Drivmedelsförmån" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-for-egenavgifter"
+fields = { "label" = "Ersättning för egenavgifter" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kostnadsersattningar"
+fields = { "label" = "Kostnadsersättningar" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-skattepliktiga-formaner"
+fields = { "label" = "Övriga skattepliktiga förmåner" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:pensionsersattning"
+fields = { "label" = "Pensionsersättning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-skattereduktion-hushallsarbete-som-forman"
+fields = { "label" = "Underlag skattereduktion hushållsarbete som förmån" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:utbetald-ersattning"
+fields = { "label" = "Utbetald ersättning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."

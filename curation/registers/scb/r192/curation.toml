@@ -512,3 +512,39 @@ kind = "set"
 subject = "var:lararkategori-i-utlandsskola-larare-komp"
 fields = { "description" = "Anger om utlandsskolan har lärare i kompletterande svenskundervisning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i kompletterande svenskundervisning.\ncatalog:occurrence:463516\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-elever"
+fields = { "label" = "Antal elever" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-ovriga-skolledare"
+fields = { "label" = "Antal övriga skolledare" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-rektorer"
+fields = { "label" = "Antal rektorer" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lararkategori"
+fields = { "label" = "Lärarkategori" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skolform"
+fields = { "label" = "Skolform" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsvolym"
+fields = { "label" = "Undervisningsvolym" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."

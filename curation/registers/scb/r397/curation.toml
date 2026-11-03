@@ -479,3 +479,51 @@ kind = "set"
 subject = "var:genomfledarutb"
 fields = { "description" = "Anger hur ledarens ledarutbildning genomförts." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "label" = "Ålder" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:amnesomrade"
+fields = { "label" = "Ämnesområde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:distansstudier"
+fields = { "label" = "Distansstudier" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "label" = "Födelseland" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kon"
+fields = { "label" = "Kön" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:ledarkvalifikation"
+fields = { "label" = "Ledarkvalifikation" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "label" = "Svensk och utländsk bakgrund" }
+evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."

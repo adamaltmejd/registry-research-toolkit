@@ -992,3 +992,39 @@ kind = "set"
 subject = "var:kfrrest"
 fields = { "description" = "Restpost för kapitalförluster vid försäljning av småhus eller bostadsrätt, i kronor. Uppgiften härleds från taxerings- och deklarationsuppgifter samt kontrolluppgifter." }
 evidence = "Definition pass 2026-11-02: KFRREST and its loss label identify losses; the gain wording was copied from the gain twin. All 2007–2019 occurrences carry the error.\nrel070-base/reg_meta.db:occurrence:294330\nrel070-base/reg_meta.db:occurrence:294387\nrel070-base/reg_meta.db:occurrence:294444\nrel070-base/reg_meta.db:occurrence:294498\nrel070-base/reg_meta.db:occurrence:294549\nrel070-base/reg_meta.db:occurrence:294600\nrel070-base/reg_meta.db:occurrence:294651\nrel070-base/reg_meta.db:occurrence:294702\nrel070-base/reg_meta.db:occurrence:294752\nrel070-base/reg_meta.db:occurrence:294801\nrel070-base/reg_meta.db:occurrence:294854\nrel070-base/reg_meta.db:occurrence:294907\nrel070-base/reg_meta.db:occurrence:294960"
+
+[[statement]]
+kind = "set"
+subject = "set:aterforing-av-uppskovsbelopp"
+fields = { "label" = "Återföring av uppskovsbelopp" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:civilstand"
+fields = { "label" = "Civilstånd" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "label" = "Disponibel inkomst" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kapitalforlust"
+fields = { "label" = "Kapitalförlust" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kapitalvinst"
+fields = { "label" = "Kapitalvinst" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:rantefordelning"
+fields = { "label" = "Räntefördelning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

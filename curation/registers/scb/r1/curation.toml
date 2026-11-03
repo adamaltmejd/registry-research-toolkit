@@ -1540,3 +1540,99 @@ kind = "set"
 subject = "var:faxnummer-juridisk-enhet"
 fields = { "description" = "Den juridiska enhetens faxnummer, hämtat från exempelvis Skatteverket eller kontakt med enheten." }
 evidence = "rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."
+
+[[statement]]
+kind = "set"
+subject = "set:andel-tid-eller-omsattning"
+fields = { "label" = "Andel tid eller omsättning" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arbetsstallen"
+fields = { "label" = "Antal arbetsställen" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-verksamhetsenheter"
+fields = { "label" = "Antal verksamhetsenheter" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:belagenhetsadress"
+fields = { "label" = "Belägenhetsadress" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:fastighetstaxeringsvarde"
+fields = { "label" = "Fastighetstaxeringsvärde" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hjalpverksamhet"
+fields = { "label" = "Hjälpverksamhet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:juridisk-form"
+fields = { "label" = "Juridisk form" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "label" = "Kommun" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "label" = "Län" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:momsregistreringsstatus"
+fields = { "label" = "Momsregistreringsstatus" }
+evidence = "#2100 group name: the slug read as words; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgrenarnas-rangordning"
+fields = { "label" = "Näringsgrenarnas rangordning" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:omsattning"
+fields = { "label" = "Omsättning" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:postadress"
+fields = { "label" = "Postadress" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:verksamhetsstatus"
+fields = { "label" = "Verksamhetsstatus" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."

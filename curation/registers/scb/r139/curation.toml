@@ -931,3 +931,69 @@ kind = "set"
 subject = "var:ingaende-lager"
 fields = { "description" = "Mängd av respektive bränsle i lager vid kvartalets ingång. Mängden anges i naturliga mått för respektive bränsle." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger lagervärde, men källan mäter bränslemängd vid kvartalets ingång.\ncatalog:variable_text:6351:17532:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:45117:opdef_text; rel070-base/reg_meta.db:occurrence:45158:opdef_text; rel070-base/reg_meta.db:occurrence:44337:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleforbrukning"
+fields = { "label" = "Bränsleförbrukning" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:branslelager"
+fields = { "label" = "Bränslelager" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleslag"
+fields = { "label" = "Bränsleslag" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleslagets-gransvarden"
+fields = { "label" = "Bränsleslagets gränsvärden" }
+evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "set:branslets-mattenhet"
+fields = { "label" = "Bränslets måttenhet" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion"
+fields = { "label" = "Elproduktion" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:hetvattenproduktion"
+fields = { "label" = "Hetvattenproduktion" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:importerad-kvantitet"
+fields = { "label" = "Importerad kvantitet" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:land-for-import-export"
+fields = { "label" = "Land för import/export" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:mottagen-varme"
+fields = { "label" = "Mottagen värme" }
+evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "label" = "Näringsgren" }
+evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
