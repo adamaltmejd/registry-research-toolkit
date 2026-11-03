@@ -438,10 +438,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   has no tables table and no Held summary: its tables are FilterChips over the variable
   list, each with its period, a lens with OR within the selection, offered only when two
   or more tables deliver variables (the archived variant chips, maintainer 2026-11-03).
-  The Held panel does not appear while its data is loading. In steward mode a
-  supplemental-only variable is selectable for a project like a reference variable:
-  `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
-  questions, three scopes").
+  A Tables definition row links every table's page by name. The Held panel does not
+  appear while its data is loading. In steward mode a supplemental-only variable is
+  selectable for a project like a reference variable: `order` and `validate` read the
+  composed steward view (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px

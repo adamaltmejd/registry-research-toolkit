@@ -53,10 +53,11 @@ export function RegisterView({
   }>({ register: node.fqid, tables: new Set() });
   const selected: ReadonlySet<string> =
     filter.register === node.fqid ? filter.tables : new Set();
+  const tables = [...node.tables].sort((a, b) =>
+    svCollator.compare(a.name, b.name),
+  );
   const delivering = new Set(node.variables.flatMap((v) => v.tables));
-  const chipTables = node.tables
-    .filter((table) => delivering.has(table.fqid))
-    .sort((a, b) => svCollator.compare(a.name, b.name));
+  const chipTables = tables.filter((table) => delivering.has(table.fqid));
   const shown =
     selected.size === 0
       ? node.variables
@@ -79,6 +80,23 @@ export function RegisterView({
             term: "Period",
             value: <code>{catalogPeriodLabel(node.period)}</code>,
           },
+          // The route to each table's page (role, cadence, held placements),
+          // including tables no chip names.
+          ...(tables.length > 0
+            ? [
+                {
+                  term: "Tables",
+                  value: tables.map((table, i) => (
+                    <span key={table.fqid}>
+                      {i > 0 && ", "}
+                      <a className="link" href={catalogHref(table.fqid)}>
+                        {table.name}
+                      </a>
+                    </span>
+                  )),
+                },
+              ]
+            : []),
         ]}
       />
       <Panel title="Variables" flush={node.variables.length > 0}>
