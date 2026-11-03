@@ -335,6 +335,7 @@ fn pairs(
 }
 
 /// Every register's public surface, keyed by source handles.
+#[derive(Default)]
 struct Index<'a> {
     registers: BTreeMap<(&'a str, &'a str), usize>,
     names: BTreeMap<(&'a str, String), Vec<usize>>,
@@ -346,14 +347,7 @@ struct Index<'a> {
 
 impl<'a> Index<'a> {
     fn new(registers: &'a [Resolved]) -> Self {
-        let mut index = Index {
-            registers: BTreeMap::new(),
-            names: BTreeMap::new(),
-            tables: BTreeMap::new(),
-            releases: BTreeMap::new(),
-            variables: BTreeMap::new(),
-            variable_slugs: BTreeMap::new(),
-        };
+        let mut index = Index::default();
         for (ri, r) in registers.iter().enumerate() {
             let reg = &r.register;
             index

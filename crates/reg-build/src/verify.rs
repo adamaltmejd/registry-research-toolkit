@@ -1,16 +1,16 @@
 //! Artifact verification: the one authority for a written catalog file's invariants
-//! (schema v4 §4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
+//! (§4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
 //! runs it on any file.
 
 use std::path::Path;
 
 use reg_frame::Item;
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::{Connection, OpenFlags, OptionalExtension};
 use sha2::{Digest, Sha256};
 
 const CHECKS: &str = include_str!("checks.sql");
 
-/// Every invariant of a written catalog file (schema v4 §4.2, §4.3). Read-only.
+/// Every invariant of a written catalog file (§4.2, §4.3). Read-only.
 ///
 /// # Errors
 /// The first failure, naming the check: `integrity_check: …`, `post-write check failed:\n<sql>`,
@@ -134,11 +134,7 @@ fn schema_version(db: &Connection) -> Result<(), String> {
             [],
             |r| r.get(0),
         )
-        .map(Some)
-        .or_else(|e| match e {
-            rusqlite::Error::QueryReturnedNoRows => Ok(None),
-            e => Err(e),
-        })
+        .optional()
         .map_err(sql)?;
     let expected = reg_core::CATALOG_SCHEMA_VERSION;
     if user != i64::from(expected) || meta.as_deref() != Some(expected.to_string().as_str()) {
@@ -254,11 +250,8 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             [],
             |r| r.get(0),
         )
-        .map(Some)
-        .or_else(|e| match e {
-            rusqlite::Error::QueryReturnedNoRows => Ok(None),
-            e => Err(fail(format!("{}: {e}", previous.display()))),
-        })
+        .optional()
+        .map_err(|e| fail(format!("{}: {e}", previous.display())))
     };
     let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
     match version("prev")? {
