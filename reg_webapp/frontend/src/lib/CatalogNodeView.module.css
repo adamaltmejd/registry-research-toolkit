@@ -78,6 +78,12 @@
 .variableName {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+.variableLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .period {
   color: var(--text-muted);

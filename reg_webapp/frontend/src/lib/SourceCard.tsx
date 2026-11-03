@@ -34,7 +34,6 @@ import { ColumnChip } from "./ui/ColumnChip";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
-import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { LocatedIssue } from "./ValidationPanel";
 import { issueId, type ValidationIssue } from "./validation";
@@ -325,7 +324,7 @@ export function SourceCard({
       </p>
       {loading && (
         <div aria-busy="true">
-          <Skeleton />
+          <StatusRow tone="info">Loading coverage…</StatusRow>
         </div>
       )}
       {loadError && (
@@ -368,7 +367,7 @@ export function SourceCard({
             ) : undefined
           }
         />
-      ) : (
+      ) : loading ? null : (
         <LaneList label={`Columns of ${source.name}`} lanes={lanes} />
       )}
       {stored && Array.isArray(source.period) && (

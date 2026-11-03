@@ -149,9 +149,9 @@ spacing:
   6: 2rem
   content-max: 80rem
   breakpoint-narrow: 48rem
-  col-browse: 260px
+  col-browse: 220px
   col-browse-max: 340px
-  col-list: 230px
+  col-list: 200px
   col-list-max: 300px
   shell-max: 120rem
   lane-height: 58px
@@ -664,19 +664,20 @@ not grow new visual language meanwhile.
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
   verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
   "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph. Its slot is as wide as the widest verdict, so the banner
-  keeps one size while validation runs. A verdict with findings (Warnings, Errors, Order
-  blocked) is a link, in its status hue with the link's `accent` rule, to /project,
-  where the first non-empty findings group scrolls into view and takes focus; Valid and
-  Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
-  never a status hue. The study window is the period picker: an inline two-thumb RAC
-  `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn as
-  the Timeline's study-window band (see Time: `accent-bg` between `accent` bounds, the
-  thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
-  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
-  With no project open it is the same box, empty and untinted with a `border` leading
-  bar, holding a `default` "Create a project" Button, which starts a project and opens
-  it, and nothing in the catalog is tinted.
+  "Checking" with no glyph; a draft with no sources yet is the same plain "Empty", never
+  an error, since nothing has gone wrong. Its slot is as wide as the widest verdict, so
+  the banner keeps one size while validation runs. A verdict with findings (Warnings,
+  Errors, Order blocked) is a link, in its status hue with the link's `accent` rule, to
+  /project, where the first non-empty findings group scrolls into view and takes focus;
+  Valid and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
+  "unsaved", never a status hue. The study window is the period picker: an inline
+  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
+  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
+  `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
+  Clear keep one line. With no project open it is the same box, empty and untinted with
+  a `border` leading bar, holding a `default` "Create a project" Button, which starts a
+  project and opens it, and nothing in the catalog is tinted.
 - **Findings** are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
