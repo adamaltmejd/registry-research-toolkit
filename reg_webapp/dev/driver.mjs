@@ -505,6 +505,29 @@ async function sourceCardsCase(page, shoot) {
   await shoot("source-cards-removed");
 }
 
+// Open webapp-dev's fixture project with the 2021–2022 study window from the
+// Project page. The app reads the chosen file asynchronously, so a navigation
+// straight after setFiles can unload the page before the draft is stored. The
+// catalog page then has no project: the add window still renders but no column
+// is selectable (#2120). Wait for the opened project's sources before returning.
+async function openWindowedFixture(page, name) {
+  const main = page.getByRole("main");
+  const fixture = JSON.parse(readFileSync(new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  ), "utf8"));
+  fixture.window = { from: 2021, to: 2022 };
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({
+    name,
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await main.getByRole("region", { name: "Project sources", exact: true }).waitFor();
+  return fixture;
+}
+
 // Project + catalog → saved project boundary. Fails if a variable-page add
 // confuses identical spellings in different tables, loses the binding/type or
 // add-window years, retains a tick outside the moved window,
@@ -515,18 +538,7 @@ async function sourceCardsCase(page, shoot) {
 // readable fixture project's explicit study window and the stated thumb move.
 async function addVariableColumnsCase(page, shoot) {
   const main = page.getByRole("main");
-  const fixture = JSON.parse(readFileSync(new URL(
-    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
-    import.meta.url,
-  ), "utf8"));
-  fixture.window = { from: 2021, to: 2022 };
-  const chooser = page.waitForEvent("filechooser");
-  await main.getByRole("button", { name: "Open project file", exact: true }).click();
-  await (await chooser).setFiles({
-    name: "study-window.json",
-    mimeType: "application/json",
-    buffer: Buffer.from(JSON.stringify(fixture)),
-  });
+  const fixture = await openWindowedFixture(page, "study-window.json");
   let failRegister = true;
   let registerRequests = 0;
   const registerRoute = "**/api/catalog/demo/hush";
@@ -646,18 +658,7 @@ async function variableSuccessionCase(page, shoot) {
   const main = page.getByRole("main");
   await open(page, "/project");
   await settled(page);
-  const fixture = JSON.parse(readFileSync(new URL(
-    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
-    import.meta.url,
-  ), "utf8"));
-  fixture.window = { from: 2021, to: 2022 };
-  const chooser = page.waitForEvent("filechooser");
-  await main.getByRole("button", { name: "Open project file", exact: true }).click();
-  await (await chooser).setFiles({
-    name: "succession-window.json",
-    mimeType: "application/json",
-    buffer: Buffer.from(JSON.stringify(fixture)),
-  });
+  await openWindowedFixture(page, "succession-window.json");
   await open(page, "/catalog/demo/hush");
   await settled(page);
   const graphRequests = [];
