@@ -46,6 +46,7 @@ from datetime import date, timedelta
 from functools import partial
 from itertools import pairwise
 from pathlib import Path
+from typing import Any
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -2785,7 +2786,7 @@ def rebuilt(args) -> int:
             )
             for before, after in changed.values()
         )
-        texts = {}
+        texts: dict[str, dict[str, Any]] = {}
         for kind, sql in REBUILT_TEXT.items():
             before, after = rebuilt_text(old_db, sql), rebuilt_text(new_db, sql)
             texts[kind] = {
