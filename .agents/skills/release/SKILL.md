@@ -84,8 +84,8 @@ same release, and vice versa. **The holdings DDL pairs the same way:**
 `holdings/schema.sql` and `reg_core::HOLDINGS_SCHEMA_VERSION` change together. The
 reader admits on exact equality, without a major/minor compatibility rule. If a paired
 change is missing, stop and land it through a reviewed PR first. A bump's PR and
-subsequent main pushes are expected to be red at `schema-guard` (which compares only
-`CATALOG_SCHEMA_VERSION`) until the matching release publishes; that check is not
+subsequent main pushes are expected to be red at `schema-guard` (which compares both
+`CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION`) until the matching release publishes; that check is not
 required on main. Merge first, then release when the maintainer runs it. A gap is
 allowed; the guard blocks deployment throughout it.
 
@@ -381,7 +381,7 @@ global asset, and the paired SWECOV asset when the release has one), and dispatc
 `container-build.yml`, which bakes and deploys the catalog (and the pair, when
 `SWECOV_DEPLOY` is `on`). Integration and deployment dispatch both depend on CI, not on
 each other. The deploy guard passes only when the released `CATALOG_SCHEMA_VERSION`
-equals main's; a missing constant or a mismatch blocks deployment. Scope the run lookup
+and `HOLDINGS_SCHEMA_VERSION` both equal main's; a missing constant or a mismatch blocks deployment. Scope the run lookup
 to this release; an unfiltered `--limit 1` can match a stale run:
 
 ```sh
