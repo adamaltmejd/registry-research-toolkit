@@ -110,7 +110,7 @@ function HeldSummary({
   const rows = [...tables]
     .map(([fqid, placements]) => ({
       fqid,
-      name: names.get(fqid) ?? fqid,
+      name: names.get(fqid) ?? "Table name unavailable",
       variables: new Set(placements.map((row) => row.variable)).size,
       period: catalogPeriodRuns(placements.map((row) => row.period)),
     }))
