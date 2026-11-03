@@ -295,10 +295,6 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
     Ok(())
 }
 
-fn build(args: &Args) -> Result<(), String> {
-    build_with_provenance(args, None, None)
-}
-
 /// A steward commit covers its own generated transcription inputs; putting that
 /// same commit inside its manifest would make a self-referential Git pin.
 #[allow(clippy::too_many_lines)]
@@ -718,7 +714,7 @@ fn main() -> ExitCode {
     } else {
         parse_args(args).and_then(|args| match args.command.as_str() {
             "read" => read(&args),
-            "build" => build(&args),
+            "build" => build_with_provenance(&args, None, None),
             "lock" => lock(&args),
             other => Err(format!("unknown command {other:?}")),
         })

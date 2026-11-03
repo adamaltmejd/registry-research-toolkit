@@ -37,29 +37,16 @@ pub use grammar::{
     next_iso_day, period_token_for_bounds, prev_iso_day,
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
-pub use structural::{q as quote, quoted_list, validate_structural};
+pub use structural::{q as quote, validate_structural};
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
-use unicode_properties::{GeneralCategory, GeneralCategoryGroup, UnicodeGeneralCategory};
+use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
 pub use validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 /// Python `str.isspace()`: `White_Space` plus the four information separators
 /// U+001C..U+001F, which Python treats as whitespace and Unicode does not.
 fn py_isspace(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
-}
-
-/// Python `str.strip()` with no arguments.
-#[must_use]
-pub fn py_strip(s: &str) -> &str {
-    s.trim_matches(py_isspace)
-}
-
-/// The class `\d` in Python's `re`: general category Nd (decimal digits), not the
-/// superscripts, fractions and other numbers `char::is_numeric` also admits.
-#[must_use]
-pub fn py_isdecimal(c: char) -> bool {
-    c.general_category() == GeneralCategory::DecimalNumber
 }
 
 /// Python `str.split()` with no arguments.
@@ -201,22 +188,4 @@ pub fn fts_terms(s: &str) -> Vec<String> {
         .filter(|t| !t.is_empty())
         .map(str::to_owned)
         .collect()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{py_isdecimal, py_strip};
-
-    /// Fails if `py_isdecimal` widens to every number (`²`, `½`, `Ⅻ`) or misses a
-    /// non-ASCII decimal digit, or `py_strip` misses Python's U+001C..U+001F.
-    #[test]
-    fn python_decimal_and_strip() {
-        assert!(['3', '\u{0663}', '\u{FF13}'].into_iter().all(py_isdecimal));
-        assert!(
-            !['\u{00B2}', '\u{00BD}', '\u{216B}']
-                .into_iter()
-                .any(py_isdecimal)
-        );
-        assert_eq!(py_strip("\u{1c} \u{3000}F32\u{1f}\n"), "F32");
-    }
 }

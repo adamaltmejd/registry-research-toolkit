@@ -62,7 +62,8 @@ pub enum GuardField {
 }
 
 impl GuardField {
-    fn name(self) -> &'static str {
+    #[must_use]
+    pub fn name(self) -> &'static str {
         match self {
             Self::Label => "label",
             Self::Type => "type",
