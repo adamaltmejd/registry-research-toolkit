@@ -144,8 +144,9 @@ pub(super) fn admitted(db: &Connection, base: &Connection) -> Result<BTreeSet<St
 
 /// Reference registers and tables the steward extends with variables of its own: the
 /// same entity in both origins (a register under the same provider, a table in the same
-/// register with the same timelessness). Readers keep the reference row; only the
-/// steward's distinct variables and their segments are added.
+/// register with the same timelessness). A register and its implicit table share one
+/// pid, so every steward row behind a pid must match a reference row. Readers keep the
+/// reference row; only the steward's distinct variables and their segments are added.
 pub(super) fn overlays(db: &Connection, base: &Connection) -> Result<BTreeSet<String>, String> {
     let entities = |conn: &Connection| -> Result<BTreeSet<(String, String, i64)>, String> {
         conn.prepare(
@@ -160,8 +161,12 @@ pub(super) fn overlays(db: &Connection, base: &Connection) -> Result<BTreeSet<St
         .map_err(|e| e.to_string())
     };
     let global = entities(base)?;
-    Ok(entities(db)?
+    let held = entities(db)?;
+    let mismatched: BTreeSet<&String> = held.difference(&global).map(|(pid, ..)| pid).collect();
+    Ok(held
         .intersection(&global)
-        .map(|(pid, ..)| pid.clone())
+        .map(|(pid, ..)| pid)
+        .filter(|pid| !mismatched.contains(pid))
+        .cloned()
         .collect())
 }

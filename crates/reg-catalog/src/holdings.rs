@@ -148,7 +148,11 @@ impl Catalog {
                -- An overlay: the steward adds its own variables to the same register or table.
                OR (b.kind='register' AND EXISTS(SELECT 1 FROM main.register br JOIN main.provider bp ON bp.id=br.provider_id
                  JOIN held.register hr ON hr.pid=br.pid JOIN held.provider hp ON hp.id=hr.provider_id
-                 WHERE br.pid=b.pid AND hp.pid=bp.pid))
+                 WHERE br.pid=b.pid AND hp.pid=bp.pid)
+                 -- Its implicit table shares the pid and must match too.
+                 AND NOT EXISTS(SELECT 1 FROM held.tbl ht JOIN held.register hr ON hr.id=ht.register_id
+                   WHERE ht.pid=b.pid AND NOT EXISTS(SELECT 1 FROM main.tbl bt JOIN main.register br ON br.id=bt.register_id
+                     WHERE bt.pid=ht.pid AND br.pid=hr.pid AND bt.timeless=ht.timeless)))
                OR (b.kind='table' AND EXISTS(SELECT 1 FROM main.tbl bt JOIN main.register br ON br.id=bt.register_id
                  JOIN held.tbl ht ON ht.pid=bt.pid JOIN held.register hr ON hr.id=ht.register_id
                  WHERE bt.pid=b.pid AND hr.pid=br.pid AND ht.timeless=bt.timeless)))))

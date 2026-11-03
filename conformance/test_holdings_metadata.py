@@ -354,9 +354,47 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         in refused.stderr
     )
     source_file.write_text(held_original)
+    # Fails if an overlay register admits its implicit table without comparing
+    # timelessness: undated steward rows held timeless make demo/projected timeless,
+    # while the reference table is dated.
+    projected_source = source / "projected.csv"
+    projected_original = projected_source.read_text()
+    projected_source.write_text(
+        projected_original.replace("2014-01-01,2014-12-31", ",")
+    )
+    topology = root / "holdings.toml"
+    topology_original = topology.read_text()
+    dated_slot = (
+        'physical_name = "AttestedSlot"\ndisposition = "dated"\ndelivery = "2014"'
+    )
+    assert dated_slot in topology_original
+    topology.write_text(
+        topology_original.replace(
+            dated_slot, 'physical_name = "AttestedSlot"\ndisposition = "timeless"'
+        )
+    )
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    timeless = run([*command, "--out", tmp_path / "timeless.db"])
+    assert timeless.returncode != 0
+    assert "holdings_semantic_collision" in timeless.stderr
+    projected_source.write_text(projected_original)
+    topology.write_text(topology_original)
     # Fails if an overlay register also admits an undeclared variable id: a steward
     # variable may join a reference register, never take one of its variable ids.
-    with (source / "projected.csv").open("a") as f:
+    with projected_source.open("a") as f:
         f.write(
             ",Amount,Steward amount,,integer,,,,false,false,2014-01-01,2014-12-31\n"
         )
